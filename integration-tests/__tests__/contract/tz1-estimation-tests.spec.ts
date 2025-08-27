@@ -104,7 +104,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
       expect(estimate.minimalFeeMutez).toEqual(575);
       expect(estimate.totalCost).toEqual(575);
       expect(estimate.usingBaseFeeMutez).toEqual(575);
-      expect(estimate.consumedMilligas).toEqual(3456142);
+      expect(estimate.consumedMilligas).toEqual(3456228);
     });
 
     it('Verify .estimate.transfer for multiple internal transfers to unallocated account', async () => {
@@ -121,7 +121,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
       expect(estimate.minimalFeeMutez).toEqual(846);
       expect(estimate.totalCost).toEqual(134346);
       expect(estimate.usingBaseFeeMutez).toEqual(846);
-      expect(estimate.consumedMilligas).toEqual(5570671);
+      expect(estimate.consumedMilligas).toEqual(5570757);
     });
 
     it('Verify .estimate.transfer for internal origination', async () => {
@@ -134,20 +134,20 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
       expect(estimate.minimalFeeMutez).toEqual(422);
       expect(estimate.totalCost).toEqual(84672);
       expect(estimate.usingBaseFeeMutez).toEqual(422);
-      expect(estimate.consumedMilligas).toEqual(1866766);
+      expect(estimate.consumedMilligas).toEqual(1866852);
     });
 
     it('Verify .estimate.transfer for multiple internal originations', async () => {
       const tx = contract.methodsObject.do(originate2()).toTransferParams();
       const estimate = await Tz1.estimate.transfer(tx);
-      expect(estimate.gasLimit).toEqual(2392);
+      expect(estimate.gasLimit).toEqual(2393);
       expect(estimate.storageLimit).toEqual(654);
       expect(estimate.suggestedFeeMutez).toEqual(560);
       expect(estimate.burnFeeMutez).toEqual(163500);
       expect(estimate.minimalFeeMutez).toEqual(540);
       expect(estimate.totalCost).toEqual(164040);
       expect(estimate.usingBaseFeeMutez).toEqual(540);
-      expect(estimate.consumedMilligas).toEqual(2391919);
+      expect(estimate.consumedMilligas).toEqual(2392005);
       // Do the actual operation
       const op2 = await contract.methodsObject.do(originate2()).send();
       await op2.confirmation();
