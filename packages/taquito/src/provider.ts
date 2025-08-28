@@ -22,6 +22,8 @@ import {
   createSmartRollupAddMessagesOperation,
   createSmartRollupOriginateOperation,
   createSmartRollupExecuteOutboxMessageOperation,
+  createUpdateConsensusKeyOperation,
+  createUpdateCompanionKeyOperation,
 } from './contract/prepare';
 import { OpKind } from '@taquito/rpc';
 import { InvalidOperationKindError } from '@taquito/utils';
@@ -110,6 +112,14 @@ export abstract class Provider {
         });
       case OpKind.INCREASE_PAID_STORAGE:
         return createIncreasePaidStorageOperation({
+          ...param,
+        });
+      case OpKind.UPDATE_CONSENSUS_KEY:
+        return createUpdateConsensusKeyOperation({
+          ...param,
+        });
+      case OpKind.UPDATE_COMPANION_KEY:
+        return createUpdateCompanionKeyOperation({
           ...param,
         });
       case OpKind.TRANSFER_TICKET:

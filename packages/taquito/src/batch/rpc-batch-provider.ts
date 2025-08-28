@@ -13,6 +13,8 @@ import {
   createSmartRollupAddMessagesOperation,
   createSmartRollupOriginateOperation,
   createSmartRollupExecuteOutboxMessageOperation,
+  createUpdateConsensusKeyOperation,
+  createUpdateCompanionKeyOperation,
 } from '../contract/prepare';
 import { BatchOperation } from '../operations/batch-operation';
 import {
@@ -27,16 +29,27 @@ import {
   SmartRollupAddMessagesParams,
   SmartRollupOriginateParams,
   SmartRollupExecuteOutboxMessageParams,
+  UpdateConsensusKeyParams,
+  UpdateCompanionKeyParams,
 } from '../operations/types';
 import { OpKind } from '@taquito/rpc';
 import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
-import { validateAddress, validateKeyHash, ValidationResult } from '@taquito/utils';
+import {
+  b58DecodeAndCheckPrefix,
+  PrefixV2,
+  publicKeyPrefixes,
+  validateAddress,
+  validateKeyHash,
+  ValidationResult,
+} from '@taquito/utils';
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
 import {
   InvalidAddressError,
   InvalidKeyHashError,
   InvalidOperationKindError,
   InvalidAmountError,
+  InvalidProofError,
+  ProhibitedActionError,
 } from '@taquito/core';
 import { Provider } from '../provider';
 import { PrepareProvider } from '../prepare';
@@ -184,6 +197,47 @@ export class OperationBatch extends Provider {
 
   /**
    *
+   * @description Add a update consensus key operation to the batch
+   *
+   * @param params UpdateConsensusKey operation parameter
+   */
+  withUpdateConsensusKey(params: UpdateConsensusKeyParams) {
+    const [, pkPrefix] = b58DecodeAndCheckPrefix(params.pk, publicKeyPrefixes);
+    if (pkPrefix === PrefixV2.BLS12_381PublicKey) {
+      if (!params.proof) {
+        throw new InvalidProofError('Proof is required to set a bls account as consensus key ');
+      }
+    } else {
+      if (params.proof) {
+        throw new ProhibitedActionError(
+          'Proof field is only allowed for a bls account as consensus key'
+        );
+      }
+    }
+    this.operations.push({ kind: OpKind.UPDATE_CONSENSUS_KEY, ...params });
+    return this;
+  }
+
+  /**
+   *
+   * @description Add a update companion key operation to the batch
+   *
+   * @param params UpdateCompanionKey operation parameter
+   */
+  withUpdateCompanionKey(params: UpdateCompanionKeyParams) {
+    const [, pkPrefix] = b58DecodeAndCheckPrefix(params.pk, publicKeyPrefixes);
+    if (pkPrefix !== PrefixV2.BLS12_381PublicKey) {
+      throw new ProhibitedActionError('companion key must be a bls account');
+    }
+    if (!params.proof) {
+      throw new InvalidProofError('Proof is required to set a bls account as companion key ');
+    }
+    this.operations.push({ kind: OpKind.UPDATE_COMPANION_KEY, ...params });
+    return this;
+  }
+
+  /**
+   *
    * @description Add a smart rollup add messages operation to the batch
    *
    * @param params Rollup origination operation parameter
@@ -237,6 +291,14 @@ export class OperationBatch extends Provider {
         });
       case OpKind.INCREASE_PAID_STORAGE:
         return createIncreasePaidStorageOperation({
+          ...param,
+        });
+      case OpKind.UPDATE_CONSENSUS_KEY:
+        return createUpdateConsensusKeyOperation({
+          ...param,
+        });
+      case OpKind.UPDATE_COMPANION_KEY:
+        return createUpdateCompanionKeyOperation({
           ...param,
         });
       case OpKind.TRANSFER_TICKET:
@@ -341,7 +403,7 @@ export class RPCBatchProvider {
   constructor(
     private context: Context,
     private estimator: EstimationProvider
-  ) { }
+  ) {}
 
   /***
    *

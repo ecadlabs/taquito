@@ -17,6 +17,7 @@ import {
   OperationContentsTransaction,
   OperationContentsTransferTicket,
   OperationContentsUpdateConsensusKey,
+  OperationContentsUpdateCompanionKey,
   ScriptResponse,
 } from '@taquito/rpc';
 import {
@@ -24,13 +25,19 @@ import {
   validateAddress,
   validateContractAddress,
   ValidationResult,
+  b58DecodeAndCheckPrefix,
+  publicKeyHashPrefixes,
+  PrefixV2,
+  publicKeyPrefixes,
 } from '@taquito/utils';
 import {
   InvalidAddressError,
+  InvalidProofError,
   InvalidContractAddressError,
   InvalidAmountError,
   InvalidFinalizeUnstakeAmountError,
   InvalidStakingAddressError,
+  ProhibitedActionError,
 } from '@taquito/core';
 import { OperationBatch } from '../batch/rpc-batch-provider';
 import { Context } from '../context';
@@ -53,6 +60,7 @@ import {
   BallotParams,
   ProposalsParams,
   UpdateConsensusKeyParams,
+  UpdateCompanionKeyParams,
   SmartRollupAddMessagesParams,
   SmartRollupOriginateParams,
   SmartRollupExecuteOutboxMessageParams,
@@ -72,6 +80,7 @@ import { BallotOperation } from '../operations/ballot-operation';
 import { DrainDelegateOperation } from '../operations/drain-delegate-operation';
 import { ProposalsOperation } from '../operations/proposals-operation';
 import { UpdateConsensusKeyOperation } from '../operations/update-consensus-key-operation';
+import { UpdateCompanionKeyOperation } from '../operations/update-companion-key-operation';
 import { SmartRollupAddMessagesOperation } from '../operations/smart-rollup-add-messages-operation';
 import { SmartRollupOriginateOperation } from '../operations/smart-rollup-originate-operation';
 import { SmartRollupExecuteOutboxMessageOperation } from '../operations/smart-rollup-execute-outbox-message-operation';
@@ -558,13 +567,25 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
   /**
    *
    * @description Reveal the public key of the current address. Will throw an error if the address is already revealed.
-   * @remarks Reveal tz4 address is not included in the current beta release for protocol Seoul (still a work in progress)
    * @returns An operation handle with the result from the rpc node
    *
    * @param RevealParams operation parameter
    */
   async reveal(params: RevealParams) {
     const publicKeyHash = await this.signer.publicKeyHash();
+    const [, pkhPrefix] = b58DecodeAndCheckPrefix(publicKeyHash, publicKeyHashPrefixes);
+    if (pkhPrefix === PrefixV2.BLS12_381PublicKeyHash) {
+      if (params.proof) {
+        b58DecodeAndCheckPrefix(params.proof, [PrefixV2.BLS12_381Signature]); // validate proof to be a bls signature
+      } else {
+        const { prefixSig } = await this.signer.provePossession!();
+        params.proof = prefixSig;
+      }
+    } else {
+      if (params.proof) {
+        throw new ProhibitedActionError('Proof field is only allowed to reveal a bls account ');
+      }
+    }
     const estimateReveal = await this.estimator.reveal(params);
     if (estimateReveal) {
       const estimated = await this.estimate(params, async () => estimateReveal);
@@ -718,14 +739,25 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
 
   /**
    *
-   * @description Updates the consensus key of the baker to public_key starting from the current cycle plus PRESERVED_CYCLES + 1
-   * @remarks updateConsensusKey to a tz4 address is not included in the current beta release for protocol Seoul (still a work in progress)
+   * @description Update the consensus key of a delegate starting from the current cycle plus CONSENSUS_RIGHTS_DELAY + 1
    * @returns An operation handle with the result from the rpc node
    *
    * @param UpdateConsensusKeyParams
    */
   async updateConsensusKey(params: UpdateConsensusKeyParams) {
     const publicKeyHash = await this.signer.publicKeyHash();
+    const [, pkPrefix] = b58DecodeAndCheckPrefix(params.pk, publicKeyPrefixes);
+    if (pkPrefix === PrefixV2.BLS12_381PublicKey) {
+      if (!params.proof) {
+        throw new InvalidProofError('Proof is required to set a bls account as consensus key ');
+      }
+    } else {
+      if (params.proof) {
+        throw new ProhibitedActionError(
+          'Proof field is only allowed for a bls account as consensus key'
+        );
+      }
+    }
     const estimate = await this.estimate(
       params,
       this.estimator.updateConsensusKey.bind(this.estimator)
@@ -738,6 +770,45 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
     const opBytes = await this.forge(prepared);
     const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
     return new UpdateConsensusKeyOperation(
+      hash,
+      content,
+      publicKeyHash,
+      forgedBytes,
+      opResponse,
+      context
+    );
+  }
+
+  /**
+   *
+   * @description Updates the companion key of the delegate starting from the current cycle plus CONSENSUS_KEY_ACTIVATION_DELAY + 1
+   * @returns An operation handle with the result from the rpc node
+   *
+   * @param UpdateCompanionKeyParams
+   */
+  async updateCompanionKey(params: UpdateCompanionKeyParams) {
+    const publicKeyHash = await this.signer.publicKeyHash();
+    const [, pkPrefix] = b58DecodeAndCheckPrefix(params.pk, publicKeyPrefixes);
+    if (pkPrefix !== PrefixV2.BLS12_381PublicKey) {
+      throw new ProhibitedActionError(
+        'Proof field is only allowed for a bls account as companion key'
+      );
+    }
+    if (!params.proof) {
+      throw new InvalidProofError('Proof is required to set a bls account as companion key ');
+    }
+    const estimate = await this.estimate(
+      params,
+      this.estimator.updateCompanionKey.bind(this.estimator)
+    );
+
+    const prepared = await this.prepare.updateCompanionKey({ ...params, ...estimate });
+    const content = prepared.opOb.contents.find(
+      (op) => op.kind === OpKind.UPDATE_COMPANION_KEY
+    ) as OperationContentsUpdateCompanionKey;
+    const opBytes = await this.forge(prepared);
+    const { hash, context, forgedBytes, opResponse } = await this.signAndInject(opBytes);
+    return new UpdateCompanionKeyOperation(
       hash,
       content,
       publicKeyHash,
