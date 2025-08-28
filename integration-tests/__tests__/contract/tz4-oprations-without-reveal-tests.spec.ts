@@ -6,12 +6,12 @@ import crypto from 'crypto';
 import { PvmKind } from "@taquito/rpc";
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress, protocol, knownBaker, knownTicketContract }) => {
-  const seoulnetAndAlpha = ProtoGreaterOrEqual(protocol, Protocols.PtSeouLou) ? test : test.skip;
-  const Tezos = lib;
-  let Tz4: TezosToolkit;
-  let contractAddress = 'KT1XgwgLtcD79LzFifBKxU2TYwKzQ6iUwwj1'
 
   describe(`Test tz4 account operations through contract API using: ${rpc}`, () => {
+    const seoulnetAndAlpha = ProtoGreaterOrEqual(protocol, Protocols.PtSeouLou) ? test : test.skip;
+    const Tezos = lib;
+    let Tz4: TezosToolkit;
+    let contractAddress = ''
     beforeAll(async () => {
       await setup(true)
       Tz4 = await createAddress(PrefixV2.BLS12_381SecretKey)

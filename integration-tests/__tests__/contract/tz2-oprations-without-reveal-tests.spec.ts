@@ -6,11 +6,12 @@ import crypto from 'crypto';
 import { PvmKind } from "@taquito/rpc";
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker, knownTicketContract, protocol }) => {
-  const seoulnetAndAlpha = ProtoGreaterOrEqual(protocol, Protocols.PtSeouLou) ? test : test.skip;
-  const Tz2 = lib;
-  let contractAddress = ''
+  describe(`Test tz2 account operations through contract API using: ${rpc}`, async() => {
+    const Tz2 = lib;
+    const isUnreveal = await Tz2.rpc.getManagerKey(await Tz2.signer.publicKeyHash()) !== null ? true : false
+    const seoulnetAndAlpha = ProtoGreaterOrEqual(protocol, Protocols.PtSeouLou) && isUnreveal ? test : test.skip;
+    let contractAddress = ''
 
-  describe(`Test tz2 account operations through contract API using: ${rpc}`, () => {
     beforeAll(async () => {
       await setup(true)
       try {
