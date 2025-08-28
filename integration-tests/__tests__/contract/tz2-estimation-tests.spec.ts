@@ -5,10 +5,11 @@ import { originate, originate2, transferImplicit2 } from '../../data/lambda';
 import { ligoSample } from '../../data/ligo-simple-contract';
 import { managerCode } from '../../data/manager_code';
 import { InvalidAmountError } from '@taquito/core';
+import { PrefixV2 } from '@taquito/utils';
 
 CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
   const Tezos = lib;
-
+  let pkh: string;
   describe(`Test estimate scenarios using: ${rpc}`, () => {
     let LowAmountTez: TezosToolkit;
     let contract: Contract;
@@ -17,9 +18,9 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
     beforeAll(async () => {
       try {
         await setup();
-        LowAmountTez = await createAddress();
-        const pkh = await LowAmountTez.signer.publicKeyHash();
-        amt += getRevealFee(await LowAmountTez.signer.publicKeyHash());
+        LowAmountTez = await createAddress(PrefixV2.Secp256k1SecretKey);
+        pkh = await LowAmountTez.signer.publicKeyHash();
+        amt += getRevealFee(pkh);
         const transfer = await Tezos.contract.transfer({ to: pkh, mutez: true, amount: amt });
         await transfer.confirmation();
         const op = await Tezos.contract.originate({
@@ -41,11 +42,11 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
       const estimate = await LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), amount: 0.019 });
       expect(estimate.gasLimit).toEqual(2101);
       expect(estimate.storageLimit).toEqual(0);
-      expect(estimate.suggestedFeeMutez).toEqual(389);
+      expect(estimate.suggestedFeeMutez).toEqual(388);
       expect(estimate.burnFeeMutez).toEqual(0);
-      expect(estimate.minimalFeeMutez).toEqual(369);
-      expect(estimate.totalCost).toEqual(369);
-      expect(estimate.usingBaseFeeMutez).toEqual(369);
+      expect(estimate.minimalFeeMutez).toEqual(368);
+      expect(estimate.totalCost).toEqual(368);
+      expect(estimate.usingBaseFeeMutez).toEqual(368);
       expect(estimate.consumedMilligas).toEqual(2100040);
     });
 
@@ -53,11 +54,11 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
       const estimate = await LowAmountTez.estimate.transfer({ to: await (await createAddress()).signer.publicKeyHash(), amount: 0.017 });
       expect(estimate.gasLimit).toEqual(2101);
       expect(estimate.storageLimit).toEqual(277);
-      expect(estimate.suggestedFeeMutez).toEqual(389);
+      expect(estimate.suggestedFeeMutez).toEqual(388);
       expect(estimate.burnFeeMutez).toEqual(69250);
-      expect(estimate.minimalFeeMutez).toEqual(369);
-      expect(estimate.totalCost).toEqual(69619);
-      expect(estimate.usingBaseFeeMutez).toEqual(369);
+      expect(estimate.minimalFeeMutez).toEqual(368);
+      expect(estimate.totalCost).toEqual(69618);
+      expect(estimate.usingBaseFeeMutez).toEqual(368);
       expect(estimate.consumedMilligas).toEqual(2100040);
     });
 
@@ -69,26 +70,26 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
       });
       expect(estimate.gasLimit).toEqual(677);
       expect(estimate.storageLimit).toEqual(591);
-      expect(estimate.suggestedFeeMutez).toEqual(538);
+      expect(estimate.suggestedFeeMutez).toEqual(537);
       expect(estimate.burnFeeMutez).toEqual(147750);
-      expect(estimate.minimalFeeMutez).toEqual(518);
-      expect(estimate.totalCost).toEqual(148268);
-      expect(estimate.usingBaseFeeMutez).toEqual(518);
+      expect(estimate.minimalFeeMutez).toEqual(517);
+      expect(estimate.totalCost).toEqual(148267);
+      expect(estimate.usingBaseFeeMutez).toEqual(517);
       expect(estimate.consumedMilligas).toEqual(676402);
     });
 
     it('Verify .estimate.setDelegate result', async () => {
       const estimate = await LowAmountTez.estimate.setDelegate({
         delegate: knownBaker,
-        source: await LowAmountTez.signer.publicKeyHash(),
+        source: pkh,
       });
       expect(estimate.gasLimit).toEqual(100);
       expect(estimate.storageLimit).toEqual(0);
-      expect(estimate.suggestedFeeMutez).toEqual(184);
+      expect(estimate.suggestedFeeMutez).toEqual(183);
       expect(estimate.burnFeeMutez).toEqual(0);
-      expect(estimate.minimalFeeMutez).toEqual(164);
-      expect(estimate.totalCost).toEqual(164);
-      expect(estimate.usingBaseFeeMutez).toEqual(164);
+      expect(estimate.minimalFeeMutez).toEqual(163);
+      expect(estimate.totalCost).toEqual(163);
+      expect(estimate.usingBaseFeeMutez).toEqual(163);
       expect(estimate.consumedMilligas).toEqual(100000);
     });
 
@@ -97,12 +98,12 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
       const estimate = await LowAmountTez.estimate.transfer(tx);
       expect(estimate.gasLimit).toEqual(3457);
       expect(estimate.storageLimit).toEqual(0);
-      expect(estimate.suggestedFeeMutez).toEqual(597);
+      expect(estimate.suggestedFeeMutez).toEqual(596);
       expect(estimate.burnFeeMutez).toEqual(0);
-      expect(estimate.minimalFeeMutez).toEqual(577);
-      expect(estimate.totalCost).toEqual(577);
-      expect(estimate.usingBaseFeeMutez).toEqual(577);
-      expect(estimate.consumedMilligas).toEqual(3456056);
+      expect(estimate.minimalFeeMutez).toEqual(576);
+      expect(estimate.totalCost).toEqual(576);
+      expect(estimate.usingBaseFeeMutez).toEqual(576);
+      expect(estimate.consumedMilligas).toEqual(3456228);
     });
 
     it('Verify .estimate.transfer for multiple internal transfers to unallocated account', async () => {
@@ -114,12 +115,12 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
       const estimate = await LowAmountTez.estimate.transfer(tx);
       expect(estimate.gasLimit).toEqual(5571);
       expect(estimate.storageLimit).toEqual(534);
-      expect(estimate.suggestedFeeMutez).toEqual(868);
+      expect(estimate.suggestedFeeMutez).toEqual(867);
       expect(estimate.burnFeeMutez).toEqual(133500);
-      expect(estimate.minimalFeeMutez).toEqual(848);
-      expect(estimate.totalCost).toEqual(134348);
-      expect(estimate.usingBaseFeeMutez).toEqual(848);
-      expect(estimate.consumedMilligas).toEqual(5570585);
+      expect(estimate.minimalFeeMutez).toEqual(847);
+      expect(estimate.totalCost).toEqual(134347);
+      expect(estimate.usingBaseFeeMutez).toEqual(847);
+      expect(estimate.consumedMilligas).toEqual(5570757);
     });
 
     it('Verify .estimate.transfer for internal origination', async () => {
@@ -127,25 +128,25 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
       const estimate = await LowAmountTez.estimate.transfer(tx);
       expect(estimate.gasLimit).toEqual(1867);
       expect(estimate.storageLimit).toEqual(337);
-      expect(estimate.suggestedFeeMutez).toEqual(444);
+      expect(estimate.suggestedFeeMutez).toEqual(443);
       expect(estimate.burnFeeMutez).toEqual(84250);
-      expect(estimate.minimalFeeMutez).toEqual(424);
-      expect(estimate.totalCost).toEqual(84674);
-      expect(estimate.usingBaseFeeMutez).toEqual(424);
-      expect(estimate.consumedMilligas).toEqual(1866680);
+      expect(estimate.minimalFeeMutez).toEqual(423);
+      expect(estimate.totalCost).toEqual(84673);
+      expect(estimate.usingBaseFeeMutez).toEqual(423);
+      expect(estimate.consumedMilligas).toEqual(1866852);
     });
 
     it('Verify .estimate.transfer for multiple internal originations', async () => {
       const tx = contract.methodsObject.do(originate2()).toTransferParams();
       const estimate = await LowAmountTez.estimate.transfer(tx);
-      expect(estimate.gasLimit).toEqual(2392);
+      expect(estimate.gasLimit).toEqual(2393);
       expect(estimate.storageLimit).toEqual(654);
-      expect(estimate.suggestedFeeMutez).toEqual(562);
+      expect(estimate.suggestedFeeMutez).toEqual(561);
       expect(estimate.burnFeeMutez).toEqual(163500);
-      expect(estimate.minimalFeeMutez).toEqual(542);
-      expect(estimate.totalCost).toEqual(164042);
-      expect(estimate.usingBaseFeeMutez).toEqual(542);
-      expect(estimate.consumedMilligas).toEqual(2391833);
+      expect(estimate.minimalFeeMutez).toEqual(541);
+      expect(estimate.totalCost).toEqual(164041);
+      expect(estimate.usingBaseFeeMutez).toEqual(541);
+      expect(estimate.consumedMilligas).toEqual(2392005);
       // Do the actual operation
       const op2 = await contract.methodsObject.do(originate2()).send();
       await op2.confirmation();
@@ -165,28 +166,28 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
 
     beforeAll(async () => {
       await setup();
-      LowAmountTez = await createAddress();
+      LowAmountTez = await createAddress(PrefixV2.Secp256k1SecretKey);
       const pkh = await LowAmountTez.signer.publicKeyHash();
-      amt += getRevealFee(await LowAmountTez.signer.publicKeyHash());
+      amt += getRevealFee(pkh);
       const transfer = await Tezos.contract.transfer({ to: pkh, mutez: true, amount: amt });
       await transfer.confirmation();
     });
 
     it('Verify .estimate.transfer to regular address', async () => {
-      let estimate = await LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + getRevealFee(await LowAmountTez.signer.publicKeyHash())) });
+      let estimate = await LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + getRevealFee(pkh)) });
       expect(estimate.gasLimit).toEqual(2101);
       expect(estimate.storageLimit).toEqual(0);
-      expect(estimate.suggestedFeeMutez).toEqual(388);
+      expect(estimate.suggestedFeeMutez).toEqual(387);
       expect(estimate.burnFeeMutez).toEqual(0);
-      expect(estimate.minimalFeeMutez).toEqual(368);
-      expect(estimate.totalCost).toEqual(368);
-      expect(estimate.usingBaseFeeMutez).toEqual(368);
+      expect(estimate.minimalFeeMutez).toEqual(367);
+      expect(estimate.totalCost).toEqual(367);
+      expect(estimate.usingBaseFeeMutez).toEqual(367);
       expect(estimate.consumedMilligas).toEqual(2100040);
     });
 
     it('Estimate transfer to regular address with a fixed fee', async () => {
 
-      const params = { fee: 2000, to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + getRevealFee(await LowAmountTez.signer.publicKeyHash())) };
+      const params = { fee: 2000, to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + getRevealFee(pkh)) };
       await expect(LowAmountTez.estimate.transfer(params)).rejects.toMatchObject({
         id: expect.stringContaining('empty_implicit_contract'),
       });
@@ -202,7 +203,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
 
     it('Estimate transfer to regular address with insufficient balance to pay storage for allocation', async () => {
       await expect(
-        LowAmountTez.estimate.transfer({ to: await (await createAddress()).signer.publicKeyHash(), mutez: true, amount: amt - (1382 + getRevealFee(await LowAmountTez.signer.publicKeyHash())) })
+        LowAmountTez.estimate.transfer({ to: await (await createAddress()).signer.publicKeyHash(), mutez: true, amount: amt - (1382 + getRevealFee(pkh)) })
       ).rejects.toEqual(
         expect.objectContaining({
           errors: expect.arrayContaining([expect.objectContaining({ id: expect.stringContaining('cannot_pay_storage_fee') })]),

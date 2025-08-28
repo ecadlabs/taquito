@@ -123,7 +123,6 @@ export enum ChainIds {
   SEOULNET = 'NetXd56aBs1aeW3',
 }
 
-// A fixed fee reveal operation gasLimit accepted by both simulate and injection endpoint is between 1.2-5 times of actual gas consumption (3.5 fails occasionally with gas exhausted; 4 fails occasionally with fee too low)
 export const getRevealGasLimit = (address: string) =>
   Math.round((getRevealGasLimitInternal(address) * 37) / 10);
 
@@ -154,7 +153,7 @@ export const getRevealFeeInternal = (address: string) => {
     case 'tz3':
       return REVEAL_FEE.TZ3;
     case 'tz4':
-      return REVEAL_FEE.TZ4;
+      return REVEAL_FEE.TZ4 * 1.7;
     default:
       throw new Error(`Cannot estimate reveal fee for ${address}`);
   }

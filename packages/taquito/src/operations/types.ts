@@ -22,6 +22,7 @@ export type ParamsWithKind =
   | withKind<IncreasePaidStorageParams, OpKind.INCREASE_PAID_STORAGE>
   | withKind<TransferTicketParams, OpKind.TRANSFER_TICKET>
   | withKind<UpdateConsensusKeyParams, OpKind.UPDATE_CONSENSUS_KEY>
+  | withKind<UpdateCompanionKeyParams, OpKind.UPDATE_COMPANION_KEY>
   | withKind<SmartRollupAddMessagesParams, OpKind.SMART_ROLLUP_ADD_MESSAGES>
   | withKind<FailingNoopParams, OpKind.FAILING_NOOP>
   | withKind<SmartRollupOriginateParams, OpKind.SMART_ROLLUP_ORIGINATE>
@@ -62,6 +63,7 @@ export type RPCOpWithFee =
   | RPCIncreasePaidStorageOperation
   | RPCTransferTicketOperation
   | RPCUpdateConsensusKeyOperation
+  | RPCUpdateCompanionKeyOperation
   | RPCSmartRollupAddMessagesOperation
   | RPCSmartRollupOriginateOperation
   | RPCSmartRollupOutboxMessageOperation;
@@ -75,16 +77,15 @@ export type RPCOpWithSource =
   | RPCIncreasePaidStorageOperation
   | RPCTransferTicketOperation
   | RPCUpdateConsensusKeyOperation
+  | RPCUpdateCompanionKeyOperation
   | RPCSmartRollupAddMessagesOperation
   | RPCSmartRollupOriginateOperation
   | RPCSmartRollupOutboxMessageOperation;
 
-export const isOpWithGasBuffer = <
-  T extends { kind: OpKind; parameters?: TransactionOperationParameter },
->(
+export const isOpWithGasBuffer = <T extends { kind: OpKind; destination?: string }>(
   op: T
 ): boolean => {
-  if (op.kind === OpKind.TRANSACTION && op.parameters) {
+  if (op.kind === OpKind.TRANSACTION && op.destination?.startsWith('KT1')) {
     return true;
   } else {
     return (
@@ -93,6 +94,7 @@ export const isOpWithGasBuffer = <
         'register_global_constant',
         'transfer_ticket',
         'update_consensus_key',
+        'update_companion_key',
         'smart_rollup_add_messages',
         'smart_rollup_originate',
       ].indexOf(op.kind) !== -1
@@ -113,6 +115,7 @@ export const isOpWithFee = <T extends { kind: OpKind }>(
       'increase_paid_storage',
       'transfer_ticket',
       'update_consensus_key',
+      'update_companion_key',
       'smart_rollup_add_messages',
       'smart_rollup_originate',
       'smart_rollup_execute_outbox_message',
@@ -132,6 +135,7 @@ export const isOpRequireReveal = <T extends { kind: OpKind }>(
       'increase_paid_storage',
       'transfer_ticket',
       'update_consensus_key',
+      'update_companion_key',
       'smart_rollup_add_messages',
       'smart_rollup_originate',
       'smart_rollup_execute_outbox_message',
@@ -247,12 +251,14 @@ export interface RPCRevealOperation {
   source?: string;
   gas_limit: number;
   storage_limit: number;
+  proof?: string;
 }
 
 export interface RevealParams {
   fee?: number;
   gasLimit?: number;
   storageLimit?: number;
+  proof?: string;
 }
 
 /**
@@ -510,6 +516,7 @@ export interface UpdateConsensusKeyParams {
   gasLimit?: number;
   storageLimit?: number;
   pk: string;
+  proof?: string;
 }
 
 export interface RPCUpdateConsensusKeyOperation {
@@ -519,6 +526,26 @@ export interface RPCUpdateConsensusKeyOperation {
   gas_limit: number;
   storage_limit: number;
   pk: string;
+  proof?: string;
+}
+
+export interface UpdateCompanionKeyParams {
+  source?: string;
+  fee?: number;
+  gasLimit?: number;
+  storageLimit?: number;
+  pk: string;
+  proof?: string;
+}
+
+export interface RPCUpdateCompanionKeyOperation {
+  kind: OpKind.UPDATE_COMPANION_KEY;
+  source: string;
+  fee: number;
+  gas_limit: number;
+  storage_limit: number;
+  pk: string;
+  proof?: string;
 }
 
 export interface SmartRollupAddMessagesParams {
@@ -609,6 +636,7 @@ export type RPCOperation =
   | RPCBallotOperation
   | RPCProposalsOperation
   | RPCUpdateConsensusKeyOperation
+  | RPCUpdateCompanionKeyOperation
   | RPCSmartRollupAddMessagesOperation
   | RPCSmartRollupOriginateOperation
   | RPCSmartRollupOutboxMessageOperation

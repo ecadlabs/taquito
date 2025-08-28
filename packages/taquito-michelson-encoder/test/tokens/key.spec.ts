@@ -170,7 +170,7 @@ describe('Key token', () => {
           'BLpk1pNZeF2EzDxN5HekTDfwqdXhJDyiPXGL3eXo3jtXLXfGcccdFTg6QNwyVBsi5ApKQYWWCEqT',
           'p2pk68TMwUNx5PzFKaSrDmc7wdEaTENBFvTYFHJdTej5Uoct3ZBgaaw'
         )
-      ).toEqual(-1);
+      ).toEqual(1);
     });
   });
 

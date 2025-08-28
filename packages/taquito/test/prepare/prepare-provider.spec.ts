@@ -712,6 +712,7 @@ describe('PrepareProvider test', () => {
       });
     });
   });
+
   describe('updateConsensusKey', () => {
     it('should return a prepared udpateConsensusKey operation', async () => {
       mockReadProvider.isAccountRevealed.mockResolvedValue(false);
@@ -749,712 +750,823 @@ describe('PrepareProvider test', () => {
       });
     });
 
-    it('should be able to prepare update_consensus_key operation prepended with reveal op', async () => {
-      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
+    describe('updateConsensusKey', () => {
+      it('should return a prepared udpateConsensusKey operation', async () => {
+        mockReadProvider.isAccountRevealed.mockResolvedValue(false);
 
-      const prepared = await prepareProvider.updateConsensusKey({
-        pk: 'edpkti5K5JbdLpp2dCqiTLoLQqs5wqzeVhfHVnNhsSCuoU8zdHYoY7',
-      });
+        const prepared = await prepareProvider.updateConsensusKey({
+          pk: 'edpkti5K5JbdLpp2dCqiTLoLQqs5wqzeVhfHVnNhsSCuoU8zdHYoY7',
+        });
 
-      expect(prepared).toEqual({
-        opOb: {
-          branch: 'test_block_hash',
-          contents: [
-            {
-              kind: 'update_consensus_key',
-              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              fee: '0',
-              gas_limit: '1040000',
-              storage_limit: '60000',
-              pk: 'edpkti5K5JbdLpp2dCqiTLoLQqs5wqzeVhfHVnNhsSCuoU8zdHYoY7',
-              counter: '1',
-            },
-          ],
-          protocol: 'test_protocol',
-        },
-        counter: 0,
-      });
-    });
-  });
-
-  describe('transferTicket', () => {
-    it('should return a prepared transferTicket operation', async () => {
-      mockReadProvider.isAccountRevealed.mockResolvedValue(false);
-
-      const params: TransferTicketParams = {
-        source: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
-        ticketContents: { string: 'foobar' },
-        ticketTy: { prim: 'string' },
-        ticketTicketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
-        ticketAmount: 2,
-        destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
-        entrypoint: 'default',
-      };
-
-      const prepared = await prepareProvider.transferTicket(params);
-
-      expect(prepared).toEqual({
-        opOb: {
-          branch: 'test_block_hash',
-          contents: [
-            {
-              kind: 'reveal',
-              fee: '334',
-              public_key: 'test_pub_key',
-              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              gas_limit: '633',
-              storage_limit: '0',
-              counter: '1',
-            },
-            {
-              kind: 'transfer_ticket',
-              fee: '0',
-              gas_limit: '1040000',
-              storage_limit: '60000',
-              source: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
-              ticket_contents: {
-                string: 'foobar',
+        expect(prepared).toEqual({
+          opOb: {
+            branch: 'test_block_hash',
+            contents: [
+              {
+                kind: 'reveal',
+                fee: '334',
+                public_key: 'test_pub_key',
+                source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+                gas_limit: '633',
+                storage_limit: '0',
+                counter: '1',
               },
-              ticket_ty: {
-                prim: 'string',
+              {
+                kind: 'update_consensus_key',
+                source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+                fee: '0',
+                gas_limit: '1040000',
+                storage_limit: '60000',
+                pk: 'edpkti5K5JbdLpp2dCqiTLoLQqs5wqzeVhfHVnNhsSCuoU8zdHYoY7',
+                counter: '2',
               },
-              ticket_ticketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
-              ticket_amount: '2',
-              destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
-              entrypoint: 'default',
-              counter: '2',
-            },
-          ],
-          protocol: 'test_protocol',
-        },
-        counter: 0,
+            ],
+            protocol: 'test_protocol',
+          },
+          counter: 0,
+        });
       });
-    });
 
-    it('should be able to prepare transfer_ticket operation prepended with reveal op', async () => {
-      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
+      it('should be able to prepare update_consensus_key operation prepended with reveal op', async () => {
+        mockReadProvider.isAccountRevealed.mockResolvedValue(true);
 
-      const params: TransferTicketParams = {
-        source: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
-        ticketContents: { string: 'foobar' },
-        ticketTy: { prim: 'string' },
-        ticketTicketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
-        ticketAmount: 2,
-        destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
-        entrypoint: 'default',
-      };
-      const prepared = await prepareProvider.transferTicket(params);
+        const prepared = await prepareProvider.updateConsensusKey({
+          pk: 'edpkti5K5JbdLpp2dCqiTLoLQqs5wqzeVhfHVnNhsSCuoU8zdHYoY7',
+        });
 
-      expect(prepared).toEqual({
-        opOb: {
-          branch: 'test_block_hash',
-          contents: [
-            {
-              kind: 'transfer_ticket',
-              fee: '0',
-              gas_limit: '1040000',
-              storage_limit: '60000',
-              source: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
-              ticket_contents: {
-                string: 'foobar',
+        expect(prepared).toEqual({
+          opOb: {
+            branch: 'test_block_hash',
+            contents: [
+              {
+                kind: 'update_consensus_key',
+                source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+                fee: '0',
+                gas_limit: '1040000',
+                storage_limit: '60000',
+                pk: 'edpkti5K5JbdLpp2dCqiTLoLQqs5wqzeVhfHVnNhsSCuoU8zdHYoY7',
+                counter: '1',
               },
-              ticket_ty: {
-                prim: 'string',
+            ],
+            protocol: 'test_protocol',
+          },
+          counter: 0,
+        });
+      });
+    });
+
+    describe('updateCompanionKey', () => {
+      it('should return a prepared udpateCompanionKey operation', async () => {
+        mockReadProvider.isAccountRevealed.mockResolvedValue(false);
+
+        const prepared = await prepareProvider.updateCompanionKey({
+          pk: 'BLpk1wMU34nS7N96D2owyejLxQtwZwLARLg6tdTFMP5N8fz6yCiLogfFXkYo9ZHnZ95Kba3D3cvt',
+          proof:
+            'BLsig9cW2ffM82s8cZWNDQTmecxHPHmJcTUh5DF2dVP7GV7oUmmptd4JpxBvSyE1VDeLtGyV68KaTuaEM1qiSUELMqkdwCLJFDQYGL6ZZLZDEUAfyu3Vu3ivs66jhV8ANwt3tKg6qABoqx',
+        });
+
+        expect(prepared).toEqual({
+          opOb: {
+            branch: 'test_block_hash',
+            contents: [
+              {
+                kind: 'reveal',
+                fee: '334',
+                public_key: 'test_pub_key',
+                source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+                gas_limit: '633',
+                storage_limit: '0',
+                counter: '1',
               },
-              ticket_ticketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
-              ticket_amount: '2',
-              destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
-              entrypoint: 'default',
-              counter: '1',
-            },
-          ],
-          protocol: 'test_protocol',
-        },
-        counter: 0,
-      });
-    });
-
-    it('should be able to prepare transfer_ticket op with estimates overriden', async () => {
-      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
-
-      const params: TransferTicketParams = {
-        source: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
-        fee: 804,
-        gasLimit: 5009,
-        storageLimit: 130,
-        ticketContents: { string: 'foobar' },
-        ticketTy: { prim: 'string' },
-        ticketTicketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
-        ticketAmount: 2,
-        destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
-        entrypoint: 'default',
-      };
-      const prepared = await prepareProvider.transferTicket(params);
-
-      expect(prepared).toEqual({
-        opOb: {
-          branch: 'test_block_hash',
-          contents: [
-            {
-              kind: 'transfer_ticket',
-              fee: '804',
-              gas_limit: '5009',
-              storage_limit: '130',
-              source: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
-              ticket_contents: {
-                string: 'foobar',
+              {
+                kind: 'update_companion_key',
+                source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+                fee: '0',
+                gas_limit: '1040000',
+                storage_limit: '60000',
+                pk: 'BLpk1wMU34nS7N96D2owyejLxQtwZwLARLg6tdTFMP5N8fz6yCiLogfFXkYo9ZHnZ95Kba3D3cvt',
+                proof:
+                  'BLsig9cW2ffM82s8cZWNDQTmecxHPHmJcTUh5DF2dVP7GV7oUmmptd4JpxBvSyE1VDeLtGyV68KaTuaEM1qiSUELMqkdwCLJFDQYGL6ZZLZDEUAfyu3Vu3ivs66jhV8ANwt3tKg6qABoqx',
+                counter: '2',
               },
-              ticket_ty: {
-                prim: 'string',
+            ],
+            protocol: 'test_protocol',
+          },
+          counter: 0,
+        });
+      });
+
+      it('should be able to prepare update_companion_key operation prepended with reveal op', async () => {
+        mockReadProvider.isAccountRevealed.mockResolvedValue(true);
+
+        const prepared = await prepareProvider.updateCompanionKey({
+          pk: 'BLpk1wMU34nS7N96D2owyejLxQtwZwLARLg6tdTFMP5N8fz6yCiLogfFXkYo9ZHnZ95Kba3D3cvt',
+          proof:
+            'BLsig9cW2ffM82s8cZWNDQTmecxHPHmJcTUh5DF2dVP7GV7oUmmptd4JpxBvSyE1VDeLtGyV68KaTuaEM1qiSUELMqkdwCLJFDQYGL6ZZLZDEUAfyu3Vu3ivs66jhV8ANwt3tKg6qABoqx',
+        });
+
+        expect(prepared).toEqual({
+          opOb: {
+            branch: 'test_block_hash',
+            contents: [
+              {
+                kind: 'update_companion_key',
+                source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+                fee: '0',
+                gas_limit: '1040000',
+                storage_limit: '60000',
+                pk: 'BLpk1wMU34nS7N96D2owyejLxQtwZwLARLg6tdTFMP5N8fz6yCiLogfFXkYo9ZHnZ95Kba3D3cvt',
+                proof:
+                  'BLsig9cW2ffM82s8cZWNDQTmecxHPHmJcTUh5DF2dVP7GV7oUmmptd4JpxBvSyE1VDeLtGyV68KaTuaEM1qiSUELMqkdwCLJFDQYGL6ZZLZDEUAfyu3Vu3ivs66jhV8ANwt3tKg6qABoqx',
+                counter: '1',
               },
-              ticket_ticketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
-              ticket_amount: '2',
-              destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
-              entrypoint: 'default',
-              counter: '1',
-            },
-          ],
-          protocol: 'test_protocol',
-        },
-        counter: 0,
-      });
-    });
-  });
-
-  describe('increasePaidStorage', () => {
-    it('should return a prepared increasePaidStorage operation with reveal op', async () => {
-      mockReadProvider.isAccountRevealed.mockResolvedValue(false);
-
-      const prepared = await prepareProvider.increasePaidStorage({
-        amount: 1,
-        destination: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
-      });
-
-      expect(prepared).toEqual({
-        opOb: {
-          branch: 'test_block_hash',
-          contents: [
-            {
-              kind: 'reveal',
-              fee: '334',
-              public_key: 'test_pub_key',
-              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              gas_limit: '633',
-              storage_limit: '0',
-              counter: '1',
-            },
-            {
-              kind: 'increase_paid_storage',
-              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              fee: '0',
-              gas_limit: '1040000',
-              storage_limit: '60000',
-              amount: '1',
-              destination: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
-              counter: '2',
-            },
-          ],
-          protocol: 'test_protocol',
-        },
-        counter: 0,
+            ],
+            protocol: 'test_protocol',
+          },
+          counter: 0,
+        });
       });
     });
 
-    it('should be able to prepare increase_paid_storage op without reveal op when estimate is undefined', async () => {
-      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
+    describe('transferTicket', () => {
+      it('should return a prepared transferTicket operation', async () => {
+        mockReadProvider.isAccountRevealed.mockResolvedValue(false);
 
-      const prepared = await prepareProvider.increasePaidStorage({
-        amount: 1,
-        destination: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
+        const params: TransferTicketParams = {
+          source: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
+          ticketContents: { string: 'foobar' },
+          ticketTy: { prim: 'string' },
+          ticketTicketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
+          ticketAmount: 2,
+          destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
+          entrypoint: 'default',
+        };
+
+        const prepared = await prepareProvider.transferTicket(params);
+
+        expect(prepared).toEqual({
+          opOb: {
+            branch: 'test_block_hash',
+            contents: [
+              {
+                kind: 'reveal',
+                fee: '334',
+                public_key: 'test_pub_key',
+                source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+                gas_limit: '633',
+                storage_limit: '0',
+                counter: '1',
+              },
+              {
+                kind: 'transfer_ticket',
+                fee: '0',
+                gas_limit: '1040000',
+                storage_limit: '60000',
+                source: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
+                ticket_contents: {
+                  string: 'foobar',
+                },
+                ticket_ty: {
+                  prim: 'string',
+                },
+                ticket_ticketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
+                ticket_amount: '2',
+                destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
+                entrypoint: 'default',
+                counter: '2',
+              },
+            ],
+            protocol: 'test_protocol',
+          },
+          counter: 0,
+        });
       });
 
-      expect(prepared).toEqual({
-        opOb: {
-          branch: 'test_block_hash',
-          contents: [
-            {
-              kind: 'increase_paid_storage',
-              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              fee: '0',
-              gas_limit: '1040000',
-              storage_limit: '60000',
-              amount: '1',
-              destination: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
-              counter: '1',
-            },
-          ],
-          protocol: 'test_protocol',
-        },
-        counter: 0,
-      });
-    });
-  });
+      it('should be able to prepare transfer_ticket operation prepended with reveal op', async () => {
+        mockReadProvider.isAccountRevealed.mockResolvedValue(true);
 
-  describe('ballot', () => {
-    it('should return a prepared ballot operation', async () => {
-      const prepared = await prepareProvider.ballot({
-        proposal: 'PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg',
-        ballot: 'yay',
-      });
+        const params: TransferTicketParams = {
+          source: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
+          ticketContents: { string: 'foobar' },
+          ticketTy: { prim: 'string' },
+          ticketTicketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
+          ticketAmount: 2,
+          destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
+          entrypoint: 'default',
+        };
+        const prepared = await prepareProvider.transferTicket(params);
 
-      expect(prepared).toEqual({
-        opOb: {
-          branch: 'test_block_hash',
-          contents: [
-            {
-              ballot: 'yay',
-              kind: 'ballot',
-              period: 103,
-              proposal: 'PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg',
-            },
-          ],
-          protocol: 'test_protocol',
-        },
-        counter: 0,
-      });
-    });
-
-    it('should be able to prepare ballot operation with the source overridden', async () => {
-      const prepared = await prepareProvider.ballot({
-        proposal: 'PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg',
-        ballot: 'yay',
-        source: 'test_override_source',
+        expect(prepared).toEqual({
+          opOb: {
+            branch: 'test_block_hash',
+            contents: [
+              {
+                kind: 'transfer_ticket',
+                fee: '0',
+                gas_limit: '1040000',
+                storage_limit: '60000',
+                source: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
+                ticket_contents: {
+                  string: 'foobar',
+                },
+                ticket_ty: {
+                  prim: 'string',
+                },
+                ticket_ticketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
+                ticket_amount: '2',
+                destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
+                entrypoint: 'default',
+                counter: '1',
+              },
+            ],
+            protocol: 'test_protocol',
+          },
+          counter: 0,
+        });
       });
 
-      expect(prepared).toEqual({
-        opOb: {
-          branch: 'test_block_hash',
-          contents: [
-            {
-              kind: 'ballot',
-              period: 103,
-              proposal: 'PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg',
-              ballot: 'yay',
-              source: 'test_override_source',
-            },
-          ],
-          protocol: 'test_protocol',
-        },
-        counter: 0,
-      });
-    });
-  });
+      it('should be able to prepare transfer_ticket op with estimates overriden', async () => {
+        mockReadProvider.isAccountRevealed.mockResolvedValue(true);
 
-  describe('proposals', () => {
-    it('should return a prepared proposals operation', async () => {
-      const prepared = await prepareProvider.proposals({
-        proposals: ['PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg'],
-      });
+        const params: TransferTicketParams = {
+          source: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
+          fee: 804,
+          gasLimit: 5009,
+          storageLimit: 130,
+          ticketContents: { string: 'foobar' },
+          ticketTy: { prim: 'string' },
+          ticketTicketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
+          ticketAmount: 2,
+          destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
+          entrypoint: 'default',
+        };
+        const prepared = await prepareProvider.transferTicket(params);
 
-      expect(prepared).toEqual({
-        opOb: {
-          branch: 'test_block_hash',
-          contents: [
-            {
-              kind: 'proposals',
-              period: 103,
-              proposals: ['PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg'],
-            },
-          ],
-          protocol: 'test_protocol',
-        },
-        counter: 0,
-      });
-    });
-
-    it('should be able to prepare proposals operation with the source overridden', async () => {
-      const prepared = await prepareProvider.proposals({
-        proposals: ['PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg'],
-        source: 'test_override_source',
-      });
-
-      expect(prepared).toEqual({
-        opOb: {
-          branch: 'test_block_hash',
-          contents: [
-            {
-              kind: 'proposals',
-              period: 103,
-              proposals: ['PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg'],
-              source: 'test_override_source',
-            },
-          ],
-          protocol: 'test_protocol',
-        },
-        counter: 0,
-      });
-    });
-  });
-
-  describe('smartRollupAddMessages', () => {
-    it('should be able to prepare a smartRollupAddMessages operation', async () => {
-      mockReadProvider.isAccountRevealed.mockResolvedValue(false);
-
-      const prepared = await prepareProvider.smartRollupAddMessages({
-        message: [
-          '0000000062010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74',
-        ],
-      });
-
-      expect(prepared).toEqual({
-        opOb: {
-          branch: 'test_block_hash',
-          contents: [
-            {
-              kind: 'reveal',
-              fee: '334',
-              public_key: 'test_pub_key',
-              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              gas_limit: '633',
-              storage_limit: '0',
-              counter: '1',
-            },
-            {
-              kind: 'smart_rollup_add_messages',
-              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              fee: '0',
-              gas_limit: '1040000',
-              storage_limit: '60000',
-              message: [
-                '0000000062010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74',
-              ],
-              counter: '2',
-            },
-          ],
-          protocol: 'test_protocol',
-        },
-        counter: 0,
+        expect(prepared).toEqual({
+          opOb: {
+            branch: 'test_block_hash',
+            contents: [
+              {
+                kind: 'transfer_ticket',
+                fee: '804',
+                gas_limit: '5009',
+                storage_limit: '130',
+                source: 'tz1iedjFYksExq8snZK9MNo4AvXHBdXfTsGX',
+                ticket_contents: {
+                  string: 'foobar',
+                },
+                ticket_ty: {
+                  prim: 'string',
+                },
+                ticket_ticketer: 'KT1AL8we1Bfajn2M7i3gQM5PJEuyD36sXaYb',
+                ticket_amount: '2',
+                destination: 'KT1SUT2TBFPCknkBxLqM5eJZKoYVY6mB26Fg',
+                entrypoint: 'default',
+                counter: '1',
+              },
+            ],
+            protocol: 'test_protocol',
+          },
+          counter: 0,
+        });
       });
     });
 
-    it('should be able to prepare smartRollupAddMessages op without reveal when estimate is undefined', async () => {
-      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
+    describe('increasePaidStorage', () => {
+      it('should return a prepared increasePaidStorage operation with reveal op', async () => {
+        mockReadProvider.isAccountRevealed.mockResolvedValue(false);
 
-      const prepared = await prepareProvider.smartRollupAddMessages({
-        message: [
-          '0000000062010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74',
-        ],
+        const prepared = await prepareProvider.increasePaidStorage({
+          amount: 1,
+          destination: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
+        });
+
+        expect(prepared).toEqual({
+          opOb: {
+            branch: 'test_block_hash',
+            contents: [
+              {
+                kind: 'reveal',
+                fee: '334',
+                public_key: 'test_pub_key',
+                source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+                gas_limit: '633',
+                storage_limit: '0',
+                counter: '1',
+              },
+              {
+                kind: 'increase_paid_storage',
+                source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+                fee: '0',
+                gas_limit: '1040000',
+                storage_limit: '60000',
+                amount: '1',
+                destination: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
+                counter: '2',
+              },
+            ],
+            protocol: 'test_protocol',
+          },
+          counter: 0,
+        });
       });
 
-      expect(prepared).toEqual({
-        opOb: {
-          branch: 'test_block_hash',
-          contents: [
-            {
-              kind: 'smart_rollup_add_messages',
-              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              fee: '0',
-              gas_limit: '1040000',
-              storage_limit: '60000',
-              message: [
-                '0000000062010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74',
-              ],
-              counter: '1',
-            },
-          ],
-          protocol: 'test_protocol',
-        },
-        counter: 0,
-      });
-    });
-  });
+      it('should be able to prepare increase_paid_storage op without reveal op when estimate is undefined', async () => {
+        mockReadProvider.isAccountRevealed.mockResolvedValue(true);
 
-  describe('batch', () => {
-    it('should be able to prepare a batch operation', async () => {
-      mockReadProvider.isAccountRevealed.mockResolvedValue(false);
+        const prepared = await prepareProvider.increasePaidStorage({
+          amount: 1,
+          destination: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
+        });
 
-      const prepared = await prepareProvider.batch([
-        {
-          kind: OpKind.TRANSACTION,
-          to: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
-          amount: 2,
-        },
-        {
-          kind: OpKind.TRANSACTION,
-          to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-          amount: 2,
-        },
-      ]);
-
-      expect(prepared).toEqual({
-        opOb: {
-          branch: 'test_block_hash',
-          contents: [
-            {
-              kind: 'reveal',
-              fee: '334',
-              public_key: 'test_pub_key',
-              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              gas_limit: '633',
-              storage_limit: '0',
-              counter: '1',
-            },
-            {
-              kind: 'transaction',
-              fee: '0',
-              gas_limit: '1040000',
-              storage_limit: '60000',
-              amount: '2000000',
-              destination: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
-              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              counter: '2',
-              parameters: undefined,
-            },
-            {
-              kind: 'transaction',
-              fee: '0',
-              gas_limit: '1040000',
-              storage_limit: '60000',
-              amount: '2000000',
-              destination: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              counter: '3',
-              parameters: undefined,
-            },
-          ],
-          protocol: 'test_protocol',
-        },
-        counter: 0,
+        expect(prepared).toEqual({
+          opOb: {
+            branch: 'test_block_hash',
+            contents: [
+              {
+                kind: 'increase_paid_storage',
+                source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+                fee: '0',
+                gas_limit: '1040000',
+                storage_limit: '60000',
+                amount: '1',
+                destination: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
+                counter: '1',
+              },
+            ],
+            protocol: 'test_protocol',
+          },
+          counter: 0,
+        });
       });
     });
 
-    it('should be able to prepare a batch operation', async () => {
-      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
+    describe('ballot', () => {
+      it('should return a prepared ballot operation', async () => {
+        const prepared = await prepareProvider.ballot({
+          proposal: 'PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg',
+          ballot: 'yay',
+        });
 
-      const prepared = await prepareProvider.batch([
-        {
-          kind: OpKind.TRANSACTION,
-          to: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
-          amount: 2,
-        },
-        {
-          kind: OpKind.TRANSACTION,
-          to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-          amount: 2,
-        },
-      ]);
+        expect(prepared).toEqual({
+          opOb: {
+            branch: 'test_block_hash',
+            contents: [
+              {
+                ballot: 'yay',
+                kind: 'ballot',
+                period: 103,
+                proposal: 'PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg',
+              },
+            ],
+            protocol: 'test_protocol',
+          },
+          counter: 0,
+        });
+      });
 
-      expect(prepared).toEqual({
-        opOb: {
-          branch: 'test_block_hash',
-          contents: [
-            {
-              kind: 'transaction',
-              fee: '0',
-              gas_limit: '1040000',
-              storage_limit: '60000',
-              amount: '2000000',
-              destination: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
-              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              counter: '1',
-            },
-            {
-              kind: 'transaction',
-              fee: '0',
-              gas_limit: '1040000',
-              storage_limit: '60000',
-              amount: '2000000',
-              destination: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              counter: '2',
-            },
-          ],
-          protocol: 'test_protocol',
-        },
-        counter: 0,
+      it('should be able to prepare ballot operation with the source overridden', async () => {
+        const prepared = await prepareProvider.ballot({
+          proposal: 'PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg',
+          ballot: 'yay',
+          source: 'test_override_source',
+        });
+
+        expect(prepared).toEqual({
+          opOb: {
+            branch: 'test_block_hash',
+            contents: [
+              {
+                kind: 'ballot',
+                period: 103,
+                proposal: 'PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg',
+                ballot: 'yay',
+                source: 'test_override_source',
+              },
+            ],
+            protocol: 'test_protocol',
+          },
+          counter: 0,
+        });
       });
     });
 
-    it('toPreapply should forge, sign forged bytes and return the PreapplyParams object', async () => {
-      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
-      mockSigner.sign.mockResolvedValue({
-        sig: '',
-        bytes: '',
-        prefixSig:
-          'spsig18HJsGY8pVAeHNHE7hURPsFfkGGBuH7cVifwabCAby2iN5R5ckNUqWfPBr8KxwUMJfrug1DZS1fjGzyemWDgukbAeRpwUe',
-        sbytes: '',
+    describe('proposals', () => {
+      it('should return a prepared proposals operation', async () => {
+        const prepared = await prepareProvider.proposals({
+          proposals: ['PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg'],
+        });
+
+        expect(prepared).toEqual({
+          opOb: {
+            branch: 'test_block_hash',
+            contents: [
+              {
+                kind: 'proposals',
+                period: 103,
+                proposals: ['PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg'],
+              },
+            ],
+            protocol: 'test_protocol',
+          },
+          counter: 0,
+        });
       });
 
-      const { contents, branch, protocol } = preparedTransactionMock.opOb;
+      it('should be able to prepare proposals operation with the source overridden', async () => {
+        const prepared = await prepareProvider.proposals({
+          proposals: ['PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg'],
+          source: 'test_override_source',
+        });
 
-      const result = await prepareProvider.toPreapply(preparedTransactionMock);
-      expect(result).toEqual([
-        {
+        expect(prepared).toEqual({
+          opOb: {
+            branch: 'test_block_hash',
+            contents: [
+              {
+                kind: 'proposals',
+                period: 103,
+                proposals: ['PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg'],
+                source: 'test_override_source',
+              },
+            ],
+            protocol: 'test_protocol',
+          },
+          counter: 0,
+        });
+      });
+    });
+
+    describe('smartRollupAddMessages', () => {
+      it('should be able to prepare a smartRollupAddMessages operation', async () => {
+        mockReadProvider.isAccountRevealed.mockResolvedValue(false);
+
+        const prepared = await prepareProvider.smartRollupAddMessages({
+          message: [
+            '0000000062010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74',
+          ],
+        });
+
+        expect(prepared).toEqual({
+          opOb: {
+            branch: 'test_block_hash',
+            contents: [
+              {
+                kind: 'reveal',
+                fee: '334',
+                public_key: 'test_pub_key',
+                source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+                gas_limit: '633',
+                storage_limit: '0',
+                counter: '1',
+              },
+              {
+                kind: 'smart_rollup_add_messages',
+                source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+                fee: '0',
+                gas_limit: '1040000',
+                storage_limit: '60000',
+                message: [
+                  '0000000062010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74',
+                ],
+                counter: '2',
+              },
+            ],
+            protocol: 'test_protocol',
+          },
+          counter: 0,
+        });
+      });
+
+      it('should be able to prepare smartRollupAddMessages op without reveal when estimate is undefined', async () => {
+        mockReadProvider.isAccountRevealed.mockResolvedValue(true);
+
+        const prepared = await prepareProvider.smartRollupAddMessages({
+          message: [
+            '0000000062010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74',
+          ],
+        });
+
+        expect(prepared).toEqual({
+          opOb: {
+            branch: 'test_block_hash',
+            contents: [
+              {
+                kind: 'smart_rollup_add_messages',
+                source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+                fee: '0',
+                gas_limit: '1040000',
+                storage_limit: '60000',
+                message: [
+                  '0000000062010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74',
+                ],
+                counter: '1',
+              },
+            ],
+            protocol: 'test_protocol',
+          },
+          counter: 0,
+        });
+      });
+    });
+
+    describe('batch', () => {
+      it('should be able to prepare a batch operation', async () => {
+        mockReadProvider.isAccountRevealed.mockResolvedValue(false);
+
+        const prepared = await prepareProvider.batch([
+          {
+            kind: OpKind.TRANSACTION,
+            to: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
+            amount: 2,
+          },
+          {
+            kind: OpKind.TRANSACTION,
+            to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+            amount: 2,
+          },
+        ]);
+
+        expect(prepared).toEqual({
+          opOb: {
+            branch: 'test_block_hash',
+            contents: [
+              {
+                kind: 'reveal',
+                fee: '334',
+                public_key: 'test_pub_key',
+                source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+                gas_limit: '633',
+                storage_limit: '0',
+                counter: '1',
+              },
+              {
+                kind: 'transaction',
+                fee: '0',
+                gas_limit: '1040000',
+                storage_limit: '60000',
+                amount: '2000000',
+                destination: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
+                source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+                counter: '2',
+                parameters: undefined,
+              },
+              {
+                kind: 'transaction',
+                fee: '0',
+                gas_limit: '1040000',
+                storage_limit: '60000',
+                amount: '2000000',
+                destination: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+                source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+                counter: '3',
+                parameters: undefined,
+              },
+            ],
+            protocol: 'test_protocol',
+          },
+          counter: 0,
+        });
+      });
+
+      it('should be able to prepare a batch operation', async () => {
+        mockReadProvider.isAccountRevealed.mockResolvedValue(true);
+
+        const prepared = await prepareProvider.batch([
+          {
+            kind: OpKind.TRANSACTION,
+            to: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
+            amount: 2,
+          },
+          {
+            kind: OpKind.TRANSACTION,
+            to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+            amount: 2,
+          },
+        ]);
+
+        expect(prepared).toEqual({
+          opOb: {
+            branch: 'test_block_hash',
+            contents: [
+              {
+                kind: 'transaction',
+                fee: '0',
+                gas_limit: '1040000',
+                storage_limit: '60000',
+                amount: '2000000',
+                destination: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
+                source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+                counter: '1',
+              },
+              {
+                kind: 'transaction',
+                fee: '0',
+                gas_limit: '1040000',
+                storage_limit: '60000',
+                amount: '2000000',
+                destination: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+                source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+                counter: '2',
+              },
+            ],
+            protocol: 'test_protocol',
+          },
+          counter: 0,
+        });
+      });
+
+      it('toPreapply should forge, sign forged bytes and return the PreapplyParams object', async () => {
+        mockReadProvider.isAccountRevealed.mockResolvedValue(true);
+        mockSigner.sign.mockResolvedValue({
+          sig: '',
+          bytes: '',
+          prefixSig:
+            'spsig18HJsGY8pVAeHNHE7hURPsFfkGGBuH7cVifwabCAby2iN5R5ckNUqWfPBr8KxwUMJfrug1DZS1fjGzyemWDgukbAeRpwUe',
+          sbytes: '',
+        });
+
+        const { contents, branch, protocol } = preparedTransactionMock.opOb;
+
+        const result = await prepareProvider.toPreapply(preparedTransactionMock);
+        expect(result).toEqual([
+          {
+            contents,
+            branch,
+            protocol,
+            signature:
+              'spsig18HJsGY8pVAeHNHE7hURPsFfkGGBuH7cVifwabCAby2iN5R5ckNUqWfPBr8KxwUMJfrug1DZS1fjGzyemWDgukbAeRpwUe',
+          },
+        ]);
+      });
+
+      it('toForge should return the ForgeParams that can be forged', async () => {
+        mockRpcClient.forgeOperations.mockResolvedValue('1234');
+        const { contents, branch } = preparedTransactionMock.opOb;
+
+        const result = prepareProvider.toForge(preparedTransactionMock as PreparedOperation);
+        expect(result).toEqual({
           contents,
           branch,
-          protocol,
-          signature:
-            'spsig18HJsGY8pVAeHNHE7hURPsFfkGGBuH7cVifwabCAby2iN5R5ckNUqWfPBr8KxwUMJfrug1DZS1fjGzyemWDgukbAeRpwUe',
-        },
-      ]);
+        });
+        const forged = await prepareProvider.rpc.forgeOperations(result);
+        expect(forged).toEqual('1234');
+      });
     });
 
-    it('toForge should return the ForgeParams that can be forged', async () => {
-      mockRpcClient.forgeOperations.mockResolvedValue('1234');
-      const { contents, branch } = preparedTransactionMock.opOb;
+    describe('smartRollupOriginate', () => {
+      it('Should prepare smartRollupOriginate without reveal', async () => {
+        mockReadProvider.isAccountRevealed.mockResolvedValue(true);
 
-      const result = prepareProvider.toForge(preparedTransactionMock as PreparedOperation);
-      expect(result).toEqual({
-        contents,
-        branch,
-      });
-      const forged = await prepareProvider.rpc.forgeOperations(result);
-      expect(forged).toEqual('1234');
-    });
-  });
-
-  describe('smartRollupOriginate', () => {
-    it('Should prepare smartRollupOriginate without reveal', async () => {
-      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
-
-      const prepared = await prepareProvider.smartRollupOriginate({
-        pvmKind: PvmKind.WASM2,
-        kernel: '123456789',
-        parametersType: {
-          prim: 'bytes',
-        },
-      });
-      expect(prepared).toEqual({
-        opOb: {
-          branch: 'test_block_hash',
-          contents: [
-            {
-              kind: 'smart_rollup_originate',
-              pvm_kind: 'wasm_2_0_0',
-              kernel: '123456789',
-              parameters_ty: {
-                prim: 'bytes',
+        const prepared = await prepareProvider.smartRollupOriginate({
+          pvmKind: PvmKind.WASM2,
+          kernel: '123456789',
+          parametersType: {
+            prim: 'bytes',
+          },
+        });
+        expect(prepared).toEqual({
+          opOb: {
+            branch: 'test_block_hash',
+            contents: [
+              {
+                kind: 'smart_rollup_originate',
+                pvm_kind: 'wasm_2_0_0',
+                kernel: '123456789',
+                parameters_ty: {
+                  prim: 'bytes',
+                },
+                fee: '0',
+                gas_limit: '1040000',
+                storage_limit: '60000',
+                counter: '1',
+                source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               },
-              fee: '0',
-              gas_limit: '1040000',
-              storage_limit: '60000',
-              counter: '1',
-              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-            },
-          ],
-          protocol: 'test_protocol',
-        },
-        counter: 0,
+            ],
+            protocol: 'test_protocol',
+          },
+          counter: 0,
+        });
       });
-    });
 
-    it('Should prepare smartRollupOriginate with reveal', async () => {
-      mockReadProvider.isAccountRevealed.mockResolvedValue(false);
+      it('Should prepare smartRollupOriginate with reveal', async () => {
+        mockReadProvider.isAccountRevealed.mockResolvedValue(false);
 
-      const prepared = await prepareProvider.smartRollupOriginate({
-        pvmKind: PvmKind.WASM2,
-        kernel: '123456789',
-        parametersType: {
-          prim: 'bytes',
-        },
-      });
-      expect(prepared).toEqual({
-        opOb: {
-          branch: 'test_block_hash',
-          contents: [
-            {
-              kind: 'reveal',
-              fee: '334',
-              public_key: 'test_pub_key',
-              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              gas_limit: '633',
-              storage_limit: '0',
-              counter: '1',
-            },
-            {
-              kind: 'smart_rollup_originate',
-              pvm_kind: 'wasm_2_0_0',
-              kernel: '123456789',
-              parameters_ty: {
-                prim: 'bytes',
+        const prepared = await prepareProvider.smartRollupOriginate({
+          pvmKind: PvmKind.WASM2,
+          kernel: '123456789',
+          parametersType: {
+            prim: 'bytes',
+          },
+        });
+        expect(prepared).toEqual({
+          opOb: {
+            branch: 'test_block_hash',
+            contents: [
+              {
+                kind: 'reveal',
+                fee: '334',
+                public_key: 'test_pub_key',
+                source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+                gas_limit: '633',
+                storage_limit: '0',
+                counter: '1',
               },
-              fee: '0',
-              gas_limit: '1040000',
-              storage_limit: '60000',
-              counter: '2',
-              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-            },
-          ],
-          protocol: 'test_protocol',
-        },
-        counter: 0,
-      });
-    });
-  });
-
-  describe('smartRollupExecuteOutboxMessage', () => {
-    it('should be able to prepare smartRollupExecuteOutboxMessage op without reveal', async () => {
-      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
-
-      const prepared = await prepareProvider.smartRollupExecuteOutboxMessage({
-        rollup: 'sr1J4MBaQqTGNwUqfcUusy3xUmH6HbMK7kYy',
-        cementedCommitment: 'src13aUmJ5fEVJJM1qH1n9spuppXVAWc8wmHpTaC81pz5rrZN5e628',
-        outputProof:
-          '030002268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d95268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d950005820764757261626c65d07eb5216be3fcfd8317136e559c80d1a5eeb8f7b684c2101e92efb2b1b9c5324603746167c00800000004536f6d650003c004a99c0224241978be1e088cf42eaca4bc53a6266842bcbf0ecad4400abeb2e5820576616c7565810370766d8107627566666572738205696e707574820468656164c00100066c656e677468c00100066f75747075740004820132810a6c6173745f6c6576656cc0040000087a0133810f76616c69646974795f706572696f64c00400013b0082013181086f7574626f7865730028001700090006820432313337820468656164c00100066c656e677468c0010004323133380003810468656164c001008208636f6e74656e7473810130c03a000000360000000031010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74066c656e677468c00101c0c619e3af574a846a44f61eb98ae7a0007d1e76039f6729e3e113c2f993dad600c0b7b6d5ebea80e0e4b148815c768de7570b7a5ad617a2bf3a3f989df81be9a224c055b19953c4aa26132da57ef8205c8ab61b518fb6e4c87c5853298042d17c98bbc08bac9f033f9d823c04b4de152892edc0767d0634c51c5d311f46a127f730f6950134810d6d6573736163355f6c696d6974c002a401047761736dd04822a3ddd2900dcb30a958d10818ea3d90407a79f88eab967063bac2452e99c7268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d950000085a000000000031010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74',
-      });
-
-      expect(prepared).toEqual({
-        opOb: {
-          branch: 'test_block_hash',
-          contents: [
-            {
-              kind: 'smart_rollup_execute_outbox_message',
-              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              fee: '0',
-              gas_limit: '1040000',
-              storage_limit: '60000',
-              rollup: 'sr1J4MBaQqTGNwUqfcUusy3xUmH6HbMK7kYy',
-              cemented_commitment: 'src13aUmJ5fEVJJM1qH1n9spuppXVAWc8wmHpTaC81pz5rrZN5e628',
-              output_proof:
-                '030002268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d95268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d950005820764757261626c65d07eb5216be3fcfd8317136e559c80d1a5eeb8f7b684c2101e92efb2b1b9c5324603746167c00800000004536f6d650003c004a99c0224241978be1e088cf42eaca4bc53a6266842bcbf0ecad4400abeb2e5820576616c7565810370766d8107627566666572738205696e707574820468656164c00100066c656e677468c00100066f75747075740004820132810a6c6173745f6c6576656cc0040000087a0133810f76616c69646974795f706572696f64c00400013b0082013181086f7574626f7865730028001700090006820432313337820468656164c00100066c656e677468c0010004323133380003810468656164c001008208636f6e74656e7473810130c03a000000360000000031010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74066c656e677468c00101c0c619e3af574a846a44f61eb98ae7a0007d1e76039f6729e3e113c2f993dad600c0b7b6d5ebea80e0e4b148815c768de7570b7a5ad617a2bf3a3f989df81be9a224c055b19953c4aa26132da57ef8205c8ab61b518fb6e4c87c5853298042d17c98bbc08bac9f033f9d823c04b4de152892edc0767d0634c51c5d311f46a127f730f6950134810d6d6573736163355f6c696d6974c002a401047761736dd04822a3ddd2900dcb30a958d10818ea3d90407a79f88eab967063bac2452e99c7268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d950000085a000000000031010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74',
-              counter: '1',
-            },
-          ],
-          protocol: 'test_protocol',
-        },
-        counter: 0,
+              {
+                kind: 'smart_rollup_originate',
+                pvm_kind: 'wasm_2_0_0',
+                kernel: '123456789',
+                parameters_ty: {
+                  prim: 'bytes',
+                },
+                fee: '0',
+                gas_limit: '1040000',
+                storage_limit: '60000',
+                counter: '2',
+                source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              },
+            ],
+            protocol: 'test_protocol',
+          },
+          counter: 0,
+        });
       });
     });
 
-    it('should be able to prepare a smartRollupExecuteOutboxMessage operation with reveal', async () => {
-      mockReadProvider.isAccountRevealed.mockResolvedValue(false);
+    describe('smartRollupExecuteOutboxMessage', () => {
+      it('should be able to prepare smartRollupExecuteOutboxMessage op without reveal', async () => {
+        mockReadProvider.isAccountRevealed.mockResolvedValue(true);
 
-      const prepared = await prepareProvider.smartRollupExecuteOutboxMessage({
-        rollup: 'sr1J4MBaQqTGNwUqfcUusy3xUmH6HbMK7kYy',
-        cementedCommitment: 'src13aUmJ5fEVJJM1qH1n9spuppXVAWc8wmHpTaC81pz5rrZN5e628',
-        outputProof:
-          '030002268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d95268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d950005820764757261626c65d07eb5216be3fcfd8317136e559c80d1a5eeb8f7b684c2101e92efb2b1b9c5324603746167c00800000004536f6d650003c004a99c0224241978be1e088cf42eaca4bc53a6266842bcbf0ecad4400abeb2e5820576616c7565810370766d8107627566666572738205696e707574820468656164c00100066c656e677468c00100066f75747075740004820132810a6c6173745f6c6576656cc0040000087a0133810f76616c69646974795f706572696f64c00400013b0082013181086f7574626f7865730028001700090006820432313337820468656164c00100066c656e677468c0010004323133380003810468656164c001008208636f6e74656e7473810130c03a000000360000000031010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74066c656e677468c00101c0c619e3af574a846a44f61eb98ae7a0007d1e76039f6729e3e113c2f993dad600c0b7b6d5ebea80e0e4b148815c768de7570b7a5ad617a2bf3a3f989df81be9a224c055b19953c4aa26132da57ef8205c8ab61b518fb6e4c87c5853298042d17c98bbc08bac9f033f9d823c04b4de152892edc0767d0634c51c5d311f46a127f730f6950134810d6d6573736163355f6c696d6974c002a401047761736dd04822a3ddd2900dcb30a958d10818ea3d90407a79f88eab967063bac2452e99c7268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d950000085a000000000031010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74',
+        const prepared = await prepareProvider.smartRollupExecuteOutboxMessage({
+          rollup: 'sr1J4MBaQqTGNwUqfcUusy3xUmH6HbMK7kYy',
+          cementedCommitment: 'src13aUmJ5fEVJJM1qH1n9spuppXVAWc8wmHpTaC81pz5rrZN5e628',
+          outputProof:
+            '030002268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d95268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d950005820764757261626c65d07eb5216be3fcfd8317136e559c80d1a5eeb8f7b684c2101e92efb2b1b9c5324603746167c00800000004536f6d650003c004a99c0224241978be1e088cf42eaca4bc53a6266842bcbf0ecad4400abeb2e5820576616c7565810370766d8107627566666572738205696e707574820468656164c00100066c656e677468c00100066f75747075740004820132810a6c6173745f6c6576656cc0040000087a0133810f76616c69646974795f706572696f64c00400013b0082013181086f7574626f7865730028001700090006820432313337820468656164c00100066c656e677468c0010004323133380003810468656164c001008208636f6e74656e7473810130c03a000000360000000031010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74066c656e677468c00101c0c619e3af574a846a44f61eb98ae7a0007d1e76039f6729e3e113c2f993dad600c0b7b6d5ebea80e0e4b148815c768de7570b7a5ad617a2bf3a3f989df81be9a224c055b19953c4aa26132da57ef8205c8ab61b518fb6e4c87c5853298042d17c98bbc08bac9f033f9d823c04b4de152892edc0767d0634c51c5d311f46a127f730f6950134810d6d6573736120555f6c696d6974c002a401047761736dd04822a3ddd2900dcb30a958d10818ea3d90407a79f88eab967063bac2452e99c7268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d950000085a000000000031010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74',
+        });
+
+        expect(prepared).toEqual({
+          opOb: {
+            branch: 'test_block_hash',
+            contents: [
+              {
+                kind: 'smart_rollup_execute_outbox_message',
+                source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+                fee: '0',
+                gas_limit: '1040000',
+                storage_limit: '60000',
+                rollup: 'sr1J4MBaQqTGNwUqfcUusy3xUmH6HbMK7kYy',
+                cemented_commitment: 'src13aUmJ5fEVJJM1qH1n9spuppXVAWc8wmHpTaC81pz5rrZN5e628',
+                output_proof:
+                  '030002268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d95268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d950005820764757261626c65d07eb5216be3fcfd8317136e559c80d1a5eeb8f7b684c2101e92efb2b1b9c5324603746167c00800000004536f6d650003c004a99c0224241978be1e088cf42eaca4bc53a6266842bcbf0ecad4400abeb2e5820576616c7565810370766d8107627566666572738205696e707574820468656164c00100066c656e677468c00100066f75747075740004820132810a6c6173745f6c6576656cc0040000087a0133810f76616c69646974795f706572696f64c00400013b0082013181086f7574626f7865730028001700090006820432313337820468656164c00100066c656e677468c0010004323133380003810468656164c001008208636f6e74656e7473810130c03a000000360000000031010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74066c656e677468c00101c0c619e3af574a846a44f61eb98ae7a0007d1e76039f6729e3e113c2f993dad600c0b7b6d5ebea80e0e4b148815c768de7570b7a5ad617a2bf3a3f989df81be9a224c055b19953c4aa26132da57ef8205c8ab61b518fb6e4c87c5853298042d17c98bbc08bac9f033f9d823c04b4de152892edc0767d0634c51c5d311f46a127f730f6950134810d6d6573736120555f6c696d6974c002a401047761736dd04822a3ddd2900dcb30a958d10818ea3d90407a79f88eab967063bac2452e99c7268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d950000085a000000000031010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74',
+                counter: '1',
+              },
+            ],
+            protocol: 'test_protocol',
+          },
+          counter: 0,
+        });
       });
 
-      expect(prepared).toEqual({
-        opOb: {
-          branch: 'test_block_hash',
-          contents: [
-            {
-              kind: 'reveal',
-              fee: '334',
-              public_key: 'test_pub_key',
-              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              gas_limit: '633',
-              storage_limit: '0',
-              counter: '1',
-            },
-            {
-              kind: 'smart_rollup_execute_outbox_message',
-              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              fee: '0',
-              gas_limit: '1040000',
-              storage_limit: '60000',
-              rollup: 'sr1J4MBaQqTGNwUqfcUusy3xUmH6HbMK7kYy',
-              cemented_commitment: 'src13aUmJ5fEVJJM1qH1n9spuppXVAWc8wmHpTaC81pz5rrZN5e628',
-              output_proof:
-                '030002268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d95268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d950005820764757261626c65d07eb5216be3fcfd8317136e559c80d1a5eeb8f7b684c2101e92efb2b1b9c5324603746167c00800000004536f6d650003c004a99c0224241978be1e088cf42eaca4bc53a6266842bcbf0ecad4400abeb2e5820576616c7565810370766d8107627566666572738205696e707574820468656164c00100066c656e677468c00100066f75747075740004820132810a6c6173745f6c6576656cc0040000087a0133810f76616c69646974795f706572696f64c00400013b0082013181086f7574626f7865730028001700090006820432313337820468656164c00100066c656e677468c0010004323133380003810468656164c001008208636f6e74656e7473810130c03a000000360000000031010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74066c656e677468c00101c0c619e3af574a846a44f61eb98ae7a0007d1e76039f6729e3e113c2f993dad600c0b7b6d5ebea80e0e4b148815c768de7570b7a5ad617a2bf3a3f989df81be9a224c055b19953c4aa26132da57ef8205c8ab61b518fb6e4c87c5853298042d17c98bbc08bac9f033f9d823c04b4de152892edc0767d0634c51c5d311f46a127f730f6950134810d6d6573736163355f6c696d6974c002a401047761736dd04822a3ddd2900dcb30a958d10818ea3d90407a79f88eab967063bac2452e99c7268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d950000085a000000000031010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74',
-              counter: '2',
-            },
-          ],
-          protocol: 'test_protocol',
-        },
-        counter: 0,
+      it('should be able to prepare a smartRollupExecuteOutboxMessage operation with reveal', async () => {
+        mockReadProvider.isAccountRevealed.mockResolvedValue(false);
+
+        const prepared = await prepareProvider.smartRollupExecuteOutboxMessage({
+          rollup: 'sr1J4MBaQqTGNwUqfcUusy3xUmH6HbMK7kYy',
+          cementedCommitment: 'src13aUmJ5fEVJJM1qH1n9spuppXVAWc8wmHpTaC81pz5rrZN5e628',
+          outputProof:
+            '030002268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d95268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d950005820764757261626c65d07eb5216be3fcfd8317136e559c80d1a5eeb8f7b684c2101e92efb2b1b9c5324603746167c00800000004536f6d650003c004a99c0224241978be1e088cf42eaca4bc53a6266842bcbf0ecad4400abeb2e5820576616c7565810370766d8107627566666572738205696e707574820468656164c00100066c656e677468c00100066f75747075740004820132810a6c6173745f6c6576656cc0040000087a0133810f76616c69646974795f706572696f64c00400013b0082013181086f7574626f7865730028001700090006820432313337820468656164c00100066c656e677468c0010004323133380003810468656164c001008208636f6e74656e7473810130c03a000000360000000031010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74066c656e677468c00101c0c619e3af574a846a44f61eb98ae7a0007d1e76039f6729e3e113c2f993dad600c0b7b6d5ebea80e0e4b148815c768de7570b7a5ad617a2bf3a3f989df81be9a224c055b19953c4aa26132da57ef8205c8ab61b518fb6e4c87c5853298042d17c98bbc08bac9f033f9d823c04b4de152892edc0767d0634c51c5d311f46a127f730f6950134810d6d6573736120555f6c696d6974c002a401047761736dd04822a3ddd2900dcb30a958d10818ea3d90407a79f88eab967063bac2452e99c7268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d950000085a000000000031010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74',
+        });
+
+        expect(prepared).toEqual({
+          opOb: {
+            branch: 'test_block_hash',
+            contents: [
+              {
+                kind: 'reveal',
+                fee: '334',
+                public_key: 'test_pub_key',
+                source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+                gas_limit: '633',
+                storage_limit: '0',
+                counter: '1',
+              },
+              {
+                kind: 'smart_rollup_execute_outbox_message',
+                source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+                fee: '0',
+                gas_limit: '1040000',
+                storage_limit: '60000',
+                rollup: 'sr1J4MBaQqTGNwUqfcUusy3xUmH6HbMK7kYy',
+                cemented_commitment: 'src13aUmJ5fEVJJM1qH1n9spuppXVAWc8wmHpTaC81pz5rrZN5e628',
+                output_proof:
+                  '030002268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d95268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d950005820764757261626c65d07eb5216be3fcfd8317136e559c80d1a5eeb8f7b684c2101e92efb2b1b9c5324603746167c00800000004536f6d650003c004a99c0224241978be1e088cf42eaca4bc53a6266842bcbf0ecad4400abeb2e5820576616c7565810370766d8107627566666572738205696e707574820468656164c00100066c656e677468c00100066f75747075740004820132810a6c6173745f6c6576656cc0040000087a0133810f76616c69646974795f706572696f64c00400013b0082013181086f7574626f7865730028001700090006820432313337820468656164c00100066c656e677468c0010004323133380003810468656164c001008208636f6e74656e7473810130c03a000000360000000031010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74066c656e677468c00101c0c619e3af574a846a44f61eb98ae7a0007d1e76039f6729e3e113c2f993dad600c0b7b6d5ebea80e0e4b148815c768de7570b7a5ad617a2bf3a3f989df81be9a224c055b19953c4aa26132da57ef8205c8ab61b518fb6e4c87c5853298042d17c98bbc08bac9f033f9d823c04b4de152892edc0767d0634c51c5d311f46a127f730f6950134810d6d6573736120555f6c696d6974c002a401047761736dd04822a3ddd2900dcb30a958d10818ea3d90407a79f88eab967063bac2452e99c7268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d950000085a000000000031010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74',
+                counter: '2',
+              },
+            ],
+            protocol: 'test_protocol',
+          },
+          counter: 0,
+        });
       });
     });
   });
