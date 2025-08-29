@@ -49,7 +49,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownTicketContract }) => {
       expect(ticketSendToImplicitOp.status).toEqual('applied');
 
       let tezos1TicketBalance = await client.getTicketBalance(tezos1Pkh, ticketToken);
-      expect(tezos1TicketBalance).toBeGreaterThanOrEqual(Number('3'));
+      expect(Number(tezos1TicketBalance)).toBeGreaterThanOrEqual(3);
     });
 
     it('will transfer 1 tickets from an implicit to another implicit account', async () => {
@@ -68,7 +68,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownTicketContract }) => {
       expect(implicitToImplicitOp.status).toEqual('applied');
 
       let tezos1TicketBalanceAfter = await client.getTicketBalance(await Tezos1.signer.publicKeyHash(), ticketToken);
-      expect(tezos1TicketBalanceAfter).toBeGreaterThanOrEqual(Number('2'));
+      expect(Number(tezos1TicketBalanceAfter)).toBeGreaterThanOrEqual(2);
       let tezos2TicketBalanceAfter = await client.getTicketBalance(await Tezos2.signer.publicKeyHash(), ticketToken);
       expect(tezos2TicketBalanceAfter).toBe('1');
     });

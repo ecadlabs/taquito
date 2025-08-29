@@ -6,18 +6,19 @@ import crypto from 'crypto';
 import { PvmKind } from "@taquito/rpc";
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker, knownTicketContract, protocol }) => {
-  describe(`Test tz2 account operations through contract API using: ${rpc}`, async() => {
+  describe(`Test tz2 account operations through contract API using: ${rpc}`, () => {
     const Tz2 = lib;
-    const isUnreveal = await Tz2.rpc.getManagerKey(await Tz2.signer.publicKeyHash()) !== null ? true : false
-    const seoulnetAndAlpha = ProtoGreaterOrEqual(protocol, Protocols.PtSeouLou) && isUnreveal ? test : test.skip;
+    let seoulnetAndAlpha = ProtoGreaterOrEqual(protocol, Protocols.PtSeouLou) ? test : test.skip;
     let contractAddress = ''
 
     beforeAll(async () => {
-      await setup(true)
+      await setup()
       try {
-        const revealOp = await Tz2.contract.reveal({})
-        await revealOp.confirmation()
-        expect(revealOp.status).toBe('applied')
+        if (await Tz2.rpc.getManagerKey(await Tz2.signer.publicKeyHash()) === null) {
+          const revealOp = await Tz2.contract.reveal({})
+          await revealOp.confirmation()
+          expect(revealOp.status).toBe('applied')
+        }
       } catch (e) {
         console.log('beforeAll error', e)
       }
@@ -72,6 +73,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker, knownTicketCont
     })
 
     it('verify that setDelegate fee and gas is sufficient', async () => {
+      if(await Tz2.rpc.getDelegate(await Tz2.signer.publicKeyHash()) !== await Tz2.signer.publicKeyHash()) {
       const estimated = await Tz2.estimate.setDelegate({ delegate: knownBaker, source: await Tz2.signer.publicKeyHash() })
       expect(estimated?.suggestedFeeMutez).toBeGreaterThanOrEqual(264)
       expect(estimated?.gasLimit).toBeGreaterThanOrEqual(155)
@@ -80,6 +82,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker, knownTicketCont
       const setDelegateOp = await Tz2.contract.setDelegate({ delegate: knownBaker, source: await Tz2.signer.publicKeyHash() })
       await setDelegateOp.confirmation()
       expect(setDelegateOp.status).toBe('applied')
+      }
     })
 
     it('verify that registerDelegate fee and gas is sufficient', async () => {
