@@ -8,6 +8,7 @@ import {
   RPCIncreasePaidStorageOperation,
   RPCBallotOperation,
   RPCUpdateConsensusKeyOperation,
+  RPCUpdateCompanionKeyOperation,
   RPCDrainDelegateOperation,
   RPCProposalsOperation,
   RPCSmartRollupAddMessagesOperation,
@@ -24,6 +25,7 @@ export enum NetworkType {
   PARISNET = 'parisnet',
   QUEBECNET = 'quebecnet',
   RIONET = 'rionet',
+  SEOULNET = 'seoulnet',
 }
 
 export interface PermissionScopeParam {
@@ -85,6 +87,9 @@ export interface IncreasePaidStorageParams
 export interface UpdateConsensusKeyParams
   extends Omit<RPCUpdateConsensusKeyOperation, WalletDefinedFields>,
     WalletOptionalFields {}
+export interface UpdateCompanionKeyParams
+  extends Omit<RPCUpdateCompanionKeyOperation, WalletDefinedFields>,
+    WalletOptionalFields {}
 export type BallotParams = Omit<RPCBallotOperation, WalletDefinedFields>;
 export type DrainDelegateParams = Omit<RPCDrainDelegateOperation, WalletDefinedFields>;
 export type ProposalsParams = Omit<RPCProposalsOperation, WalletDefinedFields>;
@@ -107,6 +112,7 @@ export type OperationParams =
   | BallotParams
   | IncreasePaidStorageParams
   | UpdateConsensusKeyParams
+  | UpdateCompanionKeyParams
   | OriginateParams
   | RevealParams
   | DelegateParams

@@ -1,15 +1,15 @@
-import { ForgedBytes, UpdateConsensusKeyOperation } from '@taquito/taquito';
+import { ForgedBytes, UpdateCompanionKeyOperation } from '@taquito/taquito';
 import { OperationContentsAndResult } from '@taquito/rpc';
 import { defaultConfigConfirmation } from '../../src/context';
-import { UpdateConsensusKeyOperationBuilder } from '../helpers';
+import { UpdateCompanionKeyOperationBuilder } from '../helpers';
 
-describe('Update Consensus Key operation', () => {
+describe('Update Companion Key operation', () => {
   let fakeContext: any;
   const fakeForgedBytes = {} as ForgedBytes;
 
   const successfulResult = [
     {
-      kind: 'update_consensus_key',
+      kind: 'update_companion_key',
       source: 'tz1MY8g5UqVmQtpAp7qs1cUwEof1GjZCHgVv',
       fee: '369',
       counter: '19043',
@@ -55,8 +55,8 @@ describe('Update Consensus Key operation', () => {
     });
   });
 
-  it('should return status of update consensus operation', () => {
-    const op = new UpdateConsensusKeyOperation(
+  it('should return status of update companion operation', () => {
+    const op = new UpdateCompanionKeyOperation(
       'opNzjyNGHBAgvsVMyezUAPSZKbFcXZmTh6GTjcTjAGtGMpVG3Eh',
       {} as any,
       '',
@@ -68,8 +68,8 @@ describe('Update Consensus Key operation', () => {
     expect(op.status).toEqual('applied');
   });
 
-  it('should return source of update consensus operation', () => {
-    const op = new UpdateConsensusKeyOperation(
+  it('should return source of update companion operation', () => {
+    const op = new UpdateCompanionKeyOperation(
       'opNzjyNGHBAgvsVMyezUAPSZKbFcXZmTh6GTjcTjAGtGMpVG3Eh',
       {} as any,
       'tz1MY8g5UqVmQtpAp7qs1cUwEof1GjZCHgVv',
@@ -81,8 +81,8 @@ describe('Update Consensus Key operation', () => {
     expect(op.source).toEqual('tz1MY8g5UqVmQtpAp7qs1cUwEof1GjZCHgVv');
   });
 
-  it('should return fee of update consensus operation', () => {
-    const op = new UpdateConsensusKeyOperation(
+  it('should return fee of update companion operation', () => {
+    const op = new UpdateCompanionKeyOperation(
       'opNzjyNGHBAgvsVMyezUAPSZKbFcXZmTh6GTjcTjAGtGMpVG3Eh',
       { fee: 500 } as any,
       '',
@@ -94,8 +94,8 @@ describe('Update Consensus Key operation', () => {
     expect(op.fee).toEqual(500);
   });
 
-  it('should return consumedMilligas of update consensus operation', () => {
-    const op = new UpdateConsensusKeyOperation(
+  it('should return consumedMilligas of update companion operation', () => {
+    const op = new UpdateCompanionKeyOperation(
       'opNzjyNGHBAgvsVMyezUAPSZKbFcXZmTh6GTjcTjAGtGMpVG3Eh',
       {} as any,
       '',
@@ -107,8 +107,8 @@ describe('Update Consensus Key operation', () => {
     expect(op.consumedMilliGas).toEqual('1000000');
   });
 
-  it('should return gasLimit of update consensus operation', () => {
-    const op = new UpdateConsensusKeyOperation(
+  it('should return gasLimit of update companion operation', () => {
+    const op = new UpdateCompanionKeyOperation(
       'opNzjyNGHBAgvsVMyezUAPSZKbFcXZmTh6GTjcTjAGtGMpVG3Eh',
       { gas_limit: 1100 } as any,
       '',
@@ -120,8 +120,8 @@ describe('Update Consensus Key operation', () => {
     expect(op.gasLimit).toEqual(1100);
   });
 
-  it('should return storageLimit of update consensus operation', () => {
-    const op = new UpdateConsensusKeyOperation(
+  it('should return storageLimit of update companion operation', () => {
+    const op = new UpdateCompanionKeyOperation(
       'opNzjyNGHBAgvsVMyezUAPSZKbFcXZmTh6GTjcTjAGtGMpVG3Eh',
       { storage_limit: 0 } as any,
       '',
@@ -133,8 +133,8 @@ describe('Update Consensus Key operation', () => {
     expect(op.storageLimit).toEqual(0);
   });
 
-  it('should return pk (public key) of update consensus operation', () => {
-    const op = new UpdateConsensusKeyOperation(
+  it('should return pk (public key) of update companion operation', () => {
+    const op = new UpdateCompanionKeyOperation(
       'opNzjyNGHBAgvsVMyezUAPSZKbFcXZmTh6GTjcTjAGtGMpVG3Eh',
       { pk: 'edpkti5K5JbdLpp2dCqiTLoLQqs5wqzeVhfHVnNhsSCuoU8zdHYoY7' } as any,
       '',
@@ -147,7 +147,7 @@ describe('Update Consensus Key operation', () => {
   });
 
   it('error property should be undefined when no error occurs', () => {
-    const op = new UpdateConsensusKeyOperation(
+    const op = new UpdateCompanionKeyOperation(
       'opNzjyNGHBAgvsVMyezUAPSZKbFcXZmTh6GTjcTjAGtGMpVG3Eh',
       {} as any,
       '',
@@ -160,9 +160,9 @@ describe('Update Consensus Key operation', () => {
   });
 
   it('should return error property if error occurs', () => {
-    const tx = new UpdateConsensusKeyOperationBuilder();
+    const tx = new UpdateCompanionKeyOperationBuilder();
 
-    const op = new UpdateConsensusKeyOperation(
+    const op = new UpdateCompanionKeyOperation(
       'opNzjyNGHBAgvsVMyezUAPSZKbFcXZmTh6GTjcTjAGtGMpVG3Eh',
       {} as any,
       '',
@@ -174,7 +174,7 @@ describe('Update Consensus Key operation', () => {
             errors: [
               {
                 kind: 'temporary',
-                id: 'proto.015-PtLimaPt.operation.update_consensus_key_on_unregistered_delegate',
+                id: 'proto.015-PtLimaPt.operation.update_companion_key_on_unregistered_delegate',
                 delegate: 'tz1KvJCU5cNdz5RAS3diEtdRvS9wfhRC7Cwj',
               },
             ],
@@ -187,7 +187,7 @@ describe('Update Consensus Key operation', () => {
     expect(op.errors).toBeDefined();
     expect(op.errors?.[0]).toEqual({
       kind: 'temporary',
-      id: 'proto.015-PtLimaPt.operation.update_consensus_key_on_unregistered_delegate',
+      id: 'proto.015-PtLimaPt.operation.update_companion_key_on_unregistered_delegate',
       delegate: 'tz1KvJCU5cNdz5RAS3diEtdRvS9wfhRC7Cwj',
     });
   });

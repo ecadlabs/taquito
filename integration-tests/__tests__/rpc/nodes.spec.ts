@@ -3,6 +3,7 @@ import { DefaultContractType, Protocols } from "@taquito/taquito";
 import { RpcClientCache, RpcClient, RPCRunViewParam, RPCRunScriptViewParam, PendingOperationsV2 } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
 import { Schema } from '@taquito/michelson-encoder';
+import { ProtoGreaterOrEqual } from '@taquito/michel-codec';
 import { tokenBigmapCode, tokenBigmapStorage } from '../../data/token_bigmap';
 import { ticketCode, ticketStorage } from '../../data/code_with_ticket';
 
@@ -20,7 +21,6 @@ CONFIGS().forEach(
   }) => {
     const Tezos = lib;
     const unrestrictedRPCNode = rpc.includes("teztnets.com") || rpc.includes("net-rolling-1.i.ecadinfra.com") ? test : test.skip;
-    const rionetAndAlpha = protocol === Protocols.PsRiotuma || protocol === Protocols.ProtoALpha ? test: test.skip;
     let ticketContract: DefaultContractType;
 
     beforeAll(async () => {
@@ -471,12 +471,12 @@ CONFIGS().forEach(
           expect(protocols).toEqual({ protocol, next_protocol: protocol });
         });
 
-        rionetAndAlpha('Verify that rpcClient.getProtocolActivations will list all protocol activations info', async () => {
+        it('Verify that rpcClient.getProtocolActivations will list all protocol activations info', async () => {
           const protocolActivations = await rpcClient.getProtocolActivations();
           expect(protocolActivations).toBeInstanceOf(Array);
         });
 
-        rionetAndAlpha('Verify that rpcClient.getProtocolActivations will list a protocol activations info', async () => {
+        it('Verify that rpcClient.getProtocolActivations will list a protocol activations info', async () => {
           const protocolActivations = await rpcClient.getProtocolActivations(protocol);
           expect(protocolActivations).toBeInstanceOf(Object);
         });

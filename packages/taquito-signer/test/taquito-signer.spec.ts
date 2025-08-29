@@ -1,6 +1,6 @@
 import { InvalidCurveError, InvalidMnemonicError, ToBeImplemented } from '../src/errors';
 import { InMemorySigner } from '../src/taquito-signer';
-import { InvalidDerivationPathError } from '@taquito/core';
+import { InvalidDerivationPathError, InvalidKeyError } from '@taquito/core';
 
 describe('inmemory-signer', () => {
   const mnemonic = 'prefer wait flock brown volume recycle scrub elder rate pair twenty giant';
@@ -58,25 +58,25 @@ describe('inmemory-signer', () => {
   it('Invalid key', () => {
     expect(function () {
       new InMemorySigner('test');
-    }).toThrow(`unsupported prefix`);
+    }).toThrow(InvalidKeyError);
   });
 
   it('(tz1) Invalid key unable to decode', () => {
     expect(function () {
       new InMemorySigner('edsk4TjJWEszkHKono7XMnepqwi37FrbVt1KCsifJeAGimxheShG');
-    }).toThrow('Invalid checksum');
+    }).toThrow(InvalidKeyError);
   });
 
   it('(tz2) Invalid key unable to decode', () => {
     expect(function () {
       new InMemorySigner('spsk4TjJWEszkHKono7XMnepqwi37FrbVt1KCsifJeAGimxheShG');
-    }).toThrow('Invalid checksum');
+    }).toThrow(InvalidKeyError);
   });
 
   it('(tz3) Invalid key unable to decode', () => {
     expect(function () {
       new InMemorySigner('p2sk4TjJWEszkHKono7XMnepqwi37FrbVt1KCsifJeAGimxheShG');
-    }).toThrow('Invalid checksum');
+    }).toThrow(InvalidKeyError);
   });
 
   it('Tz1 64 bytes', async () => {
@@ -181,7 +181,7 @@ describe('inmemory-signer', () => {
     );
   });
 
-  it('Tz3 Encrypted with bytes producing signature that needs padding', async () => {
+  it('Tz3 with bytes producing signature that needs padding', async () => {
     const signer = new InMemorySigner('p2sk2ke47zhFz3znRZj39TW5KKS9VgfU1Hax7KeErgnShNe9oQFQUP');
     expect(await signer.publicKeyHash()).toEqual('tz3bBDnPj3Bvek1DeJtsTvicBUPEoTpm2ySt');
     expect(await signer.secretKey()).toEqual(
@@ -197,6 +197,22 @@ describe('inmemory-signer', () => {
     ).toEqual(
       'p2sigMMsHbzzKh6Eg3cDxfLURiUpTMkyjyPWd7RFtBUH7ZyGBzBqMZH9xZc16akQWZNKkCMHnf1vYjjckPEfru456ikHaFWXFD'
     );
+  });
+
+  it('Tz4', async () => {
+    const signer = new InMemorySigner('BLsk2zk6pBGysG9BJn4u3XNtFnJQ1wpUYz6sQMTZQdfxQaiBWkqLyh');
+    expect(await signer.publicKey()).toEqual(
+      'BLpk1oWB1ZbeKePu8FiRMpktQoZw1rPs67qu6zbnYxiCcJDyZih8PXUiGnLyMWR6Fay9cDNyCzj9'
+    );
+    expect(await signer.publicKeyHash()).toEqual('tz4JmbuiJGyC2thisABCS59PnGr749dsP4WY');
+    expect(await signer.secretKey()).toEqual(
+      'BLsk2zk6pBGysG9BJn4u3XNtFnJQ1wpUYz6sQMTZQdfxQaiBWkqLyh'
+    );
+    expect((await signer.sign(new Uint8Array([1, 2, 3, 4]))).prefixSig).toEqual(
+      'BLsigAMExDCYjNtvjLUqvLiEQJro6VrJFZ7yr7eNY4YCAVTYVerMnrNtk7cY8ve8D4HfJ55YtK93sQNFTcXTYGt8c6HutFneTz31aR198QkbBfZpHmvJV4zGQTHKroNFDRWLw3c3eJXyAu'
+    );
+    expect(signer.canProvePossession).toEqual(true);
+    expect((await signer.provePossession())?.prefixSig).toEqual('BLsigAp94rBWCJU7yM7X5F4zSw15AKkW1JZ5dwkqa2Xjdo1y4jhcQKVf6Sh7GFV261MUEx3WbfStUkP83tmKRpAucD4NEo1bLCB3s1TM4ByDUYZ1vUV5qsAWFLagvbnHfn61DnouoxmTij');
   });
 
   it('Should instantiate tz1 from mnemonic from in memory signer', async () => {

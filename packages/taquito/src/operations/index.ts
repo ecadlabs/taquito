@@ -13,6 +13,7 @@ export { RegisterGlobalConstantOperation } from './register-global-constant-oper
 export { IncreasePaidStorageOperation } from './increase-paid-storage-operation';
 export { TransferTicketOperation } from './transfer-ticket-operation';
 export { UpdateConsensusKeyOperation } from './update-consensus-key-operation';
+export { UpdateCompanionKeyOperation } from './update-companion-key-operation';
 export { SmartRollupAddMessagesOperation } from './smart-rollup-add-messages-operation';
 export { SmartRollupOriginateOperation } from './smart-rollup-originate-operation';
 export { BallotOperation } from './ballot-operation';
