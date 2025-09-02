@@ -2518,6 +2518,7 @@ export interface ContractResponse {
   script: ScriptedContracts;
   counter?: string;
   delegate?: string;
+  revealed?: boolean;
 }
 
 export interface TestChainStatus {
