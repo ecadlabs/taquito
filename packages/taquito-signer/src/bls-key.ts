@@ -4,10 +4,12 @@ import {
   POP_DST,
   PrefixV2,
   b58Encode,
+  compareArrays,
+  InvalidPublicKeyError,
 } from '@taquito/utils';
 import { bls12_381 } from '@noble/curves/bls12-381';
 import { hash } from '@stablelib/blake2b';
-import { SigningKeyWithProofOfPossession } from './key-interface';
+import { PublicKey, SigningKeyWithProofOfPossession } from './key-interface';
 import { RawSignResult } from '@taquito/taquito';
 
 const bls = bls12_381.longSignatures; // AKA MinPK
@@ -40,36 +42,67 @@ export class BLSKey implements SigningKeyWithProofOfPossession {
     return new Uint8Array(this.#key).reverse();
   }
 
-  private signDst(message: Uint8Array, dst: string): Promise<RawSignResult> {
+  private signDst(message: Uint8Array, dst: string): RawSignResult {
     const point = bls.hash(message, dst);
     const sig = bls.sign(point, this.sk()).toBytes();
-    return Promise.resolve({
+    return {
       rawSignature: sig,
       sig: b58Encode(sig, PrefixV2.GenericSignature),
       prefixSig: b58Encode(sig, PrefixV2.BLS12_381Signature),
-    });
+    };
   }
 
-  sign(message: Uint8Array): Promise<RawSignResult> {
+  sign(message: Uint8Array): RawSignResult {
     return this.signDst(message, BLS12_381_DST);
   }
 
-  provePossession(): Promise<RawSignResult> {
+  provePossession(): RawSignResult {
     return this.signDst(this.#publicKey, POP_DST);
   }
 
-  publicKey(): Promise<string> {
-    const res = b58Encode(this.#publicKey, PrefixV2.BLS12_381PublicKey);
-    return Promise.resolve(res);
+  publicKey(): PublicKey {
+    return new BLSPublicKey(this.#publicKey);
   }
 
-  publicKeyHash(): Promise<string> {
-    const res = b58Encode(hash(this.#publicKey, 20), PrefixV2.BLS12_381PublicKeyHash);
-    return Promise.resolve(res);
+  secretKey(): string {
+    return b58Encode(this.#key, PrefixV2.BLS12_381SecretKey);
+  }
+}
+
+export class BLSPublicKey implements PublicKey {
+  #key: Uint8Array;
+
+  constructor(src: string | Uint8Array) {
+    if (typeof src === 'string') {
+      const [key, _] = b58DecodeAndCheckPrefix(src, [PrefixV2.BLS12_381PublicKey]);
+      this.#key = key;
+    } else {
+      this.#key = src;
+    }
+  }
+  compare(other: PublicKey): number {
+    if (other instanceof BLSPublicKey) {
+      return compareArrays(this.bytes(), other.bytes());
+    } else {
+      throw new InvalidPublicKeyError('BLS key expected');
+    }
+  }
+  hash(): string {
+    return b58Encode(hash(this.#key, 20), PrefixV2.BLS12_381PublicKeyHash);
   }
 
-  secretKey(): Promise<string> {
-    const res = b58Encode(this.#key, PrefixV2.BLS12_381SecretKey);
-    return Promise.resolve(res);
+  bytes(): Uint8Array {
+    return this.#key;
+  }
+
+  toProtocol(): Uint8Array {
+    const res = new Uint8Array(this.#key.length + 1);
+    res[0] = 3;
+    res.set(this.#key, 1);
+    return res;
+  }
+
+  toString(): string {
+    return b58Encode(this.#key, PrefixV2.BLS12_381PublicKey);
   }
 }
