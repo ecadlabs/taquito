@@ -4,4 +4,5 @@ export type KnownContracts = {
   onChainViewContractAddress: string;
   saplingContract: string;
   tzip12BigMapOffChainContract: string;
+  ticketContract: string;
 }

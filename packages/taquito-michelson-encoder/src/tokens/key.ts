@@ -6,16 +6,15 @@ import {
   TokenValidationError,
 } from './token';
 import {
+  b58DecodePublicKey,
+  compareArrays,
   encodeKey,
   validatePublicKey,
   ValidationResult,
-  Prefix,
-  b58cdecode,
-  prefix,
 } from '@taquito/utils';
 import { BaseTokenSchema } from '../schema/types';
-
-const publicKeyPrefixLength = 4;
+import elliptic from 'elliptic';
+const ec = new elliptic.ec('p256');
 
 /**
  *  @category Error
@@ -23,7 +22,11 @@ const publicKeyPrefixLength = 4;
  */
 export class KeyValidationError extends TokenValidationError {
   name = 'KeyValidationError';
-  constructor(public value: any, public token: KeyToken, message: string) {
+  constructor(
+    public value: any,
+    public token: KeyToken,
+    message: string
+  ) {
     super(value, token, message);
   }
 }
@@ -106,33 +109,30 @@ export class KeyToken extends ComparableToken {
     };
   }
 
+  decompressP256PublicKey(compressedKey: Uint8Array) {
+    const compressedArray = Array.from(compressedKey);
+    const keyPair = ec.keyFromPublic(compressedArray);
+    const publicKey = keyPair.getPublic();
+    const uncompressedArray = publicKey.encode('array', false);
+    return Buffer.concat([new Uint8Array([0x02]), new Uint8Array(uncompressedArray)]); // add back prefix 0x02
+  }
+
   compare(key1: string, key2: string): number {
-    const keyPrefix1 = this.getPrefix(key1);
-    const keyPrefix2 = this.getPrefix(key2);
-
-    if (keyPrefix1 === Prefix.EDPK && keyPrefix2 !== Prefix.EDPK) {
-      return -1;
-    } else if (keyPrefix1 === Prefix.SPPK && keyPrefix2 !== Prefix.SPPK) {
-      return keyPrefix2 === Prefix.EDPK ? 1 : -1;
-    } else if (keyPrefix1 === Prefix.P2PK) {
-      if (keyPrefix2 !== Prefix.P2PK) {
-        return 1;
-      }
-
-      const keyBytes1 = this.getP256PublicKeyComparableBytes(key1);
-      const keyBytes2 = this.getP256PublicKeyComparableBytes(key2);
-      return Buffer.compare(keyBytes1, keyBytes2);
+    const bytes1 = b58DecodePublicKey(key1, 'array');
+    const bytes2 = b58DecodePublicKey(key2, 'array');
+    let array1: Uint8Array;
+    let array2: Uint8Array;
+    if (bytes1[0] === 0x02) {
+      array1 = this.decompressP256PublicKey(bytes1.slice(1)); // remove prefix 0x02
+    } else {
+      array1 = bytes1;
     }
-
-    return super.compare(key1, key2);
-  }
-
-  private getPrefix(val: string) {
-    return val.substring(0, publicKeyPrefixLength);
-  }
-
-  private getP256PublicKeyComparableBytes(p2pk: string) {
-    return b58cdecode(p2pk, prefix[Prefix.P2PK]).slice(1);
+    if (bytes2[0] === 0x02) {
+      array2 = this.decompressP256PublicKey(bytes2.slice(1)); // remove prefix 0x02
+    } else {
+      array2 = bytes2;
+    }
+    return compareArrays(array1, array2);
   }
 
   findAndReturnTokens(tokenToFind: string, tokens: Token[]) {
