@@ -38,6 +38,11 @@ class AddFeedback extends React.Component<IProps, IState> {
 
   async postToSlack(rating?: number) {
     const url = process.env.SLACK_WEBHOOK_URL;
+
+    if (!url) {
+      return;
+    }
+
     const title = document.title.replace(/\s*\|\s*Taquito\s*$/, "");
     let text: string | undefined;
     if (rating !== undefined) {
