@@ -37,6 +37,22 @@
       "provider": "ecadinfra"
     },
     {
+      "net": "shadownet",
+      "url": "https://shadownet.tezos.ecadinfra.com",
+      "provider": "ecadinfra"
+    },
+    {
+      "net": "rionet",
+      "url": "https://rionet.tezos.ecadinfra.com",
+      "provider": "ecadinfra"
+    },
+    {
+      "net": "seoulnet",
+      "url": "https://seoulnet.tezos.ecadinfra.com",
+      "provider": "ecadinfra"
+    },
+
+    {
       "net": "mainnet",
       "url": "https://mainnet.smartpy.io",
       "provider": "smartpy"
@@ -57,6 +73,11 @@
       "provider": "tezosfoundation"
     },
     {
+      "net": "shadownet",
+      "url": "https://rpc.shadownet.teztnets.com",
+      "provider": "tezosfoundation"
+    },
+    {
       "net": "rionet",
       "url": "https://rpc.rionet.teztnets.com",
       "provider": "tezosfoundation"
@@ -74,6 +95,11 @@
     {
       "net": "ghostnet",
       "url": "https://rpc.tzkt.io/ghostnet",
+      "provider": "tzkt"
+    },
+    {
+      "net": "shadownet",
+      "url": "https://rpc.tzkt.io/shadownet",
       "provider": "tzkt"
     },
     {

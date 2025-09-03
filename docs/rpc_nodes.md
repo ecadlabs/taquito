@@ -25,14 +25,19 @@ values={[
 |------------------|--------------|------------------------------------------|---------------------------------------------------------------------------------|
 | ECAD Infra       | mainnet      | https://mainnet.tezos.ecadinfra.com      | [Check](https://mainnet.tezos.ecadinfra.com/chains/main/blocks/head/header) |
 | ECAD Infra       | ghostnet     | https://ghostnet.tezos.ecadinfra.com     | [Check](https://ghostnet.tezos.ecadinfra.com/chains/main/blocks/head/header) |
+| ECAD Infra       | shadownet    | https://shadownet.tezos.ecadinfra.com    | [Check](https://shadownet.tezos.ecadinfra.com/chains/main/blocks/head/header) |
+| ECAD Infra       | rionet       | https://rionet.tezos.ecadinfra.com       | [Check](https://rionet.tezos.ecadinfra.com/chains/main/blocks/head/header) |
+| ECAD Infra       | seoulnet     | https://seoulnet.tezos.ecadinfra.com     | [Check](https://seoulnet.tezos.ecadinfra.com/chains/main/blocks/head/header) |
 | SmartPy          | mainnet      | https://mainnet.smartpy.io               | [Check](https://mainnet.smartpy.io/chains/main/blocks/head/header) |
 | SmartPy          | ghostnet     | https://ghostnet.smartpy.io              | [Check](https://ghostnet.smartpy.io/chains/main/blocks/head/header) |
 | Tezos Foundation | mainnet      | https://rpc.tzbeta.net                   | [Check](https://rpc.tzbeta.net/chains/main/blocks/head/header) |
 | Tezos Foundation | ghostnet     | https://rpc.ghostnet.teztnets.com        | [Check](https://rpc.ghostnet.teztnets.com/chains/main/blocks/head/header) |
+| Tezos Foundation | shadownet    | https://rpc.shadownet.teztnets.com       | [Check](https://rpc.shadownet.teztnets.com/chains/main/blocks/head/header) |
 | Tezos Foundation | rionet       | https://rpc.rionet.teztnets.com          | [Check](https://rpc.rionet.teztnets.com/chains/main/blocks/head/header) |
 | Tezos Foundation | seoulnet     | https://rpc.seoulnet.teztnets.com        | [Check](https://rpc.seoulnet.teztnets.com/chains/main/blocks/head/header) |
 | TzKT             | mainnet      | https://rpc.tzkt.io/mainnet              | [Check](https://rpc.tzkt.io/mainnet/chains/main/blocks/head/header) |
 | TzKT             | ghostnet     | https://rpc.tzkt.io/ghostnet             | [Check](https://rpc.tzkt.io/ghostnet/chains/main/blocks/head/header) |
+| TzKT             | shadownet    | https://rpc.tzkt.io/shadownet            | [Check](https://rpc.tzkt.io/shadownet/chains/main/blocks/head/header) |
 | TzKT             | rionet       | https://rpc.tzkt.io/rionet               | [Check](https://rpc.tzkt.io/rionet/chains/main/blocks/head/header) |
 | TzKT             | seoulnet     | https://rpc.tzkt.io/seoulnet             | [Check](https://rpc.tzkt.io/seoulnet/chains/main/blocks/head/header) |
 
