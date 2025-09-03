@@ -93,7 +93,6 @@ class AddFeedback extends React.Component<IProps, IState> {
       });
     } catch (err) {
       console.error("Error submitting rating:", err);
-      // Still show user feedback even if Firebase fails
       alert("Failed to submit rating: " + (err.message || err));
     }
   }
