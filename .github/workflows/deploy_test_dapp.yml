@@ -31,7 +31,7 @@ jobs:
         uses: cloudflare/pages-action@v1
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
-          accountId: ${{ secrets.CF_ACCOUNT_ID }}
+          accountId: "b82a3212512073a1e1802d2323762d9d"
           projectName: taquito-test-dapp
           directory: apps/taquito-test-dapp/dist
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
@@ -42,4 +42,4 @@ jobs:
         if: github.event_name == 'pull_request'
         with:
           header: Test Dapp Preview
-          message: 'A new deploy preview is available on Cloudflare Pages at ${{ steps.cloudflare_publish.outputs.URL }}'
+          message: 'A new deploy preview is for the taquito-test-dapp is available on Cloudflare Pages at ${{ steps.cloudflare_publish.outputs.URL }}'
