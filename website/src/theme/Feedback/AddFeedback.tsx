@@ -36,41 +36,101 @@ class AddFeedback extends React.Component<IProps, IState> {
     };
   }
 
+  async postToSlack(rating?: number) {
+    const url = process.env.SLACK_WEBHOOK_URL;
+
+    if (!url) {
+      return;
+    }
+
+    const title = document.title.replace(/\s*\|\s*Taquito\s*$/, "");
+    let text: string | undefined;
+    if (rating !== undefined) {
+      let ratingLabel: string | undefined;
+      switch (rating) {
+        case 0:
+          ratingLabel = "bad";
+          break;
+        case 1:
+          ratingLabel = "neutral";
+          break;
+        case 2:
+          ratingLabel = "good";
+          break;
+        default:
+          ratingLabel = undefined;
+      }
+
+      text = `New Taquito documentation rating for ${title} page. Rating: ${ratingLabel}`;
+    } else {
+      text = `New Taquito documentation feedback for ${title} page. Category: ${this.state.section}. Feedback: ${this.state.feedback}`;
+    }
+
+    const response = await fetch(`${url}`, {
+      method: "POST",
+      body: JSON.stringify({ text }),
+    });
+    return response;
+  }
+
   async handleSubmit(rating) {
     try {
-      await addDoc(collection(db, "ratings"), {
+      this.setState({ visible: false });
+      await this.postToSlack(rating);
+
+      // Without this timeout, the Firebase operation will hang indefinitely if it fails
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Firebase operation timed out")), 5000)
+      );
+
+      const firestorePromise = addDoc(collection(db, "ratings"), {
         rating: rating,
         request: window.location.href,
         timestamp: Timestamp.now(),
       });
+
+      await Promise.race([firestorePromise, timeoutPromise]);
+
       ReactGA.event({
         category: "RATINGS",
         action: rating,
         label: rating,
       });
-      this.setState({ visible: false });
     } catch (err) {
-      alert(err);
+      console.error("Error submitting rating:", err);
+      alert("Failed to submit rating: " + (err.message || err));
     }
   }
 
   async handleDetailedSubmit() {
     try {
-      await addDoc(collection(db, "feedback"), {
+      this.setState({ visible: false });
+      await this.postToSlack();
+
+      // Without this timeout, the Firebase operation will hang indefinitely if it fails
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Firebase operation timed out")), 5000)
+      );
+
+      const firestorePromise = addDoc(collection(db, "feedback"), {
         section: this.state.section,
         feedback: this.state.feedback,
         request: window.location.href,
         timestamp: Timestamp.now(),
       });
+
+      await Promise.race([firestorePromise, timeoutPromise]);
+
       ReactGA.event({
         category: "FEEDBACK",
         action: this.state.section + ":" + this.state.feedback,
         label: this.state.feedback,
       });
-      this.setState({ visible: false });
+
       window.scrollTo(0, document.body.scrollHeight);
     } catch (err) {
-      alert(err);
+      console.error("Error submitting detailed feedback:", err);
+      alert("Failed to submit feedback: " + (err.message || err));
     }
   }
 
