@@ -14,9 +14,11 @@ To use the functions, simply import the function you need as such:
 ```js
 import { getPkhfromPk, b58Encode, b58DecodeAndCheckPrefix } from '@taquito/utils';
 
-const publicKeyHash = getPkhfromPk('replace_with_publickey');
-const encoded = b58Encode('replace_with_value_to_encode');
-const [buffer, prefix] = b58DecodeAndCheckPrefix('replace_with_b58_encoded_expression', [PrefixV2.'replace_with_prefix_name']) 
+const publicKeyHash = getPkhfromPk('edpk...');
+const encoded = b58Encode('03...', PrefixV2.Ed25519Signature);
+const [buffer, prefix] = b58DecodeAndCheckPrefix('edsig...', [PrefixV2.Ed25519Signature])
+const payload = b58DecodeAndCheckPrefix('tz1...', [PrefixV2.Ed25519PublicKeyHash], true)
+const length = payloadLength[PrefixV2.Ed25519PublicKeyHash]
 ```
 
 ## Using Validation Functions from `@taquito/utils`

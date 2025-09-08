@@ -705,7 +705,7 @@ export function b58cencode(value: string | Uint8Array, prefix: Uint8Array): stri
 }
 
 /**
- * @deprecated use b58DecodeAndCheckPrefix instead, this function will be removed in the next minor release
+ * @deprecated use b58DecodePublicKey, b58DecodePublicKeyHash, b58DecodeBlsAddress, b58DecodeAddress instead, this function will be removed in the next minor release
  * @description Base58 decode a string with predefined prefix
  * @param payload Value to base58 decode
  */
