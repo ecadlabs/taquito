@@ -32,7 +32,7 @@ const forgers: ForgerType[] = [ForgerType.COMPOSITE];
 
 // user running integration test can pass environment variable TEZOS_NETWORK_TYPE=sandbox to specify which network to run against
 export enum NetworkType {
-  TESTNET,  // corresponds ghostnet, rionet and weeklynet etc.
+  TESTNET,  // corresponds ghostnet, seoulnet, rionet and weeklynet etc.
   SANDBOX,  // corresponds to flextesa local chain
 }
 
@@ -158,7 +158,7 @@ const seoulnetSecretKey: Config =
 const ghostnetEphemeral: Config =
   defaultConfig({
     networkName: 'GHOSTNET',
-    protocol: Protocols.PsRiotuma,
+    protocol: Protocols.PtSeouLou,
     defaultRpc: 'http://ecad-tezos-ghostnet-rolling-1.i.ecadinfra.com/',
     knownContracts: knownContractsPtGhostnet,
     signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/ghostnet')
