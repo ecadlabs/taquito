@@ -22,7 +22,7 @@ import {
   PublicKeyVerificationError,
   SignatureVerificationError,
 } from './errors';
-import { Signer } from '@taquito/taquito';
+import { Signer } from '@taquito/core';
 import {
   InvalidSignatureError,
   InvalidKeyHashError,

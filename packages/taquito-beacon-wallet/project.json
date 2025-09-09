@@ -1,0 +1,8 @@
+{
+  "name": "@taquito/beacon-wallet",
+  "targets": {
+    "build": {
+      "dependsOn": ["@taquito/taquito:build"]
+    }
+  }
+}

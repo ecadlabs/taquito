@@ -1,0 +1,8 @@
+{
+  "name": "@taquito/remote-signer",
+  "targets": {
+    "build": {
+      "dependsOn": ["@taquito/taquito:build"]
+    }
+  }
+}

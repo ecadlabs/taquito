@@ -52,6 +52,9 @@
       "tsx",
       "js"
     ],
+    "moduleNameMapper": {
+      "^@taquito/tzip16$": "<rootDir>/../taquito-tzip16/src/taquito-tzip16.ts"
+    },
     "coveragePathIgnorePatterns": [
       "/node_modules/",
       "/test/",

@@ -20,7 +20,7 @@ import { Curves, generateSecretKey } from './helpers';
 import { InvalidMnemonicError, InvalidPassphraseError } from './errors';
 import { InvalidKeyError, ProhibitedActionError } from '@taquito/core';
 import { SigningKey, isPOP, PublicKey } from './key-interface';
-import { SignResult, RawSignResult, Signer } from '@taquito/taquito';
+import { SignResult, RawSignResult, Signer } from '@taquito/core';
 import { BLSKey, BLSPublicKey } from './bls-key';
 
 export * from './import-key';
