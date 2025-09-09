@@ -1,4 +1,5 @@
 import { CONFIGS } from "../../config";
+import { TezosToolkit } from "@taquito/taquito";
 import { PrefixV2 } from "@taquito/utils";
 import { Protocols, UnitValue } from "@taquito/taquito";
 import { ProtoGreaterOrEqual } from "@taquito/michel-codec";
@@ -7,18 +8,21 @@ import { PvmKind } from "@taquito/rpc";
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker, knownTicketContract, protocol }) => {
   describe(`Test tz2 account operations through contract API using: ${rpc}`, () => {
-    const Tz2 = lib;
+    const Tezos = lib;
     let seoulnetAndAlpha = ProtoGreaterOrEqual(protocol, Protocols.PtSeouLou) ? test : test.skip;
     let contractAddress = ''
+    let Tz2: TezosToolkit;
 
     beforeAll(async () => {
-      await setup()
+      await setup(true)
+      Tz2 = await createAddress(PrefixV2.Secp256k1SecretKey)
       try {
-        if (await Tz2.rpc.getManagerKey(await Tz2.signer.publicKeyHash()) === null) {
-          const revealOp = await Tz2.contract.reveal({})
-          await revealOp.confirmation()
-          expect(revealOp.status).toBe('applied')
-        }
+        const fundOp = await Tezos.contract.transfer({ to: await Tz2.signer.publicKeyHash(), amount: 9 })
+        await fundOp.confirmation()
+        expect(fundOp.status).toBe('applied')
+        const revealOp = await Tz2.contract.reveal({})
+        await revealOp.confirmation()
+        expect(revealOp.status).toBe('applied')
       } catch (e) {
         console.log('beforeAll error', e)
       }
@@ -73,15 +77,15 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker, knownTicketCont
     })
 
     it('verify that setDelegate fee and gas is sufficient', async () => {
-      if(await Tz2.rpc.getDelegate(await Tz2.signer.publicKeyHash()) !== await Tz2.signer.publicKeyHash()) {
-      const estimated = await Tz2.estimate.setDelegate({ delegate: knownBaker, source: await Tz2.signer.publicKeyHash() })
-      expect(estimated?.suggestedFeeMutez).toBeGreaterThanOrEqual(264)
-      expect(estimated?.gasLimit).toBeGreaterThanOrEqual(155)
-      expect(estimated?.storageLimit).toBe(0)
+      if (await Tz2.rpc.getDelegate(await Tz2.signer.publicKeyHash()) !== await Tz2.signer.publicKeyHash()) {
+        const estimated = await Tz2.estimate.setDelegate({ delegate: knownBaker, source: await Tz2.signer.publicKeyHash() })
+        expect(estimated?.suggestedFeeMutez).toBeGreaterThanOrEqual(264)
+        expect(estimated?.gasLimit).toBeGreaterThanOrEqual(155)
+        expect(estimated?.storageLimit).toBe(0)
 
-      const setDelegateOp = await Tz2.contract.setDelegate({ delegate: knownBaker, source: await Tz2.signer.publicKeyHash() })
-      await setDelegateOp.confirmation()
-      expect(setDelegateOp.status).toBe('applied')
+        const setDelegateOp = await Tz2.contract.setDelegate({ delegate: knownBaker, source: await Tz2.signer.publicKeyHash() })
+        await setDelegateOp.confirmation()
+        expect(setDelegateOp.status).toBe('applied')
       }
     })
 
