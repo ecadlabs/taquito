@@ -4,5 +4,5 @@
     "declarationDir": "dist/types",
     "outDir": "dist/lib"
   },
-  "include": ["src"]
+  "include": ["src", "../taquito-signer/src/keys.ts"]
 }
