@@ -8,7 +8,7 @@ import {
   compareArrays,
 } from '@taquito/utils';
 import { SigningKey, PublicKey } from './key-interface';
-import { RawSignResult } from '@taquito/taquito';
+import { RawSignResult } from '@taquito/core';
 
 /**
  * @description Provide signing logic for ed25519 curve based key (tz1)
