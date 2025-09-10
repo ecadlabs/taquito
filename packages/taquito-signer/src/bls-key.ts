@@ -10,7 +10,7 @@ import {
 import { bls12_381 } from '@noble/curves/bls12-381';
 import { hash } from '@stablelib/blake2b';
 import { PublicKey, SigningKeyWithProofOfPossession } from './key-interface';
-import { RawSignResult } from '@taquito/taquito';
+import { RawSignResult } from '@taquito/core';
 
 const bls = bls12_381.longSignatures; // AKA MinPK
 

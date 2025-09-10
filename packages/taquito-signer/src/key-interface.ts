@@ -1,4 +1,4 @@
-import { RawSignResult } from '@taquito/taquito';
+import { RawSignResult } from '@taquito/core';
 
 export interface SigningKey {
   sign(message: Uint8Array): RawSignResult;

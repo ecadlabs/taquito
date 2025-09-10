@@ -3,7 +3,7 @@
  * @module @taquito/ledger-signer
  */
 
-import { Signer } from '@taquito/taquito';
+import { Signer } from '@taquito/core';
 import Transport from '@ledgerhq/hw-transport';
 import { b58Encode, PrefixV2 } from '@taquito/utils';
 import {
