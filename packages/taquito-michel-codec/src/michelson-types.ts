@@ -416,7 +416,7 @@ export enum Protocol {
   ProtoALpha = 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK', // temporary protocol hash
 }
 
-export const DefaultProtocol = Protocol.PsRiotuma;
+export const DefaultProtocol = Protocol.PtSeouLou;
 
 export type ProtocolID = `${Protocol}`;
 

@@ -114,7 +114,7 @@ export class RpcClient implements RpcClientInterface {
     protected url: string,
     protected chain: string = defaultChain,
     protected httpBackend: HttpBackend = new HttpBackend()
-  ) { }
+  ) {}
 
   protected createURL(path: string) {
     // Trim trailing slashes because it is assumed to be included in path
@@ -346,24 +346,24 @@ export class RpcClient implements RpcClientInterface {
     return response === null
       ? null
       : {
-        finalizable: response.finalizable.map(({ amount, ...rest }) => {
-          const castedToBigNumber: any = castToBigNumber({ amount }, ['amount']);
-          return {
-            ...rest,
-            amount: castedToBigNumber.amount,
-          };
-        }),
-        unfinalizable: {
-          delegate: response.unfinalizable.delegate,
-          requests: response.unfinalizable.requests.map(({ amount, cycle }) => {
+          finalizable: response.finalizable.map(({ amount, ...rest }) => {
             const castedToBigNumber: any = castToBigNumber({ amount }, ['amount']);
             return {
-              cycle,
+              ...rest,
               amount: castedToBigNumber.amount,
             };
           }),
-        },
-      };
+          unfinalizable: {
+            delegate: response.unfinalizable.delegate,
+            requests: response.unfinalizable.requests.map(({ amount, cycle }) => {
+              const castedToBigNumber: any = castToBigNumber({ amount }, ['amount']);
+              return {
+                cycle,
+                amount: castedToBigNumber.amount,
+              };
+            }),
+          },
+        };
   }
 
   /**
@@ -1215,7 +1215,9 @@ export class RpcClient implements RpcClientInterface {
     { block }: { block: string } = defaultRPCOptions
   ): Promise<string> {
     return this.httpBackend.createRequest<string>({
-      url: this.createURL(`/chains/${this.chain}/blocks/${block}/context/contracts/${contract}/storage/used_space`),
+      url: this.createURL(
+        `/chains/${this.chain}/blocks/${block}/context/contracts/${contract}/storage/used_space`
+      ),
       method: 'GET',
     });
   }
@@ -1231,7 +1233,9 @@ export class RpcClient implements RpcClientInterface {
     { block }: { block: string } = defaultRPCOptions
   ): Promise<string> {
     return this.httpBackend.createRequest<string>({
-      url: this.createURL(`/chains/${this.chain}/blocks/${block}/context/contracts/${contract}/storage/paid_space`),
+      url: this.createURL(
+        `/chains/${this.chain}/blocks/${block}/context/contracts/${contract}/storage/paid_space`
+      ),
       method: 'GET',
     });
   }
@@ -1251,7 +1255,9 @@ export class RpcClient implements RpcClientInterface {
   ): Promise<string> {
     return this.httpBackend.createRequest<string>(
       {
-        url: this.createURL(`/chains/${this.chain}/blocks/${block}/context/contracts/${contract}/ticket_balance`),
+        url: this.createURL(
+          `/chains/${this.chain}/blocks/${block}/context/contracts/${contract}/ticket_balance`
+        ),
         method: 'POST',
       },
       ticket
@@ -1269,7 +1275,9 @@ export class RpcClient implements RpcClientInterface {
     { block }: { block: string } = defaultRPCOptions
   ): Promise<AllTicketBalances> {
     return this.httpBackend.createRequest<AllTicketBalances>({
-      url: this.createURL(`/chains/${this.chain}/blocks/${block}/context/contracts/${contract}/all_ticket_balances`),
+      url: this.createURL(
+        `/chains/${this.chain}/blocks/${block}/context/contracts/${contract}/all_ticket_balances`
+      ),
       method: 'GET',
     });
   }
@@ -1283,7 +1291,9 @@ export class RpcClient implements RpcClientInterface {
     block,
   }: { block: string } = defaultRPCOptions): Promise<AILaunchCycleResponse> {
     return this.httpBackend.createRequest<AILaunchCycleResponse>({
-      url: this.createURL(`/chains/${this.chain}/blocks/${block}/context/adaptive_issuance_launch_cycle`),
+      url: this.createURL(
+        `/chains/${this.chain}/blocks/${block}/context/adaptive_issuance_launch_cycle`
+      ),
       method: 'GET',
     });
   }
@@ -1292,7 +1302,7 @@ export class RpcClient implements RpcClientInterface {
    * @description List the prevalidated operations in mempool (accessibility of mempool depends on each rpc endpoint)
    * @param args has 5 optional properties
    * @default args { version: '2', validated: true, refused: true, outdated, true, branchRefused: true, branchDelayed: true, validationPass: undefined, source: undefined, operationHash: undefined }
-   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/rio-mempool-openapi.json
+   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/seoul-mempool-openapi.json
    */
   async getPendingOperations(
     args: PendingOperationsQueryArguments = {}
