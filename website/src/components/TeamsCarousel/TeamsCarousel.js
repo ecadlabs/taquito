@@ -100,7 +100,7 @@ const FeatureList = [
       {
         Image: require('../../../static/img/tezos_mandala.png').default,
         title: 'Tezos Mandala',
-        url: 'https://tezos-mandala.art/'
+        url: 'https://tezos-mandala.xyz/'
       },
       {
         Image: require('../../../static/img/tz-colors.png').default,
