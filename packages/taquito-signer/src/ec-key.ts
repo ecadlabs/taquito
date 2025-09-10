@@ -8,7 +8,7 @@ import {
 } from '@taquito/utils';
 import elliptic from 'elliptic';
 import { SigningKey, PublicKey } from './key-interface';
-import { RawSignResult } from '@taquito/taquito';
+import { RawSignResult } from '@taquito/core';
 import KeyPair from 'elliptic/lib/elliptic/ec/key';
 import { InvalidCurveError } from './errors';
 
