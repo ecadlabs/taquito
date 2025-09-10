@@ -63,11 +63,6 @@ const FeatureList = [
         url: 'https://www.umamiwallet.com/'
       },
       {
-        Image: require('../../../static/img/Vector_1.png').default,
-        title: 'Homebase',
-        url: 'https://tezos-homebase.io/'
-      },
-      {
         Image: require('../../../static/img/Group.png').default,
         title: 'Tezos Domains',
         url: 'https://tezos.domains'
@@ -81,11 +76,6 @@ const FeatureList = [
         Image: require('../../../static/img/TzSafe.svg').default,
         title: 'TzSafe',
         url: 'https://tzsafe.org/'
-      },
-      {
-        Image: require('../../../static/img/spruce_logo.png').default,
-        title: 'Spruce',
-        url: 'https://www.spruceid.com/'
       },
       {
         Image: require('../../../static/img/3route.svg').default,
@@ -102,11 +92,6 @@ const FeatureList = [
         title: 'Tezos Mandala',
         url: 'https://tezos-mandala.xyz/'
       },
-      {
-        Image: require('../../../static/img/tz-colors.png').default,
-        title: 'tzcolors',
-        url: 'https://www.tzcolors.io/'
-      }
     ]
   },
 ];
