@@ -57,7 +57,7 @@ await wallet.client.subscribeToEvent(
   },
 
 await wallet.requestPermissions();
-Tezos.setWalletProvider(wallet)
+Tezos.setWalletProvider(wallet);
 ```
 
   </TabItem>

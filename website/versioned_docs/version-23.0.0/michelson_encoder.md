@@ -7,6 +7,11 @@ The purpose of the `Michelson-Encoder` package is to create an abstraction over 
 
 Its integration into the main `Taquito` package makes it easier to write the storage when deploying a contract and the parameter when calling a contract entry-point.
 
+:::info
+With the release of Taquito vevsion 20.0.0, we have made a breaking change in the Michelson Encoder package.
+Please check the [Breaking Change to Field Numbering](#breaking-change-to-field-numbering) section of this document for more information and how to enable the old behavior.
+:::
+
 ## How it works?
 
 There are three main classes in the Michelson Encoder:
@@ -264,12 +269,16 @@ const storageType = {
     ]
 };
 const storageSchema = new Schema(storageType);
-const typecheck = storageSchema.Typecheck({
-    stored_counter: 10,
-    threshold: 5,
-    keys: ['edpkuLxx9PQD8fZ45eUzrK3yhfDZJHhBuK4Zi49DcEGANwd2rpX82t']
-})
-console.log(typecheck);
+try {
+	storageSchema.Typecheck({
+		stored_counter: 10,
+		threshold: 5,
+		keys: ['edpkuLxx9PQD8fZ45eUzrK3yhfDZJHhBuK4Zi49DcEGANwd2rpX82t']
+	})
+	console.log('Storage object is valid');
+} catch (e) {
+	console.log(`Storage is not valid: ${e}`);
+}
 ```
 
 ### The Encode method
@@ -533,3 +542,106 @@ const storageSchema = new Schema({
 const mixedSchema = storageSchema.ExtractSchema();
 console.log(JSON.stringify(mixedSchema, null, 2));
 ```
+
+## Breaking Change to Field Numbering {#breaking-change-to-field-numbering}
+When having nested `pair`s or unions (`or`), Taquito assigns numbers to fields when an annotation is not present.
+In previous versions of Taquito, the nested object's fields were numbered were a continuation of the parent object's fields.
+For example, the following schema:
+
+```js live noInline
+const param = {
+    prim: 'or',
+    args: [
+        {
+            prim: 'pair',
+            args: [{ prim: 'address' }, { prim: 'nat' }],
+            annots: ['%transfer']
+        },
+        {
+            prim: 'or',
+            args: [
+                {
+                    prim: 'pair',
+                    args: [{ prim: 'address' }, { prim: 'nat' }],
+                    annots: ['%approve']
+                },
+                {
+                    prim: 'pair',
+                    args: [{ prim: 'address' }, { prim: 'nat' }],
+                    annots: ['%mint']
+                }
+            ]
+        }
+    ],
+    annots: [':_entries']
+};
+const parameterSchema = new ParameterSchema(param);
+Token.fieldNumberingStrategy = "Legacy"; //To bring back the old behavior
+const value = parameterSchema.generateSchema();
+console.log(JSON.stringify(value, null, 2));
+Token.fieldNumberingStrategy = 'Latest'; //To restore the default (new) behavior
+```
+
+Please run the code above and check the output.
+
+Please note how nested field numbers are not predictable. The field numbers are assigned in the order their parent were encountered during the traversal of the tree. For instance, in the above example, `approve` would get a field number of `1`. Because it has annotations, the field number is not used. But its nested fields would be numbered starting from `1` and not `2`.
+
+While this behavior is not an error, it is prone to unexpected changes when the schema is modified. Also, predicting the field number of a specific field is not straightforward.
+
+With the release of Taquito version 20.0.0, we have made a breaking change in the Michelson Encoder package. The field numbering is now predictable and consistent.
+The field numbers for each nested object (`Or`/`Pair`) are now reset from zero. You can see that by commenting out the line: `Token.fieldNumberingStrategy = "Legacy";` and running the code again.
+
+Below you can see a diff of the new versus old behavior:
+
+```diff
+{
+  "__michelsonType": "or",
+  "schema": {
+    "transfer": {
+      "__michelsonType": "pair",
+      "schema": {
+        "0": {
+          "__michelsonType": "address",
+          "schema": "address"
+        },
+        "1": {
+          "__michelsonType": "nat",
+          "schema": "nat"
+        }
+      }
+    },
+    "approve": {
+      "__michelsonType": "pair",
+      "schema": {
+-        "1": {
++        "0": {
+          "__michelsonType": "address",
+          "schema": "address"
+        },
+-        "2": {
++        "1": {
+          "__michelsonType": "nat",
+          "schema": "nat"
+        }
+      }
+    },
+    "mint": {
+      "__michelsonType": "pair",
+      "schema": {
+-        "2": {
++        "0": {
+          "__michelsonType": "address",
+          "schema": "address"
+        },
+-        "3": {
++        "1": {
+          "__michelsonType": "nat",
+          "schema": "nat"
+        }
+      }
+    }
+  }
+}
+```
+You can enable the old behavior by setting the `Token.fieldNumberingStrategy = 'Legacy'`. Please note that this value should stay the same for the whole application.
+The possible values are: `type FieldNumberingStrategy = 'Legacy' | 'ResetFieldNumbersInNestedObjects' | 'Latest';` For new applications, we recommend using the default value `Latest`.

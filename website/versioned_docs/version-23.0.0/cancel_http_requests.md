@@ -43,6 +43,7 @@ class CancellableHttpBackend extends HttpBackend {
     
     try {
       const response = await fetch(urlWithQuery, {
+        keepalive: false, // generally only for Node 19 and above
         method,
         headers,
         body: JSON.stringify(data),
