@@ -28,7 +28,8 @@ module.exports = {
     filename: '[name].js',
     path: path.resolve(__dirname, 'dist'),
     library: ['[name]'],
-    libraryTarget: "var"
+    libraryTarget: "var",
+    publicPath: '',
   },
   plugins: [
     new webpack.ProvidePlugin({
