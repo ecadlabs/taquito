@@ -21,7 +21,11 @@ import {
   InvalidDalCommitmentError,
 } from './errors';
 import BigNumber from 'bignumber.js';
-import { entrypointMapping, entrypointMappingReverse, ENTRYPOINT_MAX_LENGTH } from './constants-proto022';
+import {
+  entrypointMapping,
+  entrypointMappingReverse,
+  ENTRYPOINT_MAX_LENGTH,
+} from './constants-proto022';
 import {
   extractRequiredLen,
   valueDecoder,
@@ -374,10 +378,7 @@ export const smartContractAddressDecoder = (val: Uint8ArrayConsumer) => {
     val.consume(1);
     return scAddress;
   }
-  throw new InvalidContractAddressError(
-    val.toString(),
-    invalidDetail(ValidationResult.NO_PREFIX_MATCHED)
-  );
+  throw new InvalidContractAddressError(val.toString(), ValidationResult.NO_PREFIX_MATCHED);
 };
 
 export const smartRollupCommitmentHashDecoder = (val: Uint8ArrayConsumer) => {

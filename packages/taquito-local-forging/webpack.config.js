@@ -7,9 +7,6 @@ module.exports = {
     "taquito_local_forging": ['./src/taquito-local-forging.ts']
   },
   mode: 'production',
-  externals: {
-    '@noble/curves': 'null',
-  },
   module: {
     rules: [
       {
