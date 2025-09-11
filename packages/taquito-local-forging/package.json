@@ -69,7 +69,8 @@
   "dependencies": {
     "@taquito/core": "^23.0.0",
     "@taquito/utils": "^23.0.0",
-    "bignumber.js": "^9.1.2"
+    "bignumber.js": "^9.1.2",
+    "fast-text-encoding": "^1.0.6"
   },
   "devDependencies": {
     "@taquito/rpc": "^23.0.0",
