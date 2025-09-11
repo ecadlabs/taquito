@@ -2,6 +2,14 @@
 title: Versions
 author: Jev Bjorsell
 ---
+# Taquito v23.0.1
+
+## 🛠 Internal
+
+### `@taquito/beacon-wallet`
+
+- Upgraded `@airgap/beacon` dependencies to `v4.6.1-rc1`.
+
 # Taquito v23.0.0
 # Seoul Protocol Support
 
