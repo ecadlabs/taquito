@@ -7,6 +7,9 @@ module.exports = {
     "taquito_local_forging": ['./src/taquito-local-forging.ts']
   },
   mode: 'production',
+  externals: {
+    '@noble/curves': 'null',
+  },
   module: {
     rules: [
       {
@@ -29,7 +32,6 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     library: ['[name]'],
     libraryTarget: "var",
-    publicPath: '',
   },
   plugins: [
     new webpack.ProvidePlugin({
