@@ -16,6 +16,13 @@ import { InvalidOperationSchemaError } from './errors';
 import { validateMissingProperty, validateOperationKind } from './validator';
 import { ProtocolsHash, ProtoInferiorTo } from './protocols';
 import { InvalidBlockHashError, InvalidOperationKindError } from '@taquito/core';
+import 'fast-text-encoding';
+if (typeof globalThis.TextEncoder === 'undefined') {
+  globalThis.TextEncoder = TextEncoder as any;
+}
+if (typeof globalThis.TextDecoder === 'undefined') {
+  globalThis.TextDecoder = TextDecoder as any;
+}
 
 export { CODEC, opMapping, opMappingReverse } from './constants';
 export * from './decoder';
@@ -57,7 +64,7 @@ export function getCodec(codec: CODEC | CODECPROTO022, _proto: ProtocolsHash) {
 }
 
 export class LocalForger implements Forger {
-  constructor(public readonly protocolHash = PROTOCOL_CURRENT) { }
+  constructor(public readonly protocolHash = PROTOCOL_CURRENT) {}
 
   private codec = getCodec(CODEC.MANAGER, this.protocolHash);
 
