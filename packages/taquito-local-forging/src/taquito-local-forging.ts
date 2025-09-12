@@ -3,6 +3,13 @@
  * @module @taquito/local-forging
  */
 
+import 'fast-text-encoding';
+if (typeof globalThis.TextEncoder === 'undefined') {
+  globalThis.TextEncoder = TextEncoder as any;
+}
+if (typeof globalThis.TextDecoder === 'undefined') {
+  globalThis.TextDecoder = TextDecoder as any;
+}
 import { ForgeParams, Forger } from './interface';
 import { CODEC } from './constants';
 import { CODEC as CODECPROTO022 } from './constants-proto022';
@@ -16,13 +23,6 @@ import { InvalidOperationSchemaError } from './errors';
 import { validateMissingProperty, validateOperationKind } from './validator';
 import { ProtocolsHash, ProtoInferiorTo } from './protocols';
 import { InvalidBlockHashError, InvalidOperationKindError } from '@taquito/core';
-import 'fast-text-encoding';
-if (typeof globalThis.TextEncoder === 'undefined') {
-  globalThis.TextEncoder = TextEncoder as any;
-}
-if (typeof globalThis.TextDecoder === 'undefined') {
-  globalThis.TextDecoder = TextDecoder as any;
-}
 
 export { CODEC, opMapping, opMappingReverse } from './constants';
 export * from './decoder';
