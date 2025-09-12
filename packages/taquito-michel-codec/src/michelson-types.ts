@@ -81,7 +81,8 @@ type MichelsonNoArgInstructionID =
   | 'OPEN_CHEST'
   | 'MIN_BLOCK_TIME'
   | 'BYTES'
-  | 'NAT';
+  | 'NAT'
+  | 'IS_IMPLICIT_ACCOUNT';
 
 type MichelsonRegularInstructionID =
   | 'CONTRACT'
@@ -411,10 +412,11 @@ export enum Protocol {
   PsParisCZ = 'PsParisCZo7KAh1Z1smVd9ZMZ1HHn5gkzbM94V3PLCpknFWhUAi',
   PsQuebecn = 'PsQuebecnLByd3JwTiGadoG4nGWi3HYiLXUjkibeFV8dCFeVMUg',
   PsRiotuma = 'PsRiotumaAMotcRoDWW1bysEhQy2n1M5fy8JgRp8jjRfHGmfeA7',
+  PtSeouLou = 'PtSeouLouXkxhg39oWzjxDWaCydNfR3RxCUrNe4Q9Ro8BTehcbh',
   ProtoALpha = 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK', // temporary protocol hash
 }
 
-export const DefaultProtocol = Protocol.PsRiotuma;
+export const DefaultProtocol = Protocol.PtSeouLou;
 
 export type ProtocolID = `${Protocol}`;
 
@@ -448,6 +450,7 @@ const protoLevel: Record<ProtocolID, number> = {
   PsParisCZo7KAh1Z1smVd9ZMZ1HHn5gkzbM94V3PLCpknFWhUAi: 20,
   PsQuebecnLByd3JwTiGadoG4nGWi3HYiLXUjkibeFV8dCFeVMUg: 21,
   PsRiotumaAMotcRoDWW1bysEhQy2n1M5fy8JgRp8jjRfHGmfeA7: 22,
+  PtSeouLouXkxhg39oWzjxDWaCydNfR3RxCUrNe4Q9Ro8BTehcbh: 23,
   ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK: 23,
 };
 

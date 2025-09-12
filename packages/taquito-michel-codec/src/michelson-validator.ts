@@ -89,6 +89,7 @@ const noArgInstructionIDs: Record<MichelsonNoArgInstruction['prim'], true> = {
   MIN_BLOCK_TIME: true,
   BYTES: true,
   NAT: true,
+  IS_IMPLICIT_ACCOUNT: true,
 };
 
 export const instructionIDs: Record<MichelsonInstruction['prim'], true> = Object.assign(
@@ -177,7 +178,10 @@ export class MichelsonValidationError extends MichelsonError {
    * @param val Value of a node caused the error
    * @param message An error message
    */
-  constructor(public readonly val: Expr, public readonly message: string) {
+  constructor(
+    public readonly val: Expr,
+    public readonly message: string
+  ) {
     super(val, message);
     this.name = 'MichelsonValidationError';
   }

@@ -1,0 +1,8 @@
+{
+  "name": "@taquito/ledger-signer",
+  "targets": {
+    "build": {
+      "dependsOn": ["@taquito/taquito:build"]
+    }
+  }
+}

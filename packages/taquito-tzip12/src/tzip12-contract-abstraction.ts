@@ -66,7 +66,7 @@ export class Tzip12ContractAbstraction {
     let isCompliant = false;
     const metadata = await this.getContractMetadata();
     if (metadata) {
-      const tzip12Interface = metadata.interfaces?.filter((x) => {
+      const tzip12Interface = metadata.interfaces?.filter((x: string) => {
         return x.substring(0, 8) === 'TZIP-012';
       });
       isCompliant = tzip12Interface && tzip12Interface.length !== 0 ? true : false;

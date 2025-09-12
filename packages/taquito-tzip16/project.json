@@ -1,0 +1,8 @@
+{
+  "name": "@taquito/tzip16",
+  "targets": {
+    "build": {
+      "dependsOn": ["@taquito/taquito:build"]
+    }
+  }
+}
