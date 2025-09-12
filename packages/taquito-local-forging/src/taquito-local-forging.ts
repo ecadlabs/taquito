@@ -3,6 +3,13 @@
  * @module @taquito/local-forging
  */
 
+import 'fast-text-encoding';
+if (typeof globalThis.TextEncoder === 'undefined') {
+  globalThis.TextEncoder = TextEncoder as any;
+}
+if (typeof globalThis.TextDecoder === 'undefined') {
+  globalThis.TextDecoder = TextDecoder as any;
+}
 import { ForgeParams, Forger } from './interface';
 import { CODEC } from './constants';
 import { CODEC as CODECPROTO022 } from './constants-proto022';
@@ -57,7 +64,7 @@ export function getCodec(codec: CODEC | CODECPROTO022, _proto: ProtocolsHash) {
 }
 
 export class LocalForger implements Forger {
-  constructor(public readonly protocolHash = PROTOCOL_CURRENT) { }
+  constructor(public readonly protocolHash = PROTOCOL_CURRENT) {}
 
   private codec = getCodec(CODEC.MANAGER, this.protocolHash);
 
