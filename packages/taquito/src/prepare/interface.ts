@@ -11,6 +11,7 @@ import {
   TransferParams,
   TransferTicketParams,
   UpdateConsensusKeyParams,
+  UpdateCompanionKeyParams,
   ActivationParams,
   SmartRollupAddMessagesParams,
   SmartRollupOriginateParams,
@@ -85,6 +86,14 @@ export interface PreparationProvider {
    * @returns a PreparedOperation object
    */
   updateConsensusKey(params: UpdateConsensusKeyParams): Promise<PreparedOperation>;
+
+  /**
+   * @description Method to prepare an update_companion_key operation
+   * @param params updateCompanionKey operation parameters
+   * @param source string or undefined source pkh
+   * @returns a PreparedOperation object
+   */
+  updateCompanionKey(params: UpdateCompanionKeyParams): Promise<PreparedOperation>;
 
   /**
    *

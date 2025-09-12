@@ -1,9 +1,9 @@
 import { CONFIGS } from "../../../config";
 import { DefaultContractType, TezosToolkit } from "@taquito/taquito";
-import { ticketsSendTz, ticketsBagTz, ticketsBlackholeTz } from "../../../data/code_with_ticket_transfer";
+import { ticketsBagTz, ticketsBlackholeTz } from "../../../data/code_with_ticket_transfer";
 import { RpcClient, TicketTokenParams } from '@taquito/rpc';
 
-CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
+CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownTicketContract }) => {
   const Tezos1 = lib;
   const client = new RpcClient(rpc);
 
@@ -25,9 +25,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         tezos2Pkh = await Tezos2.signer.publicKeyHash();
 
         // ticketSend contract has one default entrypoint which accepts an address to issue tickets to
-        const ticketSendOrigination = await Tezos1.contract.originate({ code: ticketsSendTz, storage: null });
-        await ticketSendOrigination.confirmation();
-        ticketSendContract = await ticketSendOrigination.contract();
+        ticketSendContract = await Tezos1.contract.at(knownTicketContract);
 
         // ticketBag contract has two entrypoints, one is "save" to receive tickets and the other is "send" to send tickets out
         const ticketBagOrigination = await Tezos1.contract.originate({ code: ticketsBagTz, storage: [] });
@@ -51,7 +49,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       expect(ticketSendToImplicitOp.status).toEqual('applied');
 
       let tezos1TicketBalance = await client.getTicketBalance(tezos1Pkh, ticketToken);
-      expect(tezos1TicketBalance).toBe('3');
+      expect(Number(tezos1TicketBalance)).toBeGreaterThanOrEqual(3);
     });
 
     it('will transfer 1 tickets from an implicit to another implicit account', async () => {
@@ -70,7 +68,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       expect(implicitToImplicitOp.status).toEqual('applied');
 
       let tezos1TicketBalanceAfter = await client.getTicketBalance(await Tezos1.signer.publicKeyHash(), ticketToken);
-      expect(tezos1TicketBalanceAfter).toBe('2');
+      expect(Number(tezos1TicketBalanceAfter)).toBeGreaterThanOrEqual(2);
       let tezos2TicketBalanceAfter = await client.getTicketBalance(await Tezos2.signer.publicKeyHash(), ticketToken);
       expect(tezos2TicketBalanceAfter).toBe('1');
     });

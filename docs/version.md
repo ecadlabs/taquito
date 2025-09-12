@@ -2,6 +2,206 @@
 title: Versions
 author: Jev Bjorsell
 ---
+# Taquito v23.0.1
+
+## 🛠 Internal
+
+### `@taquito/beacon-wallet`
+
+- Upgraded `@airgap/beacon` dependencies to `v4.6.1-rc1`.
+
+# Taquito v23.0.0
+# Seoul Protocol Support
+
+## ⚠ **Breaking Change**⚠
+* Affecting all users to `reveal` a new account, taquito versions before v23 are not forward compatible with the new encoding introduced in protocol Seoul. Please update to v23 and above to ensure backwards compatability in `LocalForger`.
+* With the addition of BLS (tz4) key support across Taquito packages, we have refactored validation logic and updated associated error classes in `@taquito/utils` and `@taquito/core`. This may affect how validation errors are returned or handled.
+
+---
+
+## 🚀 New Features
+
+### `@taquito/taquito`
+> These are all supported in `contractProvider`, `estimateProvider`, `batchProvider`, `prepareProvider`
+- Supported BLS(tz4) `reveal` operation with optional `proof` parameter. #3158
+- Supported `updateConsensusKey` to also take a BLS consensus key with optional `proof` parameter. #3159
+- Added new operation`updateCompanionKey` to use (only) BLS as companion key for DAL operations. #3160
+- Supported BLS key with `inMemorySigner` to perform all operations
+
+### `@taquito/signer`
+
+- `InMemorySigner` now supports BLS keys, including signing and generating proofs of possession via `provePosession`. #3174
+
+### `@taquito/local-forging`
+
+- Added support for the new `proof` field in the `reveal` operation. #3158
+- Supported the new `update_companion_key` operation. #3160
+- Supported the new Michelson instruction `IS_IMPLICIT_ACCOUNT`. #3156
+
+### `@taquito/michel-codec`
+
+- Added support for the `IS_IMPLICIT_ACCOUNT` Michelson instruction. #3155
+
+### `@taquito/michelson-encoder`
+
+- `address`, `key`, and `key_hash` tokens now support comparison of BLS values. #3174
+
+### `@taquito/utils`
+
+- Extended `verifySignature` to support BLS proof-of-possession verification. #3174
+
+### `@taquito/rpc`
+
+- Added new operation types:
+  - `PreattestationsAggregate`
+  - `AttestationsAggregate`
+  - `UpdateCompanionKey`
+  - `DoubleConsensusOperationEvidence` #3157, #3160, #3161
+- Updated `Reveal` and `UpdateConsensusKey` operations to include the new `proof` field. #3158, #3159
+- Enhanced `DalEntrapmentEvidence` operation with a new `consensus_slot` field. #3162
+- Updated `DoubleBaking` response types with new schema. #3162
+- Updated core types:
+  - `OperationContents`
+  - `OperationContentsAndResult`
+  - `OperationContentsAndResultWithFee`
+- Added new interface `ConstantsResponseProto023` to `ConstantsResponse`. Includes tests. #3164
+- Updated `DelegatesResponse` to include the new field `companion_key`. #3163
+- Updated `ContractResponse` to include the new field `revealed`.
+
+## 🧠 Improvements
+
+### `@taquito/utils`
+
+- Refactored all validation functions.
+- Extended `validationResult` with new codes:
+  - `4: PREFIX_NOT_ALLOWED`
+  - `5: INVALID_ENCODING`
+  - `6: OTHER`
+- **Note:** Some validation errors may now return different codes than in previous versions.
+
+### `@taquito/core`
+
+- Refactored `ParameterValidationError` for improved readability.
+- Error messages in related `InvalidXXXError` classes may have changed.
+
+### `@taquito/michelson-encoder`
+
+- Refactored validation logic for `address`, `key`, `key_hash`, and `contract` tokens. May result in different validation outcomes.
+
+### `@taquito/taquito`
+> This aligns with Seoul protocol updates hence removing the previous `InvalidStakingAddressError`
+- Removed the limitation in the `finalizeUnstake` pseudo-operation requiring the source and destination to match. #3165
+
+## 🧹 Deprecations
+
+### `@taquito/utils`
+
+- **Deprecated:**
+  - `validatePkAndExtractPrefix`, `b58cdecode`, `b58decode` → use `b58DecodeAndCheckPrefix`
+  - `b58cencode` → use `b58Encode`
+  - `prefix`, `Prefix` → use `PrefixV2`
+  - `prefixLength` → use `payloadLength`
+- **Updated APIs:**
+  - `encodeAddress`, `verifySignature`, `encodeKey`, `encodeKeyHash` now accept the `message` parameter as either a `string` or `Uint8Array`.
+
+## 🐞 Bug Fixes
+
+### `@taquito/michelson-encoder`
+
+- Fixed an issue in `key` token comparison logic.
+  P256 public keys are now decompressed before comparison to ensure accurate results.
+
+## 🛠 Internal
+
+### `@taquito/beacon-wallet`
+
+- Upgraded `@airgap/beacon` dependencies to `v4.6.1-beta.4`.
+
+### `@taquito/signer`
+- Refactored internal signingKeys classes with additional PublicKey classes to handle compare logic #3188
+
+### `@taquito/taquito` & `@taquito/core`
+- Refactored to move interface `Signer` to @taquito/core to avoid circular dependencies #3192
+
+---
+
+## Example Usage
+### tz4 reveal contractProvider
+* When using `inMemorySigner` taquito can automatically generate proof for the `reveal` operation
+```
+import { TezosToolkit } from '@taquito/taquito';
+import { InMemorySigner } from '@taquito/signer';
+
+const tezos = new TezosToolkit('https://seoulnet.tezos.ecadinfra.com');
+const signer = new InMemorySigner('BLsk...');
+const revealOp = tezos.contract.reveal({})
+await revealOp.confirmation()
+```
+* Optionally users can choose to pass the proof by themselves
+```
+import { TezosToolkit } from '@taquito/taquito';
+import { InMemorySigner } from '@taquito/signer';
+
+const tezos = new TezosToolkit('https://seoulnet.tezos.ecadinfra.com');
+const signer = new InMemorySigner('BLsk...');
+const revealOp = tezos.contract.reveal({proof: 'BLsig...'})
+await revealOp.confirmation()
+```
+
+### updateConsensusKey and updateCompanionKey to tz4 contractProvider
+```
+import { TezosToolkit } from '@taquito/taquito';
+import { InMemorySigner } from '@taquito/signer';
+
+const tezos = new TezosToolkit('https://seoulnet.tezos.ecadinfra.com');
+const signer = new InMemorySigner('BLsk...');
+const consensusOp = tezos.contract.updateConsensusKey({pk: BLpk..., proof: 'BLsig...'})
+await consensusOp.confirmation()
+
+const companionOp = tezos.contract.updateCompanionKey({pk: BLpk..., proof: 'BLsig...'})
+await companionOp.confirmation()
+```
+
+### inMemorySigner with BLS keys
+* InMemorySigner can be used directly
+```
+import { InMemorySigner } from '@taquito/signer';
+
+const signer = new InMemorySigner('BLsk...');
+const pk = await signer.publicKey()
+const pkh = await signer.publicKeyHash()
+const sig = await signer.sign('0x1234')
+const proof = await signer.provePossession()
+const isPop = await signer.canProvePossession
+```
+* InMemorySigner passed into TezosToolkit
+```
+import { TezosToolkit } from '@taquito/taquito';
+import { InMemorySigner } from '@taquito/signer';
+
+const tezos = new TezosToolkit('https://seoulnet.tezos.ecadinfra.com');
+const signer = new InMemorySigner('BLsk...');
+const pk = await tezos.signer.publicKey()
+const pkh = await tezos.signer.publicKeyHash()
+const sig = await tezos.signer.sign('0x1234')
+const proof = await tezos.signer.provePossession()
+const isPop = await tezos.signer.canProvePossession
+```
+
+### new utils functions (to replace deprecated ones)
+
+```
+import { b58Encode, b58DecodeAndCheckPrefix, payloadLength } from '@taquito/utils';
+
+const encoded = b58Encode('036d072a1daece3cbbabeeec93c9b51c23e0e545fa54129419c4021d0f27e5f8315eea1f2d53e070cf51c6a5ca29341fab902052574f1ba4e329bdfbc5780908', PrefixV2.Ed25519Signature);
+
+const [buf1, pre1] = b58DecodeAndCheckPrefix('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM') // returns [Uint8Array, PrefixV2.Ed25519PublicKeyHash]
+const [buf2, pre2] = b58DecodeAndCheckPrefix('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM', [PrefixV2.Ed25519PublicKeyHash]) // returns [Uint8Array, PrefixV2.Ed25519PublicKeyHash]
+const buf3 = b58DecodeAndCheckPrefix('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM', [PrefixV2.Ed25519PublicKeyHash], true) // returns Uint8Array
+
+const length = payloadLength[PrefixV2.Ed25519PublicKeyHash]
+```
+
 # Taquito v22.0.0
 ## Summary
 

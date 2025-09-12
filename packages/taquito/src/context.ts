@@ -3,7 +3,7 @@ import { Protocols } from './constants';
 import { Forger } from '@taquito/local-forging';
 import { Injector } from './injector/interface';
 import { RpcInjector } from './injector/rpc-injector';
-import { Signer } from './signer/interface';
+import { Signer } from '@taquito/core';
 import { NoopSigner } from './signer/noop';
 import { OperationFactory } from './wallet/operation-factory';
 import { RpcTzProvider } from './tz/rpc-tz-provider';

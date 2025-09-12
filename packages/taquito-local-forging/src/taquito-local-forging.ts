@@ -3,15 +3,25 @@
  * @module @taquito/local-forging
  */
 
+import 'fast-text-encoding';
+if (typeof globalThis.TextEncoder === 'undefined') {
+  globalThis.TextEncoder = TextEncoder as any;
+}
+if (typeof globalThis.TextDecoder === 'undefined') {
+  globalThis.TextDecoder = TextDecoder as any;
+}
 import { ForgeParams, Forger } from './interface';
 import { CODEC } from './constants';
+import { CODEC as CODECPROTO022 } from './constants-proto022';
 import { decoders } from './decoder';
+import { decoders as decodersProto022 } from './decoder-proto022';
 import { encoders } from './encoder';
+import { encoders as encodersProto022 } from './encoder-proto022';
 import { Uint8ArrayConsumer } from './uint8array-consumer';
-import { validateBlock, ValidationResult, invalidDetail } from '@taquito/utils';
+import { validateBlock, ValidationResult } from '@taquito/utils';
 import { InvalidOperationSchemaError } from './errors';
 import { validateMissingProperty, validateOperationKind } from './validator';
-import { ProtocolsHash } from './protocols';
+import { ProtocolsHash, ProtoInferiorTo } from './protocols';
 import { InvalidBlockHashError, InvalidOperationKindError } from '@taquito/core';
 
 export { CODEC, opMapping, opMappingReverse } from './constants';
@@ -22,16 +32,35 @@ export * from './interface';
 export { VERSION } from './version';
 export { ProtocolsHash } from './protocols';
 
-const PROTOCOL_CURRENT = ProtocolsHash.PsRiotuma;
+const PROTOCOL_CURRENT = ProtocolsHash.PtSeouLou;
 
-export function getCodec(codec: CODEC, _proto: ProtocolsHash) {
-  return {
-    encoder: encoders[codec],
-    decoder: (hex: string) => {
-      const consumer = Uint8ArrayConsumer.fromHexString(hex);
-      return decoders[codec](consumer) as any;
-    },
-  };
+export function getCodec(codec: CODEC | CODECPROTO022, _proto: ProtocolsHash) {
+  // use encodersProto022 & decodersProto022 if it's rio or prior
+  if (_proto === ProtocolsHash.PsRiotuma || ProtoInferiorTo(_proto, ProtocolsHash.PsRiotuma)) {
+    return {
+      encoder: encodersProto022[codec],
+      decoder: (hex: string) => {
+        const consumer = Uint8ArrayConsumer.fromHexString(hex);
+        return decodersProto022[codec](consumer) as any;
+      },
+    };
+  } else {
+    return {
+      encoder: encoders[codec],
+      decoder: (hex: string) => {
+        const consumer = Uint8ArrayConsumer.fromHexString(hex);
+        return decoders[codec](consumer) as any;
+      },
+    };
+  }
+  // TODO: Remove above if else once mainnet migrated into rio protocol and uncommon the return block below
+  // return {
+  //   encoder: encoders[codec],
+  //   decoder: (hex: string) => {
+  //     const consumer = Uint8ArrayConsumer.fromHexString(hex);
+  //     return decoders[codec](consumer) as any;
+  //   },
+  // };
 }
 
 export class LocalForger implements Forger {
@@ -42,7 +71,7 @@ export class LocalForger implements Forger {
   forge(params: ForgeParams): Promise<string> {
     const branchValidation = validateBlock(params.branch);
     if (branchValidation !== ValidationResult.VALID) {
-      throw new InvalidBlockHashError(params.branch, invalidDetail(branchValidation));
+      throw new InvalidBlockHashError(params.branch, branchValidation);
     }
 
     for (const content of params.contents) {
@@ -63,6 +92,10 @@ export class LocalForger implements Forger {
         } else if (content.kind === 'smart_rollup_originate' && diff[0] === 'whitelist') {
           continue;
         } else if (content.kind === 'update_consensus_key' && diff[0] === 'proof') {
+          continue;
+        } else if (content.kind === 'update_companion_key' && diff[0] === 'proof') {
+          continue;
+        } else if (content.kind === 'reveal' && diff[0] === 'proof') {
           continue;
         } else {
           throw new InvalidOperationSchemaError(content, `missing properties "${diff.join(', ')}"`);
