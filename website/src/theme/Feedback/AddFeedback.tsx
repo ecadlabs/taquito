@@ -44,6 +44,8 @@ class AddFeedback extends React.Component<IProps, IState> {
     }
 
     const title = document.title.replace(/\s*\|\s*Taquito\s*$/, "");
+    const currentUrl = window.location.href;
+    
     let text: string | undefined;
     if (rating !== undefined) {
       let ratingLabel: string | undefined;
@@ -61,9 +63,9 @@ class AddFeedback extends React.Component<IProps, IState> {
           ratingLabel = undefined;
       }
 
-      text = `New Taquito documentation rating for ${title} page. Rating: ${ratingLabel}`;
+      text = `New Taquito documentation rating for <${currentUrl}|${title}> page. Rating: ${ratingLabel}`;
     } else {
-      text = `New Taquito documentation feedback for ${title} page. Category: ${this.state.section}. Feedback: ${this.state.feedback}`;
+      text = `New Taquito documentation feedback for <${currentUrl}|${title}> page. Category: ${this.state.section}. Feedback: ${this.state.feedback}`;
     }
 
     const response = await fetch(`${url}`, {
