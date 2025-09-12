@@ -32,7 +32,10 @@ export class ContractToken extends Token {
   /**
    * @throws {@link ContractValidationError}
    */
-  private validate(value: any) {
+  private validate(value: unknown) {
+    if (typeof value !== 'string') {
+      throw new ContractValidationError(value, this, 'Type error');
+    }
     // tz1,tz2 and tz3 seems to be valid contract values (for Unit contract)
     if (validateAddress(value) !== ValidationResult.VALID) {
       throw new ContractValidationError(

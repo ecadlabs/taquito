@@ -6,7 +6,6 @@ import {
   ScriptResponse,
 } from '@taquito/rpc';
 import {
-  invalidDetail,
   validateChain,
   validateContractAddress,
   ValidationResult,
@@ -36,7 +35,7 @@ export class ContractView {
     private args: any[],
     private rpc: RpcClientInterface,
     private readProvider: TzReadProvider
-  ) {}
+  ) { }
 
   async read(chainId?: ChainIds) {
     const chainIdValidation = validateChain(chainId ?? '');
@@ -45,7 +44,7 @@ export class ContractView {
         `Since version 12, the lambda view no longer depends on a lambda contract. The read method no longer accepts a contract address as a parameter.`
       );
     } else if (chainId && chainIdValidation !== ValidationResult.VALID) {
-      throw new InvalidChainIdError(chainId, invalidDetail(chainIdValidation));
+      throw new InvalidChainIdError(chainId, chainIdValidation);
     }
     const arg = this.parameterSchema.Encode(...this.args);
     const result = await this.rpc.runView({

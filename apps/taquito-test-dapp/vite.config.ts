@@ -1,5 +1,5 @@
 import { defineConfig } from "vite";
-import path from "path";
+import * as path from "path";
 import { svelte } from "@sveltejs/vite-plugin-svelte";
 
 // https://vitejs.dev/config/
@@ -11,13 +11,20 @@ export default ({ command }) => {
       global: "globalThis"
     },
     build: {
-      target: "es6",
+      target: "esnext",
       commonjsOptions: {
         transformMixedEsModules: true
       }
     },
     server: {
       port: 3030
+    },
+    optimizeDeps: {
+      include: ['@noble/curves'],
+      esbuildOptions: {
+        target: 'esnext'
+      }
+
     },
     resolve: {
       alias: {
