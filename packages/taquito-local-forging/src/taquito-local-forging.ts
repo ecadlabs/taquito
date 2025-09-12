@@ -17,8 +17,12 @@ import { validateMissingProperty, validateOperationKind } from './validator';
 import { ProtocolsHash, ProtoInferiorTo } from './protocols';
 import { InvalidBlockHashError, InvalidOperationKindError } from '@taquito/core';
 import 'fast-text-encoding';
-if (!globalThis.TextEncoder) {
-  throw new Error('TextEncoder polyfill failed to load');
+
+if (typeof globalThis.TextEncoder === 'undefined') {
+  globalThis.TextEncoder = TextEncoder as any;
+}
+if (typeof globalThis.TextDecoder === 'undefined') {
+  globalThis.TextDecoder = TextDecoder as any;
 }
 
 export { CODEC, opMapping, opMappingReverse } from './constants';

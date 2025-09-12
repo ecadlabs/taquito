@@ -33,8 +33,6 @@ module.exports = {
   plugins: [
     new webpack.ProvidePlugin({
       Buffer: ['buffer', 'Buffer'],
-      TextEncoder: ['fast-text-encoding', 'TextEncoder'],
-      TextDecoder: ['fast-text-encoding', 'TextDecoder'],
     })
   ]
 };
