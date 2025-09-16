@@ -2,7 +2,7 @@
 	"name": "taquito-feedback-worker",
 	"main": "./index.ts",
 	"compatibility_date": "2025-09-15",
-	"account_id": "b82a3212512073a1e1802d2323762d9d",
+	"account_id": "",
 
 	// Environment variables
 	"vars": {
