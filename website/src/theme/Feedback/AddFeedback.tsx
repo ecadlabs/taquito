@@ -148,19 +148,19 @@ class AddFeedback extends React.Component<IProps, IState> {
                   Please provide feedback on this article:
                   <button
                     className="button  margin--sm good"
-                    onClick={() => this.handleSubmit(2)}
+                    onClick={() => this.handleSubmit(3)}
                   >
                     <BiHappyBeaming size={40} />
                   </button>
                   <button
                     className="button margin--sm average"
-                    onClick={() => this.handleSubmit(1)}
+                    onClick={() => this.handleSubmit(2)}
                   >
                     <BiMeh size={40} />
                   </button>
                   <button
                     className="button  margin--sm bad"
-                    onClick={() => this.handleSubmit(0)}
+                    onClick={() => this.handleSubmit(1)}
                   >
                     <BiSad size={40} />
                   </button>

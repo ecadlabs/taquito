@@ -24,8 +24,8 @@ interface VoteBody {
 	url: string;
 	/** Title of the page being rated */
 	title: string;
-	/** Vote value: 0=bad, 1=neutral, 2=good */
-	vote?: 0 | 1 | 2;
+	/** Vote value: 1=bad, 2=neutral, 3=good */
+	vote?: 1 | 2 | 3;
 	/** Category for feedback submissions */
 	category?: string;
 	/** Free-text feedback */
@@ -171,18 +171,32 @@ async function issueCsrf(req: Request, env: Env): Promise<Response> {
 		return new Response('CORS origin not allowed', { status: 403 });
 	}
 
-	// Generate session ID and CSRF token
-	const sid = crypto.getRandomValues(new Uint8Array(16));
-	const sidB64 = b64url(sid);
-	const token = await signCsrf(sidB64, env.CSRF_SECRET);
+	try {
+		// Generate session ID and CSRF token
+		const sid = crypto.getRandomValues(new Uint8Array(16));
+		const sidB64 = b64url(sid);
+		const token = await signCsrf(sidB64, env.CSRF_SECRET);
 
-	// Prepare response headers
-	const headers = new Headers({ ...JSON_HEADERS });
-	const corsHeadersObj = corsHeaders(origin);
-	Object.entries(corsHeadersObj).forEach(([k, v]) => headers.set(k, v));
+		// Prepare response headers
+		const headers = new Headers({ ...JSON_HEADERS });
+		const corsHeadersObj = corsHeaders(origin);
+		Object.entries(corsHeadersObj).forEach(([k, v]) => headers.set(k, v));
 
-	// Return both CSRF token and session ID for client-side storage
-	return new Response(JSON.stringify({ csrf: token, sid: sidB64 }), { headers });
+		// Return both CSRF token and session ID for client-side storage
+		return new Response(JSON.stringify({ csrf: token, sid: sidB64 }), { headers });
+	} catch (error) {
+		console.error('Failed to issue CSRF token:', error instanceof Error ? error.message : 'Unknown error');
+		
+		// Prepare response headers for error response
+		const headers = new Headers({ ...JSON_HEADERS });
+		const corsHeadersObj = corsHeaders(origin);
+		Object.entries(corsHeadersObj).forEach(([k, v]) => headers.set(k, v));
+		
+		return new Response(
+			JSON.stringify({ error: 'Failed to generate CSRF token' }), 
+			{ status: 500, headers }
+		);
+	}
 }
 
 /**
@@ -193,7 +207,7 @@ async function issueCsrf(req: Request, env: Env): Promise<Response> {
  */
 function validateVotePayload(vote: unknown, url: unknown): boolean {
 	return (
-		[0, 1, 2].includes(vote as number) &&
+		[1, 2, 3].includes(vote as number) &&
 		typeof url === 'string' &&
 		url.length <= 512
 	);
@@ -206,9 +220,9 @@ function validateVotePayload(vote: unknown, url: unknown): boolean {
  */
 function getRatingLabel(vote: number): string {
 	switch (vote) {
-		case 0: return 'bad';
-		case 1: return 'neutral';
-		case 2: return 'good';
+		case 1: return 'bad';
+		case 2: return 'neutral';
+		case 3: return 'good';
 		default: return 'unknown';
 	}
 }
@@ -400,13 +414,18 @@ async function postToSlack(env: Env, text: string): Promise<SlackResponse> {
  * @param sid - Session ID to sign
  * @param secretB64 - Base64-encoded secret key
  * @returns Signed CSRF token
+ * @throws Error if the secret is invalid or signing fails
  */
 async function signCsrf(sid: string, secretB64: string): Promise<string> {
-	const key = await importHmacKey(secretB64);
-	const timestamp = Math.floor(Date.now() / 1000);
-	const message = new TextEncoder().encode(`${sid}.${timestamp}`);
-	const signature = await crypto.subtle.sign('HMAC', key, message);
-	return `${b64url(new Uint8Array(signature))}.${timestamp}`;
+	try {
+		const key = await importHmacKey(secretB64);
+		const timestamp = Math.floor(Date.now() / 1000);
+		const message = new TextEncoder().encode(`${sid}.${timestamp}`);
+		const signature = await crypto.subtle.sign('HMAC', key, message);
+		return `${b64url(new Uint8Array(signature))}.${timestamp}`;
+	} catch (error) {
+		throw new Error(`Failed to sign CSRF token: ${error instanceof Error ? error.message : 'Unknown error'}`);
+	}
 }
 
 /**
@@ -417,28 +436,70 @@ async function signCsrf(sid: string, secretB64: string): Promise<string> {
  * @returns True if token is valid, false otherwise
  */
 async function verifyCsrf(token: string, sid: string, secretB64: string): Promise<boolean> {
-	const [sigB64, tsStr] = token.split('.');
-	if (!sigB64 || !tsStr) {
+	try {
+		const [sigB64, tsStr] = token.split('.');
+		if (!sigB64 || !tsStr) {
+			return false;
+		}
+
+		const timestamp = parseInt(tsStr, 10);
+		if (!Number.isFinite(timestamp) || Math.floor(Date.now() / 1000) - timestamp > CSRF_EXPIRY_SECONDS) {
+			return false;
+		}
+
+		const expected = await signCsrf(sid, secretB64);
+		return expected.split('.')[0] === sigB64;
+	} catch (error) {
+		// If there's any error in verification (including invalid CSRF_SECRET), treat as invalid token
+		console.error('CSRF verification failed:', error instanceof Error ? error.message : 'Unknown error');
 		return false;
 	}
+}
 
-	const timestamp = parseInt(tsStr, 10);
-	if (!Number.isFinite(timestamp) || Math.floor(Date.now() / 1000) - timestamp > CSRF_EXPIRY_SECONDS) {
+/**
+ * Validates if a string is valid base64
+ * @param str - String to validate
+ * @returns True if valid base64, false otherwise
+ */
+function isValidBase64(str: string): boolean {
+	// Base64 should only contain A-Z, a-z, 0-9, +, /, and = for padding
+	const base64Regex = /^[A-Za-z0-9+/]*={0,2}$/;
+	
+	// Check format and length
+	if (!base64Regex.test(str) || str.length % 4 !== 0) {
 		return false;
 	}
-
-	const expected = await signCsrf(sid, secretB64);
-	return expected.split('.')[0] === sigB64;
+	
+	// Try to decode to verify it's valid
+	try {
+		atob(str);
+		return true;
+	} catch {
+		return false;
+	}
 }
 
 /**
  * Imports an HMAC key from a base64-encoded secret
  * @param secretB64 - Base64-encoded secret
  * @returns CryptoKey for HMAC operations
+ * @throws Error if the secret is not valid base64
  */
 async function importHmacKey(secretB64: string): Promise<CryptoKey> {
-	const raw = Uint8Array.from(atob(secretB64), (c) => c.charCodeAt(0));
-	return crypto.subtle.importKey('raw', raw, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+	if (!secretB64) {
+		throw new Error('CSRF_SECRET is required');
+	}
+	
+	if (!isValidBase64(secretB64)) {
+		throw new Error('CSRF_SECRET must be valid base64-encoded data');
+	}
+	
+	try {
+		const raw = Uint8Array.from(atob(secretB64), (c) => c.charCodeAt(0));
+		return crypto.subtle.importKey('raw', raw, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+	} catch (error) {
+		throw new Error(`Failed to import HMAC key: ${error instanceof Error ? error.message : 'Unknown error'}`);
+	}
 }
 
 /**
