@@ -37,42 +37,40 @@ class AddFeedback extends React.Component<IProps, IState> {
   }
 
   async postToSlack(rating?: number) {
-    const url = process.env.SLACK_WEBHOOK_URL;
+    const url = process.env.DOCUSAURUS_CLOUDFLARE_WORKER_URL;
 
     if (!url) {
       return;
     }
 
-    const title = document.title.replace(/\s*\|\s*Taquito\s*$/, "");
-    const currentUrl = window.location.href;
-    
-    let text: string | undefined;
-    if (rating !== undefined) {
-      let ratingLabel: string | undefined;
-      switch (rating) {
-        case 0:
-          ratingLabel = "bad";
-          break;
-        case 1:
-          ratingLabel = "neutral";
-          break;
-        case 2:
-          ratingLabel = "good";
-          break;
-        default:
-          ratingLabel = undefined;
-      }
-
-      text = `New Taquito documentation rating for <${currentUrl}|${title}> page. Rating: ${ratingLabel}`;
-    } else {
-      text = `New Taquito documentation feedback for <${currentUrl}|${title}> page. Category: ${this.state.section}. Feedback: ${this.state.feedback}`;
+    if (!rating && (!this.state.section || !this.state.feedback)) {
+      return;
     }
 
-    const response = await fetch(`${url}`, {
-      method: "POST",
-      body: JSON.stringify({ text }),
+    const title = document.title.replace(/\s*\|\s*Taquito\s*$/, '');
+    const currentUrl = window.location.href;
+
+    const csrfResponse = await fetch(`${url}/api/vote/csrf`, {
+      credentials: 'include',
     });
-    return response;
+    const { csrf, sid } = await csrfResponse.json();
+
+    await fetch(`${url}/api/vote`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF': csrf,
+        'X-Session-ID': sid,
+      },
+      body: JSON.stringify({
+        url: currentUrl,
+        title,
+        vote: rating,
+        category: this.state.section,
+        feedback: this.state.feedback,
+      }),
+    });
   }
 
   async handleSubmit(rating) {
@@ -150,19 +148,19 @@ class AddFeedback extends React.Component<IProps, IState> {
                   Please provide feedback on this article:
                   <button
                     className="button  margin--sm good"
-                    onClick={() => this.handleSubmit(2)}
+                    onClick={() => this.handleSubmit(3)}
                   >
                     <BiHappyBeaming size={40} />
                   </button>
                   <button
                     className="button margin--sm average"
-                    onClick={() => this.handleSubmit(1)}
+                    onClick={() => this.handleSubmit(2)}
                   >
                     <BiMeh size={40} />
                   </button>
                   <button
                     className="button  margin--sm bad"
-                    onClick={() => this.handleSubmit(0)}
+                    onClick={() => this.handleSubmit(1)}
                   >
                     <BiSad size={40} />
                   </button>

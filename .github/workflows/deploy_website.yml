@@ -11,7 +11,7 @@ concurrency:
 env:
   ALGOLIA_APPLICATION_ID: ${{ secrets.ALGOLIA_APPLICATION_ID }}
   ALGOLIA_SEARCH_API_KEY: ${{ secrets.ALGOLIA_SEARCH_API_KEY }}
-  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+  DOCUSAURUS_CLOUDFLARE_WORKER_URL: ${{ secrets.DOCUSAURUS_CLOUDFLARE_WORKER_URL }}
   FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
   FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
   FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
@@ -41,7 +41,7 @@ jobs:
         uses: cloudflare/pages-action@v1
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
-          accountId: "b82a3212512073a1e1802d2323762d9d"
+          accountId: ${{ secrets.CF_ACCOUNT_ID}}
           projectName: taquito
           directory: website/build
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
