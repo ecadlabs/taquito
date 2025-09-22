@@ -32,7 +32,7 @@ const forgers: ForgerType[] = [ForgerType.COMPOSITE];
 
 // user running integration test can pass environment variable TEZOS_NETWORK_TYPE=sandbox to specify which network to run against
 export enum NetworkType {
-  TESTNET,  // corresponds ghostnet, seoulnet, rionet and weeklynet etc.
+  TESTNET,  // corresponds ghostnet, seoulnet and weeklynet etc.
   SANDBOX,  // corresponds to flextesa local chain
 }
 
@@ -131,19 +131,7 @@ const defaultConfig = ({
   }
 }
 
-const rionetEphemeral: Config =
-  defaultConfig({
-    networkName: 'RIONET',
-    protocol: Protocols.PsRiotuma,
-    defaultRpc: 'http://ecad-tezos-rionet-rolling-1.i.ecadinfra.com/',
-    knownContracts: knownContractsPsRiotuma,
-    signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/rionet')
-  })
-
-const rionetSecretKey: Config =
-  { ...rionetEphemeral, ...{ signerConfig: defaultSecretKey, defaultRpc: 'https://rpc.rionet.teztnets.com' } };
-
-  const seoulnetEphemeral: Config =
+const seoulnetEphemeral: Config =
   defaultConfig({
     networkName: 'SEOULNET',
     protocol: Protocols.PtSeouLou,
@@ -182,25 +170,21 @@ const weeklynetSecretKey: Config =
 const providers: Config[] = [];
 
 if (process.env['RUN_WITH_SECRET_KEY']) {
-  providers.push(rionetSecretKey, seoulnetSecretKey);
+  providers.push(seoulnetSecretKey);
 } else if (process.env['RUN_GHOSTNET_WITH_SECRET_KEY']) {
   providers.push(ghostnetSecretKey);
-} else if (process.env['RUN_RIONET_WITH_SECRET_KEY']) {
-  providers.push(rionetSecretKey);
 } else if (process.env['RUN_SEOULNET_WITH_SECRET_KEY']) {
   providers.push(seoulnetSecretKey);
 } else if (process.env['RUN_WEEKLYNET_WITH_SECRET_KEY']) {
   providers.push(weeklynetSecretKey);
 } else if (process.env['GHOSTNET']) {
   providers.push(ghostnetEphemeral);
-} else if (process.env['RIONET']) {
-  providers.push(rionetEphemeral);
 } else if (process.env['SEOULNET']) {
   providers.push(seoulnetEphemeral);
 } else if (process.env['WEEKLYNET']) {
   providers.push(weeklynetEphemeral);
 } else {
-  providers.push(rionetEphemeral, seoulnetEphemeral);
+  providers.push(seoulnetEphemeral);
 }
 
 const setupForger = (Tezos: TezosToolkit, forger: ForgerType): void => {

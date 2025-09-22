@@ -1,11 +1,8 @@
-import { Protocols, TezosToolkit, TezosOperationError } from "@taquito/taquito";
-import { CONFIGS, NetworkType } from '../../config';
+import { TezosToolkit, TezosOperationError } from "@taquito/taquito";
+import { CONFIGS } from '../../config';
 import { InvalidStakingAddressError, InvalidFinalizeUnstakeAmountError } from '@taquito/core';
-import { ProtoGreaterOrEqual } from "@taquito/michel-codec";
 
-CONFIGS().forEach(({ lib, rpc, setup, createAddress, networkType, protocol }) => {
-  const rionet = (networkType == NetworkType.TESTNET && protocol === Protocols.PsRiotuma) ? test : test.skip;
-  const seoulnetAndAlpha = ProtoGreaterOrEqual(protocol, Protocols.PtSeouLou) ? test: test.skip;
+CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
   const Tezos = lib;
   let thirdParty: TezosToolkit
@@ -50,7 +47,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, networkType, protocol }) =>
       expect(await op.status()).toBe('applied');
     });
 
-    seoulnetAndAlpha(`should be able to finalizeUnstake with different source and destination successfully: ${rpc}`, async () => {
+    it(`should be able to finalizeUnstake with different source and destination successfully: ${rpc}`, async () => {
       const op = await thirdParty.wallet.finalizeUnstake({ to: await Tezos.signer.publicKeyHash() }).send()
       await op.confirmation();
       expect(await op.status()).toBe('applied');
@@ -71,13 +68,5 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, networkType, protocol }) =>
         await op.confirmation()
       }).rejects.toThrow(InvalidFinalizeUnstakeAmountError);
     });
-
-    rionet('should throw error when param is against pseudo operation - finalizeUnstake', async () => {
-      expect(async () => {
-        const op = await Tezos.wallet.finalizeUnstake({ to: 'tz1PZY3tEWmXGasYeehXYqwXuw2Z3iZ6QDnA' }).send();
-        await op.confirmation()
-      }).rejects.toThrow(TezosOperationError);
-    });
-
   });
 });
