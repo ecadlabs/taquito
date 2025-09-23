@@ -7,7 +7,6 @@ import { RpcClient, RpcClientCache } from '@taquito/rpc';
 import { KnownContracts } from './known-contracts';
 import { knownContractsProtoALph } from './known-contracts-ProtoALph';
 import { knownContractsPtGhostnet } from './known-contracts-PtGhostnet';
-import { knownContractsPsRiotuma } from './known-contracts-PsRiotuma';
 import { knownContractsPtSeouLou } from './known-contracts-PtSeouLou';
 
 const nodeCrypto = require('crypto');

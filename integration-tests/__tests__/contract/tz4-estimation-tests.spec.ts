@@ -1,4 +1,4 @@
-import { MANAGER_LAMBDA, Protocols, TezosToolkit, getRevealFee } from '@taquito/taquito';
+import { MANAGER_LAMBDA, TezosToolkit, getRevealFee } from '@taquito/taquito';
 import { Contract } from '@taquito/taquito';
 import { CONFIGS } from '../../config';
 import { originate, originate2, transferImplicit2 } from '../../data/lambda';
@@ -6,10 +6,8 @@ import { ligoSample } from '../../data/ligo-simple-contract';
 import { managerCode } from '../../data/manager_code';
 import { InvalidAmountError } from '@taquito/core';
 import { PrefixV2 } from '@taquito/utils';
-import { ProtoGreaterOrEqual } from '@taquito/michel-codec';
 
-CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc, protocol }) => {
-  const seoulnetAndAlpha = ProtoGreaterOrEqual(protocol, Protocols.PtSeouLou) ? test : test.skip;
+CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
 
   const Tezos = lib;
   let pkh: string;
@@ -40,7 +38,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc, protocol }) => 
       }
     });
 
-    seoulnetAndAlpha('Verify .estimate.transfer with allocated destination', async () => {
+    it('Verify .estimate.transfer with allocated destination', async () => {
       const estimate = await Tz4.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), amount: 0.019 });
       expect(estimate.gasLimit).toEqual(2101);
       expect(estimate.storageLimit).toEqual(0);
@@ -52,7 +50,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc, protocol }) => 
       expect(estimate.consumedMilligas).toEqual(2100040);
     });
 
-    seoulnetAndAlpha('Verify .estimate.transfer with unallocated destination', async () => {
+    it('Verify .estimate.transfer with unallocated destination', async () => {
       const estimate = await Tz4.estimate.transfer({ to: await (await createAddress()).signer.publicKeyHash(), amount: 0.017 });
       expect(estimate.gasLimit).toEqual(2101);
       expect(estimate.storageLimit).toEqual(277);
@@ -64,7 +62,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc, protocol }) => 
       expect(estimate.consumedMilligas).toEqual(2100040);
     });
 
-    seoulnetAndAlpha('Verify .estimate.originate simple contract', async () => {
+    it('Verify .estimate.originate simple contract', async () => {
       const estimate = await Tz4.estimate.originate({
         balance: '1',
         code: ligoSample,
@@ -80,7 +78,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc, protocol }) => 
       expect(estimate.consumedMilligas).toEqual(676402);
     });
 
-    seoulnetAndAlpha('Verify .estimate.setDelegate result', async () => {
+    it('Verify .estimate.setDelegate result', async () => {
       const estimate = await Tz4.estimate.setDelegate({
         delegate: knownBaker,
         source: pkh,
@@ -95,7 +93,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc, protocol }) => 
       expect(estimate.consumedMilligas).toEqual(100000);
     });
 
-    seoulnetAndAlpha('Verify .estimate.transfer for internal transfer to allocated implicit', async () => {
+    it('Verify .estimate.transfer for internal transfer to allocated implicit', async () => {
       const tx = contract.methodsObject.do(MANAGER_LAMBDA.transferImplicit(knownBaker, 5)).toTransferParams();
       const estimate = await Tz4.estimate.transfer(tx);
       expect(estimate.gasLimit).toEqual(3457);
@@ -108,7 +106,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc, protocol }) => 
       expect(estimate.consumedMilligas).toEqual(3456228);
     });
 
-    seoulnetAndAlpha('Verify .estimate.transfer for multiple internal transfers to unallocated account', async () => {
+    it('Verify .estimate.transfer for multiple internal transfers to unallocated account', async () => {
       const tx = contract.methodsObject.do(transferImplicit2(
         await (await createAddress()).signer.publicKeyHash(),
         await (await createAddress()).signer.publicKeyHash(),
@@ -125,7 +123,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc, protocol }) => 
       expect(estimate.consumedMilligas).toEqual(5570757);
     });
 
-    seoulnetAndAlpha('Verify .estimate.transfer for internal origination', async () => {
+    it('Verify .estimate.transfer for internal origination', async () => {
       const tx = contract.methodsObject.do(originate()).toTransferParams();
       const estimate = await Tz4.estimate.transfer(tx);
       expect(estimate.gasLimit).toEqual(1867);
@@ -138,7 +136,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc, protocol }) => 
       expect(estimate.consumedMilligas).toEqual(1866852);
     });
 
-    seoulnetAndAlpha('Verify .estimate.transfer for multiple internal originations', async () => {
+    it('Verify .estimate.transfer for multiple internal originations', async () => {
       const tx = contract.methodsObject.do(originate2()).toTransferParams();
       const estimate = await Tz4.estimate.transfer(tx);
       expect(estimate.gasLimit).toEqual(2393);
@@ -154,7 +152,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc, protocol }) => 
       await op2.confirmation();
     });
 
-    seoulnetAndAlpha('should throw error when trying to estimate transfer with negative amount in param', async () => {
+    it('should throw error when trying to estimate transfer with negative amount in param', async () => {
       expect(async () => {
         const est = await Tz4.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), amount: -1 });
       }).rejects.toThrowError(InvalidAmountError);
@@ -175,7 +173,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc, protocol }) => 
       await transfer.confirmation();
     });
 
-    seoulnetAndAlpha('Verify .estimate.transfer to regular address', async () => {
+    it('Verify .estimate.transfer to regular address', async () => {
       let estimate = await LowAmountTz4.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + getRevealFee(pkh)) });
       expect(estimate.gasLimit).toEqual(2101);
       expect(estimate.storageLimit).toEqual(0);
@@ -187,7 +185,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc, protocol }) => 
       expect(estimate.consumedMilligas).toEqual(2100040);
     });
 
-    seoulnetAndAlpha('Estimate transfer to regular address with a fixed fee', async () => {
+    it('Estimate transfer to regular address with a fixed fee', async () => {
 
       const params = { fee: 2000, to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + getRevealFee(pkh)) };
       await expect(LowAmountTz4.estimate.transfer(params)).rejects.toMatchObject({
@@ -195,7 +193,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc, protocol }) => 
       });
     });
 
-    seoulnetAndAlpha('Estimate transfer to regular address with insufficient balance', async () => {
+    it('Estimate transfer to regular address with insufficient balance', async () => {
       await expect(
         LowAmountTz4.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt })
       ).rejects.toMatchObject({
@@ -203,7 +201,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc, protocol }) => 
       });
     });
 
-    seoulnetAndAlpha('Estimate transfer to regular address with insufficient balance to pay storage for allocation', async () => {
+    it('Estimate transfer to regular address with insufficient balance to pay storage for allocation', async () => {
       await expect(
         LowAmountTz4.estimate.transfer({ to: await (await createAddress()).signer.publicKeyHash(), mutez: true, amount: amt - (1382 + getRevealFee(pkh)) })
       ).rejects.toEqual(
@@ -213,7 +211,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc, protocol }) => 
         }));
     });
 
-    seoulnetAndAlpha('Estimate origination with insufficient balance to pay storage', async () => {
+    it('Estimate origination with insufficient balance to pay storage', async () => {
       expect(true).toBeTruthy();
       await expect(LowAmountTz4.estimate.originate({
         balance: '0',

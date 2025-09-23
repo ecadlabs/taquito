@@ -1,16 +1,14 @@
-import { ProtoGreaterOrEqual } from "@taquito/michel-codec";
 import { CONFIGS } from "../../../config";
 import { ligoSample, ligoSampleMichelson } from "../../../data/ligo-simple-contract";
-import { OpKind, Protocols } from "@taquito/taquito";
+import { OpKind } from "@taquito/taquito";
 import { TezosToolkit } from '@taquito/taquito';
 import { PrefixV2 } from '@taquito/utils';
 import { MANAGER_LAMBDA } from "@taquito/taquito";
 import { managerCode } from "../../../data/manager_code";
 
-CONFIGS().forEach(({ lib, rpc, setup, protocol, createAddress, knownBaker }) => {
+CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker }) => {
   const Tezos = lib;
   let Bls: TezosToolkit
-  const seoulnetAndAlpha = ProtoGreaterOrEqual(protocol, Protocols.PtSeouLou) ? test : test.skip;
   describe(`Test the Taquito batch api using: ${rpc}`, () => {
 
     beforeEach(async () => {
@@ -24,7 +22,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, createAddress, knownBaker }) => 
       }
     })
 
-    seoulnetAndAlpha('Verify simple batch transfers with origination', async () => {
+    it('Verify simple batch transfers with origination', async () => {
       const batch = await Bls.contract.batch()
         .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
         .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
@@ -40,7 +38,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, createAddress, knownBaker }) => 
       expect(op.status).toEqual('applied')
     })
 
-    seoulnetAndAlpha('Verify a batch of transfers and origination operations using a combination of the two notations (array of operation with kind mixed with withTransfer method)', async () => {
+    it('Verify a batch of transfers and origination operations using a combination of the two notations (array of operation with kind mixed with withTransfer method)', async () => {
       /** Tests the usage of a mix of the 2 possible notations for batched operations
        *  See for details on the 2 notations:
        *  https://taquito.io/docs/batch_API#--the-array-of-transactions-method
@@ -66,7 +64,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, createAddress, knownBaker }) => 
       expect(op.status).toEqual('applied')
     })
 
-    seoulnetAndAlpha('Verify simple batch transfer with origination fails when storage_exhausted', async () => {
+    it('Verify simple batch transfer with origination fails when storage_exhausted', async () => {
       expect.assertions(1);
       try {
         await Bls.contract.batch()
@@ -87,7 +85,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, createAddress, knownBaker }) => 
       }
     })
 
-    seoulnetAndAlpha('Verify batch transfer and origination from an account with a low balance', async () => {
+    it('Verify batch transfer and origination from an account with a low balance', async () => {
       const LocalTez = await createAddress(PrefixV2.BLS12_381SecretKey);
       const op = await Tezos.contract.transfer({ to: await LocalTez.signer.publicKeyHash(), amount: 2 });
       await op.confirmation();
@@ -110,7 +108,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, createAddress, knownBaker }) => 
       expect(op.status).toEqual('applied')
     })
 
-    seoulnetAndAlpha('Verify batch transfer with chained contract calls', async () => {
+    it('Verify batch transfer with chained contract calls', async () => {
       const op = await Bls.contract.originate({
         balance: "1",
         code: managerCode,
@@ -129,7 +127,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, createAddress, knownBaker }) => 
       expect(batchOp.status).toEqual('applied')
     });
 
-    seoulnetAndAlpha('Verify batch transfer with chained contract calls using the `methodsObject` method', async () => {
+    it('Verify batch transfer with chained contract calls using the `methodsObject` method', async () => {
       const op = await Bls.contract.originate({
         balance: "1",
         code: managerCode,
@@ -148,7 +146,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, createAddress, knownBaker }) => 
       expect(batchOp.status).toEqual('applied')
     });
 
-    seoulnetAndAlpha('Verify simple batch transfers with origination from code in Michelson format', async () => {
+    it('Verify simple batch transfers with origination from code in Michelson format', async () => {
       const batch = Bls.contract.batch()
         .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
         .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })

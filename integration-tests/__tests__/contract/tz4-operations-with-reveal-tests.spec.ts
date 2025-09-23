@@ -1,12 +1,10 @@
 import { CONFIGS } from "../../config";
 import { PrefixV2 } from "@taquito/utils";
-import { Protocols, UnitValue, OpKind, TezosToolkit } from "@taquito/taquito";
-import { ProtoGreaterOrEqual } from "@taquito/michel-codec";
+import { UnitValue, OpKind, TezosToolkit } from "@taquito/taquito";
 import crypto from 'crypto';
 import { PvmKind } from "@taquito/rpc";
 
-CONFIGS().forEach(({ lib, rpc, setup, protocol, createAddress, knownBaker, knownTicketContract }) => {
-  const seoulnetAndAlpha = ProtoGreaterOrEqual(protocol, Protocols.PtSeouLou) ? test : test.skip;
+CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker, knownTicketContract }) => {
   const Tezos = lib;
   let Tz4: TezosToolkit;
   let contractAddress = 'KT1XgwgLtcD79LzFifBKxU2TYwKzQ6iUwwj1'
@@ -24,7 +22,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, createAddress, knownBaker, known
       }
     })
 
-    seoulnetAndAlpha('verify that reveal fee and gas is sufficient', async () => {
+    it('verify that reveal fee and gas is sufficient', async () => {
       const estimated = await Tz4.estimate.reveal({})
       expect(estimated?.suggestedFeeMutez).toBeGreaterThanOrEqual(735)
       expect(estimated?.gasLimit).toBeGreaterThanOrEqual(3250)
@@ -35,7 +33,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, createAddress, knownBaker, known
       expect(revealOp.status).toBe('applied')
     })
 
-    seoulnetAndAlpha('verify that transfer to revealed account fee and gas is sufficient', async () => {
+    it('verify that transfer to revealed account fee and gas is sufficient', async () => {
       const estimated = await Tz4.estimate.transfer({ to: knownBaker, amount: 1 })
       expect(estimated?.suggestedFeeMutez).toBeGreaterThanOrEqual(366)
       expect(estimated?.gasLimit).toBeGreaterThanOrEqual(2101)
@@ -46,7 +44,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, createAddress, knownBaker, known
       expect(transferOp.status).toBe('applied')
     })
 
-    seoulnetAndAlpha('verify that transfer to unrevealed account fee and gas is sufficient', async () => {
+    it('verify that transfer to unrevealed account fee and gas is sufficient', async () => {
       const unrevealedAcc = await createAddress(PrefixV2.P256SecretKey)
       const unrevealedPkh = await unrevealedAcc.signer.publicKeyHash()
       const estimated = await Tz4.estimate.transfer({ to: unrevealedPkh, amount: 1 })
@@ -59,7 +57,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, createAddress, knownBaker, known
       expect(transferOp.status).toBe('applied')
     })
 
-    seoulnetAndAlpha('verify that originate fee and gas is sufficient', async () => {
+    it('verify that originate fee and gas is sufficient', async () => {
       const estimated = await Tz4.estimate.originate({ code: "parameter unit; storage unit; code {CDR; NIL operation; PAIR};", storage: "unit" })
       expect(estimated?.suggestedFeeMutez).toBeGreaterThanOrEqual(232)
       expect(estimated?.gasLimit).toBeGreaterThanOrEqual(609)
@@ -71,7 +69,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, createAddress, knownBaker, known
       expect(originateOp.status).toBe('applied')
     })
 
-    seoulnetAndAlpha('verify that contractCall fee and gas is sufficient', async () => {
+    it('verify that contractCall fee and gas is sufficient', async () => {
       const contract = await Tz4.contract.at(contractAddress)
       const method = contract.methodsObject.default(UnitValue)
       const estimated = await Tz4.estimate.contractCall(method)
@@ -84,7 +82,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, createAddress, knownBaker, known
       expect(contractCallOp.status).toBe('applied')
     })
 
-    seoulnetAndAlpha('verify that setDelegate fee and gas is sufficient', async () => {
+    it('verify that setDelegate fee and gas is sufficient', async () => {
       const estimated = await Tz4.estimate.setDelegate({ delegate: knownBaker, source: await Tz4.signer.publicKeyHash() })
       expect(estimated?.suggestedFeeMutez).toBeGreaterThanOrEqual(161)
       expect(estimated?.gasLimit).toBeGreaterThanOrEqual(100)
@@ -95,7 +93,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, createAddress, knownBaker, known
       expect(setDelegateOp.status).toBe('applied')
     })
 
-    seoulnetAndAlpha('verify that registerDelegate fee and gas is sufficient', async () => {
+    it('verify that registerDelegate fee and gas is sufficient', async () => {
       const estimated = await Tz4.estimate.registerDelegate({})
       expect(estimated?.suggestedFeeMutez).toBeGreaterThanOrEqual(161)
       expect(estimated?.gasLimit).toBeGreaterThanOrEqual(100)
@@ -106,7 +104,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, createAddress, knownBaker, known
       expect(registerDelegateOp.status).toBe('applied')
     })
 
-    seoulnetAndAlpha('verify that increase_paid_storage fee and gas is sufficient', async () => {
+    it('verify that increase_paid_storage fee and gas is sufficient', async () => {
       const estimated = await Tz4.estimate.increasePaidStorage({ amount: 3, destination: contractAddress })
       expect(estimated?.suggestedFeeMutez).toBeGreaterThanOrEqual(162)
       expect(estimated?.gasLimit).toBeGreaterThanOrEqual(100)
@@ -117,7 +115,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, createAddress, knownBaker, known
       expect(increasePaidStorageOp.status).toBe('applied')
     })
 
-    seoulnetAndAlpha('verify that register_global_constant fee and gas is sufficient', async () => {
+    it('verify that register_global_constant fee and gas is sufficient', async () => {
       const randomAnnots = () => crypto.randomBytes(3).toString('hex');
       const code = {
         prim: 'list',
@@ -137,7 +135,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, createAddress, knownBaker, known
       expect(registerGlobalConstantOp.status).toBe('applied')
     })
 
-    seoulnetAndAlpha('verify that update_consensus_key fee and gas is sufficient', async () => {
+    it('verify that update_consensus_key fee and gas is sufficient', async () => {
       const consensusAcc = await createAddress(PrefixV2.BLS12_381SecretKey)
       const consensusPk = await consensusAcc.signer.publicKey()
       const proof = await consensusAcc.signer.provePossession!()
@@ -161,7 +159,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, createAddress, knownBaker, known
       expect(updateConsensusKeyOp.status).toBe('applied')
     })
 
-    seoulnetAndAlpha('verify that update_companion_key fee and gas is sufficient', async () => {
+    it('verify that update_companion_key fee and gas is sufficient', async () => {
       const companionAcc = await createAddress(PrefixV2.BLS12_381SecretKey)
       const companionPk = await companionAcc.signer.publicKey()
 
@@ -185,7 +183,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, createAddress, knownBaker, known
       expect(updateCompanionKeyOp.status).toBe('applied')
     })
 
-    seoulnetAndAlpha('verify that transferTicket fee and gas is sufficient', async () => {
+    it('verify that transferTicket fee and gas is sufficient', async () => {
       // prerequisite: issuing tickets
       const ticketContract = await Tezos.contract.at(knownTicketContract)
       const ticket = { ticketer: knownTicketContract, content_type: { prim: 'string' }, content: { string: 'Ticket' } };
@@ -215,7 +213,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, createAddress, knownBaker, known
       expect(transferTicketOp.status).toBe('applied')
     })
 
-    seoulnetAndAlpha('verify that smart_rollup_originate fee and gas is sufficient', async () => {
+    it('verify that smart_rollup_originate fee and gas is sufficient', async () => {
       const kernel = '23212f7573722f62696e2f656e762073680a6578706f7274204b45524e454c3d22303036313733366430313030303030303031323830373630303337663766376630313766363030323766376630313766363030353766376637663766376630313766363030313766303036303031376630313766363030323766376630303630303030303032363130333131373336643631373237343566373236663663366337353730356636333666373236353061373236353631363435663639366537303735373430303030313137333664363137323734356637323666366336633735373035663633366637323635306337373732363937343635356636663735373437303735373430303031313137333664363137323734356637323666366336633735373035663633366637323635306237333734366637323635356637373732363937343635303030323033303530343033303430353036303530333031303030313037313430323033366436353664303230303061366236353732366536353663356637323735366530303036306161343031303432613031303237663431666130303266303130303231303132303030326630313030323130323230303132303032343730343430343165343030343131323431303034316534303034313030313030323161306230623038303032303030343163343030366230623530303130353766343166653030326430303030323130333431666330303266303130303231303232303030326430303030323130343230303032663031303032313035323030313130303432313036323030343230303334363034343032303030343130313661323030313431303136623130303131613035323030353230303234363034343032303030343130373661323030363130303131613062306230623164303130313766343164633031343138343032343139303163313030303231303034313834303232303030313030353431383430323130303330623062333830353030343165343030306231323266366236353732366536353663326636353665373632663732363536323666366637343030343166383030306230323030303130303431666130303062303230303032303034316663303030623032303030303030343166653030306230313031220a'
       const parametersType = { prim: 'bytes' }
       const estimated = await Tz4.estimate.smartRollupOriginate({
@@ -236,7 +234,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, createAddress, knownBaker, known
       expect(smartRollupOriginateOp.status).toBe('applied')
     })
 
-    seoulnetAndAlpha('verify that smart_rollup_add_messages fee and gas is sufficient', async () => {
+    it('verify that smart_rollup_add_messages fee and gas is sufficient', async () => {
       const message = ['0000000031010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74']
       const estimated = await Tz4.estimate.smartRollupAddMessages({
         message,

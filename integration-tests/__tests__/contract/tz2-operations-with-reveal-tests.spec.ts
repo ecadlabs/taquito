@@ -1,12 +1,10 @@
 import { CONFIGS } from "../../config";
 import { PrefixV2 } from "@taquito/utils";
-import { Protocols, UnitValue, OpKind } from "@taquito/taquito";
-import { ProtoGreaterOrEqual } from "@taquito/michel-codec";
+import { UnitValue, OpKind } from "@taquito/taquito";
 import crypto from 'crypto';
 import { PvmKind } from "@taquito/rpc";
 
-CONFIGS().forEach(({ lib, rpc, setup, protocol, knownBaker, createAddress, knownTicketContract }) => {
-  const seoulnetAndAlpha = ProtoGreaterOrEqual(protocol, Protocols.PtSeouLou) ? test : test.skip;
+CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress, knownTicketContract }) => {
   const Tz2 = lib;
   let contractAddress = 'KT1XgwgLtcD79LzFifBKxU2TYwKzQ6iUwwj1'
 
@@ -151,7 +149,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, knownBaker, createAddress, known
       expect(updateConsensusKeyOp.status).toBe('applied')
     })
 
-    seoulnetAndAlpha('verify that update_companion_key fee and gas is sufficient', async () => {
+    it('verify that update_companion_key fee and gas is sufficient', async () => {
       const companionAcc = await createAddress(PrefixV2.BLS12_381SecretKey)
       const companionPk = await companionAcc.signer.publicKey()
 

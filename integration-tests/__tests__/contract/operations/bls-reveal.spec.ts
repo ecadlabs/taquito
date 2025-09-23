@@ -1,10 +1,8 @@
 import { CONFIGS } from "../../../config";
 import { PrefixV2 } from "@taquito/utils";
-import { Protocols, TezosToolkit } from "@taquito/taquito";
-import { ProtoGreaterOrEqual } from "@taquito/michel-codec";
+import { TezosToolkit } from "@taquito/taquito";
 
-CONFIGS().forEach(({ lib, rpc, setup, protocol, createAddress }) => {
-  const seoulnetAndAlpha = ProtoGreaterOrEqual(protocol, Protocols.PtSeouLou) ? test : test.skip;
+CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   const Tezos = lib;
   let Bls1: TezosToolkit
   let Bls2: TezosToolkit
@@ -24,7 +22,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, createAddress }) => {
       }
     })
 
-    seoulnetAndAlpha('verify that contract.reveal reveals tz4 address (bls key) without specifying proof', async () => {
+    it('verify that contract.reveal reveals tz4 address (bls key) without specifying proof', async () => {
       const pkh = await Bls1.signer.publicKeyHash()
       const pk = await Bls1.signer.publicKey()
       const op = await Bls1.contract.reveal({})
@@ -40,7 +38,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, createAddress }) => {
       expect(op.proof).toBeDefined();
     })
 
-    seoulnetAndAlpha('verify that contract.reveal reveals tz4 address (bls key) with proof', async () => {
+    it('verify that contract.reveal reveals tz4 address (bls key) with proof', async () => {
       const proof = (await Bls2.signer.provePossession!()).prefixSig
       const pkh = await Bls2.signer.publicKeyHash()
       const pk = await Bls2.signer.publicKey()

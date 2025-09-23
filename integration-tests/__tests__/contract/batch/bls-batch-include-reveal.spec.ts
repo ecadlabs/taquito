@@ -1,11 +1,9 @@
-import { OpKind, Protocols } from '@taquito/taquito';
+import { OpKind } from '@taquito/taquito';
 import { CONFIGS, SignerType } from '../../../config';
 import { TezosToolkit } from '@taquito/taquito';
 import { PrefixV2 } from '@taquito/utils';
-import { ProtoGreaterOrEqual } from "@taquito/michel-codec";
 
-CONFIGS().forEach(({ lib, rpc, setup, knownBaker, signerConfig, protocol, createAddress }) => {
-  const seoulnetAndAlpha = ProtoGreaterOrEqual(protocol, Protocols.PtSeouLou) ? test : test.skip;
+CONFIGS().forEach(({ lib, rpc, setup, knownBaker, signerConfig, createAddress }) => {
   const Tezos = lib;
   let Bls: TezosToolkit
 
@@ -21,7 +19,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, signerConfig, protocol, create
       }
     });
 
-    seoulnetAndAlpha('Verify that an estimate for a tz4 reveal operation is included in the response when using estimate.batch with an unrevealed signer', async () => {
+    it('Verify that an estimate for a tz4 reveal operation is included in the response when using estimate.batch with an unrevealed signer', async () => {
       try {
         const batchOpEstimate = await Bls.estimate
           .batch([
@@ -40,7 +38,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, signerConfig, protocol, create
 
     });
 
-    seoulnetAndAlpha('Verify the estimate.batch does not include an estimation of a tz4 reveal operation when the signer is already revealed.', async () => {
+    it('Verify the estimate.batch does not include an estimation of a tz4 reveal operation when the signer is already revealed.', async () => {
 
       try {
         // do a reveal operation first

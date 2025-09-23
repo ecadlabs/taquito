@@ -1,10 +1,8 @@
-import { TezosToolkit, Protocols } from '@taquito/taquito';
+import { TezosToolkit } from '@taquito/taquito';
 import { CONFIGS } from '../../../config';
-import { ProtoGreaterOrEqual } from '@taquito/michel-codec';
 import { PrefixV2 } from '@taquito/utils';
 
-CONFIGS().forEach(({ lib, rpc, setup, createAddress, protocol }) => {
-  const seoulnetAndAlpha = ProtoGreaterOrEqual(protocol, Protocols.PtSeouLou) ? test : test.skip;
+CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   const Tezos = lib;
 
   describe(`Test Update Consensus Key using: ${rpc}`, () => {
@@ -23,7 +21,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, protocol }) => {
       }
     });
 
-    seoulnetAndAlpha('should be able to inject update_consensus_key operation', async () => {
+    it('should be able to inject update_consensus_key operation', async () => {
       const consensusAccount = await createAddress(PrefixV2.BLS12_381SecretKey);
       const op = await delegateAccount.contract.updateConsensusKey({ pk: await consensusAccount.signer.publicKey(), proof: (await consensusAccount.signer.provePossession!()).prefixSig });
       await op.confirmation();

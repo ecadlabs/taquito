@@ -6,7 +6,7 @@ import {
   ProtocolsHash,
   Uint8ArrayConsumer,
 } from '../src/taquito-local-forging';
-import { commonCases, seoulCases } from '../../../integration-tests/data/allTestsCases';
+import { commonCases } from '../../../integration-tests/data/allTestsCases';
 import { InvalidOperationSchemaError, UnsupportedOperationError } from '../src/errors';
 import {
   InvalidBlockHashError,
@@ -20,24 +20,18 @@ describe('Forge and parse operations default protocol', () => {
   const localForger = new LocalForger();
   commonCases.forEach(({ name, operation, expected }) => {
     it(`Common test: ${name}`, async () => {
-      const result = await localForger.forge(operation);
-      expect(await localForger.parse(result)).toEqual(expected || operation);
-    });
-    seoulCases.forEach(({ name, operation, expected }) => {
-      it(`Common test: ${name}`, async () => {
-        if (
-          name.includes('edsig(tz1)') ||
-          name.includes('spsig(tz2)') ||
-          name.includes('p2sig(tz3)')
-        ) {
-          expect(async () => {
-            await localForger.forge(operation);
-          }).rejects.toThrow(ProhibitedActionError);
-        } else {
-          const result = await localForger.forge(operation);
-          expect(await localForger.parse(result)).toEqual(expected || operation);
-        }
-      });
+      if (
+        name.includes('with proof edsig(tz1)') ||
+        name.includes('with proof spsig(tz2)') ||
+        name.includes('with proof p2sig(tz3)')
+      ) {
+        expect(async () => {
+          await localForger.forge(operation);
+        }).rejects.toThrow(ProhibitedActionError);
+      } else {
+        const result = await localForger.forge(operation);
+        expect(await localForger.parse(result)).toEqual(expected || operation);
+      }
     });
   });
   describe('Forge should validate parameters against the schema', () => {

@@ -1,15 +1,13 @@
 import { CONFIGS } from "../../config";
 import { TezosToolkit } from "@taquito/taquito";
 import { PrefixV2 } from "@taquito/utils";
-import { Protocols, UnitValue } from "@taquito/taquito";
-import { ProtoGreaterOrEqual } from "@taquito/michel-codec";
+import { UnitValue } from "@taquito/taquito";
 import crypto from 'crypto';
 import { PvmKind } from "@taquito/rpc";
 
-CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker, knownTicketContract, protocol }) => {
+CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker, knownTicketContract }) => {
   describe(`Test tz2 account operations through contract API using: ${rpc}`, () => {
     const Tezos = lib;
-    let seoulnetAndAlpha = ProtoGreaterOrEqual(protocol, Protocols.PtSeouLou) ? test : test.skip;
     let contractAddress = ''
     let Tz2: TezosToolkit;
 
@@ -145,7 +143,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker, knownTicketCont
       expect(updateConsensusKeyOp.status).toBe('applied')
     })
 
-    seoulnetAndAlpha('verify that update_companion_key fee and gas is sufficient', async () => {
+    it('verify that update_companion_key fee and gas is sufficient', async () => {
       const companionAcc = await createAddress(PrefixV2.BLS12_381SecretKey)
       const companionPk = await companionAcc.signer.publicKey()
 
