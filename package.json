@@ -3,17 +3,16 @@
   "workspaces": [
     "packages/*",
     "packages/taquito-michel-codec/pack-test-tool",
-    "apps/taquito-test-dapp",
+    "apps/",
     "example",
     "integration-tests"
   ],
   "scripts": {
-    "build": "nx run-many --target=build --exclude=@taquito/website,taquito-test-dapp-vite",
+    "build": "nx run-many --target=build --exclude=@taquito/website",
     "build-all": "nx run-many --target=build --exclude=@taquito/website",
-    "build-test-dapp": "lerna run build --scope=taquito-test-dapp-vite",
     "build-website": "npm ci && npm run build && cd website && npm ci && npm run build",
     "rebuild": "npm run clean && npm install && npm run build",
-    "test": "nx run-many --target=test --exclude=integration-tests,@taquito/website,taquito-test-dapp-vite --collectCoverage",
+    "test": "nx run-many --target=test --exclude=integration-tests,@taquito/website --collectCoverage",
     "lint": "lerna run lint",
     "clean": "lerna clean --yes && rm -rf ./node_modules/**",
     "commit": "git-cz",
