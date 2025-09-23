@@ -1,7 +1,7 @@
 import { Protocols } from '@taquito/taquito';
 import { CONFIGS, NetworkType } from '../../config';
 import BigNumber from 'bignumber.js';
-import { ConstantsResponseProto021, ConstantsResponseProto022, ConstantsResponseProto023 } from '@taquito/rpc';
+import { ConstantsResponseProto023 } from '@taquito/rpc';
 
 CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
   const Tezos = lib;
@@ -307,7 +307,7 @@ CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
 
     weeklynet(`should successfully fetch all constants for weeklynet using ${rpc}`, async () => {
       Tezos.setRpcProvider(rpc);
-      const constants: ConstantsResponseProto022 = await Tezos.rpc.getConstants();
+      const constants: ConstantsResponseProto023 = await Tezos.rpc.getConstants();
 
       expect(constants).toEqual({
         proof_of_work_nonce_size: 8,
@@ -325,10 +325,12 @@ CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
         smart_rollup_max_wrapped_proof_binary_size: 30000,
         smart_rollup_message_size_limit: 4096,
         smart_rollup_max_number_of_messages_per_level: '1000000',
-        consensus_rights_delay: 2,
+        consensus_rights_delay: 1,
         blocks_preservation_cycles: 1,
         delegate_parameters_activation_delay: 3,
-        tolerated_inactivity_period: 1,
+        tolerated_inactivity_period_high: 1,
+        tolerated_inactivity_period_low: 1,
+        tolerated_inactivity_period_threshold: 10,
         blocks_per_cycle: 200,
         blocks_per_commitment: 25,
         nonce_revelation_threshold: 50,
@@ -373,8 +375,8 @@ CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
           denominator: 3
         },
         cache_script_size: 100000000,
-        cache_stake_distribution_cycles: 5,
-        cache_sampler_state_cycles: 5,
+        cache_stake_distribution_cycles: 4,
+        cache_sampler_state_cycles: 4,
         dal_parametric: {
           feature_enable: true,
           incentives_enable: true,
@@ -463,10 +465,13 @@ CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
         direct_ticket_spending_enable: false,
         aggregate_attestation: true,
         allow_tz4_delegate_enable: true,
-        all_bakers_attest_activation_level: null,
-        issuance_modification_delay: 2,
-        consensus_key_activation_delay: 2,
-        unstake_finalization_delay: 3
+        all_bakers_attest_activation_threshold: {
+          denominator: 2,
+          numerator: 1,
+        },
+        issuance_modification_delay: 1,
+        consensus_key_activation_delay: 1,
+        unstake_finalization_delay: 2
       });
 
     });

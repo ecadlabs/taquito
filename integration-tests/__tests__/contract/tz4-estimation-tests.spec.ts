@@ -30,7 +30,6 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc, protocol }) => 
           balance: '1',
           code: managerCode,
           init: { 'string': pkh },
-          fee: 800,
         });
         await op.confirmation();
         contract = await Tz4.contract.at((await op.contract()).address);

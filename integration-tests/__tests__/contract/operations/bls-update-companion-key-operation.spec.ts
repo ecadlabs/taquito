@@ -8,23 +8,12 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, protocol }) => {
   const Tezos = lib;
 
   describe(`Test Update Companion Key using: ${rpc}`, () => {
-    let companionPk: string;
     let delegateAccount: TezosToolkit;
-    let proof: string;
-
     beforeAll(async () => {
       await setup();
       try {
         delegateAccount = await createAddress();
-
-        const companionAccount = await createAddress(PrefixV2.BLS12_381SecretKey);
-        companionPk = await companionAccount.signer.publicKey();
-        proof = (await companionAccount.signer.provePossession!()).prefixSig;
-
-        const fund = await Tezos.contract.batch()
-        .withTransfer({ amount: 2, to: await delegateAccount.signer.publicKeyHash() })
-        .withTransfer({ amount: 2, to: await companionAccount.signer.publicKeyHash()})
-        .send();
+        const fund = await Tezos.contract.transfer({ amount: 2, to: await delegateAccount.signer.publicKeyHash() })
         await fund.confirmation();
         const register = await delegateAccount.contract.registerDelegate({});
         await register.confirmation();
@@ -34,7 +23,8 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, protocol }) => {
     });
 
     seoulnetAndAlpha('should be able to inject update_companion_key operation', async () => {
-      const op = await delegateAccount.contract.updateCompanionKey({ pk: companionPk, proof });
+      const companionAccount = await createAddress(PrefixV2.BLS12_381SecretKey);
+      const op = await delegateAccount.contract.updateCompanionKey({ pk: await companionAccount.signer.publicKey(), proof: (await companionAccount.signer.provePossession!()).prefixSig });
       await op.confirmation();
       expect(op.status).toBe('applied');
       expect(op.includedInBlock).toBeDefined();

@@ -27,7 +27,6 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
           balance: '1',
           code: managerCode,
           init: { 'string': pkh },
-          fee: 800,
         });
         await op.confirmation();
         contract = await LowAmountTez.contract.at((await op.contract()).address);

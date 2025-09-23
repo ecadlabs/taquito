@@ -97,7 +97,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
 
     it('Verify batch transfer with chained contract calls', async () => {
       const op = await Tezos.contract.originate({
-        balance: "3",
+        balance: "1",
         code: managerCode,
         init: { "string": await Tezos.signer.publicKeyHash() },
       })
@@ -107,7 +107,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
 
       const batch = Tezos.contract.batch()
         .withTransfer({ to: contract.address, amount: 1 })
-        .withContractCall(contract.methods.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 1)))
+        .withContractCall(contract.methods.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 5)))
         .withContractCall(contract.methods.do(MANAGER_LAMBDA.setDelegate(knownBaker)))
         .withContractCall(contract.methods.do(MANAGER_LAMBDA.removeDelegate()))
 
@@ -120,7 +120,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
 
     it('Verify batch transfer with chained contract calls using the `methodsObject` method', async () => {
       const op = await Tezos.contract.originate({
-        balance: "3",
+        balance: "1",
         code: managerCode,
         init: { "string": await Tezos.signer.publicKeyHash() },
       })
@@ -130,7 +130,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
 
       const batch = Tezos.contract.batch()
         .withTransfer({ to: contract.address, amount: 1 })
-        .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 1)))
+        .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 5)))
         .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.setDelegate(knownBaker)))
         .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.removeDelegate()))
 

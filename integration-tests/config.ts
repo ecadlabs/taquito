@@ -135,13 +135,13 @@ const seoulnetEphemeral: Config =
   defaultConfig({
     networkName: 'SEOULNET',
     protocol: Protocols.PtSeouLou,
-    defaultRpc: 'https://rpc.seoulnet.teztnets.com',
+    defaultRpc: 'http://ecad-tezos-seoulnet-rolling-1.i.ecadinfra.com/',
     knownContracts: knownContractsPtSeouLou,
     signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/seoulnet')
   })
 
 const seoulnetSecretKey: Config =
-  { ...seoulnetEphemeral, ...{ signerConfig: defaultSecretKey, defaultRpc: 'https://rpc.seoulnet.teztnets.com' } };
+  { ...seoulnetEphemeral, ...{ signerConfig: defaultSecretKey, defaultRpc: 'https://seoulnet.tezos.ecadinfra.com' } };
 
 const ghostnetEphemeral: Config =
   defaultConfig({
@@ -159,7 +159,7 @@ const weeklynetEphemeral: Config =
   defaultConfig({
     networkName: 'WEEKLYNET',
     protocol: Protocols.ProtoALpha,
-    defaultRpc: 'https://rpc.weeklynet-2025-07-23.teztnets.com',
+    defaultRpc: 'https://rpc.weeklynet-2025-09-17.teztnets.com',
     knownContracts: knownContractsProtoALph,
     signerConfig: defaultEphemeralConfig('http://key-gen-1.i.tez.ie:3010/mondaynet')
   });

@@ -3,7 +3,6 @@ import { DefaultContractType, Protocols } from "@taquito/taquito";
 import { RpcClientCache, RpcClient, RPCRunViewParam, RPCRunScriptViewParam, PendingOperationsV2 } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
 import { Schema } from '@taquito/michelson-encoder';
-import { ProtoGreaterOrEqual } from '@taquito/michel-codec';
 import { tokenBigmapCode, tokenBigmapStorage } from '../../data/token_bigmap';
 import { ticketCode, ticketStorage } from '../../data/code_with_ticket';
 

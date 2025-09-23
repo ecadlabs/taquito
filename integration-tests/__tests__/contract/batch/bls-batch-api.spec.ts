@@ -112,7 +112,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol, createAddress, knownBaker }) => 
 
     seoulnetAndAlpha('Verify batch transfer with chained contract calls', async () => {
       const op = await Bls.contract.originate({
-        balance: "3",
+        balance: "1",
         code: managerCode,
         init: { "string": await Bls.signer.publicKeyHash() },
       })

@@ -20,7 +20,6 @@ describe('Address token', () => {
     });
   });
 
-
   describe('Encode', () => {
     it('Should encode address to string', () => {
       expect(token.Encode(['tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn'])).toEqual({
