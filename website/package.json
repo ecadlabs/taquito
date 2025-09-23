@@ -12,7 +12,8 @@
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
     "typecheck": "tsc",
-    "delete-index": "node ./scripts/delete-index.js"
+    "delete-index": "node ./scripts/delete-index.js",
+    "feedback-worker-deploy": "cd src/cloudflare && wrangler deploy"
   },
   "dependencies": {
     "@docusaurus/core": "2.4.3",
@@ -68,9 +69,11 @@
     "sass-loader": "^13.3.2",
     "stream-browserify": "^3.0.0",
     "url-loader": "^4.1.1",
-    "utf-8-validate": "^5.0.10"
+    "utf-8-validate": "^5.0.10",
+    "wrangler": "^4.37.0"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250913.0",
     "@docusaurus/module-type-aliases": "2.4.3",
     "@tsconfig/docusaurus": "^2.0.2",
     "lokijs": "^1.5.12",
@@ -88,5 +91,5 @@
       "last 1 safari version"
     ]
   },
-  "version": "22.0.0"
+  "version": "23.0.1"
 }

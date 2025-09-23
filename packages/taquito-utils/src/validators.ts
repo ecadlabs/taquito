@@ -1,80 +1,64 @@
-import { prefix, prefixLength, Prefix } from './constants';
-import bs58check from 'bs58check';
+import { PrefixV2 } from './constants';
+import {
+  b58DecodeAndCheckPrefix,
+  splitAddress,
+  ValidationResult,
+  publicKeyHashPrefixes,
+  signaturePrefixes,
+  publicKeyPrefixes,
+  addressPrefixes,
+} from './taquito-utils';
+import { ParameterValidationError } from '@taquito/core';
 
-export enum ValidationResult {
-  NO_PREFIX_MATCHED,
-  INVALID_CHECKSUM,
-  INVALID_LENGTH,
-  VALID,
+export { ValidationResult } from '@taquito/core';
+
+/**
+ * @description Used to check if a value has one of the allowed prefixes.
+ * @returns true if the value has one of the allowed prefixes, false otherwise
+ * @example
+ * ```
+ * import { isValidPrefixedValue } from '@taquito/utils';
+ * const value = 'tz1L9r8mWmRPndRhuvMCWESLGSVeFzQ9NAWx'
+ * const isValid = isValidPrefixedValue(value, [PrefixV2.Ed25519PublicKeyHash])
+ * console.log(isValid) // true
+ * ```
+ */
+export function isValidPrefixedValue(value: string, prefixes?: PrefixV2[]): boolean {
+  return validatePrefixedValue(value, prefixes) === ValidationResult.VALID;
 }
 
-export function isValidPrefix(value: unknown): value is Prefix {
-  if (typeof value !== 'string') {
-    return false;
-  }
-
-  return value in prefix;
-}
 /**
  * @description This function is called by the validation functions ([[validateAddress]], [[validateChain]], [[validateContractAddress]], [[validateKeyHash]], [[validateSignature]], [[validatePublicKey]]).
- * Verify if the value has the right prefix or return `NO_PREFIX_MATCHED`,
- * decode the value using base58 and return `INVALID_CHECKSUM` if it fails,
- * check if the length of the value matches the prefix type or return `INVALID_LENGTH`.
- * If all checks pass, return `VALID`.
- *
+ * Verify if the value can be decoded or return `1` (INVALID_CHECKSUM) / `5` (INVALID_ENCODING), then check if the prefix is valid or allowed or return `0` (NO_PREFIX_MATCHED) / `4` (PREFIX_NOT_ALLOWED)
+ * If all checks pass, return `3` (VALID).
  * @param value Value to validate
  * @param prefixes prefix the value should have
+ * @returns 0 = NO_PREFIX_MATCHED, 1 = INVALID_CHECKSUM, 2 = INVALID_LENGTH, 3 = VALID, 4 = PREFIX_NOT_ALLOWED, 5 = INVALID_ENCODING, 6 = OTHER,
+ * @example
+ * ```
+ * import { validatePrefixedValue } from '@taquito/utils';
+ * const value = 'tz1L9r8mWmRPndRhuvMCWESLGSVeFzQ9NAWx'
+ * const validation = validatePrefixedValue(value, [PrefixV2.Ed25519PublicKeyHash])
+ * console.log(validation) // 3
+ * ```
  */
-function validatePrefixedValue(value: string, prefixes: Prefix[]) {
-  const match = new RegExp(`^(${prefixes.join('|')})`).exec(value);
-  if (!match || match.length === 0) {
-    return ValidationResult.NO_PREFIX_MATCHED;
+function validatePrefixedValue(value: string, prefixes?: PrefixV2[]): ValidationResult {
+  try {
+    b58DecodeAndCheckPrefix(value, prefixes);
+  } catch (err: unknown) {
+    if (err instanceof ParameterValidationError && err.result !== undefined) {
+      return err.result;
+    }
+    return ValidationResult.OTHER;
   }
-
-  const prefixKey = match[0];
-
-  if (!isValidPrefix(prefixKey)) {
-    return ValidationResult.NO_PREFIX_MATCHED;
-  }
-
-  // Check whether annotation exist before starting validation
-  if (value.includes('%')) {
-    value = value.split('%')[0];
-  }
-
-  const kt1Regex = /^(KT1\w{33})$/;
-  if (!kt1Regex.test(value) && prefixKey === 'KT1') {
-    return ValidationResult.INVALID_CHECKSUM;
-  }
-
-  // decodeUnsafe return undefined if decoding fail
-  let decoded = bs58check.decodeUnsafe(value);
-  if (!decoded) {
-    return ValidationResult.INVALID_CHECKSUM;
-  }
-
-  decoded = decoded.slice(prefix[prefixKey].length);
-  if (decoded.length !== prefixLength[prefixKey]) {
-    return ValidationResult.INVALID_LENGTH;
-  }
-
   return ValidationResult.VALID;
 }
-
-const implicitPrefix = [Prefix.TZ1, Prefix.TZ2, Prefix.TZ3, Prefix.TZ4];
-const contractPrefix = [Prefix.KT1];
-const signaturePrefix = [Prefix.EDSIG, Prefix.P2SIG, Prefix.SPSIG, Prefix.SIG];
-const pkPrefix = [Prefix.EDPK, Prefix.SPPK, Prefix.P2PK, Prefix.BLPK];
-const operationPrefix = [Prefix.O];
-const protocolPrefix = [Prefix.P];
-const blockPrefix = [Prefix.B];
-const smartRollupPrefix = [Prefix.SR1];
 
 /**
  * @description Used to check if an address or a contract address is valid.
  *
  * @returns
- * 0 (NO_PREFIX_MATCHED), 1 (INVALID_CHECKSUM), 2 (INVALID_LENGTH) or 3 (VALID).
+ * 0 = NO_PREFIX_MATCHED, 1 = INVALID_CHECKSUM, 2 = INVALID_LENGTH, 3 = VALID, 4 = PREFIX_NOT_ALLOWED, 5 = INVALID_ENCODING, 6 = OTHER,
  *
  * @example
  * ```
@@ -86,14 +70,15 @@ const smartRollupPrefix = [Prefix.SR1];
  * ```
  */
 export function validateAddress(value: string): ValidationResult {
-  return validatePrefixedValue(value, [...implicitPrefix, ...contractPrefix, ...smartRollupPrefix]);
+  const [addr] = splitAddress(value ?? '');
+  return validatePrefixedValue(addr, addressPrefixes);
 }
 
 /**
  * @description Used to check if a chain id is valid.
  *
  * @returns
- * 0 (NO_PREFIX_MATCHED), 1 (INVALID_CHECKSUM), 2 (INVALID_LENGTH) or 3 (VALID).
+ * 0 = NO_PREFIX_MATCHED, 1 = INVALID_CHECKSUM, 2 = INVALID_LENGTH, 3 = VALID, 4 = PREFIX_NOT_ALLOWED, 5 = INVALID_ENCODING, 6 = OTHER,
  *
  * @example
  * ```
@@ -105,14 +90,14 @@ export function validateAddress(value: string): ValidationResult {
  * ```
  */
 export function validateChain(value: string): ValidationResult {
-  return validatePrefixedValue(value, [Prefix.NET]);
+  return validatePrefixedValue(value, [PrefixV2.ChainID]);
 }
 
 /**
  * @description Used to check if a contract address is valid.
  *
  * @returns
- * 0 (NO_PREFIX_MATCHED), 1 (INVALID_CHECKSUM), 2 (INVALID_LENGTH) or 3 (VALID).
+ * 0 = NO_PREFIX_MATCHED, 1 = INVALID_CHECKSUM, 2 = INVALID_LENGTH, 3 = VALID, 4 = PREFIX_NOT_ALLOWED, 5 = INVALID_ENCODING, 6 = OTHER,
  *
  * @example
  * ```
@@ -124,14 +109,14 @@ export function validateChain(value: string): ValidationResult {
  * ```
  */
 export function validateContractAddress(value: string): ValidationResult {
-  return validatePrefixedValue(value, contractPrefix);
+  return validatePrefixedValue(value, [PrefixV2.ContractHash]);
 }
 
 /**
  * @description Used to check if a key hash is valid.
  *
  * @returns
- * 0 (NO_PREFIX_MATCHED), 1 (INVALID_CHECKSUM), 2 (INVALID_LENGTH) or 3 (VALID).
+ * 0 = NO_PREFIX_MATCHED, 1 = INVALID_CHECKSUM, 2 = INVALID_LENGTH, 3 = VALID, 4 = PREFIX_NOT_ALLOWED, 5 = INVALID_ENCODING, 6 = OTHER,
  *
  * @example
  * ```
@@ -143,14 +128,14 @@ export function validateContractAddress(value: string): ValidationResult {
  * ```
  */
 export function validateKeyHash(value: string): ValidationResult {
-  return validatePrefixedValue(value, implicitPrefix);
+  return validatePrefixedValue(value, publicKeyHashPrefixes);
 }
 
 /**
  * @description Used to check if a signature is valid.
  *
  * @returns
- * 0 (NO_PREFIX_MATCHED), 1 (INVALID_CHECKSUM), 2 (INVALID_LENGTH) or 3 (VALID).
+ * 0 = NO_PREFIX_MATCHED, 1 = INVALID_CHECKSUM, 2 = INVALID_LENGTH, 3 = VALID, 4 = PREFIX_NOT_ALLOWED, 5 = INVALID_ENCODING, 6 = OTHER,
  *
  * @example
  * ```
@@ -162,14 +147,14 @@ export function validateKeyHash(value: string): ValidationResult {
  * ```
  */
 export function validateSignature(value: string): ValidationResult {
-  return validatePrefixedValue(value, signaturePrefix);
+  return validatePrefixedValue(value, signaturePrefixes);
 }
 
 /**
  * @description Used to check if a public key is valid.
  *
  * @returns
- * 0 (NO_PREFIX_MATCHED), 1 (INVALID_CHECKSUM), 2 (INVALID_LENGTH) or 3 (VALID).
+ * 0 = NO_PREFIX_MATCHED, 1 = INVALID_CHECKSUM, 2 = INVALID_LENGTH, 3 = VALID, 4 = PREFIX_NOT_ALLOWED, 5 = INVALID_ENCODING, 6 = OTHER,
  *
  * @example
  * ```
@@ -181,14 +166,14 @@ export function validateSignature(value: string): ValidationResult {
  * ```
  */
 export function validatePublicKey(value: string): ValidationResult {
-  return validatePrefixedValue(value, pkPrefix);
+  return validatePrefixedValue(value, publicKeyPrefixes);
 }
 
 /**
  * @description Used to check if an operation hash is valid.
  *
  * @returns
- * 0 (NO_PREFIX_MATCHED), 1 (INVALID_CHECKSUM), 2 (INVALID_LENGTH) or 3 (VALID).
+ * 0 = NO_PREFIX_MATCHED, 1 = INVALID_CHECKSUM, 2 = INVALID_LENGTH, 3 = VALID, 4 = PREFIX_NOT_ALLOWED, 5 = INVALID_ENCODING, 6 = OTHER,
  *
  * @example
  * ```
@@ -200,14 +185,14 @@ export function validatePublicKey(value: string): ValidationResult {
  * ```
  */
 export function validateOperation(value: string): ValidationResult {
-  return validatePrefixedValue(value, operationPrefix);
+  return validatePrefixedValue(value, [PrefixV2.OperationHash]);
 }
 
 /**
  * @description Used to check if a protocol hash is valid.
  *
  * @returns
- * 0 (NO_PREFIX_MATCHED), 1 (INVALID_CHECKSUM), 2 (INVALID_LENGTH) or 3 (VALID).
+ * 0 = NO_PREFIX_MATCHED, 1 = INVALID_CHECKSUM, 2 = INVALID_LENGTH, 3 = VALID, 4 = PREFIX_NOT_ALLOWED, 5 = INVALID_ENCODING, 6 = OTHER,
  *
  * @example
  * ```
@@ -219,14 +204,14 @@ export function validateOperation(value: string): ValidationResult {
  * ```
  */
 export function validateProtocol(value: string): ValidationResult {
-  return validatePrefixedValue(value, protocolPrefix);
+  return validatePrefixedValue(value, [PrefixV2.ProtocolHash]);
 }
 
 /**
  * @description Used to check if a block hash is valid.
  *
  * @returns
- * 0 (NO_PREFIX_MATCHED), 1 (INVALID_CHECKSUM), 2 (INVALID_LENGTH) or 3 (VALID).
+ * 0 = NO_PREFIX_MATCHED, 1 = INVALID_CHECKSUM, 2 = INVALID_LENGTH, 3 = VALID, 4 = PREFIX_NOT_ALLOWED, 5 = INVALID_ENCODING, 6 = OTHER,
  *
  * @example
  * ```
@@ -238,18 +223,13 @@ export function validateProtocol(value: string): ValidationResult {
  * ```
  */
 export function validateBlock(value: string): ValidationResult {
-  return validatePrefixedValue(value, blockPrefix);
+  return validatePrefixedValue(value, [PrefixV2.BlockHash]);
 }
 
 /**
- * @description Used to check if a spending key is valid.
- * @returns 0 (NO_PREFIX_MATCHED), 1 (INVALID_CHECKSUM), 2 (INVALID_LENGTH) or 3 (VALID).
- *
+ * @deprecated this function will be removed in the next minor release
+ * @description generates a readable error string from a validation result
  */
-export function validateSpendingKey(value: any): ValidationResult {
-  return validatePrefixedValue(value, [Prefix.SASK]);
-}
-
 export function invalidDetail(validation: ValidationResult): string {
   switch (validation) {
     case ValidationResult.NO_PREFIX_MATCHED:
@@ -263,6 +243,16 @@ export function invalidDetail(validation: ValidationResult): string {
   }
 }
 
+/**
+ * @description Used to check if a spending key is valid.
+ * @returns
+ * 0 = NO_PREFIX_MATCHED, 1 = INVALID_CHECKSUM, 2 = INVALID_LENGTH, 3 = VALID, 4 = PREFIX_NOT_ALLOWED, 5 = INVALID_ENCODING, 6 = OTHER,
+ *
+ */
+export function validateSpendingKey(value: string): ValidationResult {
+  return validatePrefixedValue(value, [PrefixV2.SaplingSpendingKey]);
+}
+
 export function validateSmartRollupAddress(value: string): ValidationResult {
-  return validatePrefixedValue(value, [...smartRollupPrefix]);
+  return validatePrefixedValue(value, [PrefixV2.SmartRollupHash]);
 }

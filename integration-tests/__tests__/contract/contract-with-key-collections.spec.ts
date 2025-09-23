@@ -18,14 +18,18 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
           'edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g',
           'edpkuNjKKT48xBoT5asPrWdmuM1Yw8D93MwgFgVvtca8jb5pstzaCh',
           'sppk7aVdgAmezMCRTcHciVkVZoGNnhSdKEYcn5pYaqt4PvLjgFbLRxo',
+          'BLpk1tYvtGix5PBju1Trpz63Ezuuocvf1dw1cvXPdToHNGFs8brqpmF2hw44cs9xqfRAsDW5JWRE',
           'p2pk67c5b5THCj5fyksX1C13etdUpLR9BDYvJUuJNrxeGqCgbY3NFpV',
           'p2pk65shUHKhx7zUSF7e8KZ2inmQ5aMS4jRBUmK6aCis4oaHoiWPXoT',
+          'BLpk1nKVbygxgq6FdH9LGqpAaBMrdftQJuSAr1JvCJrsuewPGDLvrvqgxMSawg669ATM4F4hL29Z',
           'p2pk6842BMz2Se9XuMxQDe7yVdaEvpjNGQ7DYjKTQwzMUtryaHmZcV9',
         ],
         keyMap: MichelsonMap.fromLiteral({
+          'BLpk1wdswKAQynswErddqDxjsMkhg3n5i2Qgn8XTBYCrfuvwdeQDR7GvbwQPPS2q2pBiw5mcatRF': 0,
           'edpkuNjKKT48xBoT5asPrWdmuM1Yw8D93MwgFgVvtca8jb5pstzaCh': 10,
           'p2pk65shUHKhx7zUSF7e8KZ2inmQ5aMS4jRBUmK6aCis4oaHoiWPXoT': 40,
           'sppk7aVdgAmezMCRTcHciVkVZoGNnhSdKEYcn5pYaqt4PvLjgFbLRxo': 100,
+          'BLpk1w3urTgb1QJskQe8B9Tv2d7PiJi63HGo5XcPA9StafezaBijDVxAi8McfYWKptQrRoTvyhmZ': 88,
           'sppk7aTKnmX5WV17KPo3LanjfPLoXTuNjkQTdLx2bYDqHPLVVCbSwoj': 23,
           'p2pk67c5b5THCj5fyksX1C13etdUpLR9BDYvJUuJNrxeGqCgbY3NFpV': 17
         }) as MichelsonMap<string, number>

@@ -1,19 +1,19 @@
 import { Protocols } from '@taquito/taquito';
 import { CONFIGS, NetworkType } from '../../config';
 import BigNumber from 'bignumber.js';
-import { ConstantsResponseProto021, ConstantsResponseProto022 } from '@taquito/rpc';
+import { ConstantsResponseProto023 } from '@taquito/rpc';
 
 CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
   const Tezos = lib;
   const weeklynet = (networkType == NetworkType.TESTNET && protocol === Protocols.ProtoALpha) ? test : test.skip;
-  const rionet = (networkType == NetworkType.TESTNET && protocol === Protocols.PsRiotuma) ? test : test.skip;
+  const seoulnet = (networkType == NetworkType.TESTNET && protocol === Protocols.PtSeouLou) ? test : test.skip;
 
   describe('Test fetching constants for all protocols on Mainnet', () => {
     const rpcUrl = 'https://mainnet.tezos.ecadinfra.com/';
     Tezos.setRpcProvider(rpcUrl);
-    it(`should successfully fetch Proto22(Rio) constants at head`, async () => {
-      const constants: ConstantsResponseProto021 = await Tezos.rpc.getConstants();
-      expect(constants).toEqual(   {
+    it(`should successfully fetch Proto23(Seoul) constants at head`, async () => {
+      const constants: ConstantsResponseProto023 = await Tezos.rpc.getConstants();
+      expect(constants).toEqual({
         proof_of_work_nonce_size: 8,
         nonce_length: 32,
         max_anon_ops_per_block: 132,
@@ -34,15 +34,15 @@ CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
         delegate_parameters_activation_delay: 5,
         tolerated_inactivity_period: 2,
         blocks_per_cycle: 10800,
-        blocks_per_commitment: 240,
-        nonce_revelation_threshold: 960,
+        blocks_per_commitment: 84,
+        nonce_revelation_threshold: 300,
         cycles_per_voting_period: 14,
         hard_gas_limit_per_operation: new BigNumber('1040000'),
-        hard_gas_limit_per_block: new BigNumber ('1386666'),
-        proof_of_work_threshold: new BigNumber ("281474976710655"),
-        minimal_stake: new BigNumber ('6000000000'),
+        hard_gas_limit_per_block: new BigNumber('1386666'),
+        proof_of_work_threshold: new BigNumber("281474976710655"),
+        minimal_stake: new BigNumber('6000000000'),
         minimal_frozen_stake: '600000000',
-        vdf_difficulty: new BigNumber ('8000000000'),
+        vdf_difficulty: new BigNumber('2400000000'),
         origination_size: 257,
         issuance_weights: {
           base_total_issued_per_minute: '80007812',
@@ -53,16 +53,16 @@ CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
           vdf_revelation_tip_weight: 1,
           dal_rewards_weight: 2275
         },
-        cost_per_byte: new BigNumber ('250'),
-        hard_storage_limit_per_operation: new BigNumber ('60000'),
+        cost_per_byte: new BigNumber('250'),
+        hard_storage_limit_per_operation: new BigNumber('60000'),
         quorum_min: 2000,
         quorum_max: 7000,
         min_proposal_quorum: 500,
-        liquidity_baking_subsidy: new BigNumber ('5000000'),
+        liquidity_baking_subsidy: new BigNumber('5000000'),
         liquidity_baking_toggle_ema_threshold: 1000000000,
         max_operations_time_to_live: 450,
-        minimal_block_delay: new BigNumber ('8'),
-        delay_increment_per_round: new BigNumber ('4'),
+        minimal_block_delay: new BigNumber('8'),
+        delay_increment_per_round: new BigNumber('4'),
         consensus_committee_size: 7000,
         consensus_threshold_size: 4667,
         minimal_participation_ratio: { numerator: 2, denominator: 3 },
@@ -127,8 +127,8 @@ CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
           radius_dz: { numerator: '1', denominator: '50' }
         },
         direct_ticket_spending_enable: false,
-        aggregate_attestation: false,
-        allow_tz4_delegate_enable: false,
+        aggregate_attestation: true,
+        allow_tz4_delegate_enable: true,
         all_bakers_attest_activation_level: null,
         issuance_modification_delay: 2,
         consensus_key_activation_delay: 2,
@@ -138,10 +138,10 @@ CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
   });
 
   describe(`Fetch constants for testnet`, () => {
-    rionet(`should successfully fetch all constants for Rionet
+    seoulnet(`should successfully fetch all constants for Seoulnet
       using ${rpc}`, async () => {
       Tezos.setRpcProvider(rpc);
-      const constants: ConstantsResponseProto022 = await Tezos.rpc.getConstants();
+      const constants: ConstantsResponseProto023 = await Tezos.rpc.getConstants();
       // console.log(JSON.stringify(constants, null, 2))
       expect(constants).toEqual({
         proof_of_work_nonce_size: 8,
@@ -163,7 +163,7 @@ CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
         blocks_preservation_cycles: 1,
         delegate_parameters_activation_delay: 3,
         tolerated_inactivity_period: 2,
-        blocks_per_cycle: 900,
+        blocks_per_cycle: 300,
         blocks_per_commitment: 25,
         nonce_revelation_threshold: 50,
         cycles_per_voting_period: 1,
@@ -296,8 +296,8 @@ CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
           }
         },
         direct_ticket_spending_enable: false,
-        aggregate_attestation: false,
-        allow_tz4_delegate_enable: false,
+        aggregate_attestation: true,
+        allow_tz4_delegate_enable: true,
         all_bakers_attest_activation_level: null,
         issuance_modification_delay: 2,
         consensus_key_activation_delay: 2,
@@ -307,7 +307,7 @@ CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
 
     weeklynet(`should successfully fetch all constants for weeklynet using ${rpc}`, async () => {
       Tezos.setRpcProvider(rpc);
-      const constants: ConstantsResponseProto022 = await Tezos.rpc.getConstants();
+      const constants: ConstantsResponseProto023 = await Tezos.rpc.getConstants();
 
       expect(constants).toEqual({
         proof_of_work_nonce_size: 8,
@@ -325,10 +325,12 @@ CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
         smart_rollup_max_wrapped_proof_binary_size: 30000,
         smart_rollup_message_size_limit: 4096,
         smart_rollup_max_number_of_messages_per_level: '1000000',
-        consensus_rights_delay: 2,
+        consensus_rights_delay: 1,
         blocks_preservation_cycles: 1,
         delegate_parameters_activation_delay: 3,
-        tolerated_inactivity_period: 1,
+        tolerated_inactivity_period_high: 1,
+        tolerated_inactivity_period_low: 1,
+        tolerated_inactivity_period_threshold: 10,
         blocks_per_cycle: 200,
         blocks_per_commitment: 25,
         nonce_revelation_threshold: 50,
@@ -373,8 +375,8 @@ CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
           denominator: 3
         },
         cache_script_size: 100000000,
-        cache_stake_distribution_cycles: 5,
-        cache_sampler_state_cycles: 5,
+        cache_stake_distribution_cycles: 4,
+        cache_sampler_state_cycles: 4,
         dal_parametric: {
           feature_enable: true,
           incentives_enable: true,
@@ -463,10 +465,13 @@ CONFIGS().forEach(({ lib, protocol, rpc, networkType }) => {
         direct_ticket_spending_enable: false,
         aggregate_attestation: true,
         allow_tz4_delegate_enable: true,
-        all_bakers_attest_activation_level: null,
-        issuance_modification_delay: 2,
-        consensus_key_activation_delay: 2,
-        unstake_finalization_delay: 3
+        all_bakers_attest_activation_threshold: {
+          denominator: 2,
+          numerator: 1,
+        },
+        issuance_modification_delay: 1,
+        consensus_key_activation_delay: 1,
+        unstake_finalization_delay: 2
       });
 
     });
