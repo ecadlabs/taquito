@@ -6,13 +6,12 @@
 import BigNumber from 'bignumber.js';
 import { MichelCodecPacker, Packer, TzReadProvider } from '@taquito/taquito';
 import {
-  b58cdecode,
+  b58DecodeAndCheckPrefix,
+  b58DecodePublicKeyHash,
   format,
-  prefix,
-  Prefix,
+  PrefixV2,
   validateKeyHash,
   ValidationResult,
-  invalidDetail,
 } from '@taquito/utils';
 import { InsufficientBalance, InvalidMemo } from './errors';
 import { convertValueToBigNumber } from './sapling-tx-viewer/helpers';
@@ -259,55 +258,28 @@ export class SaplingToolkit {
       return root;
     }
   }
+
   private async createBoundData(destination: string) {
-    const pref = destination.substring(0, 3);
-
-    let pad: Buffer;
-    switch (pref) {
-      case 'tz1': {
-        pad = Buffer.from('00', 'hex');
-        break;
-      }
-      case 'tz2': {
-        pad = Buffer.from('01', 'hex');
-        break;
-      }
-      case 'tz3': {
-        pad = Buffer.from('02', 'hex');
-        break;
-      }
-      default: {
-        throw new InvalidAddressError(
-          destination,
-          invalidDetail(ValidationResult.NO_PREFIX_MATCHED) +
-            ` expecting one of the following prefix '${Prefix.TZ1}', '${Prefix.TZ2}' or '${Prefix.TZ3}'.`
-        );
-      }
-    }
-
-    const decodedDestination = b58cdecode(destination, prefix[pref]);
-    const padDestination = Buffer.concat([pad, Buffer.from(decodedDestination)]);
+    const bytes = b58DecodePublicKeyHash(destination, 'hex');
     const packedDestination = await this.#packer.packData({
-      data: { bytes: padDestination.toString('hex') },
+      data: { bytes },
       type: { prim: 'bytes' },
     });
-
     return Buffer.from(packedDestination.packed, 'hex');
   }
 
   private validateDestinationImplicitAddress(to: string) {
     const toValidation = validateKeyHash(to);
     if (toValidation !== ValidationResult.VALID) {
-      throw new InvalidKeyHashError(to, invalidDetail(toValidation));
+      throw new InvalidKeyHashError(to, toValidation);
     }
   }
 
   private validateDestinationSaplingAddress(to: string) {
-    if (!to.startsWith(Prefix.ZET1)) {
-      throw new InvalidAddressError(
-        to,
-        invalidDetail(ValidationResult.NO_PREFIX_MATCHED) + ` expecting prefix ${Prefix.ZET1}.`
-      );
+    try {
+      b58DecodeAndCheckPrefix(to, [PrefixV2.SaplingAddress]);
+    } catch {
+      throw new InvalidAddressError(to, `expecting prefix ${PrefixV2.SaplingAddress}.`);
     }
   }
 

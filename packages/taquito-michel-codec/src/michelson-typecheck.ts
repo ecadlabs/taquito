@@ -136,7 +136,8 @@ function assertScalarTypesEqual(a: MichelsonType, b: MichelsonType, field = fals
       if (parseInt(a.args[0].int, 10) !== parseInt((b as typeof a).args[0].int, 10)) {
         throw new MichelsonTypeError(
           a,
-          `${typeID(a)}: type argument mismatch: ${a.args[0].int} != ${(b as typeof a).args[0].int
+          `${typeID(a)}: type argument mismatch: ${a.args[0].int} != ${
+            (b as typeof a).args[0].int
           }`,
           undefined
         );
@@ -428,7 +429,7 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
       if (
         'string' in d &&
         checkDecodeTezosID(d.string, 'ED25519PublicKey', 'SECP256K1PublicKey', 'P256PublicKey') !==
-        null
+          null
       ) {
         return;
       } else if ('bytes' in d) {
@@ -741,10 +742,10 @@ function functionTypeInternal(
     const ann =
       a.v !== undefined || a.t !== undefined || a.f !== undefined
         ? [
-          ...((a.v === null ? src.v : a.v) || []),
-          ...((a.t === null ? src.t : a.t) || []),
-          ...((a.f === null ? src.f : a.f) || []),
-        ]
+            ...((a.v === null ? src.v : a.v) || []),
+            ...((a.t === null ? src.t : a.t) || []),
+            ...((a.f === null ? src.f : a.f) || []),
+          ]
         : undefined;
 
     const { annots: _annots, ...rest } = t;
@@ -1997,35 +1998,35 @@ function functionTypeInternal(
         }
         return ProtoInferiorTo(proto, Protocol.PtJakarta)
           ? [
-            annotateVar({
-              prim: 'option',
-              args: [
-                {
-                  prim: 'pair',
-                  args: [{ prim: 'int' }, annotate(s[1], { t: null })],
-                },
-              ],
-            }),
-            ...stack.slice(2),
-          ]
+              annotateVar({
+                prim: 'option',
+                args: [
+                  {
+                    prim: 'pair',
+                    args: [{ prim: 'int' }, annotate(s[1], { t: null })],
+                  },
+                ],
+              }),
+              ...stack.slice(2),
+            ]
           : [
-            annotateVar({
-              prim: 'option',
-              args: [
-                {
-                  prim: 'pair',
-                  args: [
-                    { prim: 'bytes' },
-                    {
-                      prim: 'pair',
-                      args: [{ prim: 'int' }, annotate(s[1], { t: null })],
-                    },
-                  ],
-                },
-              ],
-            }),
-            ...stack.slice(2),
-          ];
+              annotateVar({
+                prim: 'option',
+                args: [
+                  {
+                    prim: 'pair',
+                    args: [
+                      { prim: 'bytes' },
+                      {
+                        prim: 'pair',
+                        args: [{ prim: 'int' }, annotate(s[1], { t: null })],
+                      },
+                    ],
+                  },
+                ],
+              }),
+              ...stack.slice(2),
+            ];
       }
 
       case 'OPEN_CHEST':
@@ -2053,6 +2054,10 @@ function functionTypeInternal(
         }
         return [annotate({ prim: 'operation' }, ia), ...stack.slice(1)];
       }
+
+      case 'IS_IMPLICIT_ACCOUNT':
+        args(0, ['address']);
+        return [annotateVar({ prim: 'option', args: [{ prim: 'key_hash' }] }), ...stack.slice(1)];
 
       default:
         throw new MichelsonError(

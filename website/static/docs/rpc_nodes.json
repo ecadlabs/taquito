@@ -42,11 +42,6 @@
       "provider": "ecadinfra"
     },
     {
-      "net": "rionet",
-      "url": "https://rionet.tezos.ecadinfra.com",
-      "provider": "ecadinfra"
-    },
-    {
       "net": "seoulnet",
       "url": "https://seoulnet.tezos.ecadinfra.com",
       "provider": "ecadinfra"
@@ -78,11 +73,6 @@
       "provider": "tezosfoundation"
     },
     {
-      "net": "rionet",
-      "url": "https://rpc.rionet.teztnets.com",
-      "provider": "tezosfoundation"
-    },
-    {
       "net": "seoulnet",
       "url": "https://rpc.seoulnet.teztnets.com",
       "provider": "tezosfoundation"
@@ -100,11 +90,6 @@
     {
       "net": "shadownet",
       "url": "https://rpc.tzkt.io/shadownet",
-      "provider": "tzkt"
-    },
-    {
-      "net": "rionet",
-      "url": "https://rpc.tzkt.io/rionet",
       "provider": "tzkt"
     },
     {

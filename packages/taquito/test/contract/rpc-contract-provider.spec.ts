@@ -84,6 +84,7 @@ describe('RpcContractProvider test', () => {
     transferTicket: jest.Mock<any, any>;
     increasePaidStorage: jest.Mock<any, any>;
     updateConsensusKey: jest.Mock<any, any>;
+    updateCompanionKey: jest.Mock<any, any>;
     smartRollupAddMessages: jest.Mock<any, any>;
     contractCall: jest.Mock<any, any>;
     smartRollupOriginate: jest.Mock<any, any>;
@@ -147,6 +148,7 @@ describe('RpcContractProvider test', () => {
       transferTicket: jest.fn(),
       increasePaidStorage: jest.fn(),
       updateConsensusKey: jest.fn(),
+      updateCompanionKey: jest.fn(),
       smartRollupAddMessages: jest.fn(),
       contractCall: jest.fn(),
       smartRollupOriginate: jest.fn(),
@@ -652,10 +654,10 @@ describe('RpcContractProvider test', () => {
           contents: [
             {
               kind: 'reveal',
-              fee: '331',
+              fee: '334',
               public_key: 'test_pub_key',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              gas_limit: '625',
+              gas_limit: '633',
               storage_limit: '0',
               counter: '1',
             },
@@ -710,10 +712,10 @@ describe('RpcContractProvider test', () => {
           contents: [
             {
               kind: 'reveal',
-              fee: '331',
+              fee: '334',
               public_key: 'test_pub_key',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              gas_limit: '625',
+              gas_limit: '633',
               storage_limit: '0',
               counter: '1',
             },
@@ -795,10 +797,10 @@ describe('RpcContractProvider test', () => {
           contents: [
             {
               kind: 'reveal',
-              fee: '331',
+              fee: '334',
               public_key: 'test_pub_key',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              gas_limit: '625',
+              gas_limit: '633',
               storage_limit: '0',
               counter: '1',
             },
@@ -841,10 +843,10 @@ describe('RpcContractProvider test', () => {
           contents: [
             {
               kind: 'reveal',
-              fee: '331',
+              fee: '334',
               public_key: 'test_pub_key',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              gas_limit: '625',
+              gas_limit: '633',
               storage_limit: '0',
               counter: '1',
             },
@@ -925,10 +927,10 @@ describe('RpcContractProvider test', () => {
           contents: [
             {
               kind: 'reveal',
-              fee: '331',
+              fee: '334',
               public_key: 'test_pub_key',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              gas_limit: '625',
+              gas_limit: '633',
               storage_limit: '0',
               counter: '1',
             },
@@ -977,10 +979,10 @@ describe('RpcContractProvider test', () => {
           contents: [
             {
               kind: 'reveal',
-              fee: '331',
+              fee: '334',
               public_key: 'test_pub_key',
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
-              gas_limit: '625',
+              gas_limit: '633',
               storage_limit: '0',
               counter: '1',
             },
@@ -1036,6 +1038,52 @@ describe('RpcContractProvider test', () => {
               },
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               counter: '1',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        counter: 0,
+      });
+    });
+
+    it('should be able to produce finalize_unstake pseudo operation with different source and destination', async () => {
+      const result = await rpcContractProvider.finalizeUnstake({
+        fee: 10000,
+        gasLimit: 10600,
+        storageLimit: 300,
+        to: 'tz1NFvwejbSCLBBuzCrZQgod3GkaMQJ9HoMf',
+      });
+
+      expect(result.raw).toEqual({
+        opbytes: 'test',
+        opOb: {
+          branch: 'test',
+          contents: [
+            {
+              kind: 'reveal',
+              fee: '334',
+              public_key: 'test_pub_key',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              gas_limit: '633',
+              storage_limit: '0',
+              counter: '1',
+            },
+            {
+              kind: 'transaction',
+              fee: '10000',
+              gas_limit: '10600',
+              storage_limit: '300',
+              amount: '0',
+              destination: 'tz1NFvwejbSCLBBuzCrZQgod3GkaMQJ9HoMf',
+              parameters: {
+                entrypoint: 'finalize_unstake',
+                value: {
+                  prim: 'Unit',
+                },
+              },
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              counter: '2',
             },
           ],
           protocol: 'test_proto',
@@ -1679,6 +1727,222 @@ describe('RpcContractProvider test', () => {
               gas_limit: estimate.gasLimit.toString(),
               storage_limit: estimate.storageLimit.toString(),
               pk: 'edpkti5K5JbdLpp2dCqiTLoLQqs5wqzeVhfHVnNhsSCuoU8zdHYoY7',
+              counter: '2',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        counter: 0,
+      });
+    });
+  });
+
+  describe('updateConsensusKey bls', () => {
+    it('should produce an updateConsensusKey bls operation', async () => {
+      mockRpcClient.getManagerKey.mockReturnValue('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM');
+      mockEstimate.reveal.mockResolvedValue(undefined);
+      const estimate = new Estimate(1230000, 93, 142, 250);
+      mockEstimate.updateConsensusKey.mockResolvedValue(estimate);
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
+
+      const result = await rpcContractProvider.updateConsensusKey({
+        pk: 'BLpk1wMU34nS7N96D2owyejLxQtwZwLARLg6tdTFMP5N8fz6yCiLogfFXkYo9ZHnZ95Kba3D3cvt',
+        proof:
+          'BLsig9cW2ffM82s8cZWNDQTmecxHPHmJcTUh5DF2dVP7GV7oUmmptd4JpxBvSyE1VDeLtGyV68KaTuaEM1qiSUELMqkdwCLJFDQYGL6ZZLZDEUAfyu3Vu3ivs66jhV8ANwt3tKg6qABoqx',
+      });
+
+      expect(result.raw).toEqual({
+        opbytes: 'test',
+        opOb: {
+          branch: 'test',
+          contents: [
+            {
+              kind: 'update_consensus_key',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              fee: estimate.suggestedFeeMutez.toString(),
+              gas_limit: estimate.gasLimit.toString(),
+              storage_limit: estimate.storageLimit.toString(),
+              counter: '1',
+              pk: 'BLpk1wMU34nS7N96D2owyejLxQtwZwLARLg6tdTFMP5N8fz6yCiLogfFXkYo9ZHnZ95Kba3D3cvt',
+              proof:
+                'BLsig9cW2ffM82s8cZWNDQTmecxHPHmJcTUh5DF2dVP7GV7oUmmptd4JpxBvSyE1VDeLtGyV68KaTuaEM1qiSUELMqkdwCLJFDQYGL6ZZLZDEUAfyu3Vu3ivs66jhV8ANwt3tKg6qABoqx',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        counter: 0,
+      });
+    });
+
+    it('should produce an updateConsensusKey bls operation and reveal op', async () => {
+      const estimate = new Estimate(1230000, 93, 142, 250);
+      mockEstimate.updateConsensusKey.mockResolvedValue(estimate);
+      const result = await rpcContractProvider.updateConsensusKey({
+        pk: 'BLpk1wMU34nS7N96D2owyejLxQtwZwLARLg6tdTFMP5N8fz6yCiLogfFXkYo9ZHnZ95Kba3D3cvt',
+        proof:
+          'BLsig9cW2ffM82s8cZWNDQTmecxHPHmJcTUh5DF2dVP7GV7oUmmptd4JpxBvSyE1VDeLtGyV68KaTuaEM1qiSUELMqkdwCLJFDQYGL6ZZLZDEUAfyu3Vu3ivs66jhV8ANwt3tKg6qABoqx',
+      });
+
+      expect(result.raw).toEqual({
+        opbytes: 'test',
+        opOb: {
+          branch: 'test',
+          contents: [
+            revealOp('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'),
+            {
+              kind: 'update_consensus_key',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              fee: estimate.suggestedFeeMutez.toString(),
+              gas_limit: estimate.gasLimit.toString(),
+              storage_limit: estimate.storageLimit.toString(),
+              pk: 'BLpk1wMU34nS7N96D2owyejLxQtwZwLARLg6tdTFMP5N8fz6yCiLogfFXkYo9ZHnZ95Kba3D3cvt',
+              proof:
+                'BLsig9cW2ffM82s8cZWNDQTmecxHPHmJcTUh5DF2dVP7GV7oUmmptd4JpxBvSyE1VDeLtGyV68KaTuaEM1qiSUELMqkdwCLJFDQYGL6ZZLZDEUAfyu3Vu3ivs66jhV8ANwt3tKg6qABoqx',
+              counter: '2',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        counter: 0,
+      });
+    });
+
+    it('should produce an updateConsensusKey bls operation and reveal op with fees specified', async () => {
+      const estimate = new Estimate(1230000, 93, 142, 250);
+      mockEstimate.updateConsensusKey.mockResolvedValue(estimate);
+      const result = await rpcContractProvider.updateConsensusKey({
+        pk: 'BLpk1wMU34nS7N96D2owyejLxQtwZwLARLg6tdTFMP5N8fz6yCiLogfFXkYo9ZHnZ95Kba3D3cvt',
+        proof:
+          'BLsig9cW2ffM82s8cZWNDQTmecxHPHmJcTUh5DF2dVP7GV7oUmmptd4JpxBvSyE1VDeLtGyV68KaTuaEM1qiSUELMqkdwCLJFDQYGL6ZZLZDEUAfyu3Vu3ivs66jhV8ANwt3tKg6qABoqx',
+        fee: 500,
+      });
+
+      expect(result.raw).toEqual({
+        opbytes: 'test',
+        opOb: {
+          branch: 'test',
+          contents: [
+            revealOp('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'),
+            {
+              kind: 'update_consensus_key',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              fee: '500',
+              gas_limit: estimate.gasLimit.toString(),
+              storage_limit: estimate.storageLimit.toString(),
+              pk: 'BLpk1wMU34nS7N96D2owyejLxQtwZwLARLg6tdTFMP5N8fz6yCiLogfFXkYo9ZHnZ95Kba3D3cvt',
+              proof:
+                'BLsig9cW2ffM82s8cZWNDQTmecxHPHmJcTUh5DF2dVP7GV7oUmmptd4JpxBvSyE1VDeLtGyV68KaTuaEM1qiSUELMqkdwCLJFDQYGL6ZZLZDEUAfyu3Vu3ivs66jhV8ANwt3tKg6qABoqx',
+              counter: '2',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        counter: 0,
+      });
+    });
+  });
+
+  describe('updateCompanionKey', () => {
+    it('should produce an updateCompanionKey operation', async () => {
+      mockRpcClient.getManagerKey.mockReturnValue('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM');
+      mockEstimate.reveal.mockResolvedValue(undefined);
+      const estimate = new Estimate(1230000, 93, 142, 250);
+      mockEstimate.updateCompanionKey.mockResolvedValue(estimate);
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
+
+      const result = await rpcContractProvider.updateCompanionKey({
+        pk: 'BLpk1wMU34nS7N96D2owyejLxQtwZwLARLg6tdTFMP5N8fz6yCiLogfFXkYo9ZHnZ95Kba3D3cvt',
+        proof:
+          'BLsig9cW2ffM82s8cZWNDQTmecxHPHmJcTUh5DF2dVP7GV7oUmmptd4JpxBvSyE1VDeLtGyV68KaTuaEM1qiSUELMqkdwCLJFDQYGL6ZZLZDEUAfyu3Vu3ivs66jhV8ANwt3tKg6qABoqx',
+      });
+
+      expect(result.raw).toEqual({
+        opbytes: 'test',
+        opOb: {
+          branch: 'test',
+          contents: [
+            {
+              kind: 'update_companion_key',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              fee: estimate.suggestedFeeMutez.toString(),
+              gas_limit: estimate.gasLimit.toString(),
+              storage_limit: estimate.storageLimit.toString(),
+              counter: '1',
+              pk: 'BLpk1wMU34nS7N96D2owyejLxQtwZwLARLg6tdTFMP5N8fz6yCiLogfFXkYo9ZHnZ95Kba3D3cvt',
+              proof:
+                'BLsig9cW2ffM82s8cZWNDQTmecxHPHmJcTUh5DF2dVP7GV7oUmmptd4JpxBvSyE1VDeLtGyV68KaTuaEM1qiSUELMqkdwCLJFDQYGL6ZZLZDEUAfyu3Vu3ivs66jhV8ANwt3tKg6qABoqx',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        counter: 0,
+      });
+    });
+
+    it('should produce an updateCompanionKey operation and reveal op', async () => {
+      const estimate = new Estimate(1230000, 93, 142, 250);
+      mockEstimate.updateCompanionKey.mockResolvedValue(estimate);
+      const result = await rpcContractProvider.updateCompanionKey({
+        pk: 'BLpk1wMU34nS7N96D2owyejLxQtwZwLARLg6tdTFMP5N8fz6yCiLogfFXkYo9ZHnZ95Kba3D3cvt',
+        proof:
+          'BLsig9cW2ffM82s8cZWNDQTmecxHPHmJcTUh5DF2dVP7GV7oUmmptd4JpxBvSyE1VDeLtGyV68KaTuaEM1qiSUELMqkdwCLJFDQYGL6ZZLZDEUAfyu3Vu3ivs66jhV8ANwt3tKg6qABoqx',
+      });
+
+      expect(result.raw).toEqual({
+        opbytes: 'test',
+        opOb: {
+          branch: 'test',
+          contents: [
+            revealOp('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'),
+            {
+              kind: 'update_companion_key',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              fee: estimate.suggestedFeeMutez.toString(),
+              gas_limit: estimate.gasLimit.toString(),
+              storage_limit: estimate.storageLimit.toString(),
+              pk: 'BLpk1wMU34nS7N96D2owyejLxQtwZwLARLg6tdTFMP5N8fz6yCiLogfFXkYo9ZHnZ95Kba3D3cvt',
+              proof:
+                'BLsig9cW2ffM82s8cZWNDQTmecxHPHmJcTUh5DF2dVP7GV7oUmmptd4JpxBvSyE1VDeLtGyV68KaTuaEM1qiSUELMqkdwCLJFDQYGL6ZZLZDEUAfyu3Vu3ivs66jhV8ANwt3tKg6qABoqx',
+              counter: '2',
+            },
+          ],
+          protocol: 'test_proto',
+          signature: 'test_sig',
+        },
+        counter: 0,
+      });
+    });
+
+    it('should produce an updateCompanionKey operation and reveal op with fees specified', async () => {
+      const estimate = new Estimate(1230000, 93, 142, 250);
+      mockEstimate.updateCompanionKey.mockResolvedValue(estimate);
+      const result = await rpcContractProvider.updateCompanionKey({
+        pk: 'BLpk1wMU34nS7N96D2owyejLxQtwZwLARLg6tdTFMP5N8fz6yCiLogfFXkYo9ZHnZ95Kba3D3cvt',
+        proof:
+          'BLsig9cW2ffM82s8cZWNDQTmecxHPHmJcTUh5DF2dVP7GV7oUmmptd4JpxBvSyE1VDeLtGyV68KaTuaEM1qiSUELMqkdwCLJFDQYGL6ZZLZDEUAfyu3Vu3ivs66jhV8ANwt3tKg6qABoqx',
+        fee: 500,
+      });
+
+      expect(result.raw).toEqual({
+        opbytes: 'test',
+        opOb: {
+          branch: 'test',
+          contents: [
+            revealOp('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'),
+            {
+              kind: 'update_companion_key',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              fee: '500',
+              gas_limit: estimate.gasLimit.toString(),
+              storage_limit: estimate.storageLimit.toString(),
+              pk: 'BLpk1wMU34nS7N96D2owyejLxQtwZwLARLg6tdTFMP5N8fz6yCiLogfFXkYo9ZHnZ95Kba3D3cvt',
+              proof:
+                'BLsig9cW2ffM82s8cZWNDQTmecxHPHmJcTUh5DF2dVP7GV7oUmmptd4JpxBvSyE1VDeLtGyV68KaTuaEM1qiSUELMqkdwCLJFDQYGL6ZZLZDEUAfyu3Vu3ivs66jhV8ANwt3tKg6qABoqx',
               counter: '2',
             },
           ],

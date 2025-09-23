@@ -10,7 +10,7 @@
   import { WalletConnect, PermissionScopeMethods, NetworkType as NetworkTypeWc2 } from "@taquito/wallet-connect";
   import { Modals, closeModal, openModal } from "svelte-modals";
   import ModalActivePairing from "./ModalActivePairing.svelte";
-  import  { type NetworkType as  NetworkTypeBeacon, BeaconEvent } from "@airgap/beacon-sdk";
+  import { BeaconEvent } from "@airgap/beacon-sdk";
 
   let showDialog = false;
   let connectedWallet = "";
