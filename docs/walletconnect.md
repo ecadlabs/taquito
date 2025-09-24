@@ -95,7 +95,7 @@ WalletConnect.init({
             console.log(`Waiting for ${op.opHash} to be confirmed...`);
             return op.confirmation().then(() => op.opHash);
           })
-          .then((hash) => console.log(`Operation injected: https://ghost.tzstats.com/${hash}`));
+          .then((hash) => console.log(`Operation injected: https://shadownet.tzkt.io/${hash}$/operations`));
       });
   })
   .catch((err) => console.log(err));

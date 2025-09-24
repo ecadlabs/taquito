@@ -46,7 +46,7 @@ fetch('https://keygen.ecadinfra.com/shadownet/', {
     render(`Waiting for ${op.hash} to be confirmed...`);
     return op.confirmation(1).then(() => op.hash);
   })
-  .then((hash) => render(`Operation injected: https://ghost.tzstats.com/${hash}`))
+  .then((hash) => render(`Operation injected: https://shadownet.tzkt.io/${hash}$/operations`))
   .catch((error) => render(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 

@@ -199,7 +199,7 @@ inMemorySpendingKey.getSaplingViewingKeyProvider()
         console.log(`Waiting for ${op.hash} to be confirmed...`);
         return op.confirmation(1).then(() => op.hash);
     })
-    .then((hash) => console.log(`Operation injected: https://ghost.tzstats.com/${hash}`))
+    .then((hash) => console.log(`Operation injected: https://shadownet.tzkt.io/${hash}$/operations`))
   })
   .catch((error) => console.log(`Error: ${(error)}`));
 ```
@@ -262,7 +262,7 @@ saplingToolkit.prepareSaplingTransaction([{
         console.log(`Waiting for ${op.hash} to be confirmed...`);
         return op.confirmation(1).then(() => op.hash);
     })
-    .then((hash) => console.log(`Operation injected: https://ghost.tzstats.com/${hash}`))
+    .then((hash) => console.log(`Operation injected: https://shadownet.tzkt.io/${hash}$/operations`))
 })
 .catch((error) => console.log(`Error: ${(error)}`));
 ```
@@ -319,7 +319,7 @@ saplingToolkit.prepareUnshieldedTransaction({
         console.log(`Waiting for ${op.hash} to be confirmed...`);
         return op.confirmation(1).then(() => op.hash);
     })
-    .then((hash) => console.log(`Operation injected: https://ghost.tzstats.com/${hash}`))
+    .then((hash) => console.log(`Operation injected: https://shadownet.tzkt.io/${hash}$/operations`))
 })
 .catch((error) => console.log(`Error: ${(error)}`));
 ```
