@@ -89,11 +89,11 @@ values={[
 // import { TezosToolkit, compose } from '@taquito/taquito';
 // import { Tzip12Module, tzip12 } from "@taquito/tzip12";
 // import { tzip16 } from "@taquito/tzip16";
-// const Tezos = new TezosToolkit('rpc_url');
+// const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
 
 Tezos.addExtension(new Tzip12Module());
 
-const contractAddress = "KT1NMtSQq484bDYSFvNrBjfkGtpug2Fm1rrr";
+const contractAddress = contractAddresses.TokenContract;
 const tokenId = 1;
 
 Tezos.contract.at(contractAddress, compose(tzip12, tzip16))
@@ -113,11 +113,11 @@ Tezos.contract.at(contractAddress, compose(tzip12, tzip16))
 // import { TezosToolkit, compose } from '@taquito/taquito';
 // import { Tzip12Module, tzip12 } from "@taquito/tzip12";
 // import { tzip16 } from "@taquito/tzip16";
-// const Tezos = new TezosToolkit('rpc_url');
+// const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
 
 Tezos.addExtension(new Tzip12Module());
 
-const contractAddress = "KT1NMtSQq484bDYSFvNrBjfkGtpug2Fm1rrr";
+const contractAddress = contractAddresses.TokenContract;
 const tokenId = 1;
 
 Tezos.wallet.at(contractAddress, compose(tzip12, tzip16))
@@ -146,11 +146,11 @@ values={[
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
 // import { Tzip16Module, tzip16, bytesToString } from "@taquito/tzip16";
-// const Tezos = new TezosToolkit('rpc_url');
+// const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = "KT1NMtSQq484bDYSFvNrBjfkGtpug2Fm1rrr";
+const contractAddress = contractAddresses.TokenContract;
 const tokenId = 1;
 
 Tezos.contract.at(contractAddress, tzip16)
@@ -175,11 +175,11 @@ Tezos.contract.at(contractAddress, tzip16)
 ```js live noInline wallet
 // import { TezosToolkit } from '@taquito/taquito';
 // import { Tzip16Module, tzip16, bytesToString } from "@taquito/tzip16";
-// const Tezos = new TezosToolkit('rpc_url');
+// const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = "KT1NMtSQq484bDYSFvNrBjfkGtpug2Fm1rrr";
+const contractAddress = contractAddresses.TokenContract;
 const tokenId = 1;
 
 Tezos.wallet.at(contractAddress, tzip16)
@@ -254,11 +254,11 @@ values={[
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
 // import { Tzip12Module, tzip12 } from "@taquito/tzip12";
-// const Tezos = new TezosToolkit('rpc_url');
+// const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
 
 Tezos.addExtension(new Tzip12Module());
 
-const contractAddress = "KT1NMtSQq484bDYSFvNrBjfkGtpug2Fm1rrr";
+const contractAddress = contractAddresses.TokenContract;
 const tokenId = 1;
 
 Tezos.contract.at(contractAddress, tzip12)
@@ -277,11 +277,11 @@ Tezos.contract.at(contractAddress, tzip12)
 ```js live noInline wallet
 // import { TezosToolkit } from '@taquito/taquito';
 // import { Tzip12Module, tzip12 } from "@taquito/tzip12";
-// const Tezos = new TezosToolkit('rpc_url');
+// const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
 
 Tezos.addExtension(new Tzip12Module());
 
-const contractAddress = "KT1NMtSQq484bDYSFvNrBjfkGtpug2Fm1rrr";
+const contractAddress = contractAddresses.TokenContract;
 const tokenId = 1;
 
 Tezos.wallet.at(contractAddress, tzip12)

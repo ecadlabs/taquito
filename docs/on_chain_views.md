@@ -123,8 +123,8 @@ values={[
 <TabItem value="contractAPI">
 
 ```js live noInline
-const contractTopLevelViews = 'KT1Anag1s3N7erRXrRAtPpRC2PRXrqcCJ43m';
-const contractCallFib = 'KT1KPDBat3prp2G81aDDLyJ38Vbq6YLYFQo8';
+const contractTopLevelViews = contractAddresses.ContractTopLevelViews;
+const contractCallFib = contractAddresses.ContractCallFib;
 
 Tezos.contract.at(contractCallFib)
   .then((contract) => {
@@ -152,8 +152,8 @@ Tezos.contract.at(contractCallFib)
   <TabItem value="walletAPI">
 
 ```js live noInline wallet
-const contractTopLevelViews = 'KT1Anag1s3N7erRXrRAtPpRC2PRXrqcCJ43m';
-const contractCallFib = 'KT1KPDBat3prp2G81aDDLyJ38Vbq6YLYFQo8';
+const contractTopLevelViews = contractAddresses.ContractTopLevelViews;
+const contractCallFib = contractAddresses.ContractCallFib;
 
 Tezos.wallet.at(contractCallFib)
   .then((contract) => {
@@ -207,8 +207,8 @@ values={[
 <TabItem value="contractAPI">
 
 ```js live noInline
-const contractTopLevelViews = 'KT1Anag1s3N7erRXrRAtPpRC2PRXrqcCJ43m';
-const contractCallFib = 'KT1KPDBat3prp2G81aDDLyJ38Vbq6YLYFQo8';
+const contractTopLevelViews = contractAddresses.ContractTopLevelViews;
+const contractCallFib = contractAddresses.ContractCallFib;
 const fibPosition = 7;
 
 Tezos.contract.at(contractTopLevelViews)
@@ -225,8 +225,8 @@ Tezos.contract.at(contractTopLevelViews)
   <TabItem value="walletAPI">
 
 ```js live noInline wallet
-const contractTopLevelViews = 'KT1Anag1s3N7erRXrRAtPpRC2PRXrqcCJ43m';
-const contractCallFib = 'KT1KPDBat3prp2G81aDDLyJ38Vbq6YLYFQo8';
+const contractTopLevelViews = contractAddresses.ContractTopLevelViews;
+const contractCallFib = contractAddresses.ContractCallFib;
 const fibPosition = 7;
 
 Tezos.wallet.at(contractTopLevelViews)

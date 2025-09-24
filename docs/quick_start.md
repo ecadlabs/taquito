@@ -25,7 +25,7 @@ The constructor of the `TezosToolkit` class takes an RPC URL as a parameter. It 
 ```js
 import { TezosToolkit } from '@taquito/taquito';
 
-const tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
+const tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
 ```
 
 In some cases, it can be useful to make more than one instance of Taquito, perhaps if you wanted to communicate with two different RPC nodes or offer other Signing options. You can now up separate instances with various providers or configurations per instance.
@@ -42,7 +42,7 @@ You can set which signer you wish to use as follows:
 import { TezosToolkit } from '@taquito/taquito';
 import { RemoteSigner } from '@taquito/remote-signer';
 
-const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
+const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
 
 Tezos.setProvider({
   signer: new RemoteSigner(pkh, rootUrl, { headers: requestHeaders });,
@@ -57,7 +57,7 @@ Alternatively, you can use a `WalletProvider` to interact with a wallet. Please 
 
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
 
 Tezos.tz
   .getBalance('tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY')
@@ -79,7 +79,7 @@ If you have a private key, you can import it as follows:
 import { TezosToolkit } from '@taquito/taquito';
 import { InMemorySigner, importKey } from '@taquito/signer';
 
-const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
+const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
 
 Tezos.setProvider({
   signer: new InMemorySigner('YOUR_PRIVATE_KEY'),
@@ -139,7 +139,7 @@ Tezos.wallet
 
 ### Interact with a smart contract
 
-Calling smart contract operations requires a configured signer. The Ligo source code for the smart contract [KT1BJadpDyLCACMH7Tt9xtpx4dQZVKw9cDF7][smart_contract_on_better_call_dev] used in this example can be found in a [Ligo Web IDE][smart_contract_source].
+Calling smart contract operations requires a configured signer. The Ligo source code for the smart contract [contractAddresses.IncrementContract][smart_contract_on_better_call_dev] used in this example can be found in a [Ligo Web IDE][smart_contract_source].
 
 <Tabs
 defaultValue="contractAPI"
@@ -151,7 +151,7 @@ values={[
 
 ```js live noInline
 Tezos.contract
-  .at('KT1BJadpDyLCACMH7Tt9xtpx4dQZVKw9cDF7')
+  .at(contractAddresses.IncrementContract)
   .then((contract) => {
     const i = 7;
 
@@ -171,7 +171,7 @@ Tezos.contract
 
 ```js live noInline wallet
 Tezos.wallet
-  .at('KT1BJadpDyLCACMH7Tt9xtpx4dQZVKw9cDF7')
+  .at(contractAddresses.IncrementContract)
   .then((wallet) => {
     const i = 7;
 
@@ -192,4 +192,4 @@ Tezos.wallet
 
 [boilerplate]: https://github.com/ecadlabs/taquito-boilerplate
 [smart_contract_source]: https://ide.ligolang.org/p/2sVshnZ_Aat5pIuUypIBsQ
-[smart_contract_on_better_call_dev]: https://better-call.dev/ghostnet/KT1BJadpDyLCACMH7Tt9xtpx4dQZVKw9cDF7/operations
+[smart_contract_on_better_call_dev]: https://better-call.dev/shadownet/contractAddresses.IncrementContract/operations

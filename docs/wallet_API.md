@@ -42,7 +42,7 @@ To start, let's import the Tezos Toolkit from Taquito and create a new instance 
 ```js
 import { TezosToolkit } from '@taquito/taquito';
 
-const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com/');
+const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com/');
 ```
 
 This object exposes different methods we are going to use to set up our wallet. TZIP-10 has become the official standard of communication and interaction between wallets and dapps, so let's start with the `@taquito/beacon-wallet` package that implements this standard!
@@ -63,13 +63,13 @@ Then, you can start initializing the wallet:
 const options = {
   name: 'MyAwesomeDapp',
   iconUrl: 'https://taquito.io/img/favicon.svg',
-  network: { type: 'ghostnet' },
+  network: { type: 'shadownet' },
   enableMetrics: true,
 };
 const wallet = new BeaconWallet(options);
 ```
 
-The necessary bare minimum to instantiate the wallet is an object with a `name` property that contains the name of your dapp and the network you want it to point to. In this case, we choose to point it to `ghostnet`. However, the Beacon wallet allows you to customize your dapp responses to different events. In the example above, instead of getting the default Beacon pop-up after the user connects the wallet, it will display the available data in the console. You can use whatever solution you prefer for feedback. You can find a list of all the default handlers [in the beacon-sdk Github repo](https://github.com/airgap-it/beacon-sdk/blob/master/packages/beacon-dapp/src/events.ts).
+The necessary bare minimum to instantiate the wallet is an object with a `name` property that contains the name of your dapp and the network you want it to point to. In this case, we choose to point it to `shadownet`. However, the Beacon wallet allows you to customize your dapp responses to different events. In the example above, instead of getting the default Beacon pop-up after the user connects the wallet, it will display the available data in the console. You can use whatever solution you prefer for feedback. You can find a list of all the default handlers [in the beacon-sdk Github repo](https://github.com/airgap-it/beacon-sdk/blob/master/packages/beacon-dapp/src/events.ts).
 
 The `enableMetrics` property is an optional parameter that allows you to enable or disable the collection of metrics. It also allows the user to report bugs via a link in the wallet pop-up.
 
@@ -88,7 +88,7 @@ Please check out the section [Subscribing to events](#subscribing-to-events) to 
 
 In previous versions of Beacon, you were able to set the `network` property when doing `requestPermissions()`. This behavior was removed from Beacon, and you must now set the network when instantiating the wallet.
 
-You can choose among `mainnet`, `seoulnet`, `ghostnet` and `custom` to set up the network. Once the permissions have been configured, you can get the user's address by calling the `getPKH` method on the wallet:
+You can choose among `mainnet`, `seoulnet`, `shadownet` and `custom` to set up the network. Once the permissions have been configured, you can get the user's address by calling the `getPKH` method on the wallet:
 
 ```js
 const userAddress = await wallet.getPKH();
@@ -175,7 +175,7 @@ const wallet = new TempleWallet('MyAwesomeDapp');
 The class constructor takes one parameter, the name of your dapp (this will be used later in the transaction confirmation pop-up). After the instantiation, we can connect the wallet by calling the `connect` method:
 
 ```js
-await wallet.connect('mainnet' | 'seoulnet' | 'ghostnet' | 'mondaynet' | 'sandbox');
+await wallet.connect('mainnet' | 'seoulnet' | 'shadownet' | 'mondaynet' | 'sandbox');
 ```
 
 (Temple used to be called Thanos and some Taquito code still uses the name Thanos.)
@@ -211,7 +211,7 @@ TempleWallet.isAvailable()
   .then(() => {
     const myWallet = new TempleWallet('MyAwesomeDapp');
     myWallet
-      .connect('ghostnet')
+      .connect('shadownet')
       .then(() => {
         Tezos.setWalletProvider(myWallet);
         return myWallet.getPKH();
@@ -255,7 +255,7 @@ The `transfer` method takes an object with only two required properties: the `to
 
 ```js live noInline wallet
 Tezos.wallet
-  .transfer({ to: 'KT1TBxaaeikEUcVN2qdQY7n9Q21ykcX1NLzY', amount: 0.2 })
+  .transfer({ to: contractAddresses.WalletContract, amount: 0.2 })
   .send()
   .then((op) => {
     console.log(`Waiting for ${op.opHash} to be confirmed...`);
@@ -274,7 +274,7 @@ Sending a transaction to a smart contract to update its storage will be a differ
 Fortunately, Taquito will make this operation go like a breeze! First, you need the contract abstraction created with the address of the smart contract you are targeting:
 
 ```js
-const contract = await Tezos.wallet.at('KT1TBxaaeikEUcVN2qdQY7n9Q21ykcX1NLzY');
+const contract = await Tezos.wallet.at(contractAddresses.WalletContract);
 ```
 
 This line creates a contract abstraction with multiple methods named after the contract entrypoints. For example, if you have a `transfer` entrypoint in your contract, you will also have a `.transfer()` method in the `contract` object. Each method accepts parameters required by the contract entrypoint.
@@ -289,7 +289,7 @@ Most of the time, the process is simple: you take the contract abstraction you c
 
 ```js live noInline wallet
 Tezos.wallet
-  .at('KT1SHiNUNmqBFGNysX9pmh1DC2tQ5pGmRagC')
+  .at(contractAddresses.WalletAreYouThereContract)
   .then((contract) => contract.methodsObject.areYouThere(true).send())
   .then((op) => {
     console.log(`Hash: ${op.opHash}`);
@@ -312,7 +312,7 @@ In the case of multiple arguments (for example if the entrypoint expects a pair)
 
 ```js live noInline wallet
 Tezos.wallet
-  .at('KT1SHiNUNmqBFGNysX9pmh1DC2tQ5pGmRagC')
+  .at(contractAddresses.WalletAreYouThereContract)
   .then((contract) =>
     contract.methodsObject.addName({0: 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb', 1: 'Alice'}).send()
   )
@@ -543,7 +543,7 @@ Now, we have everything we need to originate a new contract!
 Before doing so, we have to choose the network we want to originate it to:
 
 ```js
-Tezos.setProvider({ rpc: 'https://ghostnet.tezos.ecadinfra.com/' });
+Tezos.setProvider({ rpc: 'https://shadownet.tezos.ecadinfra.com/' });
 ```
 
 Then, we can start the process. The Tezos singleton has a `wallet` property with an `originate` method. This is the one that must be called to originate the contract. This method takes an argument, an object with two properties: `code` that holds the parsed Michelson code to be originated and `storage` that has the initial storage. After passing this argument, you call the `send()` method to originate the contract.

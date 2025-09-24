@@ -35,7 +35,7 @@ This requires a signer to be configured, ie:
 ```
 import { importKey } from '@taquito/signer';
 import { TezosToolkit } from '@taquito/taquito';
-const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
+const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
 importKey(Tezos, "p2sk2obfVMEuPUnadAConLWk7Tf4Dt3n4svSgJwrgpamRqJXvaYcg1")
 ```
 
@@ -45,8 +45,8 @@ importKey(Tezos, "p2sk2obfVMEuPUnadAConLWk7Tf4Dt3n4svSgJwrgpamRqJXvaYcg1")
 ```
 import {  BeaconWallet } from '@taquito/beacon-wallet';
 import { TezosToolkit } from '@taquito/taquito';
-const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
-const option = { name: "nameOfWallet", network: { type: 'ghostnet' }, enableMetrics: true};
+const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
+const option = { name: "nameOfWallet", network: { type: 'shadownet' }, enableMetrics: true};
 const wallet = new BeaconWallet(option);
 
 await wallet.client.subscribeToEvent(
@@ -93,7 +93,7 @@ values={[
 
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
 
 // const genericMultisigJSONfile = require('./generic.json')
 // generic.json is referring to Michelson source code in JSON representation
@@ -122,7 +122,7 @@ Tezos.contract
 
 ```js live noInline wallet
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
 
 // const genericMultisigJSONfile = require('./generic.json')
 // generic.json is referring to Michelson source code in JSON representation
@@ -164,7 +164,7 @@ values={[
 
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
 
 // const genericMultisigJSONfile = require('./generic.json')
 // generic.json is referring to Michelson source code in JSON representation
@@ -189,7 +189,7 @@ Tezos.contract
 
 ```js live noInline wallet
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
 
 // const genericMultisigJSONfile = require('./generic.json')
 // generic.json is referring to Michelson source code in JSON representation
@@ -225,7 +225,7 @@ values={[
 
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
 
 // const genericMultisigJSONfile = require('./generic.json')
 // generic.json is referring to Michelson source code in JSON representation
@@ -262,7 +262,7 @@ Tezos.contract
 
 ```js live noInline wallet
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
 
 // const genericMultisigJSONfile = require('./generic.json')
 // generic.json is referring to Michelson source code in JSON representation

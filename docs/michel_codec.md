@@ -41,7 +41,7 @@ const p = new Parser(parserOptions);
 
 const p = new Parser();
 Tezos.contract
-  .at("KT1BJadpDyLCACMH7Tt9xtpx4dQZVKw9cDF7")
+  .at(contractAddresses.IncrementContract)
   .then(contract => {
     const code = p.parseJSON(contract.script.code);
     console.log("Pretty print Michelson smart contract:");

@@ -121,7 +121,7 @@ export default ({
       if (typeof window !== 'undefined') {
         // solve localStorage is not defined Error when building server
         // can use localStorage on the browser, not on the server
-        wallet = new BeaconWallet({ name:"exampleWallet", network: { type: 'ghostnet'}, enableMetrics: true, });
+        wallet = new BeaconWallet({ name:"exampleWallet", network: { type: 'shadownet' }, enableMetrics: true, });
         wallet.client.subscribeToEvent(BeaconEvent.ACTIVE_ACCOUNT_SET, account => console.log(`${BeaconEvent.ACTIVE_ACCOUNT_SET} triggered: `, account));
       }
       const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com/');

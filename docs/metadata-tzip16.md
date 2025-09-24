@@ -95,11 +95,11 @@ values={[
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
 // import { Tzip16Module, tzip16 } from "@taquito/tzip16";
-// const Tezos = new TezosToolkit('rpc_url');
+// const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = 'KT1V9mi4SiN85aUKjkJGRDDxELSbMSMdBMcy';
+const contractAddress = contractAddresses.Tzip16StorageContract;
 
 Tezos.contract
   .at(contractAddress, tzip16)
@@ -119,11 +119,11 @@ Tezos.contract
 ```js live noInline wallet
 // import { TezosToolkit } from '@taquito/taquito';
 // import { Tzip16Module, tzip16 } from "@taquito/tzip16";
-// const Tezos = new TezosToolkit('rpc_url');
+// const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = 'KT1V9mi4SiN85aUKjkJGRDDxELSbMSMdBMcy';
+const contractAddress = contractAddresses.Tzip16StorageContract;
 
 Tezos.wallet
   .at(contractAddress, tzip16)
@@ -153,11 +153,11 @@ values={[
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
 // import { Tzip16Module, tzip16 } from "@taquito/tzip16";
-// const Tezos = new TezosToolkit('rpc_url');
+// const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = 'KT1MJ7wAZ9LBB797zhGJrXByaaUwvLGfe3qz';
+const contractAddress = contractAddresses.Tzip16HTTPSContract;
 
 Tezos.contract
   .at(contractAddress, tzip16)
@@ -176,11 +176,11 @@ Tezos.contract
 ```js live noInline wallet
 // import { TezosToolkit } from '@taquito/taquito';
 // import { Tzip16Module, tzip16 } from "@taquito/tzip16";
-// const Tezos = new TezosToolkit('rpc_url');
+// const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = 'KT1MJ7wAZ9LBB797zhGJrXByaaUwvLGfe3qz';
+const contractAddress = contractAddresses.Tzip16HTTPSContract;
 
 Tezos.wallet
   .at(contractAddress, tzip16)
@@ -209,11 +209,11 @@ values={[
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
 // import { Tzip16Module, tzip16 } from "@taquito/tzip16";
-// const Tezos = new TezosToolkit('rpc_url');
+// const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = 'KT1JbEzvHn2Y2DjVQ7kgK8H8pxrspG893JsX';
+const contractAddress = contractAddresses.Tzip16SHA256Contract;
 
 Tezos.contract
   .at(contractAddress, tzip16)
@@ -233,11 +233,11 @@ Tezos.contract
 ```js live noInline wallet
 // import { TezosToolkit } from '@taquito/taquito';
 // import { Tzip16Module, tzip16 } from "@taquito/tzip16";
-// const Tezos = new TezosToolkit('rpc_url');
+// const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = 'KT1JbEzvHn2Y2DjVQ7kgK8H8pxrspG893JsX';
+const contractAddress = contractAddresses.Tzip16SHA256Contract;
 
 Tezos.wallet
   .at(contractAddress, tzip16)
@@ -267,11 +267,11 @@ values={[
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
 // import { Tzip16Module, tzip16 } from "@taquito/tzip16";
-// const Tezos = new TezosToolkit('rpc_url');
+// const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = 'KT1SDtsB4DHdh1QwFNgvsavxDwQJBdimgrcL';
+const contractAddress = contractAddresses.Tzip16IPFSContract;
 
 Tezos.contract
   .at(contractAddress, tzip16)
@@ -291,11 +291,11 @@ Tezos.contract
 ```js live noInline wallet
 // import { TezosToolkit } from '@taquito/taquito';
 // import { Tzip16Module, tzip16 } from "@taquito/tzip16";
-// const Tezos = new TezosToolkit('rpc_url');
+// const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = 'KT1SDtsB4DHdh1QwFNgvsavxDwQJBdimgrcL';
+const contractAddress = contractAddresses.Tzip16IPFSContract;
 
 Tezos.wallet
   .at(contractAddress, tzip16)
@@ -316,7 +316,7 @@ Tezos.wallet
 
 A sequence diagram can be found [here](./tzip16-sequence-diagram#execute-a-view).
 
-In the next example, we will run a view named `someJson` that can be found in the metadata of the contract `KT1Vms3NQK8rCQJ6JkimLFtAC9NhpAq9vLqE`. When we inspect those metadata, we can see that this view takes no parameter, has a returnType of bytes and has the following code:
+In the next example, we will run a view named `someJson` that can be found in the metadata of the contract. When we inspect those metadata, we can see that this view takes no parameter, has a returnType of bytes and has the following code:
 
 ```
 "code":
@@ -357,11 +357,11 @@ values={[
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
 // import { Tzip16Module, tzip16, bytesToString } from "@taquito/tzip16";
-// const Tezos = new TezosToolkit('rpc_url');
+// const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = 'KT1XdXkU9piczYpTU8ToAAGJunzFiGCWRvVK';
+const contractAddress = contractAddresses.Tzip16OffChainContractJSON;
 
 Tezos.contract
   .at(contractAddress, tzip16)
@@ -386,11 +386,11 @@ Tezos.contract
 ```js live noInline wallet
 // import { TezosToolkit } from '@taquito/taquito';
 // import { Tzip16Module, tzip16, bytesToString } from "@taquito/tzip16";
-// const Tezos = new TezosToolkit('rpc_url');
+// const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = 'KT1XdXkU9piczYpTU8ToAAGJunzFiGCWRvVK';
+const contractAddress = contractAddresses.Tzip16OffChainContractJSON;
 
 Tezos.wallet
   .at(contractAddress, tzip16)
@@ -412,7 +412,7 @@ Tezos.wallet
   </TabItem>
 </Tabs>
 
-In the next example, we will run a view named `multiply-the-nat-in-storage` that can be found in the metadata of the contract `KT19rDkTYg1355Wp1XM5Q23CxuLgRnA3SiGq`. When we inspect those metadata, we can see that this view takes a `nat` has a parameter, has a returnType of `nat` and has the following instructions: `DUP, CDR, CAR, SWAP, CAR, MUL`.
+In the next example, we will run a view named `multiply-the-nat-in-storage` that can be found in the metadata of the contract. When we inspect those metadata, we can see that this view takes a `nat` has a parameter, has a returnType of `nat` and has the following instructions: `DUP, CDR, CAR, SWAP, CAR, MUL`.
 
 Try to run the view:
 
@@ -427,11 +427,11 @@ values={[
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
 // import { Tzip16Module, tzip16 } from "@taquito/tzip16";
-// const Tezos = new TezosToolkit('rpc_url');
+// const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = 'KT1CVoo3PxuvH3BuBpNTYRDafAQ7aRTfj8bd';
+const contractAddress = contractAddresses.Tzip16OffChainContractMultiply;
 
 Tezos.contract
   .at(contractAddress, tzip16)
@@ -458,11 +458,11 @@ Tezos.contract
 ```js live noInline wallet
 // import { TezosToolkit } from '@taquito/taquito';
 // import { Tzip16Module, tzip16 } from "@taquito/tzip16";
-// const Tezos = new TezosToolkit('rpc_url');
+// const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = 'KT1CVoo3PxuvH3BuBpNTYRDafAQ7aRTfj8bd';
+const contractAddress = contractAddresses.Tzip16OffChainContractMultiply;
 
 Tezos.wallet
   .at(contractAddress, tzip16)
@@ -501,9 +501,9 @@ values={[
 ```js live noInline
 // import { TezosToolkit, RpcReadAdapter } from '@taquito/taquito';
 // import { MichelsonStorageView } from "@taquito/tzip16";
-// const Tezos = new TezosToolkit('rpc_url');
+// const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
 
-const contractAddress = 'KT1CVoo3PxuvH3BuBpNTYRDafAQ7aRTfj8bd';
+const contractAddress = contractAddresses.Tzip16OffChainContractMultiply;
 
 Tezos.contract
   .at(contractAddress)
@@ -538,9 +538,9 @@ Tezos.contract
 ```js live noInline wallet
 // import { TezosToolkit, RpcReadAdapter } from '@taquito/taquito';
 // import { MichelsonStorageView } from "@taquito/tzip16";
-// const Tezos = new TezosToolkit('rpc_url');
+// const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
 
-const contractAddress = 'KT1CVoo3PxuvH3BuBpNTYRDafAQ7aRTfj8bd';
+const contractAddress = contractAddresses.Tzip16OffChainContractMultiply;
 
 Tezos.wallet
   .at(contractAddress)

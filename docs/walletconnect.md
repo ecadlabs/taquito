@@ -34,7 +34,7 @@ import { NetworkType, PermissionScopeMethods } from "@taquito/wallet-connect";
 
 await walletConnect.requestPermissions({
   permissionScope: {
-    networks: [NetworkType.GHOSTNET],
+    networks: [NetworkType.SHADOWNET],
     methods: [
       PermissionScopeMethods.TEZOS_SEND,
       PermissionScopeMethods.TEZOS_SIGN,
@@ -65,7 +65,7 @@ In the same order of ideas, `setActiveNetwork` must be called to specify the act
 Here is a complete example of using wallet connect to perform a transfer operation:
 
 ```js live noInline noConfig
-Tezos.setRpcProvider('https://ghostnet.tezos.ecadinfra.com/');
+Tezos.setRpcProvider('https://shadownet.tezos.ecadinfra.com/');
 
 WalletConnect.init({
   logger: 'debug',
@@ -81,7 +81,7 @@ WalletConnect.init({
     walletConnect
       .requestPermissions({
         permissionScope: {
-          networks: [NetworkType.GHOSTNET],
+          networks: [NetworkType.SHADOWNET],
           methods: [PermissionScopeMethods.TEZOS_SEND],
         },
 

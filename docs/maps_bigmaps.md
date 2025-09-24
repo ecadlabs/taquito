@@ -41,7 +41,7 @@ values={[
 ```js live noInline
 import { MichelsonMap } from '@taquito/taquito';
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
+// const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
 
 const storageMap = new MichelsonMap();
 storageMap.set('1', { current_stock: '10000', max_price: '50' });
@@ -70,7 +70,7 @@ Tezos.contract
 ```js live noInline wallet
 import { MichelsonMap } from '@taquito/taquito';
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
+// const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
 
 const storageMap = new MichelsonMap();
 storageMap.set('1', { current_stock: '10000', max_price: '50' });
@@ -174,7 +174,7 @@ values={[
 
 ```js live noInline
 Tezos.contract
-  .at('KT1B3SpFJ1iHagwdkd1utVYP18RyYgZXeGio')
+  .at(contractAddresses.MapWithWithSingleMapForStorage)
   .then((myContract) => {
     return myContract
       .storage()
@@ -217,7 +217,7 @@ Tezos.contract
 
 ```js live noInline wallet
 Tezos.wallet
-  .at('KT1B3SpFJ1iHagwdkd1utVYP18RyYgZXeGio')
+  .at(contractAddresses.MapWithWithSingleMapForStorage)
   .then((myContract) => {
     return myContract
       .storage()
@@ -413,7 +413,7 @@ values={[
 
 ```js live noInline
 Tezos.contract
-  .at('KT1JDDU888CaVWFey2BYxpDzPBaYYn65Q4o3')
+  .at(contractAddresses.MapWithPairAsMapContract)
   .then((myContract) => {
     return myContract.storage();
   })
@@ -433,7 +433,7 @@ Tezos.contract
 
 ```js live noInline wallet
 Tezos.wallet
-  .at('KT1JDDU888CaVWFey2BYxpDzPBaYYn65Q4o3')
+  .at(contractAddresses.MapWithPairAsMapContract) 
   .then((myContract) => {
     return myContract.storage();
   })
@@ -601,7 +601,7 @@ values={[
 
 ```js live noInline
 Tezos.contract
-  .at('KT1PBDZULVwbDW7BqEANmyEJGWuzjk43hDJG')
+  .at(contractAddresses.MapWithComplexKeysContract)
   .then((myContract) => {
     return myContract.storage();
   })
@@ -627,7 +627,7 @@ Tezos.contract
 
 ```js live noInline wallet
 Tezos.wallet
-  .at('KT1PBDZULVwbDW7BqEANmyEJGWuzjk43hDJG')
+  .at(contractAddresses.MapWithComplexKeysContract)
   .then((myContract) => {
     return myContract.storage();
   })
@@ -800,7 +800,7 @@ values={[
 
 ```js live noInline
 Tezos.contract
-  .at('KT1PZb8sEVvsKQGzLwusyQRkJpSCDQ7WFfny')
+  .at(contractAddresses.MapWithInitialStorageContract)
   .then((myContract) => {
     return myContract
       .storage()
@@ -833,7 +833,7 @@ Tezos.contract
 
 ```js live noInline wallet
 Tezos.wallet
-  .at('KT1PZb8sEVvsKQGzLwusyQRkJpSCDQ7WFfny')
+  .at(contractAddresses.MapWithInitialStorageContract)
   .then((myContract) => {
     return myContract
       .storage()
@@ -903,10 +903,10 @@ values={[
 
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
 
 Tezos.contract
-  .at('KT1LPdW47Aba3kVpNMpRt7sx5yM1M4A8XmAW')
+  .at(contractAddresses.BigMapsMultipleValuesContract)
   .then((contract) => {
     console.log('Fetching the storage of the contract...');
     return contract.storage();
@@ -933,10 +933,10 @@ Tezos.contract
 
 ```js live noInline wallet
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
 
 Tezos.wallet
-  .at('KT1LPdW47Aba3kVpNMpRt7sx5yM1M4A8XmAW')
+  .at(contractAddresses.BigMapsMultipleValuesContract)
   .then((contract) => {
     console.log('Fetching the storage of the contract...');
     return contract.storage();

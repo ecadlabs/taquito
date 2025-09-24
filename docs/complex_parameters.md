@@ -52,7 +52,7 @@ An annotation identifies every argument. Therefore we can ignore optional values
 ```js live noInline
 // import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
 // import { importKey } from '@taquito/signer';
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
 
 //%data
 const dataMap = new MichelsonMap();
@@ -129,12 +129,12 @@ The way to write the parameter when calling the function of a contract with Taqu
 
 ```js live noInline
 // import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com')
+// const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com')
 // import { importKey } from '@taquito/signer';
 
 importKey(Tezos, secretKey)
 .then(signer => {
-    return Tezos.contract.at('KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN')
+    return Tezos.contract.at(contractAddresses.BigMapsComplexStorageContract)
 }).then(myContract => {
     const dataMap = new MichelsonMap();
     dataMap.set("Hello World", { bool : true })
@@ -153,12 +153,12 @@ importKey(Tezos, secretKey)
 
 ```js live noInline
 // import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com')
+// const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com')
 // import { importKey } from '@taquito/signer';
 
 importKey(Tezos, secretKey)
 .then(signer => {
-    return Tezos.contract.at('KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN')
+    return Tezos.contract.at(contractAddresses.BigMapsComplexStorageContract)
 }).then(myContract => {
     const dataMap = new MichelsonMap();
     dataMap.set("Hello World", { bool : true })
@@ -175,7 +175,7 @@ importKey(Tezos, secretKey)
     console.log(`Waiting for ${op.hash} to be confirmed...`);
     return op.confirmation(1).then(() => op.hash);
 }).then(hash => {
-    console.log(`Operation injected: https://better-call.dev/ghostnet/KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN/operations`);
+    console.log(`Operation injected: https://better-call.dev/shadownet/contractAddresses.BigMapsComplexStorageContract/operations`);
 }).catch(error => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 #### Call the set_child_record function when optional arguments are null
@@ -184,12 +184,12 @@ The `address %address` and the `nat %ttl` of the `set_child_record` function are
 
 ```js live noInline
 // import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com')
+// const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com')
 // import { importKey } from '@taquito/signer';
 
 importKey(Tezos, secretKey)
 .then(signer => {
-    return Tezos.contract.at('KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN')
+    return Tezos.contract.at(contractAddresses.BigMapsComplexStorageContract)
 }).then(myContract => {
     const dataMap = new MichelsonMap();
     dataMap.set("Hello World", { nat : '3' })
@@ -206,6 +206,6 @@ importKey(Tezos, secretKey)
     console.log(`Waiting for ${op.hash} to be confirmed...`);
     return op.confirmation(1).then(() => op.hash);
 }).then(hash => {
-    console.log(`Operation injected: https://better-call.dev/ghostnet/KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN/operations`);
+    console.log(`Operation injected: https://better-call.dev/shadownet/contractAddresses.BigMapsComplexStorageContract/operations`);
 }).catch(error => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```

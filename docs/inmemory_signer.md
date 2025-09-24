@@ -41,7 +41,7 @@ The `fromSecretKey` method takes a secret that is base58 encoded as a parameter.
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito'
 // import { InMemorySigner } from '@taquito/signer'
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
 
 InMemorySigner.fromSecretKey('edsk2rKA8YEExg9Zo2qNPiQnnYheF1DhqjLVmfKdxiFfu5GyGRZRnb')
   .then((theSigner) => {
@@ -58,7 +58,7 @@ InMemorySigner.fromSecretKey('edsk2rKA8YEExg9Zo2qNPiQnnYheF1DhqjLVmfKdxiFfu5GyGR
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito'
 // import { InMemorySigner } from '@taquito/signer'
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
 
 InMemorySigner.fromSecretKey('spsk2Fiz7sGP5fNMJrokp6ynTa4bcFbsRhw58FHXbNf5ProDNFJ5Xq')
   .then((theSigner) => {
@@ -78,7 +78,7 @@ When required, Taquito offers the `b58Encode` function allowing to encode the se
 // import { b58Encode, PrefixV2 } from '@taquito/utils';
 // import { TezosToolkit } from '@taquito/taquito'
 // import { InMemorySigner } from '@taquito/signer'
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
 
 const b58encodedSecret = b58Encode(
   '7c842c15c8b0c8fd228e6cb5302a50201f41642dd36b699003fb3c857920bc9d',
@@ -119,7 +119,7 @@ Here are three examples with encrypted private keys where the passphrase used is
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito'
 // import { InMemorySigner } from '@taquito/signer'
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
 
 InMemorySigner.fromSecretKey(
   'edesk1GXwWmGjXiLHBKxGBxwmNvG21vKBh6FBxc4CyJ8adQQE2avP5vBB57ZUZ93Anm7i4k8RmsHaPzVAvpnHkFF',
@@ -139,7 +139,7 @@ InMemorySigner.fromSecretKey(
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito'
 // import { InMemorySigner } from '@taquito/signer'
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
 
 InMemorySigner.fromSecretKey(
   'spesk24UQkAiJk8X6AufNtRv1WWPp2BAssEgmijCTQPMgUXweSKPmLdbyAjPmCG1pR2dC9P5UZZVeZcb7zVodUHZ',
@@ -159,7 +159,7 @@ InMemorySigner.fromSecretKey(
 ```js live noInline
 // import { TezosToolkit } from '@taquito/taquito'
 // import { InMemorySigner } from '@taquito/signer'
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
 
 InMemorySigner.fromSecretKey(
   'p2esk28hoUE2J88QNFj2aDX2pjzL7wcVh2g8tkEwtWWguby9M3FHUgSbzvF2Sd7wQ4Kd8crFwvto6gF3otcBuo4T',
@@ -188,7 +188,7 @@ With ed25519 default derivation path (Reminder Must be hardened with either h or
 ```js live noInline
   // import { TezosToolkit } from '@taquito/taquito
   // import { InMemorySigner } from '@taquito/signer'
-  // const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
+  // const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
 
   // ed25519 must have all hardened paths
 
@@ -212,7 +212,7 @@ With a non-default derivation path non-hardened with a tz2 address
 ```js live noInline
   // import { TezosToolkit } from '@taquito/taquito
   // import { InMemorySigner } from '@taquito/signer'
-  // const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
+  // const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
 
   const params = {
     mnemonic: 'author crumble medal dose ribbon permit ankle sport final hood shadow vessel horn hawk enter zebra prefer devote captain during fly found despair business',
