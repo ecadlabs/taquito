@@ -11,11 +11,28 @@ import Clipboard from 'clipboard';
 import rangeParser from 'parse-numeric-range';
 import Highlight, { defaultProps } from 'prism-react-renderer';
 import defaultTheme from 'prism-react-renderer/themes/palenight';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
 
 import styles from './styles.module.css';
 
 const highlightLinesRangeRegex = /{([\d,-]+)}/;
+
+// Helper function to transform code by replacing contract address lookups
+const transformCodeForDisplay = (code, contractAddresses) => {
+  let transformedCode = code;
+  if (contractAddresses) {
+    console.log('Transforming code with contract addresses:', contractAddresses);
+    Object.keys(contractAddresses).forEach(contractName => {
+      const regex = new RegExp(`contractAddresses\\.${contractName}`, 'g');
+      const replacement = `'${contractAddresses[contractName]}'`;
+      transformedCode = transformedCode.replace(regex, replacement);
+      console.log(`Replaced contractAddresses.${contractName} with ${replacement}`);
+    });
+  } else {
+    console.log('No contract addresses available for transformation');
+  }
+  return transformedCode;
+};
 
 export default ({
   children,
@@ -91,6 +108,18 @@ export default ({
       const { WalletConnect, PermissionScopeMethods, NetworkType } = await import('@taquito/wallet-connect');
       const TransportWebHID = (await import("@ledgerhq/hw-transport-webhid")).default;
 
+      let contractAddresses = {};
+      try {
+        const response = await fetch('/example/originated-contracts.json');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        contractAddresses = await response.json();
+        console.log('Successfully loaded contract addresses:', contractAddresses);
+      } catch (error) {
+        console.warn('Failed to load contract addresses:', error);
+      }
+
       let wallet;
       if (typeof window !== 'undefined') {
         // solve localStorage is not defined Error when building server
@@ -98,7 +127,7 @@ export default ({
         wallet = new BeaconWallet({ name:"exampleWallet", network: { type: 'ghostnet'}, enableMetrics: true, });
         wallet.client.subscribeToEvent(BeaconEvent.ACTIVE_ACCOUNT_SET, account => console.log(`${BeaconEvent.ACTIVE_ACCOUNT_SET} triggered: `, account));
       }
-      const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com/');
+      const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com/');
       setDependencies({
         Tezos,
         wallet,
@@ -150,13 +179,19 @@ export default ({
         ECDSA,
         Path,
         generateSecretKey,
-        UnitValue
+        UnitValue,
+        contractAddresses
       });
     }
     if (!dependencies) {
       getDependencies();
     }
   }, []);
+
+  // Get the transformed code - this will update when dependencies change
+  const displayCode = useMemo(() => {
+    return transformCodeForDisplay(children.trim(), dependencies?.contractAddresses);
+  }, [children, dependencies?.contractAddresses]);
 
   if (live) {
 
@@ -217,10 +252,14 @@ export default ({
           Path: dependencies?.Path,
           generateSecretKey: dependencies?.generateSecretKey,
           UnitValue: dependencies?.UnitValue,
+          contractAddresses: dependencies?.contractAddresses,
          }}
-        code={children.trim()}
+        code={displayCode}
         theme={prism.theme || defaultTheme}
-        transformCode={code => code.replace(/import .*/g, '')}
+        transformCode={code => {
+          let transformedCode = code.replace(/import .*/g, '');
+          return transformCodeForDisplay(transformedCode, dependencies?.contractAddresses);
+        }}
         {...props}
       />
     );
@@ -244,7 +283,7 @@ export default ({
     <Highlight
       {...defaultProps}
       theme={prism.theme || defaultTheme}
-      code={children.trim()}
+      code={displayCode}
       language={language}>
       {({ className, style, tokens, getLineProps, getTokenProps }) => (
         <div className={styles.codeBlockWrapper}>

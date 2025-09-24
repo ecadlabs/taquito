@@ -5,12 +5,14 @@
 ///   examples in Taquito Docs and produce a JSON file with each Contract Identifier and its PKH.
 ///   Use the testpad script Docs Live Code Contract Origination (in https://ecadlabs.ontestpad.com/project/18/)
 ///   with the desired chain (e.g. kathmandu) to match the originated scripts with their locations in the Docs.
-///   The script will also print to console a json file of contracts to use in the code examples in taquito/examples
+///   The script will print to console a json file of contracts and save it to 'originated-contracts.json'
 ///   Execute this script with
 ///     node -r ts-node/register deploy-docs-live-code-contracts.ts
 
 import { MichelsonMap, TezosToolkit } from '@taquito/taquito';
 import { InMemorySigner } from '@taquito/signer';
+import { writeFileSync, mkdirSync } from 'fs';
+import { join } from 'path';
 import { tzip7Contract } from '../integration-tests/data/tzip_7_contract';
 import { contractMapPairKey } from './data/contractMapPairKey';
 import { contractIncrementing } from './data/contractIncrementing';
@@ -32,12 +34,12 @@ import { fa2Contract } from '../integration-tests/data/fa2_contract';
 import BigNumber from 'bignumber.js';
 
 
-const provider = 'https://ghostnet.tezos.ecadinfra.com/';
+const provider = 'https://shadownet.tezos.ecadinfra.com/';
 export const signer = new InMemorySigner(
-  'edskRtmEwZxRzwd1obV9pJzAoLoxXFWTSHbgqpDBRHx1Ktzo5yVuJ37e2R4nzjLnNbxFU4UiBU1iHzAy52pK5YBRpaFwLbByca'
+  'edskRw4LpAVieZpK8SyhHWBa1MFpHzwJyoMcTgFnKpvTdk8ATBnTifsFrU1p7HqVjF5K5a8DkeKi2fKwU4jpakfMb7DbVCAU8i'
 );
 export const tezos = new TezosToolkit(provider);
-
+tezos.setSignerProvider(signer);
 
 const contract_catalogue = new Map();
 
@@ -180,6 +182,23 @@ async function originateTheContracts() {
       jsonObject[key] = value;
     });
     console.log(JSON.stringify(jsonObject));
+    
+    // Save to JSON file
+    const websiteDir = join(__dirname, '..', 'website', 'static', 'example');
+    const websiteFilePath = join(websiteDir, 'originated-contracts.json');
+    
+    try {
+      const jsonContent = JSON.stringify(jsonObject, null, 2);
+      
+      // Ensure website directory exists
+      mkdirSync(websiteDir, { recursive: true });
+      
+      // Save to website static directory
+      writeFileSync(websiteFilePath, jsonContent);
+      console.log(`Contract catalogue saved to: ${websiteFilePath}`);
+    } catch (error) {
+      console.error('Error saving contract catalogue to file:', error);
+    }
   }
 }
 
