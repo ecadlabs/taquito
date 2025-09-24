@@ -9,6 +9,7 @@ import {
   OperationContentsAndResultTransferTicket,
   OperationContentsAndResultIncreasePaidStorage,
   OperationContentsAndResultUpdateConsensusKey,
+  OperationContentsAndResultUpdateCompanionKey,
 } from '@taquito/rpc';
 import { PreparedOperation } from '../src/prepare';
 
@@ -95,6 +96,16 @@ const defaultIncreasePaidStorageData = {
 
 const defaultUpdateConsensusKeyData = {
   kind: OpKind.UPDATE_CONSENSUS_KEY as OpKind.UPDATE_CONSENSUS_KEY,
+  source: 'tz1MY8g5UqVmQtpAp7qs1cUwEof1GjZCHgVv',
+  fee: '369',
+  counter: '19043',
+  gas_limit: '1100',
+  storage_limit: '0',
+  pk: 'edpkti5K5JbdLpp2dCqiTLoLQqs5wqzeVhfHVnNhsSCuoU8zdHYoY7',
+};
+
+const defaultUpdateCompanionKeyData = {
+  kind: OpKind.UPDATE_COMPANION_KEY as OpKind.UPDATE_COMPANION_KEY,
   source: 'tz1MY8g5UqVmQtpAp7qs1cUwEof1GjZCHgVv',
   fee: '369',
   counter: '19043',
@@ -300,6 +311,35 @@ export class UpdateConsensusKeyOperationBuilder {
   }
 
   build(): OperationContentsAndResultUpdateConsensusKey {
+    return {
+      ...this.data,
+      metadata: {
+        balance_updates: [],
+        operation_result: this.result,
+      },
+    };
+  }
+}
+
+export class UpdateCompanionKeyOperationBuilder {
+  private result: OperationContentsAndResultUpdateCompanionKey['metadata']['operation_result'] =
+    defaultResult;
+  private data: Omit<OperationContentsAndResultUpdateCompanionKey, 'metadata'>;
+
+  constructor(
+    private _data: Partial<Omit<OperationContentsAndResultUpdateCompanionKey, 'metadata'>> = {}
+  ) {
+    this.data = { ...defaultUpdateCompanionKeyData, ...this._data };
+  }
+
+  withResult(
+    result: Partial<OperationContentsAndResultUpdateCompanionKey['metadata']['operation_result']>
+  ) {
+    this.result = { ...defaultResult, ...result };
+    return this;
+  }
+
+  build(): OperationContentsAndResultUpdateCompanionKey {
     return {
       ...this.data,
       metadata: {

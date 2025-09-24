@@ -1,6 +1,6 @@
 {
   "name": "@taquito/beacon-wallet",
-  "version": "22.0.0",
+  "version": "23.0.1",
   "description": "Beacon wallet provider",
   "keywords": [
     "tezos",
@@ -46,18 +46,51 @@
   },
   "jest": {
     "transform": {
-      ".(ts|tsx)": "ts-jest"
+      ".(ts|tsx)": [
+        "ts-jest",
+        {
+          "useESM": true,
+          "allowJs": true,
+          "tsconfig": {
+            "allowJs": true,
+            "module": "es2020"
+          }
+        }
+      ],
+      ".(js|jsx|mjs)": [
+        "ts-jest",
+        {
+          "useESM": true,
+          "allowJs": true,
+          "tsconfig": {
+            "allowJs": true,
+            "module": "es2020"
+          }
+        }
+      ]
     },
     "testEnvironment": "node",
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
     "moduleFileExtensions": [
       "ts",
       "tsx",
-      "js"
+      "js",
+      "jsx",
+      "json",
+      "mjs"
     ],
     "moduleNameMapper": {
-      "^@taquito/taquito$": "<rootDir>/../taquito/src/taquito.ts"
+      "^@taquito/taquito$": "<rootDir>/../taquito/src/taquito.ts",
+      "^(\\.{1,2}/.*)\\.js$": "$1"
     },
+    "transformIgnorePatterns": [
+      "/node_modules/(?!(@airgap|@stablelib)/.*)"
+    ],
+    "extensionsToTreatAsEsm": [
+      ".ts",
+      ".tsx",
+      ".mts"
+    ],
     "coveragePathIgnorePatterns": [
       "/node_modules/",
       "/test/"
@@ -67,9 +100,9 @@
     ]
   },
   "dependencies": {
-    "@airgap/beacon-dapp": "4.5.1",
-    "@taquito/core": "^22.0.0",
-    "@taquito/taquito": "^22.0.0",
+    "@airgap/beacon-dapp": "^4.6.1-rc1",
+    "@taquito/core": "^23.0.1",
+    "@taquito/taquito": "^23.0.1",
     "crypto-browserify": "^3.12.1",
     "util": "^0.12.5"
   },

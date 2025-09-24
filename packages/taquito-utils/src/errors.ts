@@ -1,4 +1,4 @@
-import { ParameterValidationError, UnsupportedActionError } from '@taquito/core';
+import { ParameterValidationError, UnsupportedActionError, ValidationResult } from '@taquito/core';
 
 export {
   InvalidAddressError,
@@ -23,11 +23,9 @@ export {
  */
 export class InvalidProtocolHashError extends ParameterValidationError {
   public name = 'InvalidProtocolHashError';
-  constructor(public readonly protocolHash: string, public readonly errorDetails?: string) {
-    super();
-    this.name = 'InvalidProtocolHashError';
-    this.message = `The protocol hash '${protocolHash}' is invalid`;
-    errorDetails ? (this.message += `: ${errorDetails}`) : null;
+  constructor(public readonly protocolHash: string, errorDetails?: string | ValidationResult) {
+    super(`The protocol hash '${protocolHash}' is invalid`, errorDetails);
+    this.name = this.constructor.name;
   }
 }
 
@@ -37,8 +35,7 @@ export class InvalidProtocolHashError extends ParameterValidationError {
  */
 export class ValueConversionError extends UnsupportedActionError {
   constructor(public readonly value: string, public readonly desiredType: string) {
-    super();
-    this.name = 'ValueConversionError';
-    this.message = `Unable to convert ${value} to a ${desiredType}`;
+    super(`Unable to convert ${value} to a ${desiredType}`);
+    this.name = this.constructor.name;
   }
 }

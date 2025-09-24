@@ -16,6 +16,7 @@ import {
   TransferParams,
   OriginateParams,
   UpdateConsensusKeyParams,
+  UpdateCompanionKeyParams,
   TransferTicketParams,
   IncreasePaidStorageParams,
   BallotParams,
@@ -35,7 +36,13 @@ import {
 import { PreparationProvider, PreparedOperation } from './interface';
 import { REVEAL_STORAGE_LIMIT, Protocols, getRevealFee, getRevealGasLimit } from '../constants';
 import { RPCResponseError } from '../errors';
-import { PublicKeyNotFoundError, InvalidOperationKindError, DeprecationError } from '@taquito/core';
+import {
+  PublicKeyNotFoundError,
+  InvalidOperationKindError,
+  DeprecationError,
+  InvalidProofError,
+  ProhibitedActionError,
+} from '@taquito/core';
 import { Context } from '../context';
 import { ContractMethod } from '../contract/contract-methods/contract-method-flat-param';
 import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
@@ -47,6 +54,7 @@ import {
   createRegisterGlobalConstantOperation,
   createOriginationOperation,
   createUpdateConsensusKeyOperation,
+  createUpdateCompanionKeyOperation,
   createTransferTicketOperation,
   createIncreasePaidStorageOperation,
   createBallotOperation,
@@ -65,6 +73,12 @@ import { ForgeParams } from '@taquito/local-forging';
 import { Provider } from '../provider';
 import BigNumber from 'bignumber.js';
 import { BlockIdentifier } from '../read-provider/interface';
+import {
+  b58DecodeAndCheckPrefix,
+  PrefixV2,
+  publicKeyHashPrefixes,
+  publicKeyPrefixes,
+} from '@taquito/utils';
 
 interface Limits {
   fee?: number;
@@ -169,12 +183,17 @@ export class PrepareProvider extends Provider implements PreparationProvider {
         if (!publicKey) {
           throw new PublicKeyNotFoundError(pkh);
         }
+        const [, pkhPrefix] = b58DecodeAndCheckPrefix(pkh, publicKeyHashPrefixes);
         ops.unshift(
           await createRevealOperation(
             {
               fee: getRevealFee(pkh),
               storageLimit: REVEAL_STORAGE_LIMIT,
               gasLimit: getRevealGasLimit(pkh),
+              proof:
+                pkhPrefix === PrefixV2.BLS12_381PublicKeyHash
+                  ? (await this.signer.provePossession!()).prefixSig
+                  : undefined,
             },
             publicKeyHash,
             publicKey
@@ -246,6 +265,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
         case OpKind.DELEGATION:
         case OpKind.REGISTER_GLOBAL_CONSTANT:
         case OpKind.UPDATE_CONSENSUS_KEY:
+        case OpKind.UPDATE_COMPANION_KEY:
         case OpKind.SMART_ROLLUP_ADD_MESSAGES:
         case OpKind.SMART_ROLLUP_ORIGINATE:
         case OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE:
@@ -328,13 +348,26 @@ export class PrepareProvider extends Provider implements PreparationProvider {
    * @param source string or undefined source pkh
    * @returns a PreparedOperation object
    */
-  async reveal({ fee, gasLimit, storageLimit }: RevealParams): Promise<PreparedOperation> {
+  async reveal({ fee, gasLimit, storageLimit, proof }: RevealParams): Promise<PreparedOperation> {
     const { pkh, publicKey } = await this.getKeys();
 
     if (!publicKey) {
       throw new PublicKeyNotFoundError(pkh);
     }
 
+    const [, pkhPrefix] = b58DecodeAndCheckPrefix(pkh, publicKeyHashPrefixes);
+    if (pkhPrefix === PrefixV2.BLS12_381PublicKeyHash) {
+      if (proof) {
+        b58DecodeAndCheckPrefix(proof, [PrefixV2.BLS12_381Signature]); // validate proof to be a bls signature
+      } else {
+        const { prefixSig } = await this.signer.provePossession!();
+        proof = prefixSig;
+      }
+    } else {
+      if (proof) {
+        throw new ProhibitedActionError('Proof field is only allowed to reveal a bls account ');
+      }
+    }
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
     const DEFAULT_PARAMS = await this.getOperationLimits(protocolConstants);
     const mergedEstimates = mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS);
@@ -344,6 +377,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
         fee: mergedEstimates.fee,
         gasLimit: mergedEstimates.gasLimit,
         storageLimit: mergedEstimates.storageLimit,
+        proof,
       },
       pkh,
       publicKey
@@ -558,6 +592,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     fee,
     storageLimit,
     gasLimit,
+    to,
     ...rest
   }: FinalizeUnstakeParams): Promise<PreparedOperation> {
     const { pkh } = await this.getKeys();
@@ -566,7 +601,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const DEFAULT_PARAMS = await this.getOperationLimits(protocolConstants);
     const op = await createTransferOperation({
       ...rest,
-      to: pkh,
+      to: to ? to : pkh,
       amount: 0,
       ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
       parameter: {
@@ -743,10 +778,71 @@ export class PrepareProvider extends Provider implements PreparationProvider {
   ): Promise<PreparedOperation> {
     const { pkh } = await this.getKeys();
 
+    const [, pkPrefix] = b58DecodeAndCheckPrefix(rest.pk, publicKeyPrefixes);
+    if (pkPrefix === PrefixV2.BLS12_381PublicKey) {
+      if (!rest.proof) {
+        throw new InvalidProofError('Proof is required to set a bls account as consensus key ');
+      }
+    } else {
+      if (rest.proof) {
+        throw new ProhibitedActionError(
+          'Proof field is only allowed for a bls account as consensus key'
+        );
+      }
+    }
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
     const DEFAULT_PARAMS = await this.getOperationLimits(protocolConstants);
 
     const op = await createUpdateConsensusKeyOperation({
+      ...rest,
+      ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
+    });
+
+    const operation = await this.addRevealOperationIfNeeded(op, pkh);
+    const ops = this.convertIntoArray(operation);
+
+    const hash = await this.getBlockHash();
+    const protocol = await this.getProtocolHash();
+
+    this.#counters = {};
+    const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
+
+    const contents = this.constructOpContents(ops, headCounter, pkh, source);
+
+    return {
+      opOb: {
+        branch: hash,
+        contents,
+        protocol,
+      },
+      counter: headCounter,
+    };
+  }
+
+  /**
+   *
+   * @description Method to prepare an update_companion_key operation
+   * @param operation RPCOperation object or RPCOperation array
+   * @param source string or undefined source pkh
+   * @returns a PreparedOperation object
+   */
+  async updateCompanionKey(
+    { fee, storageLimit, gasLimit, ...rest }: UpdateCompanionKeyParams,
+    source?: string
+  ): Promise<PreparedOperation> {
+    const { pkh } = await this.getKeys();
+
+    const [, pkPrefix] = b58DecodeAndCheckPrefix(rest.pk, publicKeyPrefixes);
+    if (pkPrefix !== PrefixV2.BLS12_381PublicKey) {
+      throw new ProhibitedActionError('companion key must be a bls account');
+    }
+    if (!rest.proof) {
+      throw new InvalidProofError('Proof is required to set a bls account as companion key ');
+    }
+    const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
+    const DEFAULT_PARAMS = await this.getOperationLimits(protocolConstants);
+
+    const op = await createUpdateCompanionKeyOperation({
       ...rest,
       ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
     });
@@ -1159,12 +1255,17 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       if (!publicKey) {
         throw new PublicKeyNotFoundError(pkh);
       }
+      const [, pkhPrefix] = b58DecodeAndCheckPrefix(pkh, publicKeyHashPrefixes);
       ops.unshift(
         await createRevealOperation(
           {
             fee: getRevealFee(pkh),
             storageLimit: REVEAL_STORAGE_LIMIT,
             gasLimit: getRevealGasLimit(pkh),
+            proof:
+              pkhPrefix === PrefixV2.BLS12_381PublicKeyHash
+                ? (await this.signer.provePossession!()).prefixSig
+                : undefined,
           },
           pkh,
           publicKey

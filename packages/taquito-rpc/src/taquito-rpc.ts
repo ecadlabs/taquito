@@ -76,7 +76,7 @@ import {
   validateContractAddress,
   ValidationResult,
   validateProtocol,
-  invalidDetail,
+  InvalidProtocolHashError,
 } from '@taquito/utils';
 import { InvalidAddressError, InvalidContractAddressError } from '@taquito/core';
 
@@ -130,14 +130,14 @@ export class RpcClient implements RpcClientInterface {
   private validateAddress(address: string) {
     const addressValidation = validateAddress(address);
     if (addressValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(address, invalidDetail(addressValidation));
+      throw new InvalidAddressError(address, addressValidation);
     }
   }
 
   private validateContract(address: string) {
     const addressValidation = validateContractAddress(address);
     if (addressValidation !== ValidationResult.VALID) {
-      throw new InvalidContractAddressError(address, invalidDetail(addressValidation));
+      throw new InvalidContractAddressError(address, addressValidation);
     }
   }
 
@@ -1195,7 +1195,7 @@ export class RpcClient implements RpcClientInterface {
     if (protocol) {
       const protocolValidation = validateProtocol(protocol);
       if (protocolValidation !== ValidationResult.VALID) {
-        throw new Error(`Invalid protocol hash "${protocol}" ${invalidDetail(protocolValidation)}`);
+        throw new InvalidProtocolHashError(protocol, protocolValidation);
       }
     }
     return this.httpBackend.createRequest<ProtocolActivationsResponse>({
@@ -1302,7 +1302,7 @@ export class RpcClient implements RpcClientInterface {
    * @description List the prevalidated operations in mempool (accessibility of mempool depends on each rpc endpoint)
    * @param args has 5 optional properties
    * @default args { version: '2', validated: true, refused: true, outdated, true, branchRefused: true, branchDelayed: true, validationPass: undefined, source: undefined, operationHash: undefined }
-   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/rio-mempool-openapi.json
+   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/seoul-mempool-openapi.json
    */
   async getPendingOperations(
     args: PendingOperationsQueryArguments = {}

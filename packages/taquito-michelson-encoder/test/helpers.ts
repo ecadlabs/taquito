@@ -1,5 +1,5 @@
 import { MichelsonV1Expression, MichelsonV1ExpressionExtended } from '@taquito/rpc';
-import { b58decode } from '@taquito/utils';
+import { b58DecodeAddress, b58DecodePublicKeyHash } from '@taquito/utils';
 import { Schema } from '../src/schema/storage';
 import { SemanticEncoding } from '../src/tokens/token';
 
@@ -7,14 +7,14 @@ import { SemanticEncoding } from '../src/tokens/token';
 export const optimizedEncoding: SemanticEncoding = {
   // encode address to bytes
   address: (val: string) => {
-    return { bytes: b58decode(val) };
+    return { bytes: b58DecodeAddress(val) };
   },
   // encode contract to bytes
   contract: (val: string) => {
-    return { bytes: b58decode(val) };
+    return { bytes: b58DecodeAddress(val) };
   },
   key_hash: (val: string) => {
-    return { bytes: b58decode(val).slice(2) };
+    return { bytes: b58DecodePublicKeyHash(val) };
   },
   // encode timestamp to number of seconds since epoch
   timestamp: (val: string) => {
