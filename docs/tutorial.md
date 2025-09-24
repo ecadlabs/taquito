@@ -98,7 +98,7 @@ Now, open the file `index.ts` and replace the code with the following:
 ```ts
 import { TezosToolkit } from "@taquito/taquito";
 
-var tezosToolkit = new TezosToolkit("https://ghostnet.tezos.ecadinfra.com");
+var tezosToolkit = new TezosToolkit("https://shadownet.tezos.ecadinfra.com");
 
 tezosToolkit.tz.getBalance("tz1YvE7Sfo92ueEPEdZceNWd5MWNeMNSt16L").then(balance => {
     console.log(balance.toNumber());

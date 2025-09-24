@@ -148,7 +148,7 @@ storage (pair (nat %stored_counter) (pair (nat %threshold) (list %keys key)));
 
 # Lambda Contracts
 
-Taquito internally contains a list of lambda contracts. Thus, there is no need to deploy a lambda contract if you are using Mainnet, Ghostnet or another testnet. Taquito will detect the current network and use the appropriate lambda contract.
+Taquito internally contains a list of lambda contracts. Thus, there is no need to deploy a lambda contract if you are using Mainnet, Shadownet or another testnet. Taquito will detect the current network and use the appropriate lambda contract.
 
 Lambda views are introduced in [Tzip4](https://gitlab.com/tezos/tzip/-/blob/master/proposals/tzip-4/tzip-4.md#view-entrypoints).
 

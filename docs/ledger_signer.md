@@ -116,7 +116,7 @@ Tezos.contract
     console.log(`Waiting for ${op.hash} to be confirmed...`);
     return op.confirmation(1).then(() => op.hash);
   })
-  .then((hash) => console.log(`Operation injected: https://ghostnet.tzkt.io/${hash}$/operations`))
+  .then((hash) => console.log(`Operation injected: https://shadownet.tzkt.io/${hash}$/operations`))
   .catch((error) => console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
 
