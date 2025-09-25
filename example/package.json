@@ -20,7 +20,6 @@
     "example:rpc-vs-local-pack-sequential": "node -r ts-node/register --preserve-symlinks example-sequential-bigmap-local-vs-rpc-pack.ts",
     "example:bigmap-keys-pair": "node -r ts-node/register --preserve-symlinks example-bigmap-keys-as-pair.ts",
     "example:bigmap-keys-deep-pair": "node -r ts-node/register --preserve-symlinks example-bigmap-keys-as-deep-pair.ts",
-    "example:deploy-dapp": "node -r ts-node/register --preserve-symlinks deploy-test-dapp-contract.ts",
     "example:deploy-docs": "node -r ts-node/register --preserve-symlinks deploy-docs-live-code-contracts.ts",
     "example:deploy-integration": "node -r ts-node/register --preserve-symlinks deploy-integration-tests-contracts.ts",
     "example:wallet-are-you-there": "node -r ts-node/register --preserve-symlinks wallet-originate-areyouthere.ts",
