@@ -127,7 +127,9 @@ describe('RPCEstimateProvider test signer', () => {
     });
 
     mockSigner.sign.mockResolvedValue({ sbytes: 'test', prefixSig: 'test_sig' });
-    mockSigner.publicKey.mockResolvedValue('test_pub_key');
+    mockSigner.publicKey.mockResolvedValue(
+      'edpkvGfYw3LyB1UcCahKQk4rF2tvbMUk8GFiTuMjL75uGXrpvKXhjn'
+    );
     mockSigner.publicKeyHash.mockResolvedValue('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM');
     context = new Context(mockRpcClient as any, mockSigner as any);
     context.forger = mockForger;
@@ -1161,6 +1163,7 @@ describe('RPCEstimateProvider test wallet', () => {
 
   let mockWalletProvider: {
     getPKH: jest.Mock<any, any>;
+    getPK: jest.Mock<any, any>;
   };
 
   beforeEach(() => {
@@ -1189,6 +1192,7 @@ describe('RPCEstimateProvider test wallet', () => {
 
     mockWalletProvider = {
       getPKH: jest.fn(),
+      getPK: jest.fn(),
     };
 
     // Required for operations confirmation polling
@@ -1216,6 +1220,9 @@ describe('RPCEstimateProvider test wallet', () => {
     });
 
     mockWalletProvider.getPKH.mockResolvedValue('tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb');
+    mockWalletProvider.getPK.mockResolvedValue(
+      'edpkvGfYw3LyB1UcCahKQk4rF2tvbMUk8GFiTuMjL75uGXrpvKXhjn'
+    );
     const context = new Context(mockRpcClient as any);
     context.forger = mockForger;
     context.walletProvider = mockWalletProvider as any;
@@ -1249,18 +1256,6 @@ describe('RPCEstimateProvider test wallet', () => {
       });
       expect(estimate.gasLimit).toEqual(1100);
     });
-
-    it('should throw an error if the account is unrevealed', async () => {
-      mockRpcClient.getManagerKey.mockResolvedValue(null);
-      try {
-        await estimateProvider.originate({
-          code: ligoSample,
-          storage: 0,
-        });
-      } catch (e: any) {
-        expect(e.message).toContain('Public key not found of this address');
-      }
-    });
   });
 
   describe('transfer', () => {
@@ -1277,18 +1272,6 @@ describe('RPCEstimateProvider test wallet', () => {
         storageLimit: 654,
         suggestedFeeMutez: 4574,
       });
-    });
-
-    it('should throw an error if the account is unrevealed', async () => {
-      mockRpcClient.getManagerKey.mockResolvedValue(null);
-      try {
-        await estimateProvider.transfer({
-          to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-          amount: 2,
-        });
-      } catch (e: any) {
-        expect(e.message).toContain('Public key not found of this address');
-      }
     });
   });
 
@@ -1317,18 +1300,6 @@ describe('RPCEstimateProvider test wallet', () => {
         suggestedFeeMutez: 1333,
       });
     });
-
-    it('should throw an error if the account is unrevealed', async () => {
-      mockRpcClient.getManagerKey.mockResolvedValue(null);
-      try {
-        await estimateProvider.setDelegate({
-          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-          delegate: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
-        });
-      } catch (e: any) {
-        expect(e.message).toContain('Public key not found of this address');
-      }
-    });
   });
 
   describe('registerDelegate', () => {
@@ -1352,15 +1323,6 @@ describe('RPCEstimateProvider test wallet', () => {
         storageLimit: 0,
         suggestedFeeMutez: 1333,
       });
-    });
-
-    it('should throw an error if the account is unrevealed', async () => {
-      mockRpcClient.getManagerKey.mockResolvedValue(null);
-      try {
-        await estimateProvider.registerDelegate({});
-      } catch (e: any) {
-        expect(e.message).toContain('Public key not found of this address');
-      }
     });
   });
 
@@ -1416,26 +1378,6 @@ describe('RPCEstimateProvider test wallet', () => {
       expect(estimate[1].gasLimit).toEqual(1000);
       expect(estimate[2].gasLimit).toEqual(1330);
     });
-
-    it('should throw an error if the account is unrevealed', async () => {
-      mockRpcClient.getManagerKey.mockResolvedValue(null);
-
-      try {
-        await estimateProvider.batch([
-          {
-            kind: OpKind.REGISTER_GLOBAL_CONSTANT,
-            value: {
-              prim: 'Pair',
-              args: [{ int: '998' }, { int: '999' }],
-            },
-          },
-          { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 },
-          { kind: OpKind.TRANSACTION, to: 'tz3hRZUScFCcEVhdDjXWoyekbgd1Gatga6mp', amount: 2 },
-        ]);
-      } catch (e: any) {
-        expect(e.message).toContain('Public key not found of this address');
-      }
-    });
   });
 
   describe('registerGlobalConstant', () => {
@@ -1452,32 +1394,6 @@ describe('RPCEstimateProvider test wallet', () => {
         storageLimit: 93,
         suggestedFeeMutez: 319,
       });
-    });
-
-    it('should throw an error if account is unrevealed', async () => {
-      mockRpcClient.getManagerKey.mockResolvedValue(null);
-      mockRpcClient.simulateOperation.mockResolvedValue(registerGlobalConstantWithReveal);
-      try {
-        await estimateProvider.registerGlobalConstant({
-          value: {
-            prim: 'Pair',
-            args: [{ int: '998' }, { int: '999' }],
-          },
-        });
-      } catch (e: any) {
-        expect(e.message).toContain('Public key not found of this address');
-      }
-    });
-  });
-
-  describe('reveal', () => {
-    it('should throw an error', async () => {
-      mockRpcClient.getManagerKey.mockResolvedValue(null);
-      try {
-        await estimateProvider.reveal({});
-      } catch (e: any) {
-        expect(e.message).toContain('Public key is unknown');
-      }
     });
   });
 
@@ -1521,20 +1437,6 @@ describe('RPCEstimateProvider test wallet', () => {
       expect(estimate.gasLimit).toEqual(1103);
       expect(estimate.storageLimit).toEqual(0);
       expect(estimate.suggestedFeeMutez).toEqual(297);
-    });
-
-    it('should return an error if account is unrevealed', async () => {
-      mockRpcClient.getManagerKey.mockResolvedValue(null);
-
-      try {
-        await estimateProvider.smartRollupAddMessages({
-          message: [
-            '0000000031010000000b48656c6c6f20776f726c6401cc9e352a850d7475bf9b6cf103aa17ca404bc9dd000000000764656661756c74',
-          ],
-        });
-      } catch (e: any) {
-        expect(e.message).toContain('Public key not found of this address');
-      }
     });
   });
 
@@ -1584,21 +1486,6 @@ describe('RPCEstimateProvider test wallet', () => {
         storageLimit: 36,
         suggestedFeeMutez: 825,
       });
-    });
-
-    it('should return an error if account is unrevealed', async () => {
-      mockRpcClient.getManagerKey.mockResolvedValue(null);
-
-      try {
-        await estimateProvider.smartRollupExecuteOutboxMessage({
-          rollup: 'sr1J4MBaQqTGNwUqfcUusy3xUmH6HbMK7kYy',
-          cementedCommitment: 'src13aUmJ5fEVJJM1qH1n9spuppXVAWc8wmHpTaC81pz5rrZN5e628',
-          outputProof:
-            '030002268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d95268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d950005820764757261626c65d07eb5216be3fcfd8317136e559c80d1a5eeb8f7b684c2101e92efb2b1b9c5324603746167c00800000004536f6d650003c004a99c0224241978be1e088cf42eaca4bc53a6266842bcbf0ecad4400abeb2e5820576616c7565810370766d8107627566666572738205696e707574820468656164c00100066c656e677468c00100066f75747075740004820132810a6c6173745f6c6576656cc0040000087a0133810f76616c69646974795f706572696f64c00400013b0082013181086f7574626f7865730028001700090006820432313337820468656164c00100066c656e677468c0010004323133380003810468656164c001008208636f6e74656e7473810130c03a000000360000000031010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74066c656e677468c00101c0c619e3af574a846a44f61eb98ae7a0007d1e76039f6729e3e113c2f993dad600c0b7b6d5ebea80e0e4b148815c768de7570b7a5ad617a2bf3a3f989df81be9a224c055b19953c4aa26132da57ef8205c8ab61b518fb6e4c87c5853298042d17c98bbc08bac9f033f9d823c04b4de152892edc0767d0634c51c5d311f46a127f730f6950134810d6d6573736167655f6c696d6974c002a401047761736dd04822a3ddd2900dcb30a958d10818ea3d90407a79f88eab967063bac2452e99c7268259c7843df9a14e2cd5b4d187d3d603a535c64f0cc3ce3c9a3bdd5ecb3d950000085a000000000031010000000b48656c6c6f20776f726c6401bdb6f61e4f12c952f807ae7d3341af5367887dac000000000764656661756c74',
-        });
-      } catch (e: any) {
-        expect(e.message).toContain('Public key not found of this address');
-      }
     });
   });
 });
