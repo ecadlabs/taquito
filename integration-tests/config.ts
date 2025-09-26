@@ -159,13 +159,13 @@ const shadownetEphemeral: Config =
   defaultConfig({
     networkName: 'SHADOWNET',
     protocol: Protocols.PtSeouLou,
-    defaultRpc: 'https://shadownet.tezos.ecadinfra.com/',
+    defaultRpc: '	https://rpc.shadownet.teztnets.com/',
     knownContracts: knownContractsPtShadownet,
     signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/shadownet')
   });
 
 const shadownetSecretKey: Config =
-  { ...shadownetEphemeral, ...{ signerConfig: defaultSecretKey, defaultRpc: 'https://shadownet.tezos.ecadinfra.com/' } };
+  { ...shadownetEphemeral, ...{ signerConfig: defaultSecretKey, defaultRpc: '	https://rpc.shadownet.teztnets.com/' } };
 
 const weeklynetEphemeral: Config =
   defaultConfig({
