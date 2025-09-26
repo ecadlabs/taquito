@@ -21,12 +21,10 @@ const highlightLinesRangeRegex = /{([\d,-]+)}/;
 const transformCodeForDisplay = (code, contractAddresses) => {
   let transformedCode = code;
   if (contractAddresses) {
-    console.log('Transforming code with contract addresses:', contractAddresses);
     Object.keys(contractAddresses).forEach(contractName => {
       const regex = new RegExp(`contractAddresses\\.${contractName}`, 'g');
       const replacement = `'${contractAddresses[contractName]}'`;
       transformedCode = transformedCode.replace(regex, replacement);
-      console.log(`Replaced contractAddresses.${contractName} with ${replacement}`);
     });
   } else {
     console.log('No contract addresses available for transformation');
@@ -112,7 +110,6 @@ export default ({
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         contractAddresses = await response.json();
-        console.log('Successfully loaded contract addresses:', contractAddresses);
       } catch (error) {
         console.warn('Failed to load contract addresses:', error);
       }

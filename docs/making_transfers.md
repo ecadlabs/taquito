@@ -25,28 +25,16 @@ In the following example, we transfer 0.5ꜩ from a `tz1aaYoabvj2DQtpHz74Z83fSNj
 // import { TezosToolkit } from '@taquito/taquito';
 // const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
 
-render(`Fetching a private key...`);
-fetch('https://keygen.ecadinfra.com/shadownet/', {
-  method: 'POST',
-  headers: { Authorization: 'Bearer taquito-example' },
-})
-  .then((response) => response.text())
-  .then((privateKey) => {
-    render(`Importing the private key...`);
-    return importKey(Tezos, privateKey);
-  })
-  .then(() => {
-    const amount = 0.5;
-    const address = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY';
+const amount = 0.5;
+const address = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY';
 
-    render(`Transfering ${amount} ꜩ to ${address}...`);
-    return Tezos.contract.transfer({ to: address, amount: amount });
-  })
+render(`Transfering ${amount} ꜩ to ${address}...`);
+Tezos.contract.transfer({ to: address, amount: amount })
   .then((op) => {
     render(`Waiting for ${op.hash} to be confirmed...`);
     return op.confirmation(1).then(() => op.hash);
   })
-  .then((hash) => render(`Operation injected: https://shadownet.tzkt.io/${hash}$/operations`))
+  .then((hash) => render(`Operation injected: https://shadownet.tzkt.io/${hash}/operations`))
   .catch((error) => render(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
