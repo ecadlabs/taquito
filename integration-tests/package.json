@@ -60,7 +60,9 @@
       "default",
       "jest-stare"
     ],
-    "testResultsProcessor": "../node_modules/jest-stare"
+    "testResultsProcessor": "../node_modules/jest-stare",
+    "extensionsToTreatAsEsm": [".ts"],
+    "globals": { "ts-jest": { "useESM": true } }
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",
