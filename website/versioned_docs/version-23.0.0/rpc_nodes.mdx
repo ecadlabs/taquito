@@ -2,7 +2,6 @@
 title: RPC nodes
 author: Roxane Letourneau
 ---
-
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import LastBlockLink, { ReceivedTime, Timestamp } from '@site/static/js/LastBlockLink';
@@ -10,9 +9,9 @@ import LastBlockLink, { ReceivedTime, Timestamp } from '@site/static/js/LastBloc
 ## What to consider when choosing a node
 
 - **Trust**: Choose a node that you can trust the people who operate it.
-  - It should not alter your requests, for example, changing the operation data before forging it.
-  - It should not censor your operations; you want to know that your operations will reach the network.
-- **Reliability**: Consider your requirements for uptime, and choose your node option accordingly. If node availability is critical for your user-case, consider self-hosting a node or contracting someone to operate a node specifically for you.
+    - It should not alter your requests, for example, changing the operation data before forging it.
+    - It should not censor your operations; you want to know that your operations will reach the network.
+- **Reliability**: Consider your requirements for uptime, and choose your node option accordingly. If node availability is critical for your user-case,  consider self-hosting a node or contracting someone to operate a node specifically for you.
 - ** End-points support**: Public nodes have different policies on the end-points that they expose. Your use case may require specific end-points to be available to your app. We have made a suite of [integration tests](rpc_nodes_integration_test.md) for the Taquito RPC package. These tests show what RPC end-points are available on a given node. These tests are available here: [integration-tests/rpc-nodes.spec.ts](https://github.com/ecadlabs/taquito/blob/master/integration-tests/rpc-nodes.spec.ts).
 
 <Tabs
@@ -55,18 +54,18 @@ values={[
 
 <!-- To easily update this table, update website/static/docs/rpc_nodes.json first and then run `node example/convert-rpc-json-to-md.ts`. This will log a table you can copy and paste to replace above. -->
 
-_- You can also find a machine readable list in [rpc_nodes.json](https://taquito.io/docs/rpc_nodes.json)._
+*- You can also find a machine readable list in [rpc_nodes.json](https://taquito.io/docs/rpc_nodes.json).*
 
-_- If you are aware of a public node missing from our list or our information is inaccurate, please help us by submitting an issue or pull request on our [GitHub page](https://github.com/ecadlabs/taquito)._
+*- If you are aware of a public node missing from our list or our information is inaccurate, please help us by submitting an issue or pull request on our [GitHub page](https://github.com/ecadlabs/taquito).*
 
 </TabItem>
   <TabItem value="commercialNodes">
 
-| Provider | Details                 |
-| -------- | ----------------------- |
-| Exaion   | https://node.exaion.com |
+| Provider         |  Details                                    |
+|------------------|---------------------------------------------|
+| Exaion           |  https://node.exaion.com                    |
 
-_If you are aware of a private node missing from our list or our information is inaccurate, please help us by submitting an issue or pull request on our GitHub page._
+*If you are aware of a private node missing from our list or our information is inaccurate, please help us by submitting an issue or pull request on our GitHub page.*
 
   </TabItem>
 </Tabs>
@@ -77,6 +76,6 @@ Running a node is a good way of contributing to Tezos by increasing the decentra
 
 There are many ways to set up a node. Here are some links providing general instructions:
 
-- [Using Docker images](https://octez.tezos.com/docs/introduction/howtoget.html#docker-images)
-- [Building from source](https://octez.tezos.com/docs/introduction/howtobuild.html)
-- [Using Ansible Role](https://github.com/ecadlabs/ansible-role-tezos-node/blob/master/README.md)
+- [Use docker images](https://tezos.gitlab.io/introduction/howtoget.html#docker-images)
+- [Build from sources](https://tezos.gitlab.io/introduction/howtoget.html#docker-images)
+- [Use Ansible Role](https://github.com/ecadlabs/ansible-role-tezos-node/blob/master/README.md)
