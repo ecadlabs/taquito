@@ -159,13 +159,13 @@ const shadownetEphemeral: Config =
   defaultConfig({
     networkName: 'SHADOWNET',
     protocol: Protocols.PtSeouLou,
-    defaultRpc: '	https://rpc.shadownet.teztnets.com/',
+    defaultRpc: 'https://rpc.shadownet.teztnets.com/',
     knownContracts: knownContractsPtShadownet,
     signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/shadownet')
   });
 
 const shadownetSecretKey: Config =
-  { ...shadownetEphemeral, ...{ signerConfig: defaultSecretKey, defaultRpc: '	https://rpc.shadownet.teztnets.com/' } };
+  { ...shadownetEphemeral, ...{ signerConfig: defaultSecretKey, defaultRpc: 'https://rpc.shadownet.teztnets.com/' } };
 
 const weeklynetEphemeral: Config =
   defaultConfig({
@@ -182,7 +182,7 @@ const weeklynetSecretKey: Config =
 const providers: Config[] = [];
 
 if (process.env['RUN_WITH_SECRET_KEY']) {
-  providers.push(seoulnetSecretKey);
+  providers.push(ghostnetSecretKey, shadownetSecretKey, seoulnetSecretKey);
 } else if (process.env['RUN_GHOSTNET_WITH_SECRET_KEY']) {
   providers.push(ghostnetSecretKey);
 } else if (process.env['RUN_SHADOWNET_WITH_SECRET_KEY']) {
@@ -200,7 +200,7 @@ if (process.env['RUN_WITH_SECRET_KEY']) {
 } else if (process.env['WEEKLYNET']) {
   providers.push(weeklynetEphemeral);
 } else {
-  providers.push(seoulnetEphemeral);
+  providers.push(ghostnetSecretKey, shadownetSecretKey, seoulnetEphemeral);
 }
 
 const setupForger = (Tezos: TezosToolkit, forger: ForgerType): void => {

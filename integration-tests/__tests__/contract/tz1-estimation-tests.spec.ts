@@ -97,7 +97,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
     it('Verify .estimate.transfer for internal transfer to allocated implicit', async () => {
       const tx = contract.methodsObject.do(MANAGER_LAMBDA.transferImplicit(knownBaker, 5)).toTransferParams();
       const estimate = await Tz1.estimate.transfer(tx);
-      expect(estimate.gasLimit).toEqual(3456);
+      expect(estimate.gasLimit).toEqual(3457);
       expect(estimate.storageLimit).toEqual(0);
       expect(estimate.suggestedFeeMutez).toEqual(595);
       expect(estimate.burnFeeMutez).toEqual(0);
@@ -121,7 +121,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
       expect(estimate.minimalFeeMutez).toEqual(846);
       expect(estimate.totalCost).toEqual(134346);
       expect(estimate.usingBaseFeeMutez).toEqual(846);
-      expect(estimate.consumedMilligas).toEqual(5570499);
+      expect(estimate.consumedMilligas).toEqual(5570757);
     });
 
     it('Verify .estimate.transfer for internal origination', async () => {
@@ -134,13 +134,13 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
       expect(estimate.minimalFeeMutez).toEqual(422);
       expect(estimate.totalCost).toEqual(84672);
       expect(estimate.usingBaseFeeMutez).toEqual(422);
-      expect(estimate.consumedMilligas).toEqual(1866594);
+      expect(estimate.consumedMilligas).toEqual(1866852);
     });
 
     it('Verify .estimate.transfer for multiple internal originations', async () => {
       const tx = contract.methodsObject.do(originate2()).toTransferParams();
       const estimate = await Tz1.estimate.transfer(tx);
-      expect(estimate.gasLimit).toEqual(2392);
+      expect(estimate.gasLimit).toEqual(2393);
       expect(estimate.storageLimit).toEqual(654);
       expect(estimate.suggestedFeeMutez).toEqual(560);
       expect(estimate.burnFeeMutez).toEqual(163500);
