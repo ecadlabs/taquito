@@ -71,7 +71,7 @@
     "@taquito/signer": "^23.0.1",
     "@taquito/taquito": "^23.0.1",
     "@taquito/utils": "^23.0.1",
-    "@types/node": "^18",
+    "@types/node": "^20",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "eslint": "^8.57.0",

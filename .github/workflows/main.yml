@@ -51,7 +51,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: lts/Hydrogen
+          node-version: lts/Iron
       - run: npm ci
       - run: npm run build
       - if: ${{ !github.event.pull_request.head.repo.fork }}
@@ -63,6 +63,7 @@ jobs:
       - id: run-tests
         run: npm -w integration-tests run test:${{ matrix.testnet }} -- --maxWorkers=4
         env:
+          NODE_OPTIONS: --experimental-vm-modules
           # Ternary operator workaround
           TEZOS_RPC_${{ matrix.testnet_uppercase }}: ${{ github.event.pull_request.head.repo.fork && matrix.rpc_url || null }}
   # integration-tests-testnet-seoulnet-secret-key:

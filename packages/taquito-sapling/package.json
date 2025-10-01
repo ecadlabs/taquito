@@ -82,7 +82,7 @@
   "devDependencies": {
     "@rollup/plugin-json": "^6.1.0",
     "@types/jest": "^29.5.12",
-    "@types/node": "^18",
+    "@types/node": "^20",
     "@types/pbkdf2": "^3.1.2",
     "@types/typedarray-to-buffer": "^4.0.4",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
