@@ -66,6 +66,53 @@ export default function LastBlockLink({ network, rpcUrl }) {
   );
 }
 
+export function Timestamp({ network, rpcUrl }) {
+  const [blockTimestamp, setBlockTimestamp] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    async function fetchLatestBlock() {
+      try {
+        const response = await fetch(`${rpcUrl}/chains/main/blocks/head`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        setBlockTimestamp(data.header.timestamp);
+        setLoading(false);
+      } catch (error) {
+        console.error(`Failed to fetch block from ${rpcUrl}:`, error);
+        setError(true);
+        setLoading(false);
+      }
+    }
+
+    fetchLatestBlock();
+  }, [rpcUrl]);
+
+  if (loading) {
+    return <span>Loading...</span>;
+  }
+
+  if (error) {
+    return <span style={{ color: '#999' }}>Error</span>;
+  }
+
+  if (!blockTimestamp) {
+    return <span>Unknown</span>;
+  }
+
+  const blockTime = new Date(blockTimestamp);
+  const formattedTime = blockTime.toLocaleString();
+
+  return (
+    <span>
+      {formattedTime}
+    </span>
+  );
+}
+
 export function ReceivedTime({ network, rpcUrl }) {
   const [blockTimestamp, setBlockTimestamp] = useState(null);
   const [secondsAgo, setSecondsAgo] = useState(null);
