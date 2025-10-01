@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 
-export default function LastBlockLink({ network, rpcUrl }) {
-  const [blockLevel, setBlockLevel] = useState(null);
-  const [blockTimestamp, setBlockTimestamp] = useState(null);
-  const [secondsAgo, setSecondsAgo] = useState(null);
+// Custom hook to fetch block data
+function useBlockData(rpcUrl) {
+  const [blockData, setBlockData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
@@ -15,8 +14,7 @@ export default function LastBlockLink({ network, rpcUrl }) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        setBlockLevel(data.header.level);
-        setBlockTimestamp(data.header.timestamp);
+        setBlockData(data.header);
         setLoading(false);
       } catch (error) {
         console.error(`Failed to fetch block from ${rpcUrl}:`, error);
@@ -28,24 +26,11 @@ export default function LastBlockLink({ network, rpcUrl }) {
     fetchLatestBlock();
   }, [rpcUrl]);
 
-  useEffect(() => {
-    if (!blockTimestamp) return;
+  return { blockData, loading, error };
+}
 
-    function updateSecondsAgo() {
-      const now = new Date();
-      const blockTime = new Date(blockTimestamp);
-      const diffInSeconds = Math.floor((now - blockTime) / 1000);
-      setSecondsAgo(diffInSeconds);
-    }
-
-    // Update immediately
-    updateSecondsAgo();
-
-    // Update every second
-    const interval = setInterval(updateSecondsAgo, 1000);
-
-    return () => clearInterval(interval);
-  }, [blockTimestamp]);
+export default function LastBlockLink({ network, rpcUrl }) {
+  const { blockData, loading, error } = useBlockData(rpcUrl);
 
   if (loading) {
     return <span>Loading...</span>;
@@ -56,40 +41,18 @@ export default function LastBlockLink({ network, rpcUrl }) {
   }
 
   const tzktUrl = network === 'mainnet' 
-    ? `https://tzkt.io/${blockLevel}/operations`
-    : `https://${network}.tzkt.io/${blockLevel}/operations`;
+    ? `https://tzkt.io/${blockData.level}/operations`
+    : `https://${network}.tzkt.io/${blockData.level}/operations`;
 
   return (
     <a href={tzktUrl} target="_blank" rel="noopener noreferrer">
-      { blockLevel }
+      {blockData.level}
     </a>
   );
 }
 
 export function Timestamp({ network, rpcUrl }) {
-  const [blockTimestamp, setBlockTimestamp] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-
-  useEffect(() => {
-    async function fetchLatestBlock() {
-      try {
-        const response = await fetch(`${rpcUrl}/chains/main/blocks/head`);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        setBlockTimestamp(data.header.timestamp);
-        setLoading(false);
-      } catch (error) {
-        console.error(`Failed to fetch block from ${rpcUrl}:`, error);
-        setError(true);
-        setLoading(false);
-      }
-    }
-
-    fetchLatestBlock();
-  }, [rpcUrl]);
+  const { blockData, loading, error } = useBlockData(rpcUrl);
 
   if (loading) {
     return <span>Loading...</span>;
@@ -99,64 +62,31 @@ export function Timestamp({ network, rpcUrl }) {
     return <span style={{ color: '#999' }}>Error</span>;
   }
 
-  if (!blockTimestamp) {
+  if (!blockData?.timestamp) {
     return <span>Unknown</span>;
   }
 
-  const blockTime = new Date(blockTimestamp);
-  const formattedTime = blockTime.toLocaleString();
-
-  return (
-    <span>
-      {formattedTime}
-    </span>
-  );
+  return <span>{new Date(blockData.timestamp).toLocaleString()}</span>;
 }
 
 export function ReceivedTime({ network, rpcUrl }) {
-  const [blockTimestamp, setBlockTimestamp] = useState(null);
+  const { blockData, loading, error } = useBlockData(rpcUrl);
   const [secondsAgo, setSecondsAgo] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
 
   useEffect(() => {
-    async function fetchLatestBlock() {
-      try {
-        const response = await fetch(`${rpcUrl}/chains/main/blocks/head`);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        setBlockTimestamp(data.header.timestamp);
-        setLoading(false);
-      } catch (error) {
-        console.error(`Failed to fetch block from ${rpcUrl}:`, error);
-        setError(true);
-        setLoading(false);
-      }
-    }
-
-    fetchLatestBlock();
-  }, [rpcUrl]);
-
-  useEffect(() => {
-    if (!blockTimestamp) return;
+    if (!blockData?.timestamp) return;
 
     function updateSecondsAgo() {
       const now = new Date();
-      const blockTime = new Date(blockTimestamp);
+      const blockTime = new Date(blockData.timestamp);
       const diffInSeconds = Math.floor((now - blockTime) / 1000);
       setSecondsAgo(diffInSeconds);
     }
 
-    // Update immediately
     updateSecondsAgo();
-
-    // Update every second
     const interval = setInterval(updateSecondsAgo, 1000);
-
     return () => clearInterval(interval);
-  }, [blockTimestamp]);
+  }, [blockData?.timestamp]);
 
   if (loading) {
     return <span>Loading...</span>;
@@ -166,9 +96,5 @@ export function ReceivedTime({ network, rpcUrl }) {
     return <span style={{ color: '#999' }}>Error</span>;
   }
 
-  return (
-    <span>
-      {secondsAgo !== null ? `${secondsAgo}s ago` : 'Unknown'}
-    </span>
-  );
+  return <span>{secondsAgo !== null ? `${secondsAgo}s ago` : 'Unknown'}</span>;
 }
