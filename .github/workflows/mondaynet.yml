@@ -51,6 +51,7 @@ jobs:
         id: integration-tests-mondaynet
         working-directory: ./integration-tests
         env:
+          NODE_OPTIONS: --experimental-vm-modules
           TEZOS_MONDAYNET_CONTRACT_ADDRESS: ${{ steps.originate-contracts-mondaynet.outputs.knownContractAddress }}
           TEZOS_MONDAYNET_BIGMAPCONTRACT_ADDRESS: ${{ steps.originate-contracts-mondaynet.outputs.knownBigMapContractAddress }}
           TEZOS_MONDAYNET_TZIP1216CONTRACT_ADDRESS: ${{ steps.originate-contracts-mondaynet.outputs.knownTzip12BigMapOffChainContractAddress }}
