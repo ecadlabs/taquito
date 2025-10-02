@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 
-// Custom hook to fetch block data
+// Custom hook to fetch block data with polling
 function useBlockData(rpcUrl) {
   const [blockData, setBlockData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
   useEffect(() => {
+    let isMounted = true;
+    let intervalId = null;
+
     async function fetchLatestBlock() {
       try {
         const response = await fetch(`${rpcUrl}/chains/main/blocks/head`);
@@ -14,16 +17,49 @@ function useBlockData(rpcUrl) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        setBlockData(data.header);
-        setLoading(false);
+        
+        if (isMounted) {
+          setBlockData(data.header);
+          setLoading(false);
+          setError(false);
+        }
       } catch (error) {
         console.error(`Failed to fetch block from ${rpcUrl}:`, error);
-        setError(true);
-        setLoading(false);
+        if (isMounted) {
+          setError(true);
+          setLoading(false);
+        }
       }
     }
 
+    // Polling is 10s when visible, 30s when hidden (tab not focused)
+    const startPolling = () => {
+      const interval = document.hidden ? 30000 : 10000;
+      intervalId = setInterval(fetchLatestBlock, interval);
+    };
+
+    // Fetch immediately
     fetchLatestBlock();
+
+    // Start polling
+    startPolling();
+
+    // Adjust polling when visibility changes
+    const handleVisibilityChange = () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+        startPolling();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    // Cleanup
+    return () => {
+      isMounted = false;
+      if (intervalId) clearInterval(intervalId);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
   }, [rpcUrl]);
 
   return { blockData, loading, error };
