@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment';
 const controllers = new Map();
 let visibilityHandlerInitialized = false;
 
@@ -111,6 +112,7 @@ function getController(rpcUrl, network) {
 
 function ensureVisibilityHandler() {
   if (visibilityHandlerInitialized) return;
+  if (!ExecutionEnvironment.canUseDOM) return;
   visibilityHandlerInitialized = true;
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
@@ -125,7 +127,10 @@ function ensureVisibilityHandler() {
 
 function useBlockData(rpcUrl, network) {
   const controller = getController(rpcUrl, network);
-  ensureVisibilityHandler();
+  // Ensure visibility handler is only set on the client
+  useEffect(() => {
+    ensureVisibilityHandler();
+  }, []);
 
   const [, forceUpdate] = useState({});
   const elementRef = useRef(null);
