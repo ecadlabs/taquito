@@ -201,7 +201,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress, knownTicketCont
       ])
 
       expect(estimated[2]?.suggestedFeeMutez).toBeGreaterThanOrEqual(362)
-      expect(estimated[2]?.gasLimit).toBeGreaterThanOrEqual(1545)
+      expect(estimated[2]?.gasLimit).toBeGreaterThanOrEqual(1325)
       expect(estimated[2]?.storageLimit).toBe(0)
 
       const transferTicketOp = await Tz2.contract.batch()

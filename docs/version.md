@@ -2,6 +2,16 @@
 title: Versions
 author: Jev Bjorsell
 ---
+# Taquito v23.0.2
+
+## 🛠 Internal
+
+ - Supported shadownet across packages #3205
+
+### `@taquito/beacon-wallet`
+
+- Upgraded `@airgap/beacon` dependencies to `4.6.1` #3202
+
 # Taquito v23.0.1
 
 ## 🛠 Internal

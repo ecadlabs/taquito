@@ -1,0 +1,24 @@
+name: Shadownet Integration Tests
+
+on:
+  push:
+    branches:
+      - '**shadownet**'
+
+jobs:
+  integration-tests-sahdownet:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/Hydrogen
+      - run: npm ci
+      - run: npm run build
+      - if: always()
+        id: integration-tests-sahdownet
+        run: npm -w integration-tests run test:shadownet -- --maxWorkers=4
+        env:
+          # Ternary operator workaround
+          TEZOS_RPC_${{ matrix.testnet_uppercase }}: ${{ github.event.pull_request.head.repo.fork && 'https://rpc.shadownet.teztnets.com/' || null }}

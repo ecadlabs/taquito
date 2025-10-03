@@ -20,6 +20,7 @@ import {
 export enum NetworkType {
   MAINNET = 'mainnet',
   GHOSTNET = 'ghostnet',
+  SHADOWNET = 'shadownet',
   WEEKLYNET = 'weeklynet',
   OXFORDNET = 'oxfordnet',
   PARISNET = 'parisnet',
