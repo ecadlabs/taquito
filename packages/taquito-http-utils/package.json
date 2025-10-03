@@ -1,6 +1,6 @@
 {
   "name": "@taquito/http-utils",
-  "version": "23.0.1",
+  "version": "23.0.2",
   "description": "",
   "keywords": [
     "tezos"
@@ -62,7 +62,7 @@
     ]
   },
   "dependencies": {
-    "@taquito/core": "^23.0.1",
+    "@taquito/core": "^23.0.2",
     "node-fetch": "^2.7.0"
   },
   "devDependencies": {
