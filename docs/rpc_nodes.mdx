@@ -5,7 +5,6 @@ author: Roxane Letourneau
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
-import BrowserOnly from '@docusaurus/BrowserOnly';
 import { ReceivedTime, Timestamp, LastBlockHeaderLink } from '@site/static/js/LastBlockLink';
 
 ## What to consider when choosing a node
@@ -17,8 +16,6 @@ import { ReceivedTime, Timestamp, LastBlockHeaderLink } from '@site/static/js/La
 - ** End-points support**: Public nodes have different policies on the end-points that they expose. Your use case may require specific end-points to be available to your app. We have made a suite of [integration tests](rpc_nodes_integration_test.md) for the Taquito RPC package. These tests show what RPC end-points are available on a given node. These tests are available here: [integration-tests/rpc-nodes.spec.ts](https://github.com/ecadlabs/taquito/blob/master/integration-tests/rpc-nodes.spec.ts).
 
 ### Community Nodes
-
-<BrowserOnly>
 
 <Tabs defaultValue="mainnet" values={[{"label": "Mainnet", "value": "mainnet"},{"label": "Ghostnet", "value": "ghostnet"},{"label": "Shadownet", "value": "shadownet"},{"label": "Seoulnet", "value": "seoulnet"}]}>
 
@@ -97,8 +94,6 @@ import { ReceivedTime, Timestamp, LastBlockHeaderLink } from '@site/static/js/La
 </TabItem>
 
 </Tabs>
-
-</BrowserOnly>
 
 <!-- To easily update this table, update website/static/docs/rpc_nodes.json first and then run `node example/convert-rpc-json-to-md.ts`. This will log a table you can copy and paste to replace above. -->
 
