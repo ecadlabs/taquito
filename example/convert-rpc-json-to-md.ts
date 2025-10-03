@@ -28,31 +28,52 @@ rpcData.rpc_endpoints.forEach((endpoint: RpcEndpoint) => {
   endpointsByNetwork[endpoint.net].push(endpoint);
 });
 
-// Sort networks alphabetically
-const sortedNetworks = Object.keys(endpointsByNetwork).sort();
-
-let markdownTable = "";
-
-// Generate a separate table for each network
-sortedNetworks.forEach(network => {
-  const endpoints = endpointsByNetwork[network];
-  
-  // Add table header for each network
-  markdownTable += "| Network       | Provider         | URL                                   | Header                                                                        | Last Block                                                                           | Timestamp                                                                           | Block Received                                                                      |\n";
-  markdownTable += "| ------------- | ---------------- | ------------------------------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |\n";
-  
-  // Add rows for this network
-  endpoints.forEach((endpoint: RpcEndpoint) => {
-    const providerName = providers[endpoint.provider] || "Unknown Provider";
-    const url = endpoint.url;
-    const headerUrl = `${url}/chains/main/blocks/head/header`;
-    const row = `| ${network.padEnd(12)} | ${providerName.padEnd(16)} | ${url.padEnd(40)} | [Check](${headerUrl}) | <LastBlockLink network="${network}" rpcUrl="${url}" /> | <Timestamp network="${network}" rpcUrl="${url}" /> | <ReceivedTime network="${network}" rpcUrl="${url}" /> |\n`;
-    markdownTable += row;
-  });
-  
-  // Add spacing between networks
-  markdownTable += "\n";
+// Determine network ordering (prefer mainnet, ghostnet, shadownet, seoulnet)
+const preferredOrder = ['mainnet', 'ghostnet', 'shadownet', 'seoulnet'];
+const networks = Object.keys(endpointsByNetwork).sort((a, b) => {
+  const ai = preferredOrder.indexOf(a);
+  const bi = preferredOrder.indexOf(b);
+  if (ai === -1 && bi === -1) return a.localeCompare(b);
+  if (ai === -1) return 1;
+  if (bi === -1) return -1;
+  return ai - bi;
 });
 
-// Output the generated markdown table
-console.log(markdownTable);
+const capitalize = (s: string) => (s.length ? s[0].toUpperCase() + s.slice(1) : s);
+
+// Build Tabs values prop
+const valuesArray = networks.map((net) => `{"label": "${capitalize(net)}", "value": "${net}"}`);
+const defaultValue = networks.includes('mainnet') ? 'mainnet' : (networks[0] || 'mainnet');
+
+let output = '';
+output += `<Tabs defaultValue="${defaultValue}" values={[${valuesArray.join(',')}]}>\n`;
+
+networks.forEach((network) => {
+  const endpoints = endpointsByNetwork[network];
+
+  output += `\n<TabItem value="${network}">\n\n`;
+  output += `<div style={{"overflowX":"auto","width":"100%","display":"block"}}>` + "\n\n";
+  output += `<div style={{"minWidth":"800px"}}>` + "\n\n";
+
+  // Table header (6 columns, new style)
+  output += `| Network       | Provider         | URL                                   | Last Block                                                                           | Timestamp                                                                           | Block Received                                                                      |\n`;
+  output += `| ------------- | ---------------- | ------------------------------------- | ------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |\n`;
+
+  // Table rows
+  endpoints.forEach((endpoint: RpcEndpoint) => {
+    const providerName = providers[endpoint.provider] || 'Unknown Provider';
+    const url = endpoint.url;
+    const row = `| ${network.padEnd(12)} | ${providerName.padEnd(16)} | ${url.padEnd(40)} | <LastBlockHeaderLink network="${network}" rpcUrl="${url}" /> | <Timestamp network="${network}" rpcUrl="${url}" /> | <ReceivedTime network="${network}" rpcUrl="${url}" /> |\n`;
+    output += row;
+  });
+
+  output += "\n";
+  output += `</div>\n\n`;
+  output += `</div>\n\n`;
+  output += `</TabItem>\n`;
+});
+
+output += `\n</Tabs>\n`;
+
+// Output the generated MDX snippet
+console.log(output);

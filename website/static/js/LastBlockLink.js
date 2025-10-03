@@ -1,136 +1,245 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+const controllers = new Map();
+let visibilityHandlerInitialized = false;
 
-// Custom hook to fetch block data with polling
-function useBlockData(rpcUrl) {
-  const [blockData, setBlockData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-
-  useEffect(() => {
-    let isMounted = true;
-    let intervalId = null;
-
-    async function fetchLatestBlock() {
-      try {
-        const response = await fetch(`${rpcUrl}/chains/main/blocks/head`);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        
-        if (isMounted) {
-          setBlockData(data.header);
-          setLoading(false);
-          setError(false);
-        }
-      } catch (error) {
-        console.error(`Failed to fetch block from ${rpcUrl}:`, error);
-        if (isMounted) {
-          setError(true);
-          setLoading(false);
-        }
-      }
-    }
-
-    // Polling is 10s when visible, 30s when hidden (tab not focused)
-    const startPolling = () => {
-      const interval = document.hidden ? 30000 : 10000;
-      intervalId = setInterval(fetchLatestBlock, interval);
-    };
-
-    // Fetch immediately
-    fetchLatestBlock();
-
-    // Start polling
-    startPolling();
-
-    // Adjust polling when visibility changes
-    const handleVisibilityChange = () => {
-      if (intervalId) {
-        clearInterval(intervalId);
-        startPolling();
-      }
-    };
-
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-
-    // Cleanup
-    return () => {
-      isMounted = false;
-      if (intervalId) clearInterval(intervalId);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
-  }, [rpcUrl]);
-
-  return { blockData, loading, error };
+function getPollingIntervalByNetwork(network) {
+  if (network === 'shadownet' || network === 'seoulnet') {
+    return 4000;
+  }
+  if (network === 'mainnet' || network === 'ghostnet') {
+    return 8000;
+  }
+  return 8000;
 }
 
-export default function LastBlockLink({ network, rpcUrl }) {
-  const { blockData, loading, error } = useBlockData(rpcUrl);
-
-  if (loading) {
-    return <span>Loading...</span>;
+function getController(rpcUrl, network) {
+  if (controllers.has(rpcUrl)) {
+    const existing = controllers.get(rpcUrl);
+    if (network && existing.state.network !== network) {
+      existing.state.network = network;
+      if (existing.state.intervalId !== null) {
+        existing.stop();
+        existing.start();
+      }
+    }
+    return existing;
   }
 
-  if (error) {
-    return <span style={{ color: '#999' }}>Error</span>;
-  }
+  if (!controllers.has(rpcUrl)) {
+    const state = {
+      data: null,
+      loading: true,
+      error: false,
+      subscribers: new Set(),
+      intervalId: null,
+      visibleCount: 0,
+      network
+    };
 
-  const tzktUrl = network === 'mainnet' 
-    ? `https://tzkt.io/${blockData.level}/operations`
-    : `https://${network}.tzkt.io/${blockData.level}/operations`;
+    const notify = () => {
+      state.subscribers.forEach((cb) => cb());
+    };
+
+    const fetchLatestBlock = async () => {
+      try {
+        if (state.data === null) {
+          state.loading = true;
+          state.error = false;
+          notify();
+        }
+        const response = await fetch(`${rpcUrl}/chains/main/blocks/head`);
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        const json = await response.json();
+        state.data = json.header;
+        state.loading = false;
+        state.error = false;
+        notify();
+      } catch (e) {
+        state.loading = false;
+        state.error = true;
+        notify();
+      }
+    };
+
+    const start = () => {
+      if (state.intervalId !== null) return;
+      if (document.hidden) return;
+      if (state.visibleCount <= 0) return;
+      state.intervalId = setInterval(fetchLatestBlock, getPollingIntervalByNetwork(state.network));
+      fetchLatestBlock();
+    };
+
+    const stop = () => {
+      if (state.intervalId !== null) {
+        clearInterval(state.intervalId);
+        state.intervalId = null;
+      }
+    };
+
+    const subscribe = (cb) => {
+      state.subscribers.add(cb);
+      return () => state.subscribers.delete(cb);
+    };
+
+    const incrementVisibility = () => {
+      state.visibleCount += 1;
+      start();
+    };
+
+    const decrementVisibility = () => {
+      state.visibleCount = Math.max(0, state.visibleCount - 1);
+      if (state.visibleCount === 0) {
+        stop();
+      }
+    };
+
+    controllers.set(rpcUrl, {
+      state,
+      notify,
+      fetchLatestBlock,
+      start,
+      stop,
+      subscribe,
+      incrementVisibility,
+      decrementVisibility
+    });
+  }
+  return controllers.get(rpcUrl);
+}
+
+function ensureVisibilityHandler() {
+  if (visibilityHandlerInitialized) return;
+  visibilityHandlerInitialized = true;
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      controllers.forEach((c) => c.stop());
+    } else {
+      controllers.forEach((c) => {
+        if (c.state.visibleCount > 0) c.start();
+      });
+    }
+  });
+}
+
+function useBlockData(rpcUrl, network) {
+  const controller = getController(rpcUrl, network);
+  ensureVisibilityHandler();
+
+  const [, forceUpdate] = useState({});
+  const elementRef = useRef(null);
+  const visibleRef = useRef(false);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = controller.subscribe(() => forceUpdate({}));
+    return () => {
+      unsubscribe();
+    };
+  }, [controller]);
+
+  useEffect(() => {
+    const el = elementRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          if (!visibleRef.current) {
+            visibleRef.current = true;
+            setIsVisible(true);
+            controller.incrementVisibility();
+          }
+        } else {
+          if (visibleRef.current) {
+            visibleRef.current = false;
+            setIsVisible(false);
+            controller.decrementVisibility();
+          }
+        }
+      });
+    }, { threshold: 0 });
+
+    observer.observe(el);
+    return () => {
+      if (visibleRef.current) {
+        controller.decrementVisibility();
+        visibleRef.current = false;
+        setIsVisible(false);
+      }
+      observer.disconnect();
+    };
+  }, [controller]);
+
+  return {
+    blockData: controller.state.data,
+    loading: controller.state.loading,
+    error: controller.state.error,
+    elementRef,
+    isVisible
+  };
+}
+
+export function LastBlockHeaderLink({ network, rpcUrl }) {
+  const { blockData, loading, error, elementRef } = useBlockData(rpcUrl, network);
+
+  console.log('blockData', blockData);
+
+  const href = !loading && !error && blockData?.level
+    ? `${rpcUrl}/chains/main/blocks/${blockData.level}/header`
+    : `${rpcUrl}/chains/main/blocks/head/header`;
 
   return (
-    <a href={tzktUrl} target="_blank" rel="noopener noreferrer">
-      {blockData.level}
-    </a>
+    <a ref={elementRef} href={href} target='_blank'>Check</a>
   );
 }
 
+
 export function Timestamp({ network, rpcUrl }) {
-  const { blockData, loading, error } = useBlockData(rpcUrl);
+  const { blockData, loading, error, elementRef } = useBlockData(rpcUrl, network);
 
   if (loading) {
-    return <span>Loading...</span>;
+    return <span ref={elementRef}>Loading...</span>;
   }
 
   if (error) {
-    return <span style={{ color: '#999' }}>Error</span>;
+    return <span ref={elementRef} style={{ color: '#999' }}>Error</span>;
   }
 
   if (!blockData?.timestamp) {
-    return <span>Unknown</span>;
+    return <span ref={elementRef}>Unknown</span>;
   }
 
-  return <span>{new Date(blockData.timestamp).toLocaleString()}</span>;
+  return <span ref={elementRef}>{new Date(blockData.timestamp).toLocaleString()}</span>;
 }
 
 export function ReceivedTime({ network, rpcUrl }) {
-  const { blockData, loading, error } = useBlockData(rpcUrl);
+  const { blockData, loading, error, elementRef, isVisible } = useBlockData(rpcUrl, network);
   const [secondsAgo, setSecondsAgo] = useState(null);
 
   useEffect(() => {
-    if (!blockData?.timestamp) return;
+    if (!blockData?.timestamp || !isVisible) return undefined;
 
-    function updateSecondsAgo() {
-      const now = new Date();
-      const blockTime = new Date(blockData.timestamp);
-      const diffInSeconds = Math.floor((now - blockTime) / 1000);
+    const update = () => {
+      const now = Date.now();
+      const blockTime = new Date(blockData.timestamp).getTime();
+      const diffInSeconds = Math.max(0, Math.floor((now - blockTime) / 1000));
       setSecondsAgo(diffInSeconds);
-    }
+    };
 
-    updateSecondsAgo();
-    const interval = setInterval(updateSecondsAgo, 1000);
-    return () => clearInterval(interval);
-  }, [blockData?.timestamp]);
+    update();
+    const id = setInterval(update, 1000);
+    return () => clearInterval(id);
+  }, [blockData?.timestamp, isVisible]);
 
   if (loading) {
-    return <span>Loading...</span>;
+    return <span ref={elementRef}>Loading...</span>;
   }
 
   if (error) {
-    return <span style={{ color: '#999' }}>Error</span>;
+    return <span ref={elementRef} style={{ color: '#999' }}>Error</span>;
   }
 
-  return <span>{secondsAgo !== null ? `${secondsAgo}s ago` : 'Unknown'}</span>;
+  return <span ref={elementRef}>{secondsAgo !== null ? `${secondsAgo}s ago` : 'Unknown'}</span>;
 }
