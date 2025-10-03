@@ -17,6 +17,8 @@ import { ReceivedTime, Timestamp, LastBlockHeaderLink } from '@site/static/js/La
 
 ### Community Nodes
 
+<BrowserOnly>
+
 <Tabs defaultValue="mainnet" values={[{"label": "Mainnet", "value": "mainnet"},{"label": "Ghostnet", "value": "ghostnet"},{"label": "Shadownet", "value": "shadownet"},{"label": "Seoulnet", "value": "seoulnet"}]}>
 
 <TabItem value="mainnet">
@@ -94,6 +96,8 @@ import { ReceivedTime, Timestamp, LastBlockHeaderLink } from '@site/static/js/La
 </TabItem>
 
 </Tabs>
+
+</BrowserOnly>
 
 <!-- To easily update this table, update website/static/docs/rpc_nodes.json first and then run `node example/convert-rpc-json-to-md.ts`. This will log a table you can copy and paste to replace above. -->
 
