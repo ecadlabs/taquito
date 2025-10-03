@@ -20,7 +20,7 @@ npm install @taquito/taquito
 
 ### Import `TezosToolkit` from `@taquito/taquito` and instantiate it
 
-The constructor of the `TezosToolkit` class takes an RPC URL as a parameter. It can be a string or a [RpcClient](rpc_package.md) object. A list of community-run nodes can be accessed [here](rpc_nodes.md#list-of-community-run-nodes).
+The constructor of the `TezosToolkit` class takes an RPC URL as a parameter. It can be a string or a [RpcClient](rpc_package.md) object. A list of community-run nodes can be accessed [here](rpc_nodes.mdx#list-of-community-run-nodes).
 
 ```js
 import { TezosToolkit } from '@taquito/taquito';

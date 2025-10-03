@@ -53,4 +53,4 @@ jobs:
         if: github.event_name == 'pull_request'
         with:
           header: taquito.io Preview
-          message: 'A new deploy preview for taquito.iois available on Cloudflare Pages at ${{ steps.cloudflare_publish.outputs.URL }}'
+          message: 'A new deploy preview for taquito.io is available on Cloudflare Pages at ${{ steps.cloudflare_publish.outputs.URL }}'
