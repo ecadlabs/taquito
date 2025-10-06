@@ -14,7 +14,6 @@ import styles from './styles.module.css';
 import ThemedImage from '@theme/ThemedImage';
 import IconExternalLink from '@theme/Icon/ExternalLink';
 import FooterForm from '../../components/FooterForm/FooterForm';
-import lottie from 'lottie-web';
 
 function FooterLink({ to, href, label, prependBaseUrlToHref, reactComponent, ...props }) {
   const toUrl = useBaseUrl(to);
@@ -68,25 +67,34 @@ function Footer() {
   }
 
   useEffect(() => {
-    lottie.loadAnimation({
-      container: footerContainer.current,
-      renderer: 'svg',
-      loop: false,
-      autoplay: false,
-      animationData: require('../../../static/gif/Taquito_Loop_01.json'),
-      name: 'footerLogo',
-    });
+    // SSR-safe lottie loading
+    if (typeof window !== 'undefined') {
+      import('lottie-web').then((lottie) => {
+        lottie.default.loadAnimation({
+          container: footerContainer.current,
+          renderer: 'svg',
+          loop: false,
+          autoplay: false,
+          animationData: require('../../../static/gif/Taquito_Loop_01.json'),
+          name: 'footerLogo',
+        });
+      });
 
-    return () => {
-      lottie.destroy();
-    };
+      return () => {
+        import('lottie-web').then((lottie) => {
+          lottie.default.destroy();
+        });
+      };
+    }
   }, []);
 
   useEffect(() => {
-    if (!isActive) {
+    if (!isActive && typeof window !== 'undefined') {
       setTimeout(() => {
         setIsActive(true);
-        return lottie.play('footerLogo');
+        import('lottie-web').then((lottie) => {
+          lottie.default.play('footerLogo');
+        });
       }, 2000);
     }
   }, [isActive]);
@@ -119,10 +127,18 @@ function Footer() {
                           <a key={key} href="/" rel="noreferrer noopener" aria-label="">
                             <div
                               ref={footerContainer}
-                              onMouseEnter={() => lottie.play('footerLogo')}
+                              onMouseEnter={() => {
+                                if (typeof window !== 'undefined') {
+                                  import('lottie-web').then((lottie) => {
+                                    lottie.default.play('footerLogo');
+                                  });
+                                }
+                              }}
                               onMouseLeave={() => setInterval(() => {
-                                if (isActive) {
-                                  return lottie.stop('footerLogo');
+                                if (isActive && typeof window !== 'undefined') {
+                                  import('lottie-web').then((lottie) => {
+                                    lottie.default.stop('footerLogo');
+                                  });
                                 }
                               }, 5000)}
                               className="footerLogo"
