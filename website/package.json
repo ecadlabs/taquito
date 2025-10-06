@@ -68,7 +68,7 @@
     "react-slick": "^0.30.3",
     "react-use-mailchimp-signup": "^2.0.2",
     "sass": "^1.81.0",
-    "sass-loader": "^13.3.2",
+    "sass-loader": "^16.0.5",
     "stream-browserify": "^3.0.0",
     "url-loader": "^4.1.1",
     "utf-8-validate": "^5.0.10",
