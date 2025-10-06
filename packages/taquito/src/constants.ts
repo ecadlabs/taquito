@@ -101,6 +101,8 @@ export const protocols = {
 
 export enum ChainIds {
   MAINNET = 'NetXdQprcVkpaWU',
+  GHOSTNET = 'NetXnHfVqm9iesp',
+  SHADOWNET = 'NetXsqzbfFenSTS',
   CARTHAGENET = 'NetXjD3HPJJjmcd',
   DELPHINET = 'NetXm8tYqnMWky1',
   EDONET = 'NetXSgo1ZT2DRUG',
@@ -108,7 +110,6 @@ export enum ChainIds {
   GRANADANET = 'NetXz969SFaFn8k',
   HANGZHOUNET = 'NetXZSsxBpMQeAT',
   ITHACANET = 'NetXbhmtAbMukLc',
-  ITHACANET2 = 'NetXnHfVqm9iesp',
   JAKARTANET2 = 'NetXLH1uAxK7CCh',
   KATHMANDUNET = 'NetXazhm4yetmff',
   LIMANET = 'NetXizpkH94bocH',
