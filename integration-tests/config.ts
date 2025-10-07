@@ -179,6 +179,20 @@ const weeklynetEphemeral: Config =
 const weeklynetSecretKey: Config =
   { ...weeklynetEphemeral, ...{ signerConfig: defaultSecretKey } };
 
+const tezlinknetSecretKey: Config =
+  defaultConfig({
+    networkName: 'TEZLINKNET',
+    protocol: Protocols.ProtoALpha,
+    defaultRpc: 'http://node.tezlink.nomadic-labs.com:30009/tezlink',
+    knownContracts: knownContractsProtoALph,
+    signerConfig: {
+      // pkh is tz1ddb9NMYHZi5UzPdzTZMYQQZoMub195zgv (default Octez bootstrap accounts)
+      type: SignerType.SECRET_KEY,
+      secret_key: process.env['SECRET_KEY'] || 'edsk4QLrcijEffxV31gGdN2HU7UpyJjA8drFoNcmnB28n89YjPNRFm',
+      password: process.env['PASSWORD_SECRET_KEY'] || undefined,
+    },
+  });
+
 const providers: Config[] = [];
 
 if (process.env['RUN_WITH_SECRET_KEY']) {
@@ -191,6 +205,8 @@ if (process.env['RUN_WITH_SECRET_KEY']) {
   providers.push(seoulnetSecretKey);
 } else if (process.env['RUN_WEEKLYNET_WITH_SECRET_KEY']) {
   providers.push(weeklynetSecretKey);
+} else if (process.env['RUN_TEZLINKNET_WITH_SECRET_KEY']) {
+  providers.push(tezlinknetSecretKey);
 } else if (process.env['GHOSTNET']) {
   providers.push(ghostnetEphemeral);
 } else if (process.env['SHADOWNET']) {
