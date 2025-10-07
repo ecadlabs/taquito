@@ -83,6 +83,7 @@
     "@taquito/michel-codec": "^23.0.2",
     "@taquito/michelson-encoder": "^23.0.2",
     "@taquito/rpc": "^23.0.2",
+    "@taquito/signer": "^23.0.2",
     "@taquito/utils": "^23.0.2",
     "bignumber.js": "^9.1.2",
     "rxjs": "^7.8.2"
