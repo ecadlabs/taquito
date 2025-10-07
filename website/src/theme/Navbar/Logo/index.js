@@ -6,38 +6,49 @@
  */
 import React, { useEffect, useRef, useState } from 'react';
 import Logo from '@theme/Logo';
-import lottie from 'lottie-web';
 
 export default function NavbarLogo() {
   const container = useRef(null);
   const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {
-    lottie.loadAnimation({
-      container: container.current,
-      renderer: 'svg',
-      loop: false,
-      autoplay: false,
-      animationData: require('../../../../static/gif/Taquito_Loop_01.json'),
-      name: 'navbarLogo',
-    });
+    // SSR-safe lottie loading
+    if (typeof window !== 'undefined') {
+      import('lottie-web').then((lottie) => {
+        lottie.default.loadAnimation({
+          container: container.current,
+          renderer: 'svg',
+          loop: false,
+          autoplay: false,
+          animationData: require('../../../../static/gif/Taquito_Loop_01.json'),
+          name: 'navbarLogo',
+        });
+      });
 
-    return () => {
-      lottie.destroy();
-    };
+      return () => {
+        import('lottie-web').then((lottie) => {
+          lottie.default.destroy();
+        });
+      };
+    }
   }, []);
 
   useEffect(() => {
-    if (!isActive) {
+    if (!isActive && typeof window !== 'undefined') {
       setTimeout(() => {
         setIsActive(true);
-        return lottie.play('navbarLogo');
+        import('lottie-web').then((lottie) => {
+          lottie.default.play('navbarLogo');
+        });
       }, 2000);
     }
   }, [isActive]);
 
 
   useEffect(() => {
+    // SSR-safe script injection
+    if (typeof document === 'undefined') return;
+
     const scriptId = 'chatBaseExternalScript';
     const existingScript = document.getElementById(scriptId);
     if (existingScript) {
@@ -45,7 +56,7 @@ export default function NavbarLogo() {
     }
 
     const script = document.createElement('script');
-  
+
     script.src = "https://www.chatbase.co/embed.min.js";
     script.defer = true;
     script.chatbotId="Cn650xmUdORPNUE8fcKlg";
@@ -55,13 +66,16 @@ export default function NavbarLogo() {
   }, []);
   
   useEffect(() => {
+    // SSR-safe script injection
+    if (typeof document === 'undefined') return;
+
     const scriptId = 'chatBaseInlineScript';
     const existingScript = document.getElementById(scriptId);
     if (existingScript) {
       return;
     }
     const script = document.createElement('script');
-  
+
     script.text = `window.embeddedChatbotConfig = {
       chatbotId: "Cn650xmUdORPNUE8fcKlg",
       domain: "www.chatbase.co"
@@ -75,11 +89,17 @@ export default function NavbarLogo() {
       <div
         ref={container}
         onMouseEnter={() => {
-          return lottie.play('navbarLogo');
+          if (typeof window !== 'undefined') {
+            import('lottie-web').then((lottie) => {
+              lottie.default.play('navbarLogo');
+            });
+          }
         }}
         onMouseLeave={() => setInterval(() => {
-          if (isActive) {
-            return lottie.stop('navbarLogo');
+          if (isActive && typeof window !== 'undefined') {
+            import('lottie-web').then((lottie) => {
+              lottie.default.stop('navbarLogo');
+            });
           }
         }, 5000)}
         className="navbar__brand"

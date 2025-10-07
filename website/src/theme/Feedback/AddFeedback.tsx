@@ -1,6 +1,6 @@
 import { db } from "../firebase";
 import { collection, addDoc, Timestamp } from "@firebase/firestore";
-import React from "react";
+import React, { useEffect } from "react";
 import { BiHappyBeaming, BiMeh, BiSad } from "react-icons/bi";
 import ReactGA from "react-ga";
 import "@site/src/theme/feedback.css";
@@ -21,7 +21,10 @@ interface IState {
 //--- Change this if you want a different tracking account ---//
 //------------------------------------------------------------//
 const trackingId = "UA-148358030-1";
-ReactGA.initialize(trackingId);
+// SSR-safe ReactGA initialization
+if (typeof window !== 'undefined') {
+  ReactGA.initialize(trackingId);
+}
 //------------------------------------------------------------//
 //------------------------------------------------------------//
 
@@ -47,8 +50,9 @@ class AddFeedback extends React.Component<IProps, IState> {
       return;
     }
 
-    const title = document.title.replace(/\s*\|\s*Taquito\s*$/, '');
-    const currentUrl = window.location.href;
+    // SSR-safe access to document and window
+    const title = typeof document !== 'undefined' ? document.title.replace(/\s*\|\s*Taquito\s*$/, '') : '';
+    const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
 
     const csrfResponse = await fetch(`${url}/api/vote/csrf`, {
       credentials: 'include',
@@ -83,19 +87,22 @@ class AddFeedback extends React.Component<IProps, IState> {
         setTimeout(() => reject(new Error("Firebase operation timed out")), 5000)
       );
 
-      const firestorePromise = addDoc(collection(db, "ratings"), {
+      const firestorePromise = db ? addDoc(collection(db, "ratings"), {
         rating: rating,
-        request: window.location.href,
+        request: typeof window !== 'undefined' ? window.location.href : '',
         timestamp: Timestamp.now(),
-      });
+      }) : Promise.resolve();
 
       await Promise.race([firestorePromise, timeoutPromise]);
 
-      ReactGA.event({
-        category: "RATINGS",
-        action: rating,
-        label: rating,
-      });
+      // SSR-safe ReactGA event tracking
+      if (typeof window !== 'undefined') {
+        ReactGA.event({
+          category: "RATINGS",
+          action: rating,
+          label: rating,
+        });
+      }
     } catch (err) {
       console.error("Error submitting rating:", err);
       alert("Failed to submit rating: " + (err.message || err));
@@ -112,22 +119,28 @@ class AddFeedback extends React.Component<IProps, IState> {
         setTimeout(() => reject(new Error("Firebase operation timed out")), 5000)
       );
 
-      const firestorePromise = addDoc(collection(db, "feedback"), {
+      const firestorePromise = db ? addDoc(collection(db, "feedback"), {
         section: this.state.section,
         feedback: this.state.feedback,
-        request: window.location.href,
+        request: typeof window !== 'undefined' ? window.location.href : '',
         timestamp: Timestamp.now(),
-      });
+      }) : Promise.resolve();
 
       await Promise.race([firestorePromise, timeoutPromise]);
 
-      ReactGA.event({
-        category: "FEEDBACK",
-        action: this.state.section + ":" + this.state.feedback,
-        label: this.state.feedback,
-      });
+      // SSR-safe ReactGA event tracking
+      if (typeof window !== 'undefined') {
+        ReactGA.event({
+          category: "FEEDBACK",
+          action: this.state.section + ":" + this.state.feedback,
+          label: this.state.feedback,
+        });
+      }
 
-      window.scrollTo(0, document.body.scrollHeight);
+      // SSR-safe scroll operation
+      if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+        window.scrollTo(0, document.body.scrollHeight);
+      }
     } catch (err) {
       console.error("Error submitting detailed feedback:", err);
       alert("Failed to submit feedback: " + (err.message || err));
