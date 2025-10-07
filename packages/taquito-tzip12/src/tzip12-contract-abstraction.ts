@@ -25,7 +25,7 @@ const tokenMetadataBigMapType = {
 };
 
 export interface TokenMetadata {
-  token_id: number;
+  token_id: BigInt;
   decimals: number;
   name?: string;
   symbol?: string;
@@ -82,12 +82,12 @@ export class Tzip12ContractAbstraction {
    * @returns An object of type `TokenMetadata`
    * @throws {@link TokenIdNotFound, TokenMetadataNotFound, InvalidTokenMetadata}
    */
-  async getTokenMetadata(tokenId: number) {
+  async getTokenMetadata(tokenId: BigInt) {
     const tokenMetadata = await this.retrieveTokenMetadataFromView(tokenId);
     return !tokenMetadata ? this.retrieveTokenMetadataFromBigMap(tokenId) : tokenMetadata;
   }
 
-  private async retrieveTokenMetadataFromView(tokenId: number) {
+  private async retrieveTokenMetadataFromView(tokenId: BigInt) {
     if (await this.getContractMetadata()) {
       const views = await this._tzip16ContractAbstraction.metadataViews();
       if (views && this.hasTokenMetadataView(views)) {
@@ -107,7 +107,7 @@ export class Tzip12ContractAbstraction {
 
   private async executeTokenMetadataView(
     tokenMetadataView: View,
-    tokenId: number
+    tokenId: BigInt
   ): Promise<TokenMetadata> {
     const tokenMetadata = await tokenMetadataView.executeView(tokenId);
     const tokenMap = Object.values(tokenMetadata)[1];
@@ -147,7 +147,7 @@ export class Tzip12ContractAbstraction {
   }
 
   private formatMetadataToken(
-    tokenId: number,
+    tokenId: BigInt,
     metadataTokenMap: MichelsonMap<string, string>,
     metadataFromUri?: any
   ): TokenMetadata {
@@ -180,7 +180,7 @@ export class Tzip12ContractAbstraction {
     return tokenMetadataDecoded as TokenMetadata;
   }
 
-  private async retrieveTokenMetadataFromBigMap(tokenId: number) {
+  private async retrieveTokenMetadataFromBigMap(tokenId: BigInt) {
     const bigmapTokenMetadataId = await this.findTokenMetadataBigMap();
     let pairNatMap;
     try {

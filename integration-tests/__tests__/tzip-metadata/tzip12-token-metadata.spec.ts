@@ -131,7 +131,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 			expect(isTzip12Contract).toEqual(true);
 
 			// Fetch token metadata
-			const tokenMetadata1 = await contract.tzip12().getTokenMetadata(1);
+			const tokenMetadata1 = await contract.tzip12().getTokenMetadata(BigInt(1));
 			expect(tokenMetadata1).toEqual({
 				token_id: 1,
 				decimals: 6,
@@ -139,7 +139,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 				symbol: 'wTK'
 			});
 
-			const tokenMetadata2 = await contract.tzip12().getTokenMetadata(2);
+			const tokenMetadata2 = await contract.tzip12().getTokenMetadata(BigInt(2));
 			expect(tokenMetadata2).toEqual({
 				token_id: 2,
 				name: 'AliceToken',
@@ -148,7 +148,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 			});
 
 			try {
-				await contract.tzip12().getTokenMetadata(3);
+				await contract.tzip12().getTokenMetadata(BigInt(3));
 			} catch (err) {
 				expect(err).toBeInstanceOf(TokenIdNotFound);
 			}
@@ -253,7 +253,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 			expect(isTzip12Contract).toEqual(true);
 
 			// Fetch token metadata (view result contains a URI for this token)
-			const tokenMetadata0 = await contract.tzip12().getTokenMetadata(0);
+			const tokenMetadata0 = await contract.tzip12().getTokenMetadata(BigInt(0));
 			expect(tokenMetadata0).toEqual({
 				token_id: 0,
 				decimals: 3,
@@ -261,7 +261,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 				symbol: 'XTZ2'
 			});
 
-			const tokenMetadata1 = await contract.tzip12().getTokenMetadata(1);
+			const tokenMetadata1 = await contract.tzip12().getTokenMetadata(BigInt(1));
 			expect(tokenMetadata1).toEqual({
 				token_id: 1,
 				name: 'AliceToken',
@@ -271,13 +271,13 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 			});
 
 			try {
-				await contract.tzip12().getTokenMetadata(2);
+				await contract.tzip12().getTokenMetadata(BigInt(2));
 			} catch (err) {
 				expect(err).toBeInstanceOf(InvalidTokenMetadata);
 			}
 
 			try {
-				await contract.tzip12().getTokenMetadata(3);
+				await contract.tzip12().getTokenMetadata(BigInt(3));
 			} catch (err) {
 				expect(err).toBeInstanceOf(ViewSimulationError);
 			}

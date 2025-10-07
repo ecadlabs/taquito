@@ -39,13 +39,13 @@ Tezos.addExtension(new Tzip12Module());
 const contract = await Tezos.contract.at("contractAddress", tzip12)
 
 // get the token metadata
-await contract.tzip12().getTokenMetadata(1);
+await contract.tzip12().getTokenMetadata(BigInt(1));
 ```
 
-The `getTokenMetadata` method takes a number as a parameter that represents the token_id and returns an object matching this interface:
+The `getTokenMetadata` method takes a BigInt as a parameter that represents the token_id and returns an object matching this interface:
 ```
 interface TokenMetadata {
-    token_id: number,
+    token_id: BigInt,
     decimals: number
     name?: string,
     symbol?: string,
