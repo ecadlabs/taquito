@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import React, { useRef } from 'react';
+import BrowserOnly from '@docusaurus/BrowserOnly';
 import styles from './TeamsCarousel.module.scss';
-import Slider from 'react-slick';
 import '../../../static/slick/slick.css';
 import '../../../static/slick/slick-theme.css';
 import ArrowRight from '../../../static/img/carousel-arrow-right.svg';
@@ -140,24 +140,31 @@ function Feature({ images, title }) {
       <div className={styles.arrowLeftContainer}>
         <ArrowLeft onClick={prevSlide} className={styles.arrowLeft} />
       </div>
-      <Slider className={styles.slider} {...sliderSettings} ref={sliderRef}>
-        {images.map((image, idx) => (
-          <div key={idx}>
-            <a href={image.url} className={styles.imageContainer} target="_blank">
-              {typeof image.Image === 'function' ? (
-                <image.Image className={styles.image} alt={image.title} title={image.title} />
-              ) : (
-                <img
-                  src={image.Image}
-                  className={styles.image}
-                  alt={image.title}
-                  title={image.title}
-                />
-              )}
-            </a>
-          </div>
-        ))}
-      </Slider>
+      <BrowserOnly fallback={<div>Loading...</div>}>
+        {() => {
+          const Slider = require('react-slick').default;
+          return (
+            <Slider className={styles.slider} {...sliderSettings} ref={sliderRef}>
+              {images.map((image, idx) => (
+                <div key={idx}>
+                  <a href={image.url} className={styles.imageContainer} target="_blank">
+                    {typeof image.Image === 'function' ? (
+                      <image.Image className={styles.image} alt={image.title} title={image.title} />
+                    ) : (
+                      <img
+                        src={image.Image}
+                        className={styles.image}
+                        alt={image.title}
+                        title={image.title}
+                      />
+                    )}
+                  </a>
+                </div>
+              ))}
+            </Slider>
+          );
+        }}
+      </BrowserOnly>
       <div className={styles.arrowRightContainer}>
         <ArrowRight onClick={nextSlide} className={styles.arrowRight} />
       </div>
