@@ -2888,3 +2888,16 @@ export interface SmartRollupTimeoutStakers {
   alice: string;
   bob: string;
 }
+
+export interface ActiveStakingParametersResponse {
+  limit_of_staking_over_baking_millionth: number;
+	edge_of_baking_over_staking_billionth: number;
+}
+
+export interface PendingStakingParametersResponse {
+  cycle: number;
+  parameters: Array<{
+    limit_of_staking_over_baking_millionth: number;
+    edge_of_baking_over_staking_billionth: number;
+  }>;
+}

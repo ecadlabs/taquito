@@ -69,6 +69,8 @@ import {
   AILaunchCycleResponse,
   AllDelegatesQueryArguments,
   ProtocolActivationsResponse,
+  ActiveStakingParametersResponse,
+  PendingStakingParametersResponse,
 } from './types';
 import { castToBigNumber } from './utils/utils';
 import {
@@ -1312,5 +1314,40 @@ export class RpcClient implements RpcClientInterface {
       method: 'GET',
       query: args,
     });
+  }
+
+  /**
+   * @param delegate delegate address which we want to retrieve active staking parameters
+   * @param options contains generic configuration for rpc calls to specified block (default to head)
+   * @description Returns the currently active staking parameters for the given delegate
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-delegates-pkh-active-staking-parameters
+   */
+  async getActiveStakingParameters(delegate: string, { block }: RPCOptions = defaultRPCOptions) {
+    const response = await this.httpBackend.createRequest<ActiveStakingParametersResponse>({
+      url: this.createURL(`/chains/${this.chain}/blocks/${block}/context/delegates/${delegate}/active_staking_parameters`),
+      method: 'GET',
+    });
+
+    console.log('response', response);
+
+
+    return response;
+  }
+
+  /**
+   * @param delegate delegate address which we want to retrieve pending staking parameters
+   * @param options contains generic configuration for rpc calls to specified block (default to head)
+   * @description Returns the pending values for the given delegate's staking parameters
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-delegates-pkh-pending-staking-parameters
+   */
+  async getPendingStakingParameters(delegate: string, { block }: RPCOptions = defaultRPCOptions) {
+    const response = await this.httpBackend.createRequest<PendingStakingParametersResponse>({
+      url: this.createURL(`/chains/${this.chain}/blocks/${block}/context/delegates/${delegate}/pending_staking_parameters`),
+      method: 'GET',
+    });
+
+    console.log('response', response);
+
+    return response;
   }
 }
