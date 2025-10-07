@@ -1328,9 +1328,6 @@ export class RpcClient implements RpcClientInterface {
       method: 'GET',
     });
 
-    console.log('response', response);
-
-
     return response;
   }
 
@@ -1345,8 +1342,6 @@ export class RpcClient implements RpcClientInterface {
       url: this.createURL(`/chains/${this.chain}/blocks/${block}/context/delegates/${delegate}/pending_staking_parameters`),
       method: 'GET',
     });
-
-    console.log('response', response);
 
     return response;
   }
