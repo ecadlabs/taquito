@@ -159,25 +159,3 @@ jobs:
         run: npm -w integration-tests run test:${{ matrix.testnet }} -- --maxWorkers=4
         env:
           TEZOS_RPC_${{ matrix.testnet_uppercase }}: ${{ github.event.pull_request.head.repo.fork && matrix.rpc_url || null }}
-
-  # NEW: SLSA level check (informational)
-  slsa-check:
-    name: Check SLSA Level
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
-    
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Check current SLSA compliance
-        run: |
-          echo "📊 Current SLSA Status:"
-          echo "- Build Level: Will be 3 once release workflow is merged"
-          echo "- Source Level: 1 (Version controlled)"
-          echo "- Dependencies: ✓ Pinned with package-lock.json"
-          echo ""
-          echo "🎯 After release workflow merge:"
-          echo "- npm provenance enabled"
-          echo "- SBOM generation enabled"
-          echo "- Vulnerability scanning enabled"
-          echo "- Artifact verification enabled"
