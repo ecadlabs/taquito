@@ -327,6 +327,7 @@ jobs:
             taquito-${{ needs.build.outputs.version }}.intoto.jsonl
             sboms/*
           body_path: release-notes.md
+          generate_release_notes: true  # Appends GitHub's auto-generated changelog
           draft: false
           prerelease: false
         env:
