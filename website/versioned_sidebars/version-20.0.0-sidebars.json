@@ -128,18 +128,18 @@
         "michelson_encoder",
         "contracts-library",
         "timelock",
-        "taquito_utils",
-        {
-          "type": "category",
-          "label": "Sapling",
-          "collapsed": false,
-          "collapsible": false,
-          "items": [
-            "sapling",
-            "sapling_in_memory_spending_key",
-            "sapling_in_memory_viewing_key"
-          ]
-        }
+        "taquito_utils"
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Sapling",
+      "collapsed": false,
+      "collapsible": false,
+      "items": [
+        "sapling",
+        "sapling_in_memory_spending_key",
+        "sapling_in_memory_viewing_key"
       ]
     },
     {
