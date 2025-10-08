@@ -1,6 +1,3 @@
-# SLSA Level 3 Release Workflow for Taquito
-# Place this at: .github/workflows/release.yml
-
 name: Release with SLSA Provenance
 
 on:
