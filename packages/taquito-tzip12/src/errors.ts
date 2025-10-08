@@ -17,7 +17,7 @@ export class TokenMetadataNotFound extends TaquitoError {
  *  @description Error that indicates the token ID not being found
  */
 export class TokenIdNotFound extends TaquitoError {
-  constructor(public readonly tokenId: BigInt) {
+  constructor(public readonly tokenId: bigint) {
     super(`Could not find token metadata for the token ID: ${tokenId}`);
     this.name = 'TokenIdNotFound';
   }
