@@ -269,16 +269,15 @@ const storageType = {
     ]
 };
 const storageSchema = new Schema(storageType);
-const typecheckResult = storageSchema.Typecheck({
+try {
+	storageSchema.Typecheck({
 		stored_counter: 10,
 		threshold: 5,
 		keys: ['edpkuLxx9PQD8fZ45eUzrK3yhfDZJHhBuK4Zi49DcEGANwd2rpX82t']
 	})
-
-if(typecheckResult) {
 	console.log('Storage object is valid');
-} else {
-	console.log(`Storage is not valid`);
+} catch (e) {
+	console.log(`Storage is not valid: ${e}`);
 }
 ```
 
