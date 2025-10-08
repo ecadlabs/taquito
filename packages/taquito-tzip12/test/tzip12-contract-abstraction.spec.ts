@@ -260,7 +260,7 @@ describe('Tzip12 contract abstraction test', () => {
       token_info: tokenMap,
     });
 
-    const tokenMetadata = await tzip12Abs['retrieveTokenMetadataFromView'](0);
+    const tokenMetadata = await tzip12Abs['retrieveTokenMetadataFromView'](BigInt(0));
     expect(tokenMetadata).toEqual({
       token_id: BigInt(0),
       name: 'Taquito',
@@ -270,7 +270,7 @@ describe('Tzip12 contract abstraction test', () => {
   });
 
   it('Test 2 for retrieveTokenMetadataFromView(): Should return undefined when there is no contract metadata', async () => {
-    const tokenMetadata = await tzip12Abs['retrieveTokenMetadataFromView'](0);
+    const tokenMetadata = await tzip12Abs['retrieveTokenMetadataFromView'](BigInt(0));
     expect(tokenMetadata).toBeUndefined();
   });
 
@@ -282,7 +282,7 @@ describe('Tzip12 contract abstraction test', () => {
 
     mockTzip16ContractAbstraction.metadataViews.mockResolvedValue({});
 
-    const tokenMetadata = await tzip12Abs['retrieveTokenMetadataFromView'](0);
+    const tokenMetadata = await tzip12Abs['retrieveTokenMetadataFromView'](BigInt(0));
     expect(tokenMetadata).toBeUndefined();
   });
 
@@ -300,7 +300,7 @@ describe('Tzip12 contract abstraction test', () => {
       token_info: tokenMap,
     });
 
-    const tokenMetadata = await tzip12Abs['retrieveTokenMetadataFromBigMap'](0);
+    const tokenMetadata = await tzip12Abs['retrieveTokenMetadataFromBigMap'](BigInt(0));
     expect(tokenMetadata).toEqual({
       token_id: BigInt(0),
       name: 'Taquito',
@@ -312,7 +312,7 @@ describe('Tzip12 contract abstraction test', () => {
   it('Test 2 for retrieveTokenMetadataFromBigMap(): Should throw TokenMetadataNotFound', async () => {
     mockSchema.FindFirstInTopLevelPair.mockReturnValue(undefined);
     try {
-      await tzip12Abs['retrieveTokenMetadataFromBigMap'](0);
+      await tzip12Abs['retrieveTokenMetadataFromBigMap'](BigInt(0));
     } catch (err) {
       expect(err).toBeInstanceOf(TokenMetadataNotFound);
     }
@@ -351,7 +351,7 @@ describe('Tzip12 contract abstraction test', () => {
       token_info: tokenMap,
     });
 
-    const tokenMetadata = await tzip12Abs.getTokenMetadata(0);
+    const tokenMetadata = await tzip12Abs.getTokenMetadata(BigInt(0));
     expect(tokenMetadata).toEqual({
       token_id: BigInt(0),
       name: 'Taquito',
@@ -380,7 +380,7 @@ describe('Tzip12 contract abstraction test', () => {
       token_info: tokenMap,
     });
 
-    const tokenMetadata = await tzip12Abs.getTokenMetadata(0);
+    const tokenMetadata = await tzip12Abs.getTokenMetadata(BigInt(0));
     expect(tokenMetadata).toEqual({
       token_id: BigInt(0),
       name: 'Taquito test',
@@ -420,7 +420,7 @@ describe('Tzip12 contract abstraction test', () => {
       token_info: tokenMap,
     });
 
-    const tokenMetadata = await tzip12Abs.getTokenMetadata(0);
+    const tokenMetadata = await tzip12Abs.getTokenMetadata(BigInt(0));
     expect(tokenMetadata).toEqual({
       token_id: BigInt(0),
       name: 'Taquito test',

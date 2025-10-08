@@ -133,7 +133,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 			// Fetch token metadata
 			const tokenMetadata1 = await contract.tzip12().getTokenMetadata(BigInt(1));
 			expect(tokenMetadata1).toEqual({
-				token_id: 1,
+				token_id: BigInt(1),
 				decimals: 6,
 				name: 'wToken',
 				symbol: 'wTK'
@@ -141,7 +141,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
 			const tokenMetadata2 = await contract.tzip12().getTokenMetadata(BigInt(2));
 			expect(tokenMetadata2).toEqual({
-				token_id: 2,
+				token_id: BigInt(2),
 				name: 'AliceToken',
 				decimals: 0,
 				symbol: 'ALC'
@@ -255,7 +255,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 			// Fetch token metadata (view result contains a URI for this token)
 			const tokenMetadata0 = await contract.tzip12().getTokenMetadata(BigInt(0));
 			expect(tokenMetadata0).toEqual({
-				token_id: 0,
+				token_id: BigInt(0),
 				decimals: 3,
 				name: 'Taquito test URI',
 				symbol: 'XTZ2'
@@ -263,7 +263,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
 			const tokenMetadata1 = await contract.tzip12().getTokenMetadata(BigInt(1));
 			expect(tokenMetadata1).toEqual({
-				token_id: 1,
+				token_id: BigInt(1),
 				name: 'AliceToken',
 				decimals: 0,
 				symbol: 'ALC',
