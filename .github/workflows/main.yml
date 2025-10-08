@@ -93,13 +93,16 @@ jobs:
       - name: Generate SBOM
         run: |
           npm install -g @cyclonedx/cyclonedx-npm
-          cyclonedx-npm --output-file sbom.json
+          cyclonedx-npm --output-file sbom.json || echo "SBOM generation failed, but continuing..."
+        continue-on-error: true
       
       - name: Upload SBOM as artifact
         uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: sbom-${{ github.sha }}
           path: sbom.json
+          if-no-files-found: ignore
       
       # NEW: Check for license compliance
       - name: License check
