@@ -1322,7 +1322,7 @@ export class RpcClient implements RpcClientInterface {
    * @description Returns the currently active staking parameters for the given delegate
    * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-delegates-pkh-active-staking-parameters
    */
-  async getActiveStakingParameters(delegate: string, { block }: RPCOptions = defaultRPCOptions) {
+  async getActiveStakingParameters(delegate: string, { block }: RPCOptions = defaultRPCOptions): Promise<ActiveStakingParametersResponse> {
     const response = await this.httpBackend.createRequest<ActiveStakingParametersResponse>({
       url: this.createURL(`/chains/${this.chain}/blocks/${block}/context/delegates/${delegate}/active_staking_parameters`),
       method: 'GET',
@@ -1337,7 +1337,7 @@ export class RpcClient implements RpcClientInterface {
    * @description Returns the pending values for the given delegate's staking parameters
    * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-delegates-pkh-pending-staking-parameters
    */
-  async getPendingStakingParameters(delegate: string, { block }: RPCOptions = defaultRPCOptions) {
+  async getPendingStakingParameters(delegate: string, { block }: RPCOptions = defaultRPCOptions): Promise<PendingStakingParametersResponse> {
     const response = await this.httpBackend.createRequest<PendingStakingParametersResponse>({
       url: this.createURL(`/chains/${this.chain}/blocks/${block}/context/delegates/${delegate}/pending_staking_parameters`),
       method: 'GET',
