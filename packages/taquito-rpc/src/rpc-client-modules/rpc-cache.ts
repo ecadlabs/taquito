@@ -1401,7 +1401,7 @@ export class RpcClientCache implements RpcClientInterface {
       const key = this.formatCacheKey(
         this.rpcClient.getRpcUrl(),
         RPCMethodName.GET_ACTIVE_STAKING_PARAMETERS,
-        [delegate, block]
+        [block, delegate]
       );
   
       if (this.has(key)) {
@@ -1424,7 +1424,7 @@ export class RpcClientCache implements RpcClientInterface {
       const key = this.formatCacheKey(
         this.rpcClient.getRpcUrl(),
         RPCMethodName.GET_PENDING_STAKING_PARAMETERS,
-        [delegate, block]
+        [block, delegate]
       );
   
       if (this.has(key)) {
