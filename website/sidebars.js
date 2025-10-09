@@ -147,15 +147,15 @@ const sidebars = {
         'contracts-library',
         'timelock',
         'taquito_utils',
+        {
+          type: 'category',
+          label: 'Sapling',
+          collapsed: false,
+          collapsible: false,
+          className: 'sidebarSubcategory',
+          items: ['sapling', 'sapling_in_memory_spending_key', 'sapling_in_memory_viewing_key'],
+        },
       ],
-    },
-    {
-      type: 'category',
-      label: 'Sapling',
-      collapsed: false,
-      collapsible: false,
-      className: 'sidebarHeader',
-      items: ['sapling', 'sapling_in_memory_spending_key', 'sapling_in_memory_viewing_key'],
     },
     {
       type: 'category',
