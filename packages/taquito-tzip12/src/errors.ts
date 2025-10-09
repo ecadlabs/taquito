@@ -1,4 +1,5 @@
 import { TaquitoError } from '@taquito/core';
+import BigNumber from 'bignumber.js';
 
 /**
  *  @category Error
@@ -17,7 +18,7 @@ export class TokenMetadataNotFound extends TaquitoError {
  *  @description Error that indicates the token ID not being found
  */
 export class TokenIdNotFound extends TaquitoError {
-  constructor(public readonly tokenId: bigint) {
+  constructor(public readonly tokenId: BigNumber) {
     super(`Could not find token metadata for the token ID: ${tokenId}`);
     this.name = 'TokenIdNotFound';
   }

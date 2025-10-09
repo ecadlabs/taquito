@@ -2,6 +2,7 @@ import { CONFIGS } from '../../config';
 import { compose, MichelsonMap, ViewSimulationError } from '@taquito/taquito';
 import { tzip16, Tzip16Module, stringToBytes } from '@taquito/tzip16';
 import { tzip12, Tzip12Module, TokenIdNotFound, InvalidTokenMetadata } from '@taquito/tzip12';
+import BigNumber from 'bignumber.js';
 import { fa2TokenFactory } from '../../data/fa2-token-factory';
 import { fa2ForTokenMetadataView } from '../../data/fa2-for-token-metadata-view';
 
@@ -131,24 +132,24 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 			expect(isTzip12Contract).toEqual(true);
 
 			// Fetch token metadata
-			const tokenMetadata1 = await contract.tzip12().getTokenMetadata(BigInt(1));
+			const tokenMetadata1 = await contract.tzip12().getTokenMetadata(BigNumber(1));
 			expect(tokenMetadata1).toEqual({
-				token_id: BigInt(1),
+				token_id: BigNumber(1),
 				decimals: 6,
 				name: 'wToken',
 				symbol: 'wTK'
 			});
 
-			const tokenMetadata2 = await contract.tzip12().getTokenMetadata(BigInt(2));
+			const tokenMetadata2 = await contract.tzip12().getTokenMetadata(BigNumber(2));
 			expect(tokenMetadata2).toEqual({
-				token_id: BigInt(2),
+				token_id: BigNumber(2),
 				name: 'AliceToken',
 				decimals: 0,
 				symbol: 'ALC'
 			});
 
 			try {
-				await contract.tzip12().getTokenMetadata(BigInt(3));
+				await contract.tzip12().getTokenMetadata(BigNumber(3));
 			} catch (err) {
 				expect(err).toBeInstanceOf(TokenIdNotFound);
 			}
@@ -253,17 +254,17 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 			expect(isTzip12Contract).toEqual(true);
 
 			// Fetch token metadata (view result contains a URI for this token)
-			const tokenMetadata0 = await contract.tzip12().getTokenMetadata(BigInt(0));
+			const tokenMetadata0 = await contract.tzip12().getTokenMetadata(BigNumber(0));
 			expect(tokenMetadata0).toEqual({
-				token_id: BigInt(0),
+				token_id: BigNumber(0),
 				decimals: 3,
 				name: 'Taquito test URI',
 				symbol: 'XTZ2'
 			});
 
-			const tokenMetadata1 = await contract.tzip12().getTokenMetadata(BigInt(1));
+			const tokenMetadata1 = await contract.tzip12().getTokenMetadata(BigNumber(1));
 			expect(tokenMetadata1).toEqual({
-				token_id: BigInt(1),
+				token_id: BigNumber(1),
 				name: 'AliceToken',
 				decimals: 0,
 				symbol: 'ALC',
@@ -271,13 +272,13 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 			});
 
 			try {
-				await contract.tzip12().getTokenMetadata(BigInt(2));
+				await contract.tzip12().getTokenMetadata(BigNumber(2));
 			} catch (err) {
 				expect(err).toBeInstanceOf(InvalidTokenMetadata);
 			}
 
 			try {
-				await contract.tzip12().getTokenMetadata(BigInt(3));
+				await contract.tzip12().getTokenMetadata(BigNumber(3));
 			} catch (err) {
 				expect(err).toBeInstanceOf(ViewSimulationError);
 			}

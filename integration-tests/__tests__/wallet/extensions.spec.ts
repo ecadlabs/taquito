@@ -4,6 +4,7 @@ import { entrypoints } from '../../data/contract-entrypoints';
 import { tzip16, Tzip16Module } from '@taquito/tzip16';
 import { compose } from '@taquito/taquito';
 import { tzip12 } from '@taquito/tzip12';
+import BigNumber from 'bignumber.js';
 
 CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract, knownTzip1216Contract }) => {
     const Tezos = lib;
@@ -57,7 +58,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract, knownTzip1216Contract
             const contract = await Tezos.wallet.at(knownTzip1216Contract, compose(tzip16, tzip12));
             const metadata = await contract.tzip16().getMetadata();
             expect(metadata.metadata.name).toEqual('Test Taquito FA2 token_metadata view');
-            const tokenMetadata1 = await contract.tzip12().getTokenMetadata(BigInt(1));
+            const tokenMetadata1 = await contract.tzip12().getTokenMetadata(BigNumber(1));
             expect(tokenMetadata1.name).toEqual('AliceToken');
 
             // assert the script is loaded from the contractsLibrary instead of the RPC

@@ -32,6 +32,7 @@ The constructor of the `Tzip12Module` takes an optional `MetadataProvider` as a 
 import { TezosToolkit } from '@taquito/taquito';
 import { Tzip12Module } from '@taquito/tzip12';
 import { tzip12 } from '@taquito/tzip12';
+import BigNumber from 'bignumber.js';
 
 const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
 Tezos.addExtension(new Tzip12Module());
@@ -39,13 +40,13 @@ Tezos.addExtension(new Tzip12Module());
 const contract = await Tezos.contract.at("contractAddress", tzip12)
 
 // get the token metadata
-await contract.tzip12().getTokenMetadata(BigInt(1));
+await contract.tzip12().getTokenMetadata(BigNumber(1));
 ```
 
-The `getTokenMetadata` method takes a BigInt as a parameter that represents the token_id and returns an object matching this interface:
+The `getTokenMetadata` method takes a BigNumber as a parameter that represents the token_id and returns an object matching this interface:
 ```
 interface TokenMetadata {
-    token_id: BigInt,
+    token_id: BigNumber,
     decimals: number
     name?: string,
     symbol?: string,

@@ -7,6 +7,7 @@ import {
   bytesToString,
   BigMapId,
 } from '@taquito/tzip16';
+import BigNumber from 'bignumber.js';
 import { InvalidTokenMetadata, TokenIdNotFound, TokenMetadataNotFound } from './errors';
 
 const tokenMetadataBigMapType = {
@@ -25,7 +26,7 @@ const tokenMetadataBigMapType = {
 };
 
 export interface TokenMetadata {
-  token_id: bigint;
+  token_id: BigNumber;
   decimals: number;
   name?: string;
   symbol?: string;
@@ -82,12 +83,12 @@ export class Tzip12ContractAbstraction {
    * @returns An object of type `TokenMetadata`
    * @throws {@link TokenIdNotFound, TokenMetadataNotFound, InvalidTokenMetadata}
    */
-  async getTokenMetadata(tokenId: bigint) {
+  async getTokenMetadata(tokenId: BigNumber) {
     const tokenMetadata = await this.retrieveTokenMetadataFromView(tokenId);
     return !tokenMetadata ? this.retrieveTokenMetadataFromBigMap(tokenId) : tokenMetadata;
   }
 
-  private async retrieveTokenMetadataFromView(tokenId: bigint) {
+  private async retrieveTokenMetadataFromView(tokenId: BigNumber) {
     if (await this.getContractMetadata()) {
       const views = await this._tzip16ContractAbstraction.metadataViews();
       if (views && this.hasTokenMetadataView(views)) {
@@ -107,7 +108,7 @@ export class Tzip12ContractAbstraction {
 
   private async executeTokenMetadataView(
     tokenMetadataView: View,
-    tokenId: bigint
+    tokenId: BigNumber
   ): Promise<TokenMetadata> {
     const tokenMetadata = await tokenMetadataView.executeView(tokenId);
     const tokenMap = Object.values(tokenMetadata)[1];
@@ -147,7 +148,7 @@ export class Tzip12ContractAbstraction {
   }
 
   private formatMetadataToken(
-    tokenId: bigint,
+    tokenId: BigNumber,
     metadataTokenMap: MichelsonMap<string, string>,
     metadataFromUri?: any
   ): TokenMetadata {
@@ -180,7 +181,7 @@ export class Tzip12ContractAbstraction {
     return tokenMetadataDecoded as TokenMetadata;
   }
 
-  private async retrieveTokenMetadataFromBigMap(tokenId: bigint) {
+  private async retrieveTokenMetadataFromBigMap(tokenId: BigNumber) {
     const bigmapTokenMetadataId = await this.findTokenMetadataBigMap();
     let pairNatMap;
     try {
