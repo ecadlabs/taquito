@@ -1397,6 +1397,7 @@ export class RpcClientCache implements RpcClientInterface {
    * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-delegates-pkh-active-staking-parameters
    */
     async getActiveStakingParameters(delegate: string, { block }: RPCOptions = defaultRPCOptions) {
+      this.validateAddress(delegate);
       const key = this.formatCacheKey(
         this.rpcClient.getRpcUrl(),
         RPCMethodName.GET_ACTIVE_STAKING_PARAMETERS,
@@ -1419,6 +1420,7 @@ export class RpcClientCache implements RpcClientInterface {
      * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-delegates-pkh-pending-staking-parameters
      */
     async getPendingStakingParameters(delegate: string, { block }: RPCOptions = defaultRPCOptions) {
+      this.validateAddress(delegate);
       const key = this.formatCacheKey(
         this.rpcClient.getRpcUrl(),
         RPCMethodName.GET_PENDING_STAKING_PARAMETERS,
