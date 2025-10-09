@@ -2894,10 +2894,10 @@ export interface ActiveStakingParametersResponse {
 	edge_of_baking_over_staking_billionth: number;
 }
 
-export interface PendingStakingParametersResponse {
+export type PendingStakingParametersResponse = Array<{
   cycle: number;
-  parameters: Array<{
+  parameters: {
     limit_of_staking_over_baking_millionth: number;
     edge_of_baking_over_staking_billionth: number;
-  }>;
-}
+  };
+}>;
