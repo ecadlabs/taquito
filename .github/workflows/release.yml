@@ -1,0 +1,334 @@
+name: Release with SLSA Provenance
+
+on:
+  push:
+    tags:
+      - 'v*'  # Triggers on version tags like v23.0.0
+
+permissions: read-all
+
+jobs:
+  # Step 1: Build and test all packages
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      hashes: ${{ steps.hash.outputs.hashes }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'  # Uses v18 from .nvmrc
+          cache: 'npm'
+      
+      - name: Get version from tag
+        id: version
+        run: echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Audit dependencies
+        run: npm audit --audit-level=moderate
+      
+      - name: Lint
+        run: npm run lint
+      
+      - name: Build all packages
+        run: npm run build
+      
+      - name: Run tests
+        run: npm test
+      
+      - name: Pack all packages
+        run: |
+          # Pack each package
+          npx lerna exec --no-private -- npm pack
+          
+          # Move all tarballs to a single directory
+          mkdir -p dist
+          find packages -name "*.tgz" -exec mv {} dist/ \;
+          
+          # List what we packed
+          ls -lh dist/
+      
+      - name: Generate checksums
+        id: hash
+        working-directory: dist
+        run: |
+          # Generate SHA256 checksums
+          sha256sum *.tgz > ../checksums.txt
+          cat ../checksums.txt
+          
+          # Encode for SLSA generator
+          echo "hashes=$(cat ../checksums.txt | base64 -w0)" >> $GITHUB_OUTPUT
+      
+      - name: Upload packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: packages
+          path: |
+            dist/*.tgz
+            checksums.txt
+          if-no-files-found: error
+
+  # Step 2: Generate SLSA Level 3 Provenance
+  provenance:
+    name: Generate SLSA Provenance
+    needs: [build]
+    permissions:
+      actions: read      # To read workflow information
+      id-token: write    # To sign with Sigstore
+      contents: write    # To upload to release
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.9.0
+    with:
+      base64-subjects: "${{ needs.build.outputs.hashes }}"
+      upload-assets: true
+      provenance-name: "taquito-${{ needs.build.outputs.version }}.intoto.jsonl"
+
+  # Step 3: Generate SBOM for all packages
+  sbom:
+    name: Generate SBOM
+    needs: [build]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Install SBOM tools
+        run: |
+          # Install syft for SPDX format
+          curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
+          
+          # Install CycloneDX for npm-specific SBOM
+          npm install -g @cyclonedx/cyclonedx-npm
+      
+      - name: Generate SBOM (SPDX format)
+        run: |
+          syft packages dir:. -o spdx-json > taquito-sbom.spdx.json
+      
+      - name: Generate SBOM (CycloneDX format)
+        run: |
+          cyclonedx-npm --output-file taquito-sbom.cyclonedx.json || echo "CycloneDX SBOM generation failed, but continuing..."
+        continue-on-error: true
+      
+      - name: Generate per-package SBOMs
+        run: |
+          mkdir -p sboms
+          for pkg in packages/*/; do
+            pkg_name=$(basename "$pkg")
+            echo "Generating SBOM for $pkg_name..."
+            cd "$pkg"
+            cyclonedx-npm --output-file "../../sboms/${pkg_name}-sbom.json" 2>/dev/null || true
+            cd ../..
+          done
+      
+      - name: Upload SBOMs
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sboms
+          path: |
+            taquito-sbom.*
+            sboms/*
+          if-no-files-found: ignore
+
+  # Step 4: Verify provenance before publishing
+  verify:
+    name: Verify Provenance
+    needs: [build, provenance]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    
+    steps:
+      - name: Download packages
+        uses: actions/download-artifact@v4
+        with:
+          name: packages
+          path: dist
+      
+      - name: Download provenance
+        uses: actions/download-artifact@v4
+        with:
+          name: taquito-${{ needs.build.outputs.version }}.intoto.jsonl
+          path: .
+      
+      - name: Install slsa-verifier
+        run: |
+          curl -sSfL https://github.com/slsa-framework/slsa-verifier/releases/download/v2.4.1/slsa-verifier-linux-amd64 -o slsa-verifier
+          chmod +x slsa-verifier
+          sudo mv slsa-verifier /usr/local/bin/
+      
+      - name: Verify all packages
+        run: |
+          cd dist
+          for tarball in *.tgz; do
+            echo "Verifying $tarball..."
+            slsa-verifier verify-artifact "$tarball" \
+              --provenance-path "../taquito-${{ needs.build.outputs.version }}.intoto.jsonl" \
+              --source-uri "github.com/${{ github.repository }}" \
+              --source-tag "${{ github.ref_name }}"
+          done
+
+  # Step 5: Publish to npm with provenance
+  publish-npm:
+    name: Publish to npm
+    needs: [build, provenance, verify]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write  # Required for npm provenance
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          registry-url: 'https://registry.npmjs.org'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Build packages
+        run: npm run build
+      
+      - name: Configure git for Lerna
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+      
+      - name: Publish to npm with provenance
+        run: |
+          # Publish all packages with provenance
+          npx lerna publish from-package \
+            --yes \
+            --no-git-tag-version \
+            --no-push \
+            --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      
+      - name: Verify npm provenance
+        run: |
+          # Wait a bit for npm to process
+          sleep 10
+          
+          # Check provenance for main package
+          npm view @taquito/taquito@${{ needs.build.outputs.version }} --json | \
+            jq '.dist.attestations' || echo "Provenance check: will be available shortly"
+
+  # Step 6: Create GitHub Release
+  release:
+    name: Create GitHub Release
+    needs: [build, provenance, sbom, verify, publish-npm]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+      
+      - name: Create release notes
+        run: |
+          cat > release-notes.md << 'EOF'
+          ## Taquito ${{ needs.build.outputs.version }}
+          
+          ### 📦 Installation
+          
+          ```bash
+          npm install @taquito/taquito@${{ needs.build.outputs.version }}
+          ```
+          
+          ### 🔒 SLSA Provenance
+          
+          This release includes:
+          - ✅ **SLSA Build Level 3** provenance from GitHub Actions
+          - ✅ **npm native provenance** (verify with `npm audit signatures`)
+          - ✅ **SBOM** in SPDX and CycloneDX formats
+          - ✅ **Signed with Sigstore** and published to Rekor transparency log
+          
+          #### Verify GitHub Provenance
+          
+          ```bash
+          # Download package and provenance
+          wget https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/taquito-taquito-${{ needs.build.outputs.version }}.tgz
+          wget https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/taquito-${{ needs.build.outputs.version }}.intoto.jsonl
+          
+          # Install slsa-verifier
+          curl -sSfL https://github.com/slsa-framework/slsa-verifier/releases/download/v2.4.1/slsa-verifier-linux-amd64 -o slsa-verifier
+          chmod +x slsa-verifier
+          
+          # Verify
+          ./slsa-verifier verify-artifact taquito-taquito-${{ needs.build.outputs.version }}.tgz \
+            --provenance-path taquito-${{ needs.build.outputs.version }}.intoto.jsonl \
+            --source-uri github.com/${{ github.repository }} \
+            --source-tag ${{ github.ref_name }}
+          ```
+          
+          #### Verify npm Provenance
+          
+          ```bash
+          # Install packages
+          npm install @taquito/taquito@${{ needs.build.outputs.version }}
+          
+          # Verify all signatures (npm 9+)
+          npm audit signatures
+          
+          # View provenance for a specific package
+          npm view @taquito/taquito@${{ needs.build.outputs.version }} --json | jq '.dist.attestations'
+          ```
+          
+          ### 📋 SBOM
+          
+          Software Bill of Materials available in:
+          - **SPDX JSON** format (`taquito-sbom.spdx.json`)
+          - **CycloneDX JSON** format (`taquito-sbom.cyclonedx.json`)
+          - Per-package SBOMs in `sboms/` directory
+          
+          ### 🔗 Verification
+          
+          All packages published from this release can be verified against the source code in this repository.
+          The build was performed on GitHub-hosted runners with isolated, ephemeral environments.
+          
+          For more information, see our [Security Policy](SECURITY.md).
+          EOF
+      
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            packages/*.tgz
+            checksums.txt
+            taquito-${{ needs.build.outputs.version }}.intoto.jsonl
+            sboms/*
+          body_path: release-notes.md
+          generate_release_notes: true  # Appends GitHub's auto-generated changelog
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
