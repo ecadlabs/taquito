@@ -118,7 +118,7 @@ const defaultConfig = ({
     rpc: process.env[`TEZOS_RPC_${networkName}`] || defaultRpc,
     pollingIntervalMilliseconds: process.env[`POLLING_INTERVAL_MILLISECONDS`] || undefined,
     rpcCacheMilliseconds: process.env[`RPC_CACHE_MILLISECONDS`] || '1000',
-    knownBaker: process.env[`TEZOS_BAKER`] || (process.env[`TEZOS_RPC_${networkName}`] || defaultRpc).includes('shadow') ? 'tz1TnEtqDV9mZyts2pfMy6Jw1BTPs4LMjL8M' : 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
+    knownBaker: process.env[`TEZOS_BAKER`] || (process.env[`TEZOS_RPC_${networkName}`] || defaultRpc).includes('ghost') ? 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD' : 'tz1TnEtqDV9mZyts2pfMy6Jw1BTPs4LMjL8M', // ECAD 1 : Teztnets Baker
     knownContract: process.env[`TEZOS_${networkName}_CONTRACT_ADDRESS`] || knownContracts.contract,
     knownBigMapContract: process.env[`TEZOS_${networkName}_BIGMAPCONTRACT_ADDRESS`] || knownContracts.bigMapContract,
     knownTzip1216Contract: process.env[`TEZOS_${networkName}_TZIP1216CONTRACT_ADDRESS`] || knownContracts.tzip12BigMapOffChainContract,
@@ -171,7 +171,7 @@ const weeklynetEphemeral: Config =
   defaultConfig({
     networkName: 'WEEKLYNET',
     protocol: Protocols.ProtoALpha,
-    defaultRpc: 'https://rpc.weeklynet-2025-09-17.teztnets.com',
+    defaultRpc: 'https://rpc.weeklynet-2025-10-01.teztnets.com',
     knownContracts: knownContractsProtoALph,
     signerConfig: defaultEphemeralConfig('http://key-gen-1.i.tez.ie:3010/mondaynet')
   });
@@ -182,7 +182,7 @@ const weeklynetSecretKey: Config =
 const providers: Config[] = [];
 
 if (process.env['RUN_WITH_SECRET_KEY']) {
-  providers.push(ghostnetSecretKey, shadownetSecretKey, seoulnetSecretKey);
+  providers.push(ghostnetSecretKey, shadownetSecretKey, seoulnetSecretKey, weeklynetSecretKey);
 } else if (process.env['RUN_GHOSTNET_WITH_SECRET_KEY']) {
   providers.push(ghostnetSecretKey);
 } else if (process.env['RUN_SHADOWNET_WITH_SECRET_KEY']) {
@@ -200,7 +200,7 @@ if (process.env['RUN_WITH_SECRET_KEY']) {
 } else if (process.env['WEEKLYNET']) {
   providers.push(weeklynetEphemeral);
 } else {
-  providers.push(ghostnetSecretKey, shadownetSecretKey, seoulnetEphemeral);
+  providers.push(ghostnetEphemeral, shadownetEphemeral, seoulnetEphemeral, weeklynetEphemeral);
 }
 
 const setupForger = (Tezos: TezosToolkit, forger: ForgerType): void => {
