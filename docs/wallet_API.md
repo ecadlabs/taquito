@@ -88,7 +88,7 @@ Please check out the section [Subscribing to events](#subscribing-to-events) to 
 
 In previous versions of Beacon, you were able to set the `network` property when doing `requestPermissions()`. This behavior was removed from Beacon, and you must now set the network when instantiating the wallet.
 
-You can choose among `mainnet`, `rionet`, `ghostnet` and `custom` to set up the network. Once the permissions have been configured, you can get the user's address by calling the `getPKH` method on the wallet:
+You can choose among `mainnet`, `seoulnet`, `ghostnet` and `custom` to set up the network. Once the permissions have been configured, you can get the user's address by calling the `getPKH` method on the wallet:
 
 ```js
 const userAddress = await wallet.getPKH();
@@ -175,7 +175,7 @@ const wallet = new TempleWallet('MyAwesomeDapp');
 The class constructor takes one parameter, the name of your dapp (this will be used later in the transaction confirmation pop-up). After the instantiation, we can connect the wallet by calling the `connect` method:
 
 ```js
-await wallet.connect('mainnet' | 'rionet' | 'ghostnet' | 'mondaynet' | 'sandbox');
+await wallet.connect('mainnet' | 'seoulnet' | 'ghostnet' | 'mondaynet' | 'sandbox');
 ```
 
 (Temple used to be called Thanos and some Taquito code still uses the name Thanos.)

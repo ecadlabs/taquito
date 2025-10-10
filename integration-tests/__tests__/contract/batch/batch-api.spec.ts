@@ -11,7 +11,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
       await setup()
     })
     it('Verify simple batch transfers with origination', async () => {
-      const batch = await Tezos.batch()
+      const batch = await Tezos.contract.batch()
         .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
         .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
         .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
@@ -32,7 +32,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
        *  https://taquito.io/docs/batch_API#--the-array-of-transactions-method
        *  https://taquito.io/docs/batch_API#--the-withtransfer-method
        */
-      const op = await Tezos.batch([
+      const op = await Tezos.contract.batch([
         {
           kind: OpKind.TRANSACTION,
           to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
@@ -55,7 +55,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
     it('Verify simple batch transfer with origination fails when storage_exhausted', async () => {
       expect.assertions(1);
       try {
-        await Tezos.batch()
+        await Tezos.contract.batch()
           .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
           .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
           .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
@@ -105,7 +105,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
       const contract = await op.contract();
       expect(op.status).toEqual('applied')
 
-      const batch = Tezos.batch()
+      const batch = Tezos.contract.batch()
         .withTransfer({ to: contract.address, amount: 1 })
         .withContractCall(contract.methods.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 5)))
         .withContractCall(contract.methods.do(MANAGER_LAMBDA.setDelegate(knownBaker)))
@@ -128,7 +128,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
       const contract = await op.contract();
       expect(op.status).toEqual('applied')
 
-      const batch = Tezos.batch()
+      const batch = Tezos.contract.batch()
         .withTransfer({ to: contract.address, amount: 1 })
         .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 5)))
         .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.setDelegate(knownBaker)))
@@ -142,7 +142,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
     });
 
     it('Verify simple batch transfers with origination from code in Michelson format', async () => {
-      const batch = Tezos.batch()
+      const batch = Tezos.contract.batch()
         .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
         .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
         .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })

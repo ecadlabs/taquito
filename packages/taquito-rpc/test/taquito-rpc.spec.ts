@@ -3663,7 +3663,7 @@ describe('RpcClient test', () => {
 
       const balanceUpdate =
         'metadata' in response.contents[0]
-          ? (response.contents[0]['metadata'][
+          ? ((response.contents[0] as any)['metadata'][
               'balance_updates'
             ] as OperationMetadataBalanceUpdates[])
           : [];
@@ -3721,7 +3721,7 @@ describe('RpcClient test', () => {
 
       const balanceUpdate =
         'metadata' in response.contents[0]
-          ? (response.contents[0]['metadata'][
+          ? ((response.contents[0] as any)['metadata'][
               'balance_updates'
             ] as OperationMetadataBalanceUpdates[])
           : [];
@@ -3877,8 +3877,10 @@ describe('RpcClient test', () => {
       const url = 'https://mainnet.tezos.ecadinfra.com/';
       const rpcUrlMainnet = new RpcClient(url).getRpcUrl();
       expect(rpcUrlMainnet).toEqual('https://mainnet.tezos.ecadinfra.com/');
-      const rpcUrlCarthagenet = new RpcClient('https://ghostnet.tezos.ecadinfra.com').getRpcUrl();
-      expect(rpcUrlCarthagenet).toEqual('https://ghostnet.tezos.ecadinfra.com');
+      const rpcUrlGhostnet = new RpcClient('https://ghostnet.tezos.ecadinfra.com').getRpcUrl();
+      expect(rpcUrlGhostnet).toEqual('https://ghostnet.tezos.ecadinfra.com');
+      const rpcUrlShadownet = new RpcClient('https://shadownet.tezos.ecadinfra.com').getRpcUrl();
+      expect(rpcUrlShadownet).toEqual('https://shadownet.tezos.ecadinfra.com');
     });
   });
 

@@ -1,6 +1,6 @@
 import { db } from "../firebase";
 import { collection, addDoc, Timestamp } from "@firebase/firestore";
-import React from "react";
+import React, { useEffect } from "react";
 import { BiHappyBeaming, BiMeh, BiSad } from "react-icons/bi";
 import ReactGA from "react-ga";
 import "@site/src/theme/feedback.css";
@@ -21,7 +21,10 @@ interface IState {
 //--- Change this if you want a different tracking account ---//
 //------------------------------------------------------------//
 const trackingId = "UA-148358030-1";
-ReactGA.initialize(trackingId);
+// SSR-safe ReactGA initialization
+if (typeof window !== 'undefined') {
+  ReactGA.initialize(trackingId);
+}
 //------------------------------------------------------------//
 //------------------------------------------------------------//
 
@@ -36,41 +39,111 @@ class AddFeedback extends React.Component<IProps, IState> {
     };
   }
 
+  async postToSlack(rating?: number) {
+    const url = process.env.DOCUSAURUS_CLOUDFLARE_WORKER_URL;
+
+    if (!url) {
+      return;
+    }
+
+    if (!rating && (!this.state.section || !this.state.feedback)) {
+      return;
+    }
+
+    // SSR-safe access to document and window
+    const title = typeof document !== 'undefined' ? document.title.replace(/\s*\|\s*Taquito\s*$/, '') : '';
+    const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
+
+    const csrfResponse = await fetch(`${url}/api/vote/csrf`, {
+      credentials: 'include',
+    });
+    const { csrf, sid } = await csrfResponse.json();
+
+    await fetch(`${url}/api/vote`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF': csrf,
+        'X-Session-ID': sid,
+      },
+      body: JSON.stringify({
+        url: currentUrl,
+        title,
+        vote: rating,
+        category: this.state.section,
+        feedback: this.state.feedback,
+      }),
+    });
+  }
+
   async handleSubmit(rating) {
     try {
-      await addDoc(collection(db, "ratings"), {
-        rating: rating,
-        request: window.location.href,
-        timestamp: Timestamp.now(),
-      });
-      ReactGA.event({
-        category: "RATINGS",
-        action: rating,
-        label: rating,
-      });
       this.setState({ visible: false });
+      await this.postToSlack(rating);
+
+      // Without this timeout, the Firebase operation will hang indefinitely if it fails
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Firebase operation timed out")), 5000)
+      );
+
+      const firestorePromise = db ? addDoc(collection(db, "ratings"), {
+        rating: rating,
+        request: typeof window !== 'undefined' ? window.location.href : '',
+        timestamp: Timestamp.now(),
+      }) : Promise.resolve();
+
+      await Promise.race([firestorePromise, timeoutPromise]);
+
+      // SSR-safe ReactGA event tracking
+      if (typeof window !== 'undefined') {
+        ReactGA.event({
+          category: "RATINGS",
+          action: rating,
+          label: rating,
+        });
+      }
     } catch (err) {
-      alert(err);
+      console.error("Error submitting rating:", err);
+      alert("Failed to submit rating: " + (err.message || err));
     }
   }
 
   async handleDetailedSubmit() {
     try {
-      await addDoc(collection(db, "feedback"), {
+      this.setState({ visible: false });
+      await this.postToSlack();
+
+      // Without this timeout, the Firebase operation will hang indefinitely if it fails
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Firebase operation timed out")), 5000)
+      );
+
+      const firestorePromise = db ? addDoc(collection(db, "feedback"), {
         section: this.state.section,
         feedback: this.state.feedback,
-        request: window.location.href,
+        request: typeof window !== 'undefined' ? window.location.href : '',
         timestamp: Timestamp.now(),
-      });
-      ReactGA.event({
-        category: "FEEDBACK",
-        action: this.state.section + ":" + this.state.feedback,
-        label: this.state.feedback,
-      });
-      this.setState({ visible: false });
-      window.scrollTo(0, document.body.scrollHeight);
+      }) : Promise.resolve();
+
+      await Promise.race([firestorePromise, timeoutPromise]);
+
+      // SSR-safe ReactGA event tracking
+      if (typeof window !== 'undefined') {
+        ReactGA.event({
+          category: "FEEDBACK",
+          action: this.state.section + ":" + this.state.feedback,
+          label: this.state.feedback,
+        });
+      }
+
+      // SSR-safe scroll operation
+      if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+        window.scrollTo(0, document.body.scrollHeight);
+      }
     } catch (err) {
-      alert(err);
+      console.error("Error submitting detailed feedback:", err);
+      alert("Failed to submit feedback: " + (err.message || err));
     }
   }
 
@@ -88,19 +161,19 @@ class AddFeedback extends React.Component<IProps, IState> {
                   Please provide feedback on this article:
                   <button
                     className="button  margin--sm good"
-                    onClick={() => this.handleSubmit(2)}
+                    onClick={() => this.handleSubmit(3)}
                   >
                     <BiHappyBeaming size={40} />
                   </button>
                   <button
                     className="button margin--sm average"
-                    onClick={() => this.handleSubmit(1)}
+                    onClick={() => this.handleSubmit(2)}
                   >
                     <BiMeh size={40} />
                   </button>
                   <button
                     className="button  margin--sm bad"
-                    onClick={() => this.handleSubmit(0)}
+                    onClick={() => this.handleSubmit(1)}
                   >
                     <BiSad size={40} />
                   </button>

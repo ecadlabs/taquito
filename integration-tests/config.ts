@@ -1,14 +1,14 @@
 import { CompositeForger, RpcForger, TezosToolkit, Protocols, TaquitoLocalForger, PollingSubscribeProvider } from '@taquito/taquito';
 import { RemoteSigner } from '@taquito/remote-signer';
 import { HttpBackend } from '@taquito/http-utils';
-import { b58cencode, Prefix, prefix } from '@taquito/utils';
+import { b58Encode, PrefixV2 } from '@taquito/utils';
 import { importKey, InMemorySigner } from '@taquito/signer';
 import { RpcClient, RpcClientCache } from '@taquito/rpc';
 import { KnownContracts } from './known-contracts';
 import { knownContractsProtoALph } from './known-contracts-ProtoALph';
 import { knownContractsPtGhostnet } from './known-contracts-PtGhostnet';
-import { knownContractsPsRiotuma } from './known-contracts-PsRiotuma';
-
+import { knownContractsPtSeouLou } from './known-contracts-PtSeouLou';
+import { knownContractsPtShadownet } from './known-contracts-PtShadownet';
 
 const nodeCrypto = require('crypto');
 
@@ -32,7 +32,7 @@ const forgers: ForgerType[] = [ForgerType.COMPOSITE];
 
 // user running integration test can pass environment variable TEZOS_NETWORK_TYPE=sandbox to specify which network to run against
 export enum NetworkType {
-  TESTNET,  // corresponds ghostnet, rionet and weeklynet etc.
+  TESTNET,  // corresponds ghostnet, shadownet, seoulnet and weeklynet etc.
   SANDBOX,  // corresponds to flextesa local chain
 }
 
@@ -46,6 +46,7 @@ interface Config {
   knownTzip1216Contract: string;
   knownSaplingContract: string;
   knownViewContract: string;
+  knownTicketContract: string;
   protocol: Protocols;
   signerConfig: EphemeralConfig | SecretKeyConfig;
   networkType: NetworkType;
@@ -61,7 +62,7 @@ export enum SignerType {
 interface ConfigWithSetup extends Config {
   lib: TezosToolkit;
   setup: (preferFreshKey?: boolean) => Promise<void>;
-  createAddress: () => Promise<TezosToolkit>;
+  createAddress: (prefix?: PrefixV2) => Promise<TezosToolkit>;
 }
 /**
  * EphemeralConfig contains configuration for interacting with the [tezos-key-gen-api](https://github.com/ecadlabs/tezos-key-gen-api)
@@ -117,47 +118,60 @@ const defaultConfig = ({
     rpc: process.env[`TEZOS_RPC_${networkName}`] || defaultRpc,
     pollingIntervalMilliseconds: process.env[`POLLING_INTERVAL_MILLISECONDS`] || undefined,
     rpcCacheMilliseconds: process.env[`RPC_CACHE_MILLISECONDS`] || '1000',
-    knownBaker: process.env[`TEZOS_BAKER`] || 'tz1TGKSrZrBpND3PELJ43nVdyadoeiM1WMzb', // Germán - TT
+    knownBaker: process.env[`TEZOS_BAKER`] || (process.env[`TEZOS_RPC_${networkName}`] || defaultRpc).includes('shadow') ? 'tz1TnEtqDV9mZyts2pfMy6Jw1BTPs4LMjL8M' : 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
     knownContract: process.env[`TEZOS_${networkName}_CONTRACT_ADDRESS`] || knownContracts.contract,
     knownBigMapContract: process.env[`TEZOS_${networkName}_BIGMAPCONTRACT_ADDRESS`] || knownContracts.bigMapContract,
     knownTzip1216Contract: process.env[`TEZOS_${networkName}_TZIP1216CONTRACT_ADDRESS`] || knownContracts.tzip12BigMapOffChainContract,
     knownSaplingContract: process.env[`TEZOS_${networkName}_SAPLINGCONTRACT_ADDRESS`] || knownContracts.saplingContract,
     knownViewContract: process.env[`TEZOS_${networkName}_ON_CHAIN_VIEW_CONTRACT`] || knownContracts.onChainViewContractAddress,
+    knownTicketContract: process.env[`TEZOS_${networkName}_TICKET_CONTRACT`] || knownContracts.ticketContract,
     protocol: protocol,
     signerConfig: signerConfig,
     networkType: networkType
   }
 }
 
-const rionetEphemeral: Config =
+const seoulnetEphemeral: Config =
   defaultConfig({
-    networkName: 'RIONET',
-    protocol: Protocols.PsRiotuma,
-    defaultRpc: 'http://ecad-tezos-rionet-rolling-1.i.ecadinfra.com/',
-    knownContracts: knownContractsPsRiotuma,
-    signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/rionet')
+    networkName: 'SEOULNET',
+    protocol: Protocols.PtSeouLou,
+    defaultRpc: 'http://ecad-tezos-seoulnet-rolling-1.i.ecadinfra.com/',
+    knownContracts: knownContractsPtSeouLou,
+    signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/seoulnet')
   })
 
-  const rionetSecretKey: Config =
-  { ...rionetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'https://rpc.rionet.teztnets.com' } };
+const seoulnetSecretKey: Config =
+  { ...seoulnetEphemeral, ...{ signerConfig: defaultSecretKey, defaultRpc: 'https://seoulnet.tezos.ecadinfra.com' } };
 
 const ghostnetEphemeral: Config =
   defaultConfig({
     networkName: 'GHOSTNET',
-    protocol: Protocols.PsRiotuma,
+    protocol: Protocols.PtSeouLou,
     defaultRpc: 'http://ecad-tezos-ghostnet-rolling-1.i.ecadinfra.com/',
     knownContracts: knownContractsPtGhostnet,
     signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/ghostnet')
   });
 
 const ghostnetSecretKey: Config =
-  { ...ghostnetEphemeral, ...{ signerConfig: defaultSecretKey }, ...{ defaultRpc: 'https://ghostnet.ecadinfra.com' } };
+  { ...ghostnetEphemeral, ...{ signerConfig: defaultSecretKey, defaultRpc: 'https://ghostnet.ecadinfra.com' } };
+
+const shadownetEphemeral: Config =
+  defaultConfig({
+    networkName: 'SHADOWNET',
+    protocol: Protocols.PtSeouLou,
+    defaultRpc: 'https://rpc.shadownet.teztnets.com/',
+    knownContracts: knownContractsPtShadownet,
+    signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/shadownet')
+  });
+
+const shadownetSecretKey: Config =
+  { ...shadownetEphemeral, ...{ signerConfig: defaultSecretKey, defaultRpc: 'https://rpc.shadownet.teztnets.com/' } };
 
 const weeklynetEphemeral: Config =
   defaultConfig({
     networkName: 'WEEKLYNET',
     protocol: Protocols.ProtoALpha,
-    defaultRpc: 'https://rpc.weeklynet-2025-05-14.teztnets.com',
+    defaultRpc: 'https://rpc.weeklynet-2025-09-17.teztnets.com',
     knownContracts: knownContractsProtoALph,
     signerConfig: defaultEphemeralConfig('http://key-gen-1.i.tez.ie:3010/mondaynet')
   });
@@ -168,21 +182,25 @@ const weeklynetSecretKey: Config =
 const providers: Config[] = [];
 
 if (process.env['RUN_WITH_SECRET_KEY']) {
-  providers.push(rionetSecretKey);
+  providers.push(ghostnetSecretKey, shadownetSecretKey, seoulnetSecretKey);
 } else if (process.env['RUN_GHOSTNET_WITH_SECRET_KEY']) {
   providers.push(ghostnetSecretKey);
-} else if (process.env['RUN_RIONET_WITH_SECRET_KEY']) {
-  providers.push(rionetSecretKey);
+} else if (process.env['RUN_SHADOWNET_WITH_SECRET_KEY']) {
+  providers.push(shadownetSecretKey);
+} else if (process.env['RUN_SEOULNET_WITH_SECRET_KEY']) {
+  providers.push(seoulnetSecretKey);
 } else if (process.env['RUN_WEEKLYNET_WITH_SECRET_KEY']) {
   providers.push(weeklynetSecretKey);
 } else if (process.env['GHOSTNET']) {
   providers.push(ghostnetEphemeral);
-} else if (process.env['RIONET']) {
-  providers.push(rionetEphemeral);
+} else if (process.env['SHADOWNET']) {
+  providers.push(shadownetEphemeral);
+} else if (process.env['SEOULNET']) {
+  providers.push(seoulnetEphemeral);
 } else if (process.env['WEEKLYNET']) {
   providers.push(weeklynetEphemeral);
 } else {
-  providers.push(rionetEphemeral);
+  providers.push(ghostnetSecretKey, shadownetSecretKey, seoulnetEphemeral);
 }
 
 const setupForger = (Tezos: TezosToolkit, forger: ForgerType): void => {
@@ -272,6 +290,7 @@ export const CONFIGS = () => {
         knownTzip1216Contract,
         knownSaplingContract,
         knownViewContract,
+        knownTicketContract,
         signerConfig,
         networkType
       }) => {
@@ -294,6 +313,7 @@ export const CONFIGS = () => {
           knownTzip1216Contract,
           knownSaplingContract,
           knownViewContract,
+          knownTicketContract,
           signerConfig,
           networkType,
           setup: async (preferFreshKey: boolean = false) => {
@@ -307,7 +327,7 @@ export const CONFIGS = () => {
               }
             }
           },
-          createAddress: async () => {
+          createAddress: async (prefix: PrefixV2 = PrefixV2.P256SecretKey) => {
             const tezos = configureRpcCache(rpc, rpcCacheMilliseconds);
             setupForger(tezos, forger);
             configurePollingInterval(tezos, pollingIntervalMilliseconds);
@@ -315,7 +335,7 @@ export const CONFIGS = () => {
             const keyBytes = Buffer.alloc(32);
             nodeCrypto.randomFillSync(keyBytes);
 
-            const key = b58cencode(new Uint8Array(keyBytes), prefix[Prefix.P2SK]);
+            const key = b58Encode(new Uint8Array(keyBytes), prefix);
             await importKey(tezos, key);
 
             return tezos;

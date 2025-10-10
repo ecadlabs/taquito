@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import React from 'react';
+import BrowserOnly from '@docusaurus/BrowserOnly';
 import styles from './Hero.module.scss';
-import Slider from 'react-slick';
 import '../../../static/slick/slick.css';
 import '../../../static/slick/slick-theme.css';
 
@@ -44,16 +44,12 @@ const FeatureList = [
     ],
     features: [
       {
-        title: 'Installing the Taqueri CLI',
-        // icon: 'require("../../../static/img/briefcase.png").default',
-        description: 'Installing the Taqueria is easy',
-        gif: require('../../../static/img/hero-00.png').default,
+        title: 'Example of intializing a Beacon wallet with Taquito',
+        image: require('../../../static/img/hero-1.png').default,
       },
       {
-        title: 'Installing the Taqueria VS Code Extension',
-        // icon: require("../../../static/img/briefcase.png").default,
-        description: 'Taqueria has a VS Code extension available in the marketplace',
-        gif: require('../../../static/img/hero-0.png').default,
+        title: 'Example of transferring an NFT with Taquito',
+        image: require('../../../static/img/hero-2.png').default,
       },
     ],
   },
@@ -104,11 +100,18 @@ function Feature({ title, description, link, features }) {
       </div>
       <div className={styles.carouselContainer}>
         <div className={styles.carouselBox}>
-          <Slider className={styles.slider} {...sliderSettings}>
-            {features.map((feature, index) => (
-              <img key={index} src={feature.gif} />
-            ))}
-          </Slider>
+          <BrowserOnly fallback={<div>Loading...</div>}>
+            {() => {
+              const Slider = require('react-slick').default;
+              return (
+                <Slider className={styles.slider} {...sliderSettings}>
+                  {features.map((feature, index) => (
+                    <img key={index} src={feature.image} alt={feature.title} />
+                  ))}
+                </Slider>
+              );
+            }}
+          </BrowserOnly>
         </div>
       </div>
     </div>
