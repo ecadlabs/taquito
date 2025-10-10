@@ -165,20 +165,33 @@ export class Schema {
     return this.removeTopLevelAnnotation(storage);
   }
 
+  /**
+   * @description Validates that a value matches the schema type.
+   * Performs type checking with special handling for BigMap, Ticket, and nested Map tokens.
+   *
+   * @param val - The value to validate against the schema
+   * @returns Returns true if validation passes, false if validation fails
+   */
   Typecheck(val: any) {
     if (this.root instanceof BigMapToken && Number.isInteger(Number(val))) {
-      return;
+      return true;
     }
     if (this.root instanceof TicketToken && val.ticketer && val.value && val.amount) {
-      return;
+      return true;
     }
     if (this.root instanceof TicketDeprecatedToken && val.ticketer && val.value && val.amount) {
-      return;
+      return true;
     }
     if (this.root instanceof MapToken && this.root.ValueSchema instanceof BigMapToken) {
-      return;
+      return true;
     }
-    this.root.EncodeObject(val);
+
+    try {
+      this.root.EncodeObject(val);
+      return true;
+    } catch (error) {
+      return false;
+    }
   }
 
   /**
