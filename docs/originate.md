@@ -33,7 +33,7 @@ values={[
 This requires a signer to be configured, ie:
 
 ```
-import { importKey } from '@taquito/signer';
+import { importKey } from '@taquito/taquito';
 import { TezosToolkit } from '@taquito/taquito';
 const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
 importKey(Tezos, "p2sk2obfVMEuPUnadAConLWk7Tf4Dt3n4svSgJwrgpamRqJXvaYcg1")

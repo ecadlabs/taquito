@@ -1,5 +1,5 @@
-import { MichelsonMap, TezosToolkit } from '@taquito/taquito';
-import { importKey, InMemorySigner } from '@taquito/signer';
+import { MichelsonMap, TezosToolkit, importKey } from '@taquito/taquito';
+import { InMemorySigner } from '@taquito/signer';
 import { b58Encode, stringToBytes, PrefixV2 } from '@taquito/utils';
 import { fa2TokenFactory } from '../integration-tests/data/fa2-token-factory';
 

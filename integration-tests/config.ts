@@ -1,8 +1,8 @@
-import { CompositeForger, RpcForger, TezosToolkit, Protocols, TaquitoLocalForger, PollingSubscribeProvider } from '@taquito/taquito';
+import { CompositeForger, RpcForger, TezosToolkit, Protocols, TaquitoLocalForger, PollingSubscribeProvider, importKey } from '@taquito/taquito';
 import { RemoteSigner } from '@taquito/remote-signer';
 import { HttpBackend } from '@taquito/http-utils';
 import { b58Encode, PrefixV2 } from '@taquito/utils';
-import { importKey, InMemorySigner } from '@taquito/signer';
+import { InMemorySigner } from '@taquito/signer';
 import { RpcClient, RpcClientCache } from '@taquito/rpc';
 import { KnownContracts } from './known-contracts';
 import { knownContractsProtoALph } from './known-contracts-ProtoALph';
