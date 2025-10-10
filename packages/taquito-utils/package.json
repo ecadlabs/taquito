@@ -62,7 +62,7 @@
     ]
   },
   "dependencies": {
-    "@noble/curves": "^1.9.6",
+    "@noble/curves": "^1.9.7",
     "@stablelib/blake2b": "^1.0.1",
     "@stablelib/ed25519": "^1.0.3",
     "@taquito/core": "^23.0.2",
@@ -71,14 +71,13 @@
     "blakejs": "^1.2.1",
     "bs58check": "^3.0.1",
     "buffer": "^6.0.3",
-    "elliptic": "^6.6.1",
     "typedarray-to-buffer": "^4.0.0"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.42",
-    "@types/elliptic": "^6.4.18",
     "@types/jest": "^29.5.12",
     "@types/node": "^18",
+    "@types/typedarray-to-buffer": "^4.0.4",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "colors": "^1.4.0",
