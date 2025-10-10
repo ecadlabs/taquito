@@ -184,6 +184,24 @@ CONFIGS().forEach(
           expect(votinInfo).toBeDefined();
         });
 
+        it(`Verify that rpcClient.getActiveStakingParameters for known baker returns active staking parameters`, async () => {
+          const activeStakingParams = await rpcClient.getActiveStakingParameters(knownBaker);
+          expect(activeStakingParams).toBeDefined();
+          expect(typeof activeStakingParams.limit_of_staking_over_baking_millionth).toBe('number');
+          expect(typeof activeStakingParams.edge_of_baking_over_staking_billionth).toBe('number');
+        });
+
+        it(`Verify that rpcClient.getPendingStakingParameters for known baker returns pending staking parameters`, async () => {
+            const pendingStakingParams = await rpcClient.getPendingStakingParameters(knownBaker);
+            expect(pendingStakingParams).toBeDefined();
+            if (Array.isArray(pendingStakingParams) && pendingStakingParams.length > 0) {
+              expect(typeof pendingStakingParams[0].cycle).toBe('number');
+              expect(pendingStakingParams[0].parameters).toBeDefined();
+              expect(typeof pendingStakingParams[0].parameters.limit_of_staking_over_baking_millionth).toBe('number');
+              expect(typeof pendingStakingParams[0].parameters.edge_of_baking_over_staking_billionth).toBe('number');
+            }
+        });
+
         it('Verify that rpcClient.getConstants returns all constants from RPC', async () => {
           const constants = await rpcClient.getConstants();
           expect(constants).toBeDefined();
