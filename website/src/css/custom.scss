@@ -638,6 +638,37 @@ aside {
   .theme-doc-sidebar-item-category {
     padding-bottom: 10px;
   }
+
+  // Subcategory styling for nested categories
+  .sidebarSubcategory {
+    .theme-doc-sidebar-item-category-level-2 > a {
+      font-family: Source Sans Pro;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 20px;
+      letter-spacing: 0.2px;
+      text-transform: none;
+      color: var(--sidebar-text-color);
+      opacity: 0.8;
+      border-left: 2px solid var(--brown-primary);
+    }
+
+    .menu__list-item {
+      margin-left: 16px;
+    }
+
+    .menu__link {
+      font-size: 14px !important;
+      color: var(--sidebar-text-color) !important;
+      opacity: 0.9;
+    }
+
+    .menu__link--active {
+      background: var(--sidebar-link-bg) !important;
+      border-radius: 16px !important;
+    }
+  }
 }
 
 .table-of-contents__link--active {
