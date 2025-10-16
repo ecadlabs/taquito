@@ -225,7 +225,10 @@ export default ({
   }
 
   const handleCopyCode = () => {
-    window.getSelection().empty();
+    // SSR-safe getSelection usage
+    if (typeof window !== 'undefined' && window.getSelection) {
+      window.getSelection().empty();
+    }
     setShowCopied(true);
 
     setTimeout(() => setShowCopied(false), 2000);

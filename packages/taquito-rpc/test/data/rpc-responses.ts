@@ -2674,3 +2674,25 @@ export const smartRollupTimeoutResponse = {
     ],
   ],
 };
+
+export const activeStakingParametersResponse = {
+  limit_of_staking_over_baking_millionth: 1000000,
+  edge_of_baking_over_staking_billionth: 500000000,
+};
+
+export const pendingStakingParametersResponse = [
+  {
+    cycle: 100,
+    parameters: {
+      limit_of_staking_over_baking_millionth: 1200000,
+      edge_of_baking_over_staking_billionth: 600000000,
+    },
+  },
+  {
+    cycle: 101,
+    parameters: {
+      limit_of_staking_over_baking_millionth: 1500000,
+      edge_of_baking_over_staking_billionth: 750000000,
+    },
+  },
+];

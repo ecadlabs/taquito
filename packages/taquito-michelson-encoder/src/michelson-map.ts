@@ -123,36 +123,32 @@ export class MichelsonMap<K extends MichelsonMapKey, T> {
     if (!this.keySchema) {
       return;
     }
-    this.keySchema.Typecheck(key);
+    if (!this.keySchema.Typecheck(key)) {
+      throw new MapTypecheckError(key, this.keySchema, 'key', 'Type validation failed');
+    }
   }
 
   private typecheckValue(value: T) {
     if (!this.valueSchema) {
       return;
     }
-    this.valueSchema.Typecheck(value);
+    if (!this.valueSchema.Typecheck(value)) {
+      throw new MapTypecheckError(value, this.valueSchema, 'value', 'Type validation failed');
+    }
   }
 
   /**
    * @throws {@link MapTypecheckError} when the argument passed does not match the expected schema for value
    */
   private assertTypecheckValue(value: T) {
-    try {
-      this.typecheckValue(value);
-    } catch (e) {
-      throw new MapTypecheckError(value, this.valueSchema, 'value', e);
-    }
+    this.typecheckValue(value);
   }
 
   /**
    * @throws {@link MapTypecheckError} when the argument passed does not match the expected schema for key
    */
   private assertTypecheckKey(key: K) {
-    try {
-      this.typecheckKey(key);
-    } catch (e) {
-      throw new MapTypecheckError(key, this.keySchema, 'key', e);
-    }
+    this.typecheckKey(key);
   }
 
   private serializeDeterministically(key: K): string {

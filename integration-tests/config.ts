@@ -8,6 +8,7 @@ import { KnownContracts } from './known-contracts';
 import { knownContractsProtoALph } from './known-contracts-ProtoALph';
 import { knownContractsPtGhostnet } from './known-contracts-PtGhostnet';
 import { knownContractsPtSeouLou } from './known-contracts-PtSeouLou';
+import { knownContractsPtShadownet } from './known-contracts-PtShadownet';
 
 const nodeCrypto = require('crypto');
 
@@ -31,7 +32,7 @@ const forgers: ForgerType[] = [ForgerType.COMPOSITE];
 
 // user running integration test can pass environment variable TEZOS_NETWORK_TYPE=sandbox to specify which network to run against
 export enum NetworkType {
-  TESTNET,  // corresponds ghostnet, seoulnet and weeklynet etc.
+  TESTNET,  // corresponds ghostnet, shadownet, seoulnet and weeklynet etc.
   SANDBOX,  // corresponds to flextesa local chain
 }
 
@@ -117,7 +118,7 @@ const defaultConfig = ({
     rpc: process.env[`TEZOS_RPC_${networkName}`] || defaultRpc,
     pollingIntervalMilliseconds: process.env[`POLLING_INTERVAL_MILLISECONDS`] || undefined,
     rpcCacheMilliseconds: process.env[`RPC_CACHE_MILLISECONDS`] || '1000',
-    knownBaker: process.env[`TEZOS_BAKER`] || protocol === Protocols.PtSeouLou ? 'tz1NNT9EERmcKekRq2vdv6e8TL3WQpY8AXSF' : 'tz1TGKSrZrBpND3PELJ43nVdyadoeiM1WMzb', // Germán - TT
+    knownBaker: process.env[`TEZOS_BAKER`] || (process.env[`TEZOS_RPC_${networkName}`] || defaultRpc).includes('shadow') ? 'tz1TnEtqDV9mZyts2pfMy6Jw1BTPs4LMjL8M' : 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD',
     knownContract: process.env[`TEZOS_${networkName}_CONTRACT_ADDRESS`] || knownContracts.contract,
     knownBigMapContract: process.env[`TEZOS_${networkName}_BIGMAPCONTRACT_ADDRESS`] || knownContracts.bigMapContract,
     knownTzip1216Contract: process.env[`TEZOS_${networkName}_TZIP1216CONTRACT_ADDRESS`] || knownContracts.tzip12BigMapOffChainContract,
@@ -154,6 +155,18 @@ const ghostnetEphemeral: Config =
 const ghostnetSecretKey: Config =
   { ...ghostnetEphemeral, ...{ signerConfig: defaultSecretKey, defaultRpc: 'https://ghostnet.ecadinfra.com' } };
 
+const shadownetEphemeral: Config =
+  defaultConfig({
+    networkName: 'SHADOWNET',
+    protocol: Protocols.PtSeouLou,
+    defaultRpc: 'https://rpc.shadownet.teztnets.com/',
+    knownContracts: knownContractsPtShadownet,
+    signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/shadownet')
+  });
+
+const shadownetSecretKey: Config =
+  { ...shadownetEphemeral, ...{ signerConfig: defaultSecretKey, defaultRpc: 'https://rpc.shadownet.teztnets.com/' } };
+
 const weeklynetEphemeral: Config =
   defaultConfig({
     networkName: 'WEEKLYNET',
@@ -169,21 +182,25 @@ const weeklynetSecretKey: Config =
 const providers: Config[] = [];
 
 if (process.env['RUN_WITH_SECRET_KEY']) {
-  providers.push(seoulnetSecretKey);
+  providers.push(ghostnetSecretKey, shadownetSecretKey, seoulnetSecretKey);
 } else if (process.env['RUN_GHOSTNET_WITH_SECRET_KEY']) {
   providers.push(ghostnetSecretKey);
+} else if (process.env['RUN_SHADOWNET_WITH_SECRET_KEY']) {
+  providers.push(shadownetSecretKey);
 } else if (process.env['RUN_SEOULNET_WITH_SECRET_KEY']) {
   providers.push(seoulnetSecretKey);
 } else if (process.env['RUN_WEEKLYNET_WITH_SECRET_KEY']) {
   providers.push(weeklynetSecretKey);
 } else if (process.env['GHOSTNET']) {
   providers.push(ghostnetEphemeral);
+} else if (process.env['SHADOWNET']) {
+  providers.push(shadownetEphemeral);
 } else if (process.env['SEOULNET']) {
   providers.push(seoulnetEphemeral);
 } else if (process.env['WEEKLYNET']) {
   providers.push(weeklynetEphemeral);
 } else {
-  providers.push(seoulnetEphemeral);
+  providers.push(ghostnetSecretKey, shadownetSecretKey, seoulnetEphemeral);
 }
 
 const setupForger = (Tezos: TezosToolkit, forger: ForgerType): void => {

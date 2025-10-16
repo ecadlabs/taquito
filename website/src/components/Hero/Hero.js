@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import React from 'react';
+import BrowserOnly from '@docusaurus/BrowserOnly';
 import styles from './Hero.module.scss';
-import Slider from 'react-slick';
 import '../../../static/slick/slick.css';
 import '../../../static/slick/slick-theme.css';
 
@@ -100,11 +100,18 @@ function Feature({ title, description, link, features }) {
       </div>
       <div className={styles.carouselContainer}>
         <div className={styles.carouselBox}>
-          <Slider className={styles.slider} {...sliderSettings}>
-            {features.map((feature, index) => (
-              <img key={index} src={feature.image} alt={feature.title} />
-            ))}
-          </Slider>
+          <BrowserOnly fallback={<div>Loading...</div>}>
+            {() => {
+              const Slider = require('react-slick').default;
+              return (
+                <Slider className={styles.slider} {...sliderSettings}>
+                  {features.map((feature, index) => (
+                    <img key={index} src={feature.image} alt={feature.title} />
+                  ))}
+                </Slider>
+              );
+            }}
+          </BrowserOnly>
         </div>
       </div>
     </div>
