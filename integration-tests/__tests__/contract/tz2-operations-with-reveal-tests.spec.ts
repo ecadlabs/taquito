@@ -211,8 +211,6 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress, knownTicketCont
         entrypoint: 'default',
       })
       await transferTicketOp.confirmation()
-      console.log(rpc)
-      console.log(transferTicketOp.hash)
       expect(transferTicketOp.status).toBe('applied')
     })
 
