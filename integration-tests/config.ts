@@ -343,7 +343,7 @@ export const CONFIGS = () => {
               }
             }
           },
-          createAddress: async (prefix: PrefixV2 = PrefixV2.P256SecretKey) => {
+          createAddress: async (prefix: PrefixV2 = PrefixV2.Ed25519Seed) => {
             const tezos = configureRpcCache(rpc, rpcCacheMilliseconds);
             setupForger(tezos, forger);
             configurePollingInterval(tezos, pollingIntervalMilliseconds);
