@@ -51,6 +51,8 @@ import {
   AILaunchCycleResponse,
   AllDelegatesQueryArguments,
   ProtocolActivationsResponse,
+  ActiveStakingParametersResponse,
+  PendingStakingParametersResponse,
 } from './types';
 
 export interface RPCOptions {
@@ -140,6 +142,8 @@ export interface RpcClientInterface {
   getAllTicketBalances(contract: string, options?: RPCOptions): Promise<AllTicketBalances>;
   getAdaptiveIssuanceLaunchCycle(options?: RPCOptions): Promise<AILaunchCycleResponse>;
   getPendingOperations(args: PendingOperationsQueryArguments): Promise<PendingOperationsV2>;
+  getActiveStakingParameters(delegate: string, options?: RPCOptions): Promise<ActiveStakingParametersResponse>;
+  getPendingStakingParameters(delegate: string, options?: RPCOptions): Promise<PendingStakingParametersResponse>;
 }
 
 export enum RPCMethodName {
@@ -171,6 +175,8 @@ export enum RPCMethodName {
   GET_ALL_DELEGATES = 'getAllDelegates',
   GET_DELEGATES = 'getDelegates',
   GET_VOTING_INFO = 'getVotingInfo',
+  GET_ACTIVE_STAKING_PARAMETERS = 'getActiveStakingParameters',
+  GET_PENDING_STAKING_PARAMETERS = 'getPendingStakingParameters',
   GET_ATTESTATION_RIGHTS = 'getAttestationRights',
   GET_ENTRYPOINTS = 'getEntrypoints',
   GET_LIVE_BLOCKS = 'getLiveBlocks',

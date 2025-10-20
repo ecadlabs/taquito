@@ -1,16 +1,25 @@
 import { CONFIGS } from "../../config";
 import { PrefixV2 } from "@taquito/utils";
-import { UnitValue, OpKind } from "@taquito/taquito";
+import { UnitValue, OpKind, TezosToolkit } from "@taquito/taquito";
 import crypto from 'crypto';
 import { PvmKind } from "@taquito/rpc";
 
 CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress, knownTicketContract }) => {
-  const Tz2 = lib;
+  const Tezos = lib;
+  let Tz2: TezosToolkit
   let contractAddress = 'KT1XgwgLtcD79LzFifBKxU2TYwKzQ6iUwwj1'
 
   describe(`Test tz2 account operations through contract API using: ${rpc}`, () => {
     beforeEach(async () => {
       await setup(true)
+      try {
+        Tz2 = await createAddress(PrefixV2.Secp256k1SecretKey)
+        const fundOp = await Tezos.contract.transfer({ to: await Tz2.signer.publicKeyHash(), amount: 8.5 })
+        await fundOp.confirmation()
+        expect(fundOp.status).toBe('applied')
+      } catch (e) {
+        console.log('beforeEach fundOp error', e)
+      }
     })
 
     it('verify that reveal fee and gas is sufficient', async () => {
@@ -176,44 +185,31 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress, knownTicketCont
 
     it('verify that transferTicket fee and gas is sufficient', async () => {
       // prerequisite: issuing tickets
-      const ticketContract = await Tz2.contract.at(knownTicketContract)
+      const ticketContract = await Tezos.contract.at(knownTicketContract)
       const ticket = { ticketer: knownTicketContract, content_type: { prim: 'string' }, content: { string: 'Ticket' } };
+      const issueOp = await ticketContract.methodsObject.default([await Tz2.signer.publicKeyHash(), '3']).send()
+      await issueOp.confirmation()
 
-      const Tz2Pkh = await Tz2.signer.publicKeyHash()
-      const estimated = await Tz2.estimate.batch([
-        {
-          kind: OpKind.TRANSACTION, amount: 0, to: knownTicketContract, parameter: {
-            entrypoint: 'default', value: {
-              "prim": "Pair",
-              "args": [{ "string": Tz2Pkh }, { "int": "3" }]
-            }
-          }
-        },
-        {
-          kind: OpKind.TRANSFER_TICKET,
-          ticketContents: ticket.content,
-          ticketTy: ticket.content_type,
-          ticketTicketer: ticket.ticketer,
-          ticketAmount: 1,
-          destination: knownBaker,
-          entrypoint: 'default'
-        }
-      ])
+      const estimated = await Tz2.estimate.transferTicket({
+        ticketContents: ticket.content,
+        ticketTy: ticket.content_type,
+        ticketTicketer: ticket.ticketer,
+        ticketAmount: 1,
+        destination: knownBaker,
+        entrypoint: 'default'
+      })
+      expect(estimated?.suggestedFeeMutez).toBeGreaterThanOrEqual(357)
+      expect(estimated?.gasLimit).toBeGreaterThanOrEqual(1325)
+      expect(estimated?.storageLimit).toBe(0)
 
-      expect(estimated[2]?.suggestedFeeMutez).toBeGreaterThanOrEqual(362)
-      expect(estimated[2]?.gasLimit).toBeGreaterThanOrEqual(1325)
-      expect(estimated[2]?.storageLimit).toBe(0)
-
-      const transferTicketOp = await Tz2.contract.batch()
-      .withContractCall(ticketContract.methodsObject.default([Tz2Pkh, '3']))
-      .withTransferTicket({
+      const transferTicketOp = await Tz2.contract.transferTicket({
         ticketContents: ticket.content,
         ticketTy: ticket.content_type,
         ticketTicketer: ticket.ticketer,
         ticketAmount: 1,
         destination: knownBaker,
         entrypoint: 'default',
-      }).send()
+      })
       await transferTicketOp.confirmation()
       expect(transferTicketOp.status).toBe('applied')
     })

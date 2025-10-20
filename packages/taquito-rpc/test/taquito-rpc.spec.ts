@@ -26,6 +26,8 @@ import {
   RPCRunOperationParam,
   OperationMetadataBalanceUpdates,
   PendingOperationsV2,
+  ActiveStakingParametersResponse,
+  PendingStakingParametersResponse,
   OperationContentsAndResultSmartRollupCement,
   OperationContentsAndResultSmartRollupPublish,
   OperationContentsAndResultSmartRollupRefute,
@@ -63,6 +65,8 @@ import {
   unstakeRequestsResponse,
   protocolActivations,
   protocolActivation,
+  activeStakingParametersResponse,
+  pendingStakingParametersResponse,
 } from './data/rpc-responses';
 
 /**
@@ -4376,6 +4380,73 @@ describe('RpcClient test', () => {
       });
 
       expect(response).toEqual(pendingOperationsResponse);
+    });
+  });
+
+  describe('getActiveStakingParameters', () => {
+    it('should query the correct url and return active staking parameters', async () => {
+      const baker = 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD';
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(activeStakingParametersResponse));
+      const response: ActiveStakingParametersResponse = await client.getActiveStakingParameters(baker);
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/head/context/delegates/${baker}/active_staking_parameters`,
+      });
+
+      expect(response).toEqual(activeStakingParametersResponse);
+      expect(response.limit_of_staking_over_baking_millionth).toEqual(1000000);
+      expect(response.edge_of_baking_over_staking_billionth).toEqual(500000000);
+    });
+
+    it('should query the correct url with custom block parameter', async () => {
+      const baker = 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD';
+      const block = 'BLUjvteWShd6gkbkPqNmCz1rzoBSLd5MghbdMwieVynSnhxgKVs';
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(activeStakingParametersResponse));
+      const response: ActiveStakingParametersResponse = await client.getActiveStakingParameters(baker, { block });
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/${block}/context/delegates/${baker}/active_staking_parameters`,
+      });
+
+      expect(response).toEqual(activeStakingParametersResponse);
+    });
+  });
+
+  describe('getPendingStakingParameters', () => {
+    it('should query the correct url and return pending staking parameters', async () => {
+      const baker = 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD';
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(pendingStakingParametersResponse));
+      const response: PendingStakingParametersResponse = await client.getPendingStakingParameters(baker);
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/head/context/delegates/${baker}/pending_staking_parameters`,
+      });
+
+      expect(response).toEqual(pendingStakingParametersResponse);
+      expect(response).toHaveLength(2);
+      expect(response[0].cycle).toEqual(100);
+      expect(response[0].parameters.limit_of_staking_over_baking_millionth).toEqual(1200000);
+      expect(response[0].parameters.edge_of_baking_over_staking_billionth).toEqual(600000000);
+      expect(response[1].cycle).toEqual(101);
+      expect(response[1].parameters.limit_of_staking_over_baking_millionth).toEqual(1500000);
+      expect(response[1].parameters.edge_of_baking_over_staking_billionth).toEqual(750000000);
+    });
+
+    it('should query the correct url with custom block parameter', async () => {
+      const baker = 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD';
+      const block = 'BLUjvteWShd6gkbkPqNmCz1rzoBSLd5MghbdMwieVynSnhxgKVs';
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(pendingStakingParametersResponse));
+      const response: PendingStakingParametersResponse = await client.getPendingStakingParameters(baker, { block });
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/${block}/context/delegates/${baker}/pending_staking_parameters`,
+      });
+
+      expect(response).toEqual(pendingStakingParametersResponse);
     });
   });
 });

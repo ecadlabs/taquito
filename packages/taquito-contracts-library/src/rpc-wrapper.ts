@@ -51,6 +51,8 @@ import {
   AILaunchCycleResponse,
   AllDelegatesQueryArguments,
   ProtocolActivationsResponse,
+  ActiveStakingParametersResponse,
+  PendingStakingParametersResponse,
 } from '@taquito/rpc';
 import { ContractsLibrary } from './taquito-contracts-library';
 
@@ -386,5 +388,11 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
   }
   async getPendingOperations(args: PendingOperationsQueryArguments): Promise<PendingOperationsV2> {
     return this.rpc.getPendingOperations(args);
+  }
+  async getActiveStakingParameters(delegate: string, { block }: RPCOptions = defaultRPCOptions): Promise<ActiveStakingParametersResponse> {
+    return this.rpc.getActiveStakingParameters(delegate, { block });
+  }
+  async getPendingStakingParameters(delegate: string, { block }: RPCOptions = defaultRPCOptions): Promise<PendingStakingParametersResponse> {
+    return this.rpc.getPendingStakingParameters(delegate, { block });
   }
 }
