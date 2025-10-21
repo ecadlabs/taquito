@@ -1,13 +1,22 @@
+import { InMemorySigner } from "@taquito/signer";
 import { CONFIGS } from "../../config";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
-  const Tezos = lib;
-
-  beforeEach(async () => {
-    await setup();
-  });
+  let signerAlice = new InMemorySigner('edsk3QoqBuvdamxouPhin7swCvkQNgq4jP5KZPbwWNnwdZpSpJiEbq');
 
   describe(`Test wallet registerGlobalConstant using: ${rpc}`, () => {
+    const Tezos = lib
+    beforeAll(async () => {
+      setup(true)
+      if (rpc.includes('seoul')) {
+        Tezos.setProvider({ signer: signerAlice, rpc: 'https://rpc.tzkt.io/seoulnet' })
+      } else if (rpc.includes('ghost')) {
+        Tezos.setProvider({ signer: signerAlice, rpc: 'https://rpc.tzkt.io/ghostnet' })
+      } else if (rpc.includes('shadow')) {
+        Tezos.setProvider({ signer: signerAlice, rpc: 'https://rpc.tzkt.io/shadownet' })
+      }
+    });
+    
     test('Should register a global constant', async () => {
       const walletOp = await Tezos.wallet.registerGlobalConstant({
         value: {
