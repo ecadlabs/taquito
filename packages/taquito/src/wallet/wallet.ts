@@ -145,6 +145,8 @@ export class WalletOperationBatch {
         return this.walletProvider.mapDelegateParamsToWalletParams(async () => param);
       case OpKind.INCREASE_PAID_STORAGE:
         return this.walletProvider.mapIncreasePaidStorageWalletParams(async () => param);
+      case OpKind.REGISTER_GLOBAL_CONSTANT:
+        return this.walletProvider.mapRegisterGlobalConstantParamsToWalletParams(async () => param);
       default:
         throw new InvalidOperationKindError(JSON.stringify((param as any).kind));
     }
