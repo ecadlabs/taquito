@@ -24,6 +24,7 @@ import { TransactionWalletOperation } from './transaction-operation';
 import { TransferTicketWalletOperation } from './transfer-ticket-operation';
 import { ConfirmationTimeoutError } from '../errors';
 import { RegisterGlobalConstantWalletOperation } from './register-global-constant-operation';
+import { RevealWalletOperation } from './reveal-operation';
 
 export function timeoutAfter<T>(timeoutMillisec: number): (source: Observable<T>) => Observable<T> {
   return function inner(source: Observable<T>): Observable<T> {
@@ -183,6 +184,17 @@ export class OperationFactory {
     config: OperationFactoryConfig = {}
   ): Promise<RegisterGlobalConstantWalletOperation> {
     return new RegisterGlobalConstantWalletOperation(
+      hash,
+      this.context.clone(),
+      await this.createHeadObservableFromConfig(config)
+    );
+  }
+  
+  async createRevealOperation(
+    hash: string,
+    config: OperationFactoryConfig = {}
+  ): Promise<RevealWalletOperation> {
+    return new RevealWalletOperation(
       hash,
       this.context.clone(),
       await this.createHeadObservableFromConfig(config)
