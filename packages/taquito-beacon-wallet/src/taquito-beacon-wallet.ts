@@ -18,7 +18,9 @@ import {
   createOriginationOperation,
   createSetDelegateOperation,
   createTransferOperation,
+  createTransferTicketOperation,
   createRegisterGlobalConstantOperation,
+  createRevealOperation,
   WalletDelegateParams,
   WalletIncreasePaidStorageParams,
   WalletOriginateParams,
@@ -29,7 +31,7 @@ import {
   WalletFinalizeUnstakeParams,
   WalletTransferTicketParams,
   WalletRegisterGlobalConstantParams,
-  createTransferTicketOperation,
+  WalletRevealParams,
 } from '@taquito/taquito';
 import { buf2hex, hex2buf, mergebuf } from '@taquito/utils';
 import { UnsupportedActionError } from '@taquito/core';
@@ -216,6 +218,21 @@ export class BeaconWallet implements WalletProvider {
     );
   }
 
+  async mapRevealParamsToWalletParams(params: () => Promise<WalletRevealParams>) {
+    let walletParams: WalletRevealParams;
+    await this.client.showPrepare();
+    try {
+      walletParams = await params();
+    } catch (err) {
+      await this.client.hideUI(['alert']);
+      throw err;
+    }
+    return this.removeDefaultParams(
+      walletParams,
+      await createRevealOperation(this.formatParameters(walletParams), await this.getPKH(), await this.getPK())
+    );
+  }
+
   formatParameters(params: any) {
     if (params.fee) {
       params.fee = params.fee.toString();
@@ -237,7 +254,8 @@ export class BeaconWallet implements WalletProvider {
       | WalletFinalizeUnstakeParams
       | WalletOriginateParams
       | WalletDelegateParams
-      | WalletRegisterGlobalConstantParams,
+      | WalletRegisterGlobalConstantParams
+      | WalletRevealParams,
     operatedParams: any
   ) {
     // If fee, storageLimit or gasLimit is undefined by user

@@ -190,6 +190,12 @@ export class WalletOperationBatch {
         case OpKind.INCREASE_PAID_STORAGE:
           this.withIncreasePaidStorage(param);
           break;
+        case OpKind.REGISTER_GLOBAL_CONSTANT:
+          this.withRegisterGlobalConstant(param);
+          break;
+        case OpKind.REVEAL:
+          this.withReveal(param);
+          break;
         default:
           throw new InvalidOperationKindError(JSON.stringify((param as any).kind));
       }
