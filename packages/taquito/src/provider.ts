@@ -15,7 +15,6 @@ import {
 import {
   createOriginationOperation,
   createRegisterGlobalConstantOperation,
-  createRevealOperation,
   createSetDelegateOperation,
   createTransferOperation,
   createTransferTicketOperation,
@@ -139,12 +138,6 @@ export abstract class Provider {
         return createSmartRollupExecuteOutboxMessageOperation({
           ...param,
         });
-      case OpKind.REVEAL:
-        return createRevealOperation(
-          param,
-          await this.signer.publicKeyHash(),
-          await this.signer.publicKey()
-        );
       default:
         throw new InvalidOperationKindError((param as any).kind);
     }

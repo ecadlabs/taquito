@@ -9,7 +9,6 @@ import {
   FinalizeUnstakeParams,
   TransferTicketParams,
   RegisterGlobalConstantParams,
-  RevealParams,
 } from '../operations/types';
 
 export type WalletDefinedFields = 'source';
@@ -35,12 +34,7 @@ export type WalletIncreasePaidStorageParams = Omit<IncreasePaidStorageParams, Wa
 
 export type WalletTransferTicketParams = Omit<TransferTicketParams, WalletDefinedFields>;
 
-export type WalletRegisterGlobalConstantParams = Omit<
-  RegisterGlobalConstantParams,
-  WalletDefinedFields
->;
-
-export type WalletRevealParams = Omit<RevealParams, WalletDefinedFields>;
+export type WalletRegisterGlobalConstantParams = Omit<RegisterGlobalConstantParams, WalletDefinedFields>;
 
 export interface WalletProvider {
   /**
@@ -105,11 +99,6 @@ export interface WalletProvider {
   mapIncreasePaidStorageWalletParams: (
     params: () => Promise<WalletIncreasePaidStorageParams>
   ) => Promise<any>;
-
-  /**
-   * @description Transform WalletRevealParams into a format compliant with the underlying wallet
-   */
-  mapRevealParamsToWalletParams: (params: () => Promise<WalletRevealParams>) => Promise<any>;
 
   /**
    * @description Request the wallet to send an operation batch

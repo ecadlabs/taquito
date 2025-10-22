@@ -26,8 +26,7 @@ export type ParamsWithKind =
   | withKind<SmartRollupAddMessagesParams, OpKind.SMART_ROLLUP_ADD_MESSAGES>
   | withKind<FailingNoopParams, OpKind.FAILING_NOOP>
   | withKind<SmartRollupOriginateParams, OpKind.SMART_ROLLUP_ORIGINATE>
-  | withKind<SmartRollupExecuteOutboxMessageParams, OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE>
-  | withKind<RevealParams, OpKind.REVEAL>;
+  | withKind<SmartRollupExecuteOutboxMessageParams, OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE>;
 
 export type ParamsWithKindExtended = ParamsWithKind | withKind<RevealParams, OpKind.REVEAL>;
 

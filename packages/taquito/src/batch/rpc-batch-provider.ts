@@ -6,7 +6,6 @@ import { ContractProvider } from '../contract/interface';
 import {
   createOriginationOperation,
   createRegisterGlobalConstantOperation,
-  createRevealOperation,
   createSetDelegateOperation,
   createTransferOperation,
   createTransferTicketOperation,
@@ -25,7 +24,6 @@ import {
   TransferParams,
   ParamsWithKind,
   RegisterGlobalConstantParams,
-  RevealParams,
   TransferTicketParams,
   IncreasePaidStorageParams,
   SmartRollupAddMessagesParams,
@@ -33,8 +31,6 @@ import {
   SmartRollupExecuteOutboxMessageParams,
   UpdateConsensusKeyParams,
   UpdateCompanionKeyParams,
-  RPCOperation,
-  RPCRevealOperation,
 } from '../operations/types';
 import { OpKind } from '@taquito/rpc';
 import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
@@ -63,14 +59,12 @@ export const BATCH_KINDS = [
   OpKind.ORIGINATION,
   OpKind.TRANSACTION,
   OpKind.DELEGATION,
-  OpKind.REVEAL,
 ];
 export type BatchKinds =
   | OpKind.ACTIVATION
   | OpKind.ORIGINATION
   | OpKind.TRANSACTION
-  | OpKind.DELEGATION
-  | OpKind.REVEAL;
+  | OpKind.DELEGATION;
 
 export class OperationBatch extends Provider {
   private operations: ParamsWithKind[] = [];
@@ -147,17 +141,6 @@ export class OperationBatch extends Provider {
       throw new InvalidAddressError(params.delegate, delegateValidation);
     }
     this.operations.push({ kind: OpKind.DELEGATION, ...params });
-    return this;
-  }
-
-  /**
-   *
-   * @description Add a reveal operation to the batch
-   *
-   * @param params Reveal operation parameter
-   */
-  withReveal(params: RevealParams) {
-    this.operations.push({ kind: OpKind.REVEAL, ...params });
     return this;
   }
 
@@ -334,12 +317,6 @@ export class OperationBatch extends Provider {
         return createSmartRollupExecuteOutboxMessageOperation({
           ...param,
         });
-      case OpKind.REVEAL:
-        return createRevealOperation(
-          param,
-          await this.signer.publicKeyHash(),
-          await this.signer.publicKey()
-        );
       default:
         throw new InvalidOperationKindError(JSON.stringify((param as any).kind));
     }
@@ -384,9 +361,6 @@ export class OperationBatch extends Provider {
           break;
         case OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE:
           this.withSmartRollupExecuteOutboxMessage(param);
-          break;
-        case OpKind.REVEAL:
-          this.withReveal(param);
           break;
         default:
           throw new InvalidOperationKindError(JSON.stringify((param as any).kind));
