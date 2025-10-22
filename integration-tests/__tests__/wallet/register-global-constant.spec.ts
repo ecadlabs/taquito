@@ -1,11 +1,15 @@
 import { InMemorySigner } from "@taquito/signer";
 import { CONFIGS } from "../../config";
+const crypto = require('crypto');
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   let signerAlice = new InMemorySigner('edsk3QoqBuvdamxouPhin7swCvkQNgq4jP5KZPbwWNnwdZpSpJiEbq');
 
   describe(`Test wallet registerGlobalConstant using: ${rpc}`, () => {
     const Tezos = lib
+    const randomAnnots = () => crypto.randomBytes(16).toString('hex');
+    let annots = randomAnnots();
+
     beforeAll(async () => {
       setup(true)
       if (rpc.includes('seoul')) {
@@ -25,6 +29,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             { int: '999' },
             { int: '999' },
           ],
+          annots: [`%${annots}`]
         },
       }).send();
 
