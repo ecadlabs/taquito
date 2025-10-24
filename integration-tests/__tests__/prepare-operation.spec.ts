@@ -1,4 +1,4 @@
-import { OperationContentsBallot, OperationContentsTransaction } from '@taquito/rpc';
+import { OperationContentsBallot, OperationContentsTransaction, OperationContentsProposals } from '@taquito/rpc';
 import { OpKind } from '@taquito/taquito';
 import { CONFIGS } from '../config';
 import { LocalForger } from '@taquito/local-forging';
@@ -79,10 +79,9 @@ CONFIGS().forEach(({ lib, setup, protocol, createAddress }) => {
 
     });
 
-    it('should be able to prepare a ballot operation', async () => {
-      const prepared = await Tezos.prepare.ballot({
-        proposal: 'PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg',
-        ballot: 'yay'
+    it('should be able to prepare a proposals operation', async () => {
+      const prepared = await Tezos.prepare.proposals({
+        proposals: ['PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg']
       });
 
       expect(prepared).toBeDefined();
@@ -91,11 +90,10 @@ CONFIGS().forEach(({ lib, setup, protocol, createAddress }) => {
       expect(prepared.opOb.branch).toBeDefined();
       expect(prepared.opOb.contents).toBeDefined();
 
-      const content = prepared.opOb.contents[0] as OperationContentsBallot
+      const content = prepared.opOb.contents[0] as OperationContentsProposals;
 
-      expect(prepared.opOb.contents[0].kind).toEqual('ballot');
-      expect(content.proposal).toEqual('PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg');
-      expect(content.ballot).toEqual('yay');
+      expect(prepared.opOb.contents[0].kind).toEqual('proposals');
+      expect(content.proposals).toEqual(['PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg']);
       expect(prepared.opOb.protocol).toEqual(protocol);
     });
 
@@ -140,6 +138,36 @@ CONFIGS().forEach(({ lib, setup, protocol, createAddress }) => {
         expect(preapply[0].contents[0].kind).toEqual('transaction');
       }
 
+    });
+
+    it('Verify ballot and proposals operations have source parameter in prepared structure', async () => {
+      const preparedBallot = await Tezos.prepare.ballot({
+        proposal: 'PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg',
+        ballot: 'yay'
+      });
+
+      console.log(preparedBallot.opOb.contents);
+
+      expect(preparedBallot.opOb.contents[0].kind).toEqual('ballot');
+      expect(preparedBallot.opOb.contents[0]).toHaveProperty('source');
+      expect(preparedBallot.opOb.contents[0]).toHaveProperty('period');
+      expect(preparedBallot.opOb.contents[0]).toHaveProperty('proposal');
+      expect(preparedBallot.opOb.contents[0]).toHaveProperty('ballot');
+
+      // Verify source is not undefined
+      expect((preparedBallot.opOb.contents[0] as OperationContentsBallot).source).toBeDefined();
+
+      const preparedProposals = await Tezos.prepare.proposals({
+        proposals: ['PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg']
+      });
+
+      expect(preparedProposals.opOb.contents[0].kind).toEqual('proposals');
+      expect(preparedProposals.opOb.contents[0]).toHaveProperty('source');
+      expect(preparedProposals.opOb.contents[0]).toHaveProperty('period');
+      expect(preparedProposals.opOb.contents[0]).toHaveProperty('proposals');
+      
+      // Verify source is not undefined
+      expect((preparedProposals.opOb.contents[0] as OperationContentsProposals).source).toBeDefined();
     });
   });
 
