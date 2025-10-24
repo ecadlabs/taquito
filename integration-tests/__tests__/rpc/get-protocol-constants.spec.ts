@@ -657,12 +657,10 @@ CONFIGS().forEach(({ lib, rpc, networkType }) => {
         smart_rollup_max_wrapped_proof_binary_size: 30000,
         smart_rollup_message_size_limit: 4096,
         smart_rollup_max_number_of_messages_per_level: '1000000',
-        consensus_rights_delay: 1,
+        consensus_rights_delay: 2,
         blocks_preservation_cycles: 1,
         delegate_parameters_activation_delay: 3,
-        tolerated_inactivity_period_high: 1,
-        tolerated_inactivity_period_low: 1,
-        tolerated_inactivity_period_threshold: 10,
+        tolerated_inactivity_period: 1,
         blocks_per_cycle: 200,
         blocks_per_commitment: 25,
         nonce_revelation_threshold: 50,
@@ -707,8 +705,8 @@ CONFIGS().forEach(({ lib, rpc, networkType }) => {
           denominator: 3
         },
         cache_script_size: 100000000,
-        cache_stake_distribution_cycles: 4,
-        cache_sampler_state_cycles: 4,
+        cache_stake_distribution_cycles: 5,
+        cache_sampler_state_cycles: 5,
         dal_parametric: {
           feature_enable: true,
           incentives_enable: true,
@@ -801,9 +799,9 @@ CONFIGS().forEach(({ lib, rpc, networkType }) => {
           denominator: 2,
           numerator: 1,
         },
-        issuance_modification_delay: 1,
-        consensus_key_activation_delay: 1,
-        unstake_finalization_delay: 2
+        issuance_modification_delay: 2,
+        consensus_key_activation_delay: 2,
+        unstake_finalization_delay: 3,
       });
 
     });
