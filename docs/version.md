@@ -16,7 +16,7 @@ author: Jev Bjorsell
 
 ### `@taquito/beacon-wallet`
 
-- Upgraded `@airgap/beacon` dependencies to `4.6.1` #3202
+- Upgraded `@airgap/beacon` dependencies to `4.6.2` #3218
 
 ## 🐞 Bug Fixes
 
