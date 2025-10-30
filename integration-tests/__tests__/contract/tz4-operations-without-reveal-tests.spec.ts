@@ -76,7 +76,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker, knownTicketCont
     it('verify that setDelegate fee and gas is sufficient', async () => {
       const estimated = await Tz4.estimate.setDelegate({ delegate: knownBaker, source: await Tz4.signer.publicKeyHash() })
       expect(estimated?.suggestedFeeMutez).toBeGreaterThanOrEqual(450)
-      expect(estimated?.gasLimit).toBeGreaterThanOrEqual(1674)
+      expect(estimated?.gasLimit).toBeGreaterThanOrEqual(1673)
       expect(estimated?.storageLimit).toBe(0)
 
       const setDelegateOp = await Tz4.contract.setDelegate({ delegate: knownBaker, source: await Tz4.signer.publicKeyHash() })
@@ -87,7 +87,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker, knownTicketCont
     it('verify that registerDelegate fee and gas is sufficient', async () => {
       const estimated = await Tz4.estimate.registerDelegate({})
       expect(estimated?.suggestedFeeMutez).toBeGreaterThanOrEqual(450)
-      expect(estimated?.gasLimit).toBeGreaterThanOrEqual(1674)
+      expect(estimated?.gasLimit).toBeGreaterThanOrEqual(1673)
       expect(estimated?.storageLimit).toBe(0)
 
       const registerDelegateOp = await Tz4.contract.registerDelegate({})

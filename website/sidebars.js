@@ -152,6 +152,7 @@ const sidebars = {
           label: 'Sapling',
           collapsed: false,
           collapsible: false,
+          className: 'sidebarSubcategory',
           items: ['sapling', 'sapling_in_memory_spending_key', 'sapling_in_memory_viewing_key'],
         },
       ],

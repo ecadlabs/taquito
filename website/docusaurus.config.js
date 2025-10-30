@@ -17,6 +17,10 @@ module.exports = {
     {
       src: 'https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js',
       async: true,
+    },
+    {
+      src: 'https://cdnjs.cloudflare.com/ajax/libs/bignumber.js/9.1.2/bignumber.min.js',
+      async: true,
     }
   ],
   stylesheets: [
