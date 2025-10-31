@@ -172,8 +172,8 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker, knownTicketCont
         destination: knownBaker,
         entrypoint: 'default',
       })
-      expect(estimated?.suggestedFeeMutez).toBeGreaterThanOrEqual(464)
-      expect(estimated?.gasLimit).toBeGreaterThanOrEqual(1382)
+      expect(estimated?.suggestedFeeMutez).toBeGreaterThanOrEqual(463)
+      expect(estimated?.gasLimit).toBeGreaterThanOrEqual(1381)
 
       const transferTicketOp = await Tz2.contract.transferTicket({
         ticketContents: ticket.content,

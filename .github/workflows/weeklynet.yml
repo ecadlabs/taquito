@@ -1,9 +1,9 @@
-name: Shadownet Integration Tests
+name: Weeklynet Integration Tests
 
 on:
   push:
     branches:
-      - '**shadownet**'
+      - '**weeklynet**'
 
 jobs:
   integration-tests-sahdownet:
@@ -18,4 +18,4 @@ jobs:
       - run: npm run build
       - if: always()
         id: integration-tests-sahdownet
-        run: npm -w integration-tests run test:shadownet -- --maxWorkers=4
+        run: npm -w integration-tests run test:weeklynet-secret-key
