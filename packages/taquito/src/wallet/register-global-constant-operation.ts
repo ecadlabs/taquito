@@ -1,6 +1,7 @@
 import {
     BlockResponse,
     OperationContentsAndResultRegisterGlobalConstant,
+    OperationContentsAndResultReveal,
     OpKind,
   } from '@taquito/rpc';
   import { Observable } from 'rxjs';
@@ -16,6 +17,17 @@ import {
       newHead$: Observable<BlockResponse>
     ) {
       super(opHash, context, newHead$);
+    }
+
+    public async revealOperation() {
+      const operationResult = await this.operationResults();
+      if (!operationResult) {
+        throw new ObservableError('operationResult returned undefined');
+      }
+  
+      return operationResult.find((x) => x.kind === OpKind.REVEAL) as
+        | OperationContentsAndResultReveal
+        | undefined;
     }
   
     public async registerGlobalConstantOperation() {
