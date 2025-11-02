@@ -20,6 +20,7 @@ import {
   WalletUnstakeParams,
   WalletFinalizeUnstakeParams,
   WalletTransferTicketParams,
+  WalletRegisterGlobalConstantParams,
 } from './interface';
 import {
   InvalidAddressError,
@@ -44,7 +45,8 @@ export type WalletParamsWithKind =
   | withKind<WalletOriginateParams, OpKind.ORIGINATION>
   | withKind<WalletDelegateParams, OpKind.DELEGATION>
   | withKind<WalletIncreasePaidStorageParams, OpKind.INCREASE_PAID_STORAGE>
-  | withKind<WalletTransferTicketParams, OpKind.TRANSFER_TICKET>;
+  | withKind<WalletTransferTicketParams, OpKind.TRANSFER_TICKET>
+  | withKind<WalletRegisterGlobalConstantParams, OpKind.REGISTER_GLOBAL_CONSTANT>;
 
 export class WalletOperationBatch {
   private operations: WalletParamsWithKind[] = [];
@@ -143,6 +145,8 @@ export class WalletOperationBatch {
         return this.walletProvider.mapDelegateParamsToWalletParams(async () => param);
       case OpKind.INCREASE_PAID_STORAGE:
         return this.walletProvider.mapIncreasePaidStorageWalletParams(async () => param);
+      case OpKind.REGISTER_GLOBAL_CONSTANT:
+        return this.walletProvider.mapRegisterGlobalConstantParamsToWalletParams(async () => param);
       default:
         throw new InvalidOperationKindError(JSON.stringify((param as any).kind));
     }
@@ -451,6 +455,21 @@ export class Wallet {
       return this.context.operationFactory.createIncreasePaidStorageOperation(opHash);
     });
   }
+
+  /**
+ * @description Register a Micheline expression in a global table of constants.
+ * @returns a RegisterGlobalConstantWalletOperation promise object when followed by .send()
+ * @param params operation parameter
+ */
+registerGlobalConstant(params: WalletRegisterGlobalConstantParams) {
+  return this.walletCommand(async () => {
+    const mappedParams = await this.walletProvider.mapRegisterGlobalConstantParamsToWalletParams(
+      async () => params
+    );
+    const opHash = await this.walletProvider.sendOperations([mappedParams]);
+    return this.context.operationFactory.createRegisterGlobalConstantOperation(opHash);
+  });
+}
 
   /**
    * @description Create a batch of operation

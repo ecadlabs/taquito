@@ -23,6 +23,7 @@ import { OriginationWalletOperation } from './origination-operation';
 import { TransactionWalletOperation } from './transaction-operation';
 import { TransferTicketWalletOperation } from './transfer-ticket-operation';
 import { ConfirmationTimeoutError } from '../errors';
+import { RegisterGlobalConstantWalletOperation } from './register-global-constant-operation';
 
 export function timeoutAfter<T>(timeoutMillisec: number): (source: Observable<T>) => Observable<T> {
   return function inner(source: Observable<T>): Observable<T> {
@@ -171,6 +172,17 @@ export class OperationFactory {
     config: OperationFactoryConfig = {}
   ): Promise<IncreasePaidStorageWalletOperation> {
     return new IncreasePaidStorageWalletOperation(
+      hash,
+      this.context.clone(),
+      await this.createHeadObservableFromConfig(config)
+    );
+  }
+
+  async createRegisterGlobalConstantOperation(
+    hash: string,
+    config: OperationFactoryConfig = {}
+  ): Promise<RegisterGlobalConstantWalletOperation> {
+    return new RegisterGlobalConstantWalletOperation(
       hash,
       this.context.clone(),
       await this.createHeadObservableFromConfig(config)
