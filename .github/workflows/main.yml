@@ -1,4 +1,4 @@
-name: Node.js CI
+name: Node.js CI with Security
 
 on:
   pull_request:
@@ -17,26 +17,104 @@ jobs:
       fail-fast: false
       matrix:
         node:
-          - 'lts/Hydrogen'
-          - 'lts/Iron'
-          - 'lts/Jod'
+          - 'lts/Hydrogen'  # Node 18
+          - 'lts/Iron'      # Node 20
+          - 'lts/Jod'       # Node 22
     steps:
       - uses: actions/checkout@v4
+      
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
-      - run: npm ci
-      - run: npm run build
-      - run: npm run lint
-      - run: npm run build-docs
-      - run: npm run test -- --runInBand
-      - name: Codecov
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Audit dependencies
+        run: npm audit --audit-level=moderate
+        continue-on-error: true  # Don't fail build, just warn
+      
+      - name: Check for outdated packages
+        run: npm outdated || true
+      
+      - name: Build
+        run: npm run build
+      
+      - name: Lint
+        run: npm run lint
+      
+      - name: Build docs
+        run: npm run build-docs
+      
+      - name: Test
+        run: npm run test -- --runInBand
+      
+      - name: Upload coverage
         uses: codecov/codecov-action@v3.1.1
         with:
           file: .coverage/*.json
         env:
           CI: true
           RUN_INTEGRATION: true
+
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write  # For uploading SARIF results
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/Hydrogen'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run npm audit
+        run: |
+          npm audit --json > audit-results.json || true
+          cat audit-results.json
+      
+      - name: Generate SBOM
+        run: |
+          npm install -g @cyclonedx/cyclonedx-npm
+          cyclonedx-npm --output-file sbom.json || echo "SBOM generation failed, but continuing..."
+        continue-on-error: true
+      
+      - name: Upload SBOM as artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sbom-${{ github.sha }}
+          path: sbom.json
+          if-no-files-found: ignore
+      
+      - name: License check
+        run: |
+          npx license-checker --summary || true
+
+  dependency-review:
+    name: Dependency Review
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    permissions:
+      contents: read
+      pull-requests: write
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Dependency Review
+        uses: actions/dependency-review-action@v3
+        with:
+          fail-on-severity: moderate
+          comment-summary-in-pr: true
 
   integration-tests-testnet:
     runs-on: ubuntu-latest
@@ -49,43 +127,23 @@ jobs:
             rpc_url: https://rpc.seoulnet.teztnets.com/
     steps:
       - uses: actions/checkout@v4
+      
       - uses: actions/setup-node@v4
         with:
           node-version: lts/Hydrogen
+          cache: 'npm'
+      
       - run: npm ci
       - run: npm run build
+      
       - if: ${{ !github.event.pull_request.head.repo.fork }}
         name: Tailscale
         uses: tailscale/github-action@v1
         with:
           authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
           version: 1.32.2
+      
       - id: run-tests
         run: npm -w integration-tests run test:${{ matrix.testnet }} -- --maxWorkers=4
         env:
-          # Ternary operator workaround
           TEZOS_RPC_${{ matrix.testnet_uppercase }}: ${{ github.event.pull_request.head.repo.fork && matrix.rpc_url || null }}
-  # integration-tests-testnet-seoulnet-secret-key:
-  #   runs-on: ubuntu-latest
-  #   continue-on-error: true
-  #   strategy:
-  #     matrix:
-  #       include:
-  #         - testnet: seoulnet
-  #           testnet_uppercase: SEOULNET
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - uses: actions/setup-node@v4
-  #       with:
-  #         node-version: lts/hydrogen
-  #     - run: npm ci
-  #     - run: npm run build
-  #     - if: ${{ !github.event.pull_request.head.repo.fork }}
-  #       name: Tailscale
-  #       uses: tailscale/github-action@v1
-  #       with:
-  #         authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
-  #         version: 1.32.2
-  #     - run: npm -w integration-tests run test:seoulnet-secret-key
-  #       env:
-  #         RUN_${{ matrix.testnet_uppercase }}_WITH_SECRET_KEY: true
