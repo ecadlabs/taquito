@@ -63,7 +63,6 @@ jobs:
       - id: run-tests
         run: npm -w integration-tests run test:${{ matrix.testnet }} -- --maxWorkers=4
         env:
-          NODE_OPTIONS: --experimental-vm-modules
           # Ternary operator workaround
           TEZOS_RPC_${{ matrix.testnet_uppercase }}: ${{ github.event.pull_request.head.repo.fork && matrix.rpc_url || null }}
   # integration-tests-testnet-seoulnet-secret-key:
