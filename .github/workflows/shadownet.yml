@@ -6,7 +6,7 @@ on:
       - '**shadownet**'
 
 jobs:
-  integration-tests-sahdownet:
+  integration-tests-shadownet:
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:
@@ -17,5 +17,5 @@ jobs:
       - run: npm ci
       - run: npm run build
       - if: always()
-        id: integration-tests-sahdownet
+        id: integration-tests-shadownet
         run: npm -w integration-tests run test:shadownet -- --maxWorkers=4
