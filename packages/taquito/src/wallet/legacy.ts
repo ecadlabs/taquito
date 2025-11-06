@@ -10,6 +10,7 @@ import {
   WalletUnstakeParams,
   WalletFinalizeUnstakeParams,
   WalletTransferTicketParams,
+  WalletRegisterGlobalConstantParams,
 } from './interface';
 import { WalletParamsWithKind } from './wallet';
 
@@ -54,6 +55,10 @@ export class LegacyWalletProvider implements WalletProvider {
 
   async mapTransferTicketParamsToWalletParams(params: () => Promise<WalletTransferTicketParams>) {
     return attachKind(await params(), OpKind.TRANSFER_TICKET);
+  }
+
+  async mapRegisterGlobalConstantParamsToWalletParams(params: () => Promise<WalletRegisterGlobalConstantParams>) {
+    return attachKind(await params(), OpKind.REGISTER_GLOBAL_CONSTANT);
   }
 
   async sendOperations(params: WalletParamsWithKind[]) {

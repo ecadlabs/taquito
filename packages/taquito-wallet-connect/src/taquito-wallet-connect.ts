@@ -13,11 +13,13 @@ import {
   createTransferOperation,
   createTransferTicketOperation,
   createIncreasePaidStorageOperation,
+  createRegisterGlobalConstantOperation,
   RPCDelegateOperation,
   RPCOriginationOperation,
   RPCTransferOperation,
   RPCTransferTicketOperation,
   RPCIncreasePaidStorageOperation,
+  RPCRegisterGlobalConstantOperation,
   WalletDelegateParams,
   WalletOriginateParams,
   WalletProvider,
@@ -27,6 +29,7 @@ import {
   WalletUnstakeParams,
   WalletFinalizeUnstakeParams,
   WalletIncreasePaidStorageParams,
+  WalletRegisterGlobalConstantParams,
 } from '@taquito/taquito';
 import { getSdkError } from '@walletconnect/utils';
 import {
@@ -565,6 +568,7 @@ export class WalletConnect implements WalletProvider {
       | WalletOriginateParams
       | WalletDelegateParams
       | WalletIncreasePaidStorageParams
+      | WalletRegisterGlobalConstantParams
   ) {
     const formatedParams: any = params;
     if (typeof params.fee !== 'undefined') {
@@ -585,13 +589,15 @@ export class WalletConnect implements WalletProvider {
       | WalletTransferTicketParams
       | WalletOriginateParams
       | WalletDelegateParams
-      | WalletIncreasePaidStorageParams,
+      | WalletIncreasePaidStorageParams
+      | WalletRegisterGlobalConstantParams,
     operatedParams:
       | Partial<RPCTransferOperation>
       | Partial<RPCTransferTicketOperation>
       | Partial<RPCOriginationOperation>
       | Partial<RPCDelegateOperation>
       | Partial<RPCIncreasePaidStorageOperation>
+      | Partial<RPCRegisterGlobalConstantOperation>
   ) {
     if (typeof params.fee === 'undefined') {
       delete operatedParams.fee;
@@ -674,6 +680,15 @@ export class WalletConnect implements WalletProvider {
     return this.removeDefaultLimits(
       walletParams,
       await createIncreasePaidStorageOperation(this.formatParameters(walletParams))
+    );
+  }
+
+  async mapRegisterGlobalConstantParamsToWalletParams(params: () => Promise<WalletRegisterGlobalConstantParams>) {
+    const walletParams: WalletRegisterGlobalConstantParams = await params();
+  
+    return this.removeDefaultLimits(
+      walletParams,
+      await createRegisterGlobalConstantOperation(this.formatParameters(walletParams))
     );
   }
 }
