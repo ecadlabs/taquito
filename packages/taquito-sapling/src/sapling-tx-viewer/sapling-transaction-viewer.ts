@@ -61,6 +61,55 @@ export class SaplingTransactionViewer {
     return balance;
   }
 
+  private isChangeTransaction(
+    decryptedAsReceiver: Omit<Input, 'position'> | undefined,
+    decryptedAsSender: Omit<Input, 'position'> | undefined
+  ): boolean {
+    if (!decryptedAsReceiver || !decryptedAsSender) {
+      return false;
+    }
+
+    const receiverAddress = decryptedAsReceiver.paymentAddress;
+    const senderAddress = decryptedAsSender.paymentAddress;
+
+    if (receiverAddress.length !== senderAddress.length) {
+      return false;
+    }
+
+    for (let i = 0; i < receiverAddress.length; i++) {
+      if (receiverAddress[i] !== senderAddress[i]) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+async getTransactionsWithoutChangeRaw() {
+  const transactions = [];
+  const { commitments_and_ciphertexts, nullifiers } = await this.getSaplingDiff();
+  for (let i = 0; i < commitments_and_ciphertexts.length; i++) {
+    const decryptedAsReceiver = await this.decryptCiphertextAsReceiver(
+      commitments_and_ciphertexts[i]
+    );
+    const decryptedAsSender = await this.decryptCiphertextAsSender(
+      commitments_and_ciphertexts[i]
+    );
+
+    const isChange = this.isChangeTransaction(decryptedAsReceiver, decryptedAsSender);
+    if (!isChange) {
+      continue;
+    }
+    if (decryptedAsReceiver) {    
+      transactions.push({ ...readableFormat(decryptedAsReceiver), position: i, type: 'incoming' });
+    }
+    if (decryptedAsSender) {
+      transactions.push({ ...readableFormat(decryptedAsSender), position: i, type: 'outgoing' });
+    }
+  }
+  return transactions;
+}
+
   /**
    * @description Retrieve all the incoming and outgoing transactions associated with the configured viewing key.
    * The response properties are in Uint8Array format; use the getIncomingAndOutgoingTransactions method for readable properties
