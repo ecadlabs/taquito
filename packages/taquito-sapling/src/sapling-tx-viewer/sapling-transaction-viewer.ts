@@ -86,8 +86,8 @@ export class SaplingTransactionViewer {
   }
 
 async getTransactionsWithoutChangeRaw() {
-  const transactions = [];
-  const { commitments_and_ciphertexts, nullifiers } = await this.getSaplingDiff();
+  const transactions: (ReturnType<typeof readableFormat> & { type: 'incoming' | 'outgoing',  position: number })[] = [];
+  const { commitments_and_ciphertexts } = await this.getSaplingDiff();
   for (let i = 0; i < commitments_and_ciphertexts.length; i++) {
     const decryptedAsReceiver = await this.decryptCiphertextAsReceiver(
       commitments_and_ciphertexts[i]
