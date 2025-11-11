@@ -328,7 +328,7 @@ class SaplingTransactionViewer {
                 const decryptedAsReceiver = yield this.decryptCiphertextAsReceiver(commitments_and_ciphertexts[i]);
                 const decryptedAsSender = yield this.decryptCiphertextAsSender(commitments_and_ciphertexts[i]);
                 const isChange = this.isChangeTransaction(decryptedAsReceiver, decryptedAsSender);
-                if (!isChange) {
+                if (isChange) {
                     continue;
                 }
                 if (decryptedAsReceiver) {

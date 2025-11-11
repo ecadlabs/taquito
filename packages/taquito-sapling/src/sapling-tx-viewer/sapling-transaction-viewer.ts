@@ -85,30 +85,37 @@ export class SaplingTransactionViewer {
     return true;
   }
 
-async getTransactionsWithoutChangeRaw() {
-  const transactions: (ReturnType<typeof readableFormat> & { type: 'incoming' | 'outgoing',  position: number })[] = [];
-  const { commitments_and_ciphertexts } = await this.getSaplingDiff();
-  for (let i = 0; i < commitments_and_ciphertexts.length; i++) {
-    const decryptedAsReceiver = await this.decryptCiphertextAsReceiver(
-      commitments_and_ciphertexts[i]
-    );
-    const decryptedAsSender = await this.decryptCiphertextAsSender(
-      commitments_and_ciphertexts[i]
-    );
+  async getTransactionsWithoutChangeRaw() {
+    const transactions: (ReturnType<typeof readableFormat> & {
+      type: 'incoming' | 'outgoing';
+      position: number;
+    })[] = [];
+    const { commitments_and_ciphertexts } = await this.getSaplingDiff();
+    for (let i = 0; i < commitments_and_ciphertexts.length; i++) {
+      const decryptedAsReceiver = await this.decryptCiphertextAsReceiver(
+        commitments_and_ciphertexts[i]
+      );
+      const decryptedAsSender = await this.decryptCiphertextAsSender(
+        commitments_and_ciphertexts[i]
+      );
 
-    const isChange = this.isChangeTransaction(decryptedAsReceiver, decryptedAsSender);
-    if (!isChange) {
-      continue;
+      const isChange = this.isChangeTransaction(decryptedAsReceiver, decryptedAsSender);
+      if (isChange) {
+        continue;
+      }
+      if (decryptedAsReceiver) {
+        transactions.push({
+          ...readableFormat(decryptedAsReceiver),
+          position: i,
+          type: 'incoming',
+        });
+      }
+      if (decryptedAsSender) {
+        transactions.push({ ...readableFormat(decryptedAsSender), position: i, type: 'outgoing' });
+      }
     }
-    if (decryptedAsReceiver) {    
-      transactions.push({ ...readableFormat(decryptedAsReceiver), position: i, type: 'incoming' });
-    }
-    if (decryptedAsSender) {
-      transactions.push({ ...readableFormat(decryptedAsSender), position: i, type: 'outgoing' });
-    }
+    return transactions;
   }
-  return transactions;
-}
 
   /**
    * @description Retrieve all the incoming and outgoing transactions associated with the configured viewing key.
