@@ -18,6 +18,7 @@ import {
   createOriginationOperation,
   createSetDelegateOperation,
   createTransferOperation,
+  createRegisterGlobalConstantOperation,
   WalletDelegateParams,
   WalletIncreasePaidStorageParams,
   WalletOriginateParams,
@@ -27,6 +28,7 @@ import {
   WalletUnstakeParams,
   WalletFinalizeUnstakeParams,
   WalletTransferTicketParams,
+  WalletRegisterGlobalConstantParams,
   createTransferTicketOperation,
 } from '@taquito/taquito';
 import { buf2hex, hex2buf, mergebuf } from '@taquito/utils';
@@ -199,6 +201,21 @@ export class BeaconWallet implements WalletProvider {
     );
   }
 
+  async mapRegisterGlobalConstantParamsToWalletParams(params: () => Promise<WalletRegisterGlobalConstantParams>) {
+    let walletParams: WalletRegisterGlobalConstantParams;
+    await this.client.showPrepare();
+    try {
+      walletParams = await params();
+    } catch (err) {
+      await this.client.hideUI(['alert']);
+      throw err;
+    }
+    return this.removeDefaultParams(
+      walletParams,
+      await createRegisterGlobalConstantOperation(this.formatParameters(walletParams))
+    );
+  }
+
   formatParameters(params: any) {
     if (params.fee) {
       params.fee = params.fee.toString();
@@ -219,7 +236,8 @@ export class BeaconWallet implements WalletProvider {
       | WalletUnstakeParams
       | WalletFinalizeUnstakeParams
       | WalletOriginateParams
-      | WalletDelegateParams,
+      | WalletDelegateParams
+      | WalletRegisterGlobalConstantParams,
     operatedParams: any
   ) {
     // If fee, storageLimit or gasLimit is undefined by user

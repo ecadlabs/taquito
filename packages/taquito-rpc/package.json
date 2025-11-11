@@ -1,6 +1,6 @@
 {
   "name": "@taquito/rpc",
-  "version": "23.0.2",
+  "version": "23.0.3",
   "description": "Provides low level methods, and types to invoke RPC calls from a Nomadic Tezos RPC node",
   "keywords": [
     "tezos",
@@ -66,15 +66,15 @@
     ]
   },
   "dependencies": {
-    "@taquito/core": "^23.0.2",
-    "@taquito/http-utils": "^23.0.2",
-    "@taquito/utils": "^23.0.2",
+    "@taquito/core": "^23.0.3",
+    "@taquito/http-utils": "^23.0.3",
+    "@taquito/utils": "^23.0.3",
     "bignumber.js": "^9.1.2"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.42",
     "@types/jest": "^29.5.12",
-    "@types/node": "^18",
+    "@types/node": "^20",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "colors": "^1.4.0",

@@ -2,6 +2,31 @@
 title: Versions
 author: Jev Bjorsell
 ---
+# Taquito v23.0.3
+
+## 🛠 Internal
+
+- Updated CI script for weeklynet #3210
+
+### `Website`
+
+- Fine-tuned the sidebar for alignment #3216
+- Revamped RPC nodes page  #3207
+- Improved SSR safety #3123
+
+### `@taquito/beacon-wallet`
+
+- Upgraded `@airgap/beacon` dependencies to `4.6.2` #3218
+
+## 🐞 Bug Fixes
+
+### `@taquito/michelson-encoder`
+- Updated `Schema` class `Typecheck` function to return `boolean` #3213
+
+
+### `@taquito/tzip12`
+- Updated `TokenMetadata.token_id` type from `number` to `BigNumber` to be aligned with `nat` defined in tzip #3214
+
 # Taquito v23.0.2
 
 ## 🛠 Internal
