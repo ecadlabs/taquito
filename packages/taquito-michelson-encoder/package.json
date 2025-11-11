@@ -67,11 +67,11 @@
     ]
   },
   "dependencies": {
+    "@noble/curves": "^1.9.7",
     "@taquito/core": "^23.0.3",
     "@taquito/rpc": "^23.0.3",
     "@taquito/utils": "^23.0.3",
     "bignumber.js": "^9.1.2",
-    "elliptic": "^6.6.1",
     "fast-json-stable-stringify": "^2.1.0"
   },
   "devDependencies": {
