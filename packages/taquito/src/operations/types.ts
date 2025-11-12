@@ -80,7 +80,9 @@ export type RPCOpWithSource =
   | RPCUpdateCompanionKeyOperation
   | RPCSmartRollupAddMessagesOperation
   | RPCSmartRollupOriginateOperation
-  | RPCSmartRollupOutboxMessageOperation;
+  | RPCSmartRollupOutboxMessageOperation
+  | RPCBallotOperation
+  | RPCProposalsOperation;
 
 export const isOpWithGasBuffer = <T extends { kind: OpKind; destination?: string }>(
   op: T
