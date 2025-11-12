@@ -1,6 +1,6 @@
 {
   "name": "@taquito/utils",
-  "version": "23.0.2",
+  "version": "23.0.3",
   "description": "converts michelson data and types into convenient JS/TS objects",
   "keywords": [
     "tezos",
@@ -65,7 +65,7 @@
     "@noble/curves": "^1.9.7",
     "@stablelib/blake2b": "^1.0.1",
     "@stablelib/ed25519": "^1.0.3",
-    "@taquito/core": "^23.0.2",
+    "@taquito/core": "^23.0.3",
     "@types/bs58check": "^2.1.2",
     "bignumber.js": "^9.1.2",
     "blakejs": "^1.2.1",
@@ -76,7 +76,7 @@
   "devDependencies": {
     "@types/bluebird": "^3.5.42",
     "@types/jest": "^29.5.12",
-    "@types/node": "^18",
+    "@types/node": "^20",
     "@types/typedarray-to-buffer": "^4.0.4",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",

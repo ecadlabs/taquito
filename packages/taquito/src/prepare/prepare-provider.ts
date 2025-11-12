@@ -297,6 +297,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
           return {
             ...op,
             period: currentVotingPeriod?.voting_period.index,
+            ...this.getSource(op, pkh, source),
           };
         case OpKind.PROPOSALS:
           if (currentVotingPeriod === undefined) {
@@ -305,6 +306,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
           return {
             ...op,
             period: currentVotingPeriod?.voting_period.index,
+            ...this.getSource(op, pkh, source),
           };
         default:
           throw new InvalidOperationKindError((op as RPCOperation).kind);
@@ -922,7 +924,6 @@ export class PrepareProvider extends Provider implements PreparationProvider {
    */
   async ballot(params: BallotParams): Promise<PreparedOperation> {
     const { pkh } = await this.getKeys();
-
     const op = await createBallotOperation({
       ...params,
     });
@@ -947,7 +948,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       ops,
       headCounter,
       pkh,
-      undefined,
+      params.source,
       currentVotingPeriod
     );
 
@@ -994,7 +995,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       ops,
       headCounter,
       pkh,
-      undefined,
+      params.source,
       currentVotingPeriod
     );
 
