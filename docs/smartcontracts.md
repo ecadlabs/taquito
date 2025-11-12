@@ -252,7 +252,7 @@ The preceding example returns an object giving indication on how to structure th
 ```js live noInline
 // import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
 // const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com')
-// import { importKey } from '@taquito/signer';
+// import { importKey } from '@taquito/taquito';
 
 importKey(Tezos, secretKey)
   .then((signer) => {
@@ -304,7 +304,7 @@ The preceding example returns an array which contains the different possible sig
 ```js live noInline
 // import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
 // const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com')
-// import { importKey } from '@taquito/signer';
+// import { importKey } from '@taquito/taquito';
 
 importKey(Tezos, secretKey)
   .then((signer) => {

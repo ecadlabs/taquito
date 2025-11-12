@@ -76,8 +76,8 @@ This feature will import your private key in memory and sign operations using th
 If you have a private key, you can import it as follows:
 
 ```js
-import { TezosToolkit } from '@taquito/taquito';
-import { InMemorySigner, importKey } from '@taquito/signer';
+import { TezosToolkit, importKey } from '@taquito/taquito';
+import { InMemorySigner } from '@taquito/signer';
 
 const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
 

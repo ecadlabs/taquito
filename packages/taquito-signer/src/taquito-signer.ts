@@ -28,7 +28,6 @@ import {
 import { SigningKey, isPOP, PublicKey } from './key-interface';
 import { BLSKey, BLSPublicKey } from './bls-key';
 
-export * from './import-key';
 export { VERSION } from './version';
 export * from './derivation-tools';
 export * from './helpers';
