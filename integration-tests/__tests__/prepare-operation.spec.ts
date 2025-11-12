@@ -166,8 +166,6 @@ CONFIGS().forEach(({ lib, setup, protocol, createAddress }) => {
         ballot: 'yay'
       });
 
-      console.log(preparedBallot.opOb.contents);
-
       expect(preparedBallot.opOb.contents[0].kind).toEqual('ballot');
       expect(preparedBallot.opOb.contents[0]).toHaveProperty('source');
       expect(preparedBallot.opOb.contents[0]).toHaveProperty('period');
