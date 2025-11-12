@@ -51,7 +51,7 @@ An annotation identifies every argument. Therefore we can ignore optional values
 
 ```js live noInline
 // import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
-// import { importKey } from '@taquito/signer';
+// import { importKey } from '@taquito/taquito';
 // const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
 
 //%data
@@ -130,7 +130,7 @@ The way to write the parameter when calling the function of a contract with Taqu
 ```js live noInline
 // import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
 // const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com')
-// import { importKey } from '@taquito/signer';
+// import { importKey } from '@taquito/taquito';
 
 importKey(Tezos, secretKey)
 .then(signer => {
@@ -154,7 +154,7 @@ importKey(Tezos, secretKey)
 ```js live noInline
 // import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
 // const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com')
-// import { importKey } from '@taquito/signer';
+// import { importKey } from '@taquito/taquito';
 
 importKey(Tezos, secretKey)
 .then(signer => {
@@ -185,7 +185,7 @@ The `address %address` and the `nat %ttl` of the `set_child_record` function are
 ```js live noInline
 // import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
 // const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com')
-// import { importKey } from '@taquito/signer';
+// import { importKey } from '@taquito/taquito';
 
 importKey(Tezos, secretKey)
 .then(signer => {

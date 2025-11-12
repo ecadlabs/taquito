@@ -13,8 +13,7 @@ import {
   ValidationResult,
 } from '@taquito/utils';
 import { BaseTokenSchema } from '../schema/types';
-import elliptic from 'elliptic';
-const ec = new elliptic.ec('p256');
+import { p256 } from '@noble/curves/nist';
 
 /**
  *  @category Error
@@ -110,11 +109,23 @@ export class KeyToken extends ComparableToken {
   }
 
   decompressP256PublicKey(compressedKey: Uint8Array) {
-    const compressedArray = Array.from(compressedKey);
-    const keyPair = ec.keyFromPublic(compressedArray);
-    const publicKey = keyPair.getPublic();
-    const uncompressedArray = publicKey.encode('array', false);
-    return Buffer.concat([new Uint8Array([0x02]), new Uint8Array(uncompressedArray)]); // add back prefix 0x02
+    try {
+      // Convert compressed key to hex string for @noble/curves
+      const compressedHex = Array.from(compressedKey)
+        .map((byte) => byte.toString(16).padStart(2, '0'))
+        .join('');
+
+      // Create point from compressed hex
+      const point = p256.Point.fromHex(compressedHex);
+
+      // Get uncompressed coordinates
+      const uncompressed = point.toBytes(false); // false = uncompressed
+
+      // Add back the prefix 0x02 and return as Buffer
+      return Buffer.concat([new Uint8Array([0x02]), uncompressed]);
+    } catch (error) {
+      throw new Error(`Failed to decompress P256 public key: ${error}`);
+    }
   }
 
   compare(key1: string, key2: string): number {
