@@ -10,7 +10,6 @@ import {
   signaturePrefixes,
   validatePublicKey,
   ValidationResult,
-  invalidDetail,
 } from './taquito-utils';
 import elliptic from 'elliptic';
 import {
@@ -123,7 +122,7 @@ export function validatePkAndExtractPrefix(publicKey: string): PkPrefix {
   const pkPrefix = publicKey.substring(0, 4);
   const publicKeyValidation = validatePublicKey(publicKey);
   if (publicKeyValidation !== ValidationResult.VALID) {
-    throw new InvalidPublicKeyError(publicKey, invalidDetail(publicKeyValidation));
+    throw new InvalidPublicKeyError(publicKey, publicKeyValidation);
   }
   return pkPrefix as PkPrefix;
 }

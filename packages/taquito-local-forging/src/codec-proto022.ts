@@ -8,7 +8,6 @@ import {
   InvalidKeyHashError,
   InvalidPublicKeyError,
   ValidationResult,
-  invalidDetail,
 } from '@taquito/utils';
 import {
   OversizedEntryPointError,
@@ -231,7 +230,7 @@ export const publicKeyHashEncoder = (val: string) => {
     default:
       throw new InvalidKeyHashError(
         val,
-        invalidDetail(ValidationResult.NO_PREFIX_MATCHED) +
+        ValidationResult.NO_PREFIX_MATCHED +
           ` expecting one for the following "${Prefix.TZ1}", "${Prefix.TZ2}", "${Prefix.TZ3}" or "${Prefix.TZ4}".`
       );
   }
@@ -264,7 +263,7 @@ export const publicKeyEncoder = (val: string) => {
     default:
       throw new InvalidPublicKeyError(
         val,
-        invalidDetail(ValidationResult.NO_PREFIX_MATCHED) +
+        ValidationResult.NO_PREFIX_MATCHED +
           ` expecting one of the following '${Prefix.EDPK}', '${Prefix.SPPK}', '${Prefix.P2PK}' or '${Prefix.BLPK}'.`
       );
   }
@@ -283,7 +282,7 @@ export const addressEncoder = (val: string): string => {
     default:
       throw new InvalidAddressError(
         val,
-        invalidDetail(ValidationResult.NO_PREFIX_MATCHED) +
+        ValidationResult.NO_PREFIX_MATCHED +
           ` expecting one of the following prefix '${Prefix.TZ1}', ${Prefix.TZ2}', '${Prefix.TZ3}', '${Prefix.TZ4}' or '${Prefix.KT1}'.`
       );
   }
@@ -293,7 +292,7 @@ export const smartRollupAddressEncoder = (val: string): string => {
   if (val.substring(0, 3) !== Prefix.SR1) {
     throw new InvalidSmartRollupAddressError(
       val,
-      invalidDetail(ValidationResult.NO_PREFIX_MATCHED) + ` expecting prefix '${Prefix.SR1}'.`
+      ValidationResult.NO_PREFIX_MATCHED + ` expecting prefix '${Prefix.SR1}'.`
     );
   }
   return prefixEncoder(Prefix.SR1)(val);
@@ -307,7 +306,7 @@ export const smartContractAddressEncoder = (val: string): string => {
   }
   throw new InvalidContractAddressError(
     val,
-    invalidDetail(ValidationResult.NO_PREFIX_MATCHED) + ` expecting prefix '${Prefix.KT1}'.`
+    ValidationResult.NO_PREFIX_MATCHED + ` expecting prefix '${Prefix.KT1}'.`
   );
 };
 
@@ -325,7 +324,7 @@ export const publicKeyDecoder = (val: Uint8ArrayConsumer) => {
     default:
       throw new InvalidPublicKeyError(
         val.toString(),
-        invalidDetail(ValidationResult.NO_PREFIX_MATCHED)
+        ValidationResult.NO_PREFIX_MATCHED
       );
   }
 };
@@ -337,7 +336,7 @@ export const smartRollupCommitmentHashEncoder = (val: string): string => {
   }
   throw new InvalidSmartRollupCommitmentHashError(
     val,
-    invalidDetail(ValidationResult.NO_PREFIX_MATCHED) + ` expecting prefix '${Prefix.SRC1}'`
+    ValidationResult.NO_PREFIX_MATCHED + ` expecting prefix '${Prefix.SRC1}'`
   );
 };
 
@@ -361,7 +360,7 @@ export const smartRollupAddressDecoder = (val: Uint8ArrayConsumer): string => {
   if (address.substring(0, 3) !== Prefix.SR1) {
     throw new InvalidSmartRollupAddressError(
       address,
-      invalidDetail(ValidationResult.NO_PREFIX_MATCHED) + ` expecting prefix '${Prefix.SR1}'.`
+      ValidationResult.NO_PREFIX_MATCHED + ` expecting prefix '${Prefix.SR1}'.`
     );
   }
   return address;
@@ -376,7 +375,7 @@ export const smartContractAddressDecoder = (val: Uint8ArrayConsumer) => {
   }
   throw new InvalidContractAddressError(
     val.toString(),
-    invalidDetail(ValidationResult.NO_PREFIX_MATCHED)
+    ValidationResult.NO_PREFIX_MATCHED
   );
 };
 
@@ -385,7 +384,7 @@ export const smartRollupCommitmentHashDecoder = (val: Uint8ArrayConsumer) => {
   if (address.substring(0, 4) !== Prefix.SRC1) {
     throw new InvalidSmartRollupCommitmentHashError(
       address,
-      invalidDetail(ValidationResult.NO_PREFIX_MATCHED) + ` expecting prefix '${Prefix.SRC1}'`
+      ValidationResult.NO_PREFIX_MATCHED + ` expecting prefix '${Prefix.SRC1}'`
     );
   }
   return address;
@@ -546,7 +545,7 @@ const signatureV1Encoder = (val: string) => {
     default:
       throw new InvalidSignatureError(
         val,
-        invalidDetail(ValidationResult.NO_PREFIX_MATCHED) +
+        ValidationResult.NO_PREFIX_MATCHED +
           ` expecting one of the following '${Prefix.EDSIG}', '${Prefix.SPSIG}', '${Prefix.P2SIG}' or '${Prefix.BLSIG}'.`
       );
   }
@@ -605,7 +604,7 @@ export const dalCommitmentEncoder = (val: string): string => {
   }
   throw new InvalidDalCommitmentError(
     val,
-    invalidDetail(ValidationResult.NO_PREFIX_MATCHED) + ` expecting prefix '${Prefix.SH}'`
+    ValidationResult.NO_PREFIX_MATCHED + ` expecting prefix '${Prefix.SH}'`
   );
 };
 
@@ -614,7 +613,7 @@ export const dalCommitmentDecoder = (val: Uint8ArrayConsumer) => {
   if (commitment.substring(0, 2) !== Prefix.SH) {
     throw new InvalidDalCommitmentError(
       commitment,
-      invalidDetail(ValidationResult.NO_PREFIX_MATCHED) + ` expecting prefix '${Prefix.SH}'`
+      ValidationResult.NO_PREFIX_MATCHED + ` expecting prefix '${Prefix.SH}'`
     );
   }
   return commitment;
