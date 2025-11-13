@@ -143,14 +143,6 @@ export abstract class Provider {
     }
   }
 
-  protected async runOperation(op: RPCRunOperationParam) {
-    return {
-      opResponse: await this.rpc.runOperation(op),
-      op,
-      context: this.context.clone(),
-    };
-  }
-
   protected async simulate(op: RPCSimulateOperationParam) {
     return {
       opResponse: await this.rpc.simulateOperation(op),

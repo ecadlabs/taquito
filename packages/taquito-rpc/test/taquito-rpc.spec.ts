@@ -3608,64 +3608,6 @@ describe('RpcClient test', () => {
     });
   });
 
-  describe('runOperation', () => {
-    it('should query the right url and data', async () => {
-      const testData = {};
-
-      httpBackend.createRequest.mockResolvedValue({ content: {} });
-      await client.runOperation(testData as any);
-
-      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
-        method: 'POST',
-        url: 'root/chains/test/blocks/head/helpers/scripts/run_operation',
-      });
-
-      expect(httpBackend.createRequest.mock.calls[0][1]).toEqual(testData);
-    });
-
-    it('should use enum for property category to avoid space in name', async () => {
-      const testData = {};
-
-      httpBackend.createRequest.mockResolvedValue({
-        contents: [
-          {
-            metadata: {
-              balance_updates: [
-                {
-                  kind: 'minted',
-                  category: 'baking bonuses',
-                  change: '-266662',
-                  origin: 'block',
-                },
-                {
-                  kind: 'freezer',
-                  category: 'deposits',
-                  staker: {
-                    baker: 'tz1aWXP237BLwNHJcCD4b3DutCevhqq2T1Z9',
-                  },
-                  change: '266662',
-                  origin: 'block',
-                },
-              ],
-            },
-          },
-        ],
-      });
-      const response = await client.runOperation(testData as RPCRunOperationParam);
-
-      const balanceUpdate =
-        'metadata' in response.contents[0]
-          ? ((response.contents[0] as any)['metadata'][
-              'balance_updates'
-            ] as OperationMetadataBalanceUpdates[])
-          : [];
-      expect(balanceUpdate![0]['category']).toEqual(
-        METADATA_BALANCE_UPDATES_CATEGORY.BAKING_BONUSES
-      );
-      expect(balanceUpdate![1]['category']).toEqual(METADATA_BALANCE_UPDATES_CATEGORY.DEPOSITS);
-    });
-  });
-
   describe('simulateOperation', () => {
     it('should query the right url and data', async () => {
       const testData = {};

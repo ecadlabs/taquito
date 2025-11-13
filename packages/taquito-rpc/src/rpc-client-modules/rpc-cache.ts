@@ -958,20 +958,6 @@ export class RpcClientCache implements RpcClientInterface {
   }
 
   /**
-   * @deprecated Deprecated in favor of simulateOperation
-   * @param op Operation to run
-   * @param options contains generic configuration for rpc calls to specified block and version
-   * @description Run an operation with the context of the given block and without signature checks and return the operation application result, including the consumed gas.
-   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/alpha-openapi.json
-   */
-  async runOperation(
-    op: RPCRunOperationParam,
-    { block }: RPCOptions = defaultRPCOptions
-  ): Promise<PreapplyResponse> {
-    return this.rpcClient.runOperation(op, { block });
-  }
-
-  /**
    * @param op Operation to simulate
    * @param options contains generic configuration for rpc calls to specified block and version
    * @description Simulate running an operation at some future moment (based on the number of blocks given in the `latency` argument), and return the operation application result.

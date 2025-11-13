@@ -51,7 +51,6 @@ describe('RPCEstimateProvider test signer', () => {
     getBlock: jest.Mock<any, any>;
     getContract: jest.Mock<any, any>;
     getBlockMetadata: jest.Mock<any, any>;
-    runOperation: jest.Mock<any, any>;
     simulateOperation: jest.Mock<any, any>;
     injectOperation: jest.Mock<any, any>;
     preapplyOperations: jest.Mock<any, any>;
@@ -74,7 +73,6 @@ describe('RPCEstimateProvider test signer', () => {
 
   beforeEach(() => {
     mockRpcClient = {
-      runOperation: jest.fn(),
       simulateOperation: jest.fn(),
       getBalance: jest.fn(),
       getSpendable: jest.fn(),
@@ -788,7 +786,7 @@ describe('RPCEstimateProvider test signer', () => {
       });
     });
 
-    it('runOperation should be called with a gas_limit equal to the hard_gas_limit_per_operation constant', async () => {
+    it('simulateOperation should be called with a gas_limit equal to the hard_gas_limit_per_operation constant', async () => {
       const transactionResult = {
         kind: 'transaction',
         metadata: {
@@ -831,7 +829,7 @@ describe('RPCEstimateProvider test signer', () => {
       );
     });
 
-    it('runOperation should be called with a gas_limit calculated with the hard_gas_limit_per_block constant and the number of operation in the batch', async () => {
+    it('simulateOperation should be called with a gas_limit calculated with the hard_gas_limit_per_block constant and the number of operation in the batch', async () => {
       const transactionResult = {
         kind: 'transaction',
         fee: 10000,
@@ -1151,7 +1149,6 @@ describe('RPCEstimateProvider test wallet', () => {
     getBlock: jest.Mock<any, any>;
     getContract: jest.Mock<any, any>;
     getBlockMetadata: jest.Mock<any, any>;
-    runOperation: jest.Mock<any, any>;
     simulateOperation: jest.Mock<any, any>;
     injectOperation: jest.Mock<any, any>;
     preapplyOperations: jest.Mock<any, any>;
@@ -1176,7 +1173,6 @@ describe('RPCEstimateProvider test wallet', () => {
 
   beforeEach(() => {
     mockRpcClient = {
-      runOperation: jest.fn(),
       simulateOperation: jest.fn(),
       getBalance: jest.fn(),
       getSpendable: jest.fn(),
