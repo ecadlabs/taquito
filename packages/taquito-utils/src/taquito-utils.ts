@@ -11,7 +11,6 @@
 
 import { Buffer } from 'buffer';
 import { PrefixV2, prefixV2, payloadLength } from './constants';
-import { prefix } from './constants'; // (deprecated will be removed in the next minor release)
 import { hash as blake2b } from '@stablelib/blake2b';
 import bs58check from 'bs58check';
 import BigNumber from 'bignumber.js';
@@ -26,9 +25,7 @@ import {
 import { ValidationResult } from './validators';
 export * from './validators';
 export { VERSION } from './version';
-export { prefix, Prefix, prefixLength } from './constants'; // (deprecated will be removed in the next minor release)
-export { PrefixV2, payloadLength } from './constants';
-export { validatePkAndExtractPrefix } from './verify-signature'; // (deprecated will be removed in the next minor release)
+export { PrefixV2, prefixV2, payloadLength } from './constants';
 export { verifySignature, BLS12_381_DST, POP_DST } from './verify-signature';
 export * from './errors';
 export { format } from './format';
@@ -713,10 +710,10 @@ export function b58decode(payload: string) {
   const buf = bs58check.decode(payload);
 
   const prefixMap = {
-    [prefix.tz1.toString()]: '0000',
-    [prefix.tz2.toString()]: '0001',
-    [prefix.tz3.toString()]: '0002',
-    [prefix.tz4.toString()]: '0003',
+    [prefixV2[PrefixV2.Ed25519PublicKeyHash].toString()]: '0000',
+    [prefixV2[PrefixV2.Secp256k1PublicKeyHash].toString()]: '0001',
+    [prefixV2[PrefixV2.P256PublicKeyHash].toString()]: '0002',
+    [prefixV2[PrefixV2.BLS12_381PublicKeyHash].toString()]: '0003',
   };
 
   const pref = prefixMap[new Uint8Array(buf.slice(0, 3)).toString()];
@@ -759,7 +756,7 @@ export function encodePubKey(value: string) {
  * @returns return address
  */
 export function encodeL2Address(value: string) {
-  return b58cencode(value, prefix.tz4);
+  return b58cencode(value, prefixV2[PrefixV2.BLS12_381PublicKeyHash]);
 }
 
 /**
