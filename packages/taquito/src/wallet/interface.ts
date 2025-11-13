@@ -43,9 +43,9 @@ export interface WalletProvider {
   getPKH: () => Promise<string>;
 
   /**
-   * @description Get the public key from the wallet
+   * @description Request the public key from the wallet
    */
-  getPK: () => Promise<string>;
+  getPK?: () => Promise<string>;
 
   /**
    * @description Transform WalletTransferParams into a format compliant with the underlying wallet

@@ -225,7 +225,12 @@ export class Wallet {
    */
   async pk({ forceRefetch }: PKHOption = {}) {
     if (!this._pk || forceRefetch) {
-      this._pk = await this.walletProvider.getPK();
+      // Try to get PK from wallet provider first, fall back to signer
+      if (this.walletProvider.getPK) {
+        this._pk = await this.walletProvider.getPK();
+      } else {
+        this._pk = await this.context.signer.publicKey();
+      }
     }
     return this._pk;
   }
@@ -515,13 +520,5 @@ registerGlobalConstant(params: WalletRegisterGlobalConstantParams) {
       readProvider
     );
     return contractAbstractionComposer(abs, this.context);
-  }
-
-  /**
-   * @deprecated Deprecated in favor of {@link Wallet.pk} will be removed in v19.1
-   * @description Retrieve the PK of the account that is currently in use by the wallet
-   */
-  async getPK() {
-    return await this.pk();
   }
 }

@@ -181,13 +181,6 @@ export class RpcWrapperContractsLibrary implements RpcClientInterface {
   ): Promise<DelegateResponse> {
     return this.rpc.getDelegate(address, { block });
   }
-  async getBigMapKey(
-    address: string,
-    key: BigMapKey,
-    { block }: RPCOptions = defaultRPCOptions
-  ): Promise<MichelsonV1Expression> {
-    return this.rpc.getBigMapKey(address, key, { block });
-  }
   async getBigMapExpr(
     id: string,
     expr: string,

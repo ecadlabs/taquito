@@ -85,7 +85,6 @@ export interface RpcClientInterface {
   getContract(address: string, options?: RPCOptions): Promise<ContractResponse>;
   getManagerKey(address: string, options?: RPCOptions): Promise<ManagerKeyResponse>;
   getDelegate(address: string, options?: RPCOptions): Promise<DelegateResponse>;
-  getBigMapKey(address: string, key: BigMapKey, options?: RPCOptions): Promise<BigMapGetResponse>;
   getBigMapExpr(id: string, expr: string, options?: RPCOptions): Promise<BigMapResponse>;
   getAllDelegates(args: AllDelegatesQueryArguments, options?: RPCOptions): Promise<string[]>;
   getDelegates(address: string, options?: RPCOptions): Promise<DelegatesResponse>;
@@ -150,7 +149,6 @@ export enum RPCMethodName {
   GET_BAKING_RIGHTS = 'getBakingRights',
   GET_BALLOTS = 'getBallots',
   GET_BALLOT_LIST = 'getBallotList',
-  GET_BIG_MAP_KEY = 'getBigMapKey',
   GET_BIG_MAP_EXPR = 'getBigMapExpr',
   GET_BLOCK_HASH = 'getBlockHash',
   GET_BLOCK = 'getBlock',

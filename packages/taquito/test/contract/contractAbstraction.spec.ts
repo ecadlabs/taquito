@@ -28,7 +28,7 @@ describe('ContractAbstraction test', () => {
     rpcContractProvider = new RpcContractProvider(context, mockEstimate as any);
   });
 
-  describe('Calling the `toTansferParams` method on a `ContractMethod` and a `ContractMethodObject` should return the same value', () => {
+  describe('Calling the `toTransferParams` method on a `ContractMethodObject` should return the correct value', () => {
     it('calls the main method of a contract having annotations (genericMultisig where action is change_keys)', async () => {
       const contractAbs = new ContractAbstraction(
         'contractAddress',
@@ -43,29 +43,6 @@ describe('ContractAbstraction test', () => {
         mockReadProvider as any
       );
 
-      // Calling the smart contract main method using flat arguments
-      const methodMainChangeKeys = contractAbs.methods.main(
-        2,
-        'change_keys',
-        2,
-        ['edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g'],
-        [
-          'sigb1FKPeiRgPApxqBMpyBSMpwgnbzhaMcqQcTVwMz82MSzNLBrmRUuVZVgWTBFGcoWQcjTyhfJaxjFtfvB6GGHkfwpxBkFd',
-        ]
-      );
-
-      expect(methodMainChangeKeys).toBeInstanceOf(ContractMethod);
-      expect(methodMainChangeKeys.getSignature()).toEqual([
-        [
-          'nat',
-          'operation',
-          { lambda: { parameters: 'unit', returns: { list: 'operation' } } },
-          { list: { Some: 'signature' } },
-        ],
-        ['nat', 'change_keys', 'nat', { list: 'key' }, { list: { Some: 'signature' } }],
-      ]);
-
-      // Calling the smart contract main method using an object as a parameter where the keys are the annotations
       const methodObjectMainChangeKeys = contractAbs.methodsObject.main({
         payload: {
           counter: 2,
@@ -103,9 +80,6 @@ describe('ContractAbstraction test', () => {
         },
         sigs: { list: { Some: 'signature' } },
       });
-      expect(methodObjectMainChangeKeys.toTransferParams()).toEqual(
-        methodMainChangeKeys.toTransferParams()
-      );
       expect(methodObjectMainChangeKeys.toTransferParams()).toEqual({
         to: 'contractAddress',
         amount: 0,
@@ -172,19 +146,6 @@ describe('ContractAbstraction test', () => {
         mockReadProvider as any
       );
 
-      // Calling the smart contract main method using flat arguments
-      const methodMainoperation = contractAbs.methods.main(
-        '2', // Counter
-        'operation', // Sub function
-        MANAGER_LAMBDA.transferImplicit('tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh', 500), // Action
-        [
-          'sigb1FKPeiRgPApxqBMpyBSMpwgnbzhaMcqQcTVwMz82MSzNLBrmRUuVZVgWTBFGcoWQcjTyhfJaxjFtfvB6GGHkfwpxBkFd',
-        ] // Signature list
-      );
-
-      expect(methodMainoperation).toBeInstanceOf(ContractMethod);
-
-      // Calling the smart contract main method using an object as a parameter where the keys are the annotations
       const methodObjectMainoperation = contractAbs.methodsObject.main({
         payload: {
           counter: 2,
@@ -200,9 +161,6 @@ describe('ContractAbstraction test', () => {
 
       expect(methodObjectMainoperation).toBeInstanceOf(ContractMethodObject);
 
-      expect(methodObjectMainoperation.toTransferParams()).toEqual(
-        methodMainoperation.toTransferParams()
-      );
       expect(methodObjectMainoperation.toTransferParams()).toEqual({
         to: 'contractAddress',
         amount: 0,
@@ -303,14 +261,6 @@ describe('ContractAbstraction test', () => {
         mockReadProvider as any
       );
 
-      const method0 = contractAbs.methods[0](
-        'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
-        'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
-        '1'
-      );
-      expect(method0).toBeInstanceOf(ContractMethod);
-      expect(method0.getSignature()).toEqual(['address', 'address', 'nat']);
-
       const methodObject0 = contractAbs.methodsObject[0]({
         0: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
         1: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
@@ -319,7 +269,6 @@ describe('ContractAbstraction test', () => {
       expect(methodObject0).toBeInstanceOf(ContractMethodObject);
       expect(methodObject0.getSignature()).toEqual({ 0: 'address', 1: 'address', 2: 'nat' });
 
-      expect(methodObject0.toTransferParams()).toEqual(method0.toTransferParams());
       expect(methodObject0.toTransferParams()).toEqual({
         to: 'contractAddress',
         amount: 0,
@@ -378,17 +327,13 @@ describe('ContractAbstraction test', () => {
         mockReadProvider as any
       );
 
-      const method2 = contractAbs.methods[2]('tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', '1');
-      expect(method2).toBeInstanceOf(ContractMethod);
-
-      const methodObject2 = contractAbs.methodsObject[2]({
+      const methodObject = contractAbs.methodsObject[2]({
         0: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
         1: '1',
       });
-      expect(methodObject2).toBeInstanceOf(ContractMethodObject);
+      expect(methodObject).toBeInstanceOf(ContractMethodObject);
 
-      expect(methodObject2.toTransferParams()).toEqual(method2.toTransferParams());
-      expect(methodObject2.toTransferParams()).toEqual({
+      expect(methodObject.toTransferParams()).toEqual({
         to: 'contractAddress',
         amount: 0,
         mutez: false,

@@ -657,18 +657,6 @@ describe('RpcClient test', () => {
     });
   });
 
-  describe('getBigMapKey', () => {
-    it('should query the right url', async () => {
-      await client.getBigMapKey(contractAddress, { key: 'test', type: 'string' } as any);
-      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
-        method: 'POST',
-        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/big_map_get`,
-      });
-
-      expect(httpBackend.createRequest.mock.calls[0][1]).toEqual({ key: 'test', type: 'string' });
-    });
-  });
-
   describe('forgeOperation', () => {
     it('should query the right url', async () => {
       await client.forgeOperations({} as any);

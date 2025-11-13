@@ -1119,15 +1119,18 @@ describe('RPCEstimateProvider test signer', () => {
         mockReadProvider as any
       );
 
-      const contractMethod = contractAbs.methods.main(
-        2,
-        'change_keys',
-        2,
-        ['edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g'],
-        [
-          'sigb1FKPeiRgPApxqBMpyBSMpwgnbzhaMcqQcTVwMz82MSzNLBrmRUuVZVgWTBFGcoWQcjTyhfJaxjFtfvB6GGHkfwpxBkFd',
-        ]
-      );
+      const contractMethod = contractAbs.methodsObject.main({
+        payload: {
+          counter: 2,
+          action: {
+            change_keys: {
+              threshold: 2,
+              keys: ['edpkvS5QFv7KRGfa3b87gg9DBpxSm3NpSwnjhUjNBQrRUUR66F7C9g'],
+            },
+          },
+        },
+        sigs: ['sigb1FKPeiRgPApxqBMpyBSMpwgnbzhaMcqQcTVwMz82MSzNLBrmRUuVZVgWTBFGcoWQcjTyhfJaxjFtfvB6GGHkfwpxBkFd'],
+      });
 
       const estimate = await estimateProvider.contractCall(contractMethod);
 
@@ -1163,7 +1166,12 @@ describe('RPCEstimateProvider test wallet', () => {
 
   let mockWalletProvider: {
     getPKH: jest.Mock<any, any>;
-    getPK: jest.Mock<any, any>;
+  };
+
+  let mockSigner: {
+    publicKeyHash: jest.Mock<any, any>;
+    publicKey: jest.Mock<any, any>;
+    sign: jest.Mock<any, any>;
   };
 
   beforeEach(() => {
@@ -1192,7 +1200,12 @@ describe('RPCEstimateProvider test wallet', () => {
 
     mockWalletProvider = {
       getPKH: jest.fn(),
-      getPK: jest.fn(),
+    };
+
+    mockSigner = {
+      publicKeyHash: jest.fn(),
+      publicKey: jest.fn(),
+      sign: jest.fn(),
     };
 
     // Required for operations confirmation polling
@@ -1220,11 +1233,13 @@ describe('RPCEstimateProvider test wallet', () => {
     });
 
     mockWalletProvider.getPKH.mockResolvedValue('tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb');
-    mockWalletProvider.getPK.mockResolvedValue(
+    mockSigner.publicKeyHash.mockResolvedValue('tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb');
+    mockSigner.publicKey.mockResolvedValue(
       'edpkvGfYw3LyB1UcCahKQk4rF2tvbMUk8GFiTuMjL75uGXrpvKXhjn'
     );
     const context = new Context(mockRpcClient as any);
     context.forger = mockForger;
+    context.signer = mockSigner as any;
     context.walletProvider = mockWalletProvider as any;
     estimateProvider = new RPCEstimateProvider(context);
   });
