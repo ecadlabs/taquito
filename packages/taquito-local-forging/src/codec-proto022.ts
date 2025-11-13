@@ -1,13 +1,12 @@
 import {
-  b58cdecode,
-  b58cencode,
   buf2hex,
   PrefixV2,
-  prefixV2,
   payloadLength,
   InvalidKeyHashError,
   InvalidPublicKeyError,
   ValidationResult,
+  b58Encode,
+  b58DecodeAndCheckPrefix,
 } from '@taquito/utils';
 import {
   OversizedEntryPointError,
@@ -40,12 +39,12 @@ import {
 // https://tezos.gitlab.io/shell/p2p_api.html specifies data types and structure for forging
 
 export const prefixEncoder = (prefix: PrefixV2) => (str: string) => {
-  return buf2hex(Buffer.from(b58cdecode(str, prefixV2[prefix])));
+  return buf2hex(Buffer.from(b58DecodeAndCheckPrefix(str, [prefix], true)));
 };
 
 export const prefixDecoder = (pre: PrefixV2) => (str: Uint8ArrayConsumer) => {
   const val = str.consume(payloadLength[pre]);
-  return b58cencode(val, prefixV2[pre]);
+  return b58Encode(val, pre);
 };
 
 export const tz1Decoder = prefixDecoder(PrefixV2.Ed25519PublicKeyHash);
