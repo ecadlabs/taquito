@@ -14,7 +14,6 @@ import { ChainIds } from '../constants';
 import { TzReadProvider } from '../read-provider/interface';
 import { Wallet } from '../wallet';
 import { ContractMethodFactory } from './contract-methods/contract-method-factory';
-import { ContractMethod } from './contract-methods/contract-method-flat-param';
 import { ContractMethodObject } from './contract-methods/contract-method-object-param';
 import { OnChainView } from './contract-methods/contract-on-chain-view';
 import { InvalidParameterError } from './errors';
@@ -80,10 +79,6 @@ const isView = (entrypoint: MichelsonV1Expression): boolean => {
 export type Contract = ContractAbstraction<ContractProvider>;
 export type WalletContract = ContractAbstraction<Wallet>;
 
-type DefaultMethods<T extends ContractProvider | Wallet> = Record<
-  string,
-  (...args: any[]) => ContractMethod<T>
->;
 type DefaultMethodsObject<T extends ContractProvider | Wallet> = Record<
   string,
   (args?: any) => ContractMethodObject<T>

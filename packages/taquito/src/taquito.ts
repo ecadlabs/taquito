@@ -5,7 +5,6 @@
 
 import { RpcClient, RpcClientInterface } from '@taquito/rpc';
 import { Forger } from '@taquito/local-forging';
-import { RPCBatchProvider } from './batch/rpc-batch-provider';
 import { Protocols } from './constants';
 import { ConfigConfirmation, Context, TaquitoProvider } from './context';
 import { ContractProvider } from './contract/interface';

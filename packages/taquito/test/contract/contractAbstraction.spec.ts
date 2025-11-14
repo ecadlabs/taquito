@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { Context } from '../../src/context';
 import { ContractAbstraction, MANAGER_LAMBDA } from '../../src/contract';
-import { ContractMethod } from '../../src/contract/contract-methods/contract-method-flat-param';
 import { ContractMethodObject } from '../../src/contract/contract-methods/contract-method-object-param';
 import { RpcContractProvider } from '../../src/contract/rpc-contract-provider';
 import { noAnnotCode } from '../../../../integration-tests/data/token_without_annotation';

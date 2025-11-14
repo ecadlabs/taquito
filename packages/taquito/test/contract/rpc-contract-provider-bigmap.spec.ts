@@ -3,15 +3,13 @@ import { HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
 import {
   sample,
   sampleStorage,
-  sampleBigMapValue,
   tokenInit,
   tokenCode,
   sampleBigMapAbstractionValue,
 } from './data';
 import BigNumber from 'bignumber.js';
 import { Context } from '../../src/context';
-import { ContractMethod } from '../../src/contract/contract-methods/contract-method-flat-param';
-import { MichelsonMap, Schema } from '@taquito/michelson-encoder';
+import { Schema } from '@taquito/michelson-encoder';
 import { BigMapAbstraction } from '../../src/contract/big-map';
 import { ContractMethodObject } from '../../src/contract/contract-methods/contract-method-object-param';
 import { smallNestedMapTypecheck, ticketTokenTestMock } from '../helpers';

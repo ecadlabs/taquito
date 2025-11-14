@@ -1,6 +1,5 @@
 import {
   OperationContentsAndResult,
-  RPCRunOperationParam,
   RPCSimulateOperationParam,
   RpcClientInterface,
 } from '@taquito/rpc';
