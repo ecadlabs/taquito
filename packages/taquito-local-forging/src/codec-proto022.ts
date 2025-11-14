@@ -1,14 +1,12 @@
 import {
-  b58cdecode,
-  b58cencode,
   buf2hex,
-  Prefix,
-  prefix as prefixMap,
-  prefixLength,
+  PrefixV2,
+  payloadLength,
   InvalidKeyHashError,
   InvalidPublicKeyError,
   ValidationResult,
-  invalidDetail,
+  b58Encode,
+  b58DecodeAndCheckPrefix,
 } from '@taquito/utils';
 import {
   OversizedEntryPointError,
@@ -40,28 +38,28 @@ import {
 
 // https://tezos.gitlab.io/shell/p2p_api.html specifies data types and structure for forging
 
-export const prefixEncoder = (prefix: Prefix) => (str: string) => {
-  return buf2hex(Buffer.from(b58cdecode(str, prefixMap[prefix])));
+export const prefixEncoder = (prefix: PrefixV2) => (str: string) => {
+  return buf2hex(Buffer.from(b58DecodeAndCheckPrefix(str, [prefix], true)));
 };
 
-export const prefixDecoder = (pre: Prefix) => (str: Uint8ArrayConsumer) => {
-  const val = str.consume(prefixLength[pre]);
-  return b58cencode(val, prefixMap[pre]);
+export const prefixDecoder = (pre: PrefixV2) => (str: Uint8ArrayConsumer) => {
+  const val = str.consume(payloadLength[pre]);
+  return b58Encode(val, pre);
 };
 
-export const tz1Decoder = prefixDecoder(Prefix.TZ1);
-export const branchDecoder = prefixDecoder(Prefix.B);
+export const tz1Decoder = prefixDecoder(PrefixV2.Ed25519PublicKeyHash);
+export const branchDecoder = prefixDecoder(PrefixV2.BlockHash);
 export const publicKeyHashDecoder = (val: Uint8ArrayConsumer) => {
   const prefix = val.consume(1);
 
   if (prefix[0] === 0x00) {
-    return prefixDecoder(Prefix.TZ1)(val);
+    return prefixDecoder(PrefixV2.Ed25519PublicKeyHash)(val);
   } else if (prefix[0] === 0x01) {
-    return prefixDecoder(Prefix.TZ2)(val);
+    return prefixDecoder(PrefixV2.Secp256k1PublicKeyHash)(val);
   } else if (prefix[0] === 0x02) {
-    return prefixDecoder(Prefix.TZ3)(val);
+    return prefixDecoder(PrefixV2.P256PublicKeyHash)(val);
   } else if (prefix[0] === 0x03) {
-    return prefixDecoder(Prefix.TZ4)(val);
+    return prefixDecoder(PrefixV2.BLS12_381PublicKeyHash)(val);
   }
 };
 
@@ -77,17 +75,17 @@ export const publicKeyHashesDecoder = (val: Uint8ArrayConsumer) => {
   return publicKeyHashes;
 };
 
-export const branchEncoder = prefixEncoder(Prefix.B);
-export const tz1Encoder = prefixEncoder(Prefix.TZ1);
+export const branchEncoder = prefixEncoder(PrefixV2.BlockHash);
+export const tz1Encoder = prefixEncoder(PrefixV2.Ed25519PublicKeyHash);
 
 export const boolEncoder = (bool: unknown): string => (bool ? 'ff' : '00');
 
 export const proposalEncoder = (proposal: string): string => {
-  return prefixEncoder(Prefix.P)(proposal);
+  return prefixEncoder(PrefixV2.ProtocolHash)(proposal);
 };
 
 export const proposalDecoder = (proposal: Uint8ArrayConsumer): string => {
-  return prefixDecoder(Prefix.P)(proposal);
+  return prefixDecoder(PrefixV2.ProtocolHash)(proposal);
 };
 
 export const proposalsDecoder = (proposal: Uint8ArrayConsumer): string[] => {
@@ -220,19 +218,19 @@ export const delegateDecoder = (val: Uint8ArrayConsumer) => {
 export const publicKeyHashEncoder = (val: string) => {
   const pubkeyPrefix = val.substring(0, 3);
   switch (pubkeyPrefix) {
-    case Prefix.TZ1:
-      return '00' + prefixEncoder(Prefix.TZ1)(val);
-    case Prefix.TZ2:
-      return '01' + prefixEncoder(Prefix.TZ2)(val);
-    case Prefix.TZ3:
-      return '02' + prefixEncoder(Prefix.TZ3)(val);
-    case Prefix.TZ4:
-      return '03' + prefixEncoder(Prefix.TZ4)(val);
+    case PrefixV2.Ed25519PublicKeyHash:
+      return '00' + prefixEncoder(PrefixV2.Ed25519PublicKeyHash)(val);
+    case PrefixV2.Secp256k1PublicKeyHash:
+      return '01' + prefixEncoder(PrefixV2.Secp256k1PublicKeyHash)(val);
+    case PrefixV2.P256PublicKeyHash:
+      return '02' + prefixEncoder(PrefixV2.P256PublicKeyHash)(val);
+    case PrefixV2.BLS12_381PublicKeyHash:
+      return '03' + prefixEncoder(PrefixV2.BLS12_381PublicKeyHash)(val);
     default:
       throw new InvalidKeyHashError(
         val,
-        invalidDetail(ValidationResult.NO_PREFIX_MATCHED) +
-          ` expecting one for the following "${Prefix.TZ1}", "${Prefix.TZ2}", "${Prefix.TZ3}" or "${Prefix.TZ4}".`
+        ValidationResult.NO_PREFIX_MATCHED +
+          ` expecting one for the following "${PrefixV2.Ed25519PublicKeyHash}", "${PrefixV2.Secp256k1PublicKeyHash}", "${PrefixV2.P256PublicKeyHash}" or "${PrefixV2.BLS12_381PublicKeyHash}".`
       );
   }
 };
@@ -253,19 +251,19 @@ export const publicKeyHashesEncoder = (val?: string[]) => {
 export const publicKeyEncoder = (val: string) => {
   const pubkeyPrefix = val.substring(0, 4);
   switch (pubkeyPrefix) {
-    case Prefix.EDPK:
-      return '00' + prefixEncoder(Prefix.EDPK)(val);
-    case Prefix.SPPK:
-      return '01' + prefixEncoder(Prefix.SPPK)(val);
-    case Prefix.P2PK:
-      return '02' + prefixEncoder(Prefix.P2PK)(val);
-    case Prefix.BLPK:
-      return '03' + prefixEncoder(Prefix.BLPK)(val);
+    case PrefixV2.Ed25519PublicKey:
+      return '00' + prefixEncoder(PrefixV2.Ed25519PublicKey)(val);
+    case PrefixV2.Secp256k1PublicKey:
+      return '01' + prefixEncoder(PrefixV2.Secp256k1PublicKey)(val);
+    case PrefixV2.P256PublicKey:
+      return '02' + prefixEncoder(PrefixV2.P256PublicKey)(val);
+    case PrefixV2.BLS12_381PublicKey:
+      return '03' + prefixEncoder(PrefixV2.BLS12_381PublicKey)(val);
     default:
       throw new InvalidPublicKeyError(
         val,
-        invalidDetail(ValidationResult.NO_PREFIX_MATCHED) +
-          ` expecting one of the following '${Prefix.EDPK}', '${Prefix.SPPK}', '${Prefix.P2PK}' or '${Prefix.BLPK}'.`
+        ValidationResult.NO_PREFIX_MATCHED +
+          ` expecting one of the following '${PrefixV2.Ed25519PublicKey}', '${PrefixV2.Secp256k1PublicKey}', '${PrefixV2.P256PublicKey}' or '${PrefixV2.BLS12_381PublicKey}'.`
       );
   }
 };
@@ -273,41 +271,41 @@ export const publicKeyEncoder = (val: string) => {
 export const addressEncoder = (val: string): string => {
   const pubkeyPrefix = val.substring(0, 3);
   switch (pubkeyPrefix) {
-    case Prefix.TZ1:
-    case Prefix.TZ2:
-    case Prefix.TZ3:
-    case Prefix.TZ4:
+    case PrefixV2.Ed25519PublicKeyHash:
+    case PrefixV2.Secp256k1PublicKeyHash:
+    case PrefixV2.P256PublicKeyHash:
+    case PrefixV2.BLS12_381PublicKeyHash:
       return '00' + publicKeyHashEncoder(val);
-    case Prefix.KT1:
-      return '01' + prefixEncoder(Prefix.KT1)(val) + '00';
+    case PrefixV2.ContractHash:
+      return '01' + prefixEncoder(PrefixV2.ContractHash)(val) + '00';
     default:
       throw new InvalidAddressError(
         val,
-        invalidDetail(ValidationResult.NO_PREFIX_MATCHED) +
-          ` expecting one of the following prefix '${Prefix.TZ1}', ${Prefix.TZ2}', '${Prefix.TZ3}', '${Prefix.TZ4}' or '${Prefix.KT1}'.`
+        ValidationResult.NO_PREFIX_MATCHED +
+          ` expecting one of the following prefix '${PrefixV2.Ed25519PublicKeyHash}', ${PrefixV2.Secp256k1PublicKeyHash}', '${PrefixV2.P256PublicKeyHash}', '${PrefixV2.BLS12_381PublicKeyHash}' or '${PrefixV2.ContractHash}'.`
       );
   }
 };
 
 export const smartRollupAddressEncoder = (val: string): string => {
-  if (val.substring(0, 3) !== Prefix.SR1) {
+  if (val.substring(0, 3) !== PrefixV2.SmartRollupHash) {
     throw new InvalidSmartRollupAddressError(
       val,
-      invalidDetail(ValidationResult.NO_PREFIX_MATCHED) + ` expecting prefix '${Prefix.SR1}'.`
+      ValidationResult.NO_PREFIX_MATCHED + ` expecting prefix '${PrefixV2.SmartRollupHash}'.`
     );
   }
-  return prefixEncoder(Prefix.SR1)(val);
+  return prefixEncoder(PrefixV2.SmartRollupHash)(val);
 };
 
 export const smartContractAddressEncoder = (val: string): string => {
   const prefix = val.substring(0, 3);
 
-  if (prefix === Prefix.KT1) {
-    return '01' + prefixEncoder(Prefix.KT1)(val) + '00';
+  if (prefix === PrefixV2.ContractHash) {
+    return '01' + prefixEncoder(PrefixV2.ContractHash)(val) + '00';
   }
   throw new InvalidContractAddressError(
     val,
-    invalidDetail(ValidationResult.NO_PREFIX_MATCHED) + ` expecting prefix '${Prefix.KT1}'.`
+    ValidationResult.NO_PREFIX_MATCHED + ` expecting prefix '${PrefixV2.ContractHash}'.`
   );
 };
 
@@ -315,29 +313,29 @@ export const publicKeyDecoder = (val: Uint8ArrayConsumer) => {
   const preamble = val.consume(1);
   switch (preamble[0]) {
     case 0x00:
-      return prefixDecoder(Prefix.EDPK)(val);
+      return prefixDecoder(PrefixV2.Ed25519PublicKey)(val);
     case 0x01:
-      return prefixDecoder(Prefix.SPPK)(val);
+      return prefixDecoder(PrefixV2.Secp256k1PublicKey)(val);
     case 0x02:
-      return prefixDecoder(Prefix.P2PK)(val);
+      return prefixDecoder(PrefixV2.P256PublicKey)(val);
     case 0x03:
-      return prefixDecoder(Prefix.BLPK)(val);
+      return prefixDecoder(PrefixV2.BLS12_381PublicKey)(val);
     default:
       throw new InvalidPublicKeyError(
         val.toString(),
-        invalidDetail(ValidationResult.NO_PREFIX_MATCHED)
+        ValidationResult.NO_PREFIX_MATCHED
       );
   }
 };
 
 export const smartRollupCommitmentHashEncoder = (val: string): string => {
   const prefix = val.substring(0, 4);
-  if (prefix === Prefix.SRC1) {
-    return prefixEncoder(Prefix.SRC1)(val);
+  if (prefix === PrefixV2.SmartRollupCommitmentHash) {
+    return prefixEncoder(PrefixV2.SmartRollupCommitmentHash)(val);
   }
   throw new InvalidSmartRollupCommitmentHashError(
     val,
-    invalidDetail(ValidationResult.NO_PREFIX_MATCHED) + ` expecting prefix '${Prefix.SRC1}'`
+    ValidationResult.NO_PREFIX_MATCHED + ` expecting prefix '${PrefixV2.SmartRollupCommitmentHash}'`
   );
 };
 
@@ -347,7 +345,7 @@ export const addressDecoder = (val: Uint8ArrayConsumer) => {
     case 0x00:
       return publicKeyHashDecoder(val);
     case 0x01: {
-      const address = prefixDecoder(Prefix.KT1)(val);
+      const address = prefixDecoder(PrefixV2.ContractHash)(val);
       val.consume(1);
       return address;
     }
@@ -357,11 +355,11 @@ export const addressDecoder = (val: Uint8ArrayConsumer) => {
 };
 
 export const smartRollupAddressDecoder = (val: Uint8ArrayConsumer): string => {
-  const address = prefixDecoder(Prefix.SR1)(val);
-  if (address.substring(0, 3) !== Prefix.SR1) {
+  const address = prefixDecoder(PrefixV2.SmartRollupHash)(val);
+  if (address.substring(0, 3) !== PrefixV2.SmartRollupHash) {
     throw new InvalidSmartRollupAddressError(
       address,
-      invalidDetail(ValidationResult.NO_PREFIX_MATCHED) + ` expecting prefix '${Prefix.SR1}'.`
+      ValidationResult.NO_PREFIX_MATCHED + ` expecting prefix '${PrefixV2.SmartRollupHash}'.`
     );
   }
   return address;
@@ -370,22 +368,22 @@ export const smartRollupAddressDecoder = (val: Uint8ArrayConsumer): string => {
 export const smartContractAddressDecoder = (val: Uint8ArrayConsumer) => {
   const preamble = val.consume(1);
   if (preamble[0] === 0x01) {
-    const scAddress = prefixDecoder(Prefix.KT1)(val);
+    const scAddress = prefixDecoder(PrefixV2.ContractHash)(val);
     val.consume(1);
     return scAddress;
   }
   throw new InvalidContractAddressError(
     val.toString(),
-    invalidDetail(ValidationResult.NO_PREFIX_MATCHED)
+    ValidationResult.NO_PREFIX_MATCHED
   );
 };
 
 export const smartRollupCommitmentHashDecoder = (val: Uint8ArrayConsumer) => {
-  const address = prefixDecoder(Prefix.SRC1)(val);
-  if (address.substring(0, 4) !== Prefix.SRC1) {
+  const address = prefixDecoder(PrefixV2.SmartRollupCommitmentHash)(val);
+  if (address.substring(0, 4) !== PrefixV2.SmartRollupCommitmentHash) {
     throw new InvalidSmartRollupCommitmentHashError(
       address,
-      invalidDetail(ValidationResult.NO_PREFIX_MATCHED) + ` expecting prefix '${Prefix.SRC1}'`
+      ValidationResult.NO_PREFIX_MATCHED + ` expecting prefix '${PrefixV2.SmartRollupCommitmentHash}'`
     );
   }
   return address;
@@ -496,8 +494,8 @@ export const valueParameterDecoder = (val: Uint8ArrayConsumer) => {
   return valueDecoder(new Uint8ArrayConsumer(value));
 };
 
-export const blockPayloadHashEncoder = prefixEncoder(Prefix.VH);
-export const blockPayloadHashDecoder = prefixDecoder(Prefix.VH);
+export const blockPayloadHashEncoder = prefixEncoder(PrefixV2.ValueHash);
+export const blockPayloadHashDecoder = prefixDecoder(PrefixV2.ValueHash);
 
 export const entrypointNameEncoder = (entrypoint: string) => {
   const value = { string: entrypoint };
@@ -534,20 +532,25 @@ export const depositsLimitDecoder = (value: Uint8ArrayConsumer) => {
 
 const signatureV1Encoder = (val: string) => {
   const signaturePrefix = val.substring(0, 5);
+  const signaturePrefixAlt = val.substring(0, 6);
   switch (signaturePrefix) {
-    case Prefix.EDSIG:
-      return paddedBytesEncoder(prefixEncoder(Prefix.EDSIG)(val));
-    case Prefix.SPSIG:
-      return paddedBytesEncoder(prefixEncoder(Prefix.SPSIG)(val));
-    case Prefix.P2SIG:
-      return paddedBytesEncoder(prefixEncoder(Prefix.P2SIG)(val));
-    case Prefix.BLSIG:
-      return paddedBytesEncoder(prefixEncoder(Prefix.BLSIG)(val));
+    case PrefixV2.Ed25519Signature:
+      return paddedBytesEncoder(prefixEncoder(PrefixV2.Ed25519Signature)(val));
+    case PrefixV2.P256Signature:
+      return paddedBytesEncoder(prefixEncoder(PrefixV2.P256Signature)(val));
+    case PrefixV2.BLS12_381Signature:
+      return paddedBytesEncoder(prefixEncoder(PrefixV2.BLS12_381Signature)(val));
+    default:
+      break;
+  }
+  switch (signaturePrefixAlt) {
+    case PrefixV2.Secp256k1Signature:
+      return paddedBytesEncoder(prefixEncoder(PrefixV2.Secp256k1Signature)(val));
     default:
       throw new InvalidSignatureError(
         val,
-        invalidDetail(ValidationResult.NO_PREFIX_MATCHED) +
-          ` expecting one of the following '${Prefix.EDSIG}', '${Prefix.SPSIG}', '${Prefix.P2SIG}' or '${Prefix.BLSIG}'.`
+        ValidationResult.NO_PREFIX_MATCHED +
+          ` expecting one of the following '${PrefixV2.Ed25519Signature}', '${PrefixV2.Secp256k1Signature}', '${PrefixV2.P256Signature}' or '${PrefixV2.BLS12_381Signature}'.`
       );
   }
 };
@@ -555,7 +558,7 @@ const signatureV1Encoder = (val: string) => {
 const signatureV1Decoder = (val: Uint8ArrayConsumer) => {
   val.consume(4);
   if (val.length().toString() === '96') {
-    return prefixDecoder(Prefix.BLSIG)(val);
+    return prefixDecoder(PrefixV2.BLS12_381Signature)(val);
   } else {
     throw new ProhibitedActionError('currently we only support decoding of BLSIG signatures');
   }
@@ -600,21 +603,21 @@ export const smartRollupMessageDecoder = (val: Uint8ArrayConsumer) => {
 
 export const dalCommitmentEncoder = (val: string): string => {
   const prefix = val.substring(0, 2);
-  if (prefix === Prefix.SH) {
-    return prefixEncoder(Prefix.SH)(val);
+  if (prefix === PrefixV2.SlotHeader) {
+    return prefixEncoder(PrefixV2.SlotHeader)(val);
   }
   throw new InvalidDalCommitmentError(
     val,
-    invalidDetail(ValidationResult.NO_PREFIX_MATCHED) + ` expecting prefix '${Prefix.SH}'`
+    ValidationResult.NO_PREFIX_MATCHED + ` expecting prefix '${PrefixV2.SlotHeader}'`
   );
 };
 
 export const dalCommitmentDecoder = (val: Uint8ArrayConsumer) => {
-  const commitment = prefixDecoder(Prefix.SH)(val);
-  if (commitment.substring(0, 2) !== Prefix.SH) {
+  const commitment = prefixDecoder(PrefixV2.SlotHeader)(val);
+  if (commitment.substring(0, 2) !== PrefixV2.SlotHeader) {
     throw new InvalidDalCommitmentError(
       commitment,
-      invalidDetail(ValidationResult.NO_PREFIX_MATCHED) + ` expecting prefix '${Prefix.SH}'`
+      ValidationResult.NO_PREFIX_MATCHED + ` expecting prefix '${PrefixV2.SlotHeader}'`
     );
   }
   return commitment;

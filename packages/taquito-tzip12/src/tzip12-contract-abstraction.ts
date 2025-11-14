@@ -4,9 +4,9 @@ import {
   Tzip16ContractAbstraction,
   MetadataContext,
   View,
-  bytesToString,
   BigMapId,
 } from '@taquito/tzip16';
+import { bytesToString } from '@taquito/utils';
 import BigNumber from 'bignumber.js';
 import { InvalidTokenMetadata, TokenIdNotFound, TokenMetadataNotFound } from './errors';
 
