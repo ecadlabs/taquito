@@ -648,3 +648,9 @@ export type PrepareOperationParams = {
   operation: RPCOperation | RPCOperation[];
   source?: string;
 };
+
+export type ParamsWithOptionalFees = {
+  fee?: number | string;
+  storageLimit?: number | string;
+  gasLimit?: number | string;
+};
