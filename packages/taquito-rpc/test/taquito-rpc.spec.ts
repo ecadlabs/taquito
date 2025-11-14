@@ -23,7 +23,6 @@ import {
   OperationContentsAndResultSmartRollupOriginate,
   OperationContentsAndResultSmartRollupAddMessages,
   OperationContentsAndResultSmartRollupExecuteOutboxMessage,
-  RPCRunOperationParam,
   OperationMetadataBalanceUpdates,
   PendingOperationsV2,
   ActiveStakingParametersResponse,

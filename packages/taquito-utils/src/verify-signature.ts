@@ -8,8 +8,6 @@ import {
   PrefixV2,
   publicKeyPrefixes,
   signaturePrefixes,
-  validatePublicKey,
-  ValidationResult,
 } from './taquito-utils';
 import elliptic from 'elliptic';
 import {
