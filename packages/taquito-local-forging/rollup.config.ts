@@ -9,11 +9,26 @@ const libraryName = 'taquito-local-forging';
 export default {
   input: `src/${libraryName}.ts`,
   output: [
-    { file: pkg.main, name: camelCase(libraryName), format: 'umd', sourcemap: true },
+    { 
+      file: pkg.main, 
+      name: camelCase(libraryName), 
+      format: 'umd', 
+      sourcemap: true, 
+      globals: { 
+        '@taquito/utils': 'utils',
+        '@taquito/core': 'core',
+        'bignumber.js': 'BigNumber'
+      } 
+    },
     { file: pkg.module, format: 'es', sourcemap: true },
   ],
   // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
-  external: [],
+  external: [
+    '@taquito/core',
+    'bignumber.js',
+    '@taquito/utils',
+    'fast-text-encoding'
+  ],
   watch: {
     include: 'src/**',
   },
