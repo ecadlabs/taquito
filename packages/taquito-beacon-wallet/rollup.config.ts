@@ -9,13 +9,33 @@ const libraryName = 'taquito-beacon-wallet';
 export default {
   input: `src/${libraryName}.ts`,
   output: [
-    { file: pkg.main, name: camelCase(libraryName), format: 'umd', sourcemap: true, globals: { '@airgap/beacon-sdk': 'beacon'} },
+    {
+      file: pkg.main,
+      name: camelCase(libraryName),
+      format: 'umd',
+      sourcemap: true,
+      globals: {
+        '@airgap/beacon-sdk': 'beacon',
+        '@taquito/core': 'taquitoCore',
+        '@airgap/beacon-dapp': 'beaconDapp',
+        'typedarray-to-buffer': 'typedarrayToBuffer',
+        '@taquito/taquito': 'taquito',
+        '@taquito/utils': 'taquitoUtils',
+      },
+    },
     { file: pkg.module, format: 'es', sourcemap: true },
   ],
-  external: [],
   watch: {
     include: 'src/**',
   },
+  external: [
+    '@airgap/beacon-sdk',
+    '@airgap/beacon-dapp',
+    '@taquito/core',
+    'typedarray-to-buffer',
+    '@taquito/taquito',
+    '@taquito/utils',
+  ],
   plugins: [
     // Allow json resolution
     json(),
