@@ -10,10 +10,26 @@ const libraryName = 'taquito-wallet-connect';
 export default {
   input: `src/${libraryName}.ts`,
   output: [
-    { file: pkg.main, name: camelCase(libraryName), format: 'umd', sourcemap: true },
+    {
+      file: pkg.main,
+      name: camelCase(libraryName),
+      format: 'umd',
+      sourcemap: true,
+      globals: {
+        '@walletconnect/sign-client': 'walletconnectSignClient',
+        '@walletconnect/modal': 'walletconnectModal',
+        '@walletconnect/utils': 'walletconnectUtils',
+        '@taquito/taquito': 'taquito',
+      },
+    },
     { file: pkg.module, format: 'es', sourcemap: true },
   ],
-  // external: [],
+  external: [
+    '@walletconnect/sign-client',
+    '@walletconnect/modal',
+    '@walletconnect/utils',
+    '@taquito/taquito',
+  ],
   watch: {
     include: 'src/**',
   },
