@@ -1,10 +1,12 @@
 import { TransactionOperation } from '../../operations/transaction-operation';
 import { TransferParams } from '../../operations/types';
 import { ContractProvider } from '../interface';
-import { TransactionWalletOperation, Wallet } from '../../wallet';
+import type { Wallet } from '../../wallet/wallet';
+import { isWallet } from '../../wallet/type-guards';
+import { TransactionWalletOperation } from '../../wallet/transaction-operation';
 import { ParameterSchema } from "@taquito/michelson-encoder";
 import { ContractMethodInterface, ExplicitTransferParams, SendParams } from './contract-method-interface';
-import { DEFAULT_SMART_CONTRACT_METHOD_NAME } from '../contract';
+import { DEFAULT_SMART_CONTRACT_METHOD_NAME } from '../constants';
 
 /**
  * @description Utility class to send smart contract operation
@@ -39,7 +41,7 @@ export class ContractMethodObject<T extends ContractProvider | Wallet> implement
     send(
         params: Partial<SendParams> = {}
     ): Promise<T extends Wallet ? TransactionWalletOperation : TransactionOperation> {
-        if (this.provider instanceof Wallet) {
+        if (isWallet(this.provider)) {
             return (this.provider as unknown as Wallet).transfer(this.toTransferParams(params)).send() as any;
         } else {
             return this.provider.transfer(this.toTransferParams(params)) as any;

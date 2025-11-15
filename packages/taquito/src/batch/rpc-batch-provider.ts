@@ -53,18 +53,7 @@ import {
 } from '@taquito/core';
 import { Provider } from '../provider';
 import { PrepareProvider } from '../prepare';
-
-export const BATCH_KINDS = [
-  OpKind.ACTIVATION,
-  OpKind.ORIGINATION,
-  OpKind.TRANSACTION,
-  OpKind.DELEGATION,
-];
-export type BatchKinds =
-  | OpKind.ACTIVATION
-  | OpKind.ORIGINATION
-  | OpKind.TRANSACTION
-  | OpKind.DELEGATION;
+export { BATCH_KINDS, BatchKinds } from './constants';
 
 export class OperationBatch extends Provider {
   private operations: ParamsWithKind[] = [];
