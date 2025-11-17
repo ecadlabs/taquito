@@ -114,7 +114,7 @@ export class SaplingTransactionViewer {
         transactions.push({ ...readableFormat(decryptedAsSender), position: i, type: 'outgoing' });
       }
     }
-    return transactions;
+    return transactions.reverse();
   }
 
   /**

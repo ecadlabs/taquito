@@ -114,7 +114,7 @@ class SaplingTransactionViewer {
                     transactions.push(Object.assign(Object.assign({}, (0, helpers_1.readableFormat)(decryptedAsSender)), { position: i, type: 'outgoing' }));
                 }
             }
-            return transactions;
+            return transactions.reverse();
         });
     }
     /**
