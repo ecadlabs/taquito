@@ -1,6 +1,6 @@
 import { b58Encode, PrefixV2 } from '@taquito/utils';
 import * as sapling from '@airgap/sapling-wasm';
-import { InMemorySpendingKey } from './in-memory-spending-key';
+import { decryptKey } from './helpers';
 
 /**
  * @description Holds the viewing key
@@ -23,8 +23,9 @@ export class InMemoryViewingKey {
    *
    */
   static async fromSpendingKey(spendingKey: string, password?: string) {
-    const inMemorySpendingkey = new InMemorySpendingKey(spendingKey, password);
-    return inMemorySpendingkey.getSaplingViewingKeyProvider();
+    const spendingKeyBuf = decryptKey(spendingKey, password);
+    const viewingKey = await sapling.getExtendedFullViewingKeyFromSpendingKey(spendingKeyBuf);
+    return new InMemoryViewingKey(viewingKey.toString('hex'));
   }
 
   /**

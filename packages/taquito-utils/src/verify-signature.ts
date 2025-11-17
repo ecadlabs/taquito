@@ -5,19 +5,18 @@ import {
   buf2hex,
   hex2buf,
   mergebuf,
-  PrefixV2,
   publicKeyPrefixes,
   signaturePrefixes,
-  validatePublicKey,
-  ValidationResult,
-  invalidDetail,
-} from './taquito-utils';
+} from './encoding';
+import { PrefixV2 } from './constants';
+import { validatePublicKey, invalidDetail } from './validators';
 import elliptic from 'elliptic';
 import {
   InvalidMessageError,
   InvalidPublicKeyError,
   InvalidSignatureError,
   ParameterValidationError,
+  ValidationResult,
 } from '@taquito/core';
 import { bls12_381 } from '@noble/curves/bls12-381';
 

@@ -12,16 +12,17 @@ import {
 } from '@taquito/utils';
 import { ChainIds } from '../constants';
 import { TzReadProvider } from '../read-provider/interface';
-import { Wallet } from '../wallet';
+import type { Wallet } from '../wallet/wallet';
 import { ContractMethodFactory } from './contract-methods/contract-method-factory';
-import { ContractMethod } from './contract-methods/contract-method-flat-param';
-import { ContractMethodObject } from './contract-methods/contract-method-object-param';
+import type { ContractMethod } from './contract-methods/contract-method-flat-param';
+import type { ContractMethodObject } from './contract-methods/contract-method-object-param';
 import { OnChainView } from './contract-methods/contract-on-chain-view';
 import { InvalidParameterError } from './errors';
 import { ContractProvider, StorageProvider } from './interface';
 import { InvalidChainIdError, DeprecationError } from '@taquito/core';
+import { DEFAULT_SMART_CONTRACT_METHOD_NAME } from './constants';
 
-export const DEFAULT_SMART_CONTRACT_METHOD_NAME = 'default';
+export { DEFAULT_SMART_CONTRACT_METHOD_NAME };
 
 /**
  * @description Utility class to retrieve data from a smart contract's storage without incurring fees via a contract's view method

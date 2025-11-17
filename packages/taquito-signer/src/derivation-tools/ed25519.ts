@@ -2,7 +2,7 @@
 import { HMAC } from '@stablelib/hmac';
 import { SHA512 } from '@stablelib/sha512';
 import { generateKeyPairFromSeed } from '@stablelib/ed25519';
-import { ExtendedPrivateKey, Hard } from './index';
+import { ExtendedPrivateKey, Hard } from './types';
 import { parseHex } from './utils';
 import { InvalidSeedLengthError } from '../errors';
 import { InvalidDerivationPathError } from '@taquito/core';

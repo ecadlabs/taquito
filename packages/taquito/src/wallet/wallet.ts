@@ -1,12 +1,9 @@
 import { Context } from '../context';
-import {
-  ContractAbstraction,
-  ContractStorageType,
-  DefaultWalletType,
-  SendParams,
-} from '../contract';
-import { ContractMethod } from '../contract/contract-methods/contract-method-flat-param';
-import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
+import { ContractAbstraction } from '../contract/contract';
+import type { ContractStorageType, DefaultWalletType } from '../contract/contract';
+import { SendParams } from '../contract/contract-methods/contract-method-interface';
+import type { ContractMethod } from '../contract/contract-methods/contract-method-flat-param';
+import type { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
 import { OpKind, withKind } from '../operations/types';
 import { OriginationWalletOperation } from './origination-operation';
 import {
@@ -35,6 +32,9 @@ import {
   ValidationResult,
 } from '@taquito/utils';
 import { OperationContentsFailingNoop } from '@taquito/rpc';
+import { isWallet as isWalletGuard } from './type-guards';
+
+export { isWallet } from './type-guards';
 
 export interface PKHOption {
   forceRefetch?: boolean;
@@ -197,6 +197,10 @@ export class WalletOperationBatch {
 }
 
 export class Wallet {
+  static isWallet(obj: any): obj is Wallet {
+    return isWalletGuard(obj);
+  }
+
   constructor(private context: Context) { }
 
   private get walletProvider() {

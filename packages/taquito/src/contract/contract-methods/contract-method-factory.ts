@@ -1,5 +1,5 @@
-import { Wallet } from '../../wallet';
-import { ContractProvider } from '../../contract';
+import type { Wallet } from '../../wallet/wallet';
+import { ContractProvider } from '../interface';
 import { ContractMethodObject } from './contract-method-object-param';
 import { ContractMethod } from './contract-method-flat-param';
 import { ParameterSchema, ViewSchema } from '@taquito/michelson-encoder';
