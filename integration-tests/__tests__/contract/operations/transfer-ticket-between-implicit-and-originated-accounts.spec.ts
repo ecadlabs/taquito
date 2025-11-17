@@ -44,7 +44,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownTicketContract }) => {
     });
 
     it('will send 3 tickets from an originated to an implicit account', async () => {
-      const ticketSendToImplicitOp = await ticketSendContract.methodsObject.default(tezos1Pkh, '3').send();
+      const ticketSendToImplicitOp = await ticketSendContract.methodsObject.default([tezos1Pkh, '3']).send();
       await ticketSendToImplicitOp.confirmation();
       expect(ticketSendToImplicitOp.status).toEqual('applied');
 

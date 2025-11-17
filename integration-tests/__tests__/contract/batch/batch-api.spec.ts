@@ -78,7 +78,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
       const op = await Tezos.contract.transfer({ to: await LocalTez.signer.publicKeyHash(), amount: 2 });
       await op.confirmation();
 
-      const batchOp = await LocalTez.batch([
+      const batchOp = await LocalTez.contract.batch([
         {
           kind: OpKind.TRANSACTION,
           to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',

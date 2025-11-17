@@ -109,7 +109,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       const signature1 = await account1.signer.sign(packed, new Uint8Array())
       const signature2 = await account2.signer.sign(packed, new Uint8Array())
 
-      const op2 = await contract.methodsObject.main(
+      const op2 = await contract.methodsObject.main([
         // Counter
         "0",
         // Sub function
@@ -118,7 +118,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 500),
         // Signature list
         [signature1.prefixSig, signature2.prefixSig, null]
-      ).send()
+      ]).send()
 
       await op2.confirmation();
     })

@@ -244,13 +244,16 @@ CONFIGS().forEach(({ lib, rpc, setup, knownContract, knownBaker, createAddress }
         const batch = Tezos.wallet
             .batch()
             .withContractCall(
-                contract.methodsObject.do(MANAGER_LAMBDA.transferImplicit('tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh', 5), { fee: estimateOp[0].suggestedFeeMutez, gasLimit: estimateOp[0].gasLimit, storageLimit: estimateOp[0].storageLimit })
+                contract.methodsObject.do(MANAGER_LAMBDA.transferImplicit('tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh', 5)),
+                { fee: estimateOp[0].suggestedFeeMutez, gasLimit: estimateOp[0].gasLimit, storageLimit: estimateOp[0].storageLimit }
             )
             .withContractCall(
-                contract.methodsObject.do(MANAGER_LAMBDA.setDelegate(knownBaker), { fee: estimateOp[1].suggestedFeeMutez, gasLimit: estimateOp[1].gasLimit, storageLimit: estimateOp[1].storageLimit })
+                contract.methodsObject.do(MANAGER_LAMBDA.setDelegate(knownBaker)),
+                { fee: estimateOp[1].suggestedFeeMutez, gasLimit: estimateOp[1].gasLimit, storageLimit: estimateOp[1].storageLimit }
             )
             .withContractCall(
-                contract.methodsObject.do(MANAGER_LAMBDA.removeDelegate(), { fee: estimateOp[2].suggestedFeeMutez, gasLimit: estimateOp[2].gasLimit, storageLimit: estimateOp[2].storageLimit })
+                contract.methodsObject.do(MANAGER_LAMBDA.removeDelegate()),
+                { fee: estimateOp[2].suggestedFeeMutez, gasLimit: estimateOp[2].gasLimit, storageLimit: estimateOp[2].storageLimit }
             )
 
         const batchOp = await batch.send();

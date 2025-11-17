@@ -127,12 +127,12 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       const signature1 = await account1.signer.sign(packed.packed, new Uint8Array())
       const signature2 = await account2.signer.sign(packed.packed, new Uint8Array())
 
-      const op3 = await contract.methodsObject.main(
+      const op3 = await contract.methodsObject.main([
         "0",
         'operation',
         MANAGER_LAMBDA.setDelegate(pkh),
         [signature1.prefixSig, signature2.prefixSig, null]
-      ).send()
+      ]).send()
       await op3.confirmation();
 
       const check_the_delegate = await Tezos.rpc.getDelegate(contract.address)
@@ -201,12 +201,12 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       const signature3 = await account1.signer.sign(packed2.packed, new Uint8Array())
       const signature4 = await account2.signer.sign(packed2.packed, new Uint8Array())
 
-      const op4 = await contract.methodsObject.main(
+      const op4 = await contract.methodsObject.main([
         "1",
         'operation',
         MANAGER_LAMBDA.removeDelegate(),
         [signature3.prefixSig, signature4.prefixSig, null]
-      ).send()
+      ]).send()
 
       await op4.confirmation();
       const check_the_delegate_again = await Tezos.rpc.getDelegate(contract.address)

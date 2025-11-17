@@ -112,7 +112,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownContract }) => {
 
       const start_balance = await Tezos.tz.getBalance(knownContract)
 
-      const op2 = await contract.methodsObject.main(
+      const op2 = await contract.methodsObject.main([
         // Counter
         "0",
         // Sub function
@@ -121,7 +121,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownContract }) => {
         MANAGER_LAMBDA.transferToContract(knownContract, 1),
         // Signature list
         [signature1.prefixSig, signature2.prefixSig, null]
-      ).send()
+      ]).send()
 
       await op2.confirmation();
       expect(op2.status).toEqual('applied')

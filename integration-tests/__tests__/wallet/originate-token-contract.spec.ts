@@ -20,7 +20,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(op.opHash).toBeDefined();
 
       const contract = await op.contract();
-      const opMethod = await contract.methodsObject.mint(await Tezos.signer.publicKeyHash(), 100).send();
+      const opMethod = await contract.methodsObject.mint({ to: await Tezos.signer.publicKeyHash(), value: 100 }).send();
 
       await opMethod.confirmation();
       expect(op.opHash).toBeDefined();
