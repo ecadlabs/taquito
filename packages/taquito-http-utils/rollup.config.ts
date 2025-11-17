@@ -19,6 +19,7 @@ export default {
         "http": "http",
         "https": "https",
         "@taquito/core": "core",
+        "node-fetch": "fetch",
       } 
     },
     { file: pkg.module, format: 'es', sourcemap: true },
@@ -26,6 +27,7 @@ export default {
   // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
   external: [
     '@taquito/core',
+    'node-fetch',
   ],
   watch: {
     include: 'src/**',
