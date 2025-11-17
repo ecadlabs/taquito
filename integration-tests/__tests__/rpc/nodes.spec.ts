@@ -361,7 +361,7 @@ CONFIGS().forEach(
           expect(chainId).toBeDefined();
         });
 
-        it('Verify that rpcClient.runOperation runs an operation without signature checks', async () => {
+        it('Verify that rpcClient.simulateOperation runs an operation without signature checks', async () => {
           try {
             const chainId = await rpcClient.getChainId();
             expect(chainId).toBeDefined();
@@ -390,7 +390,7 @@ CONFIGS().forEach(
               },
             };
 
-            await rpcClient.runOperation(operation);
+            await rpcClient.simulateOperation(operation);
           } catch (ex: any) {
             expect(ex.message).toMatch('contract.counter_in_the_past');
           }

@@ -2581,12 +2581,9 @@ export interface BlockMetadata {
   liquidity_baking_escape_ema?: number;
 }
 
-export type RPCRunOperationParam = {
+export interface RPCSimulateOperationParam {
   operation: OperationObject;
   chain_id: string;
-};
-
-export interface RPCSimulateOperationParam extends RPCRunOperationParam {
   blocks_before_activation?: number;
   latency?: number;
 }
