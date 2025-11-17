@@ -44,7 +44,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownTicketContract }) => {
     });
 
     it('will send 3 tickets from an originated to an implicit account', async () => {
-      const ticketSendToImplicitOp = await ticketSendContract.methods.default(tezos1Pkh, '3').send();
+      const ticketSendToImplicitOp = await ticketSendContract.methodsObject.default(tezos1Pkh, '3').send();
       await ticketSendToImplicitOp.confirmation();
       expect(ticketSendToImplicitOp.status).toEqual('applied');
 
@@ -90,7 +90,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownTicketContract }) => {
     });
 
     it('will send 1 ticket from an origianted to another originated account to dispose', async () => {
-      const ticketSendOriginatedOp = await ticketBagContract.methods.send(ticketBlackholeContract.address).send();
+      const ticketSendOriginatedOp = await ticketBagContract.methodsObject.send(ticketBlackholeContract.address).send();
       await ticketSendOriginatedOp.confirmation();
       expect(ticketSendOriginatedOp.status).toEqual('applied');
 

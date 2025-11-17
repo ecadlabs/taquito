@@ -26,7 +26,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       );
 
       // bls12_381_fr value can be a hex string or a number
-      const methodCall = await contract.methods.default('01', 1).send();
+      const methodCall = await contract.methodsObject.default('01', 1).send();
       await methodCall.confirmation();
 
       expect(methodCall.hash).toBeDefined();
@@ -88,7 +88,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       const contract = await op.contract();
       expect(await contract.storage()).toEqual(null);
 
-      const methodCall = await contract.methods.default('0a4edef9c1ed7f729f520e47730a124fd70662a904ba1074728114d1031e1572c6c886f6b57ec72a6178288c47c335771638533957d540a9d2370f17cc7ed5863bc0b995b8825e0ee1ea1e1e4d00dbae81f14b0bf3611b78c952aacab827a0530f6d4552fa65dd2638b361543f887136a43253d9c66c411697003f7a13c308f5422e1aa0a59c8967acdefd8b6e36ccf30468fb440d82b0630aeb8dca2b5256789a66da69bf91009cbfe6bd221e47aa8ae88dece9764bf3bd999d95d71e4c9899').send();
+      const methodCall = await contract.methodsObject.default('0a4edef9c1ed7f729f520e47730a124fd70662a904ba1074728114d1031e1572c6c886f6b57ec72a6178288c47c335771638533957d540a9d2370f17cc7ed5863bc0b995b8825e0ee1ea1e1e4d00dbae81f14b0bf3611b78c952aacab827a0530f6d4552fa65dd2638b361543f887136a43253d9c66c411697003f7a13c308f5422e1aa0a59c8967acdefd8b6e36ccf30468fb440d82b0630aeb8dca2b5256789a66da69bf91009cbfe6bd221e47aa8ae88dece9764bf3bd999d95d71e4c9899').send();
       await methodCall.confirmation();
 
       expect(methodCall.hash).toBeDefined();

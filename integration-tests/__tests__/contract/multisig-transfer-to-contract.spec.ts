@@ -112,7 +112,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownContract }) => {
 
       const start_balance = await Tezos.tz.getBalance(knownContract)
 
-      const op2 = await contract.methods.main(
+      const op2 = await contract.methodsObject.main(
         // Counter
         "0",
         // Sub function

@@ -110,7 +110,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       const signature1 = await account1.signer.sign(packed, new Uint8Array())
       const signature2 = await account2.signer.sign(packed, new Uint8Array())
 
-      const op2 = await contract.methods.main(
+      const op2 = await contract.methodsObject.main(
         // Counter
         "0",
         // Sub function

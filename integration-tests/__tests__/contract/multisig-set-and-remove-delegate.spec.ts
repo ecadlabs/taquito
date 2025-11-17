@@ -127,7 +127,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       const signature1 = await account1.signer.sign(packed.packed, new Uint8Array())
       const signature2 = await account2.signer.sign(packed.packed, new Uint8Array())
 
-      const op3 = await contract.methods.main(
+      const op3 = await contract.methodsObject.main(
         "0",
         'operation',
         MANAGER_LAMBDA.setDelegate(pkh),
@@ -201,7 +201,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       const signature3 = await account1.signer.sign(packed2.packed, new Uint8Array())
       const signature4 = await account2.signer.sign(packed2.packed, new Uint8Array())
 
-      const op4 = await contract.methods.main(
+      const op4 = await contract.methodsObject.main(
         "1",
         'operation',
         MANAGER_LAMBDA.removeDelegate(),

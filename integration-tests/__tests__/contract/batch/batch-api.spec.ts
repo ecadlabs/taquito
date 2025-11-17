@@ -107,9 +107,9 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
 
       const batch = Tezos.contract.batch()
         .withTransfer({ to: contract.address, amount: 1 })
-        .withContractCall(contract.methods.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 5)))
-        .withContractCall(contract.methods.do(MANAGER_LAMBDA.setDelegate(knownBaker)))
-        .withContractCall(contract.methods.do(MANAGER_LAMBDA.removeDelegate()))
+        .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 5)))
+        .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.setDelegate(knownBaker)))
+        .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.removeDelegate()))
 
       const batchOp = await batch.send();
 

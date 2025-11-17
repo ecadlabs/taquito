@@ -30,7 +30,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
       // Calling an entry point is a type of transaction operation
       // The toTransferParams method returns a TransferParams object having parameter in a JSON Michelson format
-      const transferParams = contract.methods.default(5).toTransferParams();
+      const transferParams = contract.methodsObject.default(5).toTransferParams();
 
       // We estimate the fees for the operation
       const estimate = await Tezos.estimate.transfer(transferParams);

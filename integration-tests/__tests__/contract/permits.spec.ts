@@ -313,7 +313,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
         //Mint 10 tokens to bootstrap 2
         const mint_contract = await LocalTez1.contract.at(fa12_contract.address);
-        const mint = await mint_contract.methods.mint(bootstrap2_address, 10).send();
+        const mint = await mint_contract.methodsObject.mint(bootstrap2_address, 10).send();
         await mint.confirmation();
         expect(mint.hash).toBeDefined();
         expect(mint.status).toEqual('applied');
@@ -322,7 +322,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         //Observe transfer by non bootstrap2 sender fails
         const fail_contract = await LocalTez4.contract.at(fa12_contract.address);
         try {
-          await fail_contract.methods.transfer(bootstrap3_address, bootstrap4_address, 1).send();
+          await fail_contract.methodsObject.transfer(bootstrap3_address, bootstrap4_address, 1).send();
         } catch (errors) {
           let jsonStr: string = JSON.stringify(errors);
           let jsonObj = JSON.parse(jsonStr);
@@ -331,7 +331,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         }
 
         //Define a fake permit parameter to get the expected unsigned bytes
-        const transfer_param: any = fa12_contract.methods['transfer'](
+        const transfer_param: any = fa12_contract.methodsObject['transfer'](
           bootstrap2_address,
           bootstrap3_address,
           1
@@ -352,7 +352,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
         //Anyone can submit permit start
         const signed_permit_contract = await LocalTez4.contract.at(fa12_contract.address);
-        const permit_contract = await signed_permit_contract.methods
+        const permit_contract = await signed_permit_contract.methodsObject
           .permit([
             {
               0: PUB_KEY, //key,
