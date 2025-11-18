@@ -1,5 +1,5 @@
-import { TezosToolkit } from '@taquito/taquito';
-import { InMemorySigner, importKey } from '../src/taquito-signer';
+import { TezosToolkit, importKey } from '../src/taquito';
+import { InMemorySigner } from '@taquito/signer';
 
 describe('ImportKey', () => {
   let mockRpcClient: any;
