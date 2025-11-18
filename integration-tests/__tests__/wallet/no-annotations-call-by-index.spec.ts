@@ -44,7 +44,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(account2[BALANCE].toString()).toEqual('1');
 
       // Approve
-      const operation2 = await contract.methodsObject[APPROVE](ACCOUNT2_ADDRESS, "1").send();
+      const operation2 = await contract.methodsObject[APPROVE](ACCOUNT2_ADDRESS).send();
       await operation2.confirmation();
       expect(operation2.status).toBeTruthy;
 
