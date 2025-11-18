@@ -5,15 +5,9 @@ import {
   TokenFactory,
   TokenValidationError,
 } from './token';
-import {
-  b58DecodePublicKey,
-  compareArrays,
-  encodeKey,
-  validatePublicKey,
-  ValidationResult,
-} from '@taquito/utils';
+import { encodeKey, validatePublicKey, ValidationResult } from '@taquito/utils';
 import { BaseTokenSchema } from '../schema/types';
-import { p256 } from '@noble/curves/nist';
+import { publicKeyFromString } from '@taquito/signer';
 
 /**
  *  @category Error
@@ -108,42 +102,18 @@ export class KeyToken extends ComparableToken {
     };
   }
 
-  decompressP256PublicKey(compressedKey: Uint8Array) {
-    try {
-      // Convert compressed key to hex string for @noble/curves
-      const compressedHex = Array.from(compressedKey)
-        .map((byte) => byte.toString(16).padStart(2, '0'))
-        .join('');
-
-      // Create point from compressed hex
-      const point = p256.Point.fromHex(compressedHex);
-
-      // Get uncompressed coordinates
-      const uncompressed = point.toBytes(false); // false = uncompressed
-
-      // Add back the prefix 0x02 and return as Buffer
-      return Buffer.concat([new Uint8Array([0x02]), uncompressed]);
-    } catch (error) {
-      throw new Error(`Failed to decompress P256 public key: ${error}`);
-    }
-  }
-
   compare(key1: string, key2: string): number {
-    const bytes1 = b58DecodePublicKey(key1, 'array');
-    const bytes2 = b58DecodePublicKey(key2, 'array');
-    let array1: Uint8Array;
-    let array2: Uint8Array;
-    if (bytes1[0] === 0x02) {
-      array1 = this.decompressP256PublicKey(bytes1.slice(1)); // remove prefix 0x02
+    const publicKey1 = publicKeyFromString(key1);
+    const publicKey2 = publicKeyFromString(key2);
+    const bytes1 = publicKey1.toProtocol();
+    const bytes2 = publicKey2.toProtocol();
+    if (bytes1[0] === bytes2[0]) {
+      return publicKey1.compare(publicKey2);
+    } else if (bytes1[0] > bytes2[0]) {
+      return 1;
     } else {
-      array1 = bytes1;
+      return -1;
     }
-    if (bytes2[0] === 0x02) {
-      array2 = this.decompressP256PublicKey(bytes2.slice(1)); // remove prefix 0x02
-    } else {
-      array2 = bytes2;
-    }
-    return compareArrays(array1, array2);
   }
 
   findAndReturnTokens(tokenToFind: string, tokens: Token[]) {
