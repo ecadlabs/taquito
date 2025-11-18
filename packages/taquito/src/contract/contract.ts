@@ -14,7 +14,6 @@ import { ChainIds } from '../constants';
 import { TzReadProvider } from '../read-provider/interface';
 import { Wallet } from '../wallet';
 import { ContractMethodFactory } from './contract-methods/contract-method-factory';
-import { ContractMethod } from './contract-methods/contract-method-flat-param';
 import { ContractMethodObject } from './contract-methods/contract-method-object-param';
 import { OnChainView } from './contract-methods/contract-on-chain-view';
 import { InvalidParameterError } from './errors';
@@ -80,10 +79,6 @@ const isView = (entrypoint: MichelsonV1Expression): boolean => {
 export type Contract = ContractAbstraction<ContractProvider>;
 export type WalletContract = ContractAbstraction<Wallet>;
 
-type DefaultMethods<T extends ContractProvider | Wallet> = Record<
-  string,
-  (...args: any[]) => ContractMethod<T>
->;
 type DefaultMethodsObject<T extends ContractProvider | Wallet> = Record<
   string,
   (args?: any) => ContractMethodObject<T>
@@ -107,19 +102,12 @@ export type DefaultWalletType = ContractAbstraction<Wallet>;
  */
 export class ContractAbstraction<
   T extends ContractProvider | Wallet,
-  TMethods extends DefaultMethods<T> = DefaultMethods<T>,
   TMethodsObject extends DefaultMethodsObject<T> = DefaultMethodsObject<T>,
   TViews extends DefaultViews = DefaultViews,
   TContractViews extends DefaultContractViews = DefaultContractViews,
   TStorage extends DefaultStorage = DefaultStorage,
 > {
   private contractMethodFactory: ContractMethodFactory<T>;
-  /**
-   * @deprecated use methodsObject instead, flat params of methods can't sufficiently represent all Michelson values
-   * @description Contains methods that are implemented by the target Tezos Smart Contract, and offers the user to call the Smart Contract methods as if they were native TS/JS methods.
-   * NB: if the contract contains annotation it will include named properties; if not it will be indexed by a number.
-   */
-  public methods: TMethods = {} as TMethods;
   /**
    * @description Contains methods that are implemented by the target Tezos Smart Contract, and offers the user to call the Smart Contract methods as if they were native TS/JS methods.
    * `methodsObject` serves the exact same purpose as the `methods` member. The difference is that it allows passing the parameter in an object format when calling the smart contract method (instead of the flattened representation)
@@ -180,14 +168,6 @@ export class ContractAbstraction<
       keys.forEach((smartContractMethodName) => {
         const smartContractMethodSchema = new ParameterSchema(entrypoints[smartContractMethodName]);
 
-        (this.methods as DefaultMethods<T>)[smartContractMethodName] = function (...args: any[]) {
-          return currentContract.contractMethodFactory.createContractMethodFlatParams(
-            smartContractMethodSchema,
-            smartContractMethodName,
-            args
-          );
-        };
-
         (this.methodsObject as DefaultMethodsObject<T>)[smartContractMethodName] = function (
           args: any
         ) {
@@ -231,16 +211,6 @@ export class ContractAbstraction<
       );
 
       anonymousMethods.forEach((smartContractMethodName) => {
-        (this.methods as DefaultMethods<T>)[smartContractMethodName] = function (...args: any[]) {
-          return currentContract.contractMethodFactory.createContractMethodFlatParams(
-            parameterSchema,
-            smartContractMethodName,
-            args,
-            false,
-            true
-          );
-        };
-
         (this.methodsObject as DefaultMethodsObject<T>)[smartContractMethodName] = function (
           args: any
         ) {
@@ -255,16 +225,6 @@ export class ContractAbstraction<
       });
     } else {
       const smartContractMethodSchema = this.parameterSchema;
-      (this.methods as DefaultMethods<T>)[DEFAULT_SMART_CONTRACT_METHOD_NAME] = function (
-        ...args: any[]
-      ) {
-        return currentContract.contractMethodFactory.createContractMethodFlatParams(
-          smartContractMethodSchema,
-          DEFAULT_SMART_CONTRACT_METHOD_NAME,
-          args,
-          false
-        );
-      };
 
       (this.methodsObject as DefaultMethodsObject<T>)[DEFAULT_SMART_CONTRACT_METHOD_NAME] =
         function (args: any) {
@@ -304,19 +264,5 @@ export class ContractAbstraction<
    */
   public storage<T extends TStorage = TStorage>() {
     return this.storageProvider.getStorage<T>(this.address, this.schema);
-  }
-
-  /**
-   *
-   * @description Return a friendly representation of the smart contract big map value
-   *
-   * @param key BigMap key to fetch
-   *
-   * @deprecated getBigMapKey has been deprecated in favor of getBigMapKeyByID
-   *
-   * @see https://tezos.gitlab.io/api/rpc.html#post-block-id-context-contracts-contract-id-big-map-get
-   */
-  public bigMap(key: string) {
-    return this.storageProvider.getBigMapKey(this.address, key, this.schema);
   }
 }

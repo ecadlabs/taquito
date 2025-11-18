@@ -77,7 +77,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
         expect(opDupOp.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
         const opDupOpContract = await opDupOp.contract();
         expect(await opDupOpContract.storage()).toBeTruthy();
-        const opSend = await opDupOpContract.methods.default(`${opJoinContract.address}`).send();
+        const opSend = await opDupOpContract.methodsObject.default(`${opJoinContract.address}`).send();
         await opSend.confirmation();
       } catch (error: any) {
         expect(error.message).toContain('internal_operation_replay');

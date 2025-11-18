@@ -119,7 +119,7 @@ CONFIGS().forEach(({ lib, setup, protocol, createAddress }) => {
 
     it('should be able to prepare a contractCall', async () => {
       const contractAbs = await Tezos.contract.at(contractAddress);
-      const method = await contractAbs.methods.increment(1);
+      const method = await contractAbs.methodsObject.increment(1);
       const prepared = await Tezos.prepare.contractCall(method);
 
       expect(prepared).toBeDefined();

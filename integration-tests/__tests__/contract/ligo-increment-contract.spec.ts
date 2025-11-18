@@ -21,7 +21,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
       const storage: any = await contract.storage()
       expect(storage.toString()).toEqual("0")
-      const opMethod = await contract.methods.default("2").send();
+      const opMethod = await contract.methodsObject.default("2").send();
 
       await opMethod.confirmation();
       expect(op.hash).toBeDefined();

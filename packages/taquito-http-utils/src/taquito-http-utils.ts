@@ -108,7 +108,7 @@ export class HttpBackend {
         headers,
         body: JSON.stringify(data),
         signal: controller.signal,
-        ...(isNode && createAgent ? { agent: await createAgent(urlWithQuery) } : {}),
+        ...(isNode && createAgent ? { agent: createAgent(urlWithQuery) } : {}),
       });
 
       if (typeof response === 'undefined') {

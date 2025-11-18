@@ -10,7 +10,6 @@ describe('BigMapAbstraction test', () => {
   let rpcContractProvider: {
     getBigMapKeysByID: jest.Mock<any, any>;
     getStorage: jest.Mock<any, any>;
-    getBigMapKey: jest.Mock<any, any>;
     getBigMapKeyByID: jest.Mock<any, any>;
   };
 
@@ -18,7 +17,6 @@ describe('BigMapAbstraction test', () => {
     rpcContractProvider = {
       getBigMapKeysByID: jest.fn(),
       getStorage: jest.fn(),
-      getBigMapKey: jest.fn(),
       getBigMapKeyByID: jest.fn(),
     };
   });

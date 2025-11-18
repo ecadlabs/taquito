@@ -73,7 +73,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
         const opGetterContract = await opGetter.contract();
         expect(await opGetterContract.storage()).toBeTruthy();
 
-        const opSend = await opCallerContract.methods.init(opGetterContract.address).send();
+        const opSend = await opCallerContract.methodsObject.init(opGetterContract.address).send();
         await opSend.confirmation();
 
       } catch (error: any) {

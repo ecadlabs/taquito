@@ -1,6 +1,7 @@
 import { CONFIGS } from '../../config';
 import { compose, MichelsonMap, ViewSimulationError } from '@taquito/taquito';
-import { tzip16, Tzip16Module, stringToBytes } from '@taquito/tzip16';
+import { tzip16, Tzip16Module } from '@taquito/tzip16';
+import { stringToBytes } from '@taquito/utils';
 import { tzip12, Tzip12Module, TokenIdNotFound, InvalidTokenMetadata } from '@taquito/tzip12';
 import BigNumber from 'bignumber.js';
 import { fa2TokenFactory } from '../../data/fa2-token-factory';

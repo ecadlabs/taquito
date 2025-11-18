@@ -56,7 +56,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         'tz4JdacdPe8oKt7Yd65GdsryyNjGD5qpLMnf',
         'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
       ]
-      const setOp = await contract.methods['setSet'](newKeySet).send();
+      const setOp = await contract.methodsObject['setSet'](newKeySet).send();
       await setOp.confirmation();
       storage = await contract.storage<Storage>();
       expect([...storage['addressSet']].sort()).toEqual([...newKeySet].sort());
@@ -65,7 +65,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         'tz3PNdfg3Fc8hH4m9iSs7bHgDgugsufJnBZ1': 200,
         'KT1JHqHQdHSgWBKo6H4UfG8dw3JnZSyjGkHA': 201,
       }) as MichelsonMap<string, number>;
-      const mapOp = await contract.methods['setMap'](newKeyMap).send();
+      const mapOp = await contract.methodsObject['setMap'](newKeyMap).send();
       await mapOp.confirmation();
       storage = await contract.storage<Storage>();
       expect(storage['addressMap'].get('tz3PNdfg3Fc8hH4m9iSs7bHgDgugsufJnBZ1')?.toString()).toEqual('200');

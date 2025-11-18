@@ -16,7 +16,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       }).send();
       const contract = await op.contract()
 
-      const operation = await contract.methods.deposit(null).send({ amount: 1, });
+      const operation = await contract.methodsObject.deposit(null).send({ amount: 1, });
       await operation.confirmation();
       expect(operation.status).toBeTruthy
     })
