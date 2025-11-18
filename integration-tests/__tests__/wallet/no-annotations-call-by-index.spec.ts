@@ -30,7 +30,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       const contract = await op.contract();
 
       // Make a transfer
-      const operation = await contract.methodsObject[TRANSFER](ACCOUNT1_ADDRESS, ACCOUNT2_ADDRESS, "1").send();
+      const operation = await contract.methodsObject[TRANSFER]({ 0: ACCOUNT1_ADDRESS, 1: ACCOUNT2_ADDRESS, 2: "1" }).send();
       await operation.confirmation();
       expect(operation.status).toBeTruthy;
 

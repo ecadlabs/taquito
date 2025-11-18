@@ -26,7 +26,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       );
 
       // bls12_381_fr value can be a hex string or a number
-      const methodCall = await contract.methodsObject.default('01', 1).send();
+      const methodCall = await contract.methodsObject.default(['01', 1]).send();
       await methodCall.confirmation();
 
       expect(methodCall.hash).toBeDefined();

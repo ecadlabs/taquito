@@ -71,7 +71,7 @@ const create_bytes_to_sign = async (Tezos: TezosToolkit, contractAddress: string
   // signs the hash
   const signature = await Tezos.signer.sign(sigParamPacked.bytes);
 
-  return signature.sig
+  return signature.prefixSig
 }
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
@@ -113,7 +113,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       const param_sig = await create_bytes_to_sign(Tezos, permit_contract.address, param_hash)
 
       const permitMethodCall = await permit_contract.methodsObject
-        .permit([{ 0: signer_key, 1: { 0: param_sig, 1: param_hash } }])
+        .permit({ 0: signer_key, 1: param_sig, 2: param_hash })
         .send();
       await permitMethodCall.confirmation();
 
@@ -139,7 +139,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       expect(op.status).toEqual('applied');
 
       const setExpiryMethodCall = await expiry_contract.methodsObject
-        .setExpiry({ 0: await Tezos.signer.publicKeyHash(), 1: { 0: null, 1: 42 } })
+        .setExpiry({ 0: null, 1: await Tezos.signer.publicKeyHash(), 2: 42 })
         .send();
       await setExpiryMethodCall.confirmation();
 
@@ -349,7 +349,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         //Anyone can submit permit start
         const signed_permit_contract = await LocalTez4.contract.at(fa12_contract.address);
         const permit_contract = await signed_permit_contract.methodsObject
-          .permit([{ 0: PUB_KEY, 1: { 0: SIGNATURE, 1: TRANSFER_PARAM_HASHED } }])
+          .permit([{ 0: PUB_KEY, 1: SIGNATURE, 2: TRANSFER_PARAM_HASHED }])
           .send();
         await permit_contract.confirmation();
         expect(permit_contract.hash).toBeDefined();

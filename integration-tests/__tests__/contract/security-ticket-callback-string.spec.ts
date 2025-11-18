@@ -150,7 +150,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
         expect(opGetter.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
         const opGetterContract = await opGetter.contract();
         expect(await opGetterContract.storage()).toBeTruthy();
-        const opSend = await opCallerContract.methodsObject.init(`${opGetterContract.address}`, `${opGetterContract.address}`).send();
+        const opSend = await opCallerContract.methodsObject.init({ 0: opGetterContract.address, 1: opGetterContract.address }).send();
         await opSend.confirmation()
       } catch (error: any) {
         expect(error.message).toContain('{\"prim\":\"Unit\"}');
@@ -221,7 +221,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
         const opGetterContract = await opGetter.contract();
         expect(await opGetterContract.storage()).toBeTruthy();
 
-        const opSend = await opCallerContract.methodsObject.init(`${opGetterContract.address}`, `${opCallerContract.address}`).send();
+        const opSend = await opCallerContract.methodsObject.init({ 0: opGetterContract.address, 1: opCallerContract.address }).send();
         await opSend.confirmation()
       } catch (error: any) {
         expect(error.message).toContain('{\"prim\":\"Unit\"}');
