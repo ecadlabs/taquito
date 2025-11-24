@@ -40,8 +40,8 @@ export { BeaconWalletNotInitialized, MissingRequiredScopes } from './errors';
 
 type RPCOperationWithLimits = {
   fee?: number | string;
-  gasLimit?: number | string;
-  storageLimit?: number | string;
+  gas_limit?: number | string;
+  storage_limit?: number | string;
 };
 
 export class BeaconWallet implements WalletProvider {
@@ -113,12 +113,9 @@ export class BeaconWallet implements WalletProvider {
       throw err;
     }
 
-    const source = await this.getPKH();
-    const paramsWithSource = { ...walletParams, source };
-
     return this.removeDefaultParams(
       walletParams,
-      await createTransferTicketOperation(this.formatParameters(paramsWithSource))
+      await createTransferTicketOperation(this.formatParameters(walletParams))
     );
   }
 
@@ -177,12 +174,9 @@ export class BeaconWallet implements WalletProvider {
       throw err;
     }
 
-    const source = await this.getPKH();
-    const paramsWithSource = { ...walletParams, source };
-
     return this.removeDefaultParams(
       walletParams,
-      await createIncreasePaidStorageOperation(this.formatParameters(paramsWithSource))
+      await createIncreasePaidStorageOperation(this.formatParameters(walletParams))
     );
   }
 
@@ -196,12 +190,9 @@ export class BeaconWallet implements WalletProvider {
       throw err;
     }
 
-    const source = await this.getPKH();
-    const paramsWithSource = { ...walletParams, source };
-
     return this.removeDefaultParams(
       walletParams,
-      await createOriginationOperation(this.formatParameters(paramsWithSource))
+      await createOriginationOperation(this.formatParameters(walletParams))
     );
   }
 
@@ -215,12 +206,9 @@ export class BeaconWallet implements WalletProvider {
       throw err;
     }
 
-    const source = await this.getPKH();
-    const paramsWithSource = { ...walletParams, source };
-
     return this.removeDefaultParams(
       walletParams,
-      await createSetDelegateOperation(this.formatParameters(paramsWithSource))
+      await createSetDelegateOperation(this.formatParameters(walletParams))
     );
   }
 
@@ -234,12 +222,9 @@ export class BeaconWallet implements WalletProvider {
       throw err;
     }
 
-    const source = await this.getPKH();
-    const paramsWithSource = { ...walletParams, source };
-
     return this.removeDefaultParams(
       walletParams,
-      await createRegisterGlobalConstantOperation(this.formatParameters(paramsWithSource))
+      await createRegisterGlobalConstantOperation(this.formatParameters(walletParams))
     );
   }
 
@@ -276,10 +261,10 @@ export class BeaconWallet implements WalletProvider {
       delete operatedParams.fee;
     }
     if (!params.storageLimit) {
-      delete operatedParams.storageLimit;
+      delete operatedParams.storage_limit;
     }
     if (!params.gasLimit) {
-      delete operatedParams.gasLimit;
+      delete operatedParams.gas_limit;
     }
     return operatedParams;
   }
