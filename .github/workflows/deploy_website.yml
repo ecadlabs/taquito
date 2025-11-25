@@ -34,7 +34,7 @@ jobs:
         with:
           node-version: 18.18.2
       - run: npm ci
-      - run: npm run build-website; npm run build-docs
+      - run: npm run build
 
       - name: Publish to Cloudflare Pages
         id: cloudflare_publish
@@ -43,7 +43,7 @@ jobs:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           accountId: ${{ secrets.CF_ACCOUNT_ID}}
           projectName: taquito
-          directory: website/build
+          directory: website/dist
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
           wranglerVersion: '3'
 
