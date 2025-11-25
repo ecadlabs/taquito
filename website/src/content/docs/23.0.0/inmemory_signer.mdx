@@ -38,7 +38,7 @@ The operation will be signed automatically using the signer (no prompt)
 
 The `fromSecretKey` method takes a secret that is base58 encoded as a parameter. Here are three examples with unencrypted private keys:
 
-```js live noInline
+```js live 
 // import { TezosToolkit } from '@taquito/taquito'
 // import { InMemorySigner } from '@taquito/signer'
 // const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
@@ -55,7 +55,7 @@ InMemorySigner.fromSecretKey('edsk2rKA8YEExg9Zo2qNPiQnnYheF1DhqjLVmfKdxiFfu5GyGR
   .catch((error) => console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
 
-```js live noInline
+```js live 
 // import { TezosToolkit } from '@taquito/taquito'
 // import { InMemorySigner } from '@taquito/signer'
 // const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
@@ -74,7 +74,7 @@ InMemorySigner.fromSecretKey('spsk2Fiz7sGP5fNMJrokp6ynTa4bcFbsRhw58FHXbNf5ProDNF
 
 When required, Taquito offers the `b58Encode` function allowing to encode the secret in base58. The parameters of the function are the secret, that can be a `hex string` or an `Uint8Array`, and the desired prefix. Here is an example with a `hex string`:
 
-```js live noInline
+```js live 
 // import { b58Encode, PrefixV2 } from '@taquito/utils';
 // import { TezosToolkit } from '@taquito/taquito'
 // import { InMemorySigner } from '@taquito/signer'
@@ -116,7 +116,7 @@ Tezos.setProvider({
 
 Here are three examples with encrypted private keys where the passphrase used is `test`:
 
-```js live noInline
+```js live 
 // import { TezosToolkit } from '@taquito/taquito'
 // import { InMemorySigner } from '@taquito/signer'
 // const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
@@ -136,7 +136,7 @@ InMemorySigner.fromSecretKey(
   .catch((error) => console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
 
-```js live noInline
+```js live 
 // import { TezosToolkit } from '@taquito/taquito'
 // import { InMemorySigner } from '@taquito/signer'
 // const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
@@ -156,7 +156,7 @@ InMemorySigner.fromSecretKey(
   .catch((error) => console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
 
-```js live noInline
+```js live 
 // import { TezosToolkit } from '@taquito/taquito'
 // import { InMemorySigner } from '@taquito/signer'
 // const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
@@ -185,7 +185,7 @@ derivation path MUST start with "44'/1729'/"
 
 With ed25519 default derivation path (Reminder Must be hardened with either h or ')
 
-```js live noInline
+```js live 
   // import { TezosToolkit } from '@taquito/taquito
   // import { InMemorySigner } from '@taquito/signer'
   // const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
@@ -209,7 +209,7 @@ With ed25519 default derivation path (Reminder Must be hardened with either h or
 
 With a non-default derivation path non-hardened with a tz2 address
 
-```js live noInline
+```js live 
   // import { TezosToolkit } from '@taquito/taquito
   // import { InMemorySigner } from '@taquito/signer'
   // const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');

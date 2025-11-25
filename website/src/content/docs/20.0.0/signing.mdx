@@ -173,7 +173,7 @@ values={[
 ]}>
 <TabItem value="contractAPI">
 
-```js noInline
+```js 
 // import { TezosToolkit } from '@taquito/taquito'
 // import { InMemorySigner } from '@taquito/signer'
 // import { stringToBytes, num2PaddedHex } from '@taquito/utils';
@@ -201,7 +201,7 @@ InMemorySigner.fromSecretKey('edsk2rKA8YEExg9Zo2qNPiQnnYheF1DhqjLVmfKdxiFfu5GyGR
 </TabItem>
   <TabItem value="walletAPI">
 
-```js noInline wallet
+```js 
 // import { TezosToolkit } from '@taquito/taquito'
 // import { InMemorySigner } from '@taquito/signer'
 // import { stringToBytes, num2PaddedHex } from '@taquito/utils';
@@ -229,7 +229,7 @@ wallet.client.requestSignPayload(payload).then(signed => console.log(JSON.string
 
 Taquito also offers the possibility to sign Michelson code. This feature can be useful, for example, if you need to send a lambda to a contract to be executed but want to restrict the number of users who can submit a lambda by verifying the signer's address. The signing of Michelson code requires the use of the `michel-codec` package:
 
-```js noInline
+```js 
 // import { TezosToolkit } from '@taquito/taquito';
 // import { Parser, packDataBytes, MichelsonData, MichelsonType } from '@taquito/michel-codec';
 // const Tezos = new TezosToolkit(NODE_RPC_URL);

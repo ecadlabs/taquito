@@ -50,7 +50,7 @@ Parameters must not include the callback parameter
 :::
 
 Then we call the `read()` method. (Note that we have no longer need a lambda contract)
-```js live noInline
+```js live 
 Tezos.contract
   .at('KT1MhfAnNbg2oACFBP4VDU5bNY5MZUXdeDWs')
   .then((contract) => {
@@ -62,7 +62,7 @@ Tezos.contract
   .catch((error) => console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
 ```
 
-{/* ```js live noInline
+{/* ```js live 
 Tezos.contract
   .at('KT1MhfAnNbg2oACFBP4VDU5bNY5MZUXdeDWs')
   .then((contract) => {
@@ -76,7 +76,7 @@ Tezos.contract
 
 **More examples:**
 
-```js live noInline
+```js live 
 Tezos.contract
   .at('KT1Ccr6ZMeB1mp9yJAqJTHK7F4xoFV9uc11T')
   .then((contract) => {

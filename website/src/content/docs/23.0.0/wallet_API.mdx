@@ -110,7 +110,7 @@ Tezos.setProvider({ wallet });
 
 Make sure you have the Beacon browser extension installed (the extension offers minimal features, the BeaconWallet works with any wallet implementing the TZIP-10 standard), the AirGap wallet on your phone, or any TZIP-10 ready wallet like Temple or Kukai.
 
-```js live noInline wallet
+```js live  wallet
 // import { BeaconWallet } from '@taquito/beacon-wallet';
 // const options = { name: 'exampleWallet', enableMetrics: true };
 // const wallet = new BeaconWallet(options);
@@ -229,7 +229,7 @@ Although it is possible to transfer tokens directly from the wallets, Taquito ca
 
 ### - Transfer between implicit accounts
 
-```js live noInline wallet
+```js live 
 Tezos.wallet
   .transfer({ to: 'tz1NhNv9g7rtcjyNsH8Zqu79giY5aTqDDrzB', amount: 0.2 })
   .send()
@@ -253,7 +253,7 @@ The `transfer` method takes an object with only two required properties: the `to
 
 ### - Transfer to smart contracts
 
-```js live noInline wallet
+```js live 
 Tezos.wallet
   .transfer({ to: 'KT1TBxaaeikEUcVN2qdQY7n9Q21ykcX1NLzY', amount: 0.2 })
   .send()
@@ -287,7 +287,7 @@ Most of the entrypoint method's possible arguments are pretty straightforward an
 
 Most of the time, the process is simple: you take the contract abstraction you created for the contract you target, you call the `methodsObject` property on it which exposes all the entrypoints of the contract as methods. You pass the argument you want to send to the contract as a function argument before calling the `send()` method to send the transaction:
 
-```js live noInline wallet
+```js live 
 Tezos.wallet
   .at('KT1SHiNUNmqBFGNysX9pmh1DC2tQ5pGmRagC')
   .then((contract) => contract.methodsObject.areYouThere(true).send())
@@ -310,7 +310,7 @@ Tezos.wallet
 
 In the case of multiple arguments (for example if the entrypoint expects a pair), you can just pass the arguments one by one. Be careful of the order of the arguments, they must be in the exact order expected by the contract entrypoint:
 
-```js live noInline wallet
+```js live 
 Tezos.wallet
   .at('KT1SHiNUNmqBFGNysX9pmh1DC2tQ5pGmRagC')
   .then((contract) =>

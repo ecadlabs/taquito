@@ -21,7 +21,7 @@ In the following example, we have not revealed the account that we want to empty
 **If the account to drain has already been revealed, you must not subtract the reveal fee from the balance.**
 :::
 
-```js noInline
+```js 
 // const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
 // import { getRevealFee } from "@taquito/taquito";
 
@@ -86,7 +86,7 @@ The contract we originate is a `manager contract.` It has a `do` method taking a
 
 In the example, we estimate the transfer operation before doing it. The associated fees are deducted from the manager's address when draining the account. Thus, for the operation to be successful, the manager's address for that account must contain funds to cover the gas.
 
-```js noInline
+```js 
 // const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
 
 function transferImplicit(key, mutez) {

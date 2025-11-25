@@ -90,7 +90,7 @@ values={[
 ]}>
 <TabItem value="contractAPI">
 
-```js live noInline
+```js live 
 // import { TezosToolkit } from '@taquito/taquito';
 // const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
 
@@ -119,7 +119,7 @@ Tezos.contract
   </TabItem>
   <TabItem value="walletAPI">
 
-```js live noInline wallet
+```js live 
 // import { TezosToolkit } from '@taquito/taquito';
 // const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
 
@@ -161,7 +161,7 @@ values={[
 ]}>
 <TabItem value="contractAPI">
 
-```js live noInline
+```js live 
 // import { TezosToolkit } from '@taquito/taquito';
 // const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
 
@@ -186,7 +186,7 @@ Tezos.contract
 </TabItem>
   <TabItem value="walletAPI">
 
-```js live noInline wallet
+```js live 
 // import { TezosToolkit } from '@taquito/taquito';
 // const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
 
@@ -222,7 +222,7 @@ values={[
 ]}>
 <TabItem value="contractAPI">
 
-```js live noInline
+```js live 
 // import { TezosToolkit } from '@taquito/taquito';
 // const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
 
@@ -259,7 +259,7 @@ Tezos.contract
 </TabItem>
   <TabItem value="walletAPI">
 
-```js live noInline wallet
+```js live 
 // import { TezosToolkit } from '@taquito/taquito';
 // const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
 
@@ -301,7 +301,7 @@ Tezos.wallet
 
 It is also possible to use Taquito to originate multiple contracts in one operation. The origination operations must be batched with the [Batch API](https://taquito.io/docs/batch_API) and after the contracts have been originated, the addresses will be available in an array returned by the `getOriginatedContractAddresses` method of the operation object:
 
-```js noInline
+```js 
 const batch = Tezos.contract
   .batch()
   .withOrigination({

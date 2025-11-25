@@ -3,9 +3,6 @@ title: Quick Start
 author: Simon Boissonneault-Robert
 ---
 
-
-
-
 ## Installing Taquito using npm
 
 > For quick-start, you may also like to try out our template/boilerplate app [here][boilerplate]
@@ -55,7 +52,7 @@ Alternatively, you can use a `WalletProvider` to interact with a wallet. Please 
 
 ### Get the current Tezos spendable balance for an address
 
-```js noInline
+```js 
 // import { TezosToolkit } from '@taquito/taquito';
 // const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
 
@@ -100,7 +97,7 @@ values={[
 ]}>
 <TabItem value="contractAPI">
 
-```js noInline
+```js 
 const amount = 2;
 const address = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY';
 
@@ -118,7 +115,7 @@ Tezos.contract
 </TabItem>
   <TabItem value="walletAPI">
 
-```js noInline wallet
+```js  wallet
 const amount = 2;
 const address = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY';
 
@@ -149,7 +146,7 @@ values={[
 ]}>
 <TabItem value="contractAPI">
 
-```js noInline
+```js 
 Tezos.contract
   .at('KT1BJadpDyLCACMH7Tt9xtpx4dQZVKw9cDF7')
   .then((contract) => {
@@ -169,7 +166,7 @@ Tezos.contract
 </TabItem>
   <TabItem value="walletAPI">
 
-```js noInline wallet
+```js  wallet
 Tezos.wallet
   .at('KT1BJadpDyLCACMH7Tt9xtpx4dQZVKw9cDF7')
   .then((wallet) => {

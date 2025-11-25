@@ -36,7 +36,7 @@ const p = new Parser(parserOptions);
 * `parseJSON` - takes a JSON-encoded Michelson, validates it, strips away unneeded properties and expands macros based on your configuration.
 * `emitMicheline` takes a parsed JSON Michelson object and converts it to a Micheline expression with formatting options.
 
-```js noInline
+```js 
 // import { Parser, emitMicheline } from '@taquito/michel-codec'
 
 const p = new Parser();
@@ -57,7 +57,7 @@ Tezos.contract
 ### parseMichelineExpression - Parse Micheline and convert it to JSON Michelson
 Takes a Micheline expression in the form of script or data and converts it to JSON Michelson
 
-```js noInline
+```js 
 // import { Parser } from '@taquito/michel-codec'
 
 const p = new Parser();

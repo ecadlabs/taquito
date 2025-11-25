@@ -74,7 +74,7 @@ values={[
 ]}>
 <TabItem value="contractAPI">
 
-```js noInline
+```js 
 // const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
 
 Tezos.contract
@@ -89,7 +89,7 @@ Tezos.contract
 </TabItem>
   <TabItem value="walletAPI">
 
-```js noInline wallet
+```js 
 // const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
 
 Tezos.wallet
@@ -122,7 +122,7 @@ values={[
 ]}>
 <TabItem value="contractAPI">
 
-```js noInline
+```js 
 // const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
 
 Tezos.contract
@@ -136,7 +136,7 @@ Tezos.contract
 </TabItem>
   <TabItem value="walletAPI">
 
-```js noInline wallet
+```js 
 // const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
 
 Tezos.wallet
@@ -166,7 +166,7 @@ values={[
 ]}>
 <TabItem value="contractAPI">
 
-```js noInline
+```js 
 // const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
 
 Tezos.contract
@@ -187,7 +187,7 @@ Tezos.contract
 </TabItem>
   <TabItem value="walletAPI">
 
-```js noInline wallet
+```js 
 // const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
 
 Tezos.wallet
@@ -229,7 +229,7 @@ values={[
 
 In the following example, a contract's `set_child_record` method will be called by passing the parameter in an object format. The `methodsObject` member of the `ContractAbstraction` class allows doing so. First, it is possible to obtain details about the signature of the `set_child_record` entry point by using the `getSignature` method as follow:
 
-```js noInline
+```js 
 // const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
 
 Tezos.contract
@@ -249,7 +249,7 @@ Tezos.contract
 
 The preceding example returns an object giving indication on how to structure the parameter when calling the`set_child_record` method. Here is an example where the `set_child_record` method is called by passing the parameter in an object format:
 
-```js noInline
+```js 
 // import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
 // const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com')
 // import { importKey } from '@taquito/signer';
@@ -281,7 +281,7 @@ importKey(Tezos, secretKey)
 
 In the following example, a contract's `set_child_record` method will be called by passing the arguments using the flattened representation. The `methods` member of the `ContractAbstraction` class allows doing so. First, it is possible to obtain details about the signature of the `set_child_record` entry point by using the `getSignature` method as follow:
 
-```js noInline
+```js 
 // const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
 
 Tezos.contract
@@ -301,7 +301,7 @@ Tezos.contract
 
 The preceding example returns an array which contains the different possible signatures. Different signatures are possible as the `set_child_record` method contains some optional arguments. In the following example the `set_child_record` method is called by passing the arguments in the flattened way:
 
-```js noInline
+```js 
 // import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
 // const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com')
 // import { importKey } from '@taquito/signer';

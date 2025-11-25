@@ -70,7 +70,7 @@ We can use this method to obtain indications on how to write the storage when de
 
 Here is an example with a contract storage having annotations and a `pair` at its root. The `ExtractSchema` method returns an object where the keys are the annotations, and the values show the corresponding type.
 
-```js noInline
+```js 
 const storageType = {
     prim: 'pair',
     args: [
@@ -90,7 +90,7 @@ console.log(JSON.stringify(extractSchema, null, 2));
 ```
 ---
 When there is no annotation, the keys of the object are indexes starting from 0.
-```js noInline
+```js 
 const storageType = {
     prim: 'pair',
     args: [
@@ -110,7 +110,7 @@ console.log(JSON.stringify(extractSchema, null, 2));
 ```
 ---
 Here is another example using a complex storage:
-```js noInline
+```js 
 const storageType =
 {
 	prim: 'pair',
@@ -254,7 +254,7 @@ console.log(JSON.stringify(extractSchema, null, 2));
 
 We can use the `Typecheck` method to validate the storage object. The method takes the storage object as a parameter and returns `true` if the storage object is compliant with the schema type or `false`. Validation of the properties is done. For example, the key used in the following code snippet is invalid, so the returned value of the `Typecheck` method is false.
 
-```js noInline
+```js 
 const storageType = {
     prim: 'pair',
     args: [
@@ -286,7 +286,7 @@ try {
 We use the `Encode` method to transform data from a javascript object to Michelson data.
 Here is an example:
 
-```js noInline
+```js 
 const storageType = {
     prim: 'pair',
     args: [
@@ -314,7 +314,7 @@ console.log(JSON.stringify(michelsonData, null, 2));
 We use the `Execute` method to transform data from Michelson to a javascript object.
 Here is an example:
 
-```js noInline
+```js 
 const storageType = {
     prim: 'pair',
     args: [
@@ -363,7 +363,7 @@ Here is an example for the `big_map` type:
 If we have a contract having a big map in its storage, when we fetch the contract's storage with the RPC, the returned value looks like the following `{ int: big_map_id }`.
 In the Taquito main package, the `getStorage` method of the `ContractProvider` class uses the semantic parameter to override the representation of big map in the storage. When we fetch the storage of a contract using `Tezos.contract.getStorage('contractAddress')`, an instance of the `BigMapAbstraction` class is returned for the big map instead of its id.
 
-```js noInline
+```js 
 const schema = new Schema({ prim: 'big_map', args: [{ prim: 'address' }, { prim: 'int' }] });
 const dataMichelson = { int: 123456 }
 
@@ -378,7 +378,7 @@ console.log(`Customized representation of the big_map value: ${JSON.stringify(da
 ---
 Here is an example for the `ticket` type:
 
-```js noInline
+```js 
 const schema = new Schema({"prim":"ticket","args":[{"prim":"string"}]});
 const dataMichelson = {"prim":"Pair","args":[{"string":"KT1PVuv7af4VkPsZVZ8oZz9GSSdGnGBCbFWw"},{"string":"test"},{"int":"2"}]}
 
@@ -407,7 +407,7 @@ The `ParameterSchema` class is used to represent the smart contract methods. Thi
 
 Here is an example of `encode`:
 
-```js noInline
+```js 
 const parameterSchema = new ParameterSchema({"prim":"pair","args":[{"prim":"address","annots":[":spender"]},{"prim":"nat","annots":[":value"]}],"annots":["%approve"]});
 const michelsonData = parameterSchema.Encode(
     'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
@@ -417,7 +417,7 @@ console.log(JSON.stringify(michelsonData, null, 2));
 ```
 ---
 Here is an example of `encodeObject`:
-```js noInline
+```js 
 const parameterSchema = new ParameterSchema({"prim":"pair","args":[{"prim":"address","annots":[":spender"]},{"prim":"nat","annots":[":value"]}],"annots":["%approve"]});
 const michelsonData = parameterSchema.EncodeObject({
     spender: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
@@ -436,7 +436,7 @@ The `ParameterSchema` class is internally used in Taquito:
 
 In the Michelson language, we can have nested `pair`s or unions (`or`). For example, the following Michelson type is a nested `pair`:
 
-```js noInline
+```js 
 const storageSchema = new Schema({
 	prim: 'pair',
 	args: [
@@ -455,7 +455,7 @@ console.log(JSON.stringify(annotatedSchema, null, 2));
 ```
 ---
 We can also have a similar definition without the annotations:
-```js noInline
+```js 
 const storageSchema = new Schema({
 	prim: 'pair',
 	args: [
@@ -504,7 +504,7 @@ Here, Taquito developers have made two decisions:
 Formally speaking, the fields are the leaves of the three, ordered by traversing the tree (because we omit inner nodes of the tree, there is no difference between pre-order, in-order, or post-order traversal).
 Also, in case you have a mixture of annotated and non-annotated fields, the fields numbers will keep increasing, even though annotated fields are named.
 
-```js noInline
+```js 
 const storageSchema = new Schema({
 	prim: 'pair',
 	args: [
@@ -525,7 +525,7 @@ console.log(JSON.stringify(mixedSchema, null, 2));
 ### Unions
 For unions (`or`), we flatten them similarly, so instead of having `left` and `right` to refer to fields, you use the field number or annotation.
 
-```js noInline
+```js 
 const storageSchema = new Schema({
 	prim: 'or',
 	args: [
@@ -548,7 +548,7 @@ When having nested `pair`s or unions (`or`), Taquito assigns numbers to fields w
 In previous versions of Taquito, the nested object's fields were numbered were a continuation of the parent object's fields.
 For example, the following schema:
 
-```js noInline
+```js 
 const param = {
     prim: 'or',
     args: [
