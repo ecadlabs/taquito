@@ -1,0 +1,177 @@
+---
+import Prism from 'prismjs';
+import 'prismjs/components/prism-javascript';
+import 'prismjs/themes/prism.css';
+
+interface Props {
+  code: string;
+  language?: string;
+  title?: string;
+}
+
+const { code, language = 'javascript', title } = Astro.props;
+
+const html = Prism.highlight(code, Prism.languages[language] || Prism.languages.javascript, language);
+---
+
+<live-code-runner data-code={code} class="pre">
+  <div class="">
+      <pre class={`language-${language} m-0 p-4 overflow-x-auto code`} set:html={html} />
+      <button class="run-button bg-green-600 text-white border-none py-2 px-4 rounded text-sm font-medium cursor-pointer transition-colors duration-200 hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed">
+        Run Code
+      </button>
+
+    <div class="output mt-2" hidden>
+      <pre class="output-content m-0 p-3 bg-gray-50 border border-gray-300 rounded font-mono text-sm text-red-500 whitespace-pre-wrap"></pre>
+    </div>
+  </div>
+</live-code-runner>
+
+<script>
+  class LiveCodeRunner extends HTMLElement {
+    private button: HTMLButtonElement | null;
+
+    constructor() {
+      super();
+      this.button = this.querySelector('.run-button');
+      this.button?.addEventListener('click', () => this.runCode());
+    }
+
+    async waitForTaquito(timeoutMs = 15000): Promise<void> {
+      const win = window as any;
+      
+      // Check if already ready
+      if (win.Tezos) return;
+      
+      // If we have a promise, await it
+      if (win.__taquitoReady) {
+        // Race against timeout
+        const timeoutPromise = new Promise((_, reject) => 
+          setTimeout(() => reject(new Error("Taquito initialization timed out")), timeoutMs)
+        );
+        await Promise.race([win.__taquitoReady, timeoutPromise]);
+        return;
+      }
+
+      // Fallback polling if no promise (shouldn't happen with updated init script)
+      return new Promise((resolve, reject) => {
+        const startTime = Date.now();
+        const check = () => {
+          if (win.Tezos) resolve();
+          else if (win.__taquitoError) reject(win.__taquitoError);
+          else if (Date.now() - startTime > timeoutMs) reject(new Error("Taquito initialization timed out (polling)"));
+          else setTimeout(check, 250); // Check every 250ms
+        };
+        check();
+      });
+    }
+
+    async runCode() {
+      const outputDiv = this.querySelector('.output') as HTMLElement;
+      const outputContent = this.querySelector('.output-content') as HTMLElement;
+
+      if (!outputDiv || !outputContent || !this.button) return;
+
+      // Get code from data attribute
+      const sourceCodeContent = this.getAttribute('data-code') || '';
+      
+      if (!sourceCodeContent) {
+        outputContent.textContent = "Error: No code to execute";
+        outputDiv.hidden = false;
+        return;
+      }
+
+      // Reset UI
+      outputContent.textContent = "Initializing Taquito...";
+      outputDiv.hidden = false;
+      this.button.disabled = true;
+      this.button.textContent = "Loading...";
+
+      try {
+        // Wait for Taquito
+        await this.waitForTaquito();
+        this.button.textContent = "Running...";
+        outputContent.textContent = ""; // Clear loading message
+        
+        const win = window as any;
+        if (!win.Tezos) {
+          throw new Error("Taquito failed to load.");
+        }
+
+        // Automatically configure signer if not already configured
+        if (win.configureSigner && !win.__signerConfigured) {
+          try {
+            outputContent.textContent = "Configuring signer...";
+            const address = await win.configureSigner();
+            // Verify signer is actually configured by checking the flag
+            if (!win.__signerConfigured) {
+              throw new Error("Signer configuration completed but __signerConfigured flag is not set");
+            }
+            // Also verify we got an address back
+            if (!address) {
+              throw new Error("Signer configuration completed but no address was returned");
+            }
+            outputContent.textContent = ""; // Clear signer message
+          } catch (error: any) {
+            // If signer configuration fails, show the error but allow code to run
+            // Some examples (like balance checks) don't need a signer
+            const errorMsg = error instanceof Error ? error.message : String(error);
+            const errorDetails = error instanceof Error && error.stack ? `\n${error.stack}` : '';
+            outputContent.textContent = `Warning: Signer configuration failed: ${errorMsg}${errorDetails}\n\nAttempting to run code anyway (read-only operations may still work)...\n\n`;
+            console.error("Signer configuration failed:", error);
+          }
+        }
+
+        // Capture console.log
+        const originalLog = console.log;
+        let logs: string[] = [];
+        
+        console.log = (...args: any[]) => {
+          originalLog(...args);
+          const logText = args.map(arg => 
+            typeof arg === 'object' ? JSON.stringify(arg, null, 2) : String(arg)
+          ).join(' ');
+          logs.push(logText);
+          outputContent.textContent = logs.join('\n');
+        };
+
+        // Execute code
+        try {
+          // Create async function from string
+          const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
+          
+          const func = new AsyncFunction(
+            'Tezos', 
+            'TezosToolkit', 
+            'InMemorySigner', 
+            'configureSigner',
+            sourceCodeContent
+          );
+
+          await func(
+            win.Tezos,
+            win.TezosToolkit,
+            win.InMemorySigner,
+            win.configureSigner
+          );
+
+          if (logs.length === 0) {
+             outputContent.textContent = "Code executed successfully (no output)";
+          }
+        } finally {
+          console.log = originalLog;
+        }
+
+      } catch (error: any) {
+        console.error(error);
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        outputContent.textContent += (outputContent.textContent ? '\n' : '') + `Error: ${errorMessage}`;
+      } finally {
+        this.button.disabled = false;
+        this.button.textContent = "Run Code";
+      }
+    }
+  }
+
+  customElements.define('live-code-runner', LiveCodeRunner);
+</script>

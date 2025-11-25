@@ -1,0 +1,249 @@
+---
+interface Props {
+  network: string;
+  rpcUrl: string;
+}
+
+const { network, rpcUrl } = Astro.props;
+---
+
+<span class="block-timestamp" data-network={network} data-rpc-url={rpcUrl}>Loading...</span>
+
+<script>
+  interface BlockHeader {
+    timestamp: string;
+    level: number;
+  }
+
+  interface ControllerState {
+    data: BlockHeader | null;
+    loading: boolean;
+    error: boolean;
+    subscribers: Set<() => void>;
+    intervalId: number | null;
+    visibleCount: number;
+    network: string;
+  }
+
+  interface Controller {
+    state: ControllerState;
+    notify: () => void;
+    fetchLatestBlock: () => Promise<void>;
+    start: () => void;
+    stop: () => void;
+    subscribe: (cb: () => void) => () => void;
+    incrementVisibility: () => void;
+    decrementVisibility: () => void;
+  }
+
+  declare global {
+    interface Window {
+      blockTimestampControllers?: Map<string, Controller>;
+      blockTimestampVisibilityInitialized?: boolean;
+    }
+  }
+
+  if (!window.blockTimestampControllers) {
+    window.blockTimestampControllers = new Map();
+  }
+  const controllers = window.blockTimestampControllers;
+  
+  function getPollingIntervalByNetwork(network: string): number {
+    if (network === 'shadownet' || network === 'seoulnet') {
+      return 4000;
+    }
+    if (network === 'mainnet' || network === 'ghostnet') {
+      return 8000;
+    }
+    return 8000;
+  }
+
+  function getController(rpcUrl: string, network: string): Controller {
+    if (controllers.has(rpcUrl)) {
+      const existing = controllers.get(rpcUrl)!;
+      if (network && existing.state.network !== network) {
+        existing.state.network = network;
+        if (existing.state.intervalId !== null) {
+          existing.stop();
+          existing.start();
+        }
+      }
+      return existing;
+    }
+
+    const state: ControllerState = {
+      data: null,
+      loading: true,
+      error: false,
+      subscribers: new Set(),
+      intervalId: null,
+      visibleCount: 0,
+      network
+    };
+
+    const notify = () => {
+      state.subscribers.forEach((cb) => cb());
+    };
+
+    const fetchLatestBlock = async () => {
+      try {
+        if (state.data === null) {
+          state.loading = true;
+          state.error = false;
+          notify();
+        }
+        const response = await fetch(`${rpcUrl}/chains/main/blocks/head`);
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        const json = await response.json();
+        state.data = json.header;
+        state.loading = false;
+        state.error = false;
+        notify();
+      } catch (e) {
+        state.loading = false;
+        state.error = true;
+        notify();
+      }
+    };
+
+    const start = () => {
+      if (state.intervalId !== null) return;
+      if (document.hidden) return;
+      if (state.visibleCount <= 0) return;
+      state.intervalId = window.setInterval(fetchLatestBlock, getPollingIntervalByNetwork(state.network));
+      fetchLatestBlock();
+    };
+
+    const stop = () => {
+      if (state.intervalId !== null) {
+        clearInterval(state.intervalId);
+        state.intervalId = null;
+      }
+    };
+
+    const subscribe = (cb: () => void) => {
+      state.subscribers.add(cb);
+      return () => state.subscribers.delete(cb);
+    };
+
+    const incrementVisibility = () => {
+      state.visibleCount += 1;
+      start();
+    };
+
+    const decrementVisibility = () => {
+      state.visibleCount = Math.max(0, state.visibleCount - 1);
+      if (state.visibleCount === 0) {
+        stop();
+      }
+    };
+
+    const controller: Controller = {
+      state,
+      notify,
+      fetchLatestBlock,
+      start,
+      stop,
+      subscribe,
+      incrementVisibility,
+      decrementVisibility
+    };
+
+    controllers.set(rpcUrl, controller);
+    return controller;
+  }
+
+  function ensureVisibilityHandler() {
+    if (window.blockTimestampVisibilityInitialized) return;
+    window.blockTimestampVisibilityInitialized = true;
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        controllers.forEach((c) => c.stop());
+      } else {
+        controllers.forEach((c) => {
+          if (c.state.visibleCount > 0) c.start();
+        });
+      }
+    });
+  }
+
+  function initBlockTimestamp(element: HTMLElement) {
+    const rpcUrl = element.dataset.rpcUrl;
+    const network = element.dataset.network;
+    
+    if (!rpcUrl || !network) return;
+
+    ensureVisibilityHandler();
+    const controller = getController(rpcUrl, network);
+    let isVisible = false;
+
+    const updateDisplay = () => {
+      if (controller.state.loading) {
+        element.textContent = 'Loading...';
+      } else if (controller.state.error) {
+        element.textContent = 'Error';
+        element.style.color = '#999';
+      } else if (controller.state.data?.timestamp) {
+        element.textContent = new Date(controller.state.data.timestamp).toLocaleString();
+        element.style.color = '';
+      } else {
+        element.textContent = 'Unknown';
+      }
+    };
+
+    const unsubscribe = controller.subscribe(updateDisplay);
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && !isVisible) {
+          isVisible = true;
+          controller.incrementVisibility();
+        } else if (!entry.isIntersecting && isVisible) {
+          isVisible = false;
+          controller.decrementVisibility();
+        }
+      });
+    }, { threshold: 0 });
+
+    observer.observe(element);
+
+    (element as any)._cleanup = () => {
+      unsubscribe();
+      observer.disconnect();
+      if (isVisible) {
+        controller.decrementVisibility();
+      }
+    };
+  }
+
+  function initAllTimestamps() {
+    document.querySelectorAll<HTMLElement>('.block-timestamp').forEach((el) => {
+      if (!(el as any)._initialized) {
+        (el as any)._initialized = true;
+        initBlockTimestamp(el);
+      }
+    });
+  }
+
+  document.addEventListener('astro:page-load', initAllTimestamps);
+  
+  const observer = new MutationObserver(() => {
+    initAllTimestamps();
+  });
+  
+  if (document.body) {
+    observer.observe(document.body, { childList: true, subtree: true });
+  }
+
+  document.addEventListener('astro:before-swap', () => {
+    observer.disconnect();
+    document.querySelectorAll<HTMLElement>('.block-timestamp').forEach((el) => {
+      if ((el as any)._cleanup) {
+        (el as any)._cleanup();
+        (el as any)._initialized = false;
+      }
+    });
+  });
+</script>

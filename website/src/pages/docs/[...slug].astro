@@ -1,0 +1,42 @@
+---
+import MarkdownLayout from '../../layouts/MarkdownLayout.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const docs = await getCollection('docs');
+  
+  return docs.map((doc) => {
+    // Extract the slug from the file path to preserve dots
+    // doc.id is like "src/content/docs/23.0.0/quick_start.mdx"
+    // We want "23.0.0/quick_start"
+    const filePath = doc.id;
+    const slug = filePath
+      .replace('src/content/docs/', '')
+      .replace(/\.mdx?$/, '');
+    
+
+    return {
+      params: { slug },
+      props: { doc },
+    };
+  });
+}
+
+const { doc } = Astro.props;
+const { Content } = await doc.render();
+const title = doc.data.title || 'Taquito Documentation';
+
+// Extract the slug from the file path to preserve dots
+const filePath = doc.id;
+const slug = filePath
+  .replace('src/content/docs/', '')
+  .replace(/\.mdx?$/, '');
+
+// Extract version from slug (first part before the slash)
+const version = slug.split('/')[0];
+---
+
+<MarkdownLayout title={title} version={version} currentSlug={slug}>
+  <Content />
+</MarkdownLayout>
+
