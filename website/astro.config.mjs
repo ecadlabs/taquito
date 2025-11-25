@@ -3,6 +3,7 @@ import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import AutoImport from 'astro-auto-import';
 import { remarkLiveCode } from './src/utils/remark-live-code.mjs';
+import { remarkCallouts } from './src/utils/remark-callouts.mjs';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import { fileURLToPath } from 'node:url';
 import tailwindcss from "@tailwindcss/vite";
@@ -26,7 +27,7 @@ export default defineConfig({
     }),
   ],
   markdown: {
-    remarkPlugins: [remarkLiveCode],
+    remarkPlugins: [remarkCallouts, remarkLiveCode],
     syntaxHighlight: false,
   },
   vite: {

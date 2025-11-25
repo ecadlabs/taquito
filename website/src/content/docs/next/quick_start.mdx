@@ -5,37 +5,41 @@ author: [Simon Boissonneault-Robert, Maxwell Ward]
 
 
 
-## Installing Taquito using npm
+## Installing Taquito Using npm
 
-> For quick-start, you may also like to try out our template/boilerplate app [here][boilerplate]
+> If you just want to get started quickly with a new project, you can use our boilerplate [Vue](https://github.com/ecadlabs/taquito-vue-template) or [React](https://github.com/ecadlabs/taquito-react-template) templates.
 
-The following instructions assume you have a project already created, and you have `npm` installed and operable.
+This quick start guide and subsequent documentation assumes the following:
+- You have npm installed
+- You have an npm project already created
+- You have an understanding of async/await patterns in JavaScript
+- You have access to a Tezos wallet (Temple, Kukai, etc.)
 
 ```bash
 npm install @taquito/taquito
 ```
 
-## Import the library in your project
+## Importing the Library
 
-### Import `TezosToolkit` from `@taquito/taquito` and instantiate it
-
-The constructor of the `TezosToolkit` class takes an RPC URL as a parameter. It can be a string or a [RpcClient](rpc_package.md) object. A list of community-run nodes can be accessed [here](rpc_nodes.mdx#list-of-community-run-nodes).
+A `TezosToolkit` is the core of your Taquito setup. The constructor of the `TezosToolkit` class takes an RPC URL as a parameter. It can be a string or a [RpcClient](rpc_package) object. A list of well-known public RPC nodes can be found [here](rpc_nodes).
 
 ```js
 import { TezosToolkit } from '@taquito/taquito';
 
-const tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
+const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
 ```
 
-In some cases, it can be useful to make more than one instance of Taquito, perhaps if you wanted to communicate with two different RPC nodes or offer other Signing options. You can now up separate instances with various providers or configurations per instance.
+In a simple app, you will likely only want to create one instance of the Tezos Toolkit. That said, in some cases it can be useful to make more than one instance of Taquito, perhaps if you wanted to communicate with two different RPC nodes or offer other Signing options. 
 
-## Configuration
+You can use multiple instances to use with different providers or configurations per instance.
 
-### Changing the underlying signer
+We recommend creating your `TezosToolkit` instances in one place and then distributing them around your project with some sort of state management. The examples in this documentation will assume you have a `TezosToolkit` available via a `Tezos` variable.
 
-Taquito's Contract API supports different signers. There is no default signer configured. A signer is required if you intend to inject operations into the Tezos blockchain.
+## Configuring the Signer
 
-You can set which signer you wish to use as follows:
+Taquito's Contract API supports multiple different signers. There is no default signer configured, and a signer is required if you intend to inject operations into the Tezos blockchain.
+
+You can set which signer you wish to use with `Tezos.setProvider({})`. The example below sets the signer to a remote signer.
 
 ```js
 import { TezosToolkit } from '@taquito/taquito';
@@ -48,31 +52,16 @@ Tezos.setProvider({
 });
 ```
 
-Alternatively, you can use a `WalletProvider` to interact with a wallet. Please refer to the [Wallet API](wallet_API.md) documentation for more information.
+Alternatively, you can use a `WalletProvider` to interact with a wallet. Please refer to the [Wallet API](wallet_API) documentation for more information.
 
-## Examples
+### Using the InMemorySigner and Importing a Key
 
-### Get the current Tezos spendable balance for an address
+The `InMemorySigner` package is useful for development and testing. It's an easy way to get started with Tezos when you don't need to interact with a user's wallet.
 
-```js noInline
-// import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
+The `InMemorySigner` will import your private key into memory and sign operations using this key.
 
-Tezos.tz
-  .getBalance('tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY')
-  .then((balance) => console.log(`${balance.toNumber() / 1000000} ꜩ`))
-  .catch((error) => console.log(JSON.stringify(error)));
-```
-
-### Using the inMemory Signer and Importing a key
-
-The `InMemorySigner` package is useful for development and testing. It's an easy way to get started with Tezos when you don't need to interact with a user's wallet. The `InMemorySigner` is suitable for testing and development. Should you be writing code for production that deals with real value tokens, we strongly recommend that you use a RemoteSigner that an HSM backs.
-
-This feature will import your private key in memory and sign operations using this key.
-
-#### Importing a Private key
-
-If you have a private key, you can import it as follows:
+> [!DANGER]
+> The `InMemorySigner` is only suitable for testing and development, and saves private keys in memory. When working in production environments with real value tokens, we **strongly** recommend that you use a RemoteSigner that an HSM backs or use the Wallet API.
 
 ```js
 import { TezosToolkit } from '@taquito/taquito';
@@ -85,52 +74,85 @@ Tezos.setProvider({
 });
 ```
 
-The following link can be used to fund an address on the different testnets: https://teztnets.com/.
+## Examples
 
-### Transfer
+> [!TIP]
+> It's good practice to handle errors with try/catch blocks. This allows you to provide feedback to your users in the event something goes wrong.
 
-The transfer operation requires a configured signer. In this example, we will use a private key to fetch a key service implemented for demonstration purposes. You should only use this key service for testing and development purposes.
+### Get the current Tezos spendable balance for an address
 
-<Tabs
-defaultValue="contractAPI"
-values={[
-{label: 'Contract API', value: 'contractAPI'},
-{label: 'Wallet API', value: 'walletAPI'}
-]}>
-<TabItem value="contractAPI">
-
-```js noInline
-const amount = 2;
-const address = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY';
-
-console.log(`Transfering ${amount} ꜩ to ${address}...`);
-Tezos.contract
-  .transfer({ to: address, amount: amount })
-  .then((op) => {
-    console.log(`Waiting for ${op.hash} to be confirmed...`);
-    return op.confirmation(1).then(() => op.hash);
-  })
-  .then((hash) => console.log(`Operation injected: https://ghost.tzstats.com/${hash}`))
-  .catch((error) => console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
+```js live
+try {
+  // No signer is required as we're not injecting any data into the blockchain.
+  const balance = await Tezos.tz.getBalance('tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY');
+  console.log(`${balance.toNumber() / 1000000} ꜩ`); // We divide by 1000000 to convert from mutez to tez
+} catch (error) {
+  console.log(JSON.stringify(error));
+}
 ```
 
-</TabItem>
-  <TabItem value="walletAPI">
+The following link can be used to fund an address on the various testnets: https://teztnets.com/.
 
-```js noInline wallet
+### Transfer Tez between addresses
+
+The transfer operation requires a configured signer, as it involves injecting data into the blockchain. 
+
+In the examples below, we pass in our `to` address and `amount` of Tez to transfer and keep the result in a `operation` variable. We can then use the `confirmation()` method on that operation to ensure the data is injected into the blockchain. This returns a hash which we can then use to find our operation on block explorers, which while not strictly required is useful feedback for your users.
+
+<Tabs
+  defaultValue="contractAPI"
+  values={[
+  {label: 'Contract API', value: 'contractAPI'},
+  {label: 'Wallet API', value: 'walletAPI'}
+  ]}>
+  <TabItem value="contractAPI">
+
+In this example, we will use the InMemorySigner for demonstration purposes. You should only use this signer for testing and development purposes.
+
+```js live
 const amount = 2;
 const address = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY';
 
 console.log(`Transfering ${amount} ꜩ to ${address}...`);
-Tezos.wallet
-  .transfer({ to: address, amount: amount })
-  .send()
-  .then((op) => {
-    console.log(`Waiting for ${op.opHash} to be confirmed...`);
-    return op.confirmation(1).then(() => op.opHash);
-  })
-    .then((hash) => console.log(`Operation injected: https://ghost.tzstats.com/${hash}`))
-  .catch((error) => console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
+
+try {
+  const operation = await Tezos.contract.transfer({ to: address, amount: amount })
+
+  console.log(`Waiting for ${operation.hash} to be confirmed...`);
+  const hash = await operation.confirmation(1)
+
+  console.log(`Operation injected: https://ghostnet.tzkt.io/${hash}/operations`)
+} catch (error) {
+  console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`);
+}
+```
+
+  </TabItem>
+  <TabItem value="walletAPI">
+
+Transferring with the wallet API is very similar but with a few key differences, namely:
+
+- We use `Tezos.wallet` instead of `Tezos.contract`
+- We have to add `.send()` at the end of the transfer request
+- The operation hash is found in `operation.opHash` instead of `operation.hash`
+- The confirmed hash can be found at `confirmation.block.hash` instead of the root object.
+
+```js live wallet
+const amount = 2;
+const address = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY';
+
+console.log(`Transfering ${amount} ꜩ to ${address}...`);
+
+try {
+  const operation = await Tezos.wallet.transfer({ to: address, amount: amount }).send();
+
+  console.log(`Waiting for ${operation.opHash} to be confirmed...`);
+  const confirmation = await operation.confirmation(1);  
+
+  console.log(`Operation injected: https://ghostnet.tzkt.io/${confirmation.block.hash}/operations`)
+} catch (error) {
+  console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
   </TabItem>
@@ -138,7 +160,9 @@ Tezos.wallet
 
 ### Interact with a smart contract
 
-Calling smart contract operations requires a configured signer. The Ligo source code for the smart contract [KT1BJadpDyLCACMH7Tt9xtpx4dQZVKw9cDF7][smart_contract_on_better_call_dev] used in this example can be found in a [Ligo Web IDE][smart_contract_source].
+Calling smart contract operations requires a configured signer, as it involves modifying data on the blockchain.
+
+The Ligo source code for the smart contract [KT1BJadpDyLCACMH7Tt9xtpx4dQZVKw9cDF7](https://ghostnet.tzkt.io/KT1BJadpDyLCACMH7Tt9xtpx4dQZVKw9cDF7/operations/) used in this example can be found [here](https://ide.ligolang.org/p/2sVshnZ_Aat5pIuUypIBsQ).
 
 <Tabs
 defaultValue="contractAPI"
@@ -148,47 +172,45 @@ values={[
 ]}>
 <TabItem value="contractAPI">
 
-```js noInline
-Tezos.contract
-  .at('KT1BJadpDyLCACMH7Tt9xtpx4dQZVKw9cDF7')
-  .then((contract) => {
-    const i = 7;
+```js live
+try {
+  const contract = await Tezos.contract.at('KT1BJadpDyLCACMH7Tt9xtpx4dQZVKw9cDF7');
 
-    console.log(`Incrementing storage value by ${i}...`);
-    return contract.methodsObject.increment(i).send();
-  })
-  .then((op) => {
-    console.log(`Waiting for ${op.hash} to be confirmed...`);
-    return op.confirmation(1).then(() => op.hash);
-  })
-  .then((hash) => console.log(`Operation injected: https://ghost.tzstats.com/${hash}`))
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+  console.log(`Incrementing storage value by 7...`);
+  const operation = await contract.methodsObject.increment(7).send();
+
+  console.log(`Waiting for ${operation.hash} to be confirmed...`);
+  const hash = await operation.confirmation(1);
+
+  console.log(`Operation injected: https://ghostnet.tzkt.io/${hash}/operations`);
+} catch (error) {
+  console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
 </TabItem>
   <TabItem value="walletAPI">
 
-```js noInline wallet
-Tezos.wallet
-  .at('KT1BJadpDyLCACMH7Tt9xtpx4dQZVKw9cDF7')
-  .then((wallet) => {
-    const i = 7;
+Interacting with contracts using with the wallet API is very similar but with a few key differences, namely:
 
-    console.log(`Incrementing storage value by ${i}...`);
-    return wallet.methodsObject.increment(i).send();
-  })
-  .then((op) => {
-    console.log(`Waiting for ${op.opHash} to be confirmed...`);
-    return op.confirmation(1).then(() => op.opHash);
-  })
-  .then((hash) => console.log(`Operation injected: https://ghost.tzstats.com/${hash}`))
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+- We use `Tezos.wallet` instead of `Tezos.contract`
+- The operation hash is found in `operation.opHash` instead of `operation.hash`
+- The confirmed hash can be found at `confirmation.block.hash` instead of the root object.
+
+```js live wallet
+try {
+  const contract = await Tezos.wallet.at('KT1BJadpDyLCACMH7Tt9xtpx4dQZVKw9cDF7');
+
+  console.log(`Incrementing storage value by 7...`);
+  const operation = await contract.methodsObject.increment(7).send();
+
+  console.log(`Waiting for ${operation.opHash} to be confirmed...`);
+  const confirmation = await operation.confirmation(1);
+
+  console.log(`Operation injected: https://ghostnet.tzkt.io/${confirmation.block.hash}/operations`); 
+} catch (error) {
+  console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`);
+}
 ```
-
-
   </TabItem>
 </Tabs>
-
-[boilerplate]: https://github.com/ecadlabs/taquito-boilerplate
-[smart_contract_source]: https://ide.ligolang.org/p/2sVshnZ_Aat5pIuUypIBsQ
-[smart_contract_on_better_call_dev]: https://better-call.dev/ghostnet/KT1BJadpDyLCACMH7Tt9xtpx4dQZVKw9cDF7/operations
