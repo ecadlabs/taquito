@@ -6,6 +6,8 @@ declare global {
     Tezos: any;
     TezosToolkit: any;
     InMemorySigner: any;
+    BeaconWallet: any;
+    wallet: any;
     compose: any;
     Tzip12Module: any;
     tzip12: any;
@@ -14,7 +16,9 @@ declare global {
     bytesToString: any;
     BigNumber: any;
     configureSigner: () => Promise<string | undefined>;
+    connectWallet: () => Promise<string | undefined>;
     __signerConfigured?: boolean;
+    __walletConnected?: boolean;
     __taquitoReady?: Promise<void>;
     __taquitoError?: any;
   }
@@ -38,6 +42,7 @@ async function init() {
     // Dynamic imports
     const { TezosToolkit, compose } = await import('@taquito/taquito');
     const { InMemorySigner } = await import('@taquito/signer');
+    const { BeaconWallet } = await import('@taquito/beacon-wallet');
     const { Tzip12Module, tzip12 } = await import('@taquito/tzip12');
     const { Tzip16Module, tzip16, bytesToString } = await import('@taquito/tzip16');
     const { BigNumber } = await import('bignumber.js');
@@ -46,6 +51,7 @@ async function init() {
     window.Tezos = Tezos;
     window.TezosToolkit = TezosToolkit;
     window.InMemorySigner = InMemorySigner;
+    window.BeaconWallet = BeaconWallet;
     window.compose = compose;
     window.Tzip12Module = Tzip12Module;
     window.tzip12 = tzip12;
@@ -113,6 +119,49 @@ window.configureSigner = async function() {
     return address;
   } catch (error) {
     console.error("Failed to configure signer:", error);
+    throw error;
+  }
+};
+
+// Make connectWallet available globally for wallet examples
+window.connectWallet = async function() {
+  if (!window.Tezos) {
+    throw new Error("Tezos toolkit not initialized");
+  }
+
+  // Check if already connected
+  if (window.__walletConnected && window.wallet) {
+    console.log("Wallet already connected");
+    return await window.wallet.getPKH();
+  }
+
+  try {
+    // Create BeaconWallet instance if not already created
+    if (!window.wallet) {
+      const options = {
+        name: 'Taquito Docs',
+        network: { type: 'ghostnet' as const },
+        enableMetrics: true,
+      };
+      window.wallet = new window.BeaconWallet(options);
+    }
+
+    // Request permissions - this opens the wallet popup
+    await window.wallet.requestPermissions();
+
+    // Set the wallet provider on Tezos
+    window.Tezos.setWalletProvider(window.wallet);
+
+    // Mark as connected
+    window.__walletConnected = true;
+
+    const address = await window.wallet.getPKH();
+    console.log("Wallet connected successfully");
+    console.log("Address:", address);
+
+    return address;
+  } catch (error) {
+    console.error("Failed to connect wallet:", error);
     throw error;
   }
 };

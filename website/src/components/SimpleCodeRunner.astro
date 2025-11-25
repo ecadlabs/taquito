@@ -7,14 +7,15 @@ interface Props {
   code: string;
   language?: string;
   title?: string;
+  wallet?: boolean;
 }
 
-const { code, language = 'javascript', title } = Astro.props;
+const { code, language = 'javascript', title, wallet = false } = Astro.props;
 
 const html = Prism.highlight(code, Prism.languages[language] || Prism.languages.javascript, language);
 ---
 
-<live-code-runner data-code={code} class="pre">
+<live-code-runner data-code={code} data-wallet={wallet ? "true" : "false"} class="pre">
   <div class="">
       <pre class={`language-${language} m-0 p-4 overflow-x-auto code`} set:html={html} />
       <button class="run-button bg-green-600 text-white border-none py-2 px-4 rounded text-sm font-medium cursor-pointer transition-colors duration-200 hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed">
@@ -74,7 +75,8 @@ const html = Prism.highlight(code, Prism.languages[language] || Prism.languages.
 
       // Get code from data attribute
       const sourceCodeContent = this.getAttribute('data-code') || '';
-      
+      const isWalletMode = this.getAttribute('data-wallet') === 'true';
+
       if (!sourceCodeContent) {
         outputContent.textContent = "Error: No code to execute";
         outputDiv.hidden = false;
@@ -98,27 +100,46 @@ const html = Prism.highlight(code, Prism.languages[language] || Prism.languages.
           throw new Error("Taquito failed to load.");
         }
 
-        // Automatically configure signer if not already configured
-        if (win.configureSigner && !win.__signerConfigured) {
-          try {
-            outputContent.textContent = "Configuring signer...";
-            const address = await win.configureSigner();
-            // Verify signer is actually configured by checking the flag
-            if (!win.__signerConfigured) {
-              throw new Error("Signer configuration completed but __signerConfigured flag is not set");
+        // For wallet mode, connect wallet; otherwise configure signer
+        if (isWalletMode) {
+          // Connect wallet for wallet API examples
+          if (win.connectWallet && !win.__walletConnected) {
+            try {
+              outputContent.textContent = "Connecting wallet...";
+              const address = await win.connectWallet();
+              if (!address) {
+                throw new Error("Wallet connection completed but no address was returned");
+              }
+              outputContent.textContent = ""; // Clear wallet message
+            } catch (error: any) {
+              const errorMsg = error instanceof Error ? error.message : String(error);
+              outputContent.textContent = `Warning: Wallet connection failed: ${errorMsg}\n\nPlease make sure you have a Tezos wallet (like Temple) installed.\n\n`;
+              console.error("Wallet connection failed:", error);
             }
-            // Also verify we got an address back
-            if (!address) {
-              throw new Error("Signer configuration completed but no address was returned");
+          }
+        } else {
+          // Automatically configure signer if not already configured
+          if (win.configureSigner && !win.__signerConfigured) {
+            try {
+              outputContent.textContent = "Configuring signer...";
+              const address = await win.configureSigner();
+              // Verify signer is actually configured by checking the flag
+              if (!win.__signerConfigured) {
+                throw new Error("Signer configuration completed but __signerConfigured flag is not set");
+              }
+              // Also verify we got an address back
+              if (!address) {
+                throw new Error("Signer configuration completed but no address was returned");
+              }
+              outputContent.textContent = ""; // Clear signer message
+            } catch (error: any) {
+              // If signer configuration fails, show the error but allow code to run
+              // Some examples (like balance checks) don't need a signer
+              const errorMsg = error instanceof Error ? error.message : String(error);
+              const errorDetails = error instanceof Error && error.stack ? `\n${error.stack}` : '';
+              outputContent.textContent = `Warning: Signer configuration failed: ${errorMsg}${errorDetails}\n\nAttempting to run code anyway (read-only operations may still work)...\n\n`;
+              console.error("Signer configuration failed:", error);
             }
-            outputContent.textContent = ""; // Clear signer message
-          } catch (error: any) {
-            // If signer configuration fails, show the error but allow code to run
-            // Some examples (like balance checks) don't need a signer
-            const errorMsg = error instanceof Error ? error.message : String(error);
-            const errorDetails = error instanceof Error && error.stack ? `\n${error.stack}` : '';
-            outputContent.textContent = `Warning: Signer configuration failed: ${errorMsg}${errorDetails}\n\nAttempting to run code anyway (read-only operations may still work)...\n\n`;
-            console.error("Signer configuration failed:", error);
           }
         }
 
@@ -139,12 +160,15 @@ const html = Prism.highlight(code, Prism.languages[language] || Prism.languages.
         try {
           // Create async function from string
           const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
-          
+
           const func = new AsyncFunction(
-            'Tezos', 
-            'TezosToolkit', 
-            'InMemorySigner', 
+            'Tezos',
+            'TezosToolkit',
+            'InMemorySigner',
+            'BeaconWallet',
+            'wallet',
             'configureSigner',
+            'connectWallet',
             sourceCodeContent
           );
 
@@ -152,7 +176,10 @@ const html = Prism.highlight(code, Prism.languages[language] || Prism.languages.
             win.Tezos,
             win.TezosToolkit,
             win.InMemorySigner,
-            win.configureSigner
+            win.BeaconWallet,
+            win.wallet,
+            win.configureSigner,
+            win.connectWallet
           );
 
           if (logs.length === 0) {

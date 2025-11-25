@@ -11,6 +11,7 @@
   "dependencies": {
     "@astrojs/mdx": "^4.3.7",
     "@lucide/astro": "^0.554.0",
+    "@taquito/beacon-wallet": "^23.0.3",
     "@taquito/signer": "^23.0.2",
     "@taquito/taquito": "^23.0.2",
     "@taquito/tzip12": "^23.0.3",
