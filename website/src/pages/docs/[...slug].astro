@@ -36,7 +36,7 @@ const slug = filePath
 const version = slug.split('/')[0];
 ---
 
-<MarkdownLayout title={title} version={version} currentSlug={slug}>
+<MarkdownLayout title={title} version={version} currentSlug={slug} author={doc.data.author}>
   <Content />
 </MarkdownLayout>
 

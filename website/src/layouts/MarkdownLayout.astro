@@ -1,21 +1,32 @@
 ---
-import "../../global.css";
-import "../../github-md.css";
-import "prismjs/themes/prism.css";
-import Header from "../components/Header.astro";
-import Footer from "../components/Footer.astro";
-import DocsSidebar from "../components/DocsSidebar.astro";
+import '../../global.css';
+import '../../github-md.css';
+import 'prismjs/themes/prism.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import DocsSidebar from '../components/DocsSidebar.astro';
 
 interface Props {
   title?: string;
   version?: string;
   currentSlug?: string;
+  author?: string | string[];
 }
 
-const { title, version, currentSlug } = Astro.props;
+const { title, version, currentSlug, author } = Astro.props;
+
+const formatAuthors = (author: string | string[] | undefined): string | null => {
+  if (!author) return null;
+  const authors = Array.isArray(author) ? author : [author];
+  if (authors.length === 1) return authors[0];
+  if (authors.length === 2) return `${authors[0]} & ${authors[1]}`;
+  return `${authors.slice(0, -1).join(', ')}, & ${authors[authors.length - 1]}`;
+};
+
+const formattedAuthors = formatAuthors(author);
 const isDocsPage = Astro.url.pathname.startsWith('/docs');
-const isOldVersion = isDocsPage && version && version !== "23.0.0" && version !== "next";
-const isNextVersion = isDocsPage && version === "next";
+const isOldVersion = isDocsPage && version && version !== '23.0.0' && version !== 'next';
+const isNextVersion = isDocsPage && version === 'next';
 const pageSlug = currentSlug?.split('/').slice(1).join('/') || 'quick_start';
 const stableVersionUrl = `/docs/23.0.0/${pageSlug}`;
 ---
@@ -26,7 +37,7 @@ const stableVersionUrl = `/docs/23.0.0/${pageSlug}`;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    <title>{title ? title + " | Taquito" : "Taquito Documentation"}</title>
+    <title>{title ? title + ' | Taquito' : 'Taquito Documentation'}</title>
 
     <link
       href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap"
@@ -40,60 +51,103 @@ const stableVersionUrl = `/docs/23.0.0/${pageSlug}`;
   </head>
   <body class="flex flex-col min-h-screen">
     <Header />
-    <main class=" w-full flex">
+    <main class="w-full flex">
       {isDocsPage && <DocsSidebar currentSlug={currentSlug} version={version} />}
       <div class="flex-1 min-w-0 px-4 sm:px-8 lg:px-12 xl:px-24 pt-12">
         <div class="max-w-4xl mx-auto">
-          {isDocsPage && (
-            <button
-              id="docs-sidebar-toggle"
-              class="mb-4 lg:hidden block top-20 left-4 z-40 p-2 bg-primary text-white rounded shadow-lg hover:bg-opacity-90 transition-colors"
-              aria-label="Open documentation sidebar"
-            >
-              <svg
-                class="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M4 6h16M4 12h16M4 18h16"></path>
-              </svg>
-            </button>
-          )}
-          {isDocsPage && version && (
-            <div class="bg-primary rounded-md py-0.5 px-2 w-fit mb-1">
-              <p class="text-white text-xs">Version: {version}</p>
-            </div>
-          )}
-          {isOldVersion && (
-            <div class="bg-amber-50 border border-amber-300 rounded-md p-4 my-4">
-              <div class="flex items-start gap-3">
-                <svg class="w-5 h-5 text-amber-600 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+          {
+            isDocsPage && (
+              <button
+                id="docs-sidebar-toggle"
+                class="mb-4 lg:hidden block top-20 left-4 z-40 p-2 bg-primary text-white rounded shadow-lg hover:bg-opacity-90 transition-colors"
+                aria-label="Open documentation sidebar">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
                 </svg>
-                <p class="text-amber-800 text-sm">
-                  This documentation is for Taquito version <strong>{version}</strong> and is no longer being updated. Some information may be outdated. View the <a href={stableVersionUrl} class="text-amber-700 underline hover:text-amber-900">latest version</a>.
-                </p>
+              </button>
+            )
+          }
+          {
+            isDocsPage && version && (
+              <div class="bg-primary rounded-md py-0.5 px-2 w-fit mb-1">
+                <p class="text-white text-xs">Version: {version}</p>
               </div>
-            </div>
-          )}
-          {isNextVersion && (
-            <div class="bg-blue-50 border border-blue-300 rounded-md p-4 my-4">
-              <div class="flex items-start gap-3">
-                <svg class="w-5 h-5 text-blue-600 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-                <p class="text-blue-800 text-sm">
-                  This documentation is for an <strong>unreleased version</strong> of Taquito. Features and APIs may change before the final release. View the <a href={stableVersionUrl} class="text-blue-700 underline hover:text-blue-900">latest stable version</a>.
-                </p>
+            )
+          }
+          {
+            isOldVersion && (
+              <div class="bg-amber-50 border border-amber-300 rounded-md p-4 my-4">
+                <div class="flex items-start gap-3">
+                  <svg
+                    class="w-5 h-5 text-amber-600 mt-0.5 shrink-0"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                    />
+                  </svg>
+                  <p class="text-amber-800 text-sm">
+                    This documentation is for Taquito version <strong>{version}</strong> and is no
+                    longer being updated. Some information may be outdated. View the{' '}
+                    <a
+                      href={stableVersionUrl}
+                      class="text-amber-700 underline hover:text-amber-900">
+                      latest version
+                    </a>
+                    .
+                  </p>
+                </div>
               </div>
-            </div>
-          )}
-          <h1 class="text-text-secondary mb-6 text-5xl font-bold">{title}</h1>
+            )
+          }
+          {
+            isNextVersion && (
+              <div class="bg-blue-50 border border-blue-300 rounded-md p-4 my-4">
+                <div class="flex items-start gap-3">
+                  <svg
+                    class="w-5 h-5 text-blue-600 mt-0.5 shrink-0"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                  <p class="text-blue-800 text-sm">
+                    This documentation is for an <strong>unreleased version</strong> of Taquito.
+                    Features and APIs may change before the final release. View the{' '}
+                    <a href={stableVersionUrl} class="text-blue-700 underline hover:text-blue-900">
+                      latest stable version
+                    </a>
+                    .
+                  </p>
+                </div>
+              </div>
+            )
+          }
+          <div class="mb-4">
+            <h1 class="text-text-secondary text-5xl font-bold">{title}</h1>
+            {
+              formattedAuthors && (
+                <h2 class="text-sm text-text-secondary/75 mt-1">
+                  Written by {formattedAuthors}
+                </h2>
+              )
+            }
+          </div>
+
           <div class="markdown-body flex-1 min-w-0 pb-8">
             <slot />
           </div>
@@ -101,10 +155,9 @@ const stableVersionUrl = `/docs/23.0.0/${pageSlug}`;
       </div>
       <aside
         id="sidebar"
-        class="hidden md:block pt-12 w-64 pr-8 shrink-0 sticky top-4 self-start max-h-[calc(100vh-2rem)] overflow-y-auto pl-1"
-      >
+        class="hidden md:block pt-12 w-64 pr-8 shrink-0 sticky top-4 self-start max-h-[calc(100vh-2rem)] overflow-y-auto pl-1">
         <div id="sidebar-content" class="relative">
-          <div id="sidebar-line" class="w-[2px] bg-secondary absolute left-0 top-0 bottom-0"/>
+          <div id="sidebar-line" class="w-[2px] bg-secondary absolute left-0 top-0 bottom-0"></div>
           <nav>
             <ul id="sidebar-nav" class="list-none p-0 m-0"></ul>
           </nav>
@@ -170,23 +223,22 @@ const stableVersionUrl = `/docs/23.0.0/${pageSlug}`;
 </style>
 
 <script>
-  document.querySelectorAll(".markdown-body pre").forEach((pre) => {
-    const button = document.createElement("button");
-    button.className = "copy-button";
-    button.textContent = "Copy";
-    button.setAttribute("aria-label", "Copy code to clipboard");
+  document.querySelectorAll('.markdown-body pre').forEach((pre) => {
+    const button = document.createElement('button');
+    button.className = 'copy-button';
+    button.textContent = 'Copy';
+    button.setAttribute('aria-label', 'Copy code to clipboard');
 
-    button.addEventListener("click", async () => {
-      const code =
-        pre.querySelector("code")?.textContent || pre.textContent || "";
+    button.addEventListener('click', async () => {
+      const code = pre.querySelector('code')?.textContent || pre.textContent || '';
 
       try {
         await navigator.clipboard.writeText(code);
       } catch (err) {
-        console.error("Failed to copy code:", err);
-        button.textContent = "Failed to copy";
+        console.error('Failed to copy code:', err);
+        button.textContent = 'Failed to copy';
         setTimeout(() => {
-          button.textContent = "Copy";
+          button.textContent = 'Copy';
         }, 2000);
       }
     });
@@ -195,42 +247,42 @@ const stableVersionUrl = `/docs/23.0.0/${pageSlug}`;
   });
 
   const sidebarHeadings = document.querySelectorAll(
-    ".markdown-body h1, .markdown-body h2, .markdown-body h3"
+    '.markdown-body h1, .markdown-body h2, .markdown-body h3'
   );
-  const sidebarNav = document.getElementById("sidebar-nav");
+  const sidebarNav = document.getElementById('sidebar-nav');
 
   if (sidebarHeadings.length > 0 && sidebarNav) {
     sidebarHeadings.forEach((heading) => {
-      const a = document.createElement("a");
-      const li = document.createElement("li");
+      const a = document.createElement('a');
+      const li = document.createElement('li');
 
-      if (heading.tagName === "H1") {
-        li.className = "mb-2";
+      if (heading.tagName === 'H1') {
+        li.className = 'mb-2';
         a.className =
-          "block py-1 px-2 text-gray-600 no-underline text-base border-l-2 border-transparent hover:text-blue-600 hover:border-blue-600 transition-all";
-      } else if (heading.tagName === "H2") {
-        li.className = "mb-1 ml-4";
+          'block py-1 px-2 text-gray-600 no-underline text-base border-l-2 border-transparent hover:text-blue-600 hover:border-blue-600 transition-all';
+      } else if (heading.tagName === 'H2') {
+        li.className = 'mb-1 ml-4';
         a.className =
-          "block py-1 px-2 text-gray-500 no-underline text-sm border-l-2 border-transparent hover:text-blue-600 hover:border-blue-600 transition-all";
-      } else if (heading.tagName === "H3") {
-        li.className = "mb-1 ml-6";
+          'block py-1 px-2 text-gray-500 no-underline text-sm border-l-2 border-transparent hover:text-blue-600 hover:border-blue-600 transition-all';
+      } else if (heading.tagName === 'H3') {
+        li.className = 'mb-1 ml-6';
         a.className =
-          "block py-1 px-2 text-gray-500 no-underline text-sm border-l-2 border-transparent hover:text-blue-600 hover:border-blue-600 transition-all";
+          'block py-1 px-2 text-gray-500 no-underline text-sm border-l-2 border-transparent hover:text-blue-600 hover:border-blue-600 transition-all';
       }
 
       a.href = `#${heading.id}`;
-      a.textContent = heading.textContent || "";
-      a.addEventListener("click", (e) => {
+      a.textContent = heading.textContent || '';
+      a.addEventListener('click', (e) => {
         e.preventDefault();
-        heading.scrollIntoView({ behavior: "smooth" });
-        history.pushState(null, "", `#${heading.id}`);
+        heading.scrollIntoView({ behavior: 'smooth' });
+        history.pushState(null, '', `#${heading.id}`);
       });
       li.appendChild(a);
       sidebarNav.appendChild(li);
     });
 
-    const sidebarContent = document.getElementById("sidebar-content");
-    const sidebarLine = document.getElementById("sidebar-line");
+    const sidebarContent = document.getElementById('sidebar-content');
+    const sidebarLine = document.getElementById('sidebar-line');
     if (sidebarContent && sidebarLine) {
       const updateLineHeight = () => {
         sidebarLine.style.height = `${sidebarContent.offsetHeight}px`;
@@ -242,36 +294,36 @@ const stableVersionUrl = `/docs/23.0.0/${pageSlug}`;
   }
 
   const headings = document.querySelectorAll(
-    ".markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4, .markdown-body h5, .markdown-body h6"
+    '.markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4, .markdown-body h5, .markdown-body h6'
   );
 
   headings.forEach((heading, index) => {
     if (!heading.id) {
-      const text = heading.textContent || "";
+      const text = heading.textContent || '';
       heading.id =
         text
           .toLowerCase()
-          .replace(/[^a-z0-9\s-]/g, "")
-          .replace(/\s+/g, "-")
+          .replace(/[^a-z0-9\s-]/g, '')
+          .replace(/\s+/g, '-')
           .trim() || `heading-${index}`;
     }
 
-    const anchor = document.createElement("a");
+    const anchor = document.createElement('a');
     anchor.href = `#${heading.id}`;
-    anchor.className = "header-anchor";
-    anchor.textContent = "#";
-    anchor.setAttribute("aria-label", "Copy link to section");
+    anchor.className = 'header-anchor';
+    anchor.textContent = '#';
+    anchor.setAttribute('aria-label', 'Copy link to section');
 
-    anchor.addEventListener("click", async (e) => {
+    anchor.addEventListener('click', async (e) => {
       e.preventDefault();
       const url = `${window.location.origin}${window.location.pathname}#${heading.id}`;
 
       try {
         await navigator.clipboard.writeText(url);
-        heading.scrollIntoView({ behavior: "smooth" });
-        history.pushState(null, "", `#${heading.id}`);
+        heading.scrollIntoView({ behavior: 'smooth' });
+        history.pushState(null, '', `#${heading.id}`);
       } catch (err) {
-        console.error("Failed to copy link:", err);
+        console.error('Failed to copy link:', err);
       }
     });
 
