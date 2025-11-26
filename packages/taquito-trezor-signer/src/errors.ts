@@ -65,3 +65,17 @@ export class TrezorActionRejectedError extends TaquitoError {
     this.message = 'Action was rejected on the Trezor device';
   }
 }
+
+/**
+ * @category Error
+ * @description Error that indicates an unsupported operation for Trezor signing
+ */
+export class TrezorUnsupportedOperationError extends TaquitoError {
+  constructor(public readonly operationKind: string, public readonly reason?: string) {
+    super();
+    this.name = 'TrezorUnsupportedOperationError';
+    this.message = reason
+      ? `Operation '${operationKind}' is not supported by Trezor: ${reason}`
+      : `Operation '${operationKind}' is not supported by Trezor`;
+  }
+}
