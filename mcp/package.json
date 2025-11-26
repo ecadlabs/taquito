@@ -1,0 +1,20 @@
+{
+  "name": "tezos-wallet-mcp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx tsc"
+  },
+  "author": "ECAD Labs",
+  "license": "ISC",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.23.0",
+    "@taquito/signer": "^23.0.3",
+    "@taquito/taquito": "^23.0.3",
+    "typescript": "^5.9.3",
+    "zod": "^4.1.13"
+  }
+}
