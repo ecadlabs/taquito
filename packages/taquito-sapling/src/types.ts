@@ -1,5 +1,14 @@
 import BigNumber from 'bignumber.js';
 
+export type SaplingParams = {
+  spend: {
+    saplingSpendParams: string;
+  };
+  output: {
+    saplingOutputParams: string;
+  };
+};
+
 export interface SaplingIncomingAndOutgoingTransaction {
   incoming: SaplingIncomingTransaction[];
   outgoing: SaplingOutgoingTransaction[];

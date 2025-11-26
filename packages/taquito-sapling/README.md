@@ -82,6 +82,30 @@ const op = await saplingContract.methodsObject.default([shieldedTx]).send({ amou
 await op.confirmation();
 ```
 
+## Supplying Sapling parameters
+
+`@taquito/sapling` no longer bundles the heavy `saplingSpendParams` / `saplingOutputParams` artifacts. Applications must provide them explicitly before using any Sapling features by calling `setSaplingParamsProvider` once during startup.
+
+```ts
+import { setSaplingParamsProvider, SaplingParams } from '@taquito/sapling';
+
+const fetchParams = async (): Promise<SaplingParams> => {
+  const spendResponse = await fetch('/sapling/saplingSpendParams.json');
+  const outputResponse = await fetch('/sapling/saplingOutputParams.json');
+
+  return {
+    // Provide the same shape as the legacy bundles
+    // (base64-encoded strings inside an object)
+    spend: { saplingSpendParams: await spendResponse.text() },
+    output: { saplingOutputParams: await outputResponse.text() },
+  };
+};
+
+setSaplingParamsProvider(fetchParams);
+```
+
+If you skip this step, attempting to use any Sapling functionality will throw an error instructing you to configure the provider.
+
 Refer to the website documentation for further examples and information: https://taquito.io/docs/next/sapling
 
 ## Additional info

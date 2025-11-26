@@ -1,10 +1,9 @@
 import * as sapling from '@airgap/sapling-wasm';
 import { randomBytes } from '@stablelib/random';
 import { ParametersOutputProof } from './types';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const saplingOutputParams = require('../saplingOutputParams');
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const saplingSpendParams = require('../saplingSpendParams');
+import { getSaplingParams } from './sapling-params-provider';
+
+let saplingInitPromise: Promise<void> | undefined;
 
 export class SaplingWrapper {
   async withProvingContext<T>(action: (context: number) => Promise<T>) {
@@ -64,9 +63,15 @@ export class SaplingWrapper {
   }
 
   async initSaplingParameters() {
-    const spendParams = Buffer.from(saplingSpendParams.saplingSpendParams, 'base64');
-    const outputParams = Buffer.from(saplingOutputParams.saplingOutputParams, 'base64');
+    if (!saplingInitPromise) {
+      saplingInitPromise = (async () => {
+        const { spend, output } = await getSaplingParams();
+        const spendParams = Buffer.from(spend.saplingSpendParams, 'base64');
+        const outputParams = Buffer.from(output.saplingOutputParams, 'base64');
+        await sapling.initParameters(spendParams, outputParams);
+      })();
+    }
 
-    return sapling.initParameters(spendParams, outputParams);
+    return saplingInitPromise;
   }
 }

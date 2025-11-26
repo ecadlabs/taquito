@@ -1,6 +1,19 @@
 import { SaplingWrapper } from '../../src/sapling-module-wrapper';
+import { setSaplingParamsProvider } from '../../src/sapling-params-provider';
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const saplingSpendParams = require('../../saplingSpendParams');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const saplingOutputParams = require('../../saplingOutputParams');
 
 describe('SaplingWrapper', () => {
+  beforeAll(() => {
+    setSaplingParamsProvider(async () => ({
+      spend: saplingSpendParams,
+      output: saplingOutputParams,
+    }));
+  });
+
   const saplingWrapper = new SaplingWrapper();
 
   it('getRandomBytes', () => {
