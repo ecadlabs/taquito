@@ -5,6 +5,7 @@ import 'prismjs/themes/prism.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import DocsSidebar from '../components/DocsSidebar.astro';
+import FeedbackWidget from '../components/docs/FeedbackWidget.astro';
 
 interface Props {
   title?: string;
@@ -151,6 +152,8 @@ const stableVersionUrl = `/docs/23.0.0/${pageSlug}`;
           <div class="markdown-body flex-1 min-w-0 pb-8">
             <slot />
           </div>
+
+          {isDocsPage && <FeedbackWidget version={version} pageTitle={title} />}
         </div>
       </div>
       <aside
