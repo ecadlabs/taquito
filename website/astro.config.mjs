@@ -14,6 +14,7 @@ const fetchPolyfillPath = fileURLToPath(
 
 // https://astro.build/config
 export default defineConfig({
+  trailingSlash: 'never',
   integrations: [
     AutoImport({
       imports: [
