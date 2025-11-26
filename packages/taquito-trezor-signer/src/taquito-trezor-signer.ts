@@ -4,8 +4,14 @@
  */
 
 import { Signer, ProhibitedActionError, InvalidDerivationPathError } from '@taquito/core';
-import { b58Encode, PrefixV2 } from '@taquito/utils';
 import TrezorConnect from '@trezor/connect-web';
+import { LocalForger } from '@taquito/local-forging';
+import {
+  b58Encode,
+  b58DecodeAndCheckPrefix,
+  PrefixV2,
+  signaturePrefixes,
+} from '@taquito/utils';
 import {
   TrezorNotInitializedError,
   TrezorPublicKeyRetrievalError,
@@ -13,7 +19,14 @@ import {
   TrezorInitializationError,
   TrezorActionRejectedError,
 } from './errors';
-import type { TrezorSignerConfig, TrezorTezosAddress, TrezorResponse } from './types';
+import { mapOperationsToTrezor } from './utils';
+import type {
+  TrezorSignerConfig,
+  TrezorTezosAddress,
+  TrezorTezosPublicKey,
+  TrezorTezosSignedTx,
+  TrezorResponse,
+} from './types';
 
 export { VERSION } from './version';
 export {
@@ -22,6 +35,7 @@ export {
   TrezorSigningError,
   TrezorInitializationError,
   TrezorActionRejectedError,
+  TrezorUnsupportedOperationError,
 } from './errors';
 export { InvalidDerivationPathError } from '@taquito/core';
 export type { TrezorSignerConfig } from './types';
@@ -39,29 +53,6 @@ export const HDPathTemplate = (account: number): string => {
  * Implementation of the Signer interface for Trezor hardware wallets
  *
  * @description Allows signing Tezos operations using a Trezor device via @trezor/connect
- *
- * @example
- * ```typescript
- * import { TrezorSigner } from '@taquito/trezor-signer';
- * import { TezosToolkit } from '@taquito/taquito';
- *
- * // Initialize Trezor Connect (required once before creating signers)
- * await TrezorSigner.init({
- *   appName: 'My Tezos App',
- *   appUrl: 'https://myapp.com'
- * });
- *
- * // Create a signer for the first account
- * const signer = new TrezorSigner("m/44'/1729'/0'");
- *
- * // Use with TezosToolkit
- * const Tezos = new TezosToolkit('https://mainnet.ecadinfra.com');
- * Tezos.setProvider({ signer });
- *
- * // Get the account address
- * const address = await signer.publicKeyHash();
- * console.log('Address:', address);
- * ```
  */
 export class TrezorSigner implements Signer {
   private static initialized = false;
@@ -75,14 +66,6 @@ export class TrezorSigner implements Signer {
    *
    * @param config Configuration options for Trezor Connect
    * @throws {TrezorInitializationError} If initialization fails
-   *
-   * @example
-   * ```typescript
-   * await TrezorSigner.init({
-   *   appName: 'My Tezos App',
-   *   appUrl: 'https://myapp.com'
-   * });
-   * ```
    */
   static async init(config: TrezorSignerConfig = {}): Promise<void> {
     if (TrezorSigner.initialized) {
@@ -93,10 +76,13 @@ export class TrezorSigner implements Signer {
       await TrezorConnect.init({
         manifest: {
           appUrl: config.appUrl || 'https://taquito.io',
-          email: 'info@ecadlabs.com',
+          email: config.email || 'info@ecadlabs.com',
           appName: config.appName || 'Taquito',
         },
         lazyLoad: false,
+        popup: config.popup ?? true,
+        transportReconnect: config.transportReconnect ?? true,
+        debug: config.debug ?? false,
       });
       TrezorSigner.initialized = true;
     } catch (error) {
@@ -128,18 +114,6 @@ export class TrezorSigner implements Signer {
    * @param path BIP44 derivation path (default: "m/44'/1729'/0'")
    * @param showOnTrezor Whether to show address on device during connection (default: true)
    * @throws {InvalidDerivationPathError} If the path doesn't match Tezos BIP44 format
-   *
-   * @example
-   * ```typescript
-   * // Default first account
-   * const signer = new TrezorSigner();
-   *
-   * // Specific account
-   * const signer2 = new TrezorSigner("m/44'/1729'/5'");
-   *
-   * // Without device confirmation
-   * const signer3 = new TrezorSigner("m/44'/1729'/0'", false);
-   * ```
    */
   constructor(path: string = "m/44'/1729'/0'", showOnTrezor: boolean = true) {
     if (!path.match(/^m\/44'\/1729'\/\d+'$/)) {
@@ -198,20 +172,15 @@ export class TrezorSigner implements Signer {
   /**
    * Sign an operation using the Trezor device
    *
-   * @param op The operation bytes to sign (hex string)
-   * @param _magicByte Optional magic byte (watermark) - currently not supported
+   * @param op The operation bytes to sign (hex string, without watermark)
+   * @param _watermark Ignored - Trezor handles watermarking internally
    * @returns The signed operation with signature
    * @throws {TrezorNotInitializedError} If Trezor Connect is not initialized
    * @throws {TrezorSigningError} If signing fails
-   *
-   * @remarks
-   * Note: This is a prototype implementation. Full transaction signing requires
-   * parsing the operation bytes and using TrezorConnect.tezosSignTransaction
-   * with structured operation data.
    */
   async sign(
-    _op: string,
-    _magicByte?: Uint8Array
+    op: string,
+    _watermark?: Uint8Array
   ): Promise<{
     bytes: string;
     sig: string;
@@ -220,45 +189,112 @@ export class TrezorSigner implements Signer {
   }> {
     this.ensureInitialized();
 
-    // Note: Full implementation would require parsing the operation bytes
-    // and calling TrezorConnect.tezosSignTransaction with structured data.
-    // This prototype throws an error indicating signing is not yet implemented.
-    throw new TrezorSigningError(
-      'Transaction signing not yet implemented in this prototype. ' +
-        'Use this signer for address retrieval and balance viewing only.'
-    );
-  }
+    // Parse the operation bytes to get structured data
+    const forger = new LocalForger();
+    let parsedOp;
+    try {
+      parsedOp = await forger.parse(op);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      throw new TrezorSigningError(`Failed to parse operation bytes: ${message}`);
+    }
 
-  /**
-   * Fetches the address from the Trezor device
-   */
-  private async fetchAddressFromDevice(): Promise<void> {
-    this.ensureInitialized();
+    // Map operations to Trezor format
+    let trezorOperation;
+    try {
+      trezorOperation = mapOperationsToTrezor(parsedOp.contents);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      throw new TrezorSigningError(`Failed to map operations: ${message}`);
+    }
 
-    const response = (await TrezorConnect.tezosGetAddress({
+    // Call Trezor to sign the transaction
+    const response = (await TrezorConnect.tezosSignTransaction({
       path: this._path,
-      showOnTrezor: this._showOnTrezor,
-    })) as TrezorResponse<TrezorTezosAddress>;
+      branch: parsedOp.branch,
+      operation: trezorOperation,
+    })) as TrezorResponse<TrezorTezosSignedTx>;
 
     if (!response.success) {
       const error = response.payload as { error: string; code?: string };
       if (error.code === 'Failure_ActionCancelled') {
         throw new TrezorActionRejectedError();
       }
+      throw new TrezorSigningError(error.error);
+    }
+
+    const payload = response.payload as TrezorTezosSignedTx;
+
+    // The signature from Trezor is in base58 format with Ed25519 prefix (edsig...)
+    const prefixSig = payload.signature;
+
+    // Decode the signature to get raw bytes, then re-encode with generic prefix
+    const [sigBytes] = b58DecodeAndCheckPrefix(prefixSig, signaturePrefixes);
+    const sig = b58Encode(sigBytes, PrefixV2.GenericSignature);
+
+    // Trezor's sig_op_contents contains the forged operation bytes + signature
+    // This is what should be broadcast to the network
+    const sigOpContents = payload.sig_op_contents;
+
+    // Extract operation bytes (everything except last 128 hex chars which is 64-byte signature)
+    const trezorBytes = sigOpContents.slice(0, -128);
+
+    // Debug: Log comparison between Taquito's bytes and Trezor's bytes
+    if (trezorBytes !== op) {
+      console.warn('[TrezorSigner] Byte mismatch detected:');
+      console.warn('  Taquito bytes:', op);
+      console.warn('  Trezor bytes: ', trezorBytes);
+      console.warn('  Using Trezor bytes for broadcast (signature matches these bytes)');
+    }
+
+    // Use Trezor's bytes and sig_op_contents since the signature is for those bytes
+    return {
+      bytes: trezorBytes,
+      sig,
+      prefixSig,
+      sbytes: sigOpContents,
+    };
+  }
+
+  /**
+   * Fetches the address and public key from the Trezor device
+   */
+  private async fetchAddressFromDevice(): Promise<void> {
+    this.ensureInitialized();
+
+    // Fetch the address
+    const addressResponse = (await TrezorConnect.tezosGetAddress({
+      path: this._path,
+      showOnTrezor: this._showOnTrezor,
+    })) as TrezorResponse<TrezorTezosAddress>;
+
+    if (!addressResponse.success) {
+      const error = addressResponse.payload as { error: string; code?: string };
+      if (error.code === 'Failure_ActionCancelled') {
+        throw new TrezorActionRejectedError();
+      }
       throw new TrezorPublicKeyRetrievalError(error.error);
     }
 
-    const payload = response.payload as TrezorTezosAddress;
-    this._publicKeyHash = payload.address;
+    const addressPayload = addressResponse.payload as TrezorTezosAddress;
+    this._publicKeyHash = addressPayload.address;
 
-    // Trezor returns the address directly; for the public key we need a separate call
-    // In Trezor's Tezos implementation, the address IS the public key hash
-    // The public key itself is not directly exposed by tezosGetAddress
-    // For a complete implementation, you would need to derive it from a signing operation
-    // or use a separate method if available
+    // Fetch the public key (don't show on device again since we just did)
+    const pkResponse = (await TrezorConnect.tezosGetPublicKey({
+      path: this._path,
+      showOnTrezor: false,
+    })) as TrezorResponse<TrezorTezosPublicKey>;
 
-    // For now, we only have the address (public key hash)
-    // Setting _publicKey to undefined indicates it needs to be fetched differently if needed
+    if (!pkResponse.success) {
+      const error = pkResponse.payload as { error: string; code?: string };
+      if (error.code === 'Failure_ActionCancelled') {
+        throw new TrezorActionRejectedError();
+      }
+      throw new TrezorPublicKeyRetrievalError(error.error);
+    }
+
+    const pkPayload = pkResponse.payload as TrezorTezosPublicKey;
+    this._publicKey = pkPayload.publicKey;
   }
 
   /**
