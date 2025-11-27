@@ -1,0 +1,32 @@
+{
+  "name": "spending-wallet-frontend",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview",
+    "type-check": "vue-tsc --noEmit"
+  },
+  "dependencies": {
+    "@airgap/beacon-sdk": "^4.2.2",
+    "@taquito/beacon-wallet": "^21.0.0",
+    "@taquito/signer": "^21.0.0",
+    "@taquito/taquito": "^21.0.0",
+    "@taquito/utils": "^21.0.0",
+    "vue": "^3.4.21"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@vitejs/plugin-vue": "^5.0.4",
+    "@tailwindcss/vite": "^4.0.0-beta.8",
+    "autoprefixer": "^10.4.18",
+    "buffer": "^6.0.3",
+    "postcss": "^8.4.35",
+    "stream-browserify": "^3.0.0",
+    "tailwindcss": "^4.0.0-beta.8",
+    "typescript": "~5.3.3",
+    "vite": "^5.1.6",
+    "vue-tsc": "^2.0.6"
+  }
+}
