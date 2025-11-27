@@ -1,7 +1,8 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import type { ContractStorage } from '@/types'
 
-defineProps<{
+const props = defineProps<{
   /** Contract address */
   contractAddress: string
   /** Contract storage */
@@ -14,15 +15,53 @@ defineProps<{
 
 const emit = defineEmits<{
   disconnect: []
+  copyToClipboard: [text: string, label: string]
 }>()
+
+const copyFeedback = ref('')
+
+async function handleCopy(text: string, label: string): Promise<void> {
+  emit('copyToClipboard', text, label)
+  copyFeedback.value = label
+  setTimeout(() => { copyFeedback.value = '' }, 2000)
+}
+
+function openInTzkt(): void {
+  window.open(`https://ghostnet.tzkt.io/${props.contractAddress}`, '_blank')
+}
 </script>
 
 <template>
   <section class="card p-5 mb-5">
     <div class="flex items-start justify-between mb-4">
       <div>
-        <p class="section-label mb-1">contract</p>
-        <p class="mono text-sm text-text-primary">{{ contractAddress }}</p>
+        <p class="section-label mb-1">spending contract</p>
+        <div class="flex items-center gap-2">
+          <p class="mono text-sm text-text-primary">{{ contractAddress }}</p>
+          <button
+            @click="handleCopy(contractAddress, 'contract')"
+            class="btn-secondary !py-1 !px-2 text-xs"
+            :title="copyFeedback === 'contract' ? 'Copied!' : 'Copy address'"
+          >
+            <svg v-if="copyFeedback !== 'contract'" xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />
+              <path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z" />
+            </svg>
+            <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-green-600" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+            </svg>
+          </button>
+          <button
+            @click="openInTzkt"
+            class="btn-secondary !py-1 !px-2 text-xs"
+            title="View on TzKT"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
+              <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
+            </svg>
+          </button>
+        </div>
       </div>
       <div class="flex items-center gap-2">
         <span v-if="isOwner" class="badge badge-success">owner</span>

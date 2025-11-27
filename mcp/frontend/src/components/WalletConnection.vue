@@ -27,7 +27,7 @@ function formatAddress(address: string | null, prefixLen = 8, suffixLen = 6): st
   <section class="card p-5 mb-5">
     <div class="flex items-center justify-between">
       <div>
-        <p class="section-label mb-1">wallet</p>
+        <p class="section-label mb-1">your personal wallet</p>
         <p v-if="isConnected" class="mono text-text-primary">
           {{ formatAddress(userAddress, 8, 6) }}
         </p>

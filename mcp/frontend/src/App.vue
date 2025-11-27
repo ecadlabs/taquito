@@ -152,14 +152,10 @@ watch(storage, updateCountdown)
     <div class="max-w-2xl mx-auto">
 
       <!-- Header -->
-      <header class="mb-12">
-        <p class="section-label mb-2">spending wallet</p>
+      <header class="mb-6">
         <h1 class="text-3xl font-semibold tracking-tight text-text-primary">
-          Spending Wallet
+          Tezos MCP Configuration
         </h1>
-        <p class="mt-1 text-text-secondary">
-          <span class="accent-text">delegated spending</span> · configurable limits
-        </p>
       </header>
 
       <!-- Wallet Connection -->
@@ -195,6 +191,7 @@ watch(storage, updateCountdown)
           :balance-xtz="balanceXtz"
           :is-owner="isOwner"
           @disconnect="clearContractAddress"
+          @copy-to-clipboard="copyToClipboard"
         />
 
         <!-- Spending Limits -->
