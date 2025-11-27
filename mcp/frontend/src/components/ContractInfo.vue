@@ -9,9 +9,13 @@ const copyFeedback = ref('')
 
 // Spender balance state
 const spenderBalance = ref<number | null>(null)
-const fundAmount = ref('0.5')
-const isFunding = ref(false)
+const spenderFundAmount = ref('0.5')
+const isFundingSpender = ref(false)
 const showTooltip = ref(false)
+
+// Contract funding state
+const contractFundAmount = ref('10')
+const isFundingContract = ref(false)
 
 async function handleCopy(text: string, label: string): Promise<void> {
   await copyToClipboard(text)
@@ -48,10 +52,10 @@ async function fetchSpenderBalance(): Promise<void> {
 async function handleFundSpender(): Promise<void> {
   if (!contractStore.storage?.spender || !walletStore.tezos) return
 
-  const amount = parseFloat(fundAmount.value)
+  const amount = parseFloat(spenderFundAmount.value)
   if (isNaN(amount) || amount <= 0) return
 
-  isFunding.value = true
+  isFundingSpender.value = true
   try {
     const op = await walletStore.tezos.wallet.transfer({
       to: contractStore.storage.spender,
@@ -63,7 +67,27 @@ async function handleFundSpender(): Promise<void> {
   } catch (err) {
     console.error('Failed to fund spender:', err)
   } finally {
-    isFunding.value = false
+    isFundingSpender.value = false
+  }
+}
+
+async function handleFundContract(): Promise<void> {
+  if (!contractStore.contract || !walletStore.tezos) return
+
+  const amount = parseFloat(contractFundAmount.value)
+  if (isNaN(amount) || amount <= 0) return
+
+  isFundingContract.value = true
+  try {
+    // Call the default_ entrypoint to deposit XTZ
+    const op = await contractStore.contract.methodsObject.default_(null).send({ amount })
+
+    await op.confirmation()
+    await contractStore.refreshStorage()
+  } catch (err) {
+    console.error('Failed to fund contract:', err)
+  } finally {
+    isFundingContract.value = false
   }
 }
 
@@ -119,11 +143,33 @@ watch(() => contractStore.storage?.spender, () => {
 
     <!-- Balance -->
     <div class="card-subtle p-4 mb-4">
-      <p class="label mb-1">balance</p>
-      <p>
-        <span class="value-display">{{ balanceXtz() }}</span>
-        <span class="value-unit">XTZ</span>
-      </p>
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="label mb-1">balance</p>
+          <p>
+            <span class="value-display">{{ balanceXtz() }}</span>
+            <span class="value-unit">XTZ</span>
+          </p>
+        </div>
+        <div class="flex items-center gap-2">
+          <input
+            v-model="contractFundAmount"
+            type="number"
+            step="1"
+            min="0"
+            placeholder="10"
+            class="input-field !py-2 !px-3 w-24 text-sm"
+          />
+          <button
+            @click="handleFundContract"
+            :disabled="isFundingContract || !contractFundAmount"
+            class="btn-primary flex items-center gap-2 h-[38px] w-fit px-2"
+          >
+            <span v-if="isFundingContract" class="spinner !w-4 !h-4"></span>
+            Fund
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-- Owner & Spender -->
@@ -173,7 +219,7 @@ watch(() => contractStore.storage?.spender, () => {
           </div>
           <div class="flex items-center gap-2">
             <input
-              v-model="fundAmount"
+              v-model="spenderFundAmount"
               type="number"
               step="0.1"
               min="0"
@@ -182,10 +228,10 @@ watch(() => contractStore.storage?.spender, () => {
             />
             <button
               @click="handleFundSpender"
-              :disabled="isFunding || !fundAmount"
+              :disabled="isFundingSpender || !spenderFundAmount"
               class="btn-secondary !py-1 !px-2 text-xs flex items-center gap-1"
             >
-              <span v-if="isFunding" class="spinner spinner-dark !w-3 !h-3"></span>
+              <span v-if="isFundingSpender" class="spinner spinner-dark !w-3 !h-3"></span>
               Fund
             </button>
           </div>
