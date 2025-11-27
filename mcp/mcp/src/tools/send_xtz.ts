@@ -1,77 +1,115 @@
 import { TezosToolkit } from "@taquito/taquito";
 import z from "zod";
 
-type Params = {
-	toAddress: string,
-	amount: number,
-}
+// Constants
+const MUTEZ_PER_TEZ = 1_000_000;
+const CONFIRMATIONS_TO_WAIT = 3;
+const TZKT_BASE_URL = "https://ghostnet.tzkt.io";
 
-export const createSendXtzTool = (Tezos: TezosToolkit, spendingContract: string, spendingAddress: string) => ({
+// Types
+const inputSchema = z.object({
+	toAddress: z.string().describe("The address to send Tez to."),
+	amount: z.number().describe("The amount of Tez to send to the address."),
+});
+
+type SendXtzParams = z.infer<typeof inputSchema>;
+
+// Helper Functions
+
+/** Convert XTZ to mutez */
+const xtzToMutez = (xtz: number): number => xtz * MUTEZ_PER_TEZ;
+
+/** Format mutez for display */
+const formatMutez = (mutez: number): string => `${mutez} mutez`;
+
+/**
+ * MCP tool for sending XTZ via a spending contract.
+ *
+ * @param Tezos - Configured TezosToolkit instance (with signer set to spender key)
+ * @param spendingContract - Address of the spending-limited wallet contract
+ * @param spendingAddress - Address of the spender account (for fee payments)
+ */
+export const createSendXtzTool = (
+	Tezos: TezosToolkit,
+	spendingContract: string,
+	spendingAddress: string
+) => ({
 	name: "tezos_send_xtz",
-	config:
-	{
+	config: {
 		title: "Send Tez",
-		description: "Sends a set amount of Tez to another address.",
-		inputSchema: z.object({
-			toAddress: z.string().describe("The address to send Tez to."),
-			amount: z.number().describe("The amount of Tez to send to the address."),
-		}),
+		description: "Sends a set amount of Tez to another address via the spending contract.",
+		inputSchema,
 		annotations: {
 			readOnlyHint: false,
 			destructiveHint: true,
 			idempotentHint: false,
-			openWorldHint: true
-		}
+			openWorldHint: true,
+		},
 	},
+
 	handler: async (params: any) => {
-		const typedParams: Params = params;
-		try {
-			const spendingAddressMutezBalance = await Tezos.tz.getBalance(spendingAddress);
-
-			if (spendingAddressMutezBalance.isZero()) {
-				throw new Error("Spending account balance is 0. Please fund the spending address with a balance to cover transaction fees and to reveal it.")
-			}
-
-			const spendingContractBalance = (await Tezos.tz.getBalance(spendingContract)).toNumber();
-
-			if (spendingContractBalance < typedParams.amount * 1_000_000) {
-				throw new Error("Not enough spendable balance in spending contract to cover transaction");
-			}
-
-			const contract = await Tezos.contract.at(spendingContract);
-
-			const contractCall = contract.methodsObject.spend({
-				recipient: typedParams.toAddress,
-				amount: typedParams.amount * 1000000
-			});
-
-			let estimate;
-			try {
-				estimate = await Tezos.estimate.contractCall(contractCall);
-			} catch (err: any) {
-				if (err.message?.includes('balance_too_low')) {
-					throw new Error(
-						`Spending address balance (${spendingAddressMutezBalance.toNumber()} mutez) ` +
-						`is too low to cover fees. Please fund the spending address.`
-					);
-				}
-				throw err;
-			}
-
-			const totalCost = estimate.totalCost;
-			if (spendingAddressMutezBalance.toNumber() < totalCost) {
-				throw new Error(`Spending address account balance is too low to cover transaction fees (${totalCost} mutez). Please fund the spending address via the web interface.`)
-			}
-
-			const operation = await contractCall.send();
-			await operation.confirmation(3);
-			const tzktUrl = `https://ghostnet.tzkt.io/${operation.hash}`;
-
-			return {
-				content: [{ type: "text" as const, text: tzktUrl }]
-			};
-		} catch (error) {
-			throw new Error(`Error: ${error} ${JSON.stringify(error, null, 2)}`);
+		params = params as SendXtzParams; 
+		// Validate spender has funds for fees
+		const spenderBalance = await Tezos.tz.getBalance(spendingAddress);
+		if (spenderBalance.isZero()) {
+			throw new Error(
+				"Spending account balance is 0. " +
+				"Please fund the spending address to cover transaction fees."
+			);
 		}
-	}
+
+		// Validate contract has funds for transfer
+		const contractBalance = await Tezos.tz.getBalance(spendingContract);
+		const amountMutez = xtzToMutez(params.amount);
+
+		if (contractBalance.toNumber() < amountMutez) {
+			throw new Error(
+				`Insufficient contract balance. ` +
+				`Requested: ${formatMutez(amountMutez)}, ` +
+				`Available: ${formatMutez(contractBalance.toNumber())}`
+			);
+		}
+
+		// Prepare contract call
+		const contract = await Tezos.contract.at(spendingContract);
+		const contractCall = contract.methodsObject.spend({
+			recipient: params.toAddress,
+			amount: amountMutez,
+		});
+
+		// Estimate fees
+		let estimate;
+		try {
+			estimate = await Tezos.estimate.contractCall(contractCall);
+		} catch (err: unknown) {
+			const message = err instanceof Error ? err.message : String(err);
+			if (message.includes("balance_too_low")) {
+				throw new Error(
+					`Spender balance (${formatMutez(spenderBalance.toNumber())}) ` +
+					`is too low to cover fees. Please fund the spending address.`
+				);
+			}
+			throw err;
+		}
+
+		// Run another fee check because the first check is only estimating the fees, but still needs tez in the account to estimate.
+		// This check is checking against the actual estimated fee value.
+		if (spenderBalance.toNumber() < estimate.totalCost) {
+			throw new Error(
+				`Spender balance too low for fees. ` +
+				`Required: ${formatMutez(estimate.totalCost)}, ` +
+				`Available: ${formatMutez(spenderBalance.toNumber())}`
+			);
+		}
+
+		// Execute transaction
+		const operation = await contractCall.send();
+		await operation.confirmation(CONFIRMATIONS_TO_WAIT);
+
+		const tzktUrl = `${TZKT_BASE_URL}/${operation.hash}`;
+
+		return {
+			content: [{ type: "text" as const, text: tzktUrl }],
+		};
+	},
 });
