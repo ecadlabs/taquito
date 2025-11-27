@@ -1,70 +1,42 @@
 <script setup lang="ts">
-import { ref, type Ref } from 'vue'
-import type { GeneratedKeypair } from '@/types'
+import { ref } from 'vue'
+import { useWalletStore, useContractStore, useKeypairStore } from '@/stores'
+import { copyToClipboard } from '@/utils'
 
-const props = defineProps<{
-  /** Connected user address */
-  userAddress: string | null
-  /** Generated keypair data */
-  generatedKeypair: GeneratedKeypair | null
-  /** Whether keypair generation is in progress */
-  isGenerating: boolean
-  /** Whether contract operation is loading */
-  isLoading: boolean
-}>()
-
-const emit = defineEmits<{
-  generateKeypair: []
-  useKeypair: []
-  copyToClipboard: [text: string, label: string]
-  downloadKeypair: [keypair: GeneratedKeypair]
-  originate: [spender: string, dailyLimit: number, perTxLimit: number]
-  connectContract: [address: string]
-}>()
+const walletStore = useWalletStore()
+const contractStore = useContractStore()
+const keypairStore = useKeypairStore()
 
 // Local state
-const existingContractAddress: Ref<string> = ref('')
-const originateSpenderAddress: Ref<string> = ref('')
-const originateDailyLimit: Ref<string> = ref('100')
-const originatePerTxLimit: Ref<string> = ref('10')
-const copyFeedback: Ref<string> = ref('')
+const existingContractAddress = ref('')
+const originateSpenderAddress = ref('')
+const originateDailyLimit = ref('100')
+const originatePerTxLimit = ref('10')
+const copyFeedback = ref('')
 
-/**
- * Handle copy with feedback
- */
 async function handleCopy(text: string, label: string): Promise<void> {
-  emit('copyToClipboard', text, label)
+  await copyToClipboard(text)
   copyFeedback.value = label
   setTimeout(() => { copyFeedback.value = '' }, 2000)
 }
 
-/**
- * Handle originate contract
- */
-function handleOriginate(): void {
-  if (!props.userAddress) return
-  const spender = originateSpenderAddress.value || props.userAddress
+async function handleOriginate(): Promise<void> {
+  if (!walletStore.userAddress) return
+  const spender = originateSpenderAddress.value || walletStore.userAddress
   const dailyLimit = parseFloat(originateDailyLimit.value) || 100
   const perTxLimit = parseFloat(originatePerTxLimit.value) || 10
-  emit('originate', spender, dailyLimit, perTxLimit)
+  await contractStore.originateContract(walletStore.userAddress, spender, dailyLimit, perTxLimit)
 }
 
-/**
- * Handle connect existing contract
- */
-function handleConnectContract(): void {
+async function handleConnectContract(): Promise<void> {
   if (!existingContractAddress.value) return
-  emit('connectContract', existingContractAddress.value)
+  await contractStore.setContractAddress(existingContractAddress.value)
   existingContractAddress.value = ''
 }
 
-/**
- * Use generated keypair as spender
- */
 function useGeneratedKeypair(): void {
-  if (props.generatedKeypair) {
-    originateSpenderAddress.value = props.generatedKeypair.address
-    emit('useKeypair')
+  if (keypairStore.generatedKeypair) {
+    originateSpenderAddress.value = keypairStore.generatedKeypair.address
   }
 }
 </script>
@@ -81,23 +53,23 @@ function useGeneratedKeypair(): void {
       </p>
 
       <button
-        @click="emit('generateKeypair')"
-        :disabled="isGenerating"
+        @click="keypairStore.generateKeypair()"
+        :disabled="keypairStore.isGenerating"
         class="btn-secondary flex items-center gap-2 mb-3"
       >
-        <span v-if="isGenerating" class="spinner spinner-dark"></span>
-        {{ isGenerating ? 'Generating...' : 'Generate Keypair' }}
+        <span v-if="keypairStore.isGenerating" class="spinner spinner-dark"></span>
+        {{ keypairStore.isGenerating ? 'Generating...' : 'Generate Keypair' }}
       </button>
 
-      <div v-if="generatedKeypair" class="space-y-3">
+      <div v-if="keypairStore.generatedKeypair" class="space-y-3">
         <div>
           <label class="label">address</label>
           <div class="flex items-center gap-2">
             <code class="mono bg-primary-100 px-2 py-1.5 rounded flex-1 break-all text-sm">
-              {{ generatedKeypair.address }}
+              {{ keypairStore.generatedKeypair.address }}
             </code>
             <button
-              @click="handleCopy(generatedKeypair.address, 'address')"
+              @click="handleCopy(keypairStore.generatedKeypair.address, 'address')"
               class="btn-secondary !py-1.5 !px-2 text-xs"
             >
               {{ copyFeedback === 'address' ? 'Copied!' : 'Copy' }}
@@ -115,10 +87,10 @@ function useGeneratedKeypair(): void {
           </div>
           <div class="flex items-center gap-2">
             <code class="mono bg-error/5 text-error/80 px-2 py-1.5 rounded flex-1 break-all text-sm">
-              {{ `${generatedKeypair.secretKey.slice(0, 8)}...${generatedKeypair.secretKey.slice(generatedKeypair.secretKey.length - 6)}` }}
+              {{ `${keypairStore.generatedKeypair.secretKey.slice(0, 8)}...${keypairStore.generatedKeypair.secretKey.slice(-6)}` }}
             </code>
             <button
-              @click="handleCopy(generatedKeypair.secretKey, 'secret')"
+              @click="handleCopy(keypairStore.generatedKeypair.secretKey, 'secret')"
               class="btn-secondary !py-1.5 !px-2 text-xs"
             >
               {{ copyFeedback === 'secret' ? 'Copied!' : 'Copy' }}
@@ -126,14 +98,9 @@ function useGeneratedKeypair(): void {
           </div>
         </div>
 
-        <div class="flex gap-2">
-          <button @click="emit('downloadKeypair', generatedKeypair)" class="btn-secondary text-sm">
-            Download JSON
-          </button>
-          <button @click="useGeneratedKeypair" class="btn-primary text-sm">
-            Use as Spender
-          </button>
-        </div>
+        <button @click="useGeneratedKeypair" class="btn-primary text-sm">
+          Use as Spender
+        </button>
       </div>
     </div>
 
@@ -149,7 +116,7 @@ function useGeneratedKeypair(): void {
           <input
             v-model="originateSpenderAddress"
             type="text"
-            :placeholder="userAddress ?? 'tz1...'"
+            :placeholder="walletStore.userAddress ?? 'tz1...'"
             class="input-field mono"
           />
           <p class="mt-1 text-xs text-text-muted">Leave empty to use your address</p>
@@ -168,11 +135,11 @@ function useGeneratedKeypair(): void {
 
         <button
           @click="handleOriginate"
-          :disabled="isLoading"
+          :disabled="contractStore.isLoading"
           class="btn-primary w-full flex items-center justify-center gap-2"
         >
-          <span v-if="isLoading" class="spinner"></span>
-          {{ isLoading ? 'Deploying...' : 'Deploy Contract' }}
+          <span v-if="contractStore.isLoading" class="spinner"></span>
+          {{ contractStore.isLoading ? 'Deploying...' : 'Deploy Contract' }}
         </button>
       </div>
     </div>
@@ -191,7 +158,7 @@ function useGeneratedKeypair(): void {
         />
         <button
           @click="handleConnectContract"
-          :disabled="!existingContractAddress || isLoading"
+          :disabled="!existingContractAddress || contractStore.isLoading"
           class="btn-secondary"
         >
           Connect

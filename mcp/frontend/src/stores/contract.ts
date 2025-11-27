@@ -1,32 +1,12 @@
-import { ref, computed, shallowRef, type Ref, type ShallowRef, type ComputedRef } from 'vue'
+import { defineStore } from 'pinia'
+import { ref, shallowRef, computed } from 'vue'
 import type { ContractAbstraction, Wallet } from '@taquito/taquito'
-import { useWallet } from './useWallet'
+import { useWalletStore } from './wallet'
+import { xtzToMutez } from '@/utils'
 import type { ContractStorage, TimeUntilReset, RawContractStorage } from '@/types'
-
-/** Contract address (persisted to localStorage) */
-const contractAddress: Ref<string | null> = ref(localStorage.getItem('contractAddress'))
-
-/** Contract instance */
-const contract: ShallowRef<ContractAbstraction<Wallet> | null> = shallowRef(null)
-
-/** Parsed contract storage */
-const storage: Ref<ContractStorage | null> = ref(null)
-
-/** Contract balance in mutez */
-const contractBalance: Ref<number | null> = ref(null)
-
-/** Loading state */
-const isLoading: Ref<boolean> = ref(false)
-
-/** Last error message */
-const error: Ref<string | null> = ref(null)
-
-/** Last operation hash */
-const lastOpHash: Ref<string | null> = ref(null)
 
 /**
  * Compiled Michelson contract code.
- * This is the output from `ligo compile contract`.
  */
 const CONTRACT_CODE = `{ parameter
     (or (unit %default_)
@@ -148,94 +128,29 @@ const CONTRACT_CODE = `{ parameter
                                              DIG 2 ;
                                              CONS ;
                                              PAIR } } } } } } } } } }
-
 `
 
-/**
- * Return type for the useContract composable
- */
-export interface UseContractReturn {
-  /** Contract address */
-  contractAddress: Ref<string | null>
-  /** Contract instance */
-  contract: ShallowRef<ContractAbstraction<Wallet> | null>
-  /** Parsed contract storage */
-  storage: Ref<ContractStorage | null>
-  /** Contract balance in mutez */
-  contractBalance: Ref<number | null>
-  /** Loading state */
-  isLoading: Ref<boolean>
-  /** Last error message */
-  error: Ref<string | null>
-  /** Last operation hash */
-  lastOpHash: Ref<string | null>
-  /** Whether connected user is the owner */
-  isOwner: ComputedRef<boolean>
-  /** Whether connected user is the spender */
-  isSpender: ComputedRef<boolean>
-  /** Time until daily spending reset */
-  timeUntilReset: ComputedRef<TimeUntilReset | null>
-  /** Set and load a contract address */
-  setContractAddress: (address: string) => Promise<void>
-  /** Clear the contract address */
-  clearContractAddress: () => void
-  /** Load the contract instance */
-  loadContract: () => Promise<void>
-  /** Refresh the contract storage */
-  refreshStorage: () => Promise<void>
-  /** Originate a new contract */
-  originateContract: (
-    ownerAddress: string,
-    spenderAddress: string,
-    dailyLimitXtz: number,
-    perTxLimitXtz: number
-  ) => Promise<string>
-  /** Set a new spender address */
-  setSpender: (newSpender: string) => Promise<string>
-  /** Set new spending limits */
-  setLimits: (dailyLimitXtz: number, perTxLimitXtz: number) => Promise<string>
-  /** Withdraw funds */
-  withdraw: (recipient: string, amountXtz: number) => Promise<string>
-  /** Convert mutez to XTZ */
-  mutezToXtz: (mutez: number) => number
-  /** Format XTZ for display */
-  formatXtz: (xtz: number, decimals?: number) => string
-}
+export const useContractStore = defineStore('contract', () => {
+  const walletStore = useWalletStore()
 
-/**
- * Composable for contract interactions.
- * Provides methods for originating, loading, and interacting with
- * the spending-limited wallet contract.
- *
- * @returns Contract state and methods
- *
- * @example
- * ```ts
- * const { storage, isOwner, setLimits } = useContract()
- *
- * // Check if user is owner
- * if (isOwner.value) {
- *   await setLimits(200, 20) // 200 XTZ daily, 20 XTZ per tx
- * }
- * ```
- */
-export function useContract(): UseContractReturn {
-  const { getTezos, userAddress, initTezos } = useWallet()
+  // State
+  const contractAddress = ref<string | null>(localStorage.getItem('contractAddress'))
+  const contract = shallowRef<ContractAbstraction<Wallet> | null>(null)
+  const storage = ref<ContractStorage | null>(null)
+  const contractBalance = ref<number | null>(null)
+  const isLoading = ref(false)
+  const error = ref<string | null>(null)
+  const lastOpHash = ref<string | null>(null)
 
-  /** Whether the connected user is the contract owner */
+  // Getters
   const isOwner = computed(() => {
-    return storage.value !== null && userAddress.value === storage.value.owner
+    return storage.value !== null && walletStore.userAddress === storage.value.owner
   })
 
-  /** Whether the connected user is the contract spender */
   const isSpender = computed(() => {
-    return storage.value !== null && userAddress.value === storage.value.spender
+    return storage.value !== null && walletStore.userAddress === storage.value.spender
   })
 
-  /**
-   * Calculate time remaining until daily spending reset.
-   * The contract resets spent_today after 24 hours from last_reset.
-   */
   const timeUntilReset = computed((): TimeUntilReset | null => {
     if (!storage.value?.last_reset) return null
 
@@ -256,22 +171,13 @@ export function useContract(): UseContractReturn {
     return { hours, minutes, seconds, totalSeconds }
   })
 
-  /**
-   * Set the contract address and load the contract.
-   * The address is persisted to localStorage for session persistence.
-   *
-   * @param address - The contract address (KT1...)
-   */
+  // Actions
   async function setContractAddress(address: string): Promise<void> {
     contractAddress.value = address
     localStorage.setItem('contractAddress', address)
     await loadContract()
   }
 
-  /**
-   * Clear the contract address and reset state.
-   * Removes the address from localStorage.
-   */
   function clearContractAddress(): void {
     contractAddress.value = null
     contract.value = null
@@ -280,15 +186,11 @@ export function useContract(): UseContractReturn {
     localStorage.removeItem('contractAddress')
   }
 
-  /**
-   * Load the contract instance from the stored address.
-   * Also refreshes the storage data.
-   */
   async function loadContract(): Promise<void> {
     if (!contractAddress.value) return
 
-    await initTezos()
-    const tezos = getTezos()
+    await walletStore.init()
+    const tezos = walletStore.getTezos()
     if (!tezos) throw new Error('Tezos toolkit not initialized')
 
     isLoading.value = true
@@ -306,15 +208,11 @@ export function useContract(): UseContractReturn {
     }
   }
 
-  /**
-   * Refresh the contract storage and balance.
-   * Parses the raw Michelson storage into a typed structure.
-   */
   async function refreshStorage(): Promise<void> {
     if (!contractAddress.value) return
 
-    await initTezos()
-    const tezos = getTezos()
+    await walletStore.init()
+    const tezos = walletStore.getTezos()
     if (!tezos) throw new Error('Tezos toolkit not initialized')
 
     isLoading.value = true
@@ -323,7 +221,6 @@ export function useContract(): UseContractReturn {
       const contractInstance = await tezos.contract.at(contractAddress.value)
       const rawStorage = await contractInstance.storage<RawContractStorage>()
 
-      // Parse the storage structure using Michelson annotation names
       storage.value = {
         owner: rawStorage.owner,
         spender: rawStorage.spender,
@@ -333,7 +230,6 @@ export function useContract(): UseContractReturn {
         last_reset: rawStorage.last_reset,
       }
 
-      // Get contract balance
       const balance = await tezos.tz.getBalance(contractAddress.value)
       contractBalance.value = balance.toNumber()
     } catch (err) {
@@ -344,23 +240,14 @@ export function useContract(): UseContractReturn {
     }
   }
 
-  /**
-   * Originate a new spending-limited wallet contract.
-   *
-   * @param ownerAddress - Address with full control
-   * @param spenderAddress - Address with limited spending authority
-   * @param dailyLimitXtz - Maximum daily spending in XTZ
-   * @param perTxLimitXtz - Maximum per-transaction spending in XTZ
-   * @returns The new contract address
-   */
   async function originateContract(
     ownerAddress: string,
     spenderAddress: string,
     dailyLimitXtz: number,
     perTxLimitXtz: number
   ): Promise<string> {
-    await initTezos()
-    const tezos = getTezos()
+    await walletStore.init()
+    const tezos = walletStore.getTezos()
     if (!tezos) throw new Error('Tezos toolkit not initialized')
 
     isLoading.value = true
@@ -370,8 +257,8 @@ export function useContract(): UseContractReturn {
       const initialStorage = {
         owner: ownerAddress,
         spender: spenderAddress,
-        daily_limit: Math.floor(dailyLimitXtz * 1_000_000),
-        per_tx_limit: Math.floor(perTxLimitXtz * 1_000_000),
+        daily_limit: xtzToMutez(dailyLimitXtz),
+        per_tx_limit: xtzToMutez(perTxLimitXtz),
         spent_today: 0,
         last_reset: new Date().toISOString(),
       }
@@ -398,13 +285,6 @@ export function useContract(): UseContractReturn {
     }
   }
 
-  /**
-   * Set a new spender address (owner only).
-   *
-   * @param newSpender - The new spender address
-   * @returns Operation hash
-   * @throws If caller is not the owner
-   */
   async function setSpender(newSpender: string): Promise<string> {
     if (!contract.value) throw new Error('Contract not loaded')
 
@@ -428,14 +308,6 @@ export function useContract(): UseContractReturn {
     }
   }
 
-  /**
-   * Set new spending limits (owner only).
-   *
-   * @param dailyLimitXtz - New daily limit in XTZ
-   * @param perTxLimitXtz - New per-transaction limit in XTZ
-   * @returns Operation hash
-   * @throws If caller is not the owner
-   */
   async function setLimits(dailyLimitXtz: number, perTxLimitXtz: number): Promise<string> {
     if (!contract.value) throw new Error('Contract not loaded')
 
@@ -444,8 +316,8 @@ export function useContract(): UseContractReturn {
 
     try {
       const op = await contract.value.methodsObject.set_limits({
-        new_daily_limit: Math.floor(dailyLimitXtz * 1_000_000),
-        new_per_tx_limit: Math.floor(perTxLimitXtz * 1_000_000),
+        new_daily_limit: xtzToMutez(dailyLimitXtz),
+        new_per_tx_limit: xtzToMutez(perTxLimitXtz),
       }).send()
       lastOpHash.value = op.opHash
 
@@ -462,15 +334,6 @@ export function useContract(): UseContractReturn {
     }
   }
 
-  /**
-   * Withdraw funds from the contract (owner only).
-   * No limits are applied to owner withdrawals.
-   *
-   * @param recipient - The recipient address
-   * @param amountXtz - Amount to withdraw in XTZ
-   * @returns Operation hash
-   * @throws If caller is not the owner
-   */
   async function withdraw(recipient: string, amountXtz: number): Promise<string> {
     if (!contract.value) throw new Error('Contract not loaded')
 
@@ -480,7 +343,7 @@ export function useContract(): UseContractReturn {
     try {
       const op = await contract.value.methodsObject.withdraw({
         recipient: recipient,
-        amount: Math.floor(amountXtz * 1_000_000),
+        amount: xtzToMutez(amountXtz),
       }).send()
       lastOpHash.value = op.opHash
 
@@ -497,35 +360,6 @@ export function useContract(): UseContractReturn {
     }
   }
 
-  /**
-   * Convert mutez to XTZ.
-   *
-   * @param mutez - Amount in mutez (1/1,000,000 XTZ)
-   * @returns Amount in XTZ
-   */
-  function mutezToXtz(mutez: number): number {
-    return mutez / 1_000_000
-  }
-
-  /**
-   * Format XTZ amount for display.
-   * Removes trailing zeros for cleaner display.
-   *
-   * @param xtz - Amount in XTZ
-   * @param decimals - Maximum decimal places (default: 6)
-   * @returns Formatted string
-   *
-   * @example
-   * ```ts
-   * formatXtz(1.5)      // "1.5"
-   * formatXtz(1.500000) // "1.5"
-   * formatXtz(1.0)      // "1"
-   * ```
-   */
-  function formatXtz(xtz: number, decimals = 6): string {
-    return xtz.toFixed(decimals).replace(/\.?0+$/, '')
-  }
-
   return {
     // State
     contractAddress,
@@ -535,13 +369,11 @@ export function useContract(): UseContractReturn {
     isLoading,
     error,
     lastOpHash,
-
-    // Computed
+    // Getters
     isOwner,
     isSpender,
     timeUntilReset,
-
-    // Methods
+    // Actions
     setContractAddress,
     clearContractAddress,
     loadContract,
@@ -550,7 +382,5 @@ export function useContract(): UseContractReturn {
     setSpender,
     setLimits,
     withdraw,
-    mutezToXtz,
-    formatXtz,
   }
-}
+})

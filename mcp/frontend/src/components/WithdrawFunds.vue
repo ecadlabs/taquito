@@ -1,30 +1,23 @@
 <script setup lang="ts">
-import { ref, type Ref } from 'vue'
+import { ref, computed } from 'vue'
+import { useWalletStore, useContractStore } from '@/stores'
+import { mutezToXtz, formatXtz } from '@/utils'
 
-defineProps<{
-  /** Connected user address */
-  userAddress: string | null
-  /** Contract balance in XTZ (formatted) */
-  balanceXtz: string
-  /** Whether operation is loading */
-  isLoading: boolean
-}>()
+const walletStore = useWalletStore()
+const contractStore = useContractStore()
 
-const emit = defineEmits<{
-  withdraw: [recipient: string, amount: number]
-}>()
+const withdrawRecipient = ref('')
+const withdrawAmount = ref('')
 
-// Local state
-const withdrawRecipient: Ref<string> = ref('')
-const withdrawAmount: Ref<string> = ref('')
+const balanceXtz = computed(() => {
+  if (contractStore.contractBalance === null) return '0'
+  return formatXtz(mutezToXtz(contractStore.contractBalance))
+})
 
-/**
- * Handle withdraw
- */
-function handleWithdraw(): void {
+async function handleWithdraw(): Promise<void> {
   const amount = parseFloat(withdrawAmount.value)
   if (!withdrawRecipient.value || isNaN(amount)) return
-  emit('withdraw', withdrawRecipient.value, amount)
+  await contractStore.withdraw(withdrawRecipient.value, amount)
   withdrawRecipient.value = ''
   withdrawAmount.value = ''
 }
@@ -43,7 +36,7 @@ function handleWithdraw(): void {
         <input
           v-model="withdrawRecipient"
           type="text"
-          :placeholder="userAddress ?? undefined"
+          :placeholder="walletStore.userAddress ?? undefined"
           class="input-field mono"
         />
       </div>
@@ -53,10 +46,10 @@ function handleWithdraw(): void {
       </div>
       <button
         @click="handleWithdraw"
-        :disabled="isLoading || !withdrawRecipient || !withdrawAmount"
+        :disabled="contractStore.isLoading || !withdrawRecipient || !withdrawAmount"
         class="btn-primary w-full flex items-center justify-center gap-2"
       >
-        <span v-if="isLoading" class="spinner"></span>
+        <span v-if="contractStore.isLoading" class="spinner"></span>
         Withdraw
       </button>
     </div>

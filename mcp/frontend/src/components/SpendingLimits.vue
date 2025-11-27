@@ -1,42 +1,67 @@
 <script setup lang="ts">
-import { ref, type Ref } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { useContractStore } from '@/stores'
+import { mutezToXtz, formatXtz } from '@/utils'
 
-defineProps<{
-  /** Daily limit in XTZ (formatted) */
-  dailyLimitXtz: string
-  /** Per-transaction limit in XTZ (formatted) */
-  perTxLimitXtz: string
-  /** Amount spent today in XTZ (formatted) */
-  spentTodayXtz: string
-  /** Percentage of daily limit spent */
-  spentPercentage: number
-  /** Countdown until reset (formatted HH:MM:SS) */
-  resetCountdown: string | null
-  /** Whether current user is the owner */
-  isOwner: boolean
-  /** Whether operation is loading */
-  isLoading: boolean
-}>()
+const contractStore = useContractStore()
 
-const emit = defineEmits<{
-  setLimits: [dailyLimit: number, perTxLimit: number]
-}>()
+// Local state for form inputs
+const newDailyLimit = ref('')
+const newPerTxLimit = ref('')
 
-// Local state
-const newDailyLimit: Ref<string> = ref('')
-const newPerTxLimit: Ref<string> = ref('')
+// Countdown timer
+const resetCountdown = ref<string | null>(null)
+let countdownInterval: ReturnType<typeof setInterval> | null = null
 
-/**
- * Handle set limits
- */
-function handleSetLimits(): void {
+// Computed values derived from store
+const dailyLimitXtz = computed(() => {
+  if (!contractStore.storage) return '0'
+  return formatXtz(mutezToXtz(contractStore.storage.daily_limit))
+})
+
+const perTxLimitXtz = computed(() => {
+  if (!contractStore.storage) return '0'
+  return formatXtz(mutezToXtz(contractStore.storage.per_tx_limit))
+})
+
+const spentTodayXtz = computed(() => {
+  if (!contractStore.storage) return '0'
+  return formatXtz(mutezToXtz(contractStore.storage.spent_today))
+})
+
+const spentPercentage = computed(() => {
+  if (!contractStore.storage || contractStore.storage.daily_limit === 0) return 0
+  return Math.min(100, (contractStore.storage.spent_today / contractStore.storage.daily_limit) * 100)
+})
+
+function updateCountdown(): void {
+  if (contractStore.timeUntilReset) {
+    const { hours, minutes, seconds } = contractStore.timeUntilReset
+    resetCountdown.value = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+  } else {
+    resetCountdown.value = null
+  }
+}
+
+async function handleSetLimits(): Promise<void> {
   const daily = parseFloat(newDailyLimit.value)
   const perTx = parseFloat(newPerTxLimit.value)
   if (isNaN(daily) || isNaN(perTx)) return
-  emit('setLimits', daily, perTx)
+  await contractStore.setLimits(daily, perTx)
   newDailyLimit.value = ''
   newPerTxLimit.value = ''
 }
+
+onMounted(() => {
+  countdownInterval = setInterval(updateCountdown, 1000)
+  updateCountdown()
+})
+
+onUnmounted(() => {
+  if (countdownInterval) {
+    clearInterval(countdownInterval)
+  }
+})
 </script>
 
 <template>
@@ -81,7 +106,7 @@ function handleSetLimits(): void {
     </div>
 
     <!-- Update Limits (Owner) -->
-    <div v-if="isOwner">
+    <div v-if="contractStore.isOwner">
       <div class="divider"></div>
       <p class="text-sm font-medium text-text-primary mb-3">Update Limits</p>
       <div class="grid grid-cols-2 gap-3 mb-3">
@@ -96,10 +121,10 @@ function handleSetLimits(): void {
       </div>
       <button
         @click="handleSetLimits"
-        :disabled="isLoading || !newDailyLimit || !newPerTxLimit"
+        :disabled="contractStore.isLoading || !newDailyLimit || !newPerTxLimit"
         class="btn-primary flex items-center gap-2"
       >
-        <span v-if="isLoading" class="spinner"></span>
+        <span v-if="contractStore.isLoading" class="spinner"></span>
         Update Limits
       </button>
     </div>

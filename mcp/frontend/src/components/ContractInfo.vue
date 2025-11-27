@@ -1,33 +1,26 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { ContractStorage } from '@/types'
+import { useContractStore } from '@/stores'
+import { copyToClipboard, openInTzkt, mutezToXtz, formatXtz } from '@/utils'
 
-const props = defineProps<{
-  /** Contract address */
-  contractAddress: string
-  /** Contract storage */
-  storage: ContractStorage
-  /** Contract balance in XTZ (formatted) */
-  balanceXtz: string
-  /** Whether current user is the owner */
-  isOwner: boolean
-}>()
-
-const emit = defineEmits<{
-  disconnect: []
-  copyToClipboard: [text: string, label: string]
-}>()
-
+const contractStore = useContractStore()
 const copyFeedback = ref('')
 
 async function handleCopy(text: string, label: string): Promise<void> {
-  emit('copyToClipboard', text, label)
+  await copyToClipboard(text)
   copyFeedback.value = label
   setTimeout(() => { copyFeedback.value = '' }, 2000)
 }
 
-function openInTzkt(): void {
-  window.open(`https://ghostnet.tzkt.io/${props.contractAddress}`, '_blank')
+function handleOpenTzkt(): void {
+  if (contractStore.contractAddress) {
+    openInTzkt(contractStore.contractAddress)
+  }
+}
+
+function balanceXtz(): string {
+  if (contractStore.contractBalance === null) return '0'
+  return formatXtz(mutezToXtz(contractStore.contractBalance))
 }
 </script>
 
@@ -37,9 +30,9 @@ function openInTzkt(): void {
       <div>
         <p class="section-label mb-1">spending contract</p>
         <div class="flex items-center gap-2">
-          <p class="mono text-sm text-text-primary">{{ contractAddress }}</p>
+          <p class="mono text-sm text-text-primary">{{ contractStore.contractAddress }}</p>
           <button
-            @click="handleCopy(contractAddress, 'contract')"
+            @click="handleCopy(contractStore.contractAddress!, 'contract')"
             class="btn-secondary !py-1 !px-2 text-xs"
             :title="copyFeedback === 'contract' ? 'Copied!' : 'Copy address'"
           >
@@ -52,7 +45,7 @@ function openInTzkt(): void {
             </svg>
           </button>
           <button
-            @click="openInTzkt"
+            @click="handleOpenTzkt"
             class="btn-secondary !py-1 !px-2 text-xs"
             title="View on TzKT"
           >
@@ -64,8 +57,8 @@ function openInTzkt(): void {
         </div>
       </div>
       <div class="flex items-center gap-2">
-        <span v-if="isOwner" class="badge badge-success">owner</span>
-        <button @click="emit('disconnect')" class="btn-secondary !py-1 !px-2 text-xs">
+        <span v-if="contractStore.isOwner" class="badge badge-success">owner</span>
+        <button @click="contractStore.clearContractAddress()" class="btn-secondary !py-1 !px-2 text-xs">
           Disconnect
         </button>
       </div>
@@ -75,7 +68,7 @@ function openInTzkt(): void {
     <div class="card-subtle p-4 mb-4">
       <p class="label mb-1">balance</p>
       <p>
-        <span class="value-display">{{ balanceXtz }}</span>
+        <span class="value-display">{{ balanceXtz() }}</span>
         <span class="value-unit">XTZ</span>
       </p>
     </div>
@@ -84,11 +77,11 @@ function openInTzkt(): void {
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
       <div class="card-subtle p-3">
         <p class="label">owner</p>
-        <p class="mono text-sm text-text-primary break-all">{{ storage.owner }}</p>
+        <p class="mono text-sm text-text-primary break-all">{{ contractStore.storage?.owner }}</p>
       </div>
       <div class="card-subtle p-3">
         <p class="label">spender</p>
-        <p class="mono text-sm text-text-primary break-all">{{ storage.spender }}</p>
+        <p class="mono text-sm text-text-primary break-all">{{ contractStore.storage?.spender }}</p>
       </div>
     </div>
   </section>

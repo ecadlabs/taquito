@@ -1,26 +1,13 @@
 <script setup lang="ts">
-import { ref, type Ref } from 'vue'
+import { ref } from 'vue'
+import { useContractStore } from '@/stores'
 
-defineProps<{
-  /** Current spender address */
-  currentSpender: string
-  /** Whether operation is loading */
-  isLoading: boolean
-}>()
+const contractStore = useContractStore()
+const newSpenderAddress = ref('')
 
-const emit = defineEmits<{
-  setSpender: [address: string]
-}>()
-
-// Local state
-const newSpenderAddress: Ref<string> = ref('')
-
-/**
- * Handle set spender
- */
-function handleSetSpender(): void {
+async function handleSetSpender(): Promise<void> {
   if (!newSpenderAddress.value) return
-  emit('setSpender', newSpenderAddress.value)
+  await contractStore.setSpender(newSpenderAddress.value)
   newSpenderAddress.value = ''
 }
 </script>
@@ -31,7 +18,7 @@ function handleSetSpender(): void {
 
     <div class="card-subtle p-3 mb-4">
       <p class="label">current spender</p>
-      <p class="mono text-sm text-text-primary break-all">{{ currentSpender }}</p>
+      <p class="mono text-sm text-text-primary break-all">{{ contractStore.storage?.spender }}</p>
     </div>
 
     <div>
@@ -40,10 +27,10 @@ function handleSetSpender(): void {
         <input v-model="newSpenderAddress" type="text" placeholder="tz1..." class="input-field mono flex-1" />
         <button
           @click="handleSetSpender"
-          :disabled="isLoading || !newSpenderAddress"
+          :disabled="contractStore.isLoading || !newSpenderAddress"
           class="btn-primary flex items-center gap-2"
         >
-          <span v-if="isLoading" class="spinner"></span>
+          <span v-if="contractStore.isLoading" class="spinner"></span>
           Update
         </button>
       </div>
