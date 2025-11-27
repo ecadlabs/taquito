@@ -1,10 +1,17 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useContractStore } from '@/stores'
+import { ref, onMounted, watch } from 'vue'
+import { useContractStore, useWalletStore } from '@/stores'
 import { copyToClipboard, openInTzkt, mutezToXtz, formatXtz } from '@/utils'
 
 const contractStore = useContractStore()
+const walletStore = useWalletStore()
 const copyFeedback = ref('')
+
+// Spender balance state
+const spenderBalance = ref<number | null>(null)
+const fundAmount = ref('0.5')
+const isFunding = ref(false)
+const showTooltip = ref(false)
 
 async function handleCopy(text: string, label: string): Promise<void> {
   await copyToClipboard(text)
@@ -22,6 +29,52 @@ function balanceXtz(): string {
   if (contractStore.contractBalance === null) return '0'
   return formatXtz(mutezToXtz(contractStore.contractBalance))
 }
+
+function spenderBalanceXtz(): string {
+  if (spenderBalance.value === null) return '...'
+  return formatXtz(spenderBalance.value)
+}
+
+async function fetchSpenderBalance(): Promise<void> {
+  if (!contractStore.storage?.spender) return
+  try {
+    spenderBalance.value = await walletStore.getBalance(contractStore.storage.spender)
+  } catch (err) {
+    console.error('Failed to fetch spender balance:', err)
+    spenderBalance.value = null
+  }
+}
+
+async function handleFundSpender(): Promise<void> {
+  if (!contractStore.storage?.spender || !walletStore.tezos) return
+
+  const amount = parseFloat(fundAmount.value)
+  if (isNaN(amount) || amount <= 0) return
+
+  isFunding.value = true
+  try {
+    const op = await walletStore.tezos.wallet.transfer({
+      to: contractStore.storage.spender,
+      amount: amount,
+    }).send()
+
+    await op.confirmation()
+    await fetchSpenderBalance()
+  } catch (err) {
+    console.error('Failed to fund spender:', err)
+  } finally {
+    isFunding.value = false
+  }
+}
+
+onMounted(() => {
+  fetchSpenderBalance()
+})
+
+// Refetch when storage changes (e.g., after refresh)
+watch(() => contractStore.storage?.spender, () => {
+  fetchSpenderBalance()
+})
 </script>
 
 <template>
@@ -80,8 +133,63 @@ function balanceXtz(): string {
         <p class="mono text-sm text-text-primary break-all">{{ contractStore.storage?.owner }}</p>
       </div>
       <div class="card-subtle p-3">
-        <p class="label">spender</p>
-        <p class="mono text-sm text-text-primary break-all">{{ contractStore.storage?.spender }}</p>
+        <div class="flex items-center gap-1.5 mb-1">
+          <p class="label !mb-0">spender</p>
+          <div class="relative">
+            <button
+              @mouseenter="showTooltip = true"
+              @mouseleave="showTooltip = false"
+              @focus="showTooltip = true"
+              @blur="showTooltip = false"
+              class="text-text-muted hover:text-text-secondary transition-colors"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+              </svg>
+            </button>
+            <div
+              v-show="showTooltip"
+              class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-gray-900 text-white text-xs rounded-lg shadow-lg z-10"
+            >
+              <p class="font-medium mb-1">Spender Fee Balance</p>
+              <p class="text-gray-300">
+                The spender address needs a small amount of XTZ to pay for transaction fees when calling the spending contract. Approximately 0.5 XTZ covers ~100 transactions.
+              </p>
+              <div class="absolute top-full left-1/2 -translate-x-1/2 -mt-1">
+                <div class="border-4 border-transparent border-t-gray-900"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="mono text-sm text-text-primary break-all mb-2">{{ contractStore.storage?.spender }}</p>
+
+        <!-- Spender Balance -->
+        <div class="flex items-center justify-between pt-2 border-t border-primary-200">
+          <div>
+            <p class="text-xs text-text-muted">Fee Balance</p>
+            <p class="mono text-sm text-text-primary">
+              {{ spenderBalanceXtz() }} <span class="text-text-muted">XTZ</span>
+            </p>
+          </div>
+          <div class="flex items-center gap-2">
+            <input
+              v-model="fundAmount"
+              type="number"
+              step="0.1"
+              min="0"
+              placeholder="0.5"
+              class="input-field !py-1 !px-2 w-20 text-sm"
+            />
+            <button
+              @click="handleFundSpender"
+              :disabled="isFunding || !fundAmount"
+              class="btn-secondary !py-1 !px-2 text-xs flex items-center gap-1"
+            >
+              <span v-if="isFunding" class="spinner spinner-dark !w-3 !h-3"></span>
+              Fund
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </section>

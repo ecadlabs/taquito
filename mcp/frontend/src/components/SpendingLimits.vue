@@ -35,12 +35,27 @@ const spentPercentage = computed(() => {
 })
 
 function updateCountdown(): void {
-  if (contractStore.timeUntilReset) {
-    const { hours, minutes, seconds } = contractStore.timeUntilReset
-    resetCountdown.value = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
-  } else {
+  if (!contractStore.storage?.last_reset) {
     resetCountdown.value = null
+    return
   }
+
+  const lastReset = new Date(contractStore.storage.last_reset).getTime()
+  const now = Date.now()
+  const resetTime = lastReset + 24 * 60 * 60 * 1000
+  const remaining = Math.max(0, resetTime - now)
+
+  if (remaining <= 0) {
+    resetCountdown.value = '00:00:00'
+    return
+  }
+
+  const totalSeconds = Math.floor(remaining / 1000)
+  const hours = Math.floor(totalSeconds / 3600)
+  const minutes = Math.floor((totalSeconds % 3600) / 60)
+  const seconds = totalSeconds % 60
+
+  resetCountdown.value = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
 }
 
 async function handleSetLimits(): Promise<void> {
