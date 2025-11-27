@@ -685,10 +685,23 @@ class SaplingState {
     }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const saplingOutputParams = require('../saplingOutputParams');
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const saplingSpendParams = require('../saplingSpendParams');
+let paramsProvider;
+let cachedParamsPromise;
+const setSaplingParamsProvider = (provider) => {
+    paramsProvider = provider;
+    cachedParamsPromise = undefined;
+};
+const getSaplingParams = () => {
+    if (!cachedParamsPromise) {
+        if (!paramsProvider) {
+            return Promise.reject(new Error('Sapling parameters provider not configured. Call setSaplingParamsProvider before using @taquito/sapling.'));
+        }
+        cachedParamsPromise = paramsProvider();
+    }
+    return cachedParamsPromise;
+};
+
+let saplingInitPromise;
 class SaplingWrapper {
     withProvingContext(action) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -746,9 +759,15 @@ class SaplingWrapper {
     }
     initSaplingParameters() {
         return __awaiter(this, void 0, void 0, function* () {
-            const spendParams = Buffer.from(saplingSpendParams.saplingSpendParams, 'base64');
-            const outputParams = Buffer.from(saplingOutputParams.saplingOutputParams, 'base64');
-            return sapling.initParameters(spendParams, outputParams);
+            if (!saplingInitPromise) {
+                saplingInitPromise = (() => __awaiter(this, void 0, void 0, function* () {
+                    const { spend, output } = yield getSaplingParams();
+                    const spendParams = Buffer.from(spend.saplingSpendParams, 'base64');
+                    const outputParams = Buffer.from(output.saplingOutputParams, 'base64');
+                    yield sapling.initParameters(spendParams, outputParams);
+                }))();
+            }
+            return saplingInitPromise;
         });
     }
 }
@@ -1511,5 +1530,5 @@ class SaplingToolkit {
 }
 _SaplingToolkit_inMemorySpendingKey = new WeakMap(), _SaplingToolkit_saplingId = new WeakMap(), _SaplingToolkit_contractAddress = new WeakMap(), _SaplingToolkit_memoSize = new WeakMap(), _SaplingToolkit_readProvider = new WeakMap(), _SaplingToolkit_packer = new WeakMap(), _SaplingToolkit_saplingForger = new WeakMap(), _SaplingToolkit_saplingTxBuilder = new WeakMap(), _SaplingToolkit_saplingTransactionViewer = new WeakMap();
 
-export { InMemoryProvingKey, InMemorySpendingKey, InMemoryViewingKey, SaplingToolkit, SaplingTransactionViewer };
+export { InMemoryProvingKey, InMemorySpendingKey, InMemoryViewingKey, SaplingToolkit, SaplingTransactionViewer, setSaplingParamsProvider };
 //# sourceMappingURL=taquito-sapling.es6.js.map

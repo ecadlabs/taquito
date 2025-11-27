@@ -698,10 +698,23 @@
         }
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const saplingOutputParams = require('../saplingOutputParams');
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const saplingSpendParams = require('../saplingSpendParams');
+    let paramsProvider;
+    let cachedParamsPromise;
+    const setSaplingParamsProvider = (provider) => {
+        paramsProvider = provider;
+        cachedParamsPromise = undefined;
+    };
+    const getSaplingParams = () => {
+        if (!cachedParamsPromise) {
+            if (!paramsProvider) {
+                return Promise.reject(new Error('Sapling parameters provider not configured. Call setSaplingParamsProvider before using @taquito/sapling.'));
+            }
+            cachedParamsPromise = paramsProvider();
+        }
+        return cachedParamsPromise;
+    };
+
+    let saplingInitPromise;
     class SaplingWrapper {
         withProvingContext(action) {
             return __awaiter(this, void 0, void 0, function* () {
@@ -759,9 +772,15 @@
         }
         initSaplingParameters() {
             return __awaiter(this, void 0, void 0, function* () {
-                const spendParams = Buffer.from(saplingSpendParams.saplingSpendParams, 'base64');
-                const outputParams = Buffer.from(saplingOutputParams.saplingOutputParams, 'base64');
-                return sapling__namespace.initParameters(spendParams, outputParams);
+                if (!saplingInitPromise) {
+                    saplingInitPromise = (() => __awaiter(this, void 0, void 0, function* () {
+                        const { spend, output } = yield getSaplingParams();
+                        const spendParams = Buffer.from(spend.saplingSpendParams, 'base64');
+                        const outputParams = Buffer.from(output.saplingOutputParams, 'base64');
+                        yield sapling__namespace.initParameters(spendParams, outputParams);
+                    }))();
+                }
+                return saplingInitPromise;
             });
         }
     }
@@ -1529,6 +1548,7 @@
     exports.InMemoryViewingKey = InMemoryViewingKey;
     exports.SaplingToolkit = SaplingToolkit;
     exports.SaplingTransactionViewer = SaplingTransactionViewer;
+    exports.setSaplingParamsProvider = setSaplingParamsProvider;
 
 }));
 //# sourceMappingURL=taquito-sapling.umd.js.map

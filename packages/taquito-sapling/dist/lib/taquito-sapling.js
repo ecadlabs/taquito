@@ -36,7 +36,7 @@ var __rest = (this && this.__rest) || function (s, e) {
 };
 var _SaplingToolkit_inMemorySpendingKey, _SaplingToolkit_saplingId, _SaplingToolkit_contractAddress, _SaplingToolkit_memoSize, _SaplingToolkit_readProvider, _SaplingToolkit_packer, _SaplingToolkit_saplingForger, _SaplingToolkit_saplingTxBuilder, _SaplingToolkit_saplingTransactionViewer;
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SaplingToolkit = exports.InMemoryProvingKey = exports.InMemorySpendingKey = exports.InMemoryViewingKey = exports.SaplingTransactionViewer = void 0;
+exports.SaplingToolkit = exports.InMemoryProvingKey = exports.InMemorySpendingKey = exports.InMemoryViewingKey = exports.SaplingTransactionViewer = exports.setSaplingParamsProvider = void 0;
 const bignumber_js_1 = require("bignumber.js");
 const taquito_1 = require("@taquito/taquito");
 const utils_1 = require("@taquito/utils");
@@ -47,6 +47,8 @@ const sapling_transaction_viewer_1 = require("./sapling-tx-viewer/sapling-transa
 const sapling_transactions_builder_1 = require("./sapling-tx-builder/sapling-transactions-builder");
 const constants_1 = require("./constants");
 const core_1 = require("@taquito/core");
+var sapling_params_provider_1 = require("./sapling-params-provider");
+Object.defineProperty(exports, "setSaplingParamsProvider", { enumerable: true, get: function () { return sapling_params_provider_1.setSaplingParamsProvider; } });
 var sapling_transaction_viewer_2 = require("./sapling-tx-viewer/sapling-transaction-viewer");
 Object.defineProperty(exports, "SaplingTransactionViewer", { enumerable: true, get: function () { return sapling_transaction_viewer_2.SaplingTransactionViewer; } });
 var in_memory_viewing_key_1 = require("./sapling-keys/in-memory-viewing-key");

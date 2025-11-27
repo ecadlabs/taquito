@@ -12,10 +12,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SaplingWrapper = void 0;
 const sapling = require("@airgap/sapling-wasm");
 const random_1 = require("@stablelib/random");
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const saplingOutputParams = require('../saplingOutputParams');
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const saplingSpendParams = require('../saplingSpendParams');
+const sapling_params_provider_1 = require("./sapling-params-provider");
+let saplingInitPromise;
 class SaplingWrapper {
     withProvingContext(action) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -73,9 +71,15 @@ class SaplingWrapper {
     }
     initSaplingParameters() {
         return __awaiter(this, void 0, void 0, function* () {
-            const spendParams = Buffer.from(saplingSpendParams.saplingSpendParams, 'base64');
-            const outputParams = Buffer.from(saplingOutputParams.saplingOutputParams, 'base64');
-            return sapling.initParameters(spendParams, outputParams);
+            if (!saplingInitPromise) {
+                saplingInitPromise = (() => __awaiter(this, void 0, void 0, function* () {
+                    const { spend, output } = yield (0, sapling_params_provider_1.getSaplingParams)();
+                    const spendParams = Buffer.from(spend.saplingSpendParams, 'base64');
+                    const outputParams = Buffer.from(output.saplingOutputParams, 'base64');
+                    yield sapling.initParameters(spendParams, outputParams);
+                }))();
+            }
+            return saplingInitPromise;
         });
     }
 }

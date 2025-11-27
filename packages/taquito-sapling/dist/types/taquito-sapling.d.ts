@@ -9,6 +9,8 @@ import { SaplingTransactionViewer } from './sapling-tx-viewer/sapling-transactio
 import { ParametersSaplingTransaction, ParametersUnshieldedTransaction, SaplingContractDetails } from './types';
 import { SaplingTransactionBuilder } from './sapling-tx-builder/sapling-transactions-builder';
 import { InMemoryProvingKey } from './sapling-keys/in-memory-proving-key';
+export { setSaplingParamsProvider } from './sapling-params-provider';
+export type { SaplingParams } from './types';
 export { SaplingTransactionViewer } from './sapling-tx-viewer/sapling-transaction-viewer';
 export { InMemoryViewingKey } from './sapling-keys/in-memory-viewing-key';
 export { InMemorySpendingKey } from './sapling-keys/in-memory-spending-key';
