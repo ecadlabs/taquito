@@ -248,6 +248,11 @@ body {
   color: #dc2626;
 }
 
+.badge-muted {
+  background: rgba(107, 114, 128, 0.1);
+  color: #6b7280;
+}
+
 /* Accent text - orange branded text */
 .accent-text {
   color: var(--color-accent-600);

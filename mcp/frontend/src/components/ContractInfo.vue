@@ -135,6 +135,7 @@ watch(() => contractStore.storage?.spender, () => {
       </div>
       <div class="flex items-center gap-2">
         <span v-if="contractStore.isOwner" class="badge badge-success">owner</span>
+        <span v-else class="badge badge-muted">not owner</span>
         <button @click="contractStore.clearContractAddress()" class="btn-secondary !py-1 !px-2 text-xs">
           Disconnect
         </button>
