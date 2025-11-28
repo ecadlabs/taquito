@@ -23,6 +23,21 @@ export const useWalletStore = defineStore('wallet', () => {
   const isConnected = computed(() => !!userAddress.value)
   const currentNetwork = computed(() => NETWORKS[networkId.value])
 
+  // Helper to get Beacon network config
+  function getBeaconNetworkConfig(network: typeof NETWORKS[NetworkId]) {
+    if (network.beaconNetwork === 'mainnet') {
+      return {
+        type: NetworkType.MAINNET,
+      }
+    }
+    // For custom networks, provide full config
+    return {
+      type: NetworkType.CUSTOM,
+      name: network.name,
+      rpcUrl: network.rpcUrl,
+    }
+  }
+
   // Actions
   async function init(): Promise<void> {
     if (tezos.value) return
@@ -30,14 +45,11 @@ export const useWalletStore = defineStore('wallet', () => {
     const network = currentNetwork.value
     tezos.value = new TezosToolkit(network.rpcUrl)
 
-    // Map beacon network type
-    const beaconNetworkType = network.beaconNetwork === 'mainnet'
-      ? NetworkType.MAINNET
-      : NetworkType.CUSTOM
+    const beaconNetwork = getBeaconNetworkConfig(network)
 
     wallet.value = new BeaconWallet({
       name: 'Spending Wallet',
-      preferredNetwork: beaconNetworkType as any,
+      network: beaconNetwork as any,
     })
 
     tezos.value.setWalletProvider(wallet.value)
@@ -61,15 +73,10 @@ export const useWalletStore = defineStore('wallet', () => {
       }
 
       const network = currentNetwork.value
-      const beaconNetworkType = network.beaconNetwork === 'mainnet'
-        ? NetworkType.MAINNET
-        : NetworkType.CUSTOM
+      const beaconNetwork = getBeaconNetworkConfig(network)
 
       await wallet.value.requestPermissions({
-        network: {
-          type: beaconNetworkType as any,
-          rpcUrl: network.rpcUrl,
-        },
+        network: beaconNetwork as any,
       })
 
       const address = await wallet.value.getPKH()

@@ -4,7 +4,7 @@ import z from "zod";
 // Constants
 const MUTEZ_PER_TEZ = 1_000_000;
 const CONFIRMATIONS_TO_WAIT = 3;
-const TZKT_BASE_URL = "https://ghostnet.tzkt.io";
+const TZKT_BASE_URL = "https://shadownet.tzkt.io";
 
 // Types
 const inputSchema = z.object({

@@ -1,5 +1,5 @@
 // Taquito
-import { importKey, InMemorySigner } from "@taquito/signer";
+import { InMemorySigner } from "@taquito/signer";
 import { TezosToolkit } from "@taquito/taquito";
 
 // MCP
@@ -37,12 +37,22 @@ const init = async () => {
 	// Taquito setup
 	const Tezos = new TezosToolkit(network.rpcUrl);
 
-	const privateKey = process.env.SPENDING_PRIVATE_KEY;
-	if (!privateKey) { throw new ReferenceError("privateKey could not be read from the env. Ensure you have SPENDING_PRIVATE_KEY set.") }
+	const privateKey = process.env.SPENDING_PRIVATE_KEY?.trim();
+	if (!privateKey) {
+		throw new ReferenceError("SPENDING_PRIVATE_KEY not set in environment");
+	}
 
-	importKey(Tezos, privateKey);
+	// Validate private key format
+	if (!privateKey.startsWith('edsk') && !privateKey.startsWith('spsk') && !privateKey.startsWith('p2sk')) {
+		throw new Error(`Invalid SPENDING_PRIVATE_KEY format. Must start with edsk, spsk, or p2sk. Got: ${privateKey.substring(0, 10)}...`);
+	}
 
-	await Tezos.setSignerProvider(await InMemorySigner.fromSecretKey(privateKey));
+	try {
+		const signer = await InMemorySigner.fromSecretKey(privateKey);
+		Tezos.setSignerProvider(signer);
+	} catch (error) {
+		throw new Error(`Failed to initialize signer from SPENDING_PRIVATE_KEY: ${error instanceof Error ? error.message : 'Unknown error'}. Check that the key is valid and properly formatted.`);
+	}
 
 	const spendingContract = process.env.SPENDING_CONTRACT;
 	if (!spendingContract) { throw new ReferenceError("Spending contract address could not be read from the env. Ensure you have SPENDING_CONTRACT set.") }

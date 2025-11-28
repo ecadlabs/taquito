@@ -1,0 +1,31 @@
+{
+  "name": "tezos-x402-facilitator",
+  "version": "1.0.0",
+  "description": "A Tezos x402 payment facilitator service for verifying and settling native XTZ payments",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "tezos",
+    "x402",
+    "payment",
+    "facilitator"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@taquito/taquito": "^21.0.0",
+    "@taquito/utils": "^21.0.0",
+    "@taquito/local-forging": "^21.0.0",
+    "express": "^4.21.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.9.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
+  }
+}
