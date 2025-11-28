@@ -1,9 +1,9 @@
 import { KnownContracts } from './known-contracts';
 export const knownContractsPtTezlinknet: KnownContracts = {
-  contract: "KT1PyUFM6MRVfoS5BdR4DfKxdvrpdPxEfuBc",
-  bigMapContract: "KT1QYCnjhQot9aXXU8NctHzrgpWL4SB1pMrH",
-  tzip12BigMapOffChainContract: "KT1C9KsTqoTUmXPuSp8csWiC5eZ7R5CziBY8",
+  contract: "KT1Qezrqs9AVy29QmFuCSUEWjLX92cJ6zXYz",
+  bigMapContract: "KT1Wdmyco8uUSvFbDpscwvwkHwueqDuTaT5k",
+  tzip12BigMapOffChainContract: "KT1Seq51KVRaLpYMuUe2M9EJZoKS1Tq3uGsX",
   saplingContract: "",
-  onChainViewContractAddress: "KT1Cib4Jnjm9kgRjBdAYiwP81jHAYPeR8Xzd",
-  ticketContract: "KT19RQe9Ni7q9Yj9EeyNoh3foWSrUtWAZv1J",
+  onChainViewContractAddress: "",
+  ticketContract: "KT1ETeubAQoppkfUTjWn2L22DaTax4N99Mbj",
 };

@@ -5,6 +5,7 @@ import { b58Encode, PrefixV2 } from '@taquito/utils';
 import { importKey, InMemorySigner } from '@taquito/signer';
 import { RpcClient, RpcClientCache } from '@taquito/rpc';
 import { KnownContracts } from './known-contracts';
+import { knownContractsPtTezlinknet } from './known-contracts-PtTezlinknet';
 import { knownContractsProtoALph } from './known-contracts-ProtoALph';
 import { knownContractsPtGhostnet } from './known-contracts-PtGhostnet';
 import { knownContractsPtSeouLou } from './known-contracts-PtSeouLou';
@@ -182,21 +183,16 @@ const weeklynetSecretKey: Config =
 const tezlinknetSecretKey: Config =
   defaultConfig({
     networkName: 'TEZLINKNET',
-    protocol: Protocols.ProtoALpha,
-    defaultRpc: 'http://node.tezlink.nomadic-labs.com:30009/tezlink',
-    knownContracts: knownContractsProtoALph,
-    signerConfig: {
-      // pkh is tz1ddb9NMYHZi5UzPdzTZMYQQZoMub195zgv (default Octez bootstrap accounts)
-      type: SignerType.SECRET_KEY,
-      secret_key: process.env['SECRET_KEY'] || 'edsk4QLrcijEffxV31gGdN2HU7UpyJjA8drFoNcmnB28n89YjPNRFm',
-      password: process.env['PASSWORD_SECRET_KEY'] || undefined,
-    },
+    protocol: Protocols.PtSeouLou,
+    defaultRpc: 'https://node.shared.tezlink.nomadic-labs.com/.',
+    knownContracts: knownContractsPtTezlinknet,
+    signerConfig: defaultSecretKey,
   });
 
 const providers: Config[] = [];
 
 if (process.env['RUN_WITH_SECRET_KEY']) {
-  providers.push(ghostnetSecretKey, shadownetSecretKey, seoulnetSecretKey, weeklynetSecretKey);
+  providers.push(ghostnetSecretKey, shadownetSecretKey, seoulnetSecretKey, weeklynetSecretKey, tezlinknetSecretKey);
 } else if (process.env['RUN_GHOSTNET_WITH_SECRET_KEY']) {
   providers.push(ghostnetSecretKey);
 } else if (process.env['RUN_SHADOWNET_WITH_SECRET_KEY']) {
