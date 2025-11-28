@@ -1,5 +1,5 @@
 import { CONFIGS } from '../../config';
-import { DefaultContractType, Protocols } from "@taquito/taquito";
+import { DefaultContractType, } from "@taquito/taquito";
 import { RpcClientCache, RpcClient, RPCRunViewParam, RPCRunScriptViewParam, PendingOperationsV2 } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
 import { Schema } from '@taquito/michelson-encoder';
@@ -24,7 +24,6 @@ CONFIGS().forEach(
 
     beforeAll(async () => {
       await setup();
-
       try {
         // originate ticket contract
         const ticketOp = await Tezos.contract.originate({

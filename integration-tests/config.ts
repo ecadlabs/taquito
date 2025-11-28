@@ -141,7 +141,7 @@ const seoulnetEphemeral: Config =
   })
 
 const seoulnetSecretKey: Config =
-  { ...seoulnetEphemeral, ...{ signerConfig: defaultSecretKey, defaultRpc: 'https://seoulnet.tezos.ecadinfra.com' } };
+  { ...seoulnetEphemeral, ...{ signerConfig: defaultSecretKey, rpc: 'https://seoulnet.tezos.ecadinfra.com' } };
 
 const ghostnetEphemeral: Config =
   defaultConfig({
@@ -153,31 +153,28 @@ const ghostnetEphemeral: Config =
   });
 
 const ghostnetSecretKey: Config =
-  { ...ghostnetEphemeral, ...{ signerConfig: defaultSecretKey, defaultRpc: 'https://ghostnet.ecadinfra.com' } };
+  { ...ghostnetEphemeral, ...{ signerConfig: defaultSecretKey, rpc: 'https://ghostnet.tezos.ecadinfra.com' } };
 
 const shadownetEphemeral: Config =
   defaultConfig({
     networkName: 'SHADOWNET',
     protocol: Protocols.PtSeouLou,
-    defaultRpc: 'https://rpc.shadownet.teztnets.com/',
+    defaultRpc: 'http://ecad-tezos-shadownet-rolling-1.i.ecadinfra.com/',
     knownContracts: knownContractsPtShadownet,
     signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/shadownet')
   });
 
 const shadownetSecretKey: Config =
-  { ...shadownetEphemeral, ...{ signerConfig: defaultSecretKey, defaultRpc: 'https://rpc.shadownet.teztnets.com/' } };
+  { ...shadownetEphemeral, ...{ signerConfig: defaultSecretKey, rpc: 'https://shadownet.tezos.ecadinfra.com' } };
 
-const weeklynetEphemeral: Config =
+const weeklynetSecretKey: Config =
   defaultConfig({
     networkName: 'WEEKLYNET',
     protocol: Protocols.ProtoALpha,
-    defaultRpc: 'https://rpc.weeklynet-2025-10-15.teztnets.com',
+    defaultRpc: 'https://rpc.weeklynet-2025-11-05.teztnets.com',
     knownContracts: knownContractsProtoALph,
-    signerConfig: defaultEphemeralConfig('http://key-gen-1.i.tez.ie:3010/mondaynet')
+    signerConfig: defaultSecretKey
   });
-
-const weeklynetSecretKey: Config =
-  { ...weeklynetEphemeral, ...{ signerConfig: defaultSecretKey } };
 
 const providers: Config[] = [];
 
@@ -197,10 +194,8 @@ if (process.env['RUN_WITH_SECRET_KEY']) {
   providers.push(shadownetEphemeral);
 } else if (process.env['SEOULNET']) {
   providers.push(seoulnetEphemeral);
-} else if (process.env['WEEKLYNET']) {
-  providers.push(weeklynetEphemeral);
 } else {
-  providers.push(ghostnetEphemeral, shadownetEphemeral, seoulnetEphemeral, weeklynetEphemeral);
+  providers.push(ghostnetEphemeral, shadownetEphemeral, seoulnetEphemeral);
 }
 
 const setupForger = (Tezos: TezosToolkit, forger: ForgerType): void => {
