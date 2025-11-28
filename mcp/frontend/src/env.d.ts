@@ -6,6 +6,11 @@ declare module '*.vue' {
   export default component
 }
 
+declare module '*.tz?raw' {
+  const content: string
+  export default content
+}
+
 interface ImportMetaEnv {
   readonly VITE_RPC_URL?: string
   readonly VITE_NETWORK_TYPE?: string

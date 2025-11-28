@@ -43,3 +43,5 @@ coverage/
 
 # Generated keypairs (sensitive)
 *.keypair.json
+
+.ligo

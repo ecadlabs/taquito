@@ -1,0 +1,121 @@
+{ parameter
+    (or (unit %default_)
+        (or (pair %withdraw (address %recipient) (mutez %amount))
+            (or (pair %set_limits (mutez %new_daily_limit) (mutez %new_per_tx_limit))
+                (or (address %set_spender) (pair %spend (address %recipient) (mutez %amount)))))) ;
+  storage
+    (pair (address %owner)
+          (address %spender)
+          (mutez %daily_limit)
+          (mutez %per_tx_limit)
+          (mutez %spent_today)
+          (timestamp %last_reset)) ;
+  code { UNPAIR ;
+         IF_LEFT
+           { DROP ; NIL operation ; PAIR }
+           { IF_LEFT
+               { DUP 2 ;
+                 CAR ;
+                 SENDER ;
+                 COMPARE ;
+                 NEQ ;
+                 IF { DROP 2 ; PUSH string "Not authorized: only owner can call this" ; FAILWITH }
+                    { BALANCE ;
+                      DUP 2 ;
+                      CDR ;
+                      COMPARE ;
+                      GT ;
+                      IF { DROP 2 ; PUSH string "Insufficient contract balance" ; FAILWITH }
+                         { DUP ;
+                           CAR ;
+                           CONTRACT unit ;
+                           IF_NONE { PUSH string "Invalid recipient address" ; FAILWITH } {} ;
+                           SWAP ;
+                           CDR ;
+                           UNIT ;
+                           TRANSFER_TOKENS ;
+                           SWAP ;
+                           NIL operation ;
+                           DIG 2 ;
+                           CONS ;
+                           PAIR } } }
+               { IF_LEFT
+                   { DUP 2 ;
+                     CAR ;
+                     SENDER ;
+                     COMPARE ;
+                     NEQ ;
+                     IF { DROP 2 ; PUSH string "Not authorized: only owner can call this" ; FAILWITH }
+                        { SWAP ;
+                          DUP 2 ;
+                          CAR ;
+                          UPDATE 5 ;
+                          SWAP ;
+                          CDR ;
+                          UPDATE 7 ;
+                          NIL operation ;
+                          PAIR } }
+                   { IF_LEFT
+                       { DUP 2 ;
+                         CAR ;
+                         SENDER ;
+                         COMPARE ;
+                         NEQ ;
+                         IF { DROP 2 ; PUSH string "Not authorized: only owner can call this" ; FAILWITH }
+                            { UPDATE 3 ; NIL operation ; PAIR } }
+                       { DUP 2 ;
+                         GET 3 ;
+                         SENDER ;
+                         COMPARE ;
+                         NEQ ;
+                         IF { DROP 2 ;
+                              PUSH string "Not authorized: only spender can call this" ;
+                              FAILWITH }
+                            { DUP 2 ;
+                              GET 7 ;
+                              DUP 2 ;
+                              CDR ;
+                              COMPARE ;
+                              GT ;
+                              IF { DROP ; GET 7 ; PUSH string "Exceeds limit" ; PAIR ; FAILWITH }
+                                 { DUP 2 ;
+                                   GET 10 ;
+                                   NOW ;
+                                   SUB ;
+                                   PUSH int 86400 ;
+                                   SWAP ;
+                                   COMPARE ;
+                                   GE ;
+                                   IF { SWAP ; PUSH mutez 0 ; UPDATE 9 ; NOW ; UPDATE 10 } { SWAP } ;
+                                   DUP 2 ;
+                                   CDR ;
+                                   DUP 2 ;
+                                   GET 9 ;
+                                   ADD ;
+                                   DUP 2 ;
+                                   GET 5 ;
+                                   DUP 2 ;
+                                   COMPARE ;
+                                   GT ;
+                                   IF { DROP 3 ; PUSH string "Exceeds daily limit" ; FAILWITH }
+                                      { BALANCE ;
+                                        DUP 4 ;
+                                        CDR ;
+                                        COMPARE ;
+                                        GT ;
+                                        IF { DROP 3 ; PUSH string "Insufficient contract balance" ; FAILWITH }
+                                           { DUP 3 ;
+                                             CAR ;
+                                             CONTRACT unit ;
+                                             IF_NONE { PUSH string "Invalid recipient address" ; FAILWITH } {} ;
+                                             DIG 3 ;
+                                             CDR ;
+                                             UNIT ;
+                                             TRANSFER_TOKENS ;
+                                             DUG 2 ;
+                                             UPDATE 9 ;
+                                             NIL operation ;
+                                             DIG 2 ;
+                                             CONS ;
+                                             PAIR } } } } } } } } } }
+

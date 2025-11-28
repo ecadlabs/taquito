@@ -1,0 +1,213 @@
+/**
+ * Spending-Limited Wallet Contract
+ *
+ * This contract implements a wallet with delegated spending authority.
+ * The owner has full control, while a designated spender can only
+ * transfer funds within configurable daily and per-transaction limits.
+ */
+
+// =============================================================================
+// Storage Type Definition
+// =============================================================================
+
+export type storage = {
+  owner: address,           // Full control - can do anything
+  spender: address,         // Limited authority - subject to spending limits
+  daily_limit: tez,         // Maximum amount spendable in a 24-hour period
+  per_tx_limit: tez,        // Maximum amount per single transaction
+  spent_today: tez,         // Rolling counter of spending in current period
+  last_reset: timestamp     // When spent_today was last reset to zero
+};
+
+// =============================================================================
+// Parameter Types for Each Entrypoint
+// =============================================================================
+
+// Parameters for the spend entrypoint
+export type spend_params = {
+  recipient: address,
+  amount: tez
+};
+
+// Parameters for the set_limits entrypoint
+export type limits_params = {
+  new_daily_limit: tez,
+  new_per_tx_limit: tez
+};
+
+// Parameters for the withdraw entrypoint (owner's unlimited transfer)
+export type withdraw_params = {
+  recipient: address,
+  amount: tez
+};
+
+// Return type: list of operations and updated storage
+type result = [list<operation>, storage];
+
+// =============================================================================
+// Constants
+// =============================================================================
+
+// 24 hours in seconds (24 * 60 * 60)
+const seconds_per_day: int = 86400;
+
+// =============================================================================
+// Helper Functions
+// =============================================================================
+
+/**
+ * Checks if 24 hours have passed since the last reset.
+ * If so, resets spent_today to 0 and updates last_reset to current time.
+ */
+const maybe_reset_daily_spending = (store: storage): storage => {
+  const time_elapsed: int = Tezos.get_now() - store.last_reset;
+
+  if (time_elapsed >= seconds_per_day) {
+    return {
+      ...store,
+      spent_today: 0tez,
+      last_reset: Tezos.get_now()
+    };
+  }
+  return store;
+};
+
+// =============================================================================
+// Entrypoint Implementations
+// =============================================================================
+
+/**
+ * Spend entrypoint - callable only by the spender
+ *
+ * Transfers funds to a recipient, subject to:
+ * - Per-transaction limit check
+ * - Daily limit check (with automatic 24h reset)
+ */
+@entry
+const spend = (params: spend_params, store: storage): result => {
+  // Authorization check: only the spender can call this
+  if (Tezos.get_sender() != store.spender) {
+    return failwith("Not authorized: only spender can call this");
+  }
+
+  type spend_error = { message: string, limit: tez };
+
+  // Check per-transaction limit
+  if (params.amount > store.per_tx_limit) {
+    return failwith({ message: "Exceeds limit", limit: store.per_tx_limit })
+  }
+
+  // Reset daily spending if 24+ hours have passed
+  const updated_store = maybe_reset_daily_spending(store);
+
+  // Check daily limit (after potential reset)
+  const new_spent_today = updated_store.spent_today + params.amount;
+  if (new_spent_today > updated_store.daily_limit) {
+    return failwith("Exceeds daily limit");
+  }
+
+  // Check contract has sufficient balance
+  if (params.amount > Tezos.get_balance()) {
+    return failwith("Insufficient contract balance");
+  }
+
+  // Create transfer operation to recipient
+  const recipient_contract: contract<unit> =
+    Tezos.get_contract_with_error(params.recipient, "Invalid recipient address");
+
+  const transfer_op: operation =
+    Tezos.Next.Operation.transaction(unit, params.amount, recipient_contract);
+
+  // Update spent_today counter
+  const final_store: storage = {
+    ...updated_store,
+    spent_today: new_spent_today
+  };
+
+  return [list([transfer_op]), final_store];
+};
+
+/**
+ * Set_spender entrypoint - callable only by the owner
+ *
+ * Updates the spender address to delegate spending authority to a new key.
+ */
+@entry
+const set_spender = (new_spender: address, store: storage): result => {
+  // Authorization check: only the owner can call this
+  if (Tezos.get_sender() != store.owner) {
+    return failwith("Not authorized: only owner can call this");
+  }
+
+  // Update the spender address
+  const updated_store: storage = {
+    ...store,
+    spender: new_spender
+  };
+
+  return [list([]), updated_store];
+};
+
+/**
+ * Set_limits entrypoint - callable only by the owner
+ *
+ * Updates both the daily spending limit and per-transaction limit.
+ */
+@entry
+const set_limits = (params: limits_params, store: storage): result => {
+  // Authorization check: only the owner can call this
+  if (Tezos.get_sender() != store.owner) {
+    return failwith("Not authorized: only owner can call this");
+  }
+
+  // Update both limits
+  const updated_store: storage = {
+    ...store,
+    daily_limit: params.new_daily_limit,
+    per_tx_limit: params.new_per_tx_limit
+  };
+
+  return [list([]), updated_store];
+};
+
+/**
+ * Withdraw entrypoint - callable only by the owner
+ *
+ * Transfers funds without any limits. Used for:
+ * - Retrieving funds from the wallet
+ * - Emergency withdrawals
+ * - Closing the wallet
+ */
+@entry
+const withdraw = (params: withdraw_params, store: storage): result => {
+  // Authorization check: only the owner can call this
+  if (Tezos.get_sender() != store.owner) {
+    return failwith("Not authorized: only owner can call this");
+  }
+
+  // Check contract has sufficient balance
+  if (params.amount > Tezos.get_balance()) {
+    return failwith("Insufficient contract balance");
+  }
+
+  // Create transfer operation to recipient (no limit checks)
+  const recipient_contract: contract<unit> =
+    Tezos.get_contract_with_error(params.recipient, "Invalid recipient address");
+
+  const transfer_op: operation =
+    Tezos.Next.Operation.transaction(unit, params.amount, recipient_contract);
+
+  // Storage unchanged (no spending tracking for owner)
+  return [list([transfer_op]), store];
+};
+
+/**
+ * Default entrypoint - accepts incoming XTZ deposits
+ *
+ * Anyone can send funds to this contract.
+ */
+@entry
+const default_ = (_: unit, store: storage): result => {
+  // Simply accept the incoming transfer - no storage changes needed
+  return [list([]), store];
+};

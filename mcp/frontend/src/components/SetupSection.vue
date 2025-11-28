@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useWalletStore, useContractStore } from '@/stores'
 import KeypairGenerator from './KeypairGenerator.vue'
 
@@ -12,12 +12,19 @@ const originateSpenderAddress = ref('')
 const originateDailyLimit = ref('100')
 const originatePerTxLimit = ref('10')
 
+const isSpenderOwnAddress = computed(() => {
+  return originateSpenderAddress.value === walletStore.userAddress
+})
+
+const canDeploy = computed(() => {
+  return originateSpenderAddress.value.trim() !== '' && !isSpenderOwnAddress.value
+})
+
 async function handleOriginate(): Promise<void> {
-  if (!walletStore.userAddress) return
-  const spender = originateSpenderAddress.value || walletStore.userAddress
+  if (!walletStore.userAddress || !canDeploy.value) return
   const dailyLimit = parseFloat(originateDailyLimit.value) || 100
   const perTxLimit = parseFloat(originatePerTxLimit.value) || 10
-  await contractStore.originateContract(walletStore.userAddress, spender, dailyLimit, perTxLimit)
+  await contractStore.originateContract(walletStore.userAddress, originateSpenderAddress.value, dailyLimit, perTxLimit)
 }
 
 async function handleConnectContract(): Promise<void> {
@@ -56,10 +63,10 @@ function handleKeypairUse(address: string): void {
           <input
             v-model="originateSpenderAddress"
             type="text"
-            :placeholder="walletStore.userAddress ?? 'tz1...'"
+            placeholder="tz1..."
             class="input-field mono"
           />
-          <p class="mt-1 text-xs text-text-muted">Leave empty to use your address</p>
+          <p v-if="isSpenderOwnAddress" class="mt-1 text-xs text-red-400">Spender cannot be your own address</p>
         </div>
 
         <div class="grid grid-cols-2 gap-3">
@@ -75,7 +82,7 @@ function handleKeypairUse(address: string): void {
 
         <button
           @click="handleOriginate"
-          :disabled="contractStore.isLoading"
+          :disabled="!canDeploy || contractStore.isLoading"
           class="btn-primary w-full flex items-center justify-center gap-2"
         >
           <span v-if="contractStore.isLoading" class="spinner"></span>
