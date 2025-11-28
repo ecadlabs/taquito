@@ -3,7 +3,12 @@ import { ref, shallowRef, computed } from 'vue'
 import { TezosToolkit } from '@taquito/taquito'
 import { BeaconWallet } from '@taquito/beacon-wallet'
 import { NetworkType } from '@airgap/beacon-dapp'
-import { RPC_URL } from '@/utils'
+import {
+  NETWORKS,
+  getSelectedNetworkId,
+  setSelectedNetworkId,
+  type NetworkId,
+} from '@/utils'
 
 export const useWalletStore = defineStore('wallet', () => {
   // State
@@ -12,20 +17,27 @@ export const useWalletStore = defineStore('wallet', () => {
   const userAddress = ref<string | null>(null)
   const isConnecting = ref(false)
   const error = ref<string | null>(null)
+  const networkId = ref<NetworkId>(getSelectedNetworkId())
 
   // Getters
   const isConnected = computed(() => !!userAddress.value)
+  const currentNetwork = computed(() => NETWORKS[networkId.value])
 
   // Actions
   async function init(): Promise<void> {
     if (tezos.value) return
 
-    tezos.value = new TezosToolkit(RPC_URL)
+    const network = currentNetwork.value
+    tezos.value = new TezosToolkit(network.rpcUrl)
+
+    // Map beacon network type
+    const beaconNetworkType = network.beaconNetwork === 'mainnet'
+      ? NetworkType.MAINNET
+      : NetworkType.CUSTOM
 
     wallet.value = new BeaconWallet({
       name: 'Spending Wallet',
-      // Type assertion needed due to duplicate NetworkType enums across beacon packages
-      preferredNetwork: NetworkType.GHOSTNET as any,
+      preferredNetwork: beaconNetworkType as any,
     })
 
     tezos.value.setWalletProvider(wallet.value)
@@ -48,11 +60,15 @@ export const useWalletStore = defineStore('wallet', () => {
         throw new Error('Wallet not initialized')
       }
 
+      const network = currentNetwork.value
+      const beaconNetworkType = network.beaconNetwork === 'mainnet'
+        ? NetworkType.MAINNET
+        : NetworkType.CUSTOM
+
       await wallet.value.requestPermissions({
         network: {
-          // Type assertion needed due to duplicate NetworkType enums across beacon packages
-          type: NetworkType.GHOSTNET as any,
-          rpcUrl: RPC_URL,
+          type: beaconNetworkType as any,
+          rpcUrl: network.rpcUrl,
         },
       })
 
@@ -76,6 +92,25 @@ export const useWalletStore = defineStore('wallet', () => {
     }
   }
 
+  async function switchNetwork(newNetworkId: NetworkId): Promise<void> {
+    if (newNetworkId === networkId.value) return
+
+    // Disconnect and reset state
+    if (wallet.value) {
+      await wallet.value.clearActiveAccount()
+    }
+    tezos.value = null
+    wallet.value = null
+    userAddress.value = null
+
+    // Update network
+    networkId.value = newNetworkId
+    setSelectedNetworkId(newNetworkId)
+
+    // Reinitialize with new network
+    await init()
+  }
+
   async function getBalance(address: string): Promise<number> {
     if (!tezos.value) {
       await init()
@@ -95,12 +130,15 @@ export const useWalletStore = defineStore('wallet', () => {
     userAddress,
     isConnecting,
     error,
+    networkId,
     // Getters
     isConnected,
+    currentNetwork,
     // Actions
     init,
     connect,
     disconnect,
+    switchNetwork,
     getBalance,
     getTezos,
   }

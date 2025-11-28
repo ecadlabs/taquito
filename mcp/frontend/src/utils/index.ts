@@ -4,8 +4,44 @@
 
 // Constants
 export const MUTEZ_PER_XTZ = 1_000_000
-export const RPC_URL = 'https://ghostnet.ecadinfra.com'
-export const TZKT_BASE_URL = 'https://ghostnet.tzkt.io'
+
+// Network configurations
+export const NETWORKS = {
+  mainnet: {
+    name: 'Mainnet',
+    rpcUrl: 'https://mainnet.tezos.ecadinfra.com',
+    tzktUrl: 'https://tzkt.io',
+    beaconNetwork: 'mainnet',
+  },
+  shadownet: {
+    name: 'Shadownet',
+    rpcUrl: 'https://shadownet.tezos.ecadinfra.com',
+    tzktUrl: 'https://shadownet.tzkt.io',
+    beaconNetwork: 'custom',
+  },
+} as const
+
+export type NetworkId = keyof typeof NETWORKS
+export type NetworkConfig = typeof NETWORKS[NetworkId]
+
+const STORAGE_KEY = 'selectedNetwork'
+const DEFAULT_NETWORK: NetworkId = 'mainnet'
+
+export function getSelectedNetworkId(): NetworkId {
+  const stored = localStorage.getItem(STORAGE_KEY)
+  if (stored && stored in NETWORKS) {
+    return stored as NetworkId
+  }
+  return DEFAULT_NETWORK
+}
+
+export function setSelectedNetworkId(networkId: NetworkId): void {
+  localStorage.setItem(STORAGE_KEY, networkId)
+}
+
+export function getSelectedNetwork(): NetworkConfig {
+  return NETWORKS[getSelectedNetworkId()]
+}
 
 /**
  * Convert mutez to XTZ.
@@ -70,5 +106,6 @@ export async function copyToClipboard(text: string): Promise<boolean> {
  * Open a Tezos address or operation in TzKT explorer.
  */
 export function openInTzkt(addressOrHash: string): void {
-  window.open(`${TZKT_BASE_URL}/${addressOrHash}`, '_blank')
+  const network = getSelectedNetwork()
+  window.open(`${network.tzktUrl}/${addressOrHash}`, '_blank')
 }

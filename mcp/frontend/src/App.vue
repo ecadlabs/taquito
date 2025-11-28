@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { useWalletStore, useContractStore } from '@/stores'
+import { NETWORKS, type NetworkId } from '@/utils'
 
 // Components
 import WalletConnection from './components/WalletConnection.vue'
@@ -12,6 +13,17 @@ import WithdrawFunds from './components/WithdrawFunds.vue'
 
 const walletStore = useWalletStore()
 const contractStore = useContractStore()
+
+const networkOptions = Object.entries(NETWORKS).map(([id, config]) => ({
+  id: id as NetworkId,
+  name: config.name,
+}))
+
+async function handleNetworkChange(event: Event): Promise<void> {
+  const target = event.target as HTMLSelectElement
+  contractStore.clearContractAddress()
+  await walletStore.switchNetwork(target.value as NetworkId)
+}
 
 onMounted(async () => {
   await walletStore.init()
@@ -28,10 +40,19 @@ onMounted(async () => {
     <div class="max-w-2xl mx-auto">
 
       <!-- Header -->
-      <header class="mb-6">
+      <header class="mb-6 flex items-center justify-between">
         <h1 class="text-3xl font-semibold tracking-tight text-text-primary">
           Tezos MCP Configuration
         </h1>
+        <select
+          :value="walletStore.networkId"
+          @change="handleNetworkChange"
+          class="text-xs text-text-muted bg-transparent border border-border rounded px-2 py-1 cursor-pointer hover:border-text-muted transition-colors"
+        >
+          <option v-for="network in networkOptions" :key="network.id" :value="network.id">
+            {{ network.name }}
+          </option>
+        </select>
       </header>
 
       <!-- Wallet Connection -->
@@ -68,7 +89,7 @@ onMounted(async () => {
       <!-- Footer -->
       <footer class="mt-12 text-center">
         <p class="text-sm text-text-muted">
-          Built with <a href="https://taquito.io" target="_blank">Taquito</a> · Ghostnet
+          Built with <a href="https://taquito.io" target="_blank">Taquito</a> · {{ walletStore.currentNetwork.name }}
         </p>
       </footer>
 

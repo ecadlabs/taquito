@@ -16,7 +16,7 @@ interface TzktOperation {
 	};
 }
 
-export const createGetOperationHistoryTool = (spendingContract: string) => ({
+export const createGetOperationHistoryTool = (spendingContract: string, tzktApi: string) => ({
 	name: "tezos_get_operation_history",
 	config: {
 		title: "Get Operation History",
@@ -32,7 +32,7 @@ export const createGetOperationHistoryTool = (spendingContract: string) => ({
 	},
 	handler: async () => {
 		try {
-			const url = `https://api.ghostnet.tzkt.io/v1/accounts/${spendingContract}/operations?type=transaction&limit=100`;
+			const url = `${tzktApi}/v1/accounts/${spendingContract}/operations?type=transaction&limit=100`;
 			const response = await axios.get<TzktOperation[]>(url);
 			const allOperations = response.data;
 
