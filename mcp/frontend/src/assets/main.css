@@ -171,6 +171,28 @@ body {
   cursor: not-allowed;
 }
 
+/* Danger button - red destructive action */
+.btn-danger {
+  background: var(--color-error);
+  color: white;
+  font-weight: 500;
+  font-size: 0.875rem;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-button);
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.btn-danger:hover {
+  background: #dc2626;
+}
+
+.btn-danger:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* Input styles */
 .input-field {
   width: 100%;

@@ -67,15 +67,6 @@ export interface ContractState {
 }
 
 /**
- * Keypair composable state
- */
-export interface KeypairState {
-  generatedKeypair: Keypair | null
-  isGenerating: boolean
-  error: string | null
-}
-
-/**
  * Raw storage structure from the contract (Michelson encoded)
  * Uses named annotations from the compiled contract
  */
