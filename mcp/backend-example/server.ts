@@ -192,22 +192,12 @@ app.get('/weather', async (req: Request, res: Response) => {
 });
 
 app.listen(PORT, () => {
-  console.log('');
-  console.log('========================================');
-  console.log('   Weather API (x402 Protected)');
-  console.log('========================================');
-  console.log('');
-  console.log(`  Server:     http://localhost:${PORT}`);
-  console.log(`  Facilitator: ${FACILITATOR_URL}`);
-  console.log('');
-  console.log('  Payment Requirements:');
-  console.log(`    Network:   ${PAYMENT_NETWORK}`);
-  console.log(`    Amount:    ${PAYMENT_AMOUNT} mutez`);
-  console.log(`    Recipient: ${PAYMENT_RECIPIENT}`);
-  console.log('');
-  console.log('  Endpoints:');
-  console.log(`    GET /weather - Weather data (requires payment)`);
-  console.log('');
-  console.log('========================================');
-  console.log('');
+  console.log('Example x402 Weather service started')
+  console.log(`Server: http://localhost:${PORT}`);
+  console.log(`Facilitator: ${FACILITATOR_URL}`);
+  console.log(`Network: ${PAYMENT_NETWORK}`);
+  console.log(`Amount: ${PAYMENT_AMOUNT} mutez`);
+  console.log(`Recipient: ${PAYMENT_RECIPIENT}`);
+  console.log('> Endpoints:');
+  console.log('GET /weather - Weather data (requires payment)');
 });

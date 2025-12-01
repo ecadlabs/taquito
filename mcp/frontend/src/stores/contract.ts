@@ -3,8 +3,13 @@ import { ref, shallowRef, computed } from 'vue'
 import type { ContractAbstraction, Wallet } from '@taquito/taquito'
 import { useWalletStore } from './wallet'
 import { xtzToMutez } from '@/utils'
-import type { ContractStorage, TimeUntilReset, RawContractStorage } from '@/types'
+import type { ContractStorage, TimeUntilReset, RawContractStorage, Keypair } from '@/types'
 import CONTRACT_CODE from '../../contract/spending-limited-wallet.tz?raw'
+
+export interface DeploymentResult {
+  contractAddress: string
+  keypair: Keypair
+}
 
 export const useContractStore = defineStore('contract', () => {
   const walletStore = useWalletStore()
@@ -17,6 +22,7 @@ export const useContractStore = defineStore('contract', () => {
   const isLoading = ref(false)
   const error = ref<string | null>(null)
   const lastOpHash = ref<string | null>(null)
+  const deploymentResult = ref<DeploymentResult | null>(null)
 
   // Getters
   const isOwner = computed(() => {
@@ -120,7 +126,8 @@ export const useContractStore = defineStore('contract', () => {
     ownerAddress: string,
     spenderAddress: string,
     dailyLimitXtz: number,
-    perTxLimitXtz: number
+    perTxLimitXtz: number,
+    keypair?: Keypair
   ): Promise<string> {
     await walletStore.init()
     const tezos = walletStore.getTezos()
@@ -149,7 +156,12 @@ export const useContractStore = defineStore('contract', () => {
       const originatedContract = await originationOp.contract()
       const address = originatedContract.address
 
-      await setContractAddress(address)
+      // If keypair provided, store deployment result for success screen
+      if (keypair) {
+        deploymentResult.value = { contractAddress: address, keypair }
+      } else {
+        await setContractAddress(address)
+      }
 
       return address
     } catch (err) {
@@ -158,6 +170,13 @@ export const useContractStore = defineStore('contract', () => {
       throw err
     } finally {
       isLoading.value = false
+    }
+  }
+
+  function clearDeploymentResult(): void {
+    if (deploymentResult.value) {
+      setContractAddress(deploymentResult.value.contractAddress)
+      deploymentResult.value = null
     }
   }
 
@@ -245,6 +264,7 @@ export const useContractStore = defineStore('contract', () => {
     isLoading,
     error,
     lastOpHash,
+    deploymentResult,
     // Getters
     isOwner,
     isSpender,
@@ -255,6 +275,7 @@ export const useContractStore = defineStore('contract', () => {
     loadContract,
     refreshStorage,
     originateContract,
+    clearDeploymentResult,
     setSpender,
     setLimits,
     withdraw,

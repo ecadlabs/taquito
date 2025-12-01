@@ -6,6 +6,7 @@ import { NETWORKS, type NetworkId } from '@/utils'
 // Components
 import WalletConnection from './components/WalletConnection.vue'
 import SetupSection from './components/SetupSection.vue'
+import DeploymentSuccess from './components/DeploymentSuccess.vue'
 import ContractInfo from './components/ContractInfo.vue'
 import SpendingLimits from './components/SpendingLimits.vue'
 import SpenderManagement from './components/SpenderManagement.vue'
@@ -58,8 +59,16 @@ onMounted(async () => {
       <!-- Wallet Connection -->
       <WalletConnection />
 
+      <!-- Deployment Success (after deploying, before continuing) -->
+      <DeploymentSuccess
+        v-if="contractStore.deploymentResult"
+        :contract-address="contractStore.deploymentResult.contractAddress"
+        :keypair="contractStore.deploymentResult.keypair"
+        @continue="contractStore.clearDeploymentResult()"
+      />
+
       <!-- Setup Section (when no contract) -->
-      <SetupSection v-if="walletStore.isConnected && !contractStore.contractAddress" />
+      <SetupSection v-if="walletStore.isConnected && !contractStore.contractAddress && !contractStore.deploymentResult" />
 
       <!-- Contract Dashboard -->
       <template v-if="contractStore.contractAddress && contractStore.storage">

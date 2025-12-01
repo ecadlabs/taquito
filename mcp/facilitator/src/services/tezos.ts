@@ -59,10 +59,6 @@ class TezosService {
     address: string,
     requiredAmount: bigint
   ): Promise<{ sufficient: boolean; balance: bigint }> {
-    console.log(address);
-    console.log(requiredAmount);
-    
-    
     const balance = await this.getBalance(address);
     console.log(balance);
     
