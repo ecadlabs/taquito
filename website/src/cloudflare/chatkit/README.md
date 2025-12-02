@@ -68,7 +68,7 @@ npm run dev
 npm run deploy
 ```
 
-When developing locally, update `apiEndpoint` in `ChatKitWidget.astro` to `http://localhost:8787/api/chatkit/session`.
+When developing locally, update `apiEndpoint` in `ChatKitWidget.astro` to `http://localhost:8787/api/chatkit/session` and run the worker with `npx wrangler run dev`.
 
 ## API
 
@@ -85,6 +85,18 @@ Creates a new ChatKit session.
   "expires_after": 3600
 }
 ```
+
+## Vector Store / Updating Docs
+
+ChatKit uses a vector store to read from the docs for model context. This needs to be updated when major changes are made to the docs.
+
+This can be done by following these steps:
+
+1. Copy all the current version `.mdx` files to a new folder outside the project
+2. Run `for f in *.mdx; do mv "$f" "${f%.mdx}.md"; done` (MacOS) to rename them all to `.md` markdown files
+3. Navigate to the [Taquito vector store](https://platform.openai.com/storage/vector_stores/vs_692f5af6b27081919266544ea9b37237)
+4. Remove all existing files (or only the ones you want to update)
+5. Upload new docs files
 
 ## Security Notes
 
