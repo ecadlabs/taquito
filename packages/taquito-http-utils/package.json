@@ -1,6 +1,6 @@
 {
   "name": "@taquito/http-utils",
-  "version": "23.0.2",
+  "version": "23.0.3",
   "description": "",
   "keywords": [
     "tezos"
@@ -62,13 +62,13 @@
     ]
   },
   "dependencies": {
-    "@taquito/core": "^23.0.2",
+    "@taquito/core": "^23.0.3",
     "node-fetch": "^2.7.0"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.42",
     "@types/jest": "^29.5.12",
-    "@types/node": "^18",
+    "@types/node": "^20",
     "@types/node-fetch": "^2.6.11",
     "@types/superagent": "^8.1.8",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
