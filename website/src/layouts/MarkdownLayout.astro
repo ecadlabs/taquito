@@ -6,6 +6,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import DocsSidebar from '../components/DocsSidebar.astro';
 import FeedbackWidget from '../components/docs/FeedbackWidget.astro';
+import ChatKitWidget from '@components/ChatKitWidget.astro';
 
 interface Props {
   title?: string;
@@ -142,15 +143,14 @@ const stableVersionUrl = `/docs/23.0.0/${pageSlug}`;
             <h1 class="text-text-secondary text-5xl font-bold">{title}</h1>
             {
               formattedAuthors && (
-                <h2 class="text-sm text-text-secondary/75 mt-1">
-                  Written by {formattedAuthors}
-                </h2>
+                <h2 class="text-sm text-text-secondary/75 mt-1">Written by {formattedAuthors}</h2>
               )
             }
           </div>
 
           <div class="markdown-body flex-1 min-w-0 pb-8">
             <slot />
+            <ChatKitWidget />
           </div>
 
           {isDocsPage && <FeedbackWidget version={version} pageTitle={title} />}
