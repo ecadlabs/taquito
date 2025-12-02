@@ -16,7 +16,7 @@
     "feedback-worker-deploy": "cd src/cloudflare && wrangler deploy"
   },
   "dependencies": {
-    "@airgap/beacon-sdk": "^5.0.0-alpha.3",
+    "@airgap/beacon-sdk": "^5.0.0-beta.2",
     "@docusaurus/core": "2.4.3",
     "@docusaurus/plugin-google-gtag": "2.4.3",
     "@docusaurus/preset-classic": "2.4.3",

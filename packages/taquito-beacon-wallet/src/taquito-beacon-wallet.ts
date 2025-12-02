@@ -3,13 +3,8 @@
  * @module @taquito/beacon-wallet
  */
 
-import {
-  DAppClient,
-  DAppClientOptions,
-  RequestPermissionInput,
-  getDAppClientInstance,
-} from '@airgap/beacon-dapp';
-import { PermissionScope, SigningType } from '@airgap/beacon-types';
+import { DAppClient, DAppClientOptions, getDAppClientInstance } from '@airgap/beacon-dapp';
+import { PermissionScope, SigningType, RequestPermissionInput } from '@airgap/beacon-types';
 import { BeaconWalletNotInitialized, MissingRequiredScopes } from './errors';
 import toBuffer from 'typedarray-to-buffer';
 import {
