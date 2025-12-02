@@ -1,6 +1,6 @@
-import { Decoder } from '../decoder-proto022';
+import { Decoder } from '../decoder';
 import { Uint8ArrayConsumer } from '../uint8array-consumer';
-import { CODEC, kindMapping, kindMappingReverse } from '../constants-proto022';
+import { CODEC, kindMapping, kindMappingReverse } from '../constants';
 import { InvalidOperationKindError } from '@taquito/core';
 import {
   OperationDecodingError,

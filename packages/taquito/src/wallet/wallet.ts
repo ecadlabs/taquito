@@ -225,12 +225,7 @@ export class Wallet {
    */
   async pk({ forceRefetch }: PKHOption = {}) {
     if (!this._pk || forceRefetch) {
-      // Try to get PK from wallet provider first, fall back to signer
-      if (this.walletProvider.getPK) {
-        this._pk = await this.walletProvider.getPK();
-      } else {
-        this._pk = await this.context.signer.publicKey();
-      }
+      this._pk = await this.walletProvider.getPK();
     }
     return this._pk;
   }
