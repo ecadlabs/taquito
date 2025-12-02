@@ -71,7 +71,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
     return {
       publicKeyHash: isSignerConfigured
         ? await this.signer.publicKeyHash()
-        : await this.context.walletProvider.getPKH(),
+        : await this.context.wallet.pkh(),
       publicKey: isSignerConfigured
         ? await this.signer.publicKey()
         : await this.context.wallet.pk(),
