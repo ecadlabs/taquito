@@ -41,21 +41,12 @@ const pref: CurvePrefix = {
   },
 };
 
-class ECKeyBase {
-  constructor(
-    public readonly privateKey: Uint8Array,
-    public readonly curve: Curve
-  ) {}
-
-  getCurve(): Curve {
-    return this.curve;
-  }
-}
-
 /**
  * @description Provide signing logic for elliptic curve based key (tz2, tz3)
  */
-export class ECKey extends ECKeyBase implements SigningKey {
+export class ECKey implements SigningKey {
+  #keyPair: { curve: Curve; secretKey: Uint8Array; publicKey: Uint8Array };
+
   /**
    *
    * @param key Encoded private key
@@ -87,8 +78,14 @@ export class ECKey extends ECKeyBase implements SigningKey {
           return [keyData, 'p256'];
       }
     })();
-
-    super(decKey, curve);
+    this.#keyPair = {
+      curve,
+      secretKey: decKey,
+      publicKey:
+        curve === 'secp256k1'
+          ? secp256k1.getPublicKey(decKey, true)
+          : p256.getPublicKey(decKey, true),
+    };
   }
 
   /**
@@ -100,15 +97,15 @@ export class ECKey extends ECKeyBase implements SigningKey {
     const hash = blake2b(bytes, 32);
 
     let signature: Uint8Array;
-    if (this.getCurve() === 'secp256k1') {
+    if (this.#keyPair.curve === 'secp256k1') {
       signature = secp256k1
-        .sign(hash, this.privateKey, {
+        .sign(hash, this.#keyPair.secretKey, {
           lowS: true, // Use canonical signatures (prevents malleability)
         })
         .toBytes('compact');
     } else {
       signature = p256
-        .sign(hash, this.privateKey, {
+        .sign(hash, this.#keyPair.secretKey, {
           lowS: true, // Use canonical signatures (prevents malleability)
         })
         .toBytes('compact');
@@ -117,7 +114,7 @@ export class ECKey extends ECKeyBase implements SigningKey {
     return {
       rawSignature: signature,
       sig: b58Encode(signature, PrefixV2.GenericSignature),
-      prefixSig: b58Encode(signature, pref[this.getCurve()].sig),
+      prefixSig: b58Encode(signature, pref[this.#keyPair.curve].sig),
     };
   }
 
@@ -125,25 +122,20 @@ export class ECKey extends ECKeyBase implements SigningKey {
    * @returns Encoded public key
    */
   publicKey(): PublicKey {
-    let publicKeyBytes: Uint8Array;
-    if (this.getCurve() === 'secp256k1') {
-      publicKeyBytes = secp256k1.getPublicKey(this.privateKey, true);
-    } else {
-      publicKeyBytes = p256.getPublicKey(this.privateKey, true);
-    }
-    return new ECPublicKey(publicKeyBytes, this.getCurve());
+    return new ECPublicKey(this.#keyPair.publicKey, this.#keyPair.curve);
   }
 
   /**
    * @returns Encoded private key
    */
   secretKey(): string {
-    return b58Encode(this.privateKey, pref[this.getCurve()].sk);
+    return b58Encode(this.#keyPair.secretKey, pref[this.#keyPair.curve].sk);
   }
 }
 
-export class ECPublicKey extends ECKeyBase implements PublicKey {
-  private readonly publicKey: Uint8Array;
+export class ECPublicKey implements PublicKey {
+  #key: Uint8Array;
+  public readonly curve: Curve;
 
   constructor(src: string);
   constructor(src: Uint8Array, curve: Curve);
@@ -164,16 +156,16 @@ export class ECPublicKey extends ECKeyBase implements PublicKey {
 
     // For ECPublicKey, we don't need the private key, so we pass an empty array
     // The public key is stored separately
-    super(new Uint8Array(32), crv);
-    this.publicKey = key;
+    this.#key = key;
+    this.curve = crv;
   }
 
   compare(other: PublicKey): number {
     if (other instanceof ECPublicKey) {
-      if (this.getCurve() === other.getCurve()) {
-        const compress = this.getCurve() === 'secp256k1';
+      if (this.curve === other.curve) {
+        const compress = this.curve === 'secp256k1';
         return compareArrays(this.bytes(compress), other.bytes(compress));
-      } else if (this.getCurve() === 'secp256k1') {
+      } else if (this.curve === 'secp256k1') {
         return -1;
       } else {
         return 1;
@@ -185,20 +177,20 @@ export class ECPublicKey extends ECKeyBase implements PublicKey {
 
   hash(): string {
     const key = this.bytes();
-    return b58Encode(blake2b(key, 20), pref[this.getCurve()].pkh);
+    return b58Encode(blake2b(key, 20), pref[this.curve].pkh);
   }
 
   bytes(compress: boolean = true): Uint8Array {
     // @noble/curves supports both compressed and uncompressed formats
     // We need to convert the stored public key to the requested format
 
-    if (this.getCurve() === 'secp256k1') {
+    if (this.curve === 'secp256k1') {
       // For secp256k1, we need to get the public key from the stored bytes and convert format
-      const point = secp256k1.Point.fromHex(this.publicKey);
+      const point = secp256k1.Point.fromHex(this.#key);
       return point.toBytes(compress);
     } else {
       // For p256, we need to get the public key from the stored bytes and convert format
-      const point = p256.Point.fromHex(this.publicKey);
+      const point = p256.Point.fromHex(this.#key);
       return point.toBytes(compress);
     }
   }
@@ -206,13 +198,13 @@ export class ECPublicKey extends ECKeyBase implements PublicKey {
   toProtocol(): Uint8Array {
     const key = this.bytes();
     const res = new Uint8Array(key.length + 1);
-    res[0] = pref[this.getCurve()].tag;
+    res[0] = pref[this.curve].tag;
     res.set(key, 1);
     return res;
   }
 
   toString(): string {
     const key = this.bytes();
-    return b58Encode(key, pref[this.getCurve()].pk);
+    return b58Encode(key, pref[this.curve].pk);
   }
 }
