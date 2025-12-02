@@ -25,7 +25,7 @@ export class PrivateKey implements ExtendedPrivateKey {
   readonly keyPair: { curve: CurveName; secretKey: BN; publicKey: Uint8Array };
   /**
    *
-   * @param priv key pair priv (BN) pub (curve.base.BasePint) if applicable
+   * @param priv { secretKey: BN, curve: 'p256' | 'secp256k1' }
    * @param chainCode slice 32->n HMAC hash key and seedkey (first instance curve default seedKey. after hmac value slice 32->n)
    */
   constructor(
@@ -36,8 +36,8 @@ export class PrivateKey implements ExtendedPrivateKey {
     const privateKeyUint8 = new Uint8Array(privateKeyBytes);
     const publicKey =
       priv.curve === 'secp256k1'
-        ? secp256k1.getPublicKey(privateKeyUint8, true)
-        : p256.getPublicKey(privateKeyUint8, true);
+        ? secp256k1.getPublicKey(privateKeyUint8, true) // compressed public key
+        : p256.getPublicKey(privateKeyUint8, true); // compressed public key
 
     this.keyPair = {
       curve: priv.curve,
