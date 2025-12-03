@@ -5,6 +5,7 @@ import { b58Encode, PrefixV2 } from '@taquito/utils';
 import { importKey, InMemorySigner } from '@taquito/signer';
 import { RpcClient, RpcClientCache } from '@taquito/rpc';
 import { KnownContracts } from './known-contracts';
+import { knownContractsPtTezlinknet } from './known-contracts-PtTezlinknet';
 import { knownContractsProtoALph } from './known-contracts-ProtoALph';
 import { knownContractsPtGhostnet } from './known-contracts-PtGhostnet';
 import { knownContractsPtSeouLou } from './known-contracts-PtSeouLou';
@@ -176,10 +177,19 @@ const weeklynetSecretKey: Config =
     signerConfig: defaultSecretKey
   });
 
+const tezlinknetSecretKey: Config =
+  defaultConfig({
+    networkName: 'TEZLINKNET',
+    protocol: Protocols.PtSeouLou,
+    defaultRpc: 'https://node.shared.tezlink.nomadic-labs.com/.',
+    knownContracts: knownContractsPtTezlinknet,
+    signerConfig: defaultSecretKey,
+  });
+
 const providers: Config[] = [];
 
 if (process.env['RUN_WITH_SECRET_KEY']) {
-  providers.push(ghostnetSecretKey, shadownetSecretKey, seoulnetSecretKey, weeklynetSecretKey);
+  providers.push(ghostnetSecretKey, shadownetSecretKey, seoulnetSecretKey, weeklynetSecretKey, tezlinknetSecretKey);
 } else if (process.env['RUN_GHOSTNET_WITH_SECRET_KEY']) {
   providers.push(ghostnetSecretKey);
 } else if (process.env['RUN_SHADOWNET_WITH_SECRET_KEY']) {
@@ -188,6 +198,8 @@ if (process.env['RUN_WITH_SECRET_KEY']) {
   providers.push(seoulnetSecretKey);
 } else if (process.env['RUN_WEEKLYNET_WITH_SECRET_KEY']) {
   providers.push(weeklynetSecretKey);
+} else if (process.env['RUN_TEZLINKNET_WITH_SECRET_KEY']) {
+  providers.push(tezlinknetSecretKey);
 } else if (process.env['GHOSTNET']) {
   providers.push(ghostnetEphemeral);
 } else if (process.env['SHADOWNET']) {
@@ -322,7 +334,7 @@ export const CONFIGS = () => {
               }
             }
           },
-          createAddress: async (prefix: PrefixV2 = PrefixV2.P256SecretKey) => {
+          createAddress: async (prefix: PrefixV2 = PrefixV2.Ed25519Seed) => {
             const tezos = configureRpcCache(rpc, rpcCacheMilliseconds);
             setupForger(tezos, forger);
             configurePollingInterval(tezos, pollingIntervalMilliseconds);
