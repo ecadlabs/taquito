@@ -78,7 +78,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
       const op = await Tezos.contract.transfer({ to: await LocalTez.signer.publicKeyHash(), amount: 2 });
       await op.confirmation();
 
-      const batchOp = await LocalTez.batch([
+      const batchOp = await LocalTez.contract.batch([
         {
           kind: OpKind.TRANSACTION,
           to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
@@ -107,9 +107,9 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
 
       const batch = Tezos.contract.batch()
         .withTransfer({ to: contract.address, amount: 1 })
-        .withContractCall(contract.methods.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 5)))
-        .withContractCall(contract.methods.do(MANAGER_LAMBDA.setDelegate(knownBaker)))
-        .withContractCall(contract.methods.do(MANAGER_LAMBDA.removeDelegate()))
+        .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 5)))
+        .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.setDelegate(knownBaker)))
+        .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.removeDelegate()))
 
       const batchOp = await batch.send();
 

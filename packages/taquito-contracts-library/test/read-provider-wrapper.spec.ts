@@ -3,7 +3,7 @@ import { entrypoints } from './data/contract-entrypoints';
 import { ContractsLibrary } from '../src/taquito-contracts-library';
 import { ReadWrapperContractsLibrary } from '../src/read-provider-wrapper';
 
-describe('RpcWrapperContractsLibrary tests', () => {
+describe('ReadWrapperContractsLibrary tests', () => {
   let mockReadProvider: any;
 
   beforeEach(() => {

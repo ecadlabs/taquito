@@ -132,7 +132,7 @@ export class OperationBatch extends Provider {
    * @param params Delegation operation parameter
    */
   withDelegation(params: DelegateParams) {
-    const sourceValidation = validateAddress(params.source);
+    const sourceValidation = validateAddress(params.source ?? '');
     if (params.source && sourceValidation !== ValidationResult.VALID) {
       throw new InvalidAddressError(params.source, sourceValidation);
     }

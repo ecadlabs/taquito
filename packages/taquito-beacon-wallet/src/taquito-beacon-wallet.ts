@@ -30,12 +30,19 @@ import {
   WalletTransferTicketParams,
   WalletRegisterGlobalConstantParams,
   createTransferTicketOperation,
+  ParamsWithOptionalFees,
 } from '@taquito/taquito';
 import { buf2hex, hex2buf, mergebuf } from '@taquito/utils';
 import { UnsupportedActionError } from '@taquito/core';
 
 export { VERSION } from './version';
 export { BeaconWalletNotInitialized, MissingRequiredScopes } from './errors';
+
+type RPCOperationWithLimits = {
+  fee?: number | string;
+  gas_limit?: number | string;
+  storage_limit?: number | string;
+};
 
 export class BeaconWallet implements WalletProvider {
   public client: DAppClient;
@@ -105,6 +112,7 @@ export class BeaconWallet implements WalletProvider {
       await this.client.hideUI(['alert']);
       throw err;
     }
+
     return this.removeDefaultParams(
       walletParams,
       await createTransferTicketOperation(this.formatParameters(walletParams))
@@ -122,7 +130,7 @@ export class BeaconWallet implements WalletProvider {
     }
     return this.removeDefaultParams(
       walletParams,
-      await createTransferOperation(this.formatParameters(walletParams))
+      await createTransferOperation(this.formatParameters(walletParams) as WalletTransferParams)
     );
   }
 
@@ -137,7 +145,7 @@ export class BeaconWallet implements WalletProvider {
     }
     return this.removeDefaultParams(
       walletParams,
-      await createTransferOperation(this.formatParameters(walletParams))
+      await createTransferOperation(this.formatParameters(walletParams) as WalletTransferParams)
     );
   }
 
@@ -152,7 +160,7 @@ export class BeaconWallet implements WalletProvider {
     }
     return this.removeDefaultParams(
       walletParams,
-      await createTransferOperation(this.formatParameters(walletParams))
+      await createTransferOperation(this.formatParameters(walletParams) as WalletTransferParams)
     );
   }
 
@@ -165,6 +173,7 @@ export class BeaconWallet implements WalletProvider {
       await this.client.hideUI(['alert']);
       throw err;
     }
+
     return this.removeDefaultParams(
       walletParams,
       await createIncreasePaidStorageOperation(this.formatParameters(walletParams))
@@ -180,6 +189,7 @@ export class BeaconWallet implements WalletProvider {
       await this.client.hideUI(['alert']);
       throw err;
     }
+
     return this.removeDefaultParams(
       walletParams,
       await createOriginationOperation(this.formatParameters(walletParams))
@@ -195,6 +205,7 @@ export class BeaconWallet implements WalletProvider {
       await this.client.hideUI(['alert']);
       throw err;
     }
+
     return this.removeDefaultParams(
       walletParams,
       await createSetDelegateOperation(this.formatParameters(walletParams))
@@ -210,13 +221,14 @@ export class BeaconWallet implements WalletProvider {
       await this.client.hideUI(['alert']);
       throw err;
     }
+
     return this.removeDefaultParams(
       walletParams,
       await createRegisterGlobalConstantOperation(this.formatParameters(walletParams))
     );
   }
 
-  formatParameters(params: any) {
+  formatParameters<T extends ParamsWithOptionalFees>(params: T): T {
     if (params.fee) {
       params.fee = params.fee.toString();
     }
@@ -237,8 +249,10 @@ export class BeaconWallet implements WalletProvider {
       | WalletFinalizeUnstakeParams
       | WalletOriginateParams
       | WalletDelegateParams
-      | WalletRegisterGlobalConstantParams,
-    operatedParams: any
+      | WalletRegisterGlobalConstantParams
+      | WalletTransferTicketParams
+      | WalletIncreasePaidStorageParams,
+    operatedParams: RPCOperationWithLimits
   ) {
     // If fee, storageLimit or gasLimit is undefined by user
     // in case of beacon wallet, dont override it by
