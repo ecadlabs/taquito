@@ -21,14 +21,14 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(op.status === 'applied');
 
       try {
-        await contract.methods.default(null).send()
+        await contract.methodsObject.default(null).send()
       } catch (ex: any) {
         expect(ex.message).toMatch('test')
       }
 
       try {
         // Bypass estimation by specifying fee & limits
-        await contract.methods.default(null).send({ fee: 20000, gasLimit: 20000, storageLimit: 0 })
+        await contract.methodsObject.default(null).send({ fee: 20000, gasLimit: 20000, storageLimit: 0 })
       } catch (ex: any) {
         expect(ex.message).toMatch('test')
       }

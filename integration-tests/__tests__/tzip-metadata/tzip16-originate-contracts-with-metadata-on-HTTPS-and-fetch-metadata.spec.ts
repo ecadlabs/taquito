@@ -1,7 +1,8 @@
 import { CONFIGS } from "../../config";
 import { tacoContractTzip16 } from "../../data/modified-taco-contract"
 import { MichelsonMap } from "@taquito/taquito";
-import { tzip16, Tzip16Module, stringToBytes } from '@taquito/tzip16';
+import { tzip16, Tzip16Module } from '@taquito/tzip16';
+import { stringToBytes } from '@taquito/utils';
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;

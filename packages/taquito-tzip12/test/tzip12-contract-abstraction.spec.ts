@@ -1,5 +1,6 @@
 import { MichelsonMap, ViewSimulationError } from '@taquito/taquito';
-import { stringToBytes, InvalidUriError } from '@taquito/tzip16';
+import { InvalidUriError } from '@taquito/tzip16';
+import { stringToBytes } from '@taquito/utils';
 import BigNumber from 'bignumber.js';
 import { Tzip12ContractAbstraction } from '../src/tzip12-contract-abstraction';
 import { InvalidTokenMetadata, TokenIdNotFound, TokenMetadataNotFound } from '../src/errors';

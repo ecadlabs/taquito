@@ -130,15 +130,15 @@ describe('Beacon Wallet tests', () => {
     const wallet = new BeaconWallet({ name: 'Test', storage: new LocalStorage() });
     const formattedParam = await wallet.removeDefaultParams(
       { storageLimit: 2000 },
-      { storageLimit: 165 }
+      { storage_limit: 165 }
     );
-    expect(formattedParam.storageLimit).toEqual(165);
+    expect(formattedParam.storage_limit).toEqual(165);
   });
 
   it(`Verify removeDefaultParameters for gas limit`, async () => {
     const wallet = new BeaconWallet({ name: 'Test', storage: new LocalStorage() });
-    const formattedParam = await wallet.removeDefaultParams({ gasLimit: 40 }, { gasLimit: 80 });
-    expect(formattedParam.gasLimit).toEqual(80);
+    const formattedParam = await wallet.removeDefaultParams({ gasLimit: 40 }, { gas_limit: 80 });
+    expect(formattedParam.gas_limit).toEqual(80);
   });
 
   it('Verify getSigningType returns correct signing type for undefined', async () => {

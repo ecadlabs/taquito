@@ -145,10 +145,10 @@ CONFIGS().forEach(({ lib, rpc, setup, knownContract, knownBaker, createAddress }
                 .batch()
                 .withTransfer({ to: contract.address, amount: 1 })
                 .withContractCall(
-                    contract.methods.do(MANAGER_LAMBDA.transferImplicit('tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh', 5))
+                    contract.methodsObject.do(MANAGER_LAMBDA.transferImplicit('tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh', 5))
                 )
-                .withContractCall(contract.methods.do(MANAGER_LAMBDA.setDelegate(knownBaker)))
-                .withContractCall(contract.methods.do(MANAGER_LAMBDA.removeDelegate()));
+                .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.setDelegate(knownBaker)))
+                .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.removeDelegate()));
 
             const batchOp = await batch.send();
             await batchOp.confirmation();
@@ -173,7 +173,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownContract, knownBaker, createAddress }
                 .batch([
                     { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 },
                     { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 },
-                    { kind: OpKind.TRANSACTION, ...contract.methods.default([['Unit']]).toTransferParams() }
+                    { kind: OpKind.TRANSACTION, ...contract.methodsObject.default([['Unit']]).toTransferParams() }
                 ])
                 .send();
 
@@ -236,21 +236,24 @@ CONFIGS().forEach(({ lib, rpc, setup, knownContract, knownBaker, createAddress }
 
         const estimateOp = await Tezos.estimate.batch([
             { ...(contract.methodsObject.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 5)).toTransferParams()), kind: OpKind.TRANSACTION },
-            { ...(contract.methods.do(MANAGER_LAMBDA.setDelegate(knownBaker)).toTransferParams()), kind: OpKind.TRANSACTION },
-            { ...(contract.methods.do(MANAGER_LAMBDA.removeDelegate()).toTransferParams()), kind: OpKind.TRANSACTION },
+            { ...(contract.methodsObject.do(MANAGER_LAMBDA.setDelegate(knownBaker)).toTransferParams()), kind: OpKind.TRANSACTION },
+            { ...(contract.methodsObject.do(MANAGER_LAMBDA.removeDelegate()).toTransferParams()), kind: OpKind.TRANSACTION },
 
         ])
 
         const batch = Tezos.wallet
             .batch()
             .withContractCall(
-                contract.methods.do(MANAGER_LAMBDA.transferImplicit('tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh', 5), { fee: estimateOp[0].suggestedFeeMutez, gasLimit: estimateOp[0].gasLimit, storageLimit: estimateOp[0].storageLimit })
+                contract.methodsObject.do(MANAGER_LAMBDA.transferImplicit('tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh', 5)),
+                { fee: estimateOp[0].suggestedFeeMutez, gasLimit: estimateOp[0].gasLimit, storageLimit: estimateOp[0].storageLimit }
             )
             .withContractCall(
-                contract.methods.do(MANAGER_LAMBDA.setDelegate(knownBaker), { fee: estimateOp[1].suggestedFeeMutez, gasLimit: estimateOp[1].gasLimit, storageLimit: estimateOp[1].storageLimit })
+                contract.methodsObject.do(MANAGER_LAMBDA.setDelegate(knownBaker)),
+                { fee: estimateOp[1].suggestedFeeMutez, gasLimit: estimateOp[1].gasLimit, storageLimit: estimateOp[1].storageLimit }
             )
             .withContractCall(
-                contract.methods.do(MANAGER_LAMBDA.removeDelegate(), { fee: estimateOp[2].suggestedFeeMutez, gasLimit: estimateOp[2].gasLimit, storageLimit: estimateOp[2].storageLimit })
+                contract.methodsObject.do(MANAGER_LAMBDA.removeDelegate()),
+                { fee: estimateOp[2].suggestedFeeMutez, gasLimit: estimateOp[2].gasLimit, storageLimit: estimateOp[2].storageLimit }
             )
 
         const batchOp = await batch.send();
