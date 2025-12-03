@@ -60,24 +60,47 @@ describe('ContractAbstraction test', () => {
 
       expect(methodObjectMainChangeKeys).toBeInstanceOf(ContractMethodObject);
       expect(methodObjectMainChangeKeys.getSignature()).toEqual({
-        payload: {
-          counter: 'nat',
-          action: {
-            change_keys: {
-              threshold: 'nat',
-              keys: { list: 'key' },
-            },
-            operation: {
-              lambda: {
-                parameters: 'unit',
-                returns: {
-                  list: 'operation',
+        __michelsonType: 'pair',
+        schema: {
+          payload: {
+            __michelsonType: 'pair',
+            schema: {
+              counter: { __michelsonType: 'nat', schema: 'nat' },
+              action: {
+                __michelsonType: 'or',
+                schema: {
+                  change_keys: {
+                    __michelsonType: 'pair',
+                    schema: {
+                      threshold: { __michelsonType: 'nat', schema: 'nat' },
+                      keys: {
+                        __michelsonType: 'list',
+                        schema: { __michelsonType: 'key', schema: 'key' },
+                      },
+                    },
+                  },
+                  operation: {
+                    __michelsonType: 'lambda',
+                    schema: {
+                      parameters: { __michelsonType: 'unit', schema: 'unit' },
+                      returns: {
+                        __michelsonType: 'list',
+                        schema: { __michelsonType: 'operation', schema: 'operation' },
+                      },
+                    },
+                  },
                 },
               },
             },
           },
+          sigs: {
+            __michelsonType: 'list',
+            schema: {
+              __michelsonType: 'option',
+              schema: { __michelsonType: 'signature', schema: 'signature' },
+            },
+          },
         },
-        sigs: { list: { Some: 'signature' } },
       });
       expect(methodObjectMainChangeKeys.toTransferParams()).toEqual({
         to: 'contractAddress',
@@ -266,7 +289,14 @@ describe('ContractAbstraction test', () => {
         2: '1',
       });
       expect(methodObject0).toBeInstanceOf(ContractMethodObject);
-      expect(methodObject0.getSignature()).toEqual({ 0: 'address', 1: 'address', 2: 'nat' });
+      expect(methodObject0.getSignature()).toEqual({
+        __michelsonType: 'pair',
+        schema: {
+          '0': { __michelsonType: 'address', schema: 'address' },
+          '1': { __michelsonType: 'address', schema: 'address' },
+          '2': { __michelsonType: 'nat', schema: 'nat' },
+        },
+      });
 
       expect(methodObject0.toTransferParams()).toEqual({
         to: 'contractAddress',
