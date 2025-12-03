@@ -1,6 +1,5 @@
 import {
   OperationContentsAndResult,
-  RPCRunOperationParam,
   RPCSimulateOperationParam,
   RpcClientInterface,
 } from '@taquito/rpc';
@@ -141,14 +140,6 @@ export abstract class Provider {
       default:
         throw new InvalidOperationKindError((param as any).kind);
     }
-  }
-
-  protected async runOperation(op: RPCRunOperationParam) {
-    return {
-      opResponse: await this.rpc.runOperation(op),
-      op,
-      context: this.context.clone(),
-    };
   }
 
   protected async simulate(op: RPCSimulateOperationParam) {
