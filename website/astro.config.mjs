@@ -9,6 +9,8 @@ import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import { fileURLToPath } from 'node:url';
 import tailwindcss from "@tailwindcss/vite";
 
+import sitemap from '@astrojs/sitemap';
+
 const fetchPolyfillPath = fileURLToPath(
   new URL('./src/scripts/fetch-polyfill.ts', import.meta.url)
 );
@@ -16,18 +18,15 @@ const fetchPolyfillPath = fileURLToPath(
 // https://astro.build/config
 export default defineConfig({
   trailingSlash: 'never',
-  integrations: [
-    AutoImport({
-      imports: [
-        './src/components/SimpleCodeRunner.astro',
-        './src/components/Tabs.astro',
-        './src/components/TabItem.astro',
-      ],
-    }),
-    mdx({
-      extendMarkdownConfig: true,
-    }),
-  ],
+  integrations: [AutoImport({
+    imports: [
+      './src/components/SimpleCodeRunner.astro',
+      './src/components/Tabs.astro',
+      './src/components/TabItem.astro',
+    ],
+  }), mdx({
+    extendMarkdownConfig: true,
+  }), sitemap()],
   markdown: {
     remarkPlugins: [remarkRelativeLinks, remarkCallouts, remarkLiveCode],
     syntaxHighlight: false,

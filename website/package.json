@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.7",
+    "@astrojs/sitemap": "^3.6.0",
     "@cloudflare/workers-types": "^4.20251126.0",
     "@lucide/astro": "^0.554.0",
     "@taquito/beacon-wallet": "^23.0.3",
