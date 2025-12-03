@@ -173,7 +173,7 @@ const weeklynetSecretKey: Config =
   defaultConfig({
     networkName: 'WEEKLYNET',
     protocol: Protocols.ProtoALpha,
-    defaultRpc: 'https://rpc.weeklynet-2025-11-26.teztnets.com',
+    defaultRpc: 'https://rpc.weeklynet-2025-12-03.teztnets.com',
     knownContracts: knownContractsWeeklynet,
     signerConfig: defaultSecretKey
   });
