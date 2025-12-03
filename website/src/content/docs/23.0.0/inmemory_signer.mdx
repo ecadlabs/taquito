@@ -38,66 +38,49 @@ The operation will be signed automatically using the signer (no prompt)
 
 The `fromSecretKey` method takes a secret that is base58 encoded as a parameter. Here are three examples with unencrypted private keys:
 
-```js live 
-// import { TezosToolkit } from '@taquito/taquito'
-// import { InMemorySigner } from '@taquito/signer'
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
-
-InMemorySigner.fromSecretKey('edsk2rKA8YEExg9Zo2qNPiQnnYheF1DhqjLVmfKdxiFfu5GyGRZRnb')
-  .then((theSigner) => {
-    Tezos.setProvider({ signer: theSigner });
-    //We can access the public key hash
-    return Tezos.signer.publicKeyHash();
-  })
-  .then((publicKeyHash) => {
-    console.log(`The public key hash associated is: ${publicKeyHash}.`);
-  })
-  .catch((error) => console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
+```js live
+try {
+  const theSigner = await InMemorySigner.fromSecretKey('edsk2rKA8YEExg9Zo2qNPiQnnYheF1DhqjLVmfKdxiFfu5GyGRZRnb');
+  Tezos.setProvider({ signer: theSigner });
+  const publicKeyHash = await Tezos.signer.publicKeyHash();
+  console.log(`The public key hash associated is: ${publicKeyHash}.`);
+} catch (error) {
+  console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
-```js live 
-// import { TezosToolkit } from '@taquito/taquito'
-// import { InMemorySigner } from '@taquito/signer'
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
-
-InMemorySigner.fromSecretKey('spsk2Fiz7sGP5fNMJrokp6ynTa4bcFbsRhw58FHXbNf5ProDNFJ5Xq')
-  .then((theSigner) => {
-    Tezos.setProvider({ signer: theSigner });
-    //We can access the public key hash
-    return Tezos.signer.publicKeyHash();
-  })
-  .then((publicKeyHash) => {
-    console.log(`The public key hash associated is: ${publicKeyHash}.`);
-  })
-  .catch((error) => console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
+```js live
+try {
+  const theSigner = await InMemorySigner.fromSecretKey('spsk2Fiz7sGP5fNMJrokp6ynTa4bcFbsRhw58FHXbNf5ProDNFJ5Xq');
+  Tezos.setProvider({ signer: theSigner });
+  const publicKeyHash = await Tezos.signer.publicKeyHash();
+  console.log(`The public key hash associated is: ${publicKeyHash}.`);
+} catch (error) {
+  console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
 When required, Taquito offers the `b58Encode` function allowing to encode the secret in base58. The parameters of the function are the secret, that can be a `hex string` or an `Uint8Array`, and the desired prefix. Here is an example with a `hex string`:
 
-```js live 
+```js live
 // import { b58Encode, PrefixV2 } from '@taquito/utils';
-// import { TezosToolkit } from '@taquito/taquito'
-// import { InMemorySigner } from '@taquito/signer'
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
 
-const b58encodedSecret = b58Encode(
-  '7c842c15c8b0c8fd228e6cb5302a50201f41642dd36b699003fb3c857920bc9d',
-  PrefixV2.P256SecretKey
-);
-console.log(
-  `The secret is encoded in base58 and the prefix "p2sk" is added to it: ${b58encodedSecret}.`
-);
-//We take the encoded secret to configure the signer.
-InMemorySigner.fromSecretKey(b58encodedSecret)
-  .then((theSigner) => {
-    Tezos.setProvider({ signer: theSigner });
-    //We can access the public key hash
-    return Tezos.signer.publicKeyHash();
-  })
-  .then((publicKeyHash) => {
-    console.log(`The public key hash associated is: ${publicKeyHash}.`);
-  })
-  .catch((error) => console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
+try {
+  const b58encodedSecret = b58Encode(
+    '7c842c15c8b0c8fd228e6cb5302a50201f41642dd36b699003fb3c857920bc9d',
+    PrefixV2.P256SecretKey
+  );
+  console.log(
+    `The secret is encoded in base58 and the prefix "p2sk" is added to it: ${b58encodedSecret}.`
+  );
+
+  const theSigner = await InMemorySigner.fromSecretKey(b58encodedSecret);
+  Tezos.setProvider({ signer: theSigner });
+  const publicKeyHash = await Tezos.signer.publicKeyHash();
+  console.log(`The public key hash associated is: ${publicKeyHash}.`);
+} catch (error) {
+  console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
 ### Loading an encrypted private key with a passphrase
@@ -116,64 +99,46 @@ Tezos.setProvider({
 
 Here are three examples with encrypted private keys where the passphrase used is `test`:
 
-```js live 
-// import { TezosToolkit } from '@taquito/taquito'
-// import { InMemorySigner } from '@taquito/signer'
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
-
-InMemorySigner.fromSecretKey(
-  'edesk1GXwWmGjXiLHBKxGBxwmNvG21vKBh6FBxc4CyJ8adQQE2avP5vBB57ZUZ93Anm7i4k8RmsHaPzVAvpnHkFF',
-  'test'
-)
-  .then((theSigner) => {
-    Tezos.setProvider({ signer: theSigner });
-    //We can access the public key hash
-    return Tezos.signer.publicKeyHash();
-  })
-  .then((publicKeyHash) => {
-    console.log(`The public key hash associated is: ${publicKeyHash}.`);
-  })
-  .catch((error) => console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
+```js live
+try {
+  const theSigner = await InMemorySigner.fromSecretKey(
+    'edesk1GXwWmGjXiLHBKxGBxwmNvG21vKBh6FBxc4CyJ8adQQE2avP5vBB57ZUZ93Anm7i4k8RmsHaPzVAvpnHkFF',
+    'test'
+  );
+  Tezos.setProvider({ signer: theSigner });
+  const publicKeyHash = await Tezos.signer.publicKeyHash();
+  console.log(`The public key hash associated is: ${publicKeyHash}.`);
+} catch (error) {
+  console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
-```js live 
-// import { TezosToolkit } from '@taquito/taquito'
-// import { InMemorySigner } from '@taquito/signer'
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
-
-InMemorySigner.fromSecretKey(
-  'spesk24UQkAiJk8X6AufNtRv1WWPp2BAssEgmijCTQPMgUXweSKPmLdbyAjPmCG1pR2dC9P5UZZVeZcb7zVodUHZ',
-  'test'
-)
-  .then((theSigner) => {
-    Tezos.setProvider({ signer: theSigner });
-    //We can access the public key hash
-    return Tezos.signer.publicKeyHash();
-  })
-  .then((publicKeyHash) => {
-    console.log(`The public key hash associated is: ${publicKeyHash}.`);
-  })
-  .catch((error) => console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
+```js live
+try {
+  const theSigner = await InMemorySigner.fromSecretKey(
+    'spesk24UQkAiJk8X6AufNtRv1WWPp2BAssEgmijCTQPMgUXweSKPmLdbyAjPmCG1pR2dC9P5UZZVeZcb7zVodUHZ',
+    'test'
+  );
+  Tezos.setProvider({ signer: theSigner });
+  const publicKeyHash = await Tezos.signer.publicKeyHash();
+  console.log(`The public key hash associated is: ${publicKeyHash}.`);
+} catch (error) {
+  console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
-```js live 
-// import { TezosToolkit } from '@taquito/taquito'
-// import { InMemorySigner } from '@taquito/signer'
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
-
-InMemorySigner.fromSecretKey(
-  'p2esk28hoUE2J88QNFj2aDX2pjzL7wcVh2g8tkEwtWWguby9M3FHUgSbzvF2Sd7wQ4Kd8crFwvto6gF3otcBuo4T',
-  'test'
-)
-  .then((theSigner) => {
-    Tezos.setProvider({ signer: theSigner });
-    //We can access the public key hash
-    return Tezos.signer.publicKeyHash();
-  })
-  .then((publicKeyHash) => {
-    console.log(`The public key hash associated is: ${publicKeyHash}.`);
-  })
-  .catch((error) => console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
+```js live
+try {
+  const theSigner = await InMemorySigner.fromSecretKey(
+    'p2esk28hoUE2J88QNFj2aDX2pjzL7wcVh2g8tkEwtWWguby9M3FHUgSbzvF2Sd7wQ4Kd8crFwvto6gF3otcBuo4T',
+    'test'
+  );
+  Tezos.setProvider({ signer: theSigner });
+  const publicKeyHash = await Tezos.signer.publicKeyHash();
+  console.log(`The public key hash associated is: ${publicKeyHash}.`);
+} catch (error) {
+  console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
 
@@ -185,49 +150,41 @@ derivation path MUST start with "44'/1729'/"
 
 With ed25519 default derivation path (Reminder Must be hardened with either h or ')
 
-```js live 
-  // import { TezosToolkit } from '@taquito/taquito
-  // import { InMemorySigner } from '@taquito/signer'
-  // const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
-
-  // ed25519 must have all hardened paths
-
-  // using all default values password = '' curve = 'ed25519' and derivationPath "44'/1729'/0'/0'"
+```js live
+// ed25519 must have all hardened paths
+// using all default values password = '' curve = 'ed25519' and derivationPath "44'/1729'/0'/0'"
+try {
   const params = {
     mnemonic: 'author crumble medal dose ribbon permit ankle sport final hood shadow vessel horn hawk enter zebra prefer devote captain during fly found despair business'
-  }
-
+  };
 
   const signer = InMemorySigner.fromMnemonic(params);
-  Tezos.setSignerProvider(signer)
-  Tezos.signer.publicKeyHash()
-    .then((publicKeyHash) => {
-      console.log(`The public key hash associated is: ${publicKeyHash}`)
-    })
-    .catch(err => console.log(err))
+  Tezos.setSignerProvider(signer);
+  const publicKeyHash = await Tezos.signer.publicKeyHash();
+  console.log(`The public key hash associated is: ${publicKeyHash}`);
+} catch (error) {
+  console.log(error);
+}
 ```
 
 With a non-default derivation path non-hardened with a tz2 address
 
-```js live 
-  // import { TezosToolkit } from '@taquito/taquito
-  // import { InMemorySigner } from '@taquito/signer'
-  // const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
-
+```js live
+try {
   const params = {
     mnemonic: 'author crumble medal dose ribbon permit ankle sport final hood shadow vessel horn hawk enter zebra prefer devote captain during fly found despair business',
     password: '',
-    derivationPath: '44h/1729h/1/0', // h  or ' specify hardened derivation path)
+    derivationPath: '44h/1729h/1/0', // h or ' specify hardened derivation path
     curve: 'secp256k1'
-  }
+  };
 
   const signer = InMemorySigner.fromMnemonic(params);
-  Tezos.setSignerProvider(signer)
-  Tezos.signer.publicKeyHash()
-    .then((publicKeyHash) => {
-      console.log(`The public key hash associated is: ${publicKeyHash}`)
-    })
-    .catch(err => console.log(err))
+  Tezos.setSignerProvider(signer);
+  const publicKeyHash = await Tezos.signer.publicKeyHash();
+  console.log(`The public key hash associated is: ${publicKeyHash}`);
+} catch (error) {
+  console.log(error);
+}
 ```
 
 ### Using a testnet faucet key

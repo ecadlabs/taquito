@@ -49,10 +49,8 @@ As described above, the `map %data` uses a value that we chose between different
 
 An annotation identifies every argument. Therefore we can ignore optional values if they are not needed. In the first entry of the `bigMap %records` of this example, we do not specify values for the `address %address` or the `nat %ttl` or the `nat %validator` but we define one for the `nat %validator` of the second entry of the bigmap.
 
-```js live 
-// import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
-// import { importKey } from '@taquito/signer';
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
+```js live
+// import { MichelsonMap } from '@taquito/taquito';
 
 //%data
 const dataMap = new MichelsonMap();
@@ -83,21 +81,25 @@ const validatorsMap = new MichelsonMap();
 //key is a nat, value is an address
 validatorsMap.set('1', 'tz1btkXVkVFWLgXa66sbRJa8eeUSwvQFX4kP')
 
-importKey(Tezos, secretKey)
-.then(() => {
-  return Tezos.contract.originate({
+try {
+  await importKey(Tezos, secretKey);
+
+  const contractOriginated = await Tezos.contract.originate({
     code : contractJson,
     storage : {
-      owner : 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr', //address
+      owner : 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr',
       records: recordsBigMap,
       validators : validatorsMap
-    }})
-}).then((contractOriginated) => {
+    }
+  });
+
   console.log(`Waiting for confirmation of origination for ${contractOriginated.contractAddress}...`);
-  return contractOriginated.contract();
-}).then((contract) => {
+  const contract = await contractOriginated.contract();
+
   console.log(`Origination completed.`);
-}).catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
 ## Calling the function of a contract having a complex object as a parameter
@@ -127,85 +129,88 @@ The way to write the parameter when calling the function of a contract with Taqu
 
 #### Inspect parameter
 
-```js live 
-// import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com')
-// import { importKey } from '@taquito/signer';
+```js live
+// import { MichelsonMap } from '@taquito/taquito';
 
-importKey(Tezos, secretKey)
-.then(signer => {
-    return Tezos.contract.at('KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN')
-}).then(myContract => {
-    const dataMap = new MichelsonMap();
-    dataMap.set("Hello World", { bool : true })
-    let inspect = myContract.methodsObject.set_child_record({
-      address: { Some: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr' },
-      data: dataMap,
-      label: 'EEEE',
-      owner: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr',
-      parent: 'FFFF',
-      ttl: { Some: '10' }}).toTransferParams();
-    console.log(JSON.stringify(inspect, null, 2))
-}).catch(error => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+try {
+  await importKey(Tezos, secretKey);
+  const myContract = await Tezos.contract.at('KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN');
+
+  const dataMap = new MichelsonMap();
+  dataMap.set("Hello World", { bool : true });
+
+  const inspect = myContract.methodsObject.set_child_record({
+    address: { Some: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr' },
+    data: dataMap,
+    label: 'EEEE',
+    owner: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr',
+    parent: 'FFFF',
+    ttl: { Some: '10' }
+  }).toTransferParams();
+
+  console.log(JSON.stringify(inspect, null, 2));
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
 #### Call the set_child_record function when all the arguments are defined
 
-```js live 
-// import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com')
-// import { importKey } from '@taquito/signer';
+```js live
+// import { MichelsonMap } from '@taquito/taquito';
 
-importKey(Tezos, secretKey)
-.then(signer => {
-    return Tezos.contract.at('KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN')
-}).then(myContract => {
-    const dataMap = new MichelsonMap();
-    dataMap.set("Hello World", { bool : true })
+try {
+  await importKey(Tezos, secretKey);
+  const myContract = await Tezos.contract.at('KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN');
 
-    return myContract.methodsObject.set_child_record({
-      address: { Some: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr' },
-      data: dataMap,
-      label: 'EEEE',
-      owner: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr',
-      parent: 'FFFF',
-      ttl: { Some: '10' }
-    }).send();
-}).then(op => {
-    console.log(`Waiting for ${op.hash} to be confirmed...`);
-    return op.confirmation(1).then(() => op.hash);
-}).then(hash => {
-    console.log(`Operation injected: https://better-call.dev/ghostnet/KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN/operations`);
-}).catch(error => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+  const dataMap = new MichelsonMap();
+  dataMap.set("Hello World", { bool : true });
+
+  const op = await myContract.methodsObject.set_child_record({
+    address: { Some: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr' },
+    data: dataMap,
+    label: 'EEEE',
+    owner: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr',
+    parent: 'FFFF',
+    ttl: { Some: '10' }
+  }).send();
+
+  console.log(`Waiting for ${op.hash} to be confirmed...`);
+  await op.confirmation(1);
+
+  console.log(`Operation injected: https://ghostnet.tzkt.io/${op.hash}/operations`);
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 #### Call the set_child_record function when optional arguments are null
 
 The `address %address` and the `nat %ttl` of the `set_child_record` function are optional. If we want one or both to be null, we must specify the value of the argument as `null` or `undefined`.
 
-```js live 
-// import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com')
-// import { importKey } from '@taquito/signer';
+```js live
+// import { MichelsonMap } from '@taquito/taquito';
 
-importKey(Tezos, secretKey)
-.then(signer => {
-    return Tezos.contract.at('KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN')
-}).then(myContract => {
-    const dataMap = new MichelsonMap();
-    dataMap.set("Hello World", { nat : '3' })
+try {
+  await importKey(Tezos, secretKey);
+  const myContract = await Tezos.contract.at('KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN');
 
-    return myContract.methodsObject.set_child_record({
-      address: null,
-      data: dataMap,
-      label: 'EEEE',
-      owner: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr',
-      parent: 'FFFF',
-      ttl: null
-    }).send();
-}).then(op => {
-    console.log(`Waiting for ${op.hash} to be confirmed...`);
-    return op.confirmation(1).then(() => op.hash);
-}).then(hash => {
-    console.log(`Operation injected: https://better-call.dev/ghostnet/KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN/operations`);
-}).catch(error => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+  const dataMap = new MichelsonMap();
+  dataMap.set("Hello World", { nat : '3' });
+
+  const op = await myContract.methodsObject.set_child_record({
+    address: null,
+    data: dataMap,
+    label: 'EEEE',
+    owner: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr',
+    parent: 'FFFF',
+    ttl: null
+  }).send();
+
+  console.log(`Waiting for ${op.hash} to be confirmed...`);
+  await op.confirmation(1);
+
+  console.log(`Operation injected: https://ghostnet.tzkt.io/${op.hash}/operations`);
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```

@@ -90,60 +90,55 @@ values={[
 ]}>
 <TabItem value="contractAPI">
 
-```js live 
-// import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
-
+```js live
 // const genericMultisigJSONfile = require('./generic.json')
 // generic.json is referring to Michelson source code in JSON representation
 
-Tezos.contract
-  .originate({
+try {
+  const originationOp = await Tezos.contract.originate({
     code: genericMultisigJSONfile,
     storage: {
       stored_counter: 0,
       threshold: 1,
       keys: ['edpkuLxx9PQD8fZ45eUzrK3BhfDZJHhBuK4Zi49DcEGANwd2rpX82t'],
     },
-  })
-  .then((originationOp) => {
-    console.log(`Waiting for confirmation of origination for ${originationOp.contractAddress}...`);
-    return originationOp.contract();
-  })
-  .then((contract) => {
-    console.log(`Origination completed.`);
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+  });
+
+  console.log(`Waiting for confirmation of origination for ${originationOp.contractAddress}...`);
+  const contract = await originationOp.contract();
+
+  console.log(`Origination completed.`);
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
   </TabItem>
   <TabItem value="walletAPI">
 
-```js live 
-// import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
-
+```js live wallet
 // const genericMultisigJSONfile = require('./generic.json')
 // generic.json is referring to Michelson source code in JSON representation
 
-Tezos.wallet
-  .originate({
-    code: genericMultisigJSONfile,
-    storage: {
-      stored_counter: 0,
-      threshold: 1,
-      keys: ['edpkuLxx9PQD8fZ45eUzrK3BhfDZJHhBuK4Zi49DcEGANwd2rpX82t'],
-    },
-  })
-  .send()
-  .then((originationOp) => {
-    console.log(`Waiting for confirmation of origination...`);
-    return originationOp.contract();
-  })
-  .then((contract) => {
-    console.log(`Origination completed for ${contract.address}.`);
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+try {
+  const originationOp = await Tezos.wallet
+    .originate({
+      code: genericMultisigJSONfile,
+      storage: {
+        stored_counter: 0,
+        threshold: 1,
+        keys: ['edpkuLxx9PQD8fZ45eUzrK3BhfDZJHhBuK4Zi49DcEGANwd2rpX82t'],
+      },
+    })
+    .send();
+
+  console.log(`Waiting for confirmation of origination...`);
+  const contract = await originationOp.contract();
+
+  console.log(`Origination completed for ${contract.address}.`);
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
   </TabItem>
@@ -161,52 +156,47 @@ values={[
 ]}>
 <TabItem value="contractAPI">
 
-```js live 
-// import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
-
+```js live
 // const genericMultisigJSONfile = require('./generic.json')
 // generic.json is referring to Michelson source code in JSON representation
 
-Tezos.contract
-  .originate({
+try {
+  const originationOp = await Tezos.contract.originate({
     code: genericMultisigJSONfile,
     init: `(Pair 0 (Pair 1 { "edpkuLxx9PQD8fZ45eUzrK3BhfDZJHhBuK4Zi49DcEGANwd2rpX82t" }))`,
-  })
-  .then((originationOp) => {
-    console.log(`Waiting for confirmation of origination for ${originationOp.contractAddress}...`);
-    return originationOp.contract();
-  })
-  .then((contract) => {
-    console.log(`Origination completed.`);
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+  });
+
+  console.log(`Waiting for confirmation of origination for ${originationOp.contractAddress}...`);
+  const contract = await originationOp.contract();
+
+  console.log(`Origination completed.`);
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
 </TabItem>
   <TabItem value="walletAPI">
 
-```js live 
-// import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
-
+```js live wallet
 // const genericMultisigJSONfile = require('./generic.json')
 // generic.json is referring to Michelson source code in JSON representation
 
-Tezos.wallet
-  .originate({
-    code: genericMultisigJSONfile,
-    init: `(Pair 0 (Pair 1 { "edpkuLxx9PQD8fZ45eUzrK3BhfDZJHhBuK4Zi49DcEGANwd2rpX82t" }))`,
-  })
-  .send()
-  .then((originationOp) => {
-    console.log(`Waiting for confirmation of origination...`);
-    return originationOp.contract();
-  })
-  .then((contract) => {
-    console.log(`Origination completed for ${contract.address}.`);
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+try {
+  const originationOp = await Tezos.wallet
+    .originate({
+      code: genericMultisigJSONfile,
+      init: `(Pair 0 (Pair 1 { "edpkuLxx9PQD8fZ45eUzrK3BhfDZJHhBuK4Zi49DcEGANwd2rpX82t" }))`,
+    })
+    .send();
+
+  console.log(`Waiting for confirmation of origination...`);
+  const contract = await originationOp.contract();
+
+  console.log(`Origination completed for ${contract.address}.`);
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
 </TabItem>
@@ -222,15 +212,12 @@ values={[
 ]}>
 <TabItem value="contractAPI">
 
-```js live 
-// import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
-
+```js live
 // const genericMultisigJSONfile = require('./generic.json')
 // generic.json is referring to Michelson source code in JSON representation
 
-Tezos.contract
-  .originate({
+try {
+  const originationOp = await Tezos.contract.originate({
     code: genericMultisigJSONfile,
     init: {
       prim: 'Pair',
@@ -245,53 +232,51 @@ Tezos.contract
         },
       ],
     },
-  })
-  .then((originationOp) => {
-    console.log(`Waiting for confirmation of origination for ${originationOp.contractAddress}...`);
-    return originationOp.contract();
-  })
-  .then((contract) => {
-    console.log(`Origination completed.`);
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+  });
+
+  console.log(`Waiting for confirmation of origination for ${originationOp.contractAddress}...`);
+  const contract = await originationOp.contract();
+
+  console.log(`Origination completed.`);
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
 </TabItem>
   <TabItem value="walletAPI">
 
-```js live 
-// import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
-
+```js live wallet
 // const genericMultisigJSONfile = require('./generic.json')
 // generic.json is referring to Michelson source code in JSON representation
 
-Tezos.wallet
-  .originate({
-    code: genericMultisigJSONfile,
-    init: {
-      prim: 'Pair',
-      args: [
-        { int: '0' },
-        {
-          prim: 'Pair',
-          args: [
-            { int: '1' },
-            [{ string: 'edpkuLxx9PQD8fZ45eUzrK3BhfDZJHhBuK4Zi49DcEGANwd2rpX82t' }],
-          ],
-        },
-      ],
-    },
-  })
-  .send()
-  .then((originationOp) => {
-    console.log(`Waiting for confirmation of origination...`);
-    return originationOp.contract();
-  })
-  .then((contract) => {
-    console.log(`Origination completed for ${contract.address}.`);
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+try {
+  const originationOp = await Tezos.wallet
+    .originate({
+      code: genericMultisigJSONfile,
+      init: {
+        prim: 'Pair',
+        args: [
+          { int: '0' },
+          {
+            prim: 'Pair',
+            args: [
+              { int: '1' },
+              [{ string: 'edpkuLxx9PQD8fZ45eUzrK3BhfDZJHhBuK4Zi49DcEGANwd2rpX82t' }],
+            ],
+          },
+        ],
+      },
+    })
+    .send();
+
+  console.log(`Waiting for confirmation of origination...`);
+  const contract = await originationOp.contract();
+
+  console.log(`Origination completed for ${contract.address}.`);
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
 </TabItem>

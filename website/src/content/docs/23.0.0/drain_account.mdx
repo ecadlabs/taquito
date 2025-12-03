@@ -21,61 +21,56 @@ In the following example, we have not revealed the account that we want to empty
 **If the account to drain has already been revealed, you must not subtract the reveal fee from the balance.**
 :::
 
-```js live 
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
+```js live
 // import { getRevealFee } from "@taquito/taquito";
 
-Tezos.signer
-    .publicKeyHash()
-    .then((address) => {
-        Tezos.tz.getBalance(address).then((balance) => {
-            console.log(
-                `The account we want to drain is ${address}.\nIts initial balance is ${
-                  balance.toNumber() / 1000000
-                  } ꜩ.`
-            );
-            return Tezos.estimate
-                .transfer({
-                    to: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr',
-                    amount: balance.toNumber() - getRevealFee(address), // Remove default reveal fee
-                    mutez: true
-                })
-                .then((estimate) => {
-                    const maxAmount = balance.minus(
-                      estimate.suggestedFeeMutez + getRevealFee(address)
-                    ).toNumber();
-                    console.log(
-                        `The estimated fees related to the emptying operation are ${
-                          estimate.suggestedFeeMutez
-                        } mutez.\nThe fees related to the reveal operation are ${
-                          getRevealFee(address)
-                        } mutez.\nConsidering those fees, the amount we need to send to empty the account is ${
-                          maxAmount / 1000000
-                        } ꜩ.`
-                    );
-                    return Tezos.contract.transfer({
-                        to: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr',
-                        mutez: true,
-                        amount: maxAmount,
-                        fee: estimate.suggestedFeeMutez,
-                        gasLimit: estimate.gasLimit,
-                        storageLimit: 0
-                    });
-                })
-                .then((op) => {
-                    console.log(`Waiting for confirmation of the draining operation...`);
-                    return op.confirmation(1).then(() => op.hash);
-                })
-                .then((hash) => {
-                    console.log(`The account has been emptied.`);
-                    return Tezos.tz.getBalance(address);
-                })
-                .then((finalBalance) => {
-                    console.log(`The balance is now ${finalBalance.toNumber() / 1000000} ꜩ.`);
-                });
-        });
-    })
-    .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+try {
+  const address = await Tezos.signer.publicKeyHash();
+  const balance = await Tezos.tz.getBalance(address);
+
+  console.log(
+    `The account we want to drain is ${address}.\nIts initial balance is ${
+      balance.toNumber() / 1000000
+    } ꜩ.`
+  );
+
+  const estimate = await Tezos.estimate.transfer({
+    to: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr',
+    amount: balance.toNumber() - getRevealFee(address),
+    mutez: true,
+  });
+
+  const maxAmount = balance.minus(estimate.suggestedFeeMutez + getRevealFee(address)).toNumber();
+
+  console.log(
+    `The estimated fees related to the emptying operation are ${
+      estimate.suggestedFeeMutez
+    } mutez.\nThe fees related to the reveal operation are ${
+      getRevealFee(address)
+    } mutez.\nConsidering those fees, the amount we need to send to empty the account is ${
+      maxAmount / 1000000
+    } ꜩ.`
+  );
+
+  const operation = await Tezos.contract.transfer({
+    to: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr',
+    mutez: true,
+    amount: maxAmount,
+    fee: estimate.suggestedFeeMutez,
+    gasLimit: estimate.gasLimit,
+    storageLimit: 0,
+  });
+
+  console.log(`Waiting for confirmation of the draining operation...`);
+  await operation.confirmation(1);
+
+  console.log(`The account has been emptied.`);
+  const finalBalance = await Tezos.tz.getBalance(address);
+
+  console.log(`The balance is now ${finalBalance.toNumber() / 1000000} ꜩ.`);
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
 ## Draining originated accounts (KT1)
@@ -86,9 +81,7 @@ The contract we originate is a `manager contract.` It has a `do` method taking a
 
 In the example, we estimate the transfer operation before doing it. The associated fees are deducted from the manager's address when draining the account. Thus, for the operation to be successful, the manager's address for that account must contain funds to cover the gas.
 
-```js live 
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
-
+```js live
 function transferImplicit(key, mutez) {
   return [
     { prim: 'DROP' },
@@ -108,53 +101,48 @@ function transferImplicit(key, mutez) {
   ];
 }
 
-Tezos.signer
-  .publicKeyHash()
-  .then((address) => {
-    Tezos.contract
-      .originate({
-        balance: '8',
-        code: managerCode,
-        init: { string: address },
-      })
-      .then((contractOrigination) => {
-        console.log(
-          `Waiting for confirmation of origination for ${contractOrigination.contractAddress}...`
-        );
-        return contractOrigination.contract();
-      })
-      .then((contract) => {
-        console.log(`Origination completed.`);
-        Tezos.tz.getBalance(contract.address).then((balance) => {
-          console.log(`The balance of the contract is ${balance.toNumber() / 1000000} ꜩ.`);
-          const estimateOp = contract.methodsObject
-            .do(transferImplicit('tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr', balance.toNumber()))
-            .toTransferParams({});
-          console.log(`Waiting for the estimation of the smart contract call...`);
-          Tezos.estimate
-            .transfer(estimateOp)
-            .then((estimate) => {
-              //Will be deducted from manager's address
-              console.log(
-                `The estimated fees related to the emptying operation are ${estimate.suggestedFeeMutez} mutez.`
-              );
-              return contract.methodsObject
-                .do(transferImplicit('tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr', balance.toNumber()))
-                .send({ amount: 0 });
-            })
-            .then((operation) => {
-              console.log(`Waiting for confirmation of the draining operation...`);
-              return operation.confirmation(1).then(() => operation.hash);
-            })
-            .then((hash) => {
-              console.log(`The account has been emptied.`);
-              return Tezos.tz.getBalance(contract.address);
-            })
-            .then((finalBalance) => {
-              console.log(`The balance is now ${finalBalance.toNumber() / 1000000} ꜩ.`);
-            });
-        });
-      });
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+try {
+  const address = await Tezos.signer.publicKeyHash();
+
+  const contractOrigination = await Tezos.contract.originate({
+    balance: '8',
+    code: managerCode,
+    init: { string: address },
+  });
+
+  console.log(
+    `Waiting for confirmation of origination for ${contractOrigination.contractAddress}...`
+  );
+  const contract = await contractOrigination.contract();
+
+  console.log(`Origination completed.`);
+  const balance = await Tezos.tz.getBalance(contract.address);
+
+  console.log(`The balance of the contract is ${balance.toNumber() / 1000000} ꜩ.`);
+
+  const estimateOp = contract.methodsObject
+    .do(transferImplicit('tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr', balance.toNumber()))
+    .toTransferParams({});
+
+  console.log(`Waiting for the estimation of the smart contract call...`);
+  const estimate = await Tezos.estimate.transfer(estimateOp);
+
+  console.log(
+    `The estimated fees related to the emptying operation are ${estimate.suggestedFeeMutez} mutez.`
+  );
+
+  const operation = await contract.methodsObject
+    .do(transferImplicit('tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr', balance.toNumber()))
+    .send({ amount: 0 });
+
+  console.log(`Waiting for confirmation of the draining operation...`);
+  await operation.confirmation(1);
+
+  console.log(`The account has been emptied.`);
+  const finalBalance = await Tezos.tz.getBalance(contract.address);
+
+  console.log(`The balance is now ${finalBalance.toNumber() / 1000000} ꜩ.`);
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```

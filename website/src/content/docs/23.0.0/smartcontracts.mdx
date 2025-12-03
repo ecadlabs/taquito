@@ -73,31 +73,27 @@ values={[
 ]}>
 <TabItem value="contractAPI">
 
-```js live 
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
-
-Tezos.contract
-  .at('KT1KAUbe1gsdw5BeVQfgjh9xZFrHrKVs8ApD')
-  .then((c) => {
-    let methods = c.parameterSchema.ExtractSignatures();
-    console.log(JSON.stringify(methods, null, 2));
-  })
-  .catch((error) => console.log(`Error: ${error}`));
+```js live
+try {
+  const contract = await Tezos.contract.at('KT1KAUbe1gsdw5BeVQfgjh9xZFrHrKVs8ApD');
+  const methods = contract.parameterSchema.ExtractSignatures();
+  console.log(JSON.stringify(methods, null, 2));
+} catch (error) {
+  console.log(`Error: ${error}`);
+}
 ```
 
 </TabItem>
   <TabItem value="walletAPI">
 
-```js live 
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
-
-Tezos.wallet
-  .at('KT1KAUbe1gsdw5BeVQfgjh9xZFrHrKVs8ApD')
-  .then((c) => {
-    let methods = c.parameterSchema.ExtractSignatures();
-    console.log(JSON.stringify(methods, null, 2));
-  })
-  .catch((error) => console.log(`Error: ${error}`));
+```js live wallet
+try {
+  const contract = await Tezos.wallet.at('KT1KAUbe1gsdw5BeVQfgjh9xZFrHrKVs8ApD');
+  const methods = contract.parameterSchema.ExtractSignatures();
+  console.log(JSON.stringify(methods, null, 2));
+} catch (error) {
+  console.log(`Error: ${error}`);
+}
 ```
   </TabItem>
 </Tabs>
@@ -121,30 +117,26 @@ values={[
 ]}>
 <TabItem value="contractAPI">
 
-```js live 
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
-
-Tezos.contract
-  .at('KT1KAUbe1gsdw5BeVQfgjh9xZFrHrKVs8ApD')
-  .then((c) => {
-    let incrementParams = c.methodsObject.increment(2).toTransferParams();
-    console.log(JSON.stringify(incrementParams, null, 2));
-  })
-  .catch((error) => console.log(`Error: ${error}`));
+```js live
+try {
+  const contract = await Tezos.contract.at('KT1KAUbe1gsdw5BeVQfgjh9xZFrHrKVs8ApD');
+  const incrementParams = contract.methodsObject.increment(2).toTransferParams();
+  console.log(JSON.stringify(incrementParams, null, 2));
+} catch (error) {
+  console.log(`Error: ${error}`);
+}
 ```
 </TabItem>
   <TabItem value="walletAPI">
 
-```js live 
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
-
-Tezos.wallet
-  .at('KT1KAUbe1gsdw5BeVQfgjh9xZFrHrKVs8ApD')
-  .then((c) => {
-    let incrementParams = c.methodsObject.increment(2).toTransferParams();
-    console.log(JSON.stringify(incrementParams, null, 2));
-  })
-  .catch((error) => console.log(`Error: ${error}`));
+```js live wallet
+try {
+  const contract = await Tezos.wallet.at('KT1KAUbe1gsdw5BeVQfgjh9xZFrHrKVs8ApD');
+  const incrementParams = contract.methodsObject.increment(2).toTransferParams();
+  console.log(JSON.stringify(incrementParams, null, 2));
+} catch (error) {
+  console.log(`Error: ${error}`);
+}
 ```
   </TabItem>
 </Tabs>
@@ -165,44 +157,38 @@ values={[
 ]}>
 <TabItem value="contractAPI">
 
-```js live 
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
+```js live
+try {
+  const contract = await Tezos.contract.at('KT1KAUbe1gsdw5BeVQfgjh9xZFrHrKVs8ApD');
 
-Tezos.contract
-  .at('KT1KAUbe1gsdw5BeVQfgjh9xZFrHrKVs8ApD')
-  .then((contract) => {
-    const i = 7;
+  console.log(`Incrementing storage value by 7...`);
+  const operation = await contract.methodsObject.increment(7).send();
 
-    console.log(`Incrementing storage value by ${i}...`);
-    return contract.methodsObject.increment(i).send();
-  })
-  .then((op) => {
-    console.log(`Waiting for ${op.hash} to be confirmed...`);
-    return op.confirmation(3).then(() => op.hash);
-  })
-  .then((hash) => console.log(`Operation injected: https://ghost.tzstats.com/${hash}`))
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+  console.log(`Waiting for ${operation.hash} to be confirmed...`);
+  const hash = await operation.confirmation(3);
+
+  console.log(`Operation injected: https://ghostnet.tzkt.io/${hash}/operations`);
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 </TabItem>
   <TabItem value="walletAPI">
 
-```js live 
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
+```js live wallet
+try {
+  const contract = await Tezos.wallet.at('KT1KAUbe1gsdw5BeVQfgjh9xZFrHrKVs8ApD');
 
-Tezos.wallet
-  .at('KT1KAUbe1gsdw5BeVQfgjh9xZFrHrKVs8ApD')
-  .then((contract) => {
-    const i = 7;
+  console.log(`Incrementing storage value by 7...`);
+  const operation = await contract.methodsObject.increment(7).send();
 
-    console.log(`Incrementing storage value by ${i}...`);
-    return contract.methodsObject.increment(i).send();
-  })
-  .then((op) => {
-    console.log(`Waiting for ${op.opHash} to be confirmed...`);
-    return op.confirmation(3).then(() => op.opHash);
-  })
-  .then((hash) => console.log(`Operation injected: https://ghost.tzstats.com/${hash}`))
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+  console.log(`Waiting for ${operation.opHash} to be confirmed...`);
+  const confirmation = await operation.confirmation(3);
+
+  console.log(`Operation injected: https://ghostnet.tzkt.io/${confirmation.block.hash}/operations`);
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
   </TabItem>
 </Tabs>
@@ -228,105 +214,93 @@ values={[
 
 In the following example, a contract's `set_child_record` method will be called by passing the parameter in an object format. The `methodsObject` member of the `ContractAbstraction` class allows doing so. First, it is possible to obtain details about the signature of the `set_child_record` entry point by using the `getSignature` method as follow:
 
-```js live 
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
-
-Tezos.contract
-  .at('KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN')
-  .then((contract) => {
-    console.log(`List all contract methods: ${Object.keys(contract.methodsObject)}\n`);
-    console.log(
-      `Inspect the signature of the 'set_child_record' contract method: ${JSON.stringify(
-        contract.methodsObject.set_child_record().getSignature(),
-        null,
-        2
-      )}`
-    );
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+```js live
+try {
+  const contract = await Tezos.contract.at('KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN');
+  console.log(`List all contract methods: ${Object.keys(contract.methodsObject)}\n`);
+  console.log(
+    `Inspect the signature of the 'set_child_record' contract method: ${JSON.stringify(
+      contract.methodsObject.set_child_record().getSignature(),
+      null,
+      2
+    )}`
+  );
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
 The preceding example returns an object giving indication on how to structure the parameter when calling the`set_child_record` method. Here is an example where the `set_child_record` method is called by passing the parameter in an object format:
 
-```js live 
-// import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com')
-// import { importKey } from '@taquito/signer';
+```js live
+try {
+  await importKey(Tezos, secretKey);
+  const contract = await Tezos.contract.at('KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN');
 
-importKey(Tezos, secretKey)
-  .then((signer) => {
-    return Tezos.contract.at('KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN');
-  })
-  .then((contract) => {
-    return contract.methodsObject
-      .set_child_record({
-        address: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr',
-        data: new MichelsonMap(),
-        label: 'EEEE',
-        owner: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr',
-        parent: 'FFFF',
-      })
-      .send();
-  })
-  .then((op) => {
-    console.log(`Awaiting for ${op.hash} to be confirmed...`);
-    return op.confirmation().then(() => op.hash);
-  })
-  .then((hash) => console.log(`Operation injected: https://ghost.tzstats.com/${hash}`))
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+  const operation = await contract.methodsObject
+    .set_child_record({
+      address: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr',
+      data: new MichelsonMap(),
+      label: 'EEEE',
+      owner: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr',
+      parent: 'FFFF',
+    })
+    .send();
+
+  console.log(`Awaiting for ${operation.hash} to be confirmed...`);
+  const hash = await operation.confirmation();
+
+  console.log(`Operation injected: https://ghostnet.tzkt.io/${hash}/operations`);
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 </TabItem>
 <TabItem value='flat'>
 
 In the following example, a contract's `set_child_record` method will be called by passing the arguments using the flattened representation. The `methods` member of the `ContractAbstraction` class allows doing so. First, it is possible to obtain details about the signature of the `set_child_record` entry point by using the `getSignature` method as follow:
 
-```js live 
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
-
-Tezos.contract
-  .at('KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN')
-  .then((contract) => {
-    console.log(`List all contract methods: ${Object.keys(contract.methodsObject)}\n`);
-    console.log(
-      `Inspect the signature of the 'set_child_record' contract method: ${JSON.stringify(
-        contract.methods.set_child_record().getSignature(),
-        null,
-        2
-      )}`
-    );
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+```js live
+try {
+  const contract = await Tezos.contract.at('KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN');
+  console.log(`List all contract methods: ${Object.keys(contract.methodsObject)}\n`);
+  console.log(
+    `Inspect the signature of the 'set_child_record' contract method: ${JSON.stringify(
+      contract.methods.set_child_record().getSignature(),
+      null,
+      2
+    )}`
+  );
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
 The preceding example returns an array which contains the different possible signatures. Different signatures are possible as the `set_child_record` method contains some optional arguments. In the following example the `set_child_record` method is called by passing the arguments in the flattened way:
 
-```js live 
-// import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com')
-// import { importKey } from '@taquito/signer';
+```js live
+try {
+  await importKey(Tezos, secretKey);
+  const contract = await Tezos.contract.at('KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN');
 
-importKey(Tezos, secretKey)
-  .then((signer) => {
-    return Tezos.contract.at('KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN');
-  })
-  .then((contract) => {
-    return contract.methods
-      .set_child_record(
-        'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr', //address(optional)
-        new MichelsonMap(), //data
-        'EEEE', //label
-        'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr', //owner
-        'FFFF', //parent
-        '10' //ttl(optional)
-      )
-      .send();
-  })
-  .then((op) => {
-    console.log(`Awaiting for ${op.hash} to be confirmed...`);
-    return op.confirmation().then(() => op.hash);
-  })
-  .then((hash) => console.log(`Operation injected: https://ghost.tzstats.com/${hash}`))
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+  const operation = await contract.methods
+    .set_child_record(
+      'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr', //address(optional)
+      new MichelsonMap(), //data
+      'EEEE', //label
+      'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr', //owner
+      'FFFF', //parent
+      '10' //ttl(optional)
+    )
+    .send();
+
+  console.log(`Awaiting for ${operation.hash} to be confirmed...`);
+  const hash = await operation.confirmation();
+
+  console.log(`Operation injected: https://ghostnet.tzkt.io/${hash}/operations`);
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
   </TabItem>

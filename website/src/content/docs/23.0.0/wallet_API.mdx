@@ -110,17 +110,19 @@ Tezos.setProvider({ wallet });
 
 Make sure you have the Beacon browser extension installed (the extension offers minimal features, the BeaconWallet works with any wallet implementing the TZIP-10 standard), the AirGap wallet on your phone, or any TZIP-10 ready wallet like Temple or Kukai.
 
-```js live  wallet
+```js live wallet
 // import { BeaconWallet } from '@taquito/beacon-wallet';
 // const options = { name: 'exampleWallet', enableMetrics: true };
 // const wallet = new BeaconWallet(options);
 
-wallet
-  .requestPermissions()
-  .then((_) => wallet.getPKH())
-  .then((address) => console.log(`Your address: ${address}`));
-
-Tezos.setWalletProvider(wallet);
+try {
+  await wallet.requestPermissions();
+  const address = await wallet.getPKH();
+  console.log(`Your address: ${address}`);
+  Tezos.setWalletProvider(wallet);
+} catch (error) {
+  console.log(`Error: ${error}`);
+}
 ```
 
 ### Subscribing to events
@@ -229,40 +231,43 @@ Although it is possible to transfer tokens directly from the wallets, Taquito ca
 
 ### - Transfer between implicit accounts
 
-```js live 
-Tezos.wallet
-  .transfer({ to: 'tz1NhNv9g7rtcjyNsH8Zqu79giY5aTqDDrzB', amount: 0.2 })
-  .send()
-  .then((op) => {
-    console.log(`Hash: ${op.opHash}`);
+```js live wallet
+try {
+  const op = await Tezos.wallet
+    .transfer({ to: 'tz1NhNv9g7rtcjyNsH8Zqu79giY5aTqDDrzB', amount: 0.2 })
+    .send();
 
-    op.confirmation()
-      .then((result) => {
-        console.log(result);
-        if (result.completed) {
-          console.log('Transaction correctly processed!');
-        } else {
-          console.log('An error has occurred');
-        }
-      })
-      .catch((err) => console.log(err));
-  });
+  console.log(`Hash: ${op.opHash}`);
+  const result = await op.confirmation();
+
+  console.log(result);
+  if (result.completed) {
+    console.log('Transaction correctly processed!');
+  } else {
+    console.log('An error has occurred');
+  }
+} catch (error) {
+  console.log(error);
+}
 ```
 
 The `transfer` method takes an object with only two required properties: the `to` property that indicates the recipient of the transaction and the `amount` property for the number of tokens that should be sent. Unlike the Contract API, the transfer must be _sent_ by using the `.send` method, which returns a promise that will resolve with an instance of the [**TransactionWalletOperation class**](https://taquito.io/typedoc/classes/_taquito_taquito.transactionwalletoperation.html). This instance holds, among others, the transaction hash under the `opHash` property. You can then call the `.confirmation()` method and pass as a parameter the number of confirmations you want to wait (one by default). Once confirmed, the returned promise is resolved to an object with a `complete` property set to true if the operation has been confirmed.
 
 ### - Transfer to smart contracts
 
-```js live 
-Tezos.wallet
-  .transfer({ to: 'KT1TBxaaeikEUcVN2qdQY7n9Q21ykcX1NLzY', amount: 0.2 })
-  .send()
-  .then((op) => {
-    console.log(`Waiting for ${op.opHash} to be confirmed...`);
-    return op.confirmation().then(() => op.opHash);
-  })
-  .then(() => console.log(`Operation injected!`))
-  .catch((error) => console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
+```js live wallet
+try {
+  const op = await Tezos.wallet
+    .transfer({ to: 'KT1TBxaaeikEUcVN2qdQY7n9Q21ykcX1NLzY', amount: 0.2 })
+    .send();
+
+  console.log(`Waiting for ${op.opHash} to be confirmed...`);
+  await op.confirmation();
+
+  console.log(`Operation injected!`);
+} catch (error) {
+  console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
 Transactions to smart contracts operate in the same fashion as transactions to an implicit account, the only difference being the `KT1...` address. You will also receive a transaction hash and have to wait for the transaction to be confirmed. Once confirmed, it can be the right time to update the user's/contract's balance, for example.
@@ -287,50 +292,48 @@ Most of the entrypoint method's possible arguments are pretty straightforward an
 
 Most of the time, the process is simple: you take the contract abstraction you created for the contract you target, you call the `methodsObject` property on it which exposes all the entrypoints of the contract as methods. You pass the argument you want to send to the contract as a function argument before calling the `send()` method to send the transaction:
 
-```js live 
-Tezos.wallet
-  .at('KT1SHiNUNmqBFGNysX9pmh1DC2tQ5pGmRagC')
-  .then((contract) => contract.methodsObject.areYouThere(true).send())
-  .then((op) => {
-    console.log(`Hash: ${op.opHash}`);
-    return op.confirmation();
-  })
-  .then((result) => {
-    console.log(result);
-    if (result.completed) {
-      console.log(`Transaction correctly processed!
+```js live wallet
+try {
+  const contract = await Tezos.wallet.at('KT1SHiNUNmqBFGNysX9pmh1DC2tQ5pGmRagC');
+  const op = await contract.methodsObject.areYouThere(true).send();
+
+  console.log(`Hash: ${op.opHash}`);
+  const result = await op.confirmation();
+
+  console.log(result);
+  if (result.completed) {
+    console.log(`Transaction correctly processed!
       Block: ${result.block.header.level}
       Chain ID: ${result.block.chain_id}`);
-    } else {
-      console.log('An error has occurred');
-    }
-  })
-  .catch((err) => console.log(err));
+  } else {
+    console.log('An error has occurred');
+  }
+} catch (error) {
+  console.log(error);
+}
 ```
 
 In the case of multiple arguments (for example if the entrypoint expects a pair), you can just pass the arguments one by one. Be careful of the order of the arguments, they must be in the exact order expected by the contract entrypoint:
 
-```js live 
-Tezos.wallet
-  .at('KT1SHiNUNmqBFGNysX9pmh1DC2tQ5pGmRagC')
-  .then((contract) =>
-    contract.methodsObject.addName({0: 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb', 1: 'Alice'}).send()
-  )
-  .then((op) => {
-    console.log(`Hash: ${op.opHash}`);
-    return op.confirmation();
-  })
-  .then((result) => {
-    console.log(result);
-    if (result.completed) {
-      console.log(`Transaction correctly processed!
+```js live wallet
+try {
+  const contract = await Tezos.wallet.at('KT1SHiNUNmqBFGNysX9pmh1DC2tQ5pGmRagC');
+  const op = await contract.methodsObject.addName({0: 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb', 1: 'Alice'}).send();
+
+  console.log(`Hash: ${op.opHash}`);
+  const result = await op.confirmation();
+
+  console.log(result);
+  if (result.completed) {
+    console.log(`Transaction correctly processed!
       Block: ${result.block.header.level}
       Chain ID: ${result.block.chain_id}`);
-    } else {
-      console.log('An error has occurred');
-    }
-  })
-  .catch((err) => console.log(err));
+  } else {
+    console.log('An error has occurred');
+  }
+} catch (error) {
+  console.log(error);
+}
 ```
 
 If the entrypoint doesn't expect any value (or more precisely, if it expects a `unit` value), you also have to specify it when sending the transaction as follows:

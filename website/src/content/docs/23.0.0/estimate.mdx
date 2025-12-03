@@ -40,51 +40,47 @@ values={[
 ]}>
 <TabItem value="signer">
 
-```js live 
-// import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
-
+```js live
 const amount = 2;
 const address = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY';
 
 console.log(`Estimating the transfer of ${amount} ꜩ to ${address} : `);
-Tezos.estimate
-  .transfer({ to: address, amount: amount })
-  .then((est) => {
-    console.log(`burnFeeMutez : ${est.burnFeeMutez},
+
+try {
+  const est = await Tezos.estimate.transfer({ to: address, amount: amount });
+  console.log(`burnFeeMutez : ${est.burnFeeMutez},
     gasLimit : ${est.gasLimit},
     minimalFeeMutez : ${est.minimalFeeMutez},
     storageLimit : ${est.storageLimit},
     suggestedFeeMutez : ${est.suggestedFeeMutez},
     totalCost : ${est.totalCost},
     usingBaseFeeMutez : ${est.usingBaseFeeMutez}`);
-  })
-  .catch((error) => console.table(`Error: ${JSON.stringify(error, null, 2)}`));
+} catch (error) {
+  console.table(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
 </TabItem>
   <TabItem value="wallet">
 
-```js live 
-// import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
-
+```js live wallet
 const amount = 2;
 const address = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY';
 
 console.log(`Estimating the transfer of ${amount} ꜩ to ${address} : `);
-Tezos.estimate
-  .transfer({ to: address, amount: amount })
-  .then((est) => {
-    console.log(`burnFeeMutez : ${est.burnFeeMutez},
+
+try {
+  const est = await Tezos.estimate.transfer({ to: address, amount: amount });
+  console.log(`burnFeeMutez : ${est.burnFeeMutez},
     gasLimit : ${est.gasLimit},
     minimalFeeMutez : ${est.minimalFeeMutez},
     storageLimit : ${est.storageLimit},
     suggestedFeeMutez : ${est.suggestedFeeMutez},
     totalCost : ${est.totalCost},
     usingBaseFeeMutez : ${est.usingBaseFeeMutez}`);
-  })
-  .catch((error) => console.table(`Error: ${JSON.stringify(error, null, 2)}`));
+} catch (error) {
+  console.table(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
   </TabItem>
@@ -106,57 +102,48 @@ values={[
 We have updated the estimate provider to have a `contractCall()` method.
 The `contractCall()` member method can now be used to estimate contract calls as such:
 
-```js live 
-// import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
-Tezos.contract
-  .at('KT1BJadpDyLCACMH7Tt9xtpx4dQZVKw9cDF7')
-  .then((contract) => {
-    return contract.methodsObject.increment(7);
-  })
-  .then((op) => {
-    console.log(`Estimating the smart contract call: `);
-    return Tezos.estimate.contractCall(op);
-  })
-  .then((estimate) => {
-    console.log(`burnFeeMutez : ${estimate.burnFeeMutez},
+```js live
+try {
+  const contract = await Tezos.contract.at('KT1BJadpDyLCACMH7Tt9xtpx4dQZVKw9cDF7');
+  const op = contract.methodsObject.increment(7);
+
+  console.log(`Estimating the smart contract call: `);
+  const estimate = await Tezos.estimate.contractCall(op);
+
+  console.log(`burnFeeMutez : ${estimate.burnFeeMutez},
     gasLimit : ${estimate.gasLimit},
     minimalFeeMutez : ${estimate.minimalFeeMutez},
     storageLimit : ${estimate.storageLimit},
     suggestedFeeMutez : ${estimate.suggestedFeeMutez},
     totalCost : ${estimate.totalCost},
     usingBaseFeeMutez : ${estimate.usingBaseFeeMutez}`);
-  })
-  .catch((error) => console.table(`Error: ${JSON.stringify(error, null, 2)}`));
+} catch (error) {
+  console.table(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
 
 </TabItem>
   <TabItem value="wallet">
 
-```js live 
-// import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
+```js live wallet
+try {
+  const contract = await Tezos.wallet.at('KT1BJadpDyLCACMH7Tt9xtpx4dQZVKw9cDF7');
+  const op = contract.methodsObject.increment(7);
 
-Tezos.wallet
-  .at('KT1BJadpDyLCACMH7Tt9xtpx4dQZVKw9cDF7')
-  .then((contract) => {
-    return contract.methodsObject.increment(7);
-  })
-  .then((op) => {
-    console.log(`Estimating the smart contract call: `);
-    return Tezos.estimate.contractCall(op);
-  })
-  .then((estimate) => {
-    console.log(`burnFeeMutez : ${estimate.burnFeeMutez},
+  console.log(`Estimating the smart contract call: `);
+  const estimate = await Tezos.estimate.contractCall(op);
+
+  console.log(`burnFeeMutez : ${estimate.burnFeeMutez},
     gasLimit : ${estimate.gasLimit},
     minimalFeeMutez : ${estimate.minimalFeeMutez},
     storageLimit : ${estimate.storageLimit},
     suggestedFeeMutez : ${estimate.suggestedFeeMutez},
     totalCost : ${estimate.totalCost},
     usingBaseFeeMutez : ${estimate.usingBaseFeeMutez}`);
-  })
-  .catch((error) => console.table(`Error: ${JSON.stringify(error, null, 2)}`));
+} catch (error) {
+  console.table(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
   </TabItem>
@@ -175,60 +162,58 @@ values={[
 ]}>
 <TabItem value="signer">
 
-```js live 
-// import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
-
+```js live
 console.log(`Estimating the contract origination : `);
-Tezos.estimate
-  .originate({
+
+try {
+  const originationOp = await Tezos.estimate.originate({
     code: genericMultisigJSONfile,
     storage: {
       stored_counter: 0,
       threshold: 1,
       keys: ['edpkuLxx9PQD8fZ45eUzrK3BhfDZJHhBuK4Zi49DcEGANwd2rpX82t'],
     },
-  })
-  .then((originationOp) => {
-    console.log(`burnFeeMutez : ${originationOp.burnFeeMutez},
+  });
+
+  console.log(`burnFeeMutez : ${originationOp.burnFeeMutez},
     gasLimit : ${originationOp.gasLimit},
     minimalFeeMutez : ${originationOp.minimalFeeMutez},
     storageLimit : ${originationOp.storageLimit},
     suggestedFeeMutez : ${originationOp.suggestedFeeMutez},
     totalCost : ${originationOp.totalCost},
     usingBaseFeeMutez : ${originationOp.usingBaseFeeMutez}`);
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
 </TabItem>
   <TabItem value="wallet">
 
 
-```js live 
-// import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
-
+```js live wallet
 console.log(`Estimating the contract origination : `);
-Tezos.estimate
-  .originate({
+
+try {
+  const originationOp = await Tezos.estimate.originate({
     code: genericMultisigJSONfile,
     storage: {
       stored_counter: 0,
       threshold: 1,
       keys: ['edpkuLxx9PQD8fZ45eUzrK3BhfDZJHhBuK4Zi49DcEGANwd2rpX82t'],
     },
-  })
-  .then((originationOp) => {
-    console.log(`burnFeeMutez : ${originationOp.burnFeeMutez},
+  });
+
+  console.log(`burnFeeMutez : ${originationOp.burnFeeMutez},
     gasLimit : ${originationOp.gasLimit},
     minimalFeeMutez : ${originationOp.minimalFeeMutez},
     storageLimit : ${originationOp.storageLimit},
     suggestedFeeMutez : ${originationOp.suggestedFeeMutez},
     totalCost : ${originationOp.totalCost},
     usingBaseFeeMutez : ${originationOp.usingBaseFeeMutez}`);
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
   </TabItem>
