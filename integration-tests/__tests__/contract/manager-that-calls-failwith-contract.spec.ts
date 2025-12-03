@@ -40,7 +40,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(opManager.status).toEqual('applied');
 
       try {
-        await managerContract.methods.do(MANAGER_LAMBDA.transferToContract(contract.address, 1)).send({ amount: 0 })
+        await managerContract.methodsObject.do(MANAGER_LAMBDA.transferToContract(contract.address, 1)).send({ amount: 0 })
         fail('Expected transfer operation to throw error')
       } catch (ex: any) {
         expect(ex.message).toMatch('test')

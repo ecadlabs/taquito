@@ -59,20 +59,6 @@ export interface StorageProvider {
 
   /**
    *
-   * @description Return a well formatted json object of the contract big map storage
-   *
-   * @param contract contract address you want to get the storage from
-   * @param key contract big map key to fetch value from
-   * @param schema optional schema can either be the contract script rpc response or a michelson-encoder schema
-   *
-   * @deprecated Deprecated in favor of getBigMapKeyByID
-   *
-   * @see https://tezos.gitlab.io/api/rpc.html#post-block-id-context-contracts-contract-id-big-map-get
-   */
-  getBigMapKey<T>(contract: string, key: string, schema?: ContractSchema): Promise<T>;
-
-  /**
-   *
    * @description Return a well formatted json object of a big map value
    *
    * @param id Big Map ID
