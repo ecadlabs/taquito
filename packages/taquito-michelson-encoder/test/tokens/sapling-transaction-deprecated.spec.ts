@@ -99,10 +99,6 @@ describe('Sapling Transaction Deprecated token', () => {
   describe('ExtractSchema', () => {
     it('Should extract schema', () => {
       expect(token.generateSchema()).toEqual({
-        sapling_transaction_deprecated: { 'memo-size': 8 },
-      });
-
-      expect(token.generateSchema()).toEqual({
         __michelsonType: 'sapling_transaction_deprecated',
         schema: {
           memoSize: '8',

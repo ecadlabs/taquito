@@ -7,22 +7,6 @@ describe('Baker Registry contract test', () => {
   it('Test storage schema', () => {
     const schema = new Schema(storage);
     expect(schema.generateSchema()).toEqual({
-      '0': {
-        big_map: {
-          key: 'key_hash',
-          value: {
-            data: { Some: 'bytes' },
-            last_update: 'timestamp',
-            reporter: { Some: 'address' },
-          },
-        },
-      },
-      owner: 'address',
-      signup_fee: 'mutez',
-      update_fee: 'mutez',
-    });
-
-    expect(schema.generateSchema()).toEqual({
       __michelsonType: 'pair',
       schema: {
         '0': {
@@ -109,19 +93,6 @@ describe('Baker Registry contract test', () => {
   it('Extract parameter schema properly', () => {
     const schema = new ParameterSchema(params);
     expect(schema.generateSchema()).toEqual({
-      set_data: {
-        delegate: 'key_hash',
-        data: { Some: 'bytes' },
-        reporter: { Some: 'address' },
-      },
-      set_fees: {
-        signup_fee: 'mutez',
-        update_fee: 'mutez',
-      },
-      withdraw: 'contract',
-    });
-
-    expect(schema.generateSchema()).toEqual({
       __michelsonType: 'or',
       schema: {
         set_data: {
@@ -172,9 +143,26 @@ describe('Baker Registry contract test', () => {
       },
     });
 
-    expect(schema.ExtractSignatures()).toContainEqual(['set_data', 'key_hash', 'bytes', 'address']);
-    expect(schema.ExtractSignatures()).toContainEqual(['set_fees', 'mutez', 'mutez']);
-    expect(schema.ExtractSignatures()).toContainEqual(['withdraw', 'contract']);
+    expect(schema.ExtractSignatures()).toContainEqual([
+      'set_data',
+      { __michelsonType: 'key_hash', schema: 'key_hash' },
+      { __michelsonType: 'bytes', schema: 'bytes' },
+      { __michelsonType: 'address', schema: 'address' },
+    ]);
+    expect(schema.ExtractSignatures()).toContainEqual([
+      'set_fees',
+      { __michelsonType: 'mutez', schema: 'mutez' },
+      { __michelsonType: 'mutez', schema: 'mutez' },
+    ]);
+    expect(schema.ExtractSignatures()).toContainEqual([
+      'withdraw',
+      {
+        __michelsonType: 'contract',
+        schema: {
+          parameter: { __michelsonType: 'unit', schema: 'unit' },
+        },
+      },
+    ]);
   });
 
   it('Encode parameter schema properly', () => {

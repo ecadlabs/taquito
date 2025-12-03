@@ -5,16 +5,16 @@ import { Schema } from '../src/schema/storage';
 describe('Schema test', () => {
   it('Should parse storage properly', () => {
     const schema = new ParameterSchema(params8);
-    const storage = schema.generateSchema();
-    expect(storage).toEqual('string');
     expect(schema.generateSchema()).toEqual({
-      __michelsonType: "string",
-      schema: 'string'
+      __michelsonType: 'string',
+      schema: 'string',
     });
     expect({ string: 'test' }).toEqual(schema.Encode('test'));
     expect(schema.isMultipleEntryPoint).toBeFalsy();
 
-    expect(schema.ExtractSignatures()).toContainEqual(['string']);
+    expect(schema.ExtractSignatures()).toContainEqual([
+      { __michelsonType: 'string', schema: 'string' },
+    ]);
   });
   it('Should encode storage properly', () => {
     const schema = new Schema(storage8);

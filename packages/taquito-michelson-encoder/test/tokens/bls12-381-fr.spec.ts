@@ -72,7 +72,6 @@ describe('Bls12-381-fr token', () => {
 
   describe('ExtractSchema', () => {
     it('test schema', () => {
-      expect(token.generateSchema()).toEqual('bls12_381_fr');
       expect(token.generateSchema()).toEqual({
         __michelsonType: 'bls12_381_fr',
         schema: 'bls12_381_fr'

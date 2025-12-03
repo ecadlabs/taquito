@@ -12,26 +12,6 @@ describe('Token contract with big map', () => {
   it('should extract schema properly', () => {
     const schema = Schema.fromRPCResponse(rpcContractResponse as any);
     expect(schema.generateSchema()).toEqual({
-      '0': {
-        big_map: {
-          key: 'address',
-          value: {
-            '0': 'nat',
-            '1': {
-              map: {
-                key: 'address',
-                value: 'nat',
-              },
-            },
-          },
-        },
-      },
-      '1': 'address',
-      '2': 'bool',
-      '3': 'nat',
-    });
-
-    expect(schema.generateSchema()).toEqual({
       __michelsonType: 'pair',
       schema: {
         '0': {

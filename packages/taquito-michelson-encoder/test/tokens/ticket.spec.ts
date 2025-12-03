@@ -481,13 +481,6 @@ describe('Ticket token', () => {
         args: [{ prim: 'string' }],
         annots: ['%receive'],
       });
-      const result = schema.generateSchema();
-      expect(result).toEqual({
-        ticketer: 'contract',
-        value: 'string',
-        amount: 'int',
-      });
-
       expect(schema.generateSchema()).toEqual({
         __michelsonType: 'ticket',
         schema: {

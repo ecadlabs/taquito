@@ -34,48 +34,6 @@ describe('Schema with a ticket of type timestamp inside a big map %tickets in st
   it('Should extract schema properly', () => {
     const schema = new Schema(storage);
     expect(schema.generateSchema()).toEqual({
-      data: {
-        winners: {
-          big_map: {
-            key: 'address',
-            value: 'mutez',
-          },
-        },
-        bets: {
-          map: {
-            key: 'address',
-            value: 'nat',
-          },
-        },
-        current_pot: 'mutez',
-        opened_at: 'timestamp',
-        settings: {
-          pool_type: 'string',
-          entrance_fee: 'mutez',
-          minimum_bet: 'mutez',
-          open_period: 'int',
-          validation_delay: 'int',
-          ticket_validity: 'int',
-          max_capacity: 'nat',
-        },
-        validator: { Some: 'address' },
-        pending_validation: 'bool',
-        oracle: 'address',
-        admin: 'address',
-      },
-      tickets: {
-        big_map: {
-          key: 'address',
-          value: {
-            amount: 'int',
-            ticketer: 'contract',
-            value: 'timestamp',
-          },
-        },
-      },
-    });
-
-    expect(schema.generateSchema()).toEqual({
       __michelsonType: 'pair',
       schema: {
         data: {

@@ -15,13 +15,6 @@ describe('Schema with a map as root storage', () => {
   it('Should extract schema properly and do not remove top level annotation', () => {
     const schema = new Schema(storage);
     expect(schema.generateSchema()).toEqual({
-      map: {
-        key: 'nat',
-        value: 'string',
-      },
-    });
-
-    expect(schema.generateSchema()).toEqual({
       __michelsonType: "map",
       schema: {
         key: {

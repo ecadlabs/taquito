@@ -40,9 +40,6 @@ describe('Contract Token Tests', () => {
         schema: { parameter: { __michelsonType: 'contract', schema: { parameter: {} } } },
       });
     });
-    it('should return prim', () => {
-      expect(token.generateSchema()).toEqual('contract');
-    });
   });
 
   describe('find and return token', () => {

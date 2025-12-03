@@ -17,35 +17,6 @@ describe('Schema with a ticket of type nat inside a big map %tickets in storage'
     it('Should extract schema properly', () => {
         const schema = new Schema(storage);
         expect(schema.generateSchema()).toEqual({
-            admin: 'address',
-            current_id: 'nat',
-            tickets: {
-                big_map: {
-                    key: "nat",
-                    value: {
-                        amount: 'int',
-                        ticketer: 'contract',
-                        value: 'nat'
-                    }
-                }
-            },
-            token_metadata: {
-                big_map: {
-                    key: "nat",
-                    value: {
-                        '0': 'nat',
-                        '1': {
-                            map: {
-                                key: 'string',
-                                value: 'bytes'
-                            }
-                        }
-                    },
-                }
-            }
-        });
-
-        expect(schema.generateSchema()).toEqual({
             __michelsonType: 'pair',
             schema: {
                 admin: {

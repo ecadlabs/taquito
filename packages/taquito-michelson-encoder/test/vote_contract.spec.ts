@@ -5,17 +5,6 @@ describe('Schema test', () => {
   it('Should parse storage schema properly', () => {
     const schema = new Schema(storage);
     expect(schema.generateSchema()).toEqual({
-      mgr1: {
-        addr: 'address',
-        key: { Some: 'key_hash' },
-      },
-      mgr2: {
-        addr: 'address',
-        key: { Some: 'key_hash' },
-      },
-    });
-
-    expect(schema.generateSchema()).toEqual({
       __michelsonType: 'pair',
       schema: {
         mgr1: {

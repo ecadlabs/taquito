@@ -9,29 +9,6 @@ import { Token } from '../src/taquito-michelson-encoder';
 describe('Schema test', () => {
   it('Should extract schema properly', () => {
     const schema = new Schema(storage);
-    const s = schema.generateSchema();
-    expect(s).toEqual({
-      accounts: {
-        big_map: {
-          key: 'address',
-          value: {
-            allowances: {
-              map: {
-                key: 'address',
-                value: 'nat',
-              },
-            },
-            balance: 'nat',
-          },
-        },
-      },
-      name: 'string',
-      owner: 'address',
-      symbol: 'string',
-      totalSupply: 'nat',
-      version: 'nat',
-    });
-
     expect(schema.generateSchema()).toEqual({
       __michelsonType: 'pair',
       schema: {
@@ -203,75 +180,6 @@ describe('Schema test', () => {
 
   it('Should build parameter schema properly', () => {
     const schema = new ParameterSchema(params);
-    const extractSchema_Legacy = {
-      allowance: {
-        '4': 'address',
-        '5': 'address',
-        NatNatContract: 'contract',
-      },
-      approve: {
-        '1': 'address',
-        '2': 'nat',
-      },
-      balanceOf: {
-        '3': 'address',
-        NatContract: 'contract',
-      },
-      createAccount: {
-        '5': 'address',
-        '6': 'nat',
-      },
-      createAccounts: {
-        list: {
-          '6': 'address',
-          '7': 'nat',
-        },
-      },
-      transfer: {
-        '0': 'address',
-        '1': 'nat',
-      },
-      transferFrom: {
-        '2': 'address',
-        '3': 'address',
-        '4': 'nat',
-      },
-    };
-    const extractSchema_ResetFields = {
-      allowance: {
-        '0': 'address',
-        '1': 'address',
-        NatNatContract: 'contract',
-      },
-      approve: {
-        '0': 'address',
-        '1': 'nat',
-      },
-      balanceOf: {
-        '0': 'address',
-        NatContract: 'contract',
-      },
-      createAccount: {
-        '0': 'address',
-        '1': 'nat',
-      },
-      createAccounts: {
-        list: {
-          '0': 'address',
-          '1': 'nat',
-        },
-      },
-      transfer: {
-        '0': 'address',
-        '1': 'nat',
-      },
-      transferFrom: {
-        '0': 'address',
-        '1': 'address',
-        '2': 'nat',
-      },
-    };
-
     const generateSchema_Legacy = {
       __michelsonType: 'or',
       schema: {
@@ -527,33 +435,71 @@ describe('Schema test', () => {
     };
 
     Token.fieldNumberingStrategy = 'Legacy';
-    expect(schema.generateSchema()).toEqual(extractSchema_Legacy);
     expect(schema.generateSchema()).toEqual(generateSchema_Legacy);
     Token.fieldNumberingStrategy = 'ResetFieldNumbersInNestedObjects';
-    expect(schema.generateSchema()).toEqual(extractSchema_ResetFields);
     expect(schema.generateSchema()).toEqual(generateSchema_ResetFields);
     Token.fieldNumberingStrategy = 'Latest';
-    expect(schema.generateSchema()).toEqual(extractSchema_ResetFields);
     expect(schema.generateSchema()).toEqual(generateSchema_ResetFields);
   });
 
   it('Should extract signature properly', () => {
     const schema = new ParameterSchema(params);
     const sig = schema.ExtractSignatures();
-    expect(sig).toContainEqual(['allowance', 'address', 'address', 'contract']);
-    expect(sig).toContainEqual(['approve', 'address', 'nat']);
-    expect(sig).toContainEqual(['balanceOf', 'address', 'contract']);
-    expect(sig).toContainEqual(['createAccount', 'address', 'nat']);
+    expect(sig).toContainEqual([
+      'allowance',
+      { __michelsonType: 'address', schema: 'address' },
+      { __michelsonType: 'address', schema: 'address' },
+      {
+        __michelsonType: 'contract',
+        schema: {
+          parameter: {
+            __michelsonType: 'pair',
+            schema: {
+              '0': { __michelsonType: 'nat', schema: 'nat' },
+              '1': { __michelsonType: 'nat', schema: 'nat' },
+            },
+          },
+        },
+      },
+    ]);
+    expect(sig).toContainEqual([
+      'approve',
+      { __michelsonType: 'address', schema: 'address' },
+      { __michelsonType: 'nat', schema: 'nat' },
+    ]);
+    expect(sig).toContainEqual([
+      'balanceOf',
+      { __michelsonType: 'address', schema: 'address' },
+      {
+        __michelsonType: 'contract',
+        schema: {
+          parameter: { __michelsonType: 'nat', schema: 'nat' },
+        },
+      },
+    ]);
+    expect(sig).toContainEqual([
+      'createAccount',
+      { __michelsonType: 'address', schema: 'address' },
+      { __michelsonType: 'nat', schema: 'nat' },
+    ]);
     const createAccount_Legacy = {
-      list: {
-        '6': 'address',
-        '7': 'nat',
+      __michelsonType: 'list',
+      schema: {
+        __michelsonType: 'pair',
+        schema: {
+          '6': { __michelsonType: 'address', schema: 'address' },
+          '7': { __michelsonType: 'nat', schema: 'nat' },
+        },
       },
     };
     const createAccount_ResetFields = {
-      list: {
-        '0': 'address',
-        '1': 'nat',
+      __michelsonType: 'list',
+      schema: {
+        __michelsonType: 'pair',
+        schema: {
+          '0': { __michelsonType: 'address', schema: 'address' },
+          '1': { __michelsonType: 'nat', schema: 'nat' },
+        },
       },
     };
     Token.fieldNumberingStrategy = 'Legacy';
@@ -568,8 +514,17 @@ describe('Schema test', () => {
       'createAccounts',
       createAccount_ResetFields,
     ]);
-    expect(sig).toContainEqual(['transfer', 'address', 'nat']);
-    expect(sig).toContainEqual(['transferFrom', 'address', 'address', 'nat']);
+    expect(sig).toContainEqual([
+      'transfer',
+      { __michelsonType: 'address', schema: 'address' },
+      { __michelsonType: 'nat', schema: 'nat' },
+    ]);
+    expect(sig).toContainEqual([
+      'transferFrom',
+      { __michelsonType: 'address', schema: 'address' },
+      { __michelsonType: 'address', schema: 'address' },
+      { __michelsonType: 'nat', schema: 'nat' },
+    ]);
   });
 
   it('Should parse parameter properly', () => {

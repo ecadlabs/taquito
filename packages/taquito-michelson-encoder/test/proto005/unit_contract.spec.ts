@@ -10,6 +10,9 @@ describe('Contract with unit encoding', () => {
 
   it('Should extract signature properly', () => {
     const schema = new ParameterSchema(params);
-    expect(schema.ExtractSignatures()).toContainEqual(['deposit', 'unit']);
+    expect(schema.ExtractSignatures()).toContainEqual([
+      'deposit',
+      { __michelsonType: 'unit', schema: 'unit' },
+    ]);
   });
 });

@@ -17,13 +17,6 @@ describe('List token type structure', () => {
     const schema = new Schema(storageType);
 
     expect(schema.generateSchema()).toEqual({
-        list: {
-        "from": "address",
-        "to": "address"
-      }
-    });
-
-    expect(schema.generateSchema()).toEqual({
       __michelsonType: 'list',
       schema: {
         __michelsonType: 'pair',

@@ -41,7 +41,7 @@ export class OrToken extends ComparableToken {
     const leftToken = this.createToken(this.val.args[0], this.getIdxForChildren(), 'Or');
     let keyCount = 1;
     if (leftToken instanceof OrToken) {
-      keyCount = Object.keys(leftToken.generateSchema()).length;
+      keyCount = Object.keys(leftToken.generateSchema().schema as object).length;
     }
 
     const rightToken = this.createToken(
@@ -78,7 +78,7 @@ export class OrToken extends ComparableToken {
     const leftToken = this.createToken(this.val.args[0], this.getIdxForChildren(), 'Or');
     let keyCount = 1;
     if (leftToken instanceof OrToken) {
-      keyCount = Object.keys(leftToken.generateSchema()).length;
+      keyCount = Object.keys(leftToken.generateSchema().schema as object).length;
     }
 
     const rightToken = this.createToken(
@@ -118,7 +118,7 @@ export class OrToken extends ComparableToken {
     const leftToken = this.createToken(this.val.args[0], this.getIdxForChildren(), 'Or');
     let keyCount = 1;
     if (leftToken instanceof OrToken) {
-      keyCount = Object.keys(leftToken.generateSchema()).length;
+      keyCount = Object.keys(leftToken.generateSchema().schema as object).length;
     }
 
     const rightToken = this.createToken(
@@ -174,7 +174,7 @@ export class OrToken extends ComparableToken {
     const leftToken = this.createToken(this.val.args[0], this.getIdxForChildren(), 'Or');
     let keyCount = 1;
     if (leftToken instanceof OrToken) {
-      keyCount = Object.keys(leftToken.generateSchema()).length;
+      keyCount = Object.keys(leftToken.generateSchema().schema as object).length;
     }
     const rightToken = this.createToken(
       this.val.args[1],
@@ -216,7 +216,7 @@ export class OrToken extends ComparableToken {
     let leftValue;
     if (leftToken instanceof OrToken) {
       leftValue = getLeftValue(leftToken);
-      keyCount = Object.keys(leftToken.generateSchema()).length;
+      keyCount = Object.keys(leftToken.generateSchema().schema as object).length;
     } else {
       leftValue = { [leftToken.annot()]: getLeftValue(leftToken) };
     }
@@ -268,7 +268,8 @@ export class OrToken extends ComparableToken {
     const leftToken = this.createToken(this.val.args[0], this.getIdxForChildren(), 'Or');
     let keyCount = 1;
     if (leftToken instanceof OrToken) {
-      keyCount = Object.keys(leftToken.generateSchema()).length;
+      const schema = leftToken.generateSchema();
+      keyCount = Object.keys(schema.schema as object).length;
     }
 
     const rightToken = this.createToken(

@@ -8,61 +8,21 @@ describe('Schema test', () => {
   it('Should parse storage properly', () => {
     const schema = new ParameterSchema(params9);
 
-    expect(schema.ExtractSignatures()).toContainEqual(['0', 'address', 'string', 'bytes']);
-    expect(schema.ExtractSignatures()).toContainEqual(['1', 'mutez']);
-    expect(schema.ExtractSignatures()).toContainEqual(['2', 'address', 'bool']);
-
-    const extractSchema_Legacy = {
-      '0': {
-        '0': 'address',
-        '1': 'string',
-        '2': { Some: 'bytes' },
-      },
-      '1': 'mutez',
-      '2': {
-        '2': 'address',
-        '3': 'bool',
-      },
-      '3': {
-        lambda: {
-          parameters: {
-            5: { Some: 'bytes' },
-            3: 'address',
-            4: 'string',
-          },
-          returns: 'operation',
-        },
-      },
-    };
-    const extractSchema_ResetFields = {
-      '0': {
-        '0': 'address',
-        '1': 'string',
-        '2': { Some: 'bytes' },
-      },
-      '1': 'mutez',
-      '2': {
-        '0': 'address',
-        '1': 'bool',
-      },
-      '3': {
-        lambda: {
-          parameters: {
-            0: 'address',
-            1: 'string',
-            2: { Some: 'bytes' },
-          },
-          returns: 'operation',
-        },
-      },
-    };
-
-    Token.fieldNumberingStrategy = 'Legacy';
-    expect(schema.generateSchema()).toEqual(extractSchema_Legacy);
-    Token.fieldNumberingStrategy = 'ResetFieldNumbersInNestedObjects';
-    expect(schema.generateSchema()).toEqual(extractSchema_ResetFields);
-    Token.fieldNumberingStrategy = 'Latest';
-    expect(schema.generateSchema()).toEqual(extractSchema_ResetFields);
+    expect(schema.ExtractSignatures()).toContainEqual([
+      '0',
+      { __michelsonType: 'address', schema: 'address' },
+      { __michelsonType: 'string', schema: 'string' },
+      { __michelsonType: 'bytes', schema: 'bytes' },
+    ]);
+    expect(schema.ExtractSignatures()).toContainEqual([
+      '1',
+      { __michelsonType: 'mutez', schema: 'mutez' },
+    ]);
+    expect(schema.ExtractSignatures()).toContainEqual([
+      '2',
+      { __michelsonType: 'address', schema: 'address' },
+      { __michelsonType: 'bool', schema: 'bool' },
+    ]);
 
     const generateSchema_Legacy = {
       __michelsonType: 'or',

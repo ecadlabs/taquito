@@ -8,55 +8,6 @@ describe('Contract test where the value of the map "selling" is a big_map', () =
   it('Test storage schema', () => {
     const schema = new Schema(storage);
     expect(schema.generateSchema()).toEqual({
-      _euranov: 'address',
-      admin: 'address',
-      auctions: {
-        big_map: {
-          key: "address",
-          value: {
-            map: {
-              key: 'nat',
-              value: {
-                assetId: 'nat',
-                bidCount: 'nat',
-                claimed: 'bool',
-                creator: 'address',
-                currentBidAmount: 'mutez',
-                currentBidOwner: 'address',
-                duration: 'int',
-                startTime: 'timestamp',
-              },
-            },
-          },
-        },
-      },
-      authorizedSC: {
-        big_map: {
-          key: "address",
-          value: "bool",
-        },
-      },
-      balance: 'int',
-      paused: 'bool',
-      selling: {
-        map: {
-          key: 'address',
-          value: {
-            big_map: {
-              key: "nat",
-              value: {
-                fee: 'nat',
-                owner: 'address',
-                price: 'mutez',
-              },
-            },
-          },
-        },
-      },
-      tokenAddress: 'address',
-    });
-
-    expect(schema.generateSchema()).toEqual({
       "__michelsonType": "pair",
       schema: {
         _euranov: {
