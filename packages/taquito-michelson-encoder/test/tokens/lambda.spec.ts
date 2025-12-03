@@ -21,7 +21,7 @@ describe('Lambda token', () => {
             args: [{ prim: 'unit' }, { prim: 'list', args: [{ prim: 'operation' }] }],
             annots: ['%proposalLambda']
         });
-        const result = schema.ExtractSchema();
+        const result = schema.generateSchema();
         expect(result).toEqual({
             lambda: {
                 parameters: 'unit',

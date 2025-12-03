@@ -4,7 +4,7 @@ import { Schema } from '../src/schema/storage';
 describe('Schema test', () => {
   it('Should parse storage schema properly', () => {
     const schema = new Schema(storage);
-    expect(schema.ExtractSchema()).toEqual({
+    expect(schema.generateSchema()).toEqual({
       mgr1: {
         addr: 'address',
         key: { Some: 'key_hash' },

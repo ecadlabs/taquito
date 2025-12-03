@@ -41,7 +41,7 @@ describe('Contract Token Tests', () => {
       });
     });
     it('should return prim', () => {
-      expect(token.ExtractSchema()).toEqual('contract');
+      expect(token.generateSchema()).toEqual('contract');
     });
   });
 

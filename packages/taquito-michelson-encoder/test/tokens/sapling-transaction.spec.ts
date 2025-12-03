@@ -92,7 +92,7 @@ describe('Sapling Transaction token', () => {
 
   describe('ExtractSchema', () => {
     it('Should extract schema', () => {
-      expect(token.ExtractSchema()).toEqual({
+      expect(token.generateSchema()).toEqual({
         sapling_transaction: { 'memo-size': 8 },
       });
 

@@ -6,7 +6,7 @@ import { MichelsonMap } from '../src/michelson-map';
 describe('Baker Registry contract test', () => {
   it('Test storage schema', () => {
     const schema = new Schema(storage);
-    expect(schema.ExtractSchema()).toEqual({
+    expect(schema.generateSchema()).toEqual({
       '0': {
         big_map: {
           key: 'key_hash',
@@ -108,7 +108,7 @@ describe('Baker Registry contract test', () => {
 
   it('Extract parameter schema properly', () => {
     const schema = new ParameterSchema(params);
-    expect(schema.ExtractSchema()).toEqual({
+    expect(schema.generateSchema()).toEqual({
       set_data: {
         delegate: 'key_hash',
         data: { Some: 'bytes' },

@@ -60,7 +60,7 @@ describe('Or token', () => {
           3: { __michelsonType: 'bool', schema: 'bool' },
         },
       });
-      schema3LevelMixedAnnots = token3LevelOrMixedAnnots.ExtractSchema();
+      schema3LevelMixedAnnots = token3LevelOrMixedAnnots.generateSchema();
       expect(schema3LevelMixedAnnots).toEqual({
         0: 'bytes',
         1: 'int',
@@ -576,7 +576,7 @@ describe('Or token', () => {
 
   describe('ExtractSchema', () => {
     it('Should extract schema properly', () => {
-      expect(token.ExtractSchema()).toEqual({
+      expect(token.generateSchema()).toEqual({
         intTest: 'int',
         stringTest: 'string',
       });
@@ -595,7 +595,7 @@ describe('Or token', () => {
         },
       });
 
-      expect(tokenNoAnnots.ExtractSchema()).toEqual({
+      expect(tokenNoAnnots.generateSchema()).toEqual({
         0: 'int',
         1: 'string',
       });
@@ -629,11 +629,11 @@ describe('Or token', () => {
         4: 'nat',
       };
       Token.fieldNumberingStrategy = 'Legacy';
-      expect(tokenComplexNoAnnots.ExtractSchema()).toEqual(extractSchema_Legacy);
+      expect(tokenComplexNoAnnots.generateSchema()).toEqual(extractSchema_Legacy);
       Token.fieldNumberingStrategy = 'ResetFieldNumbersInNestedObjects';
-      expect(tokenComplexNoAnnots.ExtractSchema()).toEqual(extractSchema_ResetFields);
+      expect(tokenComplexNoAnnots.generateSchema()).toEqual(extractSchema_ResetFields);
       Token.fieldNumberingStrategy = 'Latest';
-      expect(tokenComplexNoAnnots.ExtractSchema()).toEqual(extractSchema_ResetFields);
+      expect(tokenComplexNoAnnots.generateSchema()).toEqual(extractSchema_ResetFields);
 
       let generateSchema_Legacy: object = {
         __michelsonType: 'or',
@@ -811,11 +811,11 @@ describe('Or token', () => {
         option4: 'nat',
       };
       Token.fieldNumberingStrategy = 'Legacy';
-      expect(tokenComplex.ExtractSchema()).toEqual(extractSchema_Legacy);
+      expect(tokenComplex.generateSchema()).toEqual(extractSchema_Legacy);
       Token.fieldNumberingStrategy = 'ResetFieldNumbersInNestedObjects';
-      expect(tokenComplex.ExtractSchema()).toEqual(extractSchema_ResetFields);
+      expect(tokenComplex.generateSchema()).toEqual(extractSchema_ResetFields);
       Token.fieldNumberingStrategy = 'Latest';
-      expect(tokenComplex.ExtractSchema()).toEqual(extractSchema_ResetFields);
+      expect(tokenComplex.generateSchema()).toEqual(extractSchema_ResetFields);
 
       generateSchema_Legacy = {
         __michelsonType: 'or',

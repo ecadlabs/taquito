@@ -43,8 +43,8 @@ export class ContractMethod<T extends ContractProvider | Wallet>
    */
   get schema() {
     return this.isAnonymous
-      ? this.parameterSchema.ExtractSchema()[this.name]
-      : this.parameterSchema.ExtractSchema();
+      ? (this.parameterSchema.generateSchema() as Record<string, unknown>)[this.name]
+      : this.parameterSchema.generateSchema();
   }
 
   /**

@@ -10,7 +10,7 @@ import { ParameterSchema } from '../src/schema/parameter';
 describe('Schema test', () => {
   it('Should extract schema properly', () => {
     const schema = new Schema(storage6);
-    expect(schema.ExtractSchema()).toEqual({
+    expect(schema.generateSchema()).toEqual({
       key_info: {
         key_groups: {
           list: {
@@ -225,7 +225,7 @@ describe('Schema test', () => {
 
   it('Should extract parameter schema properly', () => {
     const schema = new ParameterSchema(params6);
-    expect(schema.ExtractSchema()).toEqual({
+    expect(schema.generateSchema()).toEqual({
       Pour: {
         Some: {
           pour_amount: 'mutez',

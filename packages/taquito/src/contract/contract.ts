@@ -207,7 +207,7 @@ export class ContractAbstraction<
 
       // Deal with methods with no annotations which were not discovered by the RPC endpoint
       // Methods with no annotations are discovered using parameter schema
-      const anonymousMethods = Object.keys(parameterSchema.ExtractSchema()).filter(
+      const anonymousMethods = Object.keys(parameterSchema.generateSchema()).filter(
         (key) => Object.keys(entrypoints).indexOf(key) === -1
       );
 

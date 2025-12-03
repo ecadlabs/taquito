@@ -16,7 +16,7 @@ describe('List token type structure', () => {
     };
     const schema = new Schema(storageType);
 
-    expect(schema.ExtractSchema()).toEqual({
+    expect(schema.generateSchema()).toEqual({
         list: {
         "from": "address",
         "to": "address"

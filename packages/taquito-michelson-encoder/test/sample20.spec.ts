@@ -7,7 +7,7 @@ import { expectMichelsonMap } from './utils';
 describe('Contract test where the value of the map "selling" is a big_map', () => {
   it('Test storage schema', () => {
     const schema = new Schema(storage);
-    expect(schema.ExtractSchema()).toEqual({
+    expect(schema.generateSchema()).toEqual({
       _euranov: 'address',
       admin: 'address',
       auctions: {

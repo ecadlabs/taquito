@@ -91,11 +91,11 @@ describe('Exchange contract test', () => {
     };
 
     Token.fieldNumberingStrategy = 'Legacy';
-    expect(schema.ExtractSchema()).toEqual(extractSchema_Legacy);
+    expect(schema.generateSchema()).toEqual(extractSchema_Legacy);
     Token.fieldNumberingStrategy = 'ResetFieldNumbersInNestedObjects';
-    expect(schema.ExtractSchema()).toEqual(extractSchema_ResetFields);
+    expect(schema.generateSchema()).toEqual(extractSchema_ResetFields);
     Token.fieldNumberingStrategy = 'Latest';
-    expect(schema.ExtractSchema()).toEqual(extractSchema_ResetFields);
+    expect(schema.generateSchema()).toEqual(extractSchema_ResetFields);
 
     const generateSchema_Legacy = {
       __michelsonType: 'pair',
@@ -561,11 +561,11 @@ describe('Exchange contract test', () => {
     };
 
     Token.fieldNumberingStrategy = 'Legacy';
-    expect(schema.ExtractSchema()).toEqual(extractSchema_Legacy);
+    expect(schema.generateSchema()).toEqual(extractSchema_Legacy);
     Token.fieldNumberingStrategy = 'ResetFieldNumbersInNestedObjects';
-    expect(schema.ExtractSchema()).toEqual(extractSchema_ResetFields);
+    expect(schema.generateSchema()).toEqual(extractSchema_ResetFields);
     Token.fieldNumberingStrategy = 'Latest';
-    expect(schema.ExtractSchema()).toEqual(extractSchema_ResetFields);
+    expect(schema.generateSchema()).toEqual(extractSchema_ResetFields);
 
     const generateSchema_Legacy = {
       __michelsonType: 'or',
@@ -878,7 +878,7 @@ describe('Exchange contract test', () => {
 describe('Exchange contract test', () => {
   it('Test storage schema', () => {
     const schema = new Schema(storageToken);
-    expect(schema.ExtractSchema()).toEqual({
+    expect(schema.generateSchema()).toEqual({
       '0': {
         big_map: {
           key: 'address',
@@ -960,7 +960,7 @@ describe('Exchange contract test', () => {
 
   it('Test parameter schema', () => {
     const schema = new ParameterSchema(paramsToken);
-    expect(schema.ExtractSchema()).toEqual({
+    expect(schema.generateSchema()).toEqual({
       '0': {
         '0': 'address',
         '1': 'address',

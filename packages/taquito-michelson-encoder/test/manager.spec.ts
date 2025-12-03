@@ -5,7 +5,7 @@ import { Schema } from '../src/schema/storage';
 describe('Schema test', () => {
   it('Should parse storage schema properly', () => {
     const schema = new Schema(storage);
-    expect(schema.ExtractSchema()).toEqual('key_hash');
+    expect(schema.generateSchema()).toEqual('key_hash');
     expect(schema.generateSchema()).toEqual({
       __michelsonType: "key_hash",
       schema:'key_hash'

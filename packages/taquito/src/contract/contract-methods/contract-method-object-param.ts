@@ -28,8 +28,8 @@ export class ContractMethodObject<T extends ContractProvider | Wallet> implement
      */
     getSignature() {
         return this.isAnonymous
-            ? this.parameterSchema.ExtractSchema()[this.name]
-            : this.parameterSchema.ExtractSchema();
+            ? (this.parameterSchema.generateSchema() as Record<string, unknown>)[this.name]
+            : this.parameterSchema.generateSchema();
     }
 
     /**

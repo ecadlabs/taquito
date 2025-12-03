@@ -16,7 +16,7 @@ describe('Schema with a ticket of type nat inside a big map %tickets in storage'
 
     it('Should extract schema properly', () => {
         const schema = new Schema(storage);
-        expect(schema.ExtractSchema()).toEqual({
+        expect(schema.generateSchema()).toEqual({
             admin: 'address',
             current_id: 'nat',
             tickets: {

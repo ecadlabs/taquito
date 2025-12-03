@@ -481,7 +481,7 @@ describe('Ticket token', () => {
         args: [{ prim: 'string' }],
         annots: ['%receive'],
       });
-      const result = schema.ExtractSchema();
+      const result = schema.generateSchema();
       expect(result).toEqual({
         ticketer: 'contract',
         value: 'string',

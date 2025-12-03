@@ -9,7 +9,7 @@ import { Token } from '../src/taquito-michelson-encoder';
 describe('Schema test', () => {
   it('Should extract schema properly', () => {
     const schema = new Schema(storage);
-    const s = schema.ExtractSchema();
+    const s = schema.generateSchema();
     expect(s).toEqual({
       accounts: {
         big_map: {
@@ -527,13 +527,13 @@ describe('Schema test', () => {
     };
 
     Token.fieldNumberingStrategy = 'Legacy';
-    expect(schema.ExtractSchema()).toEqual(extractSchema_Legacy);
+    expect(schema.generateSchema()).toEqual(extractSchema_Legacy);
     expect(schema.generateSchema()).toEqual(generateSchema_Legacy);
     Token.fieldNumberingStrategy = 'ResetFieldNumbersInNestedObjects';
-    expect(schema.ExtractSchema()).toEqual(extractSchema_ResetFields);
+    expect(schema.generateSchema()).toEqual(extractSchema_ResetFields);
     expect(schema.generateSchema()).toEqual(generateSchema_ResetFields);
     Token.fieldNumberingStrategy = 'Latest';
-    expect(schema.ExtractSchema()).toEqual(extractSchema_ResetFields);
+    expect(schema.generateSchema()).toEqual(extractSchema_ResetFields);
     expect(schema.generateSchema()).toEqual(generateSchema_ResetFields);
   });
 

@@ -5,7 +5,7 @@ import {
   buf2hex,
   hex2buf,
   mergebuf,
-  Prefix,
+  PrefixV2,
   publicKeyPrefixes,
   signaturePrefixes,
 } from './taquito-utils';
@@ -91,11 +91,11 @@ export function verifySignature(
     return verifyBLSPopSignature(sig, msg, pk);
   } else {
     switch (pre) {
-      case Prefix.P256PublicKey:
+      case PrefixV2.P256PublicKey:
         return verifyP2Signature(sig, msg, pk);
-      case Prefix.Secp256k1PublicKey:
+      case PrefixV2.Secp256k1PublicKey:
         return verifySpSignature(sig, msg, pk);
-      case Prefix.Ed25519PublicKey:
+      case PrefixV2.Ed25519PublicKey:
         return verifyEdSignature(sig, msg, pk);
       default:
         return verifyBLSSignature(sig, msg, pk);

@@ -77,7 +77,7 @@ describe('ChestKey token', () => {
 
     describe('ExtractSchema', () => {
         it('Should generate the schema properly.', () => {
-            expect(token.ExtractSchema()).toEqual('chest_key');
+            expect(token.generateSchema()).toEqual('chest_key');
 
             expect(token.generateSchema()).toEqual({
                 __michelsonType: 'chest_key',

@@ -77,7 +77,7 @@ describe('Bls12-381-g1 token', () => {
 
   describe('ExtractSchema', () => {
     it('test schema', () => {
-      expect(token.ExtractSchema()).toEqual('bls12_381_g1');
+      expect(token.generateSchema()).toEqual('bls12_381_g1');
 
       expect(token.generateSchema()).toEqual({
         __michelsonType: 'bls12_381_g1',

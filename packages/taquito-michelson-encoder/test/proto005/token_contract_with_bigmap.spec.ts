@@ -11,7 +11,7 @@ import { expectMichelsonMap } from '../utils';
 describe('Token contract with big map', () => {
   it('should extract schema properly', () => {
     const schema = Schema.fromRPCResponse(rpcContractResponse as any);
-    expect(schema.ExtractSchema()).toEqual({
+    expect(schema.generateSchema()).toEqual({
       '0': {
         big_map: {
           key: 'address',

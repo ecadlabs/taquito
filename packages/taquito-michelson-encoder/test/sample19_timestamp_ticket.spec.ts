@@ -33,7 +33,7 @@ describe('Schema with a ticket of type timestamp inside a big map %tickets in st
 
   it('Should extract schema properly', () => {
     const schema = new Schema(storage);
-    expect(schema.ExtractSchema()).toEqual({
+    expect(schema.generateSchema()).toEqual({
       data: {
         winners: {
           big_map: {

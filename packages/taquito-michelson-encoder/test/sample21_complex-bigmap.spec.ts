@@ -5,7 +5,7 @@ describe('Complex big_map storage', () => {
   it('Should extract correct bigmap schema', () => {
     const schema = new Schema(storage);
 
-    expect(schema.ExtractSchema()).toEqual({
+    expect(schema.generateSchema()).toEqual({
       administrator: 'address',
       balances: {
         big_map: {
@@ -198,7 +198,7 @@ describe('Complex big_map storage', () => {
   it('Should extract correct bigmap schema for complex key-value pairs', () => {
     const schema = new Schema(complex_storage);
 
-    expect(schema.ExtractSchema()).toEqual({
+    expect(schema.generateSchema()).toEqual({
       administrator: 'address',
       balances: {
         big_map: {

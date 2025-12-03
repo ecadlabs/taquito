@@ -58,11 +58,11 @@ describe('Schema test', () => {
     };
 
     Token.fieldNumberingStrategy = 'Legacy';
-    expect(schema.ExtractSchema()).toEqual(extractSchema_Legacy);
+    expect(schema.generateSchema()).toEqual(extractSchema_Legacy);
     Token.fieldNumberingStrategy = 'ResetFieldNumbersInNestedObjects';
-    expect(schema.ExtractSchema()).toEqual(extractSchema_ResetFields);
+    expect(schema.generateSchema()).toEqual(extractSchema_ResetFields);
     Token.fieldNumberingStrategy = 'Latest';
-    expect(schema.ExtractSchema()).toEqual(extractSchema_ResetFields);
+    expect(schema.generateSchema()).toEqual(extractSchema_ResetFields);
 
     const generateSchema_Legacy = {
       __michelsonType: 'or',
