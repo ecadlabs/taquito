@@ -433,7 +433,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
    * @param Estimate
    */
   async setDelegate({ fee, gasLimit, storageLimit, ...rest }: DelegateParams) {
-    const sourceValidation = validateAddress(rest.source);
+    const sourceValidation = validateAddress(rest.source ?? '');
     if (rest.source && sourceValidation !== ValidationResult.VALID) {
       throw new InvalidAddressError(rest.source, sourceValidation);
     }
