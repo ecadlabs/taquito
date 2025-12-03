@@ -28,6 +28,8 @@ export default {
   external: [
     '@taquito/core',
     'node-fetch',
+    'http',
+    'https',
   ],
   watch: {
     include: 'src/**',
