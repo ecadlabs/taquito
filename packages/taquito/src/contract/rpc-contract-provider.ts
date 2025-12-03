@@ -186,13 +186,13 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
 
     const bigMapValue = block
       ? await this.context.readProvider.getBigMapValue(
-        { id: id.toString(), expr: encodedExpr },
-        block
-      )
+          { id: id.toString(), expr: encodedExpr },
+          block
+        )
       : await this.context.readProvider.getBigMapValue(
-        { id: id.toString(), expr: encodedExpr },
-        'head'
-      );
+          { id: id.toString(), expr: encodedExpr },
+          'head'
+        );
 
     return schema.ExecuteOnBigMapValue(bigMapValue, smartContractAbstractionSemantic(this)) as T;
   }
@@ -321,7 +321,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
    * @param SetDelegate operation parameter
    */
   async setDelegate(params: DelegateParams) {
-    const sourceValidation = validateAddress(params.source);
+    const sourceValidation = validateAddress(params.source ?? '');
     if (params.source && sourceValidation !== ValidationResult.VALID) {
       throw new InvalidAddressError(params.source, sourceValidation);
     }
@@ -331,8 +331,8 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
     }
 
     // Since babylon delegation source cannot smart contract
-    if (/^kt1/i.test(params.source)) {
-      throw new InvalidDelegationSource(params.source);
+    if (/^kt1/i.test(params.source ?? '')) {
+      throw new InvalidDelegationSource(params.source ?? '');
     }
 
     const publicKeyHash = await this.signer.publicKeyHash();
