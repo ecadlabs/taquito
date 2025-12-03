@@ -29,14 +29,6 @@ export class UnitToken extends ComparableToken {
     return UnitValue;
   }
 
-  /**
-   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
-   *
-   */
-  public ExtractSchema() {
-    return UnitToken.prim;
-  }
-
   generateSchema(): BaseTokenSchema {
     return {
       __michelsonType: UnitToken.prim,

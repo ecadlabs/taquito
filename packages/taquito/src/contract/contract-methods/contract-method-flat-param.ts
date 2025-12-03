@@ -42,9 +42,12 @@ export class ContractMethod<T extends ContractProvider | Wallet>
    * @description Get the schema of the smart contract method
    */
   get schema() {
-    return this.isAnonymous
-      ? this.parameterSchema.ExtractSchema()[this.name]
-      : this.parameterSchema.ExtractSchema();
+    const generatedSchema = this.parameterSchema.generateSchema();
+    if (this.isAnonymous) {
+      const schemaObj = generatedSchema.schema as Record<string, unknown> | undefined;
+      return schemaObj?.[this.name];
+    }
+    return generatedSchema;
   }
 
   /**

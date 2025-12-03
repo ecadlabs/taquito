@@ -37,6 +37,8 @@ export default {
     json(),
     // Compile TypeScript files
     typescript({ tsconfig: './tsconfig.prod.json', useTsconfigDeclarationDir: true }),
-    nodePolyfills(),
+    nodePolyfills({
+      exclude: ['crypto'], // Use native crypto (globalThis.crypto) in Node.js 20+
+    }),
   ],
 };

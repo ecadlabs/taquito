@@ -226,23 +226,6 @@ export function validateBlock(value: string): ValidationResult {
 }
 
 /**
- * @deprecated this function will be removed in the next minor release
- * @description generates a readable error string from a validation result
- */
-export function invalidDetail(validation: ValidationResult): string {
-  switch (validation) {
-    case ValidationResult.NO_PREFIX_MATCHED:
-      return 'with unsupported prefix';
-    case ValidationResult.INVALID_CHECKSUM:
-      return 'failed checksum';
-    case ValidationResult.INVALID_LENGTH:
-      return 'with incorrect length';
-    default:
-      return '';
-  }
-}
-
-/**
  * @description Used to check if a spending key is valid.
  * @returns
  * 0 = NO_PREFIX_MATCHED, 1 = INVALID_CHECKSUM, 2 = INVALID_LENGTH, 3 = VALID, 4 = PREFIX_NOT_ALLOWED, 5 = INVALID_ENCODING, 6 = OTHER,

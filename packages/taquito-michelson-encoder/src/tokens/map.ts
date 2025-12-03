@@ -116,19 +116,6 @@ export class MapToken extends Token {
       });
   }
 
-  /**
-   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
-   *
-   */
-  public ExtractSchema() {
-    return {
-      map: {
-        key: this.KeySchema.ExtractSchema(),
-        value: this.ValueSchema.ExtractSchema(),
-      },
-    };
-  }
-
   generateSchema(): MapTokenSchema {
     return {
       __michelsonType: MapToken.prim,

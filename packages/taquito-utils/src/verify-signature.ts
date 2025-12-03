@@ -5,18 +5,16 @@ import {
   buf2hex,
   hex2buf,
   mergebuf,
+  PrefixV2,
   publicKeyPrefixes,
   signaturePrefixes,
-} from './encoding';
-import { PrefixV2 } from './constants';
-import { validatePublicKey, invalidDetail } from './validators';
+} from './taquito-utils';
 import elliptic from 'elliptic';
 import {
   InvalidMessageError,
   InvalidPublicKeyError,
   InvalidSignatureError,
   ParameterValidationError,
-  ValidationResult,
 } from '@taquito/core';
 import { bls12_381 } from '@noble/curves/bls12-381';
 
@@ -103,28 +101,6 @@ export function verifySignature(
         return verifyBLSSignature(sig, msg, pk);
     }
   }
-}
-
-// deprecated will be removed in the next minor release
-type PkPrefix =
-  | PrefixV2.Ed25519PublicKey
-  | PrefixV2.Secp256k1PublicKey
-  | PrefixV2.P256PublicKey
-  | PrefixV2.BLS12_381PublicKey;
-/**
- * @deprecated use b58DecodeAndCheckPrefix instead, this function will be removed in the next minor release
- * @description validates a public key and extracts the prefix
- */
-export function validatePkAndExtractPrefix(publicKey: string): PkPrefix {
-  if (publicKey === '') {
-    throw new InvalidPublicKeyError(publicKey, `can't be empty`);
-  }
-  const pkPrefix = publicKey.substring(0, 4);
-  const publicKeyValidation = validatePublicKey(publicKey);
-  if (publicKeyValidation !== ValidationResult.VALID) {
-    throw new InvalidPublicKeyError(publicKey, invalidDetail(publicKeyValidation));
-  }
-  return pkPrefix as PkPrefix;
 }
 
 function verifyEdSignature(sig: Uint8Array, msg: Uint8Array, publicKey: Uint8Array): boolean {
