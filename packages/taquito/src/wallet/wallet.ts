@@ -516,12 +516,4 @@ registerGlobalConstant(params: WalletRegisterGlobalConstantParams) {
     );
     return contractAbstractionComposer(abs, this.context);
   }
-
-  /**
-   * @deprecated Deprecated in favor of {@link Wallet.pk} will be removed in v19.1
-   * @description Retrieve the PK of the account that is currently in use by the wallet
-   */
-  async getPK() {
-    return await this.pk();
-  }
 }

@@ -8,7 +8,6 @@ import {
   UnstakeRequestsResponse,
   BallotListResponse,
   BallotsResponse,
-  BigMapGetResponse,
   BigMapKey,
   BigMapResponse,
   BlockHeaderResponse,
@@ -33,7 +32,6 @@ import {
   ProposalsResponse,
   ProtocolsResponse,
   RPCRunCodeParam,
-  RPCRunOperationParam,
   RPCRunScriptViewParam,
   RPCRunViewParam,
   RunCodeResult,
@@ -567,34 +565,6 @@ export class RpcClientCache implements RpcClientInterface {
   }
 
   /**
-   * @deprecated Deprecated in favor of getBigMapKeyByID
-   * @param address contract address from which we want to retrieve the big map key
-   * @param options contains generic configuration for rpc calls to specified block (default to head)
-   * @description Access the value associated with a key in the big map storage of the contract.
-   * @see https://tezos.gitlab.io/active/rpc.html#post-block-id-context-contracts-contract-id-big-map-get
-   */
-  async getBigMapKey(
-    address: string,
-    key: BigMapKey,
-    { block }: { block: string } = defaultRPCOptions
-  ): Promise<BigMapGetResponse> {
-    this.validateAddress(address);
-    const keyUrl = this.formatCacheKey(
-      this.rpcClient.getRpcUrl(),
-      RPCMethodName.GET_BIG_MAP_KEY,
-      [block, address],
-      key
-    );
-    if (this.has(keyUrl)) {
-      return this.get(keyUrl);
-    } else {
-      const response = this.rpcClient.getBigMapKey(address, key, { block });
-      this.put(keyUrl, response);
-      return response;
-    }
-  }
-
-  /**
    * @param id Big Map ID
    * @param expr Expression hash to query (A b58check encoded Blake2b hash of the expression (The expression can be packed using the pack_data method))
    * @param options contains generic configuration for rpc calls to specified block (default to head)
@@ -983,20 +953,6 @@ export class RpcClientCache implements RpcClientInterface {
       this.put(key, response);
       return response;
     }
-  }
-
-  /**
-   * @deprecated Deprecated in favor of simulateOperation
-   * @param op Operation to run
-   * @param options contains generic configuration for rpc calls to specified block and version
-   * @description Run an operation with the context of the given block and without signature checks and return the operation application result, including the consumed gas.
-   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/alpha-openapi.json
-   */
-  async runOperation(
-    op: RPCRunOperationParam,
-    { block }: RPCOptions = defaultRPCOptions
-  ): Promise<PreapplyResponse> {
-    return this.rpcClient.runOperation(op, { block });
   }
 
   /**
