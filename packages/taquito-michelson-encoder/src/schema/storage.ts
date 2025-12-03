@@ -26,7 +26,6 @@ import {
   StorageEncodingError,
   MissingArgumentError,
 } from './errors';
-import { RpcTransaction } from './model';
 import { TokenSchema } from './types';
 
 const schemaTypeSymbol = Symbol.for('taquito-schema-type-symbol');
