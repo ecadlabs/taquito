@@ -135,13 +135,13 @@ const seoulnetEphemeral: Config =
   defaultConfig({
     networkName: 'SEOULNET',
     protocol: Protocols.PtSeouLou,
-    defaultRpc: 'https://rpc.seoulnet.teztnets.com',
+    defaultRpc: 'http://ecad-tezos-seoulnet-rolling-1.i.ecadinfra.com/',
     knownContracts: knownContractsPtSeouLou,
     signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/seoulnet')
   })
 
 const seoulnetSecretKey: Config =
-  { ...seoulnetEphemeral, ...{ signerConfig: defaultSecretKey, rpc: 'https://rpc.seoulnet.teztnets.com' } };
+  { ...seoulnetEphemeral, ...{ signerConfig: defaultSecretKey, rpc: 'https://seoulnet.tezos.ecadinfra.com' } };
 
 const ghostnetEphemeral: Config =
   defaultConfig({
