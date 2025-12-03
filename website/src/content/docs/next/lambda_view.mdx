@@ -50,30 +50,38 @@ Parameters must not include the callback parameter
 :::
 
 Then we call the `read()` method. (Note that we have no longer need a lambda contract)
-```js 
+```js live
+try {
+  const contract = await Tezos.contract.at('KT1MhfAnNbg2oACFBP4VDU5bNY5MZUXdeDWs');
+  const response = await contract.views.getTotalSupply(UnitValue).read();
+  console.log(response);
+} catch (error) {
+  console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`);
+}
+```
+
+{/* ```js live 
 Tezos.contract
   .at('KT1MhfAnNbg2oACFBP4VDU5bNY5MZUXdeDWs')
   .then((contract) => {
-    return contract.views.getTotalSupply(UnitValue).read();
+    return contract.views.getBalance('tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5').read();
   })
   .then((response) => {
     console.log(response);
   })
   .catch((error) => console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
-```
+``` */}
 
 **More examples:**
 
-```js 
-Tezos.contract
-  .at('KT1Ccr6ZMeB1mp9yJAqJTHK7F4xoFV9uc11T')
-  .then((contract) => {
-    return contract.views
-      .balance_of([{ owner: 'tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1', token_id: '0' }])
-      .read();
-  })
-  .then((response) => {
-    console.log(JSON.stringify(response, null, 2));
-  })
-  .catch((error) => console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
+```js live
+try {
+  const contract = await Tezos.contract.at('KT1Ccr6ZMeB1mp9yJAqJTHK7F4xoFV9uc11T');
+  const response = await contract.views
+    .balance_of([{ owner: 'tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1', token_id: '0' }])
+    .read();
+  console.log(JSON.stringify(response, null, 2));
+} catch (error) {
+  console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`);
+}
 ```

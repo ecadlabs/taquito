@@ -64,41 +64,39 @@ In the same order of ideas, `setActiveNetwork` must be called to specify the act
 
 Here is a complete example of using wallet connect to perform a transfer operation:
 
-```js  noConfig
+```js live noConfig
 Tezos.setRpcProvider('https://ghostnet.tezos.ecadinfra.com/');
 
-WalletConnect.init({
-  logger: 'debug',
-  projectId: 'ba97fd7d1e89eae02f7c330e14ce1f36',  // can get YOUR_PROJECT_ID from [Reown Cloud](https://cloud.reown.com)
-  metadata: {
-    name: 'Taquito website',
-    description: 'Taquito website with WalletConnect',
-    url: 'https://tezostaquito.io/',
-    icons: [],
-  },
-})
-  .then((walletConnect) => {
-    walletConnect
-      .requestPermissions({
-        permissionScope: {
-          networks: [NetworkType.GHOSTNET],
-          methods: [PermissionScopeMethods.TEZOS_SEND],
-        },
+try {
+  const walletConnect = await WalletConnect.init({
+    logger: 'debug',
+    projectId: 'ba97fd7d1e89eae02f7c330e14ce1f36',  // can get YOUR_PROJECT_ID from [Reown Cloud](https://cloud.reown.com)
+    metadata: {
+      name: 'Taquito website',
+      description: 'Taquito website with WalletConnect',
+      url: 'https://tezostaquito.io/',
+      icons: [],
+    },
+  });
 
-      })
-      .then(() => {
-        Tezos.setWalletProvider(walletConnect);
-        Tezos.wallet
-          .transfer({ to: 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY', amount: 1 })
-          .send()
-          .then((op) => {
-            console.log(`Waiting for ${op.opHash} to be confirmed...`);
-            return op.confirmation().then(() => op.opHash);
-          })
-          .then((hash) => console.log(`Operation injected: https://ghost.tzstats.com/${hash}`));
-      });
-  })
-  .catch((err) => console.log(err));
+  await walletConnect.requestPermissions({
+    permissionScope: {
+      networks: [NetworkType.GHOSTNET],
+      methods: [PermissionScopeMethods.TEZOS_SEND],
+    },
+  });
+
+  Tezos.setWalletProvider(walletConnect);
+  const op = await Tezos.wallet
+    .transfer({ to: 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY', amount: 1 })
+    .send();
+
+  console.log(`Waiting for ${op.opHash} to be confirmed...`);
+  await op.confirmation();
+  console.log(`Operation injected: https://ghostnet.tzkt.io/${op.opHash}`);
+} catch (error) {
+  console.log(error);
+}
 ```
 
 ## Sign payload with `WalletConnect`

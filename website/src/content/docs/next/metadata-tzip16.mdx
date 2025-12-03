@@ -91,7 +91,7 @@ values={[
 ]}>
 <TabItem value="contractAPI">
 
-```js 
+```js live
 // import { TezosToolkit } from '@taquito/taquito';
 // import { Tzip16Module, tzip16 } from "@taquito/tzip16";
 // const Tezos = new TezosToolkit('rpc_url');
@@ -100,22 +100,20 @@ Tezos.addExtension(new Tzip16Module());
 
 const contractAddress = 'KT1V9mi4SiN85aUKjkJGRDDxELSbMSMdBMcy';
 
-Tezos.contract
-  .at(contractAddress, tzip16)
-  .then((contract) => {
-    console.log(`Fetching the metadata for ${contractAddress}...`);
-    return contract.tzip16().getMetadata();
-  })
-  .then((metadata) => {
-    console.log(JSON.stringify(metadata, null, 2));
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+try {
+  const contract = await Tezos.contract.at(contractAddress, tzip16);
+  console.log(`Fetching the metadata for ${contractAddress}...`);
+  const metadata = await contract.tzip16().getMetadata();
+  console.log(JSON.stringify(metadata, null, 2));
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
 </TabItem>
   <TabItem value="walletAPI">
 
-```js  wallet
+```js live
 // import { TezosToolkit } from '@taquito/taquito';
 // import { Tzip16Module, tzip16 } from "@taquito/tzip16";
 // const Tezos = new TezosToolkit('rpc_url');
@@ -124,16 +122,14 @@ Tezos.addExtension(new Tzip16Module());
 
 const contractAddress = 'KT1V9mi4SiN85aUKjkJGRDDxELSbMSMdBMcy';
 
-Tezos.wallet
-  .at(contractAddress, tzip16)
-  .then((wallet) => {
-    console.log(`Fetching the metadata for ${contractAddress}...`);
-    return wallet.tzip16().getMetadata();
-  })
-  .then((metadata) => {
-    console.log(JSON.stringify(metadata, null, 2));
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+try {
+  const wallet = await Tezos.wallet.at(contractAddress, tzip16);
+  console.log(`Fetching the metadata for ${contractAddress}...`);
+  const metadata = await wallet.tzip16().getMetadata();
+  console.log(JSON.stringify(metadata, null, 2));
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
   </TabItem>
@@ -149,7 +145,7 @@ values={[
 ]}>
 <TabItem value="contractAPI">
 
-```js 
+```js live
 // import { TezosToolkit } from '@taquito/taquito';
 // import { Tzip16Module, tzip16 } from "@taquito/tzip16";
 // const Tezos = new TezosToolkit('rpc_url');
@@ -158,21 +154,19 @@ Tezos.addExtension(new Tzip16Module());
 
 const contractAddress = 'KT1MJ7wAZ9LBB797zhGJrXByaaUwvLGfe3qz';
 
-Tezos.contract
-  .at(contractAddress, tzip16)
-  .then((contract) => {
-    console.log(`Fetching the metadata for ${contractAddress}...`);
-    return contract.tzip16().getMetadata();
-  })
-  .then((metadata) => {
-    console.log(JSON.stringify(metadata, null, 2));
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+try {
+  const contract = await Tezos.contract.at(contractAddress, tzip16);
+  console.log(`Fetching the metadata for ${contractAddress}...`);
+  const metadata = await contract.tzip16().getMetadata();
+  console.log(JSON.stringify(metadata, null, 2));
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 </TabItem>
   <TabItem value="walletAPI">
 
-```js  wallet
+```js live
 // import { TezosToolkit } from '@taquito/taquito';
 // import { Tzip16Module, tzip16 } from "@taquito/tzip16";
 // const Tezos = new TezosToolkit('rpc_url');
@@ -181,16 +175,14 @@ Tezos.addExtension(new Tzip16Module());
 
 const contractAddress = 'KT1MJ7wAZ9LBB797zhGJrXByaaUwvLGfe3qz';
 
-Tezos.wallet
-  .at(contractAddress, tzip16)
-  .then((wallet) => {
-    console.log(`Fetching the metadata for ${contractAddress}...`);
-    return wallet.tzip16().getMetadata();
-  })
-  .then((metadata) => {
-    console.log(JSON.stringify(metadata, null, 2));
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+try {
+  const wallet = await Tezos.wallet.at(contractAddress, tzip16);
+  console.log(`Fetching the metadata for ${contractAddress}...`);
+  const metadata = await wallet.tzip16().getMetadata();
+  console.log(JSON.stringify(metadata, null, 2));
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
   </TabItem>
 </Tabs>
@@ -205,7 +197,7 @@ values={[
 ]}>
 <TabItem value="contractAPI">
 
-```js 
+```js live
 // import { TezosToolkit } from '@taquito/taquito';
 // import { Tzip16Module, tzip16 } from "@taquito/tzip16";
 // const Tezos = new TezosToolkit('rpc_url');
@@ -214,22 +206,20 @@ Tezos.addExtension(new Tzip16Module());
 
 const contractAddress = 'KT1JbEzvHn2Y2DjVQ7kgK8H8pxrspG893JsX';
 
-Tezos.contract
-  .at(contractAddress, tzip16)
-  .then((contract) => {
-    console.log(`Fetching the metadata for ${contractAddress}...`);
-    return contract.tzip16().getMetadata();
-  })
-  .then((metadata) => {
-    console.log(JSON.stringify(metadata, null, 2));
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+try {
+  const contract = await Tezos.contract.at(contractAddress, tzip16);
+  console.log(`Fetching the metadata for ${contractAddress}...`);
+  const metadata = await contract.tzip16().getMetadata();
+  console.log(JSON.stringify(metadata, null, 2));
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
 </TabItem>
   <TabItem value="walletAPI">
 
-```js  wallet
+```js live
 // import { TezosToolkit } from '@taquito/taquito';
 // import { Tzip16Module, tzip16 } from "@taquito/tzip16";
 // const Tezos = new TezosToolkit('rpc_url');
@@ -238,16 +228,14 @@ Tezos.addExtension(new Tzip16Module());
 
 const contractAddress = 'KT1JbEzvHn2Y2DjVQ7kgK8H8pxrspG893JsX';
 
-Tezos.wallet
-  .at(contractAddress, tzip16)
-  .then((wallet) => {
-    console.log(`Fetching the metadata for ${contractAddress}...`);
-    return wallet.tzip16().getMetadata();
-  })
-  .then((metadata) => {
-    console.log(JSON.stringify(metadata, null, 2));
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+try {
+  const wallet = await Tezos.wallet.at(contractAddress, tzip16);
+  console.log(`Fetching the metadata for ${contractAddress}...`);
+  const metadata = await wallet.tzip16().getMetadata();
+  console.log(JSON.stringify(metadata, null, 2));
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
   </TabItem>
@@ -263,7 +251,7 @@ values={[
 ]}>
 <TabItem value="contractAPI">
 
-```js 
+```js live
 // import { TezosToolkit } from '@taquito/taquito';
 // import { Tzip16Module, tzip16 } from "@taquito/tzip16";
 // const Tezos = new TezosToolkit('rpc_url');
@@ -272,22 +260,20 @@ Tezos.addExtension(new Tzip16Module());
 
 const contractAddress = 'KT1SDtsB4DHdh1QwFNgvsavxDwQJBdimgrcL';
 
-Tezos.contract
-  .at(contractAddress, tzip16)
-  .then((contract) => {
-    console.log(`Fetching the metadata for ${contractAddress}...`);
-    return contract.tzip16().getMetadata();
-  })
-  .then((metadata) => {
-    console.log(JSON.stringify(metadata, null, 2));
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+try {
+  const contract = await Tezos.contract.at(contractAddress, tzip16);
+  console.log(`Fetching the metadata for ${contractAddress}...`);
+  const metadata = await contract.tzip16().getMetadata();
+  console.log(JSON.stringify(metadata, null, 2));
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
 </TabItem>
   <TabItem value="walletAPI">
 
-```js  wallet
+```js live
 // import { TezosToolkit } from '@taquito/taquito';
 // import { Tzip16Module, tzip16 } from "@taquito/tzip16";
 // const Tezos = new TezosToolkit('rpc_url');
@@ -296,16 +282,14 @@ Tezos.addExtension(new Tzip16Module());
 
 const contractAddress = 'KT1SDtsB4DHdh1QwFNgvsavxDwQJBdimgrcL';
 
-Tezos.wallet
-  .at(contractAddress, tzip16)
-  .then((wallet) => {
-    console.log(`Fetching the metadata for ${contractAddress}...`);
-    return wallet.tzip16().getMetadata();
-  })
-  .then((metadata) => {
-    console.log(JSON.stringify(metadata, null, 2));
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+try {
+  const wallet = await Tezos.wallet.at(contractAddress, tzip16);
+  console.log(`Fetching the metadata for ${contractAddress}...`);
+  const metadata = await wallet.tzip16().getMetadata();
+  console.log(JSON.stringify(metadata, null, 2));
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
   </TabItem>
@@ -353,7 +337,7 @@ values={[
 ]}>
 <TabItem value="contractAPI">
 
-```js 
+```js live
 // import { TezosToolkit } from '@taquito/taquito';
 // import { Tzip16Module, tzip16, bytesToString } from "@taquito/tzip16";
 // const Tezos = new TezosToolkit('rpc_url');
@@ -362,27 +346,23 @@ Tezos.addExtension(new Tzip16Module());
 
 const contractAddress = 'KT1XdXkU9piczYpTU8ToAAGJunzFiGCWRvVK';
 
-Tezos.contract
-  .at(contractAddress, tzip16)
-  .then((contract) => {
-    console.log(`Initialising the views for ${contractAddress}...`);
-    return contract.tzip16().metadataViews();
-  })
-  .then((views) => {
-    console.log(`The following view names were found in the metadata: ${Object.keys(views)}`);
-    return views.someJson().executeView();
-  })
-  .then((result) => {
-    console.log(`Result of the view someJson: ${result}`);
-    console.log(`Transform result to char: ${bytesToString(result)}`);
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+try {
+  const contract = await Tezos.contract.at(contractAddress, tzip16);
+  console.log(`Initialising the views for ${contractAddress}...`);
+  const views = await contract.tzip16().metadataViews();
+  console.log(`The following view names were found in the metadata: ${Object.keys(views)}`);
+  const result = await views.someJson().executeView();
+  console.log(`Result of the view someJson: ${result}`);
+  console.log(`Transform result to char: ${bytesToString(result)}`);
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
 </TabItem>
   <TabItem value="walletAPI">
 
-```js  wallet
+```js live
 // import { TezosToolkit } from '@taquito/taquito';
 // import { Tzip16Module, tzip16, bytesToString } from "@taquito/tzip16";
 // const Tezos = new TezosToolkit('rpc_url');
@@ -391,21 +371,17 @@ Tezos.addExtension(new Tzip16Module());
 
 const contractAddress = 'KT1XdXkU9piczYpTU8ToAAGJunzFiGCWRvVK';
 
-Tezos.wallet
-  .at(contractAddress, tzip16)
-  .then((wallet) => {
-    console.log(`Initialising the views for ${contractAddress}...`);
-    return wallet.tzip16().metadataViews();
-  })
-  .then((views) => {
-    console.log(`The following view names were found in the metadata: ${Object.keys(views)}`);
-    return views.someJson().executeView();
-  })
-  .then((result) => {
-    console.log(`Result of the view someJson: ${result}`);
-    console.log(`Transform result to char: ${bytesToString(result)}`);
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+try {
+  const wallet = await Tezos.wallet.at(contractAddress, tzip16);
+  console.log(`Initialising the views for ${contractAddress}...`);
+  const views = await wallet.tzip16().metadataViews();
+  console.log(`The following view names were found in the metadata: ${Object.keys(views)}`);
+  const result = await views.someJson().executeView();
+  console.log(`Result of the view someJson: ${result}`);
+  console.log(`Transform result to char: ${bytesToString(result)}`);
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
   </TabItem>
@@ -423,7 +399,7 @@ values={[
 ]}>
 <TabItem value="contractAPI">
 
-```js 
+```js live
 // import { TezosToolkit } from '@taquito/taquito';
 // import { Tzip16Module, tzip16 } from "@taquito/tzip16";
 // const Tezos = new TezosToolkit('rpc_url');
@@ -432,29 +408,24 @@ Tezos.addExtension(new Tzip16Module());
 
 const contractAddress = 'KT1CVoo3PxuvH3BuBpNTYRDafAQ7aRTfj8bd';
 
-Tezos.contract
-  .at(contractAddress, tzip16)
-  .then((contract) => {
-    return contract.storage().then((storage) => {
-      console.log(`The nat in the storage of the contract is: ${storage[0]}`);
-      console.log(`Initialising the views for ${contractAddress}...`);
-      return contract.tzip16().metadataViews();
-    });
-  })
-  .then((views) => {
-    console.log(`The following view names were found in the metadata: ${Object.keys(views)}`);
-    return views['multiply-the-nat-in-storage']().executeView(10);
-  })
-  .then((result) => {
-    console.log(`Result of the view 'multiply-the-nat-in-storage': ${result}`);
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+try {
+  const contract = await Tezos.contract.at(contractAddress, tzip16);
+  const storage = await contract.storage();
+  console.log(`The nat in the storage of the contract is: ${storage[0]}`);
+  console.log(`Initialising the views for ${contractAddress}...`);
+  const views = await contract.tzip16().metadataViews();
+  console.log(`The following view names were found in the metadata: ${Object.keys(views)}`);
+  const result = await views['multiply-the-nat-in-storage']().executeView(10);
+  console.log(`Result of the view 'multiply-the-nat-in-storage': ${result}`);
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
 </TabItem>
   <TabItem value="walletAPI">
 
-```js  wallet
+```js live
 // import { TezosToolkit } from '@taquito/taquito';
 // import { Tzip16Module, tzip16 } from "@taquito/tzip16";
 // const Tezos = new TezosToolkit('rpc_url');
@@ -463,23 +434,18 @@ Tezos.addExtension(new Tzip16Module());
 
 const contractAddress = 'KT1CVoo3PxuvH3BuBpNTYRDafAQ7aRTfj8bd';
 
-Tezos.wallet
-  .at(contractAddress, tzip16)
-  .then((wallet) => {
-    return wallet.storage().then((storage) => {
-      console.log(`The nat in the storage of the contract is: ${storage[0]}`);
-      console.log(`Initialising the views for ${contractAddress}...`);
-      return wallet.tzip16().metadataViews();
-    });
-  })
-  .then((views) => {
-    console.log(`The following view names were found in the metadata: ${Object.keys(views)}`);
-    return views['multiply-the-nat-in-storage']().executeView(10);
-  })
-  .then((result) => {
-    console.log(`Result of the view 'multiply-the-nat-in-storage': ${result}`);
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+try {
+  const wallet = await Tezos.wallet.at(contractAddress, tzip16);
+  const storage = await wallet.storage();
+  console.log(`The nat in the storage of the contract is: ${storage[0]}`);
+  console.log(`Initialising the views for ${contractAddress}...`);
+  const views = await wallet.tzip16().metadataViews();
+  console.log(`The following view names were found in the metadata: ${Object.keys(views)}`);
+  const result = await views['multiply-the-nat-in-storage']().executeView(10);
+  console.log(`Result of the view 'multiply-the-nat-in-storage': ${result}`);
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
   </TabItem>
@@ -497,75 +463,73 @@ values={[
 ]}>
 <TabItem value="contractAPI">
 
-```js 
+```js live
 // import { TezosToolkit, RpcReadAdapter } from '@taquito/taquito';
 // import { MichelsonStorageView } from "@taquito/tzip16";
 // const Tezos = new TezosToolkit('rpc_url');
 
 const contractAddress = 'KT1CVoo3PxuvH3BuBpNTYRDafAQ7aRTfj8bd';
 
-Tezos.contract
-  .at(contractAddress)
-  .then((contract) => {
-    const view = new MichelsonStorageView(
-      'test', // view name
-      contract, // contract abstraction
-      Tezos.rpc, // rpc
-      new RpcReadAdapter(Tezos.rpc), // readProvider
-      { prim: 'nat' }, // returnType
-      [
-        { prim: 'DUP' },
-        { prim: 'CDR' },
-        { prim: 'CAR' },
-        { prim: 'SWAP' },
-        { prim: 'CAR' },
-        { prim: 'MUL' },
-      ], // code of the view
-      { prim: 'nat' } // parameter type
-    );
+try {
+  const contract = await Tezos.contract.at(contractAddress);
+  const view = new MichelsonStorageView(
+    'test', // view name
+    contract, // contract abstraction
+    Tezos.rpc, // rpc
+    new RpcReadAdapter(Tezos.rpc), // readProvider
+    { prim: 'nat' }, // returnType
+    [
+      { prim: 'DUP' },
+      { prim: 'CDR' },
+      { prim: 'CAR' },
+      { prim: 'SWAP' },
+      { prim: 'CAR' },
+      { prim: 'MUL' },
+    ], // code of the view
+    { prim: 'nat' } // parameter type
+  );
 
-    view.executeView(2).then((result) => {
-      console.log(`Result of the custom view: ${result}`);
-    });
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+  const result = await view.executeView(2);
+  console.log(`Result of the custom view: ${result}`);
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
 </TabItem>
   <TabItem value="walletAPI">
 
-```js  wallet
+```js live
 // import { TezosToolkit, RpcReadAdapter } from '@taquito/taquito';
 // import { MichelsonStorageView } from "@taquito/tzip16";
 // const Tezos = new TezosToolkit('rpc_url');
 
 const contractAddress = 'KT1CVoo3PxuvH3BuBpNTYRDafAQ7aRTfj8bd';
 
-Tezos.wallet
-  .at(contractAddress)
-  .then((wallet) => {
-    const view = new MichelsonStorageView(
-      'test', // view name
-      wallet, // contract abstraction
-      Tezos.rpc, // rpc,
-      new RpcReadAdapter(Tezos.rpc), // readProvider
-      { prim: 'nat' }, // returnType
-      [
-        { prim: 'DUP' },
-        { prim: 'CDR' },
-        { prim: 'CAR' },
-        { prim: 'SWAP' },
-        { prim: 'CAR' },
-        { prim: 'MUL' },
-      ], // code of the view
-      { prim: 'nat' } // parameter type
-    );
+try {
+  const wallet = await Tezos.wallet.at(contractAddress);
+  const view = new MichelsonStorageView(
+    'test', // view name
+    wallet, // contract abstraction
+    Tezos.rpc, // rpc,
+    new RpcReadAdapter(Tezos.rpc), // readProvider
+    { prim: 'nat' }, // returnType
+    [
+      { prim: 'DUP' },
+      { prim: 'CDR' },
+      { prim: 'CAR' },
+      { prim: 'SWAP' },
+      { prim: 'CAR' },
+      { prim: 'MUL' },
+    ], // code of the view
+    { prim: 'nat' } // parameter type
+  );
 
-    view.executeView(2).then((result) => {
-      console.log(`Result of the custom view: ${result}`);
-    });
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+  const result = await view.executeView(2);
+  console.log(`Result of the custom view: ${result}`);
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
   </TabItem>
 </Tabs>

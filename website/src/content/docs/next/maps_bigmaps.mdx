@@ -37,7 +37,7 @@ values={[
 ]}>
 <TabItem value="contractAPI">
 
-```js 
+```js live 
 import { MichelsonMap } from '@taquito/taquito';
 // import { TezosToolkit } from '@taquito/taquito';
 // const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
@@ -66,7 +66,7 @@ Tezos.contract
 </TabItem>
   <TabItem value="walletAPI">
 
-```js 
+```js live 
 import { MichelsonMap } from '@taquito/taquito';
 // import { TezosToolkit } from '@taquito/taquito';
 // const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
@@ -106,7 +106,7 @@ values={[
 ]}>
 <TabItem value="contractAPI">
 
-```js 
+```js live 
 import { MichelsonMap } from '@taquito/taquito';
 
 Tezos.contract
@@ -131,7 +131,7 @@ Tezos.contract
 </TabItem>
   <TabItem value="walletAPI">
 
-```js 
+```js live 
 import { MichelsonMap } from '@taquito/taquito';
 
 Tezos.wallet
@@ -171,87 +171,71 @@ values={[
 ]}>
 <TabItem value="contractAPI">
 
-```js 
-Tezos.contract
-  .at('KT1B3SpFJ1iHagwdkd1utVYP18RyYgZXeGio')
-  .then((myContract) => {
-    return myContract
-      .storage()
-      .then((myStorage) => {
-        //We want to see the value of the key "1"
-        const value = myStorage.get('1');
-        console.log(
-          `The key "1" of the map has a current_stock of ${
-            value[Object.keys(value)[0]]
-          } and a max_price of   ${value[Object.keys(value)[1]]}.`
-        );
+```js live
+try {
+  const myContract = await Tezos.contract.at('KT1B3SpFJ1iHagwdkd1utVYP18RyYgZXeGio');
+  let myStorage = await myContract.storage();
 
-        //Calling the main method of the contract will modify the storage
-        return myContract.methodsObject.default('1').send();
-      })
-      .then((op) => {
-        console.log(`Waiting for ${op.hash} to be confirmed...`);
-        return op.confirmation(1).then(() => op.hash);
-      })
-      .then((hash) => {
-        console.log(`Operation injected.`);
+  //We want to see the value of the key "1"
+  let value = myStorage.get('1');
+  console.log(
+    `The key "1" of the map has a current_stock of ${
+      value[Object.keys(value)[0]]
+    } and a max_price of   ${value[Object.keys(value)[1]]}.`
+  );
 
-        //Use the get method to see the change in storage
-        return myContract.storage();
-      })
-      .then((myStorage) => {
-        const value = myStorage.get('1');
-        console.log(
-          `The key "1" of the map has now a current_stock of ${
-            value[Object.keys(value)[0]]
-          } and a max_price of ${value[Object.keys(value)[1]]}.`
-        );
-      });
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+  //Calling the main method of the contract will modify the storage
+  const op = await myContract.methodsObject.default('1').send();
+  console.log(`Waiting for ${op.hash} to be confirmed...`);
+  await op.confirmation(1);
+  console.log(`Operation injected.`);
+
+  //Use the get method to see the change in storage
+  myStorage = await myContract.storage();
+  value = myStorage.get('1');
+  console.log(
+    `The key "1" of the map has now a current_stock of ${
+      value[Object.keys(value)[0]]
+    } and a max_price of ${value[Object.keys(value)[1]]}.`
+  );
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
 </TabItem>
   <TabItem value="walletAPI">
 
-```js 
-Tezos.wallet
-  .at('KT1B3SpFJ1iHagwdkd1utVYP18RyYgZXeGio')
-  .then((myContract) => {
-    return myContract
-      .storage()
-      .then((myStorage) => {
-        //We want to see the value of the key "1"
-        const value = myStorage.get('1');
-        console.log(
-          `The key "1" of the map has a current_stock of ${
-            value[Object.keys(value)[0]]
-          } and a max_price of   ${value[Object.keys(value)[1]]}.`
-        );
+```js live
+try {
+  const myContract = await Tezos.wallet.at('KT1B3SpFJ1iHagwdkd1utVYP18RyYgZXeGio');
+  let myStorage = await myContract.storage();
 
-        //Calling the main method of the contract will modify the storage
-        return myContract.methodsObject.default('1').send();
-      })
-      .then((op) => {
-        console.log(`Waiting for ${op.opHash} to be confirmed...`);
-        return op.confirmation(1).then(() => op.opHash);
-      })
-      .then((hash) => {
-        console.log(`Operation injected.`);
+  //We want to see the value of the key "1"
+  let value = myStorage.get('1');
+  console.log(
+    `The key "1" of the map has a current_stock of ${
+      value[Object.keys(value)[0]]
+    } and a max_price of   ${value[Object.keys(value)[1]]}.`
+  );
 
-        //Use the get method to see the change in storage
-        return myContract.storage();
-      })
-      .then((myStorage) => {
-        const value = myStorage.get('1');
-        console.log(
-          `The key "1" of the map has now a current_stock of ${
-            value[Object.keys(value)[0]]
-          } and a max_price of ${value[Object.keys(value)[1]]}.`
-        );
-      });
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+  //Calling the main method of the contract will modify the storage
+  const op = await myContract.methodsObject.default('1').send();
+  console.log(`Waiting for ${op.opHash} to be confirmed...`);
+  await op.confirmation(1);
+  console.log(`Operation injected.`);
+
+  //Use the get method to see the change in storage
+  myStorage = await myContract.storage();
+  value = myStorage.get('1');
+  console.log(
+    `The key "1" of the map has now a current_stock of ${
+      value[Object.keys(value)[0]]
+    } and a max_price of ${value[Object.keys(value)[1]]}.`
+  );
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
   </TabItem>
@@ -281,7 +265,7 @@ values={[
 ]}>
 <TabItem value="contractAPI">
 
-```js 
+```js live 
 import { MichelsonMap } from '@taquito/taquito';
 
 const storageMap = new MichelsonMap();
@@ -337,7 +321,7 @@ Tezos.contract
 </TabItem>
   <TabItem value="walletAPI">
 
-```js 
+```js live 
 import { MichelsonMap } from '@taquito/taquito';
 
 const storageMap = new MichelsonMap();
@@ -410,41 +394,37 @@ values={[
 ]}>
 <TabItem value="contractAPI">
 
-```js 
-Tezos.contract
-  .at('KT1JDDU888CaVWFey2BYxpDzPBaYYn65Q4o3')
-  .then((myContract) => {
-    return myContract.storage();
-  })
-  .then((myStorage) => {
-    const value = myStorage['theMap'].get({
-      0: '2', //nat
-      1: 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY', //address
-    });
-    console.log(`Values associated with this key : amount : ${value[Object.keys(value)[0]]}, quantity :
-    ${value[Object.keys(value)[1]]}`);
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+```js live
+try {
+  const myContract = await Tezos.contract.at('KT1JDDU888CaVWFey2BYxpDzPBaYYn65Q4o3');
+  const myStorage = await myContract.storage();
+  const value = myStorage['theMap'].get({
+    0: '2', //nat
+    1: 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY', //address
+  });
+  console.log(`Values associated with this key : amount : ${value[Object.keys(value)[0]]}, quantity :
+  ${value[Object.keys(value)[1]]}`);
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
 </TabItem>
   <TabItem value="walletAPI">
 
-```js 
-Tezos.wallet
-  .at('KT1JDDU888CaVWFey2BYxpDzPBaYYn65Q4o3')
-  .then((myContract) => {
-    return myContract.storage();
-  })
-  .then((myStorage) => {
-    const value = myStorage['theMap'].get({
-      0: '2', //nat
-      1: 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY', //address
-    });
-    console.log(`Values associated with this key : amount : ${value[Object.keys(value)[0]]}, quantity :
-    ${value[Object.keys(value)[1]]}`);
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+```js live
+try {
+  const myContract = await Tezos.wallet.at('KT1JDDU888CaVWFey2BYxpDzPBaYYn65Q4o3');
+  const myStorage = await myContract.storage();
+  const value = myStorage['theMap'].get({
+    0: '2', //nat
+    1: 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY', //address
+  });
+  console.log(`Values associated with this key : amount : ${value[Object.keys(value)[0]]}, quantity :
+  ${value[Object.keys(value)[1]]}`);
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
   </TabItem>
@@ -479,7 +459,7 @@ values={[
 ]}>
 <TabItem value="contractAPI">
 
-```js 
+```js live 
 const storageMap = new MichelsonMap();
 storageMap.set(
   {
@@ -530,7 +510,7 @@ Tezos.contract
 </TabItem>
   <TabItem value="walletAPI">
 
-```js 
+```js live 
 const storageMap = new MichelsonMap();
 storageMap.set(
   {
@@ -598,53 +578,49 @@ values={[
 ]}>
 <TabItem value="contractAPI">
 
-```js 
-Tezos.contract
-  .at('KT1PBDZULVwbDW7BqEANmyEJGWuzjk43hDJG')
-  .then((myContract) => {
-    return myContract.storage();
-  })
-  .then((myStorage) => {
-    const value = myStorage.get({
-      0: '1', // int
-      1: '2', // nat
-      2: 'test', // string
-      3: 'cafe', // bytes
-      4: '10', // mutez
-      5: true, // bool
-      6: 'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5', // key_hash
-      7: '2019-09-06T15:08:29.000Z', // timestamp
-      8: 'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5', // address
-    });
-    console.log(`The value associated to this key is ${value}.`);
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+```js live
+try {
+  const myContract = await Tezos.contract.at('KT1PBDZULVwbDW7BqEANmyEJGWuzjk43hDJG');
+  const myStorage = await myContract.storage();
+  const value = myStorage.get({
+    0: '1', // int
+    1: '2', // nat
+    2: 'test', // string
+    3: 'cafe', // bytes
+    4: '10', // mutez
+    5: true, // bool
+    6: 'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5', // key_hash
+    7: '2019-09-06T15:08:29.000Z', // timestamp
+    8: 'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5', // address
+  });
+  console.log(`The value associated to this key is ${value}.`);
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
 </TabItem>
 <TabItem value="walletAPI">
 
-```js 
-Tezos.wallet
-  .at('KT1PBDZULVwbDW7BqEANmyEJGWuzjk43hDJG')
-  .then((myContract) => {
-    return myContract.storage();
-  })
-  .then((myStorage) => {
-    const value = myStorage.get({
-      0: '1', // int
-      1: '2', // nat
-      2: 'test', // string
-      3: 'cafe', // bytes
-      4: '10', // mutez
-      5: true, // bool
-      6: 'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5', // key_hash
-      7: '2019-09-06T15:08:29.000Z', // timestamp
-      8: 'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5', // address
-    });
-    console.log(`The value associated to this key is ${value}.`);
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+```js live
+try {
+  const myContract = await Tezos.wallet.at('KT1PBDZULVwbDW7BqEANmyEJGWuzjk43hDJG');
+  const myStorage = await myContract.storage();
+  const value = myStorage.get({
+    0: '1', // int
+    1: '2', // nat
+    2: 'test', // string
+    3: 'cafe', // bytes
+    4: '10', // mutez
+    5: true, // bool
+    6: 'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5', // key_hash
+    7: '2019-09-06T15:08:29.000Z', // timestamp
+    8: 'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5', // address
+  });
+  console.log(`The value associated to this key is ${value}.`);
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
   </TabItem>
@@ -672,7 +648,7 @@ values={[
 ]}>
 <TabItem value="contractAPI">
 
-```js 
+```js live 
 import { MichelsonMap } from '@taquito/taquito';
 
 const storageMap = new MichelsonMap();
@@ -728,7 +704,7 @@ Tezos.contract
 </TabItem>
   <TabItem value="walletAPI">
 
-```js 
+```js live 
 import { MichelsonMap } from '@taquito/taquito';
 
 const storageMap = new MichelsonMap();
@@ -797,67 +773,55 @@ values={[
 ]}>
 <TabItem value="contractAPI">
 
-```js 
-Tezos.contract
-  .at('KT1PZb8sEVvsKQGzLwusyQRkJpSCDQ7WFfny')
-  .then((myContract) => {
-    return myContract
-      .storage()
-      .then((myStorage) => {
-        //When called on a map, the get method returns the value directly
-        const valueMap = myStorage['themap'].get({
-          0: '1', //nat
-          1: 'tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx', //address
-        });
-        console.log(`The value associated with the specified key of the map is ${valueMap}.`);
-        return myContract.storage();
-      })
+```js live
+try {
+  const myContract = await Tezos.contract.at('KT1PZb8sEVvsKQGzLwusyQRkJpSCDQ7WFfny');
+  let myStorage = await myContract.storage();
 
-      .then((myStorage) => {
-        //When called on a bigMap, the get method returns a promise
-        return myStorage['thebigmap'].get({
-          0: '10', //nat
-          1: 'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5', //address
-        });
-      })
-      .then((valueBigMap) => {
-        console.log(`The value associated with the specified key of the bigMap is ${valueBigMap}.`);
-      });
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+  //When called on a map, the get method returns the value directly
+  const valueMap = myStorage['themap'].get({
+    0: '1', //nat
+    1: 'tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx', //address
+  });
+  console.log(`The value associated with the specified key of the map is ${valueMap}.`);
+
+  myStorage = await myContract.storage();
+  //When called on a bigMap, the get method returns a promise
+  const valueBigMap = await myStorage['thebigmap'].get({
+    0: '10', //nat
+    1: 'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5', //address
+  });
+  console.log(`The value associated with the specified key of the bigMap is ${valueBigMap}.`);
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
 </TabItem>
   <TabItem value="walletAPI">
 
-```js 
-Tezos.wallet
-  .at('KT1PZb8sEVvsKQGzLwusyQRkJpSCDQ7WFfny')
-  .then((myContract) => {
-    return myContract
-      .storage()
-      .then((myStorage) => {
-        //When called on a map, the get method returns the value directly
-        const valueMap = myStorage['themap'].get({
-          0: '1', //nat
-          1: 'tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx', //address
-        });
-        console.log(`The value associated with the specified key of the map is ${valueMap}.`);
-        return myContract.storage();
-      })
+```js live
+try {
+  const myContract = await Tezos.wallet.at('KT1PZb8sEVvsKQGzLwusyQRkJpSCDQ7WFfny');
+  let myStorage = await myContract.storage();
 
-      .then((myStorage) => {
-        //When called on a bigMap, the get method returns a promise
-        return myStorage['thebigmap'].get({
-          0: '10', //nat
-          1: 'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5', //address
-        });
-      })
-      .then((valueBigMap) => {
-        console.log(`The value associated with the specified key of the bigMap is ${valueBigMap}.`);
-      });
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+  //When called on a map, the get method returns the value directly
+  const valueMap = myStorage['themap'].get({
+    0: '1', //nat
+    1: 'tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx', //address
+  });
+  console.log(`The value associated with the specified key of the map is ${valueMap}.`);
+
+  myStorage = await myContract.storage();
+  //When called on a bigMap, the get method returns a promise
+  const valueBigMap = await myStorage['thebigmap'].get({
+    0: '10', //nat
+    1: 'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5', //address
+  });
+  console.log(`The value associated with the specified key of the bigMap is ${valueBigMap}.`);
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
   </TabItem>
@@ -900,61 +864,53 @@ values={[
 ]}>
 <TabItem value="contractAPI">
 
-```js 
+```js live
 // import { TezosToolkit } from '@taquito/taquito';
 // const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
 
-Tezos.contract
-  .at('KT1LPdW47Aba3kVpNMpRt7sx5yM1M4A8XmAW')
-  .then((contract) => {
-    console.log('Fetching the storage of the contract...');
-    return contract.storage();
-  })
-  .then((storage) => {
-    console.log('Fetching the big map values...\n');
-    return storage['0'].getMultipleValues([
-      'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5',
-      'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr',
-      'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys',
-      'tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx',
-    ]);
-  })
-  .then((values) => {
-    values.forEach((value, key) => {
-      console.log(`The value of the key ${key} is:\n${JSON.stringify(value, null, 2)}.\n`);
-    });
-  })
-  .catch((error) => console.log(JSON.stringify(error)));
+try {
+  const contract = await Tezos.contract.at('KT1LPdW47Aba3kVpNMpRt7sx5yM1M4A8XmAW');
+  console.log('Fetching the storage of the contract...');
+  const storage = await contract.storage();
+  console.log('Fetching the big map values...\n');
+  const values = await storage['0'].getMultipleValues([
+    'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5',
+    'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr',
+    'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys',
+    'tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx',
+  ]);
+  values.forEach((value, key) => {
+    console.log(`The value of the key ${key} is:\n${JSON.stringify(value, null, 2)}.\n`);
+  });
+} catch (error) {
+  console.log(JSON.stringify(error));
+}
 ```
 
 </TabItem>
   <TabItem value="walletAPI">
 
-```js 
+```js live
 // import { TezosToolkit } from '@taquito/taquito';
 // const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
 
-Tezos.wallet
-  .at('KT1LPdW47Aba3kVpNMpRt7sx5yM1M4A8XmAW')
-  .then((contract) => {
-    console.log('Fetching the storage of the contract...');
-    return contract.storage();
-  })
-  .then((storage) => {
-    console.log('Fetching the big map values...\n');
-    return storage['0'].getMultipleValues([
-      'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5',
-      'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr',
-      'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys',
-      'tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx',
-    ]);
-  })
-  .then((values) => {
-    values.forEach((value, key) => {
-      console.log(`The value of the key ${key} is:\n${JSON.stringify(value, null, 2)}.\n`);
-    });
-  })
-  .catch((error) => console.log(JSON.stringify(error)));
+try {
+  const contract = await Tezos.wallet.at('KT1LPdW47Aba3kVpNMpRt7sx5yM1M4A8XmAW');
+  console.log('Fetching the storage of the contract...');
+  const storage = await contract.storage();
+  console.log('Fetching the big map values...\n');
+  const values = await storage['0'].getMultipleValues([
+    'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5',
+    'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr',
+    'tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys',
+    'tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx',
+  ]);
+  values.forEach((value, key) => {
+    console.log(`The value of the key ${key} is:\n${JSON.stringify(value, null, 2)}.\n`);
+  });
+} catch (error) {
+  console.log(JSON.stringify(error));
+}
 ```
 
   </TabItem>

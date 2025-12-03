@@ -172,7 +172,7 @@ values={[
 ]}>
 <TabItem value="contractAPI">
 
-```js 
+```js live
 // import { TezosToolkit } from '@taquito/taquito'
 // import { InMemorySigner } from '@taquito/signer'
 // import { stringToBytes, num2PaddedHex } from '@taquito/utils';
@@ -186,21 +186,20 @@ let message = 'Hello world!'
 
 let bytes = stringToBytes(magicString) + num2PaddedHex(interface_.length, 8) + stringToBytes(interface_) + num2PaddedHex(Number(characterEncoding), 8) + num2PaddedHex(message.length, 16) + stringToBytes(message)
 
-InMemorySigner.fromSecretKey('edsk2rKA8YEExg9Zo2qNPiQnnYheF1DhqjLVmfKdxiFfu5GyGRZRnb')
-  .then((theSigner) => {
-    Tezos.setProvider({ signer: theSigner });
-    return Tezos.signer.sign(bytes, new Uint8Array([parseInt(magicByte, 16)]))
-  })
-  .then(signed => {
-    console.log(JSON.stringify(signed, null, 2));
-  })
-  .catch((error) => console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`));
+try {
+  const theSigner = await InMemorySigner.fromSecretKey('edsk2rKA8YEExg9Zo2qNPiQnnYheF1DhqjLVmfKdxiFfu5GyGRZRnb');
+  Tezos.setProvider({ signer: theSigner });
+  const signed = await Tezos.signer.sign(bytes, new Uint8Array([parseInt(magicByte, 16)]));
+  console.log(JSON.stringify(signed, null, 2));
+} catch (error) {
+  console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
 </TabItem>
   <TabItem value="walletAPI">
 
-```js  wallet
+```js live 
 // import { TezosToolkit } from '@taquito/taquito'
 // import { InMemorySigner } from '@taquito/signer'
 // import { stringToBytes, num2PaddedHex } from '@taquito/utils';
@@ -228,7 +227,7 @@ wallet.client.requestSignPayload(payload).then(signed => console.log(JSON.string
 
 Taquito also offers the possibility to sign Michelson code. This feature can be useful, for example, if you need to send a lambda to a contract to be executed but want to restrict the number of users who can submit a lambda by verifying the signer's address. The signing of Michelson code requires the use of the `michel-codec` package:
 
-```js 
+```js live
 // import { TezosToolkit } from '@taquito/taquito';
 // import { Parser, packDataBytes, MichelsonData, MichelsonType } from '@taquito/michel-codec';
 // const Tezos = new TezosToolkit(NODE_RPC_URL);
@@ -248,10 +247,13 @@ const packed = packDataBytes(
   dataJSON, // as MichelsonData
   typeJSON // as MichelsonType
 );
-Tezos.signer
-  .sign(packed.bytes)
-  .then((signed) => console.log(JSON.stringify(signed, null, 2)))
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+
+try {
+  const signed = await Tezos.signer.sign(packed.bytes);
+  console.log(JSON.stringify(signed, null, 2));
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
 First, you provide the Michelson code to be signed as a string along with its type.

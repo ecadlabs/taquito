@@ -23,28 +23,28 @@ In the following example, we transfer 0.5ꜩ from a `tz1aaYoabvj2DQtpHz74Z83fSNj
 
 ```js live
 try {
-  render(`Fetching a private key...`);
+  console.log(`Fetching a private key...`);
   const response = await fetch('https://keygen.ecadinfra.com/ghostnet/', {
     method: 'POST',
     headers: { Authorization: 'Bearer taquito-example' },
   });
   const privateKey = await response.text();
 
-  render(`Importing the private key...`);
+  console.log(`Importing the private key...`);
   await importKey(Tezos, privateKey);
 
   const amount = 0.5;
   const address = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY';
 
-  render(`Transfering ${amount} ꜩ to ${address}...`);
+  console.log(`Transfering ${amount} ꜩ to ${address}...`);
   const operation = await Tezos.contract.transfer({ to: address, amount: amount });
 
-  render(`Waiting for ${operation.hash} to be confirmed...`);
+  console.log(`Waiting for ${operation.hash} to be confirmed...`);
   const hash = await operation.confirmation(1);
 
-  render(`Operation injected: https://ghostnet.tzkt.io/${hash}/operations`);
+  console.log(`Operation injected: https://ghostnet.tzkt.io/${hash}/operations`);
 } catch (error) {
-  render(`Error: ${JSON.stringify(error, null, 2)}`);
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
 }
 ```
 

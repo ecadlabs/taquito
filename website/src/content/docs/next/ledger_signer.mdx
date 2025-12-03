@@ -3,6 +3,8 @@ title: Ledger Signer
 author: Roxane Letourneau
 ---
 
+
+
 The Ledger Signer implements the Signer interface of Taquito, allowing you to sign operation from a Ledger Nano device.
 
 :::note
@@ -55,7 +57,7 @@ const ledgerSigner = new LedgerSigner(transport);
 The constructor of the `LedgerSigner` class can take three other parameters. If none are specified, the default values are used.
 
 - path: **default value is "44'/1729'/0'/0'"**
-  You can use as a parameter the `HDPathTemplate` which refers to `44'/1729'/${account}'/0'`. You have to specify what is the index of the account you want to use. Or you can also use a complete path as a parameter.
+  You can use as a parameter the `HDPathTemplate` which refers to ``44'/1729'/\${account}'/0'``. You have to specify what is the index of the account you want to use. Or you can also use a complete path as a parameter.
   _More details about paths below_
 - prompt: **default is true**
   If true, you will be asked on your Ledger device to send your public key for validation.
@@ -168,8 +170,8 @@ We can see other implementations that use `44'/1729'/0'/0'/0'`, where the next a
 
 | Wallet  | Path                                                         |
 | ------- | ------------------------------------------------------------ |
-| Tezbox  | "44'/1729'/\{account\}'/0'" or "44'/1729'/0'/\{account\}'"       |
-| Galleon | "44'/1729'/\{account\}'/0'/0'" or "44'/1729'/0'/0'/\{account\}'" |
+| Tezbox  | `"44'/1729'/{account}'/0'"` or `"44'/1729'/0'/{account}'"`       |
+| Galleon | `"44'/1729'/{account}'/0'/0'"` or `"44'/1729'/0'/0'/{account}'"` |
 
 #### Some considerations about paths
 
@@ -192,27 +194,13 @@ https://medium.com/mycrypto/wtf-is-a-derivation-path-c3493ca2eb52
 Having your Ledger device connected to your computer and the `Tezos Wallet App` opened, you can run the following code example. It will scan your Ledger from path `44'/1729'/0'/0'` to `44'/1729'/9'/0'` to get public key hashes and the balance for revealed accounts. Confirmations will be asked on your Ledger to send the public keys.
 _Note that this example is not intended to be a complete example of paths scanning but only a rough outline of what it is possible to do._
 
-```js 
+```js live
 //import { LedgerSigner, DerivationType, HDPathTemplate } from '@taquito/ledger-signer';
 //import { TezosToolkit } from '@taquito/taquito';
 // import TransportWebHID from "@ledgerhq/hw-transport-webhid";
 //const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
 
-TransportWebHID.create().then((transport) => {
-  for (let index = 0, p = Promise.resolve(); index < 10; index++) {
-    p = p.then(
-      (_) =>
-        new Promise((resolve) =>
-          setTimeout(function () {
-            getAddressInfo(transport, index);
-            resolve();
-          }, 2000)
-        )
-    );
-  }
-});
-
-function getAddressInfo(transport, index) {
+async function getAddressInfo(transport, index) {
   const ledgerSigner = new LedgerSigner(
     transport,
     `44'/1729'/${index}'/0'`,
@@ -220,20 +208,33 @@ function getAddressInfo(transport, index) {
     DerivationType.ED25519
   );
   Tezos.setProvider({ signer: ledgerSigner });
-  return Tezos.signer.publicKeyHash().then((pkh) => {
-    Tezos.tz.getBalance(pkh).then((balance) => {
-      Tezos.rpc.getManagerKey(pkh).then((getPublicKey) => {
-        console.log(
-          `The public key hash related to the derivation path having the index ${index} is ${pkh}.`
-        );
-        if (getPublicKey) {
-          console.log(`The balance is ${balance.toNumber() / 1000000} ꜩ.\n`);
-        } else {
-          console.log('This account is not revealed.\n');
-        }
-      });
-    });
-  });
+
+  const pkh = await Tezos.signer.publicKeyHash();
+  const balance = await Tezos.tz.getBalance(pkh);
+  const getPublicKey = await Tezos.rpc.getManagerKey(pkh);
+
+  console.log(
+    `The public key hash related to the derivation path having the index ${index} is ${pkh}.`
+  );
+  if (getPublicKey) {
+    console.log(`The balance is ${balance.toNumber() / 1000000} ꜩ.\n`);
+  } else {
+    console.log('This account is not revealed.\n');
+  }
+}
+
+try {
+  const transport = await TransportWebHID.create();
+  for (let index = 0; index < 10; index++) {
+    await new Promise((resolve) =>
+      setTimeout(async function () {
+        await getAddressInfo(transport, index);
+        resolve();
+      }, 2000)
+    );
+  }
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
 }
 ```
 

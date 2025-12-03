@@ -121,60 +121,46 @@ values={[
 ]}>
 <TabItem value="contractAPI">
 
-```js 
+```js live
 const contractTopLevelViews = 'KT1Anag1s3N7erRXrRAtPpRC2PRXrqcCJ43m';
 const contractCallFib = 'KT1KPDBat3prp2G81aDDLyJ38Vbq6YLYFQo8';
 
-Tezos.contract.at(contractCallFib)
-  .then((contract) => {
-    contract.storage()
-      .then((storage) => {
-        console.log(`The initial storage of ${contractCallFib} is ${storage}.`);
-        const fibPosition = storage.toNumber() + 1;
-        console.log(`Calling the default method of ${contractCallFib} will call the view fib of ${contractTopLevelViews} with ${fibPosition}.`);
-        return contract.methodsObject.default({ 0: fibPosition, 1: contractTopLevelViews }).send()
-          .then((op) => {
-            console.log(`Waiting for ${op.hash} to be confirmed...`);
-            return op.confirmation().then(() => op.hash)
-              .then(() => {
-                return contract.storage()
-                  .then((finalStorage) => {
-                    console.log(`The storage is now ${finalStorage} which corresponds to the value of the Fibonacci sequence at position ${fibPosition}.`);
-                  })
-              })
-          })
-      })
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+try {
+  const contract = await Tezos.contract.at(contractCallFib);
+  const storage = await contract.storage();
+  console.log(`The initial storage of ${contractCallFib} is ${storage}.`);
+  const fibPosition = storage.toNumber() + 1;
+  console.log(`Calling the default method of ${contractCallFib} will call the view fib of ${contractTopLevelViews} with ${fibPosition}.`);
+  const op = await contract.methodsObject.default({ 0: fibPosition, 1: contractTopLevelViews }).send();
+  console.log(`Waiting for ${op.hash} to be confirmed...`);
+  await op.confirmation();
+  const finalStorage = await contract.storage();
+  console.log(`The storage is now ${finalStorage} which corresponds to the value of the Fibonacci sequence at position ${fibPosition}.`);
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 </TabItem>
   <TabItem value="walletAPI">
 
-```js 
+```js live
 const contractTopLevelViews = 'KT1Anag1s3N7erRXrRAtPpRC2PRXrqcCJ43m';
 const contractCallFib = 'KT1KPDBat3prp2G81aDDLyJ38Vbq6YLYFQo8';
 
-Tezos.wallet.at(contractCallFib)
-  .then((contract) => {
-    contract.storage()
-      .then((storage) => {
-        console.log(`The initial storage of ${contractCallFib} is ${storage}.`);
-        const fibPosition = storage.toNumber() + 1;
-        console.log(`Calling the default method of ${contractCallFib} will call the view fib of ${contractTopLevelViews} with ${fibPosition}.`);
-        return contract.methodsObject.default({ 0: fibPosition, 1: contractTopLevelViews }).send()
-          .then((op) => {
-            console.log(`Waiting for ${op.opHash} to be confirmed...`);
-            return op.confirmation().then(() => op.opHash)
-              .then(() => {
-                return contract.storage()
-                  .then((finalStorage) => {
-                    console.log(`The storage is now ${finalStorage} which corresponds to the value of the Fibonacci sequence at position ${fibPosition}.`);
-                  })
-              })
-          })
-      })
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+try {
+  const contract = await Tezos.wallet.at(contractCallFib);
+  const storage = await contract.storage();
+  console.log(`The initial storage of ${contractCallFib} is ${storage}.`);
+  const fibPosition = storage.toNumber() + 1;
+  console.log(`Calling the default method of ${contractCallFib} will call the view fib of ${contractTopLevelViews} with ${fibPosition}.`);
+  const op = await contract.methodsObject.default({ 0: fibPosition, 1: contractTopLevelViews }).send();
+  console.log(`Waiting for ${op.opHash} to be confirmed...`);
+  await op.confirmation();
+  const finalStorage = await contract.storage();
+  console.log(`The storage is now ${finalStorage} which corresponds to the value of the Fibonacci sequence at position ${fibPosition}.`);
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
   </TabItem>
 </Tabs>
@@ -205,37 +191,35 @@ values={[
 ]}>
 <TabItem value="contractAPI">
 
-```js 
+```js live
 const contractTopLevelViews = 'KT1Anag1s3N7erRXrRAtPpRC2PRXrqcCJ43m';
 const contractCallFib = 'KT1KPDBat3prp2G81aDDLyJ38Vbq6YLYFQo8';
 const fibPosition = 7;
 
-Tezos.contract.at(contractTopLevelViews)
-  .then((contract) => {
-    return contract.contractViews.fib(fibPosition).executeView({ viewCaller: contractCallFib })
-      .then((viewResult) => {
-        console.log(`The result of the view simulation is ${viewResult}.`);
-      })
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+try {
+  const contract = await Tezos.contract.at(contractTopLevelViews);
+  const viewResult = await contract.contractViews.fib(fibPosition).executeView({ viewCaller: contractCallFib });
+  console.log(`The result of the view simulation is ${viewResult}.`);
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
 </TabItem>
   <TabItem value="walletAPI">
 
-```js 
+```js live
 const contractTopLevelViews = 'KT1Anag1s3N7erRXrRAtPpRC2PRXrqcCJ43m';
 const contractCallFib = 'KT1KPDBat3prp2G81aDDLyJ38Vbq6YLYFQo8';
 const fibPosition = 7;
 
-Tezos.wallet.at(contractTopLevelViews)
-  .then((contract) => {
-    return contract.contractViews.fib(fibPosition).executeView({ viewCaller: contractCallFib })
-      .then((viewResult) => {
-        console.log(`The result of the view simulation is ${viewResult}.`);
-      })
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+try {
+  const contract = await Tezos.wallet.at(contractTopLevelViews);
+  const viewResult = await contract.contractViews.fib(fibPosition).executeView({ viewCaller: contractCallFib });
+  console.log(`The result of the view simulation is ${viewResult}.`);
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
   </TabItem>
 </Tabs>

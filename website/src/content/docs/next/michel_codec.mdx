@@ -36,28 +36,29 @@ const p = new Parser(parserOptions);
 * `parseJSON` - takes a JSON-encoded Michelson, validates it, strips away unneeded properties and expands macros based on your configuration.
 * `emitMicheline` takes a parsed JSON Michelson object and converts it to a Micheline expression with formatting options.
 
-```js 
+```js live
 // import { Parser, emitMicheline } from '@taquito/michel-codec'
 
 const p = new Parser();
-Tezos.contract
-  .at("KT1BJadpDyLCACMH7Tt9xtpx4dQZVKw9cDF7")
-  .then(contract => {
-    const code = p.parseJSON(contract.script.code);
-    console.log("Pretty print Michelson smart contract:");
-    console.log(emitMicheline(code, {indent:" ", newline: "\n",}));
 
-    const storage = p.parseJSON(contract.script.storage);
-    console.log("Pretty print Storage:");
-    console.log(emitMicheline(storage, {indent:" ", newline: "\n",}));
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+try {
+  const contract = await Tezos.contract.at("KT1BJadpDyLCACMH7Tt9xtpx4dQZVKw9cDF7");
+  const code = p.parseJSON(contract.script.code);
+  console.log("Pretty print Michelson smart contract:");
+  console.log(emitMicheline(code, {indent:" ", newline: "\n",}));
+
+  const storage = p.parseJSON(contract.script.storage);
+  console.log("Pretty print Storage:");
+  console.log(emitMicheline(storage, {indent:" ", newline: "\n",}));
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
 ### parseMichelineExpression - Parse Micheline and convert it to JSON Michelson
 Takes a Micheline expression in the form of script or data and converts it to JSON Michelson
 
-```js 
+```js live 
 // import { Parser } from '@taquito/michel-codec'
 
 const p = new Parser();
