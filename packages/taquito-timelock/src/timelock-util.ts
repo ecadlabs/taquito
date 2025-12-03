@@ -2,7 +2,7 @@ import bigInt, { BigInteger } from 'big-integer';
 import { hash } from '@stablelib/blake2b';
 import { TimelockInit, RNG } from './interface';
 
-// globalThis.crypto is available in browsers and Node.js 19+
+// globalThis.crypto is available in browsers and Node.js 20+
 const defaultRNG: RNG = globalThis.crypto as unknown as RNG;
 
 export const RSA_MODULUS = bigInt(
