@@ -1,5 +1,5 @@
-import { MichelsonMap, TezosToolkit } from '@taquito/taquito';
-import { importKey, InMemorySigner } from '@taquito/signer';
+import { MichelsonMap, TezosToolkit, importKey } from '@taquito/taquito';
+import { InMemorySigner } from '@taquito/signer';
 import { fa2ForTokenMetadataView } from '../integration-tests/data/fa2-for-token-metadata-view';
 import { b58Encode, stringToBytes, PrefixV2 } from '@taquito/utils';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
