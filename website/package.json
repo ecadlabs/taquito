@@ -9,6 +9,7 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@airgap/beacon-sdk": "^4.6.3",
     "@astrojs/mdx": "^4.3.7",
     "@astrojs/sitemap": "^3.6.0",
     "@cloudflare/workers-types": "^4.20251126.0",

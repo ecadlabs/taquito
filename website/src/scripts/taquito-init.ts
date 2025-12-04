@@ -32,7 +32,20 @@ declare global {
     bytesToString: any;
     BigNumber: any;
     MichelsonMap: any;
+    MichelsonStorageView: any;
     importKey: any;
+    UnitValue: any;
+    RpcReadAdapter: any;
+    stringToBytes: any;
+    num2PaddedHex: any;
+    SigningType: any;
+    Parser: any;
+    packDataBytes: any;
+    b58Encode: any;
+    PrefixV2: any;
+    emitMicheline: any;
+    getRevealFee: any;
+
     // Contract globals
     genericMultisigJSONfile: any;
     genericMultisig: any;
@@ -71,12 +84,16 @@ async function init() {
     console.log("Initializing Taquito dynamically...");
 
     // Dynamic imports
-    const { TezosToolkit, compose, MichelsonMap } = await import('@taquito/taquito');
+    const { TezosToolkit, compose, MichelsonMap, UnitValue, RpcReadAdapter, getRevealFee } = await import('@taquito/taquito');
     const { InMemorySigner, importKey } = await import('@taquito/signer');
     const { BeaconWallet } = await import('@taquito/beacon-wallet');
     const { Tzip12Module, tzip12 } = await import('@taquito/tzip12');
-    const { Tzip16Module, tzip16, bytesToString } = await import('@taquito/tzip16');
+    const { Tzip16Module, tzip16, bytesToString, MichelsonStorageView } = await import('@taquito/tzip16');
+    const { stringToBytes, num2PaddedHex } = await import('@taquito/utils');
     const { BigNumber } = await import('bignumber.js');
+    const { SigningType } = await import('@airgap/beacon-dapp')
+    const { Parser, packDataBytes, emitMicheline } = await import('@taquito/michel-codec');
+    const { b58Encode, PrefixV2 } = await import('@taquito/utils');
 
     const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
     window.Tezos = Tezos;
@@ -91,7 +108,19 @@ async function init() {
     window.bytesToString = bytesToString;
     window.BigNumber = BigNumber;
     window.MichelsonMap = MichelsonMap;
+    window.MichelsonStorageView = MichelsonStorageView;
     window.importKey = importKey;
+    window.UnitValue = UnitValue;
+    window.RpcReadAdapter = RpcReadAdapter;
+    window.stringToBytes = stringToBytes;
+    window.num2PaddedHex = num2PaddedHex;
+    window.SigningType = SigningType;
+    window.Parser = Parser;
+    window.packDataBytes = packDataBytes;
+    window.b58Encode = b58Encode;
+    window.PrefixV2 = PrefixV2;
+    window.emitMicheline = emitMicheline;
+    window.getRevealFee = getRevealFee;
 
     // Expose contracts for live code examples
     window.genericMultisigJSONfile = genericMultisigJSONfile;
@@ -146,7 +175,7 @@ window.configureSigner = async function() {
       throw new Error(`Failed to generate key: ${response.status}`);
     }
 
-    const privateKey = await response.text();;
+    const privateKey = await response.text();
 
     if (!privateKey) {
       throw new Error("No private key in response");
