@@ -198,7 +198,7 @@ export class WalletOperationBatch {
 }
 
 export class Wallet {
-  static isWallet(provider: Wallet | ContractProvider): provider is Wallet {
+  isWallet(provider: Wallet | ContractProvider): provider is Wallet {
     return isWalletGuard(provider);
   }
 
