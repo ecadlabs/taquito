@@ -3,9 +3,6 @@ title: Maps and BigMaps
 author: Roxane Letourneau
 ---
 
-
-import { MichelsonMap } from '@taquito/taquito';
-
 Learn how to:
 
 - Fetch data from a `Map` datatype on a Tezos Smart Contract
@@ -38,7 +35,7 @@ values={[
 <TabItem value="contractAPI">
 
 ```js live 
-import { MichelsonMap } from '@taquito/taquito';
+// import { MichelsonMap } from '@taquito/taquito';
 // import { TezosToolkit } from '@taquito/taquito';
 // const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
 
@@ -48,26 +45,27 @@ storageMap.set('2', { current_stock: '120', max_price: '20' });
 storageMap.set('3', { current_stock: '50', max_price: '60' });
 
 // contractMapTacoShop variable contains the Michelson Smart Contract source code, and is not shown for brevity
-Tezos.contract
+try {
+ const contractOriginated = await Tezos.contract
   .originate({
     code: contractMapTacoShop,
     storage: storageMap,
-  })
-  .then((contractOriginated) => {
+  });
+  
     console.log(`Waiting for confirmation of origination for ${contractOriginated.contractAddress}...`);
-    return contractOriginated.contract();
-  })
-  .then((contract) => {
-    console.log(`Origination completed.`);
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+    contract = await contractOriginated.contract();
+
+console.log(`Origination completed.`);
+} catch (error) {
+ console.log(`Error: ${JSON.stringify(error, null, 2)}`) 
+}
 ```
 
 </TabItem>
   <TabItem value="walletAPI">
 
-```js live 
-import { MichelsonMap } from '@taquito/taquito';
+```js live
+// import { MichelsonMap } from '@taquito/taquito';
 // import { TezosToolkit } from '@taquito/taquito';
 // const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
 
@@ -77,20 +75,19 @@ storageMap.set('2', { current_stock: '120', max_price: '20' });
 storageMap.set('3', { current_stock: '50', max_price: '60' });
 
 // contractMapTacoShop variable contains the Michelson Smart Contract source code, and is not shown for brevity
-Tezos.wallet
-  .originate({
-    code: contractMapTacoShop,
-    storage: storageMap,
-  })
-  .send()
-  .then((originationOp) => {
-    console.log(`Waiting for confirmation of origination...`);
-    return originationOp.contract();
-  })
-  .then((contract) => {
-    console.log(`Origination completed for ${contract.address}.`);
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+try {
+  const originationOp = await Tezos.wallet
+    .originate({
+      code: contractMapTacoShop,
+      storage: storageMap,
+    })
+    .send();
+  console.log(`Waiting for confirmation of origination...`);
+  const contract = await originationOp.contract();
+  console.log(`Origination completed for ${contract.address}.`);
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
   </TabItem>
@@ -106,52 +103,50 @@ values={[
 ]}>
 <TabItem value="contractAPI">
 
-```js live 
-import { MichelsonMap } from '@taquito/taquito';
+```js live
+// import { MichelsonMap } from '@taquito/taquito';
 
-Tezos.contract
-  .originate({
-    code: contractMapTacoShop,
-    storage: MichelsonMap.fromLiteral({
-      1: { current_stock: '10000', max_price: '50' },
-      2: { current_stock: '120', max_price: '20' },
-      3: { current_stock: '50', max_price: '60' },
-    }),
-  })
-  .then((contractOriginated) => {
-    console.log(`Waiting for confirmation of origination for ${contractOriginated.contractAddress}...`);
-    return contractOriginated.contract();
-  })
-  .then((contract) => {
-    console.log(`Origination completed.`);
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+try {
+  const contractOriginated = await Tezos.contract
+    .originate({
+      code: contractMapTacoShop,
+      storage: MichelsonMap.fromLiteral({
+        1: { current_stock: '10000', max_price: '50' },
+        2: { current_stock: '120', max_price: '20' },
+        3: { current_stock: '50', max_price: '60' },
+      }),
+    });
+  console.log(`Waiting for confirmation of origination for ${contractOriginated.contractAddress}...`);
+  const contract = await contractOriginated.contract();
+  console.log(`Origination completed.`);
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
 </TabItem>
   <TabItem value="walletAPI">
 
-```js live 
-import { MichelsonMap } from '@taquito/taquito';
+```js live
+// import { MichelsonMap } from '@taquito/taquito';
 
-Tezos.wallet
-  .originate({
-    code: contractMapTacoShop,
-    storage: MichelsonMap.fromLiteral({
-      1: { current_stock: '10000', max_price: '50' },
-      2: { current_stock: '120', max_price: '20' },
-      3: { current_stock: '50', max_price: '60' },
-    }),
-  })
-  .send()
-  .then((originationOp) => {
-    console.log(`Waiting for confirmation of origination...`);
-    return originationOp.contract();
-  })
-  .then((contract) => {
-    console.log(`Origination completed for ${contract.address}.`);
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+try {
+  const originationOp = await Tezos.wallet
+    .originate({
+      code: contractMapTacoShop,
+      storage: MichelsonMap.fromLiteral({
+        1: { current_stock: '10000', max_price: '50' },
+        2: { current_stock: '120', max_price: '20' },
+        3: { current_stock: '50', max_price: '60' },
+      }),
+    })
+    .send();
+  console.log(`Waiting for confirmation of origination...`);
+  const contract = await originationOp.contract();
+  console.log(`Origination completed for ${contract.address}.`);
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
  </TabItem>
@@ -265,8 +260,8 @@ values={[
 ]}>
 <TabItem value="contractAPI">
 
-```js live 
-import { MichelsonMap } from '@taquito/taquito';
+```js live
+// import { MichelsonMap } from '@taquito/taquito';
 
 const storageMap = new MichelsonMap();
 //First entry of the map
@@ -299,30 +294,29 @@ storageMap.set(
 );
 
 // contractMapPairKey variable contains the Michelson Smart Contract
-Tezos.contract
-  .originate({
-    code: contractMapPairKey,
-    storage: {
-      theAddress: 'tz1NAozDvi5e7frVq9cUaC3uXQQannemB8Jw',
-      theMap: storageMap,
-      theNumber: 10,
-    },
-  })
-  .then((contractOriginated) => {
-    console.log(`Waiting for the contract origination of ${contractOriginated.contractAddress}...`);
-    return contractOriginated.contract();
-  })
-  .then((contract) => {
-    console.log(`Origination completed.`);
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+try {
+  const contractOriginated = await Tezos.contract
+    .originate({
+      code: contractMapPairKey,
+      storage: {
+        theAddress: 'tz1NAozDvi5e7frVq9cUaC3uXQQannemB8Jw',
+        theMap: storageMap,
+        theNumber: 10,
+      },
+    });
+  console.log(`Waiting for the contract origination of ${contractOriginated.contractAddress}...`);
+  const contract = await contractOriginated.contract();
+  console.log(`Origination completed.`);
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
 </TabItem>
   <TabItem value="walletAPI">
 
-```js live 
-import { MichelsonMap } from '@taquito/taquito';
+```js live
+// import { MichelsonMap } from '@taquito/taquito';
 
 const storageMap = new MichelsonMap();
 //First entry of the map
@@ -355,24 +349,23 @@ storageMap.set(
 );
 
 // contractMapPairKey variable contains the Michelson Smart Contract
-Tezos.wallet
-  .originate({
-    code: contractMapPairKey,
-    storage: {
-      theAddress: 'tz1NAozDvi5e7frVq9cUaC3uXQQannemB8Jw',
-      theMap: storageMap,
-      theNumber: 10,
-    },
-  })
-  .send()
-  .then((originationOp) => {
-    console.log(`Waiting for confirmation of origination...`);
-    return originationOp.contract();
-  })
-  .then((contract) => {
-    console.log(`Origination completed for ${contract.address}.`);
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+try {
+  const originationOp = await Tezos.wallet
+    .originate({
+      code: contractMapPairKey,
+      storage: {
+        theAddress: 'tz1NAozDvi5e7frVq9cUaC3uXQQannemB8Jw',
+        theMap: storageMap,
+        theNumber: 10,
+      },
+    })
+    .send();
+  console.log(`Waiting for confirmation of origination...`);
+  const contract = await originationOp.contract();
+  console.log(`Origination completed for ${contract.address}.`);
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
   </TabItem>
@@ -459,7 +452,7 @@ values={[
 ]}>
 <TabItem value="contractAPI">
 
-```js live 
+```js live
 const storageMap = new MichelsonMap();
 storageMap.set(
   {
@@ -492,25 +485,24 @@ storageMap.set(
 );
 
 // contractMap8pairs variable contains the Michelson Smart Contract
-Tezos.contract
-  .originate({
-    code: contractMap8pairs,
-    storage: storageMap,
-  })
-  .then((contractOriginated) => {
-    console.log(`Waiting for the contract origination of ${contractOriginated.contractAddress}...`);
-    return contractOriginated.contract();
-  })
-  .then((contract) => {
-    console.log(`Origination completed.`);
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+try {
+  const contractOriginated = await Tezos.contract
+    .originate({
+      code: contractMap8pairs,
+      storage: storageMap,
+    });
+  console.log(`Waiting for the contract origination of ${contractOriginated.contractAddress}...`);
+  const contract = await contractOriginated.contract();
+  console.log(`Origination completed.`);
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
 </TabItem>
   <TabItem value="walletAPI">
 
-```js live 
+```js live
 const storageMap = new MichelsonMap();
 storageMap.set(
   {
@@ -543,20 +535,19 @@ storageMap.set(
 );
 
 // contractMap8pairs variable contains the Michelson Smart Contract
-Tezos.wallet
-  .originate({
-    code: contractMap8pairs,
-    storage: storageMap,
-  })
-  .send()
-  .then((originationOp) => {
-    console.log(`Waiting for confirmation of origination...`);
-    return originationOp.contract();
-  })
-  .then((contract) => {
-    console.log(`Origination completed for ${contract.address}.`);
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+try {
+  const originationOp = await Tezos.wallet
+    .originate({
+      code: contractMap8pairs,
+      storage: storageMap,
+    })
+    .send();
+  console.log(`Waiting for confirmation of origination...`);
+  const contract = await originationOp.contract();
+  console.log(`Origination completed for ${contract.address}.`);
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
   </TabItem>
@@ -648,8 +639,8 @@ values={[
 ]}>
 <TabItem value="contractAPI">
 
-```js live 
-import { MichelsonMap } from '@taquito/taquito';
+```js live
+// import { MichelsonMap } from '@taquito/taquito';
 
 const storageMap = new MichelsonMap();
 storageMap.set(
@@ -683,29 +674,28 @@ storageBigMap.set(
   200
 );
 // contractMapBigMap variable contains the Michelson Smart Contract
-Tezos.contract
-  .originate({
-    code: contractMapBigMap,
-    storage: {
-      themap: storageMap,
-      thebigmap: storageBigMap,
-    },
-  })
-  .then((originationOp) => {
-    console.log(`Waiting for confirmation of origination...`);
-    return originationOp.contract();
-  })
-  .then((contract) => {
-    console.log(`Origination completed for ${contract.address}.`);
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+try {
+  const originationOp = await Tezos.contract
+    .originate({
+      code: contractMapBigMap,
+      storage: {
+        themap: storageMap,
+        thebigmap: storageBigMap,
+      },
+    });
+  console.log(`Waiting for confirmation of origination...`);
+  const contract = await originationOp.contract();
+  console.log(`Origination completed for ${contract.address}.`);
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
 </TabItem>
   <TabItem value="walletAPI">
 
-```js live 
-import { MichelsonMap } from '@taquito/taquito';
+```js live
+// import { MichelsonMap } from '@taquito/taquito';
 
 const storageMap = new MichelsonMap();
 storageMap.set(
@@ -739,23 +729,22 @@ storageBigMap.set(
   200
 );
 // contractMapBigMap variable contains the Michelson Smart Contract
-Tezos.wallet
-  .originate({
-    code: contractMapBigMap,
-    storage: {
-      themap: storageMap,
-      thebigmap: storageBigMap,
-    },
-  })
-  .send()
-  .then((originationOp) => {
-    console.log(`Waiting for confirmation of origination...`);
-    return originationOp.contract();
-  })
-  .then((contract) => {
-    console.log(`Origination completed for ${contract.address}.`);
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+try {
+  const originationOp = await Tezos.wallet
+    .originate({
+      code: contractMapBigMap,
+      storage: {
+        themap: storageMap,
+        thebigmap: storageBigMap,
+      },
+    })
+    .send();
+  console.log(`Waiting for confirmation of origination...`);
+  const contract = await originationOp.contract();
+  console.log(`Origination completed for ${contract.address}.`);
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
   </TabItem>
