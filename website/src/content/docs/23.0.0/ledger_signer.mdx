@@ -200,7 +200,7 @@ _Note that this example is not intended to be a complete example of paths scanni
 // import TransportWebHID from "@ledgerhq/hw-transport-webhid";
 //const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
 
-async function getAddressInfo(transport, index) {
+const getAddressInfo = async (transport, index) => {
   const ledgerSigner = new LedgerSigner(
     transport,
     `44'/1729'/${index}'/0'`,
@@ -234,7 +234,7 @@ try {
     );
   }
 } catch (error) {
-  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+  console.log(error);
 }
 ```
 

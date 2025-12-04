@@ -45,6 +45,10 @@ declare global {
     PrefixV2: any;
     emitMicheline: any;
     getRevealFee: any;
+    TransportWebHID: any;
+    LedgerSigner: any;
+    DerivationType: any;
+    HDPathTemplate: any;
 
     // Contract globals
     genericMultisigJSONfile: any;
@@ -94,6 +98,8 @@ async function init() {
     const { SigningType } = await import('@airgap/beacon-dapp')
     const { Parser, packDataBytes, emitMicheline } = await import('@taquito/michel-codec');
     const { b58Encode, PrefixV2 } = await import('@taquito/utils');
+    const TransportWebHID = (await import('@ledgerhq/hw-transport-webhid')).default;
+    const { LedgerSigner, DerivationType, HDPathTemplate } = await import('@taquito/ledger-signer');
 
     const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
     window.Tezos = Tezos;
@@ -121,6 +127,10 @@ async function init() {
     window.PrefixV2 = PrefixV2;
     window.emitMicheline = emitMicheline;
     window.getRevealFee = getRevealFee;
+    window.TransportWebHID = TransportWebHID;
+    window.LedgerSigner = LedgerSigner;
+    window.DerivationType = DerivationType;
+    window.HDPathTemplate = HDPathTemplate;
 
     // Expose contracts for live code examples
     window.genericMultisigJSONfile = genericMultisigJSONfile;

@@ -146,18 +146,44 @@ const html = Prism.highlight(code, Prism.languages[language] || Prism.languages.
           }
         }
 
-        // Capture console.log
+        // Capture console.log and console.error
         const originalLog = console.log;
+        const originalError = console.error;
         let logs: string[] = [];
-        
-        console.log = (...args: any[]) => {
+
+        const formatArg = (arg: any): string => {
+          try {
+            if (arg instanceof Error) {
+              return `${arg.name}: ${arg.message}`;
+            }
+            if (typeof arg === 'object' && arg !== null) {
+              return JSON.stringify(arg, null, 2);
+            }
+            return String(arg);
+          } catch {
+            return String(arg);
+          }
+        };
+
+        const captureLog = (...args: any[]) => {
           originalLog(...args);
-          const logText = args.map(arg => 
-            typeof arg === 'object' ? JSON.stringify(arg, null, 2) : String(arg)
-          ).join(' ');
+          const logText = args.map(formatArg).join(' ');
           logs.push(logText);
           outputContent.textContent = logs.join('\n');
         };
+
+        console.log = captureLog;
+        console.error = captureLog;
+
+        // Capture unhandled promise rejections (e.g., errors inside setTimeout async callbacks)
+        const rejectionHandler = (event: PromiseRejectionEvent) => {
+          event.preventDefault();
+          const error = event.reason;
+          const errorMessage = error instanceof Error ? `${error.name}: ${error.message}` : String(error);
+          logs.push(errorMessage);
+          outputContent.textContent = logs.join('\n');
+        };
+        window.addEventListener('unhandledrejection', rejectionHandler);
 
         // Execute code
         try {
@@ -175,6 +201,11 @@ const html = Prism.highlight(code, Prism.languages[language] || Prism.languages.
             'MichelsonMap',
             'importKey',
             'BigNumber',
+            // Ledger globals
+            'TransportWebHID',
+            'LedgerSigner',
+            'DerivationType',
+            'HDPathTemplate',
             // Contract globals
             'genericMultisigJSONfile',
             'genericMultisig',
@@ -202,6 +233,11 @@ const html = Prism.highlight(code, Prism.languages[language] || Prism.languages.
             win.MichelsonMap,
             win.importKey,
             win.BigNumber,
+            // Ledger globals
+            win.TransportWebHID,
+            win.LedgerSigner,
+            win.DerivationType,
+            win.HDPathTemplate,
             // Contract globals
             win.genericMultisigJSONfile,
             win.genericMultisig,
@@ -222,6 +258,8 @@ const html = Prism.highlight(code, Prism.languages[language] || Prism.languages.
           }
         } finally {
           console.log = originalLog;
+          console.error = originalError;
+          window.removeEventListener('unhandledrejection', rejectionHandler);
         }
 
       } catch (error: any) {
