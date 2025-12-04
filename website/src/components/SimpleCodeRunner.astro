@@ -86,7 +86,10 @@ const html = Prism.highlight(code, Prism.languages[language] || Prism.languages.
       // Reset UI
       outputContent.textContent = "Initializing Taquito...";
       outputDiv.hidden = false;
-      this.button.disabled = true;
+
+      // Disable ALL run buttons to prevent multiple runners at once
+      const allButtons = document.querySelectorAll<HTMLButtonElement>('.run-button');
+      allButtons.forEach(btn => btn.disabled = true);
       this.button.textContent = "Loading...";
 
       try {
@@ -226,7 +229,9 @@ const html = Prism.highlight(code, Prism.languages[language] || Prism.languages.
         const errorMessage = error instanceof Error ? error.message : String(error);
         outputContent.textContent += (outputContent.textContent ? '\n' : '') + `Error: ${errorMessage}`;
       } finally {
-        this.button.disabled = false;
+        // Re-enable ALL run buttons
+        const allButtons = document.querySelectorAll<HTMLButtonElement>('.run-button');
+        allButtons.forEach(btn => btn.disabled = false);
         this.button.textContent = "Run Code";
       }
     }
