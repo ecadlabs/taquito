@@ -34,11 +34,11 @@ values={[
 ]}>
 <TabItem value="contractAPI">
 
-```js live 
+```js live
 // const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
 
-Tezos.contract
-  .originate({
+try {
+  const originationOp = await Tezos.contract.originate({
     code: contractStorageAnnot,
     storage: {
       theAddress: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr',
@@ -47,42 +47,39 @@ Tezos.contract
       theNumber: '5',
       theTez: '10',
     },
-  })
-  .then((originationOp) => {
-    console.log(`Waiting for confirmation of origination for ${originationOp.contractAddress}...`);
-    return originationOp.contract();
-  })
-  .then(() => {
-    console.log(`Origination completed.`);
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+  });
+  console.log(`Waiting for confirmation of origination for ${originationOp.contractAddress}...`);
+  await originationOp.contract();
+  console.log(`Origination completed.`);
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 </TabItem>
   <TabItem value="walletAPI">
 
-```js live 
+```js live
 // const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
 
-Tezos.wallet
-  .originate({
-    code: contractStorageAnnot,
-    storage: {
-      theAddress: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr',
-      theBool: true,
-      theNat: '3',
-      theNumber: '5',
-      theTez: '10',
-    },
-  })
-  .send()
-  .then((originationOp) => {
-    console.log(`Waiting for confirmation of origination...`);
-    return originationOp.contract();
-  })
-  .then(() => {
-    console.log(`Origination completed.`);
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+try {
+  const originationOp = await Tezos.wallet
+    .originate({
+      code: contractStorageAnnot,
+      storage: {
+        theAddress: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr',
+        theBool: true,
+        theNat: '3',
+        theNumber: '5',
+        theTez: '10',
+      },
+    })
+    .send();
+  console.log(`Waiting for confirmation of origination...`);
+  await originationOp.contract();
+  console.log(`Origination completed.`);
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
   </TabItem>
 </Tabs>
@@ -109,11 +106,11 @@ values={[
 ]}>
 <TabItem value="contractAPI">
 
-```js live 
+```js live
 // const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
 
-Tezos.contract
-  .originate({
+try {
+  const originationOp = await Tezos.contract.originate({
     code: contractStorageWithoutAnnot,
     storage: {
       0: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr', //address
@@ -122,42 +119,39 @@ Tezos.contract
       3: '5', //int
       4: '10', //mutez
     },
-  })
-  .then((originationOp) => {
-    console.log(`Waiting for confirmation of origination for ${originationOp.contractAddress}...`);
-    return originationOp.contract();
-  })
-  .then(() => {
-    console.log(`Origination completed.`);
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+  });
+  console.log(`Waiting for confirmation of origination for ${originationOp.contractAddress}...`);
+  await originationOp.contract();
+  console.log(`Origination completed.`);
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 </TabItem>
   <TabItem value="walletAPI">
 
-```js live 
+```js live
 // const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
 
-Tezos.wallet
-  .originate({
-    code: contractStorageWithoutAnnot,
-    storage: {
-      0: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr', //address
-      1: true, //bool
-      2: '3', //nat
-      3: '5', //int
-      4: '10', //mutez
-    },
-  })
-  .send()
-  .then((originationOp) => {
-    console.log(`Waiting for confirmation of origination...`);
-    return originationOp.contract();
-  })
-  .then(() => {
-    console.log(`Origination completed.`);
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+try {
+  const originationOp = await Tezos.wallet
+    .originate({
+      code: contractStorageWithoutAnnot,
+      storage: {
+        0: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr', //address
+        1: true, //bool
+        2: '3', //nat
+        3: '5', //int
+        4: '10', //mutez
+      },
+    })
+    .send();
+  console.log(`Waiting for confirmation of origination...`);
+  await originationOp.contract();
+  console.log(`Origination completed.`);
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
   </TabItem>
 </Tabs>
@@ -186,11 +180,11 @@ values={[
 ]}>
 <TabItem value="contractAPI">
 
-```js live 
+```js live
 // const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
 
-Tezos.contract
-  .originate({
+try {
+  const originationOp = await Tezos.contract.originate({
     code: contractStorageWithAndWithoutAnnot,
     storage: {
       0: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr', //address
@@ -199,43 +193,40 @@ Tezos.contract
       theNumber: '5',
       4: '10', //mutez
     },
-  })
-  .then((originationOp) => {
-    console.log(`Waiting for confirmation of origination for ${originationOp.contractAddress}...`);
-    return originationOp.contract();
-  })
-  .then(() => {
-    console.log(`Origination completed.`);
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+  });
+  console.log(`Waiting for confirmation of origination for ${originationOp.contractAddress}...`);
+  await originationOp.contract();
+  console.log(`Origination completed.`);
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
 
 </TabItem>
   <TabItem value="walletAPI">
 
-```js live 
+```js live
 // const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
 
-Tezos.wallet
-  .originate({
-    code: contractStorageWithAndWithoutAnnot,
-    storage: {
-      0: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr', //address
-      1: true, //bool
-      theNat: '3',
-      theNumber: '5',
-      4: '10', //mutez
-    },
-  })
-  .send()
-  .then((originationOp) => {
-    console.log(`Waiting for confirmation of origination...`);
-    return originationOp.contract();
-  })
-  .then(() => {
-    console.log(`Origination completed.`);
-  })
-  .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
+try {
+  const originationOp = await Tezos.wallet
+    .originate({
+      code: contractStorageWithAndWithoutAnnot,
+      storage: {
+        0: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr', //address
+        1: true, //bool
+        theNat: '3',
+        theNumber: '5',
+        4: '10', //mutez
+      },
+    })
+    .send();
+  console.log(`Waiting for confirmation of origination...`);
+  await originationOp.contract();
+  console.log(`Origination completed.`);
+} catch (error) {
+  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+}
 ```
   </TabItem>
 </Tabs>
