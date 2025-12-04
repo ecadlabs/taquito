@@ -49,6 +49,9 @@ declare global {
     LedgerSigner: any;
     DerivationType: any;
     HDPathTemplate: any;
+    WalletConnect: any;
+    NetworkType: any;
+    PermissionScopeMethods: any;
 
     // Contract globals
     genericMultisigJSONfile: any;
@@ -100,6 +103,7 @@ async function init() {
     const { b58Encode, PrefixV2 } = await import('@taquito/utils');
     const TransportWebHID = (await import('@ledgerhq/hw-transport-webhid')).default;
     const { LedgerSigner, DerivationType, HDPathTemplate } = await import('@taquito/ledger-signer');
+    const { WalletConnect, NetworkType, PermissionScopeMethods } = await import("@taquito/wallet-connect");
 
     const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
     window.Tezos = Tezos;
@@ -131,6 +135,9 @@ async function init() {
     window.LedgerSigner = LedgerSigner;
     window.DerivationType = DerivationType;
     window.HDPathTemplate = HDPathTemplate;
+    window.WalletConnect = WalletConnect;
+    window.NetworkType = NetworkType;
+    window.PermissionScopeMethods = PermissionScopeMethods;
 
     // Expose contracts for live code examples
     window.genericMultisigJSONfile = genericMultisigJSONfile;
@@ -147,10 +154,10 @@ async function init() {
     window.managerCode = managerCode;
 
     console.log('Taquito initialized with Ghostnet RPC');
-    
+
     // Resolve the global promise if we created the resolvers
     if (resolveInit) resolveInit();
-    
+
   } catch (e) {
     console.error("Failed to initialize Taquito:", e);
     window.__taquitoError = e;
@@ -159,7 +166,7 @@ async function init() {
 }
 
 // Make configureSigner available globally
-window.configureSigner = async function() {
+window.configureSigner = async function () {
   if (!window.Tezos) {
     throw new Error("Tezos toolkit not initialized");
   }
@@ -194,14 +201,14 @@ window.configureSigner = async function() {
     // Set up the InMemorySigner
     const signer = await window.InMemorySigner.fromSecretKey(privateKey);
     window.Tezos.setProvider({ signer });
-    
+
     // Mark as configured
     window.__signerConfigured = true;
-    
+
     const address = await signer.publicKeyHash();
     console.log("Signer configured successfully");
     console.log("Address:", address);
-    
+
     return address;
   } catch (error) {
     console.error("Failed to configure signer:", error);
@@ -210,7 +217,7 @@ window.configureSigner = async function() {
 };
 
 // Make connectWallet available globally for wallet examples
-window.connectWallet = async function() {
+window.connectWallet = async function () {
   if (!window.Tezos) {
     throw new Error("Tezos toolkit not initialized");
   }
