@@ -5,7 +5,6 @@
 
 import { RpcClient, RpcClientInterface } from '@taquito/rpc';
 import { Forger } from '@taquito/local-forging';
-import { RPCBatchProvider } from './batch/rpc-batch-provider';
 import { Protocols } from './constants';
 import { ConfigConfirmation, Context, TaquitoProvider } from './context';
 import { ContractProvider } from './contract/interface';
@@ -106,11 +105,6 @@ export class TezosToolkit {
   private _rpcClient: RpcClientInterface;
   private _wallet: Wallet;
   private _context: Context;
-  /**
-   * @deprecated TezosToolkit.batch has been deprecated in favor of TezosToolkit.contract.batch
-   *
-   */
-  public batch: RPCBatchProvider['batch'];
 
   public readonly format = format;
 
@@ -123,7 +117,6 @@ export class TezosToolkit {
     this._context = new Context(_rpc);
     this._wallet = new Wallet(this._context);
     this.setProvider({ rpc: this._rpcClient });
-    this.batch = this._context.batch.batch.bind(this._context.batch);
   }
 
   /**

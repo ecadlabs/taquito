@@ -276,7 +276,7 @@ export interface ForgedBytes {
  * @description Parameters for setDelegate method
  */
 export interface DelegateParams {
-  source: string;
+  source?: string;
   delegate?: string;
   fee?: number;
   gasLimit?: number;
@@ -647,4 +647,10 @@ export type RPCOperation =
 export type PrepareOperationParams = {
   operation: RPCOperation | RPCOperation[];
   source?: string;
+};
+
+export type ParamsWithOptionalFees = {
+  fee?: number | string;
+  storageLimit?: number | string;
+  gasLimit?: number | string;
 };

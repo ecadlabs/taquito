@@ -71,7 +71,7 @@ const create_bytes_to_sign = async (Tezos: TezosToolkit, contractAddress: string
   // signs the hash
   const signature = await Tezos.signer.sign(sigParamPacked.bytes);
 
-  return signature.sig
+  return signature.prefixSig
 }
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
@@ -101,7 +101,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
       const signer_key = await Tezos.signer.publicKey();
       const wrapped_param: any =
-        permit_contract.methods['wrapped'](42).toTransferParams().parameter?.value;
+        permit_contract.methodsObject['wrapped'](42).toTransferParams().parameter?.value;
       const wrapped_param_type = permit_contract.entrypoints.entrypoints['wrapped'];
       const raw_packed = await Tezos.rpc.packData({
         data: wrapped_param,
@@ -112,8 +112,8 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
       const param_sig = await create_bytes_to_sign(Tezos, permit_contract.address, param_hash)
 
-      const permitMethodCall = await permit_contract.methods
-        .permit(signer_key, param_sig, param_hash)
+      const permitMethodCall = await permit_contract.methodsObject
+        .permit({ 0: signer_key, 1: param_sig, 2: param_hash })
         .send();
       await permitMethodCall.confirmation();
 
@@ -138,12 +138,8 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       const expiry_contract = await op.contract();
       expect(op.status).toEqual('applied');
 
-      const setExpiryMethodCall = await expiry_contract.methods
-        .setExpiry(
-          null, //bytes
-          await Tezos.signer.publicKeyHash(), //address of current signer
-          42 // nat
-        )
+      const setExpiryMethodCall = await expiry_contract.methodsObject
+        .setExpiry({ 0: null, 1: await Tezos.signer.publicKeyHash(), 2: 42 })
         .send();
       await setExpiryMethodCall.confirmation();
 
@@ -168,7 +164,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       const defaultExpiry_contract = await op.contract();
       expect(op.status).toEqual('applied');
 
-      const defaultExpiryMethodCall = await defaultExpiry_contract.methods
+      const defaultExpiryMethodCall = await defaultExpiry_contract.methodsObject
         .defaultExpiry(
           100 // nat
         )
@@ -211,11 +207,11 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
       const mint_amount = 42;
 
-      const setMintMethodCall = await fa12_contract.methods
-        .mint(
-          await Tezos.signer.publicKeyHash(), //address :to
-          mint_amount // nat :value
-        )
+      const setMintMethodCall = await fa12_contract.methodsObject
+        .mint({
+          address: await Tezos.signer.publicKeyHash(),
+          value: mint_amount
+        })
         .send();
       await setMintMethodCall.confirmation();
       expect(setMintMethodCall.hash).toBeDefined();
@@ -313,7 +309,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
         //Mint 10 tokens to bootstrap 2
         const mint_contract = await LocalTez1.contract.at(fa12_contract.address);
-        const mint = await mint_contract.methods.mint(bootstrap2_address, 10).send();
+        const mint = await mint_contract.methodsObject.mint({ address: bootstrap2_address, value: 10 }).send();
         await mint.confirmation();
         expect(mint.hash).toBeDefined();
         expect(mint.status).toEqual('applied');
@@ -322,20 +318,20 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         //Observe transfer by non bootstrap2 sender fails
         const fail_contract = await LocalTez4.contract.at(fa12_contract.address);
         try {
-          await fail_contract.methods.transfer(bootstrap3_address, bootstrap4_address, 1).send();
+          await fail_contract.methodsObject.transfer({ from_: bootstrap3_address, to_: bootstrap4_address, value: 1 }).send();
         } catch (errors) {
           let jsonStr: string = JSON.stringify(errors);
           let jsonObj = JSON.parse(jsonStr);
-          let error_code = JSON.stringify(jsonObj.errors[1].with.int);
+          let error_code = JSON.stringify(jsonObj?.errors?.[0]?.with?.int || jsonObj?.errors?.[1]?.with?.int);
           expect((error_code = '26'));
         }
 
         //Define a fake permit parameter to get the expected unsigned bytes
-        const transfer_param: any = fa12_contract.methods['transfer'](
-          bootstrap2_address,
-          bootstrap3_address,
-          1
-        ).toTransferParams().parameter?.value;
+        const transfer_param: any = fa12_contract.methodsObject['transfer']({
+          from_: bootstrap2_address,
+          to_: bootstrap3_address,
+          value: 1
+        }).toTransferParams().parameter?.value;
         const type = fa12_contract.entrypoints.entrypoints['transfer'];
         const TRANSFER_PARAM_PACKED = await Tezos.rpc.packData({
           data: transfer_param,
@@ -352,22 +348,16 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
         //Anyone can submit permit start
         const signed_permit_contract = await LocalTez4.contract.at(fa12_contract.address);
-        const permit_contract = await signed_permit_contract.methods
-          .permit([
-            {
-              0: PUB_KEY, //key,
-              1: SIGNATURE, //signature
-              2: TRANSFER_PARAM_HASHED, //bytes
-            },
-          ])
+        const permit_contract = await signed_permit_contract.methodsObject
+          .permit([{ 0: PUB_KEY, 1: SIGNATURE, 2: TRANSFER_PARAM_HASHED }])
           .send();
         await permit_contract.confirmation();
         expect(permit_contract.hash).toBeDefined();
         expect(permit_contract.status).toEqual('applied');
 
         //Successfully execute transfer away from bootstrap2  by calling transfer endpoint from any account
-        const successful_transfer = await signed_permit_contract.methods
-          .transfer(bootstrap2_address, bootstrap3_address, 1)
+        const successful_transfer = await signed_permit_contract.methodsObject
+          .transfer({ from_: bootstrap2_address, to_: bootstrap3_address, value: 1 })
           .send();
         await successful_transfer.confirmation();
         expect(successful_transfer.hash).toBeDefined();
