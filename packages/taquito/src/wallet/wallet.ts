@@ -2,7 +2,6 @@ import { Context } from '../context';
 import { ContractAbstraction } from '../contract/contract';
 import type { ContractStorageType, DefaultWalletType } from '../contract/contract';
 import { SendParams } from '../contract/contract-methods/contract-method-interface';
-import type { ContractMethod } from '../contract/contract-methods/contract-method-flat-param';
 import type { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
 import { OpKind, withKind } from '../operations/types';
 import { OriginationWalletOperation } from './origination-operation';
@@ -32,10 +31,6 @@ import {
   ValidationResult,
 } from '@taquito/utils';
 import { OperationContentsFailingNoop } from '@taquito/rpc';
-import { isWallet as isWalletGuard } from './type-guards';
-import { ContractProvider } from '../contract';
-
-export { isWallet } from './type-guards';
 
 export interface PKHOption {
   forceRefetch?: boolean;
@@ -76,7 +71,7 @@ export class WalletOperationBatch {
    * @param options Generic operation parameters
    */
   withContractCall(
-    params: ContractMethod<Wallet> | ContractMethodObject<Wallet>,
+    params: ContractMethodObject<Wallet>,
     options: Partial<SendParams> = {}
   ) {
     return this.withTransfer(params.toTransferParams(options));
@@ -198,10 +193,6 @@ export class WalletOperationBatch {
 }
 
 export class Wallet {
-  isWallet(provider: Wallet | ContractProvider): provider is Wallet {
-    return isWalletGuard(provider);
-  }
-
   constructor(private context: Context) { }
 
   private get walletProvider() {

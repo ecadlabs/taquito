@@ -1,6 +1,5 @@
 import { Context } from '../context';
 import { ContractStorageType, DefaultContractType } from '../contract/contract';
-import { ContractMethod } from '../contract/contract-methods/contract-method-flat-param';
 import { SendParams } from '../contract/contract-methods/contract-method-interface';
 import { ContractProvider } from '../contract/interface';
 import {
@@ -108,7 +107,7 @@ export class OperationBatch extends Provider {
    * @param options Generic operation parameters
    */
   withContractCall(
-    params: ContractMethod<ContractProvider> | ContractMethodObject<ContractProvider>,
+    params: ContractMethodObject<ContractProvider>,
     options: Partial<SendParams> = {}
   ) {
     return this.withTransfer(params.toTransferParams(options));

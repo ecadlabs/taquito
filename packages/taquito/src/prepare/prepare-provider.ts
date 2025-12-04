@@ -44,7 +44,6 @@ import {
   ProhibitedActionError,
 } from '@taquito/core';
 import { Context } from '../context';
-import { ContractMethod } from '../contract/contract-methods/contract-method-flat-param';
 import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
 import { ContractProvider } from '../contract/interface';
 import {
@@ -1300,7 +1299,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
    * @returns a PreparedOperation object
    */
   async contractCall(
-    contractMethod: ContractMethod<ContractProvider> | ContractMethodObject<ContractProvider>
+    contractMethod: ContractMethodObject<ContractProvider>
   ): Promise<PreparedOperation> {
     const hash = await this.getBlockHash();
     const protocol = await this.getProtocolHash();
