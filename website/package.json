@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@airgap/beacon-sdk": "^4.6.3",
-    "@astrojs/mdx": "^4.3.7",
+    "@astrojs/mdx": "^4.3.12",
     "@astrojs/sitemap": "^3.6.0",
     "@cloudflare/workers-types": "^4.20251126.0",
     "@lucide/astro": "^0.554.0",
@@ -19,7 +19,7 @@
     "@taquito/taquito": "^23.0.2",
     "@taquito/tzip12": "^23.0.3",
     "@taquito/tzip16": "^23.0.3",
-    "astro": "^5.14.4",
+    "astro": "^5.16.4",
     "astro-auto-import": "^0.4.5",
     "buffer": "^6.0.3",
     "fuse.js": "^7.1.0",
