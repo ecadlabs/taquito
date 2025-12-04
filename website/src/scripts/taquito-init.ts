@@ -1,6 +1,22 @@
 // We need to dynamically import Taquito to ensure polyfills are loaded first
 // and to catch any module loading errors.
 
+// Import contracts for live code examples
+import {
+  genericMultisigJSONfile,
+  genericMultisig,
+  contractMapTacoShop,
+  contractMapPairKey,
+  contractMap8pairs,
+  contractMapBigMap,
+  secretKey,
+  contractJson,
+  contractStorageAnnot,
+  contractStorageWithAndWithoutAnnot,
+  contractStorageWithoutAnnot,
+  managerCode,
+} from './contracts';
+
 declare global {
   interface Window {
     Tezos: any;
@@ -15,6 +31,21 @@ declare global {
     tzip16: any;
     bytesToString: any;
     BigNumber: any;
+    MichelsonMap: any;
+    importKey: any;
+    // Contract globals
+    genericMultisigJSONfile: any;
+    genericMultisig: any;
+    contractMapTacoShop: any;
+    contractMapPairKey: any;
+    contractMap8pairs: any;
+    contractMapBigMap: any;
+    secretKey: string;
+    contractJson: any;
+    contractStorageAnnot: any;
+    contractStorageWithAndWithoutAnnot: any;
+    contractStorageWithoutAnnot: any;
+    managerCode: any;
     configureSigner: () => Promise<string | undefined>;
     connectWallet: () => Promise<string | undefined>;
     __signerConfigured?: boolean;
@@ -40,8 +71,8 @@ async function init() {
     console.log("Initializing Taquito dynamically...");
 
     // Dynamic imports
-    const { TezosToolkit, compose } = await import('@taquito/taquito');
-    const { InMemorySigner } = await import('@taquito/signer');
+    const { TezosToolkit, compose, MichelsonMap } = await import('@taquito/taquito');
+    const { InMemorySigner, importKey } = await import('@taquito/signer');
     const { BeaconWallet } = await import('@taquito/beacon-wallet');
     const { Tzip12Module, tzip12 } = await import('@taquito/tzip12');
     const { Tzip16Module, tzip16, bytesToString } = await import('@taquito/tzip16');
@@ -59,6 +90,22 @@ async function init() {
     window.tzip16 = tzip16;
     window.bytesToString = bytesToString;
     window.BigNumber = BigNumber;
+    window.MichelsonMap = MichelsonMap;
+    window.importKey = importKey;
+
+    // Expose contracts for live code examples
+    window.genericMultisigJSONfile = genericMultisigJSONfile;
+    window.genericMultisig = genericMultisig;
+    window.contractMapTacoShop = contractMapTacoShop;
+    window.contractMapPairKey = contractMapPairKey;
+    window.contractMap8pairs = contractMap8pairs;
+    window.contractMapBigMap = contractMapBigMap;
+    window.secretKey = secretKey;
+    window.contractJson = contractJson;
+    window.contractStorageAnnot = contractStorageAnnot;
+    window.contractStorageWithAndWithoutAnnot = contractStorageWithAndWithoutAnnot;
+    window.contractStorageWithoutAnnot = contractStorageWithoutAnnot;
+    window.managerCode = managerCode;
 
     console.log('Taquito initialized with Ghostnet RPC');
     
