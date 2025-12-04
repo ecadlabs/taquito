@@ -31,10 +31,6 @@ import {
   ValidationResult,
 } from '@taquito/utils';
 import { OperationContentsFailingNoop } from '@taquito/rpc';
-import { isWallet as isWalletGuard } from './type-guards';
-import { ContractProvider } from '../contract';
-
-export { isWallet } from './type-guards';
 
 export interface PKHOption {
   forceRefetch?: boolean;
@@ -197,10 +193,6 @@ export class WalletOperationBatch {
 }
 
 export class Wallet {
-  isWallet(provider: Wallet | ContractProvider): provider is Wallet {
-    return isWalletGuard(provider);
-  }
-
   constructor(private context: Context) { }
 
   private get walletProvider() {
