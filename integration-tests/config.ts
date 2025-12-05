@@ -10,7 +10,6 @@ import { knownContractsShadownet } from './known-contracts-shadownet';
 import { knownContractsSeoulnet } from './known-contracts-seoulnet';
 import { knownContractsTallinnnet } from './known-contracts-tallinnnet';
 import { knownContractsWeeklynet } from './known-contracts-weeklynet';
-import { knownContractsTallinnnet } from './known-contracts-tallinnnet';
 
 const nodeCrypto = require('crypto');
 
@@ -182,18 +181,6 @@ const seoulnetEphemeral: Config =
 
 const seoulnetSecretKey: Config =
   { ...seoulnetEphemeral, ...{ signerConfig: defaultSecretKey, rpc: 'https://seoulnet.tezos.ecadinfra.com' } };
-
-  const tallinnnetEphemeral: Config =
-  defaultConfig({
-    networkName: 'TALLINNNET',
-    protocol: Protocols.ProtoALpha,
-    defaultRpc: 'http://ecad-tezos-tallinnnet-rolling-1.i.ecadinfra.com/',
-    knownContracts: knownContractsTallinnnet,
-    signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/tallinnnet')
-  })
-
-const tallinnnetSecretKey: Config =
-  { ...tallinnnetEphemeral, ...{ signerConfig: defaultSecretKey, rpc: 'https://tallinnnet.tezos.ecadinfra.com' } };
 
 const weeklynetSecretKey: Config =
   defaultConfig({
