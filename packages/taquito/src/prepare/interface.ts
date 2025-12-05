@@ -16,7 +16,6 @@ import {
   SmartRollupAddMessagesParams,
   SmartRollupOriginateParams,
 } from '../operations/types';
-import { ContractMethod } from '../contract/contract-methods/contract-method-flat-param';
 import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
 import { ContractProvider } from '../contract/interface';
 import { ParamsWithKind } from '../operations/types';
@@ -158,11 +157,11 @@ export interface PreparationProvider {
 
   /**
    * @description Method to prepare a contract call (transfer) operation
-   * @param contractMethod ContractMethod or ContractMethodObject retrieved from smart contract
+   * @param contractMethod ContractMethodObject retrieved from smart contract
    * @returns a PreparedOperation object
    */
   contractCall(
-    contractMethod: ContractMethod<ContractProvider> | ContractMethodObject<ContractProvider>
+    contractMethod: ContractMethodObject<ContractProvider>
   ): Promise<PreparedOperation>;
 
   /**

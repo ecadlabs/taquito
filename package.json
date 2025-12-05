@@ -9,6 +9,7 @@
   ],
   "scripts": {
     "build": "nx run-many --target=build --exclude=@taquito/website",
+    "build-verbose": "nx run-many --target=build --exclude=@taquito/website --output-style=stream",
     "build-all": "nx run-many --target=build --exclude=@taquito/website",
     "build-website": "npm ci && npm run build && cd website && npm ci && npm run build",
     "rebuild": "npm run clean && npm install && npm run build",

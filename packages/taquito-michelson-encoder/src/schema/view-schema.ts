@@ -95,7 +95,7 @@ export class ViewSchema {
    * @description Return the signature of the view parameter
    */
   extractArgsSchema() {
-    return this.rootArgsType.ExtractSchema();
+    return this.rootArgsType.generateSchema();
   }
 
   /**
@@ -103,6 +103,6 @@ export class ViewSchema {
    * @description Return the format of the view result
    */
   extractResultSchema() {
-    return this.rootReturnType.ExtractSchema();
+    return this.rootReturnType.generateSchema();
   }
 }

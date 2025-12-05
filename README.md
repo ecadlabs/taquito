@@ -40,9 +40,8 @@ Taquito currently supports the following versions of Node.js®:
 
 | Version          | Supported? |
 | ---------------- | ---------- |
-| v14 LTS          |    ❌      |
 | v16 LTS/Gallium  |    ❌      |
-| v18 LTS/Hydrogen |    ✅      |
+| v18 LTS/Hydrogen |    ❌      |
 | v20 LTS/Iron     |    ⭐️      |
 | v22 LTS/Jod      |    ✅      |
 

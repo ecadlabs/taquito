@@ -88,14 +88,6 @@ export class ContractToken extends Token {
     return { string: val };
   }
 
-  /**
-   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
-   *
-   */
-  public ExtractSchema() {
-    return ContractToken.prim;
-  }
-
   generateSchema(): ContractTokenSchema {
     const valueSchema = this.createToken(this.val.args[0], 0);
     return {

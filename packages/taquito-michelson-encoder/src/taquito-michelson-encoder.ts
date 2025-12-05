@@ -12,8 +12,7 @@ export * from './schema/types';
 export { Semantic, SemanticEncoding, BigMapKeyType } from './tokens/token';
 export * from './errors';
 
-export const UnitValue = Symbol();
-export const SaplingStateValue = {};
+export { UnitValue, SaplingStateValue } from './constants';
 export * from './michelson-map';
 export { VERSION } from './version';
 export { FieldNumberingStrategy, Token } from './tokens/token';

@@ -35,14 +35,17 @@ describe('ViewSchema test', () => {
   it('Should extract args schema properly', () => {
     const argsSchema = viewSchema.extractArgsSchema();
     expect(argsSchema).toEqual({
-      0: 'nat',
-      1: 'address',
+      __michelsonType: 'pair',
+      schema: {
+        0: { __michelsonType: 'nat', schema: 'nat' },
+        1: { __michelsonType: 'address', schema: 'address' },
+      },
     });
   });
 
   it('Should extract result schema properly', () => {
     const argsSchema = viewSchema.extractResultSchema();
-    expect(argsSchema).toEqual('nat');
+    expect(argsSchema).toEqual({ __michelsonType: 'nat', schema: 'nat' });
   });
 
   it('Should encode view args properly', () => {

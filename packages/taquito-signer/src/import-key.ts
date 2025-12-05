@@ -1,4 +1,4 @@
-import { InMemorySigner } from './taquito-signer';
+import { InMemorySigner } from './in-memory-signer';
 import { TezosToolkit } from '@taquito/taquito';
 
 /**

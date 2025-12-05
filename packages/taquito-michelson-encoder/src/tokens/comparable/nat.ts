@@ -71,14 +71,6 @@ export class NatToken extends ComparableToken {
     return { int: new BigNumber(val).toFixed() };
   }
 
-  /**
-   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
-   *
-   */
-  public ExtractSchema() {
-    return NatToken.prim;
-  }
-
   generateSchema(): BaseTokenSchema {
     return {
       __michelsonType: NatToken.prim,

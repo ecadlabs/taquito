@@ -1,20 +1,9 @@
 import { InvalidDerivationPathError } from '@taquito/core';
+import { Hard } from './types';
 
 export * as ECDSA from './ecdsa';
 export * as Ed25519 from './ed25519';
-
-export const Hard = 0x80000000;
-
-export interface ExtendedKey {
-  readonly chainCode: Uint8Array;
-  derive(index: number): ExtendedKey;
-  derivePath(path: Iterable<number>): ExtendedKey;
-}
-
-export interface ExtendedPrivateKey extends ExtendedKey {
-  derive(index: number): ExtendedPrivateKey;
-  derivePath(path: number[]): ExtendedPrivateKey;
-}
+export * from './types';
 
 export class Path extends Array<number> {
   static from(iterable: Iterable<number> | ArrayLike<number>): Path {

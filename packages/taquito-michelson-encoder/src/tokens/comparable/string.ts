@@ -16,14 +16,6 @@ export class StringToken extends ComparableToken {
     return val[Object.keys(val)[0]];
   }
 
-  /**
-   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
-   *
-   */
-  public ExtractSchema() {
-    return StringToken.prim;
-  }
-
   generateSchema(): BaseTokenSchema {
     return {
       __michelsonType: StringToken.prim,

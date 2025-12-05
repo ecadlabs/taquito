@@ -26,7 +26,6 @@ import {
   StorageEncodingError,
   MissingArgumentError,
 } from './errors';
-import { RpcTransaction } from './model';
 import { TokenSchema } from './types';
 
 const schemaTypeSymbol = Symbol.for('taquito-schema-type-symbol');
@@ -258,41 +257,11 @@ export class Schema {
   }
 
   /**
-   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
-   *
-   */
-  ExtractSchema() {
-    return this.removeTopLevelAnnotation(this.root.ExtractSchema());
-  }
-
-  /**
    * @description Produce a representation of the storage schema.
    * Note: Provide guidance on how to write the storage object for the origination operation with Taquito.
    */
   generateSchema(): TokenSchema {
     return this.removeTopLevelAnnotation(this.root.generateSchema());
-  }
-
-  /**
-   * @deprecated
-   * @throws {@link InvalidBigMapSchemaError}
-   */
-  ComputeState(tx: RpcTransaction[], state: any) {
-    if (!this.bigMap) {
-      throw new InvalidBigMapSchemaError('Big map schema is undefined');
-    }
-
-    const bigMap = tx.reduce((prev, current) => {
-      return {
-        ...prev,
-        ...this.ExecuteOnBigMapDiff(current.contents[0].metadata.operation_result.big_map_diff),
-      };
-    }, {});
-
-    return {
-      ...this.Execute(state),
-      [this.bigMap.annot()]: bigMap,
-    };
   }
 
   /**

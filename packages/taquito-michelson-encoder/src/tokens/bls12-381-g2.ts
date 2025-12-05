@@ -64,14 +64,6 @@ export class Bls12381g2Token extends Token {
     return val.bytes;
   }
 
-  /**
-   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
-   *
-   */
-  public ExtractSchema() {
-    return Bls12381g2Token.prim;
-  }
-
   generateSchema(): BaseTokenSchema {
     return {
       __michelsonType: Bls12381g2Token.prim,

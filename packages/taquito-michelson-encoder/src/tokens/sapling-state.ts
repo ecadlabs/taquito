@@ -79,18 +79,6 @@ export class SaplingStateToken extends Token {
     }
   }
 
-  /**
-   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
-   *
-   */
-  ExtractSchema() {
-    return {
-      [SaplingStateToken.prim]: {
-        'memo-size': Number(this.val.args[0]['int']),
-      },
-    };
-  }
-
   generateSchema(): SaplingStateTokenSchema {
     return {
       __michelsonType: SaplingStateToken.prim,

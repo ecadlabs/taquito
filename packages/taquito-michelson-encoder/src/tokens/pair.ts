@@ -99,7 +99,7 @@ export class PairToken extends ComparableToken {
     return this.args().map((a) => {
       const tok = this.createToken(a, this.getIdxForChildren() + cnt, 'Pair');
       if (tok instanceof PairToken) {
-        cnt += Object.keys(tok.ExtractSchema()).length;
+        cnt += Object.keys(tok.generateSchema()).length;
       } else {
         cnt++;
       }
@@ -119,7 +119,7 @@ export class PairToken extends ComparableToken {
     const leftToken = this.createToken(args[0], this.getIdxForChildren(), 'Pair');
     let keyCount = 1;
     if (leftToken instanceof OrToken) {
-      keyCount = Object.keys(leftToken.ExtractSchema()).length;
+      keyCount = Object.keys(leftToken.generateSchema()).length;
     }
 
     const rightToken = this.createToken(args[1], this.getIdxForChildren() + keyCount, 'Pair');
@@ -181,7 +181,7 @@ export class PairToken extends ComparableToken {
     if (leftToken instanceof PairToken && !leftToken.hasAnnotations()) {
       leftValue = getLeftValue(leftToken);
       if (leftToken instanceof PairToken) {
-        keyCount = Object.keys(leftToken.ExtractSchema()).length;
+        keyCount = Object.keys(leftToken.generateSchema()).length;
       }
     } else {
       leftValue = { [leftToken.annot()]: getLeftValue(leftToken) };
@@ -208,17 +208,6 @@ export class PairToken extends ComparableToken {
     return this.traversal(
       (leftToken) => leftToken.Execute(args[0], semantics),
       (rightToken) => rightToken.Execute(args[1], semantics)
-    );
-  }
-
-  /**
-   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
-   *
-   */
-  public ExtractSchema(): any {
-    return this.traversal(
-      (leftToken) => leftToken.ExtractSchema(),
-      (rightToken) => rightToken.ExtractSchema()
     );
   }
 

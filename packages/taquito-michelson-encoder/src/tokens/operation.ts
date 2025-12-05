@@ -28,14 +28,6 @@ export class OperationToken extends Token {
     return { string: val };
   }
 
-  /**
-   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
-   *
-   */
-  public ExtractSchema() {
-    return OperationToken.prim;
-  }
-
   generateSchema(): BaseTokenSchema {
     return {
       __michelsonType: OperationToken.prim,
