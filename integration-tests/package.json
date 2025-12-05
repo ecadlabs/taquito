@@ -3,6 +3,8 @@
   "scripts": {
     "test": "jest",
     "test:secret-key": "RUN_WITH_SECRET_KEY=true jest --runInBand",
+    "test:tallinnnet": "TALLINNNET=true jest",
+    "test:tallinnnet-secret-key": "RUN_TALLINNNET_WITH_SECRET_KEY=true jest --runInBand",
     "test:seoulnet": "SEOULNET=true jest",
     "test:seoulnet-secret-key": "RUN_SEOULNET_WITH_SECRET_KEY=true jest --runInBand",
     "test:ghostnet": "GHOSTNET=true jest",

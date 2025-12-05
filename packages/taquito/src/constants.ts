@@ -43,6 +43,7 @@ export enum Protocols {
   PsQuebecn = 'PsQuebecnLByd3JwTiGadoG4nGWi3HYiLXUjkibeFV8dCFeVMUg',
   PsRiotuma = 'PsRiotumaAMotcRoDWW1bysEhQy2n1M5fy8JgRp8jjRfHGmfeA7',
   PtSeouLou = 'PtSeouLouXkxhg39oWzjxDWaCydNfR3RxCUrNe4Q9Ro8BTehcbh',
+  PtTALLiNt = 'PtTALLiNtPec7mE7yY4m3k26J8Qukef3E3ehzhfXgFZKGtDdAXu',
   ProtoALpha = 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK',
 }
 
@@ -66,7 +67,8 @@ export const protocols = {
   '021': [Protocols.PsQuebecn],
   '022': [Protocols.PsRiotuma],
   '023': [Protocols.PtSeouLou],
-  '024': [Protocols.ProtoALpha],
+  '024': [Protocols.PtTALLiNt],
+  '025': [Protocols.ProtoALpha],
 };
 
 export enum ChainIds {
@@ -92,6 +94,7 @@ export enum ChainIds {
   QUEBECNET = 'NetXuTeGinLEqxp',
   RIONET = 'NetXPdgaoabtBth',
   SEOULNET = 'NetXd56aBs1aeW3',
+  TALLINNNET = 'NetXe8DbhW9A1eS',
 }
 
 export const getRevealGasLimit = (address: string) =>
