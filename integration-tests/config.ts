@@ -8,6 +8,7 @@ import { KnownContracts } from './known-contracts';
 import { knownContractsGhostnet } from './known-contracts-ghostnet';
 import { knownContractsShadownet } from './known-contracts-shadownet';
 import { knownContractsSeoulnet } from './known-contracts-seoulnet';
+import { knownContractsTallinnnet } from './known-contracts-tallinnnet';
 import { knownContractsWeeklynet } from './known-contracts-weeklynet';
 import { knownContractsTallinnnet } from './known-contracts-tallinnnet';
 
@@ -33,7 +34,7 @@ const forgers: ForgerType[] = [ForgerType.COMPOSITE];
 
 // user running integration test can pass environment variable TEZOS_NETWORK_TYPE=sandbox to specify which network to run against
 export enum NetworkType {
-  TESTNET,  // corresponds ghostnet, shadownet, seoulnet and weeklynet etc.
+  TESTNET,  // corresponds ghostnet, shadownet, tallinnnet, seoulnet and weeklynet etc.
   SANDBOX,  // corresponds to flextesa local chain
 }
 
@@ -158,6 +159,18 @@ const shadownetEphemeral: Config =
 const shadownetSecretKey: Config =
   { ...shadownetEphemeral, ...{ signerConfig: defaultSecretKey, rpc: 'https://shadownet.tezos.ecadinfra.com' } };
 
+  const tallinnnetEphemeral: Config =
+  defaultConfig({
+    networkName: 'TALLINNNET',
+    protocol: Protocols.PtTALLiNt,
+    defaultRpc: 'http://ecad-tezos-tallinnnet-rolling-1.i.ecadinfra.com/',
+    knownContracts: knownContractsTallinnnet,
+    signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/tallinnnet')
+  })
+
+const tallinnnetSecretKey: Config =
+  { ...tallinnnetEphemeral, ...{ signerConfig: defaultSecretKey, rpc: 'https://rpc.tallinnnet.teztnets.com' } };
+
 const seoulnetEphemeral: Config =
   defaultConfig({
     networkName: 'SEOULNET',
@@ -194,11 +207,13 @@ const weeklynetSecretKey: Config =
 const providers: Config[] = [];
 
 if (process.env['RUN_WITH_SECRET_KEY']) {
-  providers.push(ghostnetSecretKey, shadownetSecretKey, seoulnetSecretKey, weeklynetSecretKey);
+  providers.push(ghostnetSecretKey, shadownetSecretKey, tallinnnetSecretKey, seoulnetSecretKey, weeklynetSecretKey);
 } else if (process.env['RUN_GHOSTNET_WITH_SECRET_KEY']) {
   providers.push(ghostnetSecretKey);
 } else if (process.env['RUN_SHADOWNET_WITH_SECRET_KEY']) {
   providers.push(shadownetSecretKey);
+} else if (process.env['RUN_TALLINNNET_WITH_SECRET_KEY']) {
+  providers.push(tallinnnetSecretKey);
 } else if (process.env['RUN_SEOULNET_WITH_SECRET_KEY']) {
   providers.push(seoulnetSecretKey);
 } else if (process.env['RUN_WEEKLYNET_WITH_SECRET_KEY']) {
@@ -209,6 +224,8 @@ if (process.env['RUN_WITH_SECRET_KEY']) {
   providers.push(ghostnetEphemeral);
 } else if (process.env['SHADOWNET']) {
   providers.push(shadownetEphemeral);
+} else if (process.env['TALLINNNET']) {
+  providers.push(tallinnnetEphemeral);
 } else if (process.env['SEOULNET']) {
   providers.push(seoulnetEphemeral);
 } else if (process.env['TALLINNNET']) {
