@@ -1,0 +1,448 @@
+---
+import { getCollection } from 'astro:content';
+
+interface Props {
+  currentSlug?: string;
+  version?: string;
+}
+
+const { currentSlug, version } = Astro.props;
+
+const allDocs = await getCollection('docs');
+const versionDocs = allDocs.filter((doc) => {
+  const filePath = doc.id;
+  const slug = filePath.replace('src/content/docs/', '').replace(/\.mdx?$/, '');
+  const docVersion = slug.split('/')[0];
+  return docVersion === version;
+});
+
+interface DocItem {
+  title: string;
+  slug: string;
+  filename: string;
+}
+
+interface Category {
+  name: string;
+  items: (DocItem | { title: string; items: DocItem[] })[];
+}
+
+const organizeDocs = (docs: typeof versionDocs): Category[] => {
+  const existingFilenames = new Set<string>();
+  const docMap = new Map<string, DocItem>();
+  
+  docs.forEach((doc) => {
+    const filePath = doc.id;
+    const slug = filePath.replace('src/content/docs/', '').replace(/\.mdx?$/, '');
+    const filename = slug.split('/').pop() || '';
+    const title = doc.data.title || filename.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+    
+    existingFilenames.add(filename);
+    docMap.set(filename, {
+      title,
+      slug,
+      filename,
+    });
+  });
+
+  const getDoc = (filename: string): DocItem | undefined => {
+    return existingFilenames.has(filename) ? docMap.get(filename) : undefined;
+  };
+
+  const categories: Category[] = [
+    {
+      name: 'Getting Started',
+      items: [
+        getDoc('quick_start'),
+        getDoc('tutorial'),
+        getDoc('operation_flow'),
+        getDoc('rpc_nodes'),
+        getDoc('web3js_taquito'),
+      ].filter((item): item is DocItem => item !== undefined),
+    },
+    {
+      name: 'Taquito Providers',
+      items: [
+        getDoc('prepare'),
+        getDoc('estimate'),
+      ].filter((item): item is DocItem => item !== undefined),
+    },
+    {
+      name: 'Operations',
+      items: [
+        getDoc('making_transfers'),
+        getDoc('originate'),
+        getDoc('consensus_key'),
+        getDoc('global_constant'),
+        getDoc('increase_paid_storage'),
+        getDoc('set_delegate'),
+        getDoc('smart_rollups'),
+        getDoc('proposal_and_ballot'),
+        getDoc('failing_noop'),
+        getDoc('staking'),
+      ].filter((item): item is DocItem => item !== undefined),
+    },
+    {
+      name: 'Smart Contracts',
+      items: [
+        getDoc('smartcontracts'),
+        getDoc('contract_call_parameters'),
+        getDoc('fa2_parameters'),
+        getDoc('manager_lambda'),
+        getDoc('multisig_doc'),
+      ].filter((item): item is DocItem => item !== undefined),
+    },
+    {
+      name: 'Wallets',
+      items: [
+        getDoc('beaconwallet-singleton'),
+        getDoc('walletconnect'),
+        getDoc('wallets'),
+        getDoc('transaction_limits'),
+      ].filter((item): item is DocItem => item !== undefined),
+    },
+    {
+      name: 'Michelson',
+      items: [
+        getDoc('maps_bigmaps'),
+        getDoc('michelsonmap'),
+        getDoc('tickets'),
+      ].filter((item): item is DocItem => item !== undefined),
+    },
+    {
+      name: 'Views',
+      items: [
+        getDoc('lambda_view'),
+        getDoc('on_chain_views'),
+      ].filter((item): item is DocItem => item !== undefined),
+    },
+    {
+      name: 'Contract and Token Metadata',
+      items: [
+        getDoc('tzip12'),
+        getDoc('metadata-tzip16'),
+      ].filter((item): item is DocItem => item !== undefined),
+    },
+    {
+      name: 'Signers',
+      items: [
+        getDoc('signing'),
+        getDoc('inmemory_signer'),
+        getDoc('ledger_signer'),
+      ].filter((item): item is DocItem => item !== undefined),
+    },
+    {
+      name: 'Packages',
+      items: [
+        getDoc('rpc_package'),
+        getDoc('michelson_encoder'),
+        getDoc('michel_codec'),
+        getDoc('contracts-library'),
+        getDoc('timelock'),
+        getDoc('taquito_utils'),
+        {
+          title: 'Sapling',
+          items: [
+            getDoc('sapling'),
+            getDoc('sapling_in_memory_spending_key'),
+            getDoc('sapling_in_memory_viewing_key'),
+          ].filter((item): item is DocItem => item !== undefined),
+        },
+      ].filter((item): item is DocItem | { title: string; items: DocItem[] } => {
+        if (!item) return false;
+        if ('items' in item) return item.items.length > 0;
+        return true;
+      }),
+    },
+    {
+      name: 'Advanced Scenarios',
+      items: [
+        getDoc('ophash_before_injecting'),
+        getDoc('drain_account'),
+        getDoc('complex_parameters'),
+        getDoc('confirmation_event_stream'),
+        getDoc('events'),
+        getDoc('liquidity_baking'),
+        getDoc('storage_annotations'),
+        getDoc('tezos_domains'),
+      ].filter((item): item is DocItem => item !== undefined),
+    },
+    {
+      name: 'Modules customization',
+      items: [
+        getDoc('forger'),
+        getDoc('rpc-cache'),
+        getDoc('cancel_http_requests'),
+      ].filter((item): item is DocItem => item !== undefined),
+    },
+    {
+      name: 'Running integration tests',
+      items: [
+        getDoc('ledger_integration_test'),
+        getDoc('rpc_nodes_integration_test'),
+      ].filter((item): item is DocItem => item !== undefined),
+    },
+    {
+      name: 'Dapp Development',
+      items: [
+        getDoc('package_bundle'),
+        getDoc('dapp_template'),
+        getDoc('dapp_prelaunch'),
+      ].filter((item): item is DocItem => item !== undefined),
+    },
+    {
+      name: 'Taquito Public API',
+      items: [
+        getDoc('wallet_API'),
+        getDoc('batch-api'),
+      ].filter((item): item is DocItem => item !== undefined),
+    },
+    {
+      name: 'Misc',
+      items: [
+        getDoc('tutorial_links'),
+        getDoc('contract-test-collection'),
+      ].filter((item): item is DocItem => item !== undefined),
+    },
+  ].filter((cat) => cat.items.length > 0);
+
+  return categories;
+};
+
+const categories = organizeDocs(versionDocs);
+
+const isActive = (slug: string) => {
+  return currentSlug === slug;
+};
+
+const isParentActive = (items: DocItem[]) => {
+  return items.some((item) => isActive(item.slug));
+};
+---
+
+<aside
+  id="docs-sidebar"
+  class="hidden lg:block w-64 pb-4 pt-12 pl-8 pr-4 shrink-0 sticky top-0 self-start max-h-screen overflow-y-auto border-r-2 border-secondary bg-background-primary relative"
+>
+  <nav>
+    <ul class="list-none p-0 m-0 space-y-4">
+      {categories.map((category) => (
+        <li>
+          <div class="font-bold text-text-secondary mb-2 text-sm uppercase tracking-wide">
+            {category.name}
+          </div>
+          <ul class="list-none p-0 m-0 space-y-1">
+            {category.items.map((item) => {
+              if ('items' in item) {
+                const parentActive = isParentActive(item.items);
+                return (
+                  <li>
+                    <div class="text-text-secondary font-semibold text-sm py-1 px-2">
+                      {item.title}
+                    </div>
+                    <ul class="list-none p-0 m-0 ml-4 space-y-1">
+                      {item.items.map((subItem) => (
+                        <li>
+                          <a
+                            href={`/docs/${subItem.slug}`}
+                            class={`block py-1 px-2 text-sm no-underline transition-all border-l-2 ${
+                              isActive(subItem.slug)
+                                ? 'text-primary border-primary font-medium'
+                                : 'text-gray-600 border-transparent hover:text-primary hover:border-primary'
+                            }`}
+                          >
+                            {subItem.title}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </li>
+                );
+              } else {
+                return (
+                  <li>
+                    <a
+                      href={`/docs/${item.slug}`}
+                      class={`block py-1 px-2 text-sm no-underline transition-all border-l-2 ${
+                        isActive(item.slug)
+                          ? 'text-primary border-primary font-medium'
+                          : 'text-gray-600 border-transparent hover:text-primary hover:border-primary'
+                      }`}
+                    >
+                      {item.title}
+                    </a>
+                  </li>
+                );
+              }
+            })}
+          </ul>
+        </li>
+      ))}
+    </ul>
+  </nav>
+</aside>
+
+<div
+  id="docs-sidebar-mobile"
+  class="fixed inset-0 z-110 lg:hidden hidden"
+>
+  <div
+    id="docs-sidebar-overlay"
+    class="absolute inset-0 bg-black/30"
+  ></div>
+  <aside
+    id="docs-sidebar-panel"
+    class="absolute left-0 top-0 bottom-0 w-64 bg-white shadow-lg transform -translate-x-full transition-transform duration-300 ease-in-out overflow-y-auto"
+  >
+    <div class="p-4 border-b border-gray-200 flex items-center justify-between">
+      <h2 class="text-lg font-bold text-text-secondary">Documentation</h2>
+      <button
+        id="docs-sidebar-close"
+        class="p-2 hover:bg-gray-100 rounded"
+        aria-label="Close sidebar"
+      >
+        <svg
+          class="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
+    </div>
+    <nav class="p-4">
+      <ul class="list-none p-0 m-0 space-y-4">
+        {categories.map((category) => (
+          <li>
+            <div class="font-bold text-text-secondary mb-2 text-sm uppercase tracking-wide">
+              {category.name}
+            </div>
+            <ul class="list-none p-0 m-0 space-y-1">
+              {category.items.map((item) => {
+                if ('items' in item) {
+                  return (
+                    <li>
+                      <div class="text-text-secondary font-semibold text-sm py-1 px-2">
+                        {item.title}
+                      </div>
+                      <ul class="list-none p-0 m-0 ml-4 space-y-1">
+                        {item.items.map((subItem) => (
+                          <li>
+                            <a
+                              href={`/docs/${subItem.slug}`}
+                              class={`block py-1 px-2 text-sm no-underline transition-all border-l-2 ${
+                                isActive(subItem.slug)
+                                  ? 'text-primary border-primary font-medium'
+                                  : 'text-gray-600 border-transparent hover:text-primary hover:border-primary'
+                              }`}
+                            >
+                              {subItem.title}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    </li>
+                  );
+                } else {
+                  return (
+                    <li>
+                      <a
+                        href={`/docs/${item.slug}`}
+                        class={`block py-1 px-2 text-sm no-underline transition-all border-l-2 ${
+                          isActive(item.slug)
+                            ? 'text-primary border-primary font-medium'
+                            : 'text-gray-600 border-transparent hover:text-primary hover:border-primary'
+                        }`}
+                      >
+                        {item.title}
+                      </a>
+                    </li>
+                  );
+                }
+              })}
+            </ul>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </aside>
+</div>
+
+<script>
+  const sidebarToggle = document.getElementById('docs-sidebar-toggle');
+  const sidebarMobile = document.getElementById('docs-sidebar-mobile');
+  const sidebarOverlay = document.getElementById('docs-sidebar-overlay');
+  const sidebarClose = document.getElementById('docs-sidebar-close');
+  const sidebarPanel = document.getElementById('docs-sidebar-panel');
+
+  function openSidebar() {
+    if (sidebarMobile && sidebarPanel) {
+      sidebarMobile.classList.remove('hidden');
+      setTimeout(() => {
+        sidebarPanel.classList.remove('-translate-x-full');
+      }, 10);
+    }
+  }
+
+  function closeSidebar() {
+    if (sidebarPanel) {
+      sidebarPanel.classList.add('-translate-x-full');
+      setTimeout(() => {
+        if (sidebarMobile) {
+          sidebarMobile.classList.add('hidden');
+        }
+      }, 300);
+    }
+  }
+
+  if (sidebarToggle) {
+    sidebarToggle.addEventListener('click', openSidebar);
+  }
+
+  if (sidebarClose) {
+    sidebarClose.addEventListener('click', closeSidebar);
+  }
+
+  if (sidebarOverlay) {
+    sidebarOverlay.addEventListener('click', closeSidebar);
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && sidebarMobile && !sidebarMobile.classList.contains('hidden')) {
+      closeSidebar();
+    }
+  });
+
+  if (sidebarPanel) {
+    sidebarPanel.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      if (target.tagName === 'A') {
+        closeSidebar();
+      }
+    });
+  }
+</script>
+
+<style>
+  @media (min-width: 1024px) {
+    #docs-sidebar::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 16rem;
+      height: 100vh;
+      background: var(--color-background-primary);
+      border-right: 2px solid var(--color-secondary);
+      pointer-events: none;
+      z-index: -1;
+    }
+  }
+</style>
+

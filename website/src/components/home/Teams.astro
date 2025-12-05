@@ -1,0 +1,364 @@
+---
+import templeLogo from "../../images/teams/temple-logo.png";
+import ledgerLogo from "../../images/teams/Ledger.svg";
+import objktLogo from "../../images/teams/objkt.jpeg";
+import kukaiLogo from "../../images/teams/Kukai_logo.png";
+import quipuswapLogo from "../../images/teams/quipuswap-logo.png";
+import nomadicLogo from "../../images/teams/nomadic_logo.png";
+import trilitechLogo from "../../images/teams/Trilitech.svg";
+import teiaLogo from "../../images/teams/teia.jpeg";
+import ligoLogo from "../../images/teams/Ligoland_logo.png";
+import umamiLogo from "../../images/teams/UmamiWallet.svg";
+import tezosDomains from "../../images/teams/Group.png";
+import bakingBadLogo from "../../images/teams/BakingBad.svg";
+import tzSafeLogo from "../../images/teams/TzSafe.svg";
+import routeLogo from "../../images/teams/3route.svg";
+import mooncakesLogo from "../../images/teams/mooncakes.jpeg";
+import tezosMandalaLogo from "../../images/teams/tezos_mandala.png";
+
+const images = [
+  {
+    src: templeLogo,
+    title: "Temple - Tezos Wallet",
+    url: "https://templewallet.com/",
+  },
+  {
+    src: ledgerLogo,
+    title: "Ledger",
+    url: "https://www.ledger.com/",
+  },
+  {
+    src: objktLogo,
+    title: "objkt.com",
+    url: "https://objkt.com/",
+  },
+  {
+    src: kukaiLogo,
+    title: "Kukai",
+    url: "https://wallet.kukai.app/",
+  },
+  {
+    src: quipuswapLogo,
+    title: "QuipuSwap",
+    url: "https://quipuswap.com/",
+  },
+  {
+    src: nomadicLogo,
+    title: "Nomadic Labs",
+    url: "https://www.nomadic-labs.com/",
+  },
+  {
+    src: trilitechLogo,
+    title: "Trilitech",
+    url: "https://www.trili.tech/",
+  },
+  {
+    src: teiaLogo,
+    title: "teia",
+    url: "https://teia.art/",
+  },
+  {
+    src: ligoLogo,
+    title: "Ligo",
+    url: "https://ligolang.org/",
+  },
+  {
+    src: umamiLogo,
+    title: "Umami Wallet",
+    url: "https://www.umamiwallet.com/",
+  },
+  {
+    src: tezosDomains,
+    title: "Tezos Domains",
+    url: "https://tezos.domains",
+  },
+  {
+    src: bakingBadLogo,
+    title: "BakingBad",
+    url: "https://bakingbad.dev/",
+  },
+  {
+    src: tzSafeLogo,
+    title: "TzSafe",
+    url: "https://tzsafe.org/",
+  },
+  {
+    src: routeLogo,
+    title: "3Route",
+    url: "https://3route.io/",
+  },
+  {
+    src: mooncakesLogo,
+    title: "mooncakes",
+    url: "https://mooncakes.fun/",
+  },
+  {
+    src: tezosMandalaLogo,
+    title: "Tezos Mandala",
+    url: "https://tezos-mandala.xyz/",
+  },
+];
+
+const clonedImages = [...images.slice(-3), ...images, ...images.slice(0, 3)];
+---
+
+<section class="bg-white pt-16 pb-20">
+  <p class="w-3/4 2xl:w-1/2 mx-auto text-4xl font-bold mb-12">Teams Building With Taquito</p>
+
+  <div class="carousel-container">
+    <button
+      class="carousel-nav carousel-nav-left"
+      id="prevBtn"
+      aria-label="Previous slide"
+    >
+      <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+    </button>
+
+    <div class="carousel-wrapper">
+      <div class="carousel-track" id="carouselTrack">
+        {
+          clonedImages.map((image, index) => (
+            <div class="carousel-slide" data-index={index}>
+              <a
+                href={image.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="logo-link"
+              >
+                <img src={image.src.src} alt={image.title} class="team-logo" />
+              </a>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+
+    <button
+      class="carousel-nav carousel-nav-right"
+      id="nextBtn"
+      aria-label="Next slide"
+    >
+      <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <polyline points="9 18 15 12 9 6"></polyline>
+      </svg>
+    </button>
+  </div>
+</section>
+
+<style>
+  .carousel-container {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    padding: 0 4rem;
+  }
+
+  .carousel-wrapper {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .carousel-track {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+  }
+
+  .carousel-slide {
+    min-width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 1rem;
+    box-sizing: border-box;
+  }
+
+  @media (min-width: 640px) {
+    .carousel-slide {
+      min-width: 50%;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .carousel-slide {
+      min-width: calc(100% / 3);
+    }
+  }
+
+  .logo-link {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 200px;
+    height: 120px;
+    padding: 1rem;
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease;
+    border-radius: 8px;
+  }
+
+  .logo-link:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .team-logo {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .carousel-nav {
+    background: white;
+    border: 2px solid #e5e7eb;
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+    color: #6b7280;
+  }
+
+  .carousel-nav:hover {
+    background: #f9fafb;
+    border-color: #d1d5db;
+    color: #374151;
+    transform: scale(1.05);
+  }
+
+  .carousel-nav:active {
+    transform: scale(0.95);
+  }
+
+  .carousel-nav:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+  }
+</style>
+
+<script>
+  const track = document.getElementById("carouselTrack") as HTMLElement;
+  const prevBtn = document.getElementById("prevBtn") as HTMLButtonElement;
+  const nextBtn = document.getElementById("nextBtn") as HTMLButtonElement;
+
+  if (track && prevBtn && nextBtn) {
+    const slides = track.querySelectorAll(".carousel-slide");
+    const totalSlides = slides.length;
+    const realSlidesCount = 16;
+
+    let currentIndex = 3;
+    let isTransitioning = false;
+
+    function getSlidesPerView(): number {
+      const width = window.innerWidth;
+      if (width < 640) return 1;
+      if (width < 1024) return 2;
+      return 3;
+    }
+
+    function getSlideWidth(): number {
+      return 100 / getSlidesPerView();
+    }
+
+    function updateCarousel(smooth: boolean = true) {
+      const slideWidth = getSlideWidth();
+      if (!smooth) {
+        track.style.transition = "none";
+      } else {
+        track.style.transition = "transform 0.5s ease-in-out";
+      }
+      track.style.transform = `translateX(-${currentIndex * slideWidth}%)`;
+
+      if (!smooth) {
+        void track.offsetWidth;
+      }
+    }
+
+    updateCarousel(false);
+
+    function nextSlide() {
+      if (isTransitioning) return;
+      isTransitioning = true;
+
+      currentIndex++;
+      updateCarousel(true);
+
+      setTimeout(() => {
+        if (currentIndex >= realSlidesCount + 3) {
+          currentIndex = 3;
+          updateCarousel(false);
+        }
+        isTransitioning = false;
+      }, 500);
+    }
+
+    function prevSlide() {
+      if (isTransitioning) return;
+      isTransitioning = true;
+
+      currentIndex--;
+      updateCarousel(true);
+
+      setTimeout(() => {
+        if (currentIndex < 3) {
+          currentIndex = realSlidesCount + 2;
+          updateCarousel(false);
+        }
+        isTransitioning = false;
+      }, 500);
+    }
+
+    nextBtn.addEventListener("click", nextSlide);
+    prevBtn.addEventListener("click", prevSlide);
+
+    let autoplayInterval = setInterval(nextSlide, 4000);
+
+    const container = document.querySelector(
+      ".carousel-container"
+    ) as HTMLElement;
+    if (container) {
+      container.addEventListener("mouseenter", () => {
+        clearInterval(autoplayInterval);
+      });
+
+      container.addEventListener("mouseleave", () => {
+        autoplayInterval = setInterval(nextSlide, 4000);
+      });
+    }
+
+    let resizeTimeout: number;
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = window.setTimeout(() => {
+        updateCarousel(false);
+      }, 100);
+    });
+  }
+</script>

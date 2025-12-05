@@ -1,0 +1,116 @@
+# Taquito Documentation
+
+> Official documentation for Taquito, a TypeScript library for building DApps on the Tezos blockchain.
+
+This is the documentation website for Taquito at https://taquito.io. Use this guide to understand how to navigate and find information.
+
+## URL Structure
+
+Documentation pages follow this pattern:
+- `/docs/{version}/{page}` - Versioned documentation
+- Example: `/docs/next/quick_start` or `/docs/23.0.0/making_transfers`
+
+Available versions: 20.0.0, 20.1.0, 21.0.0, 22.0.0, 23.0.0, next (development)
+
+The `next` version contains the latest unreleased documentation.
+
+## Documentation Sections
+
+### Getting Started
+Start here for new users:
+- `quick_start` - Installation and basic setup
+- `tutorial` - Step-by-step tutorial
+- `operation_flow` - How Taquito operations work
+- `rpc_nodes` - List of public RPC nodes
+- `web3js_taquito` - Migration guide from web3.js
+
+### Operations
+How to perform blockchain operations:
+- `making_transfers` - Send tez between accounts
+- `originate` - Deploy smart contracts
+- `set_delegate` - Delegation operations
+- `batch-api` - Batch multiple operations
+- `staking` - Staking operations
+- `consensus_key` - Consensus key operations
+- `smart_rollups` - Smart rollup operations
+- `proposal_and_ballot` - Governance operations
+
+### Smart Contracts
+Working with contracts:
+- `smartcontracts` - Contract interaction basics
+- `contract_call_parameters` - Calling contract methods
+- `fa2_parameters` - FA2 token standard
+- `manager_lambda` - Manager.tz lambda operations
+- `multisig_doc` - Multisig contracts
+
+### Wallets
+Wallet integration:
+- `beaconwallet-singleton` - Beacon wallet setup
+- `walletconnect` - WalletConnect integration
+- `wallets` - Overview of wallet options
+- `wallet_API` - Wallet API reference
+- `transaction_limits` - Transaction limits
+
+### Michelson
+Working with Michelson data:
+- `maps_bigmaps` - Maps and BigMaps
+- `michelsonmap` - MichelsonMap class
+- `tickets` - Ticket operations
+- `michelson_encoder` - Michelson encoder package
+
+### Signers
+Transaction signing:
+- `signing` - Signing overview
+- `inmemory_signer` - In-memory signer
+- `ledger_signer` - Ledger hardware wallet
+
+### Contract and Token Metadata
+TZIP standards:
+- `tzip12` - TZIP-12 (FA2 token metadata)
+- `metadata-tzip16` - TZIP-16 (contract metadata)
+
+### Views
+Contract views:
+- `lambda_view` - Lambda views
+- `on_chain_views` - On-chain views
+
+### Packages
+Individual package documentation:
+- `rpc_package` - @taquito/rpc
+- `michelson_encoder` - @taquito/michelson-encoder
+- `michel_codec` - @taquito/michel-codec
+- `contracts-library` - @taquito/contracts-library
+- `timelock` - Timelock operations
+- `taquito_utils` - @taquito/utils
+- `sapling` - Sapling (privacy) operations
+
+### Advanced Topics
+- `complex_parameters` - Complex contract parameters
+- `confirmation_event_stream` - Operation confirmations
+- `events` - Contract events
+- `drain_account` - Draining accounts
+- `liquidity_baking` - Liquidity baking
+- `storage_annotations` - Storage annotations
+- `tezos_domains` - Tezos Domains integration
+- `ophash_before_injecting` - Get operation hash before injection
+
+### Customization
+- `forger` - Custom forgers
+- `rpc-cache` - RPC caching
+- `cancel_http_requests` - Request cancellation
+- `prepare` - Prepare provider
+- `estimate` - Fee estimation
+
+### DApp Development
+- `package_bundle` - Bundle optimization
+- `dapp_template` - Starter templates
+- `dapp_prelaunch` - Pre-launch checklist
+
+## API Reference
+
+TypeDoc-generated API documentation is available at `/typedoc`.
+
+## Resources
+
+- GitHub: https://github.com/ecadlabs/taquito
+- npm: https://www.npmjs.com/package/@taquito/taquito

@@ -1,0 +1,122 @@
+---
+title: RPC nodes
+author: Roxane Letourneau
+---
+
+
+import BlockTimestamp from '@components/docs/BlockTimestamp.astro';
+import BlockReceivedAgo from '@components/docs/BlockReceivedAgo.astro';
+
+## What to consider when choosing a node
+
+- **Trust**: Choose a node that you can trust the people who operate it.
+  - It should not alter your requests, for example, changing the operation data before forging it.
+  - It should not censor your operations; you want to know that your operations will reach the network.
+- **Reliability**: Consider your requirements for uptime, and choose your node option accordingly. If node availability is critical for your user-case, consider self-hosting a node or contracting someone to operate a node specifically for you.
+- ** End-points support**: Public nodes have different policies on the end-points that they expose. Your use case may require specific end-points to be available to your app. We have made a suite of [integration tests](rpc_nodes_integration_test.md) for the Taquito RPC package. These tests show what RPC end-points are available on a given node. These tests are available here: [integration-tests/rpc-nodes.spec.ts](https://github.com/ecadlabs/taquito/blob/master/integration-tests/rpc-nodes.spec.ts).
+
+### Community Nodes
+
+<Tabs defaultValue="mainnet" values={[{"label": "Mainnet", "value": "mainnet"},{"label": "Ghostnet", "value": "ghostnet"},{"label": "Shadownet", "value": "shadownet"},{"label": "Seoulnet", "value": "seoulnet"}]}>
+
+<TabItem value="mainnet">
+
+<div style={{"overflowX":"auto","width":"100%","display":"block"}}>
+
+<div style={{"minWidth":"800px"}}>
+
+
+| Network       | Provider         | URL                                   | Last Block                                                                           | Timestamp                                                                           | Block Received                                                                      |
+| ------------- | ---------------- | ------------------------------------- | ------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| mainnet      | ECAD Infra       | https://mainnet.tezos.ecadinfra.com      | [Check](https://mainnet.tezos.ecadinfra.com/chains/main/blocks/head/header) | <BlockTimestamp network="mainnet" rpcUrl="https://mainnet.tezos.ecadinfra.com" /> | <BlockReceivedAgo network="mainnet" rpcUrl="https://mainnet.tezos.ecadinfra.com" /> |
+| mainnet      | SmartPy          | https://mainnet.smartpy.io               | [Check](https://mainnet.smartpy.io/chains/main/blocks/head/header) | <BlockTimestamp network="mainnet" rpcUrl="https://mainnet.smartpy.io" /> | <BlockReceivedAgo network="mainnet" rpcUrl="https://mainnet.smartpy.io" /> |
+| mainnet      | Tezos Foundation | https://rpc.tzbeta.net                   | [Check](https://rpc.tzbeta.net/chains/main/blocks/head/header) | <BlockTimestamp network="mainnet" rpcUrl="https://rpc.tzbeta.net" /> | <BlockReceivedAgo network="mainnet" rpcUrl="https://rpc.tzbeta.net" /> |
+| mainnet      | TzKT             | https://rpc.tzkt.io/mainnet              | [Check](https://rpc.tzkt.io/mainnet/chains/main/blocks/head/header) | <BlockTimestamp network="mainnet" rpcUrl="https://rpc.tzkt.io/mainnet" /> | <BlockReceivedAgo network="mainnet" rpcUrl="https://rpc.tzkt.io/mainnet" /> |
+
+</div>
+
+</div>
+
+</TabItem>
+
+<TabItem value="ghostnet">
+
+<div style={{"overflowX":"auto","width":"100%","display":"block"}}>
+
+<div style={{"minWidth":"800px"}}>
+
+
+| Network       | Provider         | URL                                   | Last Block                                                                           | Timestamp                                                                           | Block Received                                                                      |
+| ------------- | ---------------- | ------------------------------------- | ------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| ghostnet     | ECAD Infra       | https://ghostnet.tezos.ecadinfra.com     | [Check](https://ghostnet.tezos.ecadinfra.com/chains/main/blocks/head/header) | <BlockTimestamp network="ghostnet" rpcUrl="https://ghostnet.tezos.ecadinfra.com" /> | <BlockReceivedAgo network="ghostnet" rpcUrl="https://ghostnet.tezos.ecadinfra.com" /> |
+| ghostnet     | SmartPy          | https://ghostnet.smartpy.io              | [Check](https://ghostnet.smartpy.io/chains/main/blocks/head/header) | <BlockTimestamp network="ghostnet" rpcUrl="https://ghostnet.smartpy.io" /> | <BlockReceivedAgo network="ghostnet" rpcUrl="https://ghostnet.smartpy.io" /> |
+| ghostnet     | Tezos Foundation | https://rpc.ghostnet.teztnets.com        | [Check](https://rpc.ghostnet.teztnets.com/chains/main/blocks/head/header) | <BlockTimestamp network="ghostnet" rpcUrl="https://rpc.ghostnet.teztnets.com" /> | <BlockReceivedAgo network="ghostnet" rpcUrl="https://rpc.ghostnet.teztnets.com" /> |
+| ghostnet     | TzKT             | https://rpc.tzkt.io/ghostnet             | [Check](https://rpc.tzkt.io/ghostnet/chains/main/blocks/head/header) | <BlockTimestamp network="ghostnet" rpcUrl="https://rpc.tzkt.io/ghostnet" /> | <BlockReceivedAgo network="ghostnet" rpcUrl="https://rpc.tzkt.io/ghostnet" /> |
+
+</div>
+
+</div>
+
+</TabItem>
+
+<TabItem value="shadownet">
+
+<div style={{"overflowX":"auto","width":"100%","display":"block"}}>
+
+<div style={{"minWidth":"800px"}}>
+
+
+| Network       | Provider         | URL                                   | Last Block                                                                           | Timestamp                                                                           | Block Received                                                                      |
+| ------------- | ---------------- | ------------------------------------- | ------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| shadownet    | ECAD Infra       | https://shadownet.tezos.ecadinfra.com    | [Check](https://shadownet.tezos.ecadinfra.com/chains/main/blocks/head/header) | <BlockTimestamp network="shadownet" rpcUrl="https://shadownet.tezos.ecadinfra.com" /> | <BlockReceivedAgo network="shadownet" rpcUrl="https://shadownet.tezos.ecadinfra.com" /> |
+| shadownet    | Tezos Foundation | https://rpc.shadownet.teztnets.com       | [Check](https://rpc.shadownet.teztnets.com/chains/main/blocks/head/header) | <BlockTimestamp network="shadownet" rpcUrl="https://rpc.shadownet.teztnets.com" /> | <BlockReceivedAgo network="shadownet" rpcUrl="https://rpc.shadownet.teztnets.com" /> |
+| shadownet    | TzKT             | https://rpc.tzkt.io/shadownet            | [Check](https://rpc.tzkt.io/shadownet/chains/main/blocks/head/header) | <BlockTimestamp network="shadownet" rpcUrl="https://rpc.tzkt.io/shadownet" /> | <BlockReceivedAgo network="shadownet" rpcUrl="https://rpc.tzkt.io/shadownet" /> |
+
+</div>
+
+</div>
+
+</TabItem>
+
+<TabItem value="seoulnet">
+
+<div style={{"overflowX":"auto","width":"100%","display":"block"}}>
+
+<div style={{"minWidth":"800px"}}>
+
+
+| Network       | Provider         | URL                                   | Last Block                                                                           | Timestamp                                                                           | Block Received                                                                      |
+| ------------- | ---------------- | ------------------------------------- | ------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| seoulnet     | ECAD Infra       | https://seoulnet.tezos.ecadinfra.com     | [Check](https://seoulnet.tezos.ecadinfra.com/chains/main/blocks/head/header) | <BlockTimestamp network="seoulnet" rpcUrl="https://seoulnet.tezos.ecadinfra.com" /> | <BlockReceivedAgo network="seoulnet" rpcUrl="https://seoulnet.tezos.ecadinfra.com" /> |
+| seoulnet     | Tezos Foundation | https://rpc.seoulnet.teztnets.com        | [Check](https://rpc.seoulnet.teztnets.com/chains/main/blocks/head/header) | <BlockTimestamp network="seoulnet" rpcUrl="https://rpc.seoulnet.teztnets.com" /> | <BlockReceivedAgo network="seoulnet" rpcUrl="https://rpc.seoulnet.teztnets.com" /> |
+| seoulnet     | TzKT             | https://rpc.tzkt.io/seoulnet             | [Check](https://rpc.tzkt.io/seoulnet/chains/main/blocks/head/header) | <BlockTimestamp network="seoulnet" rpcUrl="https://rpc.tzkt.io/seoulnet" /> | <BlockReceivedAgo network="seoulnet" rpcUrl="https://rpc.tzkt.io/seoulnet" /> |
+
+</div>
+
+</div>
+
+</TabItem>
+
+</Tabs>
+
+_- You can also find a machine readable list in [rpc_nodes.json](https://taquito.io/docs/rpc_nodes.json)._
+
+_- If you are aware of a public node missing from our list or our information is inaccurate, please help us by submitting an issue or pull request on our [GitHub page](https://github.com/ecadlabs/taquito)._
+
+### Commerical Nodes
+
+| Provider | Values                 |
+| -------- | ----------------------- |
+| Exaion   | https://node.exaion.com |
+
+_If you are aware of a private node missing from our list or our information is inaccurate, please help us by submitting an issue or pull request on our GitHub page_
+
+## How to run a node
+
+Running a node is a good way of contributing to Tezos by increasing the decentralization of the network.
+
+There are many ways to set up a node. Here are some links providing general instructions:
+
+- [Using Docker images](https://octez.tezos.com/docs/introduction/howtoget.html#docker-images)
+- [Building from source](https://octez.tezos.com/docs/introduction/howtobuild.html)
+- [Using Ansible Role](https://github.com/ecadlabs/ansible-role-tezos-node/blob/master/README.md)
