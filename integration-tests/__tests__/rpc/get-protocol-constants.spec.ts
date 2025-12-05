@@ -140,7 +140,7 @@ CONFIGS().forEach(({ lib, rpc, networkType }) => {
   });
 
   describe(`Fetch constants for testnet`, () => {
-    tallinnnet(`should successfully fetch all constants for Talinnnet
+    tallinnnet(`should successfully fetch all constants for Tallinnnet
       using ${rpc}`, async () => {
       Tezos.setRpcProvider(rpc);
       const constants: ConstantsResponseProto024 = await Tezos.rpc.getConstants();
@@ -299,7 +299,10 @@ CONFIGS().forEach(({ lib, rpc, networkType }) => {
         direct_ticket_spending_enable: false,
         aggregate_attestation: true,
         allow_tz4_delegate_enable: true,
-        all_bakers_attest_activation_level: null,
+        all_bakers_attest_activation_threshold: {
+          numerator: 1,
+          denominator: 2,
+        },
         issuance_modification_delay: 2,
         consensus_key_activation_delay: 2,
         unstake_finalization_delay: 3

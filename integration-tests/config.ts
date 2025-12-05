@@ -9,6 +9,7 @@ import { knownContractsGhostnet } from './known-contracts-ghostnet';
 import { knownContractsShadownet } from './known-contracts-shadownet';
 import { knownContractsSeoulnet } from './known-contracts-seoulnet';
 import { knownContractsWeeklynet } from './known-contracts-weeklynet';
+import { knownContractsTallinnnet } from './known-contracts-tallinnnet';
 
 const nodeCrypto = require('crypto');
 
@@ -169,6 +170,18 @@ const seoulnetEphemeral: Config =
 const seoulnetSecretKey: Config =
   { ...seoulnetEphemeral, ...{ signerConfig: defaultSecretKey, rpc: 'https://seoulnet.tezos.ecadinfra.com' } };
 
+  const tallinnnetEphemeral: Config =
+  defaultConfig({
+    networkName: 'TALLINNNET',
+    protocol: Protocols.ProtoALpha,
+    defaultRpc: 'http://ecad-tezos-tallinnnet-rolling-1.i.ecadinfra.com/',
+    knownContracts: knownContractsTallinnnet,
+    signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/tallinnnet')
+  })
+
+const tallinnnetSecretKey: Config =
+  { ...tallinnnetEphemeral, ...{ signerConfig: defaultSecretKey, rpc: 'https://tallinnnet.tezos.ecadinfra.com' } };
+
 const weeklynetSecretKey: Config =
   defaultConfig({
     networkName: 'WEEKLYNET',
@@ -190,14 +203,18 @@ if (process.env['RUN_WITH_SECRET_KEY']) {
   providers.push(seoulnetSecretKey);
 } else if (process.env['RUN_WEEKLYNET_WITH_SECRET_KEY']) {
   providers.push(weeklynetSecretKey);
+} else if (process.env['RUN_TALLINNNET_WITH_SECRET_KEY']) {
+  providers.push(tallinnnetSecretKey);
 } else if (process.env['GHOSTNET']) {
   providers.push(ghostnetEphemeral);
 } else if (process.env['SHADOWNET']) {
   providers.push(shadownetEphemeral);
 } else if (process.env['SEOULNET']) {
   providers.push(seoulnetEphemeral);
+} else if (process.env['TALLINNNET']) {
+  providers.push(tallinnnetEphemeral)
 } else {
-  providers.push(ghostnetEphemeral, shadownetEphemeral, seoulnetEphemeral);
+  providers.push(ghostnetEphemeral, shadownetEphemeral, seoulnetEphemeral, tallinnnetEphemeral);
 }
 
 const setupForger = (Tezos: TezosToolkit, forger: ForgerType): void => {
