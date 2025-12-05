@@ -213,10 +213,10 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     return {
       pkh: isSignerConfigured
         ? await this.signer.publicKeyHash()
-        : await this.context.walletProvider.getPKH(),
+        : await this.context.wallet.pkh(),
       publicKey: isSignerConfigured
         ? await this.signer.publicKey()
-        : await this.context.walletProvider.getPK(),
+        : await this.context.wallet.pk(),
     };
   }
 

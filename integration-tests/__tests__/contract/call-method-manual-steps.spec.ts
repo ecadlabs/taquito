@@ -21,16 +21,16 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       const contract = await opOrigination.contract();
 
       // Let's say we want to call the default entry point of the presented contract, and we want to obtain the operation hash before injecting the operation to the node.
-      // Currently, if we do `await contract.methods.default(5).send()`, we won't be able to obtain the operation hash before the operation gets injected.
+      // Currently, if we do `await contract.methodsObject.default(5).send()`, we won't be able to obtain the operation hash before the operation gets injected.
       // This plan to be addressed in issue #432
 
       // The purpose of this test is to calculate the operation hash before sending the operation to the node.
       // Using Taquito to call a contract entry point abstracts many underlying calls
-      // Here are steps to manually reproduce the following operation: contract.methods.default(5).send();
+      // Here are steps to manually reproduce the following operation: contract.methodsObject.default(5).send();
 
       // Calling an entry point is a type of transaction operation
       // The toTransferParams method returns a TransferParams object having parameter in a JSON Michelson format
-      const transferParams = contract.methods.default(5).toTransferParams();
+      const transferParams = contract.methodsObject.default(5).toTransferParams();
 
       // We estimate the fees for the operation
       const estimate = await Tezos.estimate.transfer(transferParams);

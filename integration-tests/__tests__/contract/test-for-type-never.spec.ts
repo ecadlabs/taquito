@@ -29,7 +29,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 			expect(contract).toBeDefined();
 
 			try {
-				await contract.methods.admin('test').send();
+				await contract.methodsObject.admin('test').send();
 			} catch (e: any) {
 				expect(e.message).toContain('Assigning a value to the type never is forbidden.');
 			}
