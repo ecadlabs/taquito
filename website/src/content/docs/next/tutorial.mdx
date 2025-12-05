@@ -84,7 +84,7 @@ Now, run the following command in the terminal:
 npx ts-node index.ts
 ```
 
-If everything is done right, you should be able to see the output `Hello Blockchain!` in the terminal.
+If everything is done right, you should be able to see the output `Hello, Blockchain!` in the terminal.
 Now we can start using Taquito to interact with the Tezos blockchain.
 
 Run the following command in your project directory to install Taquito:
@@ -208,7 +208,7 @@ For the purpose of this section, we are using a pre-defined address that is bein
 > [!CAUTION]
 > In the next step, we will simply store the private key in the source code. **This is not secure**, and you should never do this in a production application.
 >
-> Even in a development environment, you should use environment variables that are never commited to your version control system.
+> Even in a development environment, you should use environment variables that are never committed to your version control system.
 
 Due to the extensive nature of Taquito it is broken up into multiple packages that provide different functionality. In the example below, we use the `@taquito/signer` package which provides an "In Memory Signer" functionality. You can install it in your project like so:
 
@@ -334,7 +334,7 @@ Here is a high-level example of the flow of events in the dApp:
 5. The user selects a wallet, sending a request to their wallet application
 6. The user visits their wallet (on their phone, computer, a browser extension, in another tab, or even a hardware wallet) and approves the connection
 7. The user returns to the dApp which has now received the information about the users account from the wallet
-8. The user makes an interaction that requires sending an operation to the blockchain (such as a tranfer of tokens)
+8. The user makes an interaction that requires sending an operation to the blockchain (such as a transfer of tokens)
 9. The dApp sends the operation to the wallet
 10. The wallet shows the operation to the user (including details of the transaction and fees) and asks them to approve it
 11. The user approves the operation
@@ -357,6 +357,14 @@ Open your terminal and run this command to create a basic React app:
 
 ```bash
 npm create vite@latest my-dapp -- --template react-ts
+```
+
+If the development server doesn't automatically start, you may also need to run:
+
+```bash
+cd my-dapp
+npm install
+npm run dev
 ```
 
 The terminal should show a message that says: `➜  Local:   http://localhost:5173/`.
@@ -458,7 +466,7 @@ const ConnectButton = ({
 
 	return (
 		<div>
-			<button onClick={connectWallet}>
+			<button disabled={!wallet} onClick={connectWallet}>
 				<span>
 					Connect wallet
 				</span>
@@ -514,7 +522,7 @@ const Transfer = ({
         onChange={e => setRecipient(e.target.value)}
       />
       <br />
-      Amount in uTez:<input
+      Amount in Mutez:<input
         type="number"
         placeholder="Amount"
         value={amount}
@@ -522,7 +530,7 @@ const Transfer = ({
       />
       <br />
       <button
-        disabled={!recipient && !amount}
+        disabled={!recipient || !amount}
         onClick={sendTez}
       >
         {loading ? (
