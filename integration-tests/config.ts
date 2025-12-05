@@ -161,7 +161,7 @@ const shadownetSecretKey: Config =
   const tallinnnetEphemeral: Config =
   defaultConfig({
     networkName: 'TALLINNNET',
-    protocol: Protocols.PtSeouLou,
+    protocol: Protocols.PtTALLiNt,
     defaultRpc: 'http://ecad-tezos-tallinnnet-rolling-1.i.ecadinfra.com/',
     knownContracts: knownContractsTallinnnet,
     signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/tallinnnet')
