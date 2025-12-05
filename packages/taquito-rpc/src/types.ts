@@ -2042,6 +2042,7 @@ export interface OperationContentsAndResultMetadataOrigination {
 }
 
 export type ConstantsResponse = ConstantsResponseCommon &
+  ConstantsResponseProto024 &
   ConstantsResponseProto023 &
   ConstantsResponseProto022 &
   ConstantsResponseProto021 &
@@ -2089,6 +2090,10 @@ export interface ConstantsResponseCommon {
 }
 
 export type Ratio = { numerator: number; denominator: number };
+
+export interface ConstantsResponseProto024 extends Omit<ConstantsResponseProto023, | 'all_bakers_attest_activation_level'> {
+  all_bakers_attest_activation_threshold: Ratio;
+}
 
 export type ConstantsResponseProto023 = ConstantsResponseProto022;
 
