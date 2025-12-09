@@ -2567,8 +2567,6 @@ export interface BlockMetadata {
   deactivated?: string[];
   balance_updates?: OperationBalanceUpdates;
   liquidity_baking_toggle_ema?: number;
-  adaptive_issuance_vote_ema?: number;
-  adaptive_issuance_activation_cycle?: number;
   implicit_operations_results?: SuccessfulManagerOperationResult[];
   proposer_consensus_key?: string;
   baker_consensus_key?: string;

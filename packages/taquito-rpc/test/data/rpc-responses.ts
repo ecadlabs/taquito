@@ -141,8 +141,6 @@ export const blockResponse = {
       },
     ],
     liquidity_baking_toggle_ema: 2550,
-    adaptive_issuance_vote_ema: 2634186,
-    adaptive_issuance_activation_cycle: 0,
     implicit_operations_results: [
       {
         kind: 'transaction',
