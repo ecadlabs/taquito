@@ -2551,6 +2551,18 @@ export interface LevelInfo {
   expected_commitment: boolean;
 }
 
+export interface Attestations {
+  total_committee_power: number;
+  threshold: number;
+  recorded_power: number;
+}
+
+export interface PreAttestations {
+  total_committee_power: number;
+  threshold: number;
+  recorded_power: number;
+}
+
 export interface BlockMetadata {
   protocol: string;
   next_protocol: string;
@@ -2576,6 +2588,9 @@ export interface BlockMetadata {
   voting_period_kind?: string;
   consumed_gas?: string;
   liquidity_baking_escape_ema?: number;
+  all_bakers_attest_activation_level?: number;
+  attestations?: Attestations;
+  preattestations?: PreAttestations;
 }
 
 export interface RPCSimulateOperationParam {
