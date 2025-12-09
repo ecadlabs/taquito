@@ -6,7 +6,7 @@ author: Claude Barde
 
 Web3js and Taquito have a common goal: connecting dapps to the Ethereum and Tezos blockchain (respectively) and thus implement similar approaches. However, these approaches are also different due to the nature of Ethereum and the Tezos blockchains.
 
-A comparison of the methods implemented by Web3js and Taquito can put in perspective their similarities and differences.
+This page will highlight some of the differences between the two systems. This is not to attempt to determine which package is superior, as the two are used for different purposes. Instead, this is more suited for developers who are familiar with Web3js and are interested in learning to work with Taquito.
 
 ## Installation
 
@@ -37,7 +37,7 @@ const Tezos = new TezosToolkit('http://localhost:8732');
 ```
 
 The Web3js package exports a class that needs to be instantiated before being used. The difference between _Web3_ and _web3_ is a common source of Ethereum development errors.
-Taquito also exports a class named `TezosToolkit` that needs to be instantiated before being used, similar to the Web3js code.
+Taquito also exports a class named `TezosToolkit` that needs to be instantiated before being used - similar to the Web3js code -, but with less boilerplate.
 
 ## Get account balance
 
@@ -158,25 +158,6 @@ const contractAddress = contract.address;
 ```
 
 Both functions return a new instance of the contract from which the newly deployed/originated contract address can be found.
-
-## Check if the wallet injected an outdated version of the library in the browser
-
-**Web3js**:
-
-```js
-if(typeof window.web3 !== undefined){
- // MetaMask injected web3
- ...
-} else {
- ...
-}
-```
-
-**Taquito**:
-
-```js
-Nope;
-```
 
 ## Full code to connect to a local node and send a transaction to a smart contract
 
