@@ -190,7 +190,9 @@ export const blockResponse = {
             block_payload_hash: 'vh3Y2ysro9mSgkGmB1uNmoGho98gCTF3ycSfSKGXGrYEowXbDraa',
             metadata: {
               delegate: 'tz1Zt8QQ9aBznYNk5LUBjtME9DuExomw9YRs',
-              consensus_power: 2558,
+              consensus_power: {
+                slots: 2558,
+              },
               consensus_key: 'tz1Zt8QQ9aBznYNk5LUBjtME9DuExomw9YRs',
             },
           },

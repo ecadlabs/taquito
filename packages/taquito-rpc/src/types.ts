@@ -146,6 +146,11 @@ export type PendingConsensusKey = {
   pkh: string;
 };
 
+export type ConsensusPower = {
+  slots: number;
+  baking_power?: number;
+};
+
 export type VotingInfoResponse = {
   voting_power?: string;
   current_ballot?: BallotListResponseEnum;
@@ -677,7 +682,7 @@ export type OperationContents =
 export interface OperationContentsAndResultMetadataExtended1 {
   balance_updates?: OperationMetadataBalanceUpdates[];
   delegate: string;
-  consensus_power: number;
+  consensus_power: ConsensusPower;
   consensus_key: string;
 }
 
@@ -694,13 +699,13 @@ export interface OperationContentsAndResultMetadataAttestationsAggregate {
     delegate: string;
     consensus_pkh: string;
   }[];
-  consensus_power: number;
+  consensus_power: ConsensusPower;
 }
 
 export interface OperationContentsAndResultMetadataPreattestation {
   balance_updates?: OperationMetadataBalanceUpdates[];
   delegate: string;
-  consensus_power: number;
+  consensus_power: ConsensusPower;
   consensus_key?: string;
 }
 
@@ -710,7 +715,7 @@ export interface OperationContentsAndResultMetadataPreattestationsAggregate {
     delegate: string;
     consensus_pkh: string;
   }[];
-  consensus_power: number;
+  consensus_power: ConsensusPower;
 }
 export interface OperationContentsAndResultMetadataPreEndorsement {
   balance_updates?: OperationMetadataBalanceUpdates[];
@@ -1769,6 +1774,11 @@ export type OperationResult =
   | OperationResultSmartRollupExecuteOutboxMessage
   | OperationResultDalPublishCommitment;
 
+export interface AddressRegistryDiff {
+  address: string;
+  counter: string;
+}
+
 export interface OperationResultTransaction {
   status: OperationResultStatusEnum;
   storage?: MichelsonV1Expression;
@@ -1785,6 +1795,7 @@ export interface OperationResultTransaction {
   consumed_milligas?: string;
   lazy_storage_diff?: LazyStorageDiff[];
   ticket_hash?: string;
+  address_registry_diff?: AddressRegistryDiff[];
 }
 
 export interface OperationResultReveal {
@@ -2563,11 +2574,6 @@ export interface PreAttestations {
   recorded_power: number;
 }
 
-export interface AddressRegistryDiff {
-  address: string;
-  counter: string;
-}
-
 export interface BlockMetadata {
   protocol: string;
   next_protocol: string;
@@ -2596,7 +2602,6 @@ export interface BlockMetadata {
   all_bakers_attest_activation_level?: number;
   attestations?: Attestations;
   preattestations?: PreAttestations;
-  address_registry_diff?: AddressRegistryDiff[];
 }
 
 export interface RPCSimulateOperationParam {

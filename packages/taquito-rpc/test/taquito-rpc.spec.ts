@@ -3268,7 +3268,9 @@ describe('RpcClient test', () => {
                     dal_attestation: '0',
                     metadata: {
                       delegate: 'tz1Zt8QQ9aBznYNk5LUBjtME9DuExomw9YRs',
-                      consensus_power: 532,
+                      consensus_power: {
+                        slots: 532,
+                      },
                       consensus_key: 'tz1Zt8QQ9aBznYNk5LUBjtME9DuExomw9YRs',
                     },
                   },
