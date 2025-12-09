@@ -185,7 +185,6 @@ export interface BlockFullHeader {
   proof_of_work_nonce: string;
   seed_nonce_hash?: string;
   liquidity_baking_toggle_vote?: LiquidityBakingToggleVotes;
-  adaptive_issuance_vote?: AdaptiveIssuanceVote;
   liquidity_baking_escape_vote?: boolean | LiquidityBakingToggleVotes;
   signature: string;
 }
@@ -2888,7 +2887,7 @@ export interface SmartRollupTimeoutStakers {
 
 export interface ActiveStakingParametersResponse {
   limit_of_staking_over_baking_millionth: number;
-	edge_of_baking_over_staking_billionth: number;
+  edge_of_baking_over_staking_billionth: number;
 }
 
 export type PendingStakingParametersResponse = Array<{

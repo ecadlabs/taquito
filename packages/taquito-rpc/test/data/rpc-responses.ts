@@ -18,7 +18,6 @@ export const blockResponse = {
     payload_round: 0,
     proof_of_work_nonce: '1a991a0300000000',
     liquidity_baking_toggle_vote: 'on',
-    adaptive_issuance_vote: 'pass',
     signature:
       'sigWZtc4cGRxY7Fm1uPWFqHLyZYTgouUvAyTFfPLtE669VGezRNpfLXuxjUrU4DjviZjJcQe59RvNE4wLj1zEXpYsmwF6AXs',
   },
