@@ -1,19 +1,20 @@
 ---
 title: RPC nodes
-author: Roxane Letourneau
+author: [Roxane Letourneau, Maxwell Ward]
 ---
-
 
 import BlockTimestamp from '@components/docs/BlockTimestamp.astro';
 import BlockReceivedAgo from '@components/docs/BlockReceivedAgo.astro';
 
+An RPC (Remote Procedure Call) node is a server that provides an interface for interacting with the Tezos blockchain. It allows applications like Taquito to query blockchain data (such as account balances, contract storage, and block information) and broadcast transactions to the network. Rather than running your own Tezos node, you can connect to public or commercial RPC nodes to access the blockchain.
+
 ## What to consider when choosing a node
 
 - **Trust**: Choose a node that you can trust the people who operate it.
-  - It should not alter your requests, for example, changing the operation data before forging it.
+  - It should not alter your requests. For example: changing the operation data before forging it.
   - It should not censor your operations; you want to know that your operations will reach the network.
 - **Reliability**: Consider your requirements for uptime, and choose your node option accordingly. If node availability is critical for your user-case, consider self-hosting a node or contracting someone to operate a node specifically for you.
-- ** End-points support**: Public nodes have different policies on the end-points that they expose. Your use case may require specific end-points to be available to your app. We have made a suite of [integration tests](rpc_nodes_integration_test.md) for the Taquito RPC package. These tests show what RPC end-points are available on a given node. These tests are available here: [integration-tests/rpc-nodes.spec.ts](https://github.com/ecadlabs/taquito/blob/master/integration-tests/rpc-nodes.spec.ts).
+- **End-points support**: Public nodes have different policies on the end-points that they expose. Your use case may require specific end-points to be available to your app. We have made a suite of [integration tests](rpc_nodes_integration_test) for the Taquito RPC package. These tests show what RPC end-points are available on a given node. These tests are available here: [integration-tests/rpc-nodes.spec.ts](https://github.com/ecadlabs/taquito/blob/master/integration-tests/rpc-nodes.spec.ts).
 
 ### Community Nodes
 
@@ -99,9 +100,9 @@ import BlockReceivedAgo from '@components/docs/BlockReceivedAgo.astro';
 
 </Tabs>
 
-_- You can also find a machine readable list in [rpc_nodes.json](https://taquito.io/docs/rpc_nodes.json)._
+You can find a machine readable list of RPC nodes in [rpc_nodes.json](https://taquito.io/docs/rpc_nodes.json).
 
-_- If you are aware of a public node missing from our list or our information is inaccurate, please help us by submitting an issue or pull request on our [GitHub page](https://github.com/ecadlabs/taquito)._
+If you are aware of a public node missing from our list or our information is inaccurate, please let us know by submitting an issue or pull request on our [GitHub page](https://github.com/ecadlabs/taquito).
 
 ### Commerical Nodes
 
@@ -109,13 +110,13 @@ _- If you are aware of a public node missing from our list or our information is
 | -------- | ----------------------- |
 | Exaion   | https://node.exaion.com |
 
-_If you are aware of a private node missing from our list or our information is inaccurate, please help us by submitting an issue or pull request on our GitHub page_
+If you are aware of a commerical node missing from our list or our information is inaccurate, please let us know by submitting an issue or pull request on our [GitHub page](https://github.com/ecadlabs/taquito).
 
 ## How to run a node
 
 Running a node is a good way of contributing to Tezos by increasing the decentralization of the network.
 
-There are many ways to set up a node. Here are some links providing general instructions:
+There are many ways to set up a node, but that is beyond the scope of our documentation. You can find some general information about doing so here:
 
 - [Using Docker images](https://octez.tezos.com/docs/introduction/howtoget.html#docker-images)
 - [Building from source](https://octez.tezos.com/docs/introduction/howtobuild.html)
