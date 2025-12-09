@@ -2563,6 +2563,11 @@ export interface PreAttestations {
   recorded_power: number;
 }
 
+export interface AddressRegistryDiff {
+  address: string;
+  counter: string;
+}
+
 export interface BlockMetadata {
   protocol: string;
   next_protocol: string;
@@ -2591,6 +2596,7 @@ export interface BlockMetadata {
   all_bakers_attest_activation_level?: number;
   attestations?: Attestations;
   preattestations?: PreAttestations;
+  address_registry_diff?: AddressRegistryDiff[];
 }
 
 export interface RPCSimulateOperationParam {
