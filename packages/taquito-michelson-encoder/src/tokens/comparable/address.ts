@@ -107,14 +107,6 @@ export class AddressToken extends ComparableToken {
     return encodeAddress(val.bytes);
   }
 
-  /**
-   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
-   *
-   */
-  public ExtractSchema() {
-    return AddressToken.prim;
-  }
-
   generateSchema(): BaseTokenSchema {
     return {
       __michelsonType: AddressToken.prim,

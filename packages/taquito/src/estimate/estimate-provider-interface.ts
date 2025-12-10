@@ -20,7 +20,7 @@ import {
   FinalizeUnstakeParams,
 } from '../operations/types';
 import { Estimate } from './estimate';
-import { ContractMethod, ContractMethodObject, ContractProvider } from '../contract';
+import { ContractMethodObject, ContractProvider } from '../contract';
 
 export interface EstimationProvider {
   /**
@@ -186,7 +186,7 @@ export interface EstimationProvider {
    * @param Estimate
    */
   contractCall(
-    contractMethod: ContractMethod<ContractProvider> | ContractMethodObject<ContractProvider>
+    contractMethod: ContractMethodObject<ContractProvider>
   ): Promise<Estimate>;
 
   /**

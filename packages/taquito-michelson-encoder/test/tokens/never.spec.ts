@@ -44,30 +44,30 @@ describe('Never token', () => {
   describe('Never parameter encoding', () => {
     it('Never parameter are encoded properly', () => {
       const schema = new ParameterSchema({ prim: 'never' });
-      const result = schema.ExtractSchema();
-      expect(result).toEqual('never');
       expect(schema.generateSchema()).toEqual({
         __michelsonType: 'never',
-        schema: 'never'
+        schema: 'never',
       });
     });
 
-    it('Never parameter are encoded properly', () => {
-      const schema = new ParameterSchema({ "prim": "pair", "args": [{ "prim": "nat" }, { "prim": "never" }] });
-      const result = schema.ExtractSchema();
-      expect(result).toEqual({ 0: 'nat', 1: 'never' });
+    it('Never parameter in pair are encoded properly', () => {
+      const schema = new ParameterSchema({
+        prim: 'pair',
+        args: [{ prim: 'nat' }, { prim: 'never' }],
+      });
 
       expect(schema.generateSchema()).toEqual({
         __michelsonType: 'pair',
         schema: {
           0: {
             __michelsonType: 'nat',
-            schema: 'nat'
-          }, 1: {
+            schema: 'nat',
+          },
+          1: {
             __michelsonType: 'never',
-            schema: 'never'
-          }
-        }
+            schema: 'never',
+          },
+        },
       });
     });
   });
