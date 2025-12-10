@@ -34,14 +34,6 @@ export class MutezToken extends ComparableToken {
     return new BigNumber(val[Object.keys(val)[0]]);
   }
 
-  /**
-   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
-   *
-   */
-  public ExtractSchema() {
-    return MutezToken.prim;
-  }
-
   generateSchema(): BaseTokenSchema {
     return {
       __michelsonType: MutezToken.prim,

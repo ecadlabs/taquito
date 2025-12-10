@@ -59,14 +59,6 @@ export class NeverToken extends Token {
     );
   }
 
-  /**
-   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
-   *
-   */
-  public ExtractSchema() {
-    return NeverToken.prim;
-  }
-
   generateSchema(): BaseTokenSchema {
     return {
       __michelsonType: NeverToken.prim,

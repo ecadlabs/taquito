@@ -38,19 +38,6 @@ export class BigMapToken extends Token {
     return this.createToken(this.val.args[0], 0) as unknown as ComparableToken;
   }
 
-  /**
-   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
-   *
-   */
-  public ExtractSchema() {
-    return {
-      big_map: {
-        key: this.KeySchema.ExtractSchema(),
-        value: this.ValueSchema.ExtractSchema(),
-      },
-    };
-  }
-
   generateSchema(): BigMapTokenSchema {
     return {
       __michelsonType: BigMapToken.prim,

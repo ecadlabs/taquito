@@ -2,13 +2,12 @@ import { PrefixV2 } from './constants';
 import {
   b58DecodeAndCheckPrefix,
   splitAddress,
-  ValidationResult,
   publicKeyHashPrefixes,
   signaturePrefixes,
   publicKeyPrefixes,
   addressPrefixes,
-} from './taquito-utils';
-import { ParameterValidationError } from '@taquito/core';
+} from './encoding';
+import { ParameterValidationError, ValidationResult } from '@taquito/core';
 
 export { ValidationResult } from '@taquito/core';
 
@@ -224,23 +223,6 @@ export function validateProtocol(value: string): ValidationResult {
  */
 export function validateBlock(value: string): ValidationResult {
   return validatePrefixedValue(value, [PrefixV2.BlockHash]);
-}
-
-/**
- * @deprecated this function will be removed in the next minor release
- * @description generates a readable error string from a validation result
- */
-export function invalidDetail(validation: ValidationResult): string {
-  switch (validation) {
-    case ValidationResult.NO_PREFIX_MATCHED:
-      return 'with unsupported prefix';
-    case ValidationResult.INVALID_CHECKSUM:
-      return 'failed checksum';
-    case ValidationResult.INVALID_LENGTH:
-      return 'with incorrect length';
-    default:
-      return '';
-  }
 }
 
 /**

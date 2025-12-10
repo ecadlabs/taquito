@@ -16,7 +16,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             await op.confirmation();
             const contract = await op.contract();
 
-            const operation = await contract.methods
+            const operation = await contract.methodsObject
                 .default(2000000000000000000000000000000000000000000000000000000)
                 .send();
             await operation.confirmation();
@@ -38,7 +38,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             await op.confirmation();
             const contract = await op.contract();
 
-            const operation = await contract.methods
+            const operation = await contract.methodsObject
                 .default(2000000000000000000000000000000000000000000000000000000)
                 .send();
             await operation.confirmation();

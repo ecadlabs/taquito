@@ -58,7 +58,7 @@ export default ({
 
   useEffect(() => {
     async function getDependencies() {
-      const { TezosToolkit, MichelsonMap, compose, getRevealFee, RpcReadAdapter, UnitValue } = await import('@taquito/taquito');
+      const { TezosToolkit, MichelsonMap, compose, getRevealFee, RpcReadAdapter, UnitValue, importKey } = await import('@taquito/taquito');
       const { verifySignature } = await import('@taquito/utils');
       const {
         validateAddress,
@@ -78,7 +78,7 @@ export default ({
       } = await import('@taquito/utils');
       const { BeaconWallet } = await import('@taquito/beacon-wallet');
       const { SigningType, BeaconEvent } = await import('@airgap/beacon-sdk');
-      const { InMemorySigner, importKey, Path, ECDSA, Ed25519, generateSecretKey } = await import('@taquito/signer');
+      const { InMemorySigner, Path, ECDSA, Ed25519, generateSecretKey } = await import('@taquito/signer');
       const { LedgerSigner, DerivationType } = await import('@taquito/ledger-signer');
       const { Tzip16Module, tzip16, MichelsonStorageView } = await import('@taquito/tzip16')
       const { Tzip12Module, tzip12 } = await import("@taquito/tzip12");

@@ -1,5 +1,5 @@
 import { KnownContracts } from './known-contracts';
-export const knownContractsPtShadownet: KnownContracts = {
+export const knownContractsShadownet: KnownContracts = {
   contract: "KT1J4E79F1qL6kGBSQ3yXBdXmuq5j4FNThK2",
   bigMapContract: "KT1XDt2srMQiAcjEATXbGmpRsiSE63umaMZz",
   tzip12BigMapOffChainContract: "KT1K1PkGpfnQJxB8t5NhDJ9CCaUkZKyrdu6N",

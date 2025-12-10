@@ -9,11 +9,15 @@ const libraryName = 'taquito-michel-codec';
 export default {
   input: `src/taquito-michel-codec.ts`,
   output: [
-    { file: pkg.main, name: camelCase(libraryName), format: 'umd', sourcemap: true },
+    { file: pkg.main, name: camelCase(libraryName), format: 'umd', sourcemap: true, globals: {
+      '@taquito/core': 'core'
+    } },
     { file: pkg.module, format: 'es', sourcemap: true },
   ],
   // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
-  external: [],
+  external: [
+    '@taquito/core'
+  ],
   watch: {
     include: 'src/**',
   },
