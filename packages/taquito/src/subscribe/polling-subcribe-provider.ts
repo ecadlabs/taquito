@@ -133,7 +133,7 @@ export class PollingSubscribeProvider implements SubscribeProvider {
   private async getConfirmationPollingInterval() {
     if (!this.config.pollingIntervalMilliseconds) {
       const defaultIntervalTestnetsMainnet = 5000;
-      const defaultIntervalSandbox = 700;
+      const minimumPollingInterval = 700;
       try {
         const constants = await this.context.readProvider.getProtocolConstants('head');
         const blockTime = constants.minimal_block_delay
@@ -143,8 +143,8 @@ export class PollingSubscribeProvider implements SubscribeProvider {
 
         this.config.pollingIntervalMilliseconds =
           confirmationPollingInterval.toNumber() === 0
-            ? defaultIntervalSandbox
-            : Math.max(confirmationPollingInterval.toNumber(), defaultIntervalSandbox);
+            ? minimumPollingInterval
+            : Math.max(confirmationPollingInterval.toNumber(), minimumPollingInterval);
       } catch (exception) {
         return defaultIntervalTestnetsMainnet;
       }

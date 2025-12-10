@@ -598,7 +598,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
    * @param params increasePaidStorage operation parameters
    */
   async increasePaidStorage({ fee, storageLimit, gasLimit, ...rest }: IncreasePaidStorageParams) {
-    if (rest.amount < 0) {
+    if (rest.amount <= 0) {
       throw new InvalidAmountError(rest.amount.toString());
     }
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
@@ -766,9 +766,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
    *
    * @param Estimate
    */
-  async contractCall(
-    contractMethod: ContractMethodObject<ContractProvider>
-  ) {
+  async contractCall(contractMethod: ContractMethodObject<ContractProvider>) {
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
     const preparedOperation = await this.prepare.contractCall(contractMethod);
 
