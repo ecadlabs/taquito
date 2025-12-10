@@ -10,37 +10,6 @@ import { ParameterSchema } from '../src/schema/parameter';
 describe('Schema test', () => {
   it('Should extract schema properly', () => {
     const schema = new Schema(storage6);
-    expect(schema.ExtractSchema()).toEqual({
-      key_info: {
-        key_groups: {
-          list: {
-            group_threshold: 'nat',
-            signatories: {
-              list: 'key',
-            },
-          },
-        },
-        overall_threshold: 'nat',
-      },
-      pour_info: {
-        Some: {
-          pour_authorizer: 'key',
-          pour_dest: 'contract',
-        },
-      },
-      vesting: {
-        vesting_quantities: {
-          vested_balance: 'mutez',
-          vesting_increment: 'mutez',
-        },
-        vesting_schedule: {
-          next_payout: 'timestamp',
-          payout_interval: 'int',
-        },
-      },
-      replay_counter: 'nat',
-    });
-
     expect(schema.generateSchema()).toEqual({
       __michelsonType: 'pair',
       schema: {
@@ -225,46 +194,6 @@ describe('Schema test', () => {
 
   it('Should extract parameter schema properly', () => {
     const schema = new ParameterSchema(params6);
-    expect(schema.ExtractSchema()).toEqual({
-      Pour: {
-        Some: {
-          pour_amount: 'mutez',
-          pour_auth: 'signature',
-        },
-      },
-      Action: {
-        action_input: {
-          Set_delegate: { Some: 'key_hash' },
-          Set_keys: {
-            key_groups: {
-              list: {
-                group_threshold: 'nat',
-                signatories: {
-                  list: 'key',
-                },
-              },
-            },
-            overall_threshold: 'nat',
-          },
-          Set_pour: {
-            Some: {
-              pour_authorizer: 'key',
-              pour_dest: 'contract',
-            },
-          },
-          Transfer: {
-            dest: 'contract',
-            transfer_amount: 'mutez',
-          },
-        },
-        signatures: {
-          list: {
-            list: { Some: 'signature' },
-          },
-        },
-      },
-    });
-
     expect(schema.generateSchema()).toEqual({
       __michelsonType: 'or',
       schema: {
@@ -385,12 +314,25 @@ describe('Schema test', () => {
     });
 
     const signatures = schema.ExtractSignatures();
-    expect(signatures).toContainEqual(['Pour', 'signature', 'mutez']);
+    expect(signatures).toContainEqual([
+      'Pour',
+      { __michelsonType: 'signature', schema: 'signature' },
+      { __michelsonType: 'mutez', schema: 'mutez' },
+    ]);
     expect(signatures).toContainEqual([
       'Action',
       'Set_delegate',
-      'key_hash',
-      { list: { list: { Some: 'signature' } } },
+      { __michelsonType: 'key_hash', schema: 'key_hash' },
+      {
+        __michelsonType: 'list',
+        schema: {
+          __michelsonType: 'list',
+          schema: {
+            __michelsonType: 'option',
+            schema: { __michelsonType: 'signature', schema: 'signature' },
+          },
+        },
+      },
     ]);
   });
 

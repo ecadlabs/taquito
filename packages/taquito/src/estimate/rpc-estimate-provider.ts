@@ -39,7 +39,7 @@ import {
   payloadLength as sigSize,
 } from '@taquito/utils';
 import { RevealEstimateError } from './errors';
-import { ContractMethod, ContractMethodObject, ContractProvider } from '../contract';
+import { ContractMethodObject, ContractProvider } from '../contract';
 import { Provider } from '../provider';
 import { PrepareProvider } from '../prepare/prepare-provider';
 import { PreparedOperation } from '../prepare';
@@ -767,7 +767,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
    * @param Estimate
    */
   async contractCall(
-    contractMethod: ContractMethod<ContractProvider> | ContractMethodObject<ContractProvider>
+    contractMethod: ContractMethodObject<ContractProvider>
   ) {
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
     const preparedOperation = await this.prepare.contractCall(contractMethod);

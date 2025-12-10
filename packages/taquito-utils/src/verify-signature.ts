@@ -5,10 +5,10 @@ import {
   buf2hex,
   hex2buf,
   mergebuf,
-  PrefixV2,
   publicKeyPrefixes,
   signaturePrefixes,
-} from './taquito-utils';
+} from './encoding';
+import { PrefixV2 } from './constants';
 import { secp256k1 } from '@noble/curves/secp256k1';
 import { p256 } from '@noble/curves/nist';
 import {

@@ -9,11 +9,25 @@ const libraryName = 'taquito-ledger-signer';
 export default {
   input: `src/${libraryName}.ts`,
   output: [
-    { file: pkg.main, name: camelCase(libraryName), format: 'umd', sourcemap: true },
+    { 
+      file: pkg.main, 
+      name: camelCase(libraryName), 
+      format: 'umd', 
+      sourcemap: true, 
+      globals: { 
+        '@taquito/core': 'core',
+        '@taquito/utils': 'utils',
+        '@stablelib/blake2b': 'blake2b'
+      } 
+    },
     { file: pkg.module, format: 'es', sourcemap: true },
   ],
   // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
-  //external: ['@ledgerhq/hw-transport-node-hid'],
+  external: [
+    '@taquito/core',
+    '@taquito/utils',
+    '@stablelib/blake2b'
+  ],
   watch: {
     include: 'src/**',
   },

@@ -63,7 +63,7 @@ export class ParameterSchema {
    */
   get hasAnnotation() {
     if (this.isMultipleEntryPoint) {
-      return Object.keys(this.ExtractSchema())[0] !== '0';
+      return Object.keys(this.generateSchema())[0] !== '0';
     } else {
       return true;
     }
@@ -114,14 +114,6 @@ export class ParameterSchema {
       }
       throw new ParameterEncodingError('Unable to encode parameter object', this.root, value, ex);
     }
-  }
-
-  /**
-   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
-   *
-   */
-  ExtractSchema() {
-    return this.root.ExtractSchema();
   }
 
   /**

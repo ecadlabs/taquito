@@ -6,7 +6,7 @@ import {
   OpKind,
 } from '@taquito/rpc';
 import { Observable } from 'rxjs';
-import { BATCH_KINDS } from '../batch/rpc-batch-provider';
+import { BATCH_KINDS } from '../batch/constants';
 import { Context } from '../context';
 import { hasMetadataWithResult } from '../operations/types';
 import { WalletOperation, OperationStatus } from './operation';
