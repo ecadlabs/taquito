@@ -3,11 +3,7 @@ title: Prepare Provider
 author: Davis Sawali
 ---
 
-:::warning
-This feature is currently a work in progress and may be updated in the near future.
-:::
-
-Before operations are _forged_, _signed_, and then _injected_, they first need to go through a _Prepare_ step.
+Before operations are _forged_, _signed_, and then _injected_, they first need to go through a _prepare_ step.
 
 In Taquito, the act of preparing an operation is to create the Operation Object and the counter in one single object that we name `PreparedOperation`.
 
@@ -30,7 +26,7 @@ An example of `PreparedOperation` object for a `ballot` operation looks somethin
 }
 ```
 
-The `PreparedOperation` object used to be abstracted from the user and would require a lot of workarounds to expose. We realize some users might want more control and information on what happens before operations are forged and signed. This offers a few benefits, a few of them being:
+Having access to the `PreparedOperation` object offers a few benefits, a few of them being:
 - The ability to retrieve information about the operation before injecting (operation hash, etc)
 - The ability to simulate an operation before injecting
 
@@ -39,7 +35,7 @@ The `PrepareProvider` class affords extension and control to users when preparin
 ## Usage example
 
 ### Individual Operations
-The `PrepareProvider` will be accessible via the `TezosToolkit`:
+The `PrepareProvider` is accessible via the `TezosToolkit` class:
 ```typescript
 // const Tezos = new TezosToolkit('RPC_ENDPOINT');
 
@@ -60,7 +56,7 @@ transaction(params: TransferParams , source?: string): Promise<PreparedOperation
 - `source` is the source public key hash if you do wish to override the source. This parameter is optional by design. If you do not wish to override it, the source will be grabbed from the `Context`.
 
 ### Batch Operations
-The `PrepareProvider` also provides support for batch operations:
+`PrepareProvider` also has support for batch operations:
 ```typescript
 const prepared = await Tezos.prepare.batch([
   {
@@ -75,13 +71,11 @@ const prepared = await Tezos.prepare.batch([
   },
 ]);
 ```
-- the parameters are the required parameters for each respective operation with the added `kind` property that denotes the operation kind. Users can also utilize `OpKind` which is an enum that holds operation kind values.
+The parameters for each object in the array are the required parameters for each respective operation, with the added `kind` property that denotes the operation kind. Users can also utilize `OpKind` which is an enum that holds operation kind values.
 
 ### Contract Calls
 Users are also able to utilize the `PrepareProvider` to prepare contract calls:
 ```typescript
-// contractAddress refers to an originated increment/decrement smart contract,
-// omitted for brevity
 const contractAbs = await Tezos.contract.at(contractAddress);
 const method = await contractAbs.methodsObject.increment(1);
 const prepared = await Tezos.prepare.contractCall(method);
@@ -96,8 +90,6 @@ The `toPreapply()` method converts a `PreparedOperation` object into an entity t
 
 #### Example
 ```typescript
-// prepared transfer of tez from one account to another
-// omitted for brevity
 const preparedTransferOp = await Tezos.prepare.transaction({
     amount: 1,
     to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu'
@@ -108,7 +100,6 @@ const preapplyOp = await Tezos.rpc.preapplyOperations(params);
 
 ### `toForge()`
 The `toForge()` method converts a `PreparedOperation` into an object that can be passed into the `forge` method (i.e. `ForgeParams` type object)
-
 
 #### Example
 
