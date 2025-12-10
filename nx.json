@@ -1,17 +1,21 @@
 {
   "extends": "nx/presets/npm.json",
-  "tasksRunnerOptions": {
-    "default": {
-      "runner": "nx/tasks-runners/default",
-      "options": {
-        "cacheableOperations": ["build", "example", "test", "lint", "docusaurus"],
-        "accessToken": "placeholder"
-      }
-    }
-  },
   "targetDefaults": {
     "build": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build"],
+      "cache": true
+    },
+    "test": {
+      "cache": true
+    },
+    "lint": {
+      "cache": true
+    },
+    "example": {
+      "cache": true
+    },
+    "docusaurus": {
+      "cache": true
     }
   },
   "affected": {
