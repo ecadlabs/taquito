@@ -81,14 +81,6 @@ export class SetToken extends Token {
       }, []);
   }
 
-  /**
-   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
-   *
-   */
-  public ExtractSchema() {
-    return SetToken.prim;
-  }
-
   generateSchema(): SetTokenSchema {
     return {
       __michelsonType: SetToken.prim,

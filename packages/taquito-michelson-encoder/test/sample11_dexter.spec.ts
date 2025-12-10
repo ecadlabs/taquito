@@ -13,90 +13,6 @@ import { Token } from '../src/taquito-michelson-encoder';
 describe('Exchange contract test', () => {
   it('Test storage schema', () => {
     const schema = new Schema(storageDexter);
-    const extractSchema_Legacy = {
-      '0': {
-        big_map: {
-          key: 'address',
-          value: 'nat',
-        },
-      },
-      '1': 'contract',
-      '2': 'contract',
-      '3': 'nat',
-      '4': {
-        map: {
-          key: 'address',
-          value: {
-            '0': {
-              '0': 'nat',
-              '1': 'nat',
-              '2': 'timestamp',
-            },
-            '1': {
-              '1': 'nat',
-              '2': 'mutez',
-              '3': 'nat',
-              '4': 'timestamp',
-            },
-            '2': {
-              '2': 'nat',
-              '3': 'timestamp',
-            },
-            '3': {
-              '3': 'nat',
-              '4': 'mutez',
-              '5': 'timestamp',
-            },
-          },
-        },
-      },
-    };
-    const extractSchema_ResetFields = {
-      '0': {
-        big_map: {
-          key: 'address',
-          value: 'nat',
-        },
-      },
-      '1': 'contract',
-      '2': 'contract',
-      '3': 'nat',
-      '4': {
-        map: {
-          key: 'address',
-          value: {
-            '0': {
-              '0': 'nat',
-              '1': 'nat',
-              '2': 'timestamp',
-            },
-            '1': {
-              '0': 'nat',
-              '1': 'mutez',
-              '2': 'nat',
-              '3': 'timestamp',
-            },
-            '2': {
-              '0': 'nat',
-              '1': 'timestamp',
-            },
-            '3': {
-              '0': 'nat',
-              '1': 'mutez',
-              '2': 'timestamp',
-            },
-          },
-        },
-      },
-    };
-
-    Token.fieldNumberingStrategy = 'Legacy';
-    expect(schema.ExtractSchema()).toEqual(extractSchema_Legacy);
-    Token.fieldNumberingStrategy = 'ResetFieldNumbersInNestedObjects';
-    expect(schema.ExtractSchema()).toEqual(extractSchema_ResetFields);
-    Token.fieldNumberingStrategy = 'Latest';
-    expect(schema.ExtractSchema()).toEqual(extractSchema_ResetFields);
-
     const generateSchema_Legacy = {
       __michelsonType: 'pair',
       schema: {
@@ -513,60 +429,6 @@ describe('Exchange contract test', () => {
 
   it('Test parameter schema', () => {
     const schema = new ParameterSchema(params);
-    const extractSchema_Legacy = {
-      '0': {
-        '0': 'nat',
-        '1': 'nat',
-        '2': 'timestamp',
-      },
-      '1': {
-        '1': 'nat',
-        '2': 'mutez',
-        '3': 'nat',
-        '4': 'timestamp',
-      },
-      '2': {
-        '2': 'nat',
-        '3': 'timestamp',
-      },
-      '3': {
-        '3': 'nat',
-        '4': 'mutez',
-        '5': 'timestamp',
-      },
-      '4': 'nat',
-    };
-    const extractSchema_ResetFields = {
-      '0': {
-        '0': 'nat',
-        '1': 'nat',
-        '2': 'timestamp',
-      },
-      '1': {
-        '0': 'nat',
-        '1': 'mutez',
-        '2': 'nat',
-        '3': 'timestamp',
-      },
-      '2': {
-        '0': 'nat',
-        '1': 'timestamp',
-      },
-      '3': {
-        '0': 'nat',
-        '1': 'mutez',
-        '2': 'timestamp',
-      },
-      '4': 'nat',
-    };
-
-    Token.fieldNumberingStrategy = 'Legacy';
-    expect(schema.ExtractSchema()).toEqual(extractSchema_Legacy);
-    Token.fieldNumberingStrategy = 'ResetFieldNumbersInNestedObjects';
-    expect(schema.ExtractSchema()).toEqual(extractSchema_ResetFields);
-    Token.fieldNumberingStrategy = 'Latest';
-    expect(schema.ExtractSchema()).toEqual(extractSchema_ResetFields);
-
     const generateSchema_Legacy = {
       __michelsonType: 'or',
       schema: {
@@ -878,26 +740,6 @@ describe('Exchange contract test', () => {
 describe('Exchange contract test', () => {
   it('Test storage schema', () => {
     const schema = new Schema(storageToken);
-    expect(schema.ExtractSchema()).toEqual({
-      '0': {
-        big_map: {
-          key: 'address',
-          value: {
-            '0': 'nat',
-            '1': {
-              map: {
-                key: 'address',
-                value: 'nat',
-              },
-            },
-          },
-        },
-      },
-      '1': 'nat',
-      '2': 'string',
-      '3': 'string',
-    });
-
     expect(schema.generateSchema()).toEqual({
       __michelsonType: 'pair',
       schema: {
@@ -960,15 +802,6 @@ describe('Exchange contract test', () => {
 
   it('Test parameter schema', () => {
     const schema = new ParameterSchema(paramsToken);
-    expect(schema.ExtractSchema()).toEqual({
-      '0': {
-        '0': 'address',
-        '1': 'address',
-        '2': 'nat',
-      },
-      '1': 'address',
-    });
-
     expect(schema.generateSchema()).toEqual({
       __michelsonType: 'or',
       schema: {
@@ -996,8 +829,16 @@ describe('Exchange contract test', () => {
       },
     });
 
-    expect(schema.ExtractSignatures()).toContainEqual(['1', 'address']);
-    expect(schema.ExtractSignatures()).toContainEqual(['0', 'address', 'address', 'nat']);
+    expect(schema.ExtractSignatures()).toContainEqual([
+      '1',
+      { __michelsonType: 'address', schema: 'address' },
+    ]);
+    expect(schema.ExtractSignatures()).toContainEqual([
+      '0',
+      { __michelsonType: 'address', schema: 'address' },
+      { __michelsonType: 'address', schema: 'address' },
+      { __michelsonType: 'nat', schema: 'nat' },
+    ]);
   });
 
   it('Encode parameter properly func 0', () => {
