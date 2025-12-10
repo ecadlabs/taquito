@@ -7,7 +7,11 @@ import { Semantic, SemanticEncoding, Token, TokenFactory, TokenValidationError }
  */
 export class SaplingStateValidationError extends TokenValidationError {
   name = 'SaplingStateValidationError';
-  constructor(public value: any, public token: SaplingStateToken, message: string) {
+  constructor(
+    public value: any,
+    public token: SaplingStateToken,
+    message: string
+  ) {
     super(value, token, message);
   }
 }
@@ -77,18 +81,6 @@ export class SaplingStateToken extends Token {
         `Invalid sapling_state. Received: ${JSON.stringify(val)} while expecting: {}`
       );
     }
-  }
-
-  /**
-   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
-   *
-   */
-  ExtractSchema() {
-    return {
-      [SaplingStateToken.prim]: {
-        'memo-size': Number(this.val.args[0]['int']),
-      },
-    };
   }
 
   generateSchema(): SaplingStateTokenSchema {

@@ -7,7 +7,11 @@ import { SemanticEncoding, Token, TokenFactory, TokenValidationError } from './t
  */
 export class NeverTokenError extends TokenValidationError {
   name = 'NeverTokenError';
-  constructor(public value: any, public token: NeverToken, message: string) {
+  constructor(
+    public value: any,
+    public token: NeverToken,
+    message: string
+  ) {
     super(value, token, message);
   }
 }
@@ -57,14 +61,6 @@ export class NeverToken extends Token {
       this,
       `There is no literal value for the type never. Trying to execute ${JSON.stringify(val)}.`
     );
-  }
-
-  /**
-   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
-   *
-   */
-  public ExtractSchema() {
-    return NeverToken.prim;
   }
 
   generateSchema(): BaseTokenSchema {

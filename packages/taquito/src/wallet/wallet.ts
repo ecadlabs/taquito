@@ -1,12 +1,8 @@
 import { Context } from '../context';
-import {
-  ContractAbstraction,
-  ContractStorageType,
-  DefaultWalletType,
-  SendParams,
-} from '../contract';
-import { ContractMethod } from '../contract/contract-methods/contract-method-flat-param';
-import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
+import { ContractAbstraction } from '../contract/contract';
+import type { ContractStorageType, DefaultWalletType } from '../contract/contract';
+import { SendParams } from '../contract/contract-methods/contract-method-interface';
+import type { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
 import { OpKind, withKind } from '../operations/types';
 import { OriginationWalletOperation } from './origination-operation';
 import {
@@ -29,11 +25,7 @@ import {
   InvalidStakingAddressError,
   InvalidFinalizeUnstakeAmountError,
 } from '@taquito/core';
-import {
-  validateAddress,
-  validateContractAddress,
-  ValidationResult,
-} from '@taquito/utils';
+import { validateAddress, validateContractAddress, ValidationResult } from '@taquito/utils';
 import { OperationContentsFailingNoop } from '@taquito/rpc';
 
 export interface PKHOption {
@@ -54,7 +46,7 @@ export class WalletOperationBatch {
   constructor(
     private walletProvider: WalletProvider,
     private context: Context
-  ) { }
+  ) {}
 
   /**
    * @description Add a transaction operation to the batch
@@ -74,10 +66,7 @@ export class WalletOperationBatch {
    * @param params Call a contract method
    * @param options Generic operation parameters
    */
-  withContractCall(
-    params: ContractMethod<Wallet> | ContractMethodObject<Wallet>,
-    options: Partial<SendParams> = {}
-  ) {
+  withContractCall(params: ContractMethodObject<Wallet>, options: Partial<SendParams> = {}) {
     return this.withTransfer(params.toTransferParams(options));
   }
 
@@ -197,7 +186,7 @@ export class WalletOperationBatch {
 }
 
 export class Wallet {
-  constructor(private context: Context) { }
+  constructor(private context: Context) {}
 
   private get walletProvider() {
     return this.context.walletProvider;
@@ -457,19 +446,19 @@ export class Wallet {
   }
 
   /**
- * @description Register a Micheline expression in a global table of constants.
- * @returns a RegisterGlobalConstantWalletOperation promise object when followed by .send()
- * @param params operation parameter
- */
-registerGlobalConstant(params: WalletRegisterGlobalConstantParams) {
-  return this.walletCommand(async () => {
-    const mappedParams = await this.walletProvider.mapRegisterGlobalConstantParamsToWalletParams(
-      async () => params
-    );
-    const opHash = await this.walletProvider.sendOperations([mappedParams]);
-    return this.context.operationFactory.createRegisterGlobalConstantOperation(opHash);
-  });
-}
+   * @description Register a Micheline expression in a global table of constants.
+   * @returns a RegisterGlobalConstantWalletOperation promise object when followed by .send()
+   * @param params operation parameter
+   */
+  registerGlobalConstant(params: WalletRegisterGlobalConstantParams) {
+    return this.walletCommand(async () => {
+      const mappedParams = await this.walletProvider.mapRegisterGlobalConstantParamsToWalletParams(
+        async () => params
+      );
+      const opHash = await this.walletProvider.sendOperations([mappedParams]);
+      return this.context.operationFactory.createRegisterGlobalConstantOperation(opHash);
+    });
+  }
 
   /**
    * @description Create a batch of operation
@@ -515,13 +504,5 @@ registerGlobalConstant(params: WalletRegisterGlobalConstantParams) {
       readProvider
     );
     return contractAbstractionComposer(abs, this.context);
-  }
-
-  /**
-   * @deprecated Deprecated in favor of {@link Wallet.pk} will be removed in v19.1
-   * @description Retrieve the PK of the account that is currently in use by the wallet
-   */
-  async getPK() {
-    return await this.pk();
   }
 }

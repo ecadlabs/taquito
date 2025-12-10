@@ -20,7 +20,7 @@ import {
   FinalizeUnstakeParams,
 } from '../operations/types';
 import { Estimate } from './estimate';
-import { ContractMethod, ContractMethodObject, ContractProvider } from '../contract';
+import { ContractMethodObject, ContractProvider } from '../contract';
 
 export interface EstimationProvider {
   /**
@@ -185,9 +185,7 @@ export interface EstimationProvider {
    *
    * @param Estimate
    */
-  contractCall(
-    contractMethod: ContractMethod<ContractProvider> | ContractMethodObject<ContractProvider>
-  ): Promise<Estimate>;
+  contractCall(contractMethod: ContractMethodObject<ContractProvider>): Promise<Estimate>;
 
   /**
    * @description Estimate gasLimit, storageLimit and fees for an Smart Rollup Originate operation

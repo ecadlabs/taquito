@@ -14,7 +14,11 @@ import { BaseTokenSchema } from '../schema/types';
  */
 export class ChainIDValidationError extends TokenValidationError {
   name = 'ChainIDValidationError';
-  constructor(public value: any, public token: ChainIDToken, message: string) {
+  constructor(
+    public value: any,
+    public token: ChainIDToken,
+    message: string
+  ) {
     super(value, token, message);
   }
 }
@@ -45,14 +49,6 @@ export class ChainIDToken extends ComparableToken {
 
   public Execute(val: any): string {
     return val[Object.keys(val)[0]];
-  }
-
-  /**
-   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
-   *
-   */
-  public ExtractSchema() {
-    return ChainIDToken.prim;
   }
 
   generateSchema(): BaseTokenSchema {

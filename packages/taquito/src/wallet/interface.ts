@@ -34,7 +34,10 @@ export type WalletIncreasePaidStorageParams = Omit<IncreasePaidStorageParams, Wa
 
 export type WalletTransferTicketParams = Omit<TransferTicketParams, WalletDefinedFields>;
 
-export type WalletRegisterGlobalConstantParams = Omit<RegisterGlobalConstantParams, WalletDefinedFields>;
+export type WalletRegisterGlobalConstantParams = Omit<
+  RegisterGlobalConstantParams,
+  WalletDefinedFields
+>;
 
 export interface WalletProvider {
   /**
@@ -43,7 +46,7 @@ export interface WalletProvider {
   getPKH: () => Promise<string>;
 
   /**
-   * @description Get the public key from the wallet
+   * @description Request the public key from the wallet
    */
   getPK: () => Promise<string>;
 

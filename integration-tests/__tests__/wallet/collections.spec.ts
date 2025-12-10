@@ -33,13 +33,13 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(storage['list1'].map((x: any) => x.toString())).toEqual(['1'])
       expect(storage['map1'].get('1').toString()).toEqual('1')
 
-      const setOp = await contract.methods['setSet'](['2']).send()
+      const setOp = await contract.methodsObject['setSet'](['2']).send()
       await setOp.confirmation();
 
-      const listOp = await contract.methods['setList'](['2']).send()
+      const listOp = await contract.methodsObject['setList'](['2']).send()
       await listOp.confirmation();
 
-      const mapOp = await contract.methods['setMap'](MichelsonMap.fromLiteral({ "2": "2" })).send()
+      const mapOp = await contract.methodsObject['setMap'](MichelsonMap.fromLiteral({ "2": "2" })).send()
       await mapOp.confirmation();
 
     });

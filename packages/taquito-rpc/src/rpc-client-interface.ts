@@ -6,8 +6,6 @@ import {
   UnstakeRequestsResponse,
   BallotListResponse,
   BallotsResponse,
-  BigMapGetResponse,
-  BigMapKey,
   BigMapResponse,
   BlockHeaderResponse,
   BlockMetadata,
@@ -30,7 +28,6 @@ import {
   ProposalsResponse,
   ProtocolsResponse,
   RPCRunCodeParam,
-  RPCRunOperationParam,
   RPCRunScriptViewParam,
   RPCRunViewParam,
   RunCodeResult,
@@ -85,7 +82,6 @@ export interface RpcClientInterface {
   getContract(address: string, options?: RPCOptions): Promise<ContractResponse>;
   getManagerKey(address: string, options?: RPCOptions): Promise<ManagerKeyResponse>;
   getDelegate(address: string, options?: RPCOptions): Promise<DelegateResponse>;
-  getBigMapKey(address: string, key: BigMapKey, options?: RPCOptions): Promise<BigMapGetResponse>;
   getBigMapExpr(id: string, expr: string, options?: RPCOptions): Promise<BigMapResponse>;
   getAllDelegates(args: AllDelegatesQueryArguments, options?: RPCOptions): Promise<string[]>;
   getDelegates(address: string, options?: RPCOptions): Promise<DelegatesResponse>;
@@ -112,7 +108,6 @@ export interface RpcClientInterface {
   injectOperation(signedOpBytes: string): Promise<OperationHash>;
   preapplyOperations(ops: PreapplyParams, options?: RPCOptions): Promise<PreapplyResponse[]>;
   getEntrypoints(contract: string, options?: RPCOptions): Promise<EntrypointsResponse>;
-  runOperation(op: RPCRunOperationParam, options?: RPCOptions): Promise<PreapplyResponse>;
   simulateOperation(op: RPCSimulateOperationParam, options?: RPCOptions): Promise<PreapplyResponse>;
   runCode(code: RPCRunCodeParam, options?: RPCOptions): Promise<RunCodeResult>;
   runScriptView(
@@ -142,15 +137,20 @@ export interface RpcClientInterface {
   getAllTicketBalances(contract: string, options?: RPCOptions): Promise<AllTicketBalances>;
   getAdaptiveIssuanceLaunchCycle(options?: RPCOptions): Promise<AILaunchCycleResponse>;
   getPendingOperations(args: PendingOperationsQueryArguments): Promise<PendingOperationsV2>;
-  getActiveStakingParameters(delegate: string, options?: RPCOptions): Promise<ActiveStakingParametersResponse>;
-  getPendingStakingParameters(delegate: string, options?: RPCOptions): Promise<PendingStakingParametersResponse>;
+  getActiveStakingParameters(
+    delegate: string,
+    options?: RPCOptions
+  ): Promise<ActiveStakingParametersResponse>;
+  getPendingStakingParameters(
+    delegate: string,
+    options?: RPCOptions
+  ): Promise<PendingStakingParametersResponse>;
 }
 
 export enum RPCMethodName {
   GET_BAKING_RIGHTS = 'getBakingRights',
   GET_BALLOTS = 'getBallots',
   GET_BALLOT_LIST = 'getBallotList',
-  GET_BIG_MAP_KEY = 'getBigMapKey',
   GET_BIG_MAP_EXPR = 'getBigMapExpr',
   GET_BLOCK_HASH = 'getBlockHash',
   GET_BLOCK = 'getBlock',

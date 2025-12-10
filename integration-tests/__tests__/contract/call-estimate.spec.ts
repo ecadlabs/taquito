@@ -23,7 +23,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
     it(`should be able to estimate a contract call`, async () => {
       const contract = await Tezos.contract.at(contractAddress!);
-      const opEntrypoint = contract.methods.default(5);
+      const opEntrypoint = contract.methodsObject.default(5);
       const estimate = await Tezos.estimate.contractCall(opEntrypoint);
 
       expect(estimate).toBeDefined();

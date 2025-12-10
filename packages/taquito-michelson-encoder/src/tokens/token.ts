@@ -65,7 +65,7 @@ export abstract class Token {
     protected idx: number,
     protected fac: TokenFactory,
     protected parentTokenType?: 'Or' | 'Pair' | 'Other'
-  ) { }
+  ) {}
 
   protected typeWithoutAnnotations() {
     const handleMichelsonExpression = (val: MichelsonV1Expression): MichelsonV1Expression => {
@@ -125,12 +125,6 @@ export abstract class Token {
 
   public createToken = this.fac;
 
-  /**
-   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
-   *
-   */
-  public abstract ExtractSchema(): any;
-
   abstract generateSchema(): TokenSchema;
 
   public abstract Execute(val: any, semantics?: Semantic): any;
@@ -140,7 +134,7 @@ export abstract class Token {
   public abstract EncodeObject(args: any, semantics?: SemanticEncoding): any;
 
   public ExtractSignature() {
-    return [[this.ExtractSchema()]];
+    return [[this.generateSchema()]];
   }
 
   abstract findAndReturnTokens(tokenToFind: string, tokens: Array<Token>): Array<Token>;
