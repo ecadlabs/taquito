@@ -13,17 +13,16 @@ import { ticketsSendTz } from './data/code_with_ticket_transfer';
 // before running the test with secret key make sure tz2RqxsYQyFuP9amsmrr25x9bUcBMWXGvjuD is funded
 const MUTEZ_UNIT = new BigNumber(1000000);
 
-CONFIGS().forEach(({ lib, setup, protocol }) => {
+CONFIGS().forEach(({ lib, setup, networkName }) => {
   const tezos = lib;
   let keyPkh: string = "";
   let keyInitialBalance: BigNumber = new BigNumber(0);
-  let protocolShort = protocol.substring(0, 9);
 
   (async () => {
     await setup(true);
-    console.log(protocol)
+    console.log(`networkName: ${networkName}`);
 
-    let outputFile = await fs.open(`known-contracts-${protocolShort}.ts`, 'w');
+    let outputFile = await fs.open(`known-contracts-${networkName.toLowerCase()}.ts`, 'w');
     let writeOutput = async (line: string): Promise<void> => {
       return fs
         .writeFile(outputFile, line + '\n')
@@ -65,7 +64,7 @@ CONFIGS().forEach(({ lib, setup, protocol }) => {
     };
 
     await writeOutput("import { KnownContracts } from './known-contracts';")
-    await appendOutput("export const knownContracts" + protocolShort + ": KnownContracts = {");
+    await appendOutput("export const knownContracts" + networkName.charAt(0) + networkName.slice(1).toLowerCase() + ": KnownContracts = {");
 
     keyPkh = await tezos.signer.publicKeyHash();
     keyInitialBalance = await tezos.tz.getBalance(keyPkh);

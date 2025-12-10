@@ -2,13 +2,12 @@ import { PrefixV2 } from './constants';
 import {
   b58DecodeAndCheckPrefix,
   splitAddress,
-  ValidationResult,
   publicKeyHashPrefixes,
   signaturePrefixes,
   publicKeyPrefixes,
   addressPrefixes,
-} from './taquito-utils';
-import { ParameterValidationError } from '@taquito/core';
+} from './encoding';
+import { ParameterValidationError, ValidationResult } from '@taquito/core';
 
 export { ValidationResult } from '@taquito/core';
 
