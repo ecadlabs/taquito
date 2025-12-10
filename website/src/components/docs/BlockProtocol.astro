@@ -7,17 +7,15 @@ interface Props {
 const { network, rpcUrl } = Astro.props;
 ---
 
-<span class="block-timestamp" data-network={network} data-rpc-url={rpcUrl}>Loading...</span>
+<span class="block-protocol" data-network={network} data-rpc-url={rpcUrl}>Loading...</span>
 
 <script>
   import {
-    type Controller,
     getController,
-    getControllers,
     ensureVisibilityHandler
   } from '../../scripts/rpc-block-controller';
 
-  function initBlockTimestamp(element: HTMLElement) {
+  function initBlockProtocol(element: HTMLElement) {
     const rpcUrl = element.dataset.rpcUrl;
     const network = element.dataset.network;
 
@@ -30,14 +28,21 @@ const { network, rpcUrl } = Astro.props;
     const updateDisplay = () => {
       if (controller.state.loading) {
         element.textContent = 'Loading...';
+        element.title = '';
       } else if (controller.state.error) {
         element.textContent = 'Error';
         element.style.color = '#999';
-      } else if (controller.state.data?.header?.timestamp) {
-        element.textContent = new Date(controller.state.data.header.timestamp).toLocaleString();
+        element.title = '';
+      } else if (controller.state.data?.protocol) {
+        const protocol = controller.state.data.protocol;
+        // Show abbreviated protocol (first 8 chars) with full hash in tooltip
+        element.textContent = protocol.substring(0, 8);
+        element.title = protocol;
         element.style.color = '';
+        element.style.cursor = 'help';
       } else {
         element.textContent = 'Unknown';
+        element.title = '';
       }
     };
 
@@ -66,19 +71,19 @@ const { network, rpcUrl } = Astro.props;
     };
   }
 
-  function initAllTimestamps() {
-    document.querySelectorAll<HTMLElement>('.block-timestamp').forEach((el) => {
+  function initAllProtocols() {
+    document.querySelectorAll<HTMLElement>('.block-protocol').forEach((el) => {
       if (!(el as any)._initialized) {
         (el as any)._initialized = true;
-        initBlockTimestamp(el);
+        initBlockProtocol(el);
       }
     });
   }
 
-  document.addEventListener('astro:page-load', initAllTimestamps);
+  document.addEventListener('astro:page-load', initAllProtocols);
 
   const observer = new MutationObserver(() => {
-    initAllTimestamps();
+    initAllProtocols();
   });
 
   if (document.body) {
@@ -87,7 +92,7 @@ const { network, rpcUrl } = Astro.props;
 
   document.addEventListener('astro:before-swap', () => {
     observer.disconnect();
-    document.querySelectorAll<HTMLElement>('.block-timestamp').forEach((el) => {
+    document.querySelectorAll<HTMLElement>('.block-protocol').forEach((el) => {
       if ((el as any)._cleanup) {
         (el as any)._cleanup();
         (el as any)._initialized = false;

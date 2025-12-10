@@ -5,6 +5,8 @@ author: [Roxane Letourneau, Maxwell Ward]
 
 import BlockTimestamp from '@components/docs/BlockTimestamp.astro';
 import BlockReceivedAgo from '@components/docs/BlockReceivedAgo.astro';
+import BlockLevel from '@components/docs/BlockLevel.astro';
+import BlockProtocol from '@components/docs/BlockProtocol.astro';
 
 An RPC (Remote Procedure Call) node is a server that provides an interface for interacting with the Tezos blockchain. It allows applications like Taquito to query blockchain data (such as account balances, contract storage, and block information) and broadcast transactions to the network. Rather than running your own Tezos node, you can connect to public or commercial RPC nodes to access the blockchain.
 
@@ -24,15 +26,15 @@ An RPC (Remote Procedure Call) node is a server that provides an interface for i
 
 <div style={{"overflowX":"auto","width":"100%","display":"block"}}>
 
-<div style={{"minWidth":"800px"}}>
+<div style={{"minWidth":"1000px"}}>
 
 
-| Network       | Provider         | URL                                   | Last Block                                                                           | Timestamp                                                                           | Block Received                                                                      |
-| ------------- | ---------------- | ------------------------------------- | ------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| mainnet      | ECAD Infra       | https://mainnet.tezos.ecadinfra.com      | [Check](https://mainnet.tezos.ecadinfra.com/chains/main/blocks/head/header) | <BlockTimestamp network="mainnet" rpcUrl="https://mainnet.tezos.ecadinfra.com" /> | <BlockReceivedAgo network="mainnet" rpcUrl="https://mainnet.tezos.ecadinfra.com" /> |
-| mainnet      | SmartPy          | https://mainnet.smartpy.io               | [Check](https://mainnet.smartpy.io/chains/main/blocks/head/header) | <BlockTimestamp network="mainnet" rpcUrl="https://mainnet.smartpy.io" /> | <BlockReceivedAgo network="mainnet" rpcUrl="https://mainnet.smartpy.io" /> |
-| mainnet      | Tezos Foundation | https://rpc.tzbeta.net                   | [Check](https://rpc.tzbeta.net/chains/main/blocks/head/header) | <BlockTimestamp network="mainnet" rpcUrl="https://rpc.tzbeta.net" /> | <BlockReceivedAgo network="mainnet" rpcUrl="https://rpc.tzbeta.net" /> |
-| mainnet      | TzKT             | https://rpc.tzkt.io/mainnet              | [Check](https://rpc.tzkt.io/mainnet/chains/main/blocks/head/header) | <BlockTimestamp network="mainnet" rpcUrl="https://rpc.tzkt.io/mainnet" /> | <BlockReceivedAgo network="mainnet" rpcUrl="https://rpc.tzkt.io/mainnet" /> |
+| Provider         | URL                                   | Block | Protocol | Timestamp                                                                           | Received                                                                      |
+| ---------------- | ------------------------------------- | ----- | -------- | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| ECAD Infra       | https://mainnet.tezos.ecadinfra.com      | <BlockLevel network="mainnet" rpcUrl="https://mainnet.tezos.ecadinfra.com" /> | <BlockProtocol network="mainnet" rpcUrl="https://mainnet.tezos.ecadinfra.com" /> | <BlockTimestamp network="mainnet" rpcUrl="https://mainnet.tezos.ecadinfra.com" /> | <BlockReceivedAgo network="mainnet" rpcUrl="https://mainnet.tezos.ecadinfra.com" /> |
+| SmartPy          | https://mainnet.smartpy.io               | <BlockLevel network="mainnet" rpcUrl="https://mainnet.smartpy.io" /> | <BlockProtocol network="mainnet" rpcUrl="https://mainnet.smartpy.io" /> | <BlockTimestamp network="mainnet" rpcUrl="https://mainnet.smartpy.io" /> | <BlockReceivedAgo network="mainnet" rpcUrl="https://mainnet.smartpy.io" /> |
+| Tezos Foundation | https://rpc.tzbeta.net                   | <BlockLevel network="mainnet" rpcUrl="https://rpc.tzbeta.net" /> | <BlockProtocol network="mainnet" rpcUrl="https://rpc.tzbeta.net" /> | <BlockTimestamp network="mainnet" rpcUrl="https://rpc.tzbeta.net" /> | <BlockReceivedAgo network="mainnet" rpcUrl="https://rpc.tzbeta.net" /> |
+| TzKT             | https://rpc.tzkt.io/mainnet              | <BlockLevel network="mainnet" rpcUrl="https://rpc.tzkt.io/mainnet" /> | <BlockProtocol network="mainnet" rpcUrl="https://rpc.tzkt.io/mainnet" /> | <BlockTimestamp network="mainnet" rpcUrl="https://rpc.tzkt.io/mainnet" /> | <BlockReceivedAgo network="mainnet" rpcUrl="https://rpc.tzkt.io/mainnet" /> |
 
 </div>
 
@@ -44,15 +46,15 @@ An RPC (Remote Procedure Call) node is a server that provides an interface for i
 
 <div style={{"overflowX":"auto","width":"100%","display":"block"}}>
 
-<div style={{"minWidth":"800px"}}>
+<div style={{"minWidth":"1000px"}}>
 
 
-| Network       | Provider         | URL                                   | Last Block                                                                           | Timestamp                                                                           | Block Received                                                                      |
-| ------------- | ---------------- | ------------------------------------- | ------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| ghostnet     | ECAD Infra       | https://ghostnet.tezos.ecadinfra.com     | [Check](https://ghostnet.tezos.ecadinfra.com/chains/main/blocks/head/header) | <BlockTimestamp network="ghostnet" rpcUrl="https://ghostnet.tezos.ecadinfra.com" /> | <BlockReceivedAgo network="ghostnet" rpcUrl="https://ghostnet.tezos.ecadinfra.com" /> |
-| ghostnet     | SmartPy          | https://ghostnet.smartpy.io              | [Check](https://ghostnet.smartpy.io/chains/main/blocks/head/header) | <BlockTimestamp network="ghostnet" rpcUrl="https://ghostnet.smartpy.io" /> | <BlockReceivedAgo network="ghostnet" rpcUrl="https://ghostnet.smartpy.io" /> |
-| ghostnet     | Tezos Foundation | https://rpc.ghostnet.teztnets.com        | [Check](https://rpc.ghostnet.teztnets.com/chains/main/blocks/head/header) | <BlockTimestamp network="ghostnet" rpcUrl="https://rpc.ghostnet.teztnets.com" /> | <BlockReceivedAgo network="ghostnet" rpcUrl="https://rpc.ghostnet.teztnets.com" /> |
-| ghostnet     | TzKT             | https://rpc.tzkt.io/ghostnet             | [Check](https://rpc.tzkt.io/ghostnet/chains/main/blocks/head/header) | <BlockTimestamp network="ghostnet" rpcUrl="https://rpc.tzkt.io/ghostnet" /> | <BlockReceivedAgo network="ghostnet" rpcUrl="https://rpc.tzkt.io/ghostnet" /> |
+| Provider         | URL                                   | Block | Protocol | Timestamp                                                                           | Received                                                                      |
+| ---------------- | ------------------------------------- | ----- | -------- | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| ECAD Infra       | https://ghostnet.tezos.ecadinfra.com     | <BlockLevel network="ghostnet" rpcUrl="https://ghostnet.tezos.ecadinfra.com" /> | <BlockProtocol network="ghostnet" rpcUrl="https://ghostnet.tezos.ecadinfra.com" /> | <BlockTimestamp network="ghostnet" rpcUrl="https://ghostnet.tezos.ecadinfra.com" /> | <BlockReceivedAgo network="ghostnet" rpcUrl="https://ghostnet.tezos.ecadinfra.com" /> |
+| SmartPy          | https://ghostnet.smartpy.io              | <BlockLevel network="ghostnet" rpcUrl="https://ghostnet.smartpy.io" /> | <BlockProtocol network="ghostnet" rpcUrl="https://ghostnet.smartpy.io" /> | <BlockTimestamp network="ghostnet" rpcUrl="https://ghostnet.smartpy.io" /> | <BlockReceivedAgo network="ghostnet" rpcUrl="https://ghostnet.smartpy.io" /> |
+| Tezos Foundation | https://rpc.ghostnet.teztnets.com        | <BlockLevel network="ghostnet" rpcUrl="https://rpc.ghostnet.teztnets.com" /> | <BlockProtocol network="ghostnet" rpcUrl="https://rpc.ghostnet.teztnets.com" /> | <BlockTimestamp network="ghostnet" rpcUrl="https://rpc.ghostnet.teztnets.com" /> | <BlockReceivedAgo network="ghostnet" rpcUrl="https://rpc.ghostnet.teztnets.com" /> |
+| TzKT             | https://rpc.tzkt.io/ghostnet             | <BlockLevel network="ghostnet" rpcUrl="https://rpc.tzkt.io/ghostnet" /> | <BlockProtocol network="ghostnet" rpcUrl="https://rpc.tzkt.io/ghostnet" /> | <BlockTimestamp network="ghostnet" rpcUrl="https://rpc.tzkt.io/ghostnet" /> | <BlockReceivedAgo network="ghostnet" rpcUrl="https://rpc.tzkt.io/ghostnet" /> |
 
 </div>
 
@@ -64,14 +66,14 @@ An RPC (Remote Procedure Call) node is a server that provides an interface for i
 
 <div style={{"overflowX":"auto","width":"100%","display":"block"}}>
 
-<div style={{"minWidth":"800px"}}>
+<div style={{"minWidth":"1000px"}}>
 
 
-| Network       | Provider         | URL                                   | Last Block                                                                           | Timestamp                                                                           | Block Received                                                                      |
-| ------------- | ---------------- | ------------------------------------- | ------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| shadownet    | ECAD Infra       | https://shadownet.tezos.ecadinfra.com    | [Check](https://shadownet.tezos.ecadinfra.com/chains/main/blocks/head/header) | <BlockTimestamp network="shadownet" rpcUrl="https://shadownet.tezos.ecadinfra.com" /> | <BlockReceivedAgo network="shadownet" rpcUrl="https://shadownet.tezos.ecadinfra.com" /> |
-| shadownet    | Tezos Foundation | https://rpc.shadownet.teztnets.com       | [Check](https://rpc.shadownet.teztnets.com/chains/main/blocks/head/header) | <BlockTimestamp network="shadownet" rpcUrl="https://rpc.shadownet.teztnets.com" /> | <BlockReceivedAgo network="shadownet" rpcUrl="https://rpc.shadownet.teztnets.com" /> |
-| shadownet    | TzKT             | https://rpc.tzkt.io/shadownet            | [Check](https://rpc.tzkt.io/shadownet/chains/main/blocks/head/header) | <BlockTimestamp network="shadownet" rpcUrl="https://rpc.tzkt.io/shadownet" /> | <BlockReceivedAgo network="shadownet" rpcUrl="https://rpc.tzkt.io/shadownet" /> |
+| Provider         | URL                                   | Block | Protocol | Timestamp                                                                           | Received                                                                      |
+| ---------------- | ------------------------------------- | ----- | -------- | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| ECAD Infra       | https://shadownet.tezos.ecadinfra.com    | <BlockLevel network="shadownet" rpcUrl="https://shadownet.tezos.ecadinfra.com" /> | <BlockProtocol network="shadownet" rpcUrl="https://shadownet.tezos.ecadinfra.com" /> | <BlockTimestamp network="shadownet" rpcUrl="https://shadownet.tezos.ecadinfra.com" /> | <BlockReceivedAgo network="shadownet" rpcUrl="https://shadownet.tezos.ecadinfra.com" /> |
+| Tezos Foundation | https://rpc.shadownet.teztnets.com       | <BlockLevel network="shadownet" rpcUrl="https://rpc.shadownet.teztnets.com" /> | <BlockProtocol network="shadownet" rpcUrl="https://rpc.shadownet.teztnets.com" /> | <BlockTimestamp network="shadownet" rpcUrl="https://rpc.shadownet.teztnets.com" /> | <BlockReceivedAgo network="shadownet" rpcUrl="https://rpc.shadownet.teztnets.com" /> |
+| TzKT             | https://rpc.tzkt.io/shadownet            | <BlockLevel network="shadownet" rpcUrl="https://rpc.tzkt.io/shadownet" /> | <BlockProtocol network="shadownet" rpcUrl="https://rpc.tzkt.io/shadownet" /> | <BlockTimestamp network="shadownet" rpcUrl="https://rpc.tzkt.io/shadownet" /> | <BlockReceivedAgo network="shadownet" rpcUrl="https://rpc.tzkt.io/shadownet" /> |
 
 </div>
 
@@ -83,14 +85,14 @@ An RPC (Remote Procedure Call) node is a server that provides an interface for i
 
 <div style={{"overflowX":"auto","width":"100%","display":"block"}}>
 
-<div style={{"minWidth":"800px"}}>
+<div style={{"minWidth":"1000px"}}>
 
 
-| Network       | Provider         | URL                                   | Last Block                                                                           | Timestamp                                                                           | Block Received                                                                      |
-| ------------- | ---------------- | ------------------------------------- | ------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| seoulnet     | ECAD Infra       | https://seoulnet.tezos.ecadinfra.com     | [Check](https://seoulnet.tezos.ecadinfra.com/chains/main/blocks/head/header) | <BlockTimestamp network="seoulnet" rpcUrl="https://seoulnet.tezos.ecadinfra.com" /> | <BlockReceivedAgo network="seoulnet" rpcUrl="https://seoulnet.tezos.ecadinfra.com" /> |
-| seoulnet     | Tezos Foundation | https://rpc.seoulnet.teztnets.com        | [Check](https://rpc.seoulnet.teztnets.com/chains/main/blocks/head/header) | <BlockTimestamp network="seoulnet" rpcUrl="https://rpc.seoulnet.teztnets.com" /> | <BlockReceivedAgo network="seoulnet" rpcUrl="https://rpc.seoulnet.teztnets.com" /> |
-| seoulnet     | TzKT             | https://rpc.tzkt.io/seoulnet             | [Check](https://rpc.tzkt.io/seoulnet/chains/main/blocks/head/header) | <BlockTimestamp network="seoulnet" rpcUrl="https://rpc.tzkt.io/seoulnet" /> | <BlockReceivedAgo network="seoulnet" rpcUrl="https://rpc.tzkt.io/seoulnet" /> |
+| Provider         | URL                                   | Block | Protocol | Timestamp                                                                           | Received                                                                      |
+| ---------------- | ------------------------------------- | ----- | -------- | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| ECAD Infra       | https://seoulnet.tezos.ecadinfra.com     | <BlockLevel network="seoulnet" rpcUrl="https://seoulnet.tezos.ecadinfra.com" /> | <BlockProtocol network="seoulnet" rpcUrl="https://seoulnet.tezos.ecadinfra.com" /> | <BlockTimestamp network="seoulnet" rpcUrl="https://seoulnet.tezos.ecadinfra.com" /> | <BlockReceivedAgo network="seoulnet" rpcUrl="https://seoulnet.tezos.ecadinfra.com" /> |
+| Tezos Foundation | https://rpc.seoulnet.teztnets.com        | <BlockLevel network="seoulnet" rpcUrl="https://rpc.seoulnet.teztnets.com" /> | <BlockProtocol network="seoulnet" rpcUrl="https://rpc.seoulnet.teztnets.com" /> | <BlockTimestamp network="seoulnet" rpcUrl="https://rpc.seoulnet.teztnets.com" /> | <BlockReceivedAgo network="seoulnet" rpcUrl="https://rpc.seoulnet.teztnets.com" /> |
+| TzKT             | https://rpc.tzkt.io/seoulnet             | <BlockLevel network="seoulnet" rpcUrl="https://rpc.tzkt.io/seoulnet" /> | <BlockProtocol network="seoulnet" rpcUrl="https://rpc.tzkt.io/seoulnet" /> | <BlockTimestamp network="seoulnet" rpcUrl="https://rpc.tzkt.io/seoulnet" /> | <BlockReceivedAgo network="seoulnet" rpcUrl="https://rpc.tzkt.io/seoulnet" /> |
 
 </div>
 
