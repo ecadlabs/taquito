@@ -58,6 +58,7 @@ const organizeDocs = (docs: typeof versionDocs): Category[] => {
         getDoc('operation_flow'),
         getDoc('rpc_nodes'),
         getDoc('web3js_taquito'),
+        getDoc('fallback_rpc')
       ].filter((item): item is DocItem => item !== undefined),
     },
     {
