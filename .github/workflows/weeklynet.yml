@@ -3,7 +3,7 @@ name: Weeklynet Integration Tests
 on:
   push:
     branches:
-      - '**weeklynet**'
+      - '**weekly**'
 
 jobs:
   integration-tests-weeklynet:

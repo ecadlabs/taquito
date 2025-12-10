@@ -3,7 +3,7 @@ name: Tezlinknet Integration Tests
 on:
   push:
     branches:
-      - '**tezlinknet**'
+      - '**tezlink**'
 
 jobs:
   integration-tests-tezlinknet:
