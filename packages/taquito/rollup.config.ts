@@ -10,12 +10,12 @@ const libraryName = 'taquito';
 export default {
   input: `src/${libraryName}.ts`,
   output: [
-    { 
-      file: pkg.main, 
-      name: camelCase(libraryName), 
-      format: 'umd', 
-      sourcemap: true, 
-      globals: { 
+    {
+      file: pkg.main,
+      name: camelCase(libraryName),
+      format: 'umd',
+      sourcemap: true,
+      globals: {
         '@taquito/rpc': 'rpc',
         '@taquito/http-utils': 'httpUtils',
         '@taquito/core': 'core',
@@ -25,8 +25,9 @@ export default {
         '@taquito/utils': 'utils',
         'bignumber.js': 'BigNumber',
         '@taquito/michel-codec': 'michelCodec',
-        '@taquito/local-forging': 'localForging'
-      } 
+        '@taquito/local-forging': 'localForging',
+        '@taquito/signer': 'taquitoSigner'
+      }
     },
     { file: pkg.module, format: 'es', sourcemap: true },
   ],
@@ -39,6 +40,7 @@ export default {
     '@taquito/michelson-encoder',
     '@taquito/michel-codec',
     '@taquito/local-forging',
+    '@taquito/signer',
     'rxjs',
     'rxjs/operators',
     'bignumber.js'

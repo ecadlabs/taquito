@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-this-alias */
 import { secp256k1 } from '@noble/curves/secp256k1';
 import { p256 } from '@noble/curves/nist';
-import { Hard, ExtendedPrivateKey } from './index';
+import { Hard, ExtendedPrivateKey } from './types';
 import { HMAC } from '@stablelib/hmac';
 import { SHA512 } from '@stablelib/sha512';
 import BN from 'bn.js';

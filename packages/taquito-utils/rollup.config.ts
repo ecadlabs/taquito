@@ -10,12 +10,12 @@ const libraryName = 'taquito-utils';
 export default {
   input: `src/${libraryName}.ts`,
   output: [
-    { 
-      file: pkg.main, 
-      name: camelCase(libraryName), 
-      format: 'umd', 
-      sourcemap: true, 
-      globals: { 
+    {
+      file: pkg.main,
+      name: camelCase(libraryName),
+      format: 'umd',
+      sourcemap: true,
+      globals: {
         buffer: "buffer",
         "@stablelib/blake2b": "blake2b",
         bs58check: "bs58check",
@@ -24,8 +24,10 @@ export default {
         "@taquito/core": "core",
         "@stablelib/ed25519": "ed25519",
         elliptic: "elliptic",
-        "@noble/curves/bls12-381": "bls12381"
-      } 
+        "@noble/curves/bls12-381": "bls12381",
+        "@noble/curves/secp256k1": "secp256k1",
+        "@noble/curves/nist": "nist"
+      }
     },
     { file: pkg.module, format: 'es', sourcemap: true },
   ],
@@ -39,6 +41,8 @@ export default {
     '@stablelib/ed25519',
     'elliptic',
     '@noble/curves/bls12-381',
+    '@noble/curves/secp256k1',
+    '@noble/curves/nist',
     'bignumber.js',
   ],
   watch: {
