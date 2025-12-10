@@ -9,7 +9,8 @@ import {
   signaturePrefixes,
 } from './encoding';
 import { PrefixV2 } from './constants';
-import elliptic from 'elliptic';
+import { secp256k1 } from '@noble/curves/secp256k1';
+import { p256 } from '@noble/curves/nist';
 import {
   InvalidMessageError,
   InvalidPublicKeyError,
@@ -113,21 +114,18 @@ function verifyEdSignature(sig: Uint8Array, msg: Uint8Array, publicKey: Uint8Arr
 }
 
 function verifySpSignature(sig: Uint8Array, msg: Uint8Array, publicKey: Uint8Array): boolean {
-  const key = new elliptic.ec('secp256k1').keyFromPublic(publicKey);
-  return verifySpOrP2Sig(sig, msg, key);
+  const hash = blake2b(msg, 32);
+  try {
+    return secp256k1.verify(sig, hash, publicKey);
+  } catch {
+    return false;
+  }
 }
 
 function verifyP2Signature(sig: Uint8Array, msg: Uint8Array, publicKey: Uint8Array): boolean {
-  const key = new elliptic.ec('p256').keyFromPublic(publicKey);
-  return verifySpOrP2Sig(sig, msg, key);
-}
-
-function verifySpOrP2Sig(sig: Uint8Array, msg: Uint8Array, key: elliptic.ec.KeyPair): boolean {
-  const r = sig.slice(0, 32);
-  const s = sig.slice(32);
   const hash = blake2b(msg, 32);
   try {
-    return key.verify(hash, { r, s });
+    return p256.verify(sig, hash, publicKey);
   } catch {
     return false;
   }
