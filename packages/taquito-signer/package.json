@@ -1,6 +1,6 @@
 {
   "name": "@taquito/signer",
-  "version": "23.0.3",
+  "version": "23.1.0",
   "description": "Provide signing functionality to be with taquito",
   "keywords": [
     "tezos",
@@ -73,8 +73,8 @@
     "@stablelib/nacl": "^1.0.4",
     "@stablelib/pbkdf2": "^1.0.1",
     "@stablelib/sha512": "^1.0.1",
-    "@taquito/core": "^23.0.3",
-    "@taquito/utils": "^23.0.3",
+    "@taquito/core": "^23.1.0",
+    "@taquito/utils": "^23.1.0",
     "@types/bn.js": "^5.1.5",
     "bip39": "3.1.0",
     "pbkdf2": "^3.1.2",
