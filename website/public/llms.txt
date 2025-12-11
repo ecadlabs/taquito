@@ -46,7 +46,6 @@ The `next` version contains the latest unreleased documentation.
 - `multisig_doc` - Multisig contract interactions
 
 ### Wallets
-- `beaconwallet-singleton` - BeaconWallet singleton
 - `walletconnect` - WalletConnect (BETA)
 - `wallets` - Wallets
 - `transaction_limits` - Transaction limits
@@ -116,7 +115,6 @@ The `next` version contains the latest unreleased documentation.
 
 ### Other
 - `ballot` - Ballot Operation
-- `chatbot` - 💬 Support Chatbot
 - `failwith_errors` - Catching error messages
 - `testing_strategies` - Taquito Testing Strategies
 - `tzip16-sequence-diagram` - TZIP-16 Sequence diagrams
