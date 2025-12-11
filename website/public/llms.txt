@@ -2,7 +2,7 @@
 
 > Official documentation for Taquito, a TypeScript library for building DApps on the Tezos blockchain.
 
-This is the documentation website for Taquito at https://taquito.io. Use this guide to understand how to navigate and find information.
+This file lists all documentation pages available at https://taquito.io. Use this to understand the documentation structure and find relevant pages.
 
 ## URL Structure
 
@@ -12,97 +12,114 @@ Documentation pages follow this pattern:
 
 The `next` version contains the latest unreleased documentation.
 
-## Documentation Sections
+## Documentation Pages
 
 ### Getting Started
-Start here for new users:
-- `quick_start` - Installation and basic setup
-- `tutorial` - Step-by-step tutorial
-- `operation_flow` - How Taquito operations work
-- `rpc_nodes` - List of public RPC nodes
-- `web3js_taquito` - Migration guide from web3.js
+- `quick_start` - Quick Start
+- `tutorial` - Building Your First dApp
+- `operation_flow` - Operation Flow
+- `rpc_nodes` - RPC nodes
+- `web3js_taquito` - web3js vs Taquito
+- `fallback_rpc` - Fallback RPC URLs
+
+### Taquito Providers
+- `prepare` - Prepare Provider
+- `estimate` - Estimate Provider
 
 ### Operations
-How to perform blockchain operations:
-- `making_transfers` - Send tez between accounts
-- `originate` - Deploy smart contracts
-- `set_delegate` - Delegation operations
-- `batch-api` - Batch multiple operations
-- `staking` - Staking operations
-- `consensus_key` - Consensus key operations
-- `smart_rollups` - Smart rollup operations
-- `proposal_and_ballot` - Governance operations
+- `making_transfers` - Transfers (Transaction)
+- `originate` - Originating (Deploying) Contracts
+- `consensus_key` - Consensus Keys
+- `global_constant` - Global constants
+- `increase_paid_storage` - Increase Paid Storage
+- `set_delegate` - Delegation
+- `smart_rollups` - Smart Rollups
+- `proposal_and_ballot` - Proposal & Ballot
+- `failing_noop` - Failing Noop
+- `staking` - Staking and Adaptive Issuance
 
 ### Smart Contracts
-Working with contracts:
-- `smartcontracts` - Contract interaction basics
-- `contract_call_parameters` - Calling contract methods
-- `fa2_parameters` - FA2 token standard
-- `manager_lambda` - Manager.tz lambda operations
-- `multisig_doc` - Multisig contracts
+- `smartcontracts` - Smart contract interaction
+- `contract_call_parameters` - Contract call parameters
+- `fa2_parameters` - FA2 Parameters
+- `manager_lambda` - MANAGER_LAMBDA
+- `multisig_doc` - Multisig contract interactions
 
 ### Wallets
-Wallet integration:
-- `beaconwallet-singleton` - Beacon wallet setup
-- `walletconnect` - WalletConnect integration
-- `wallets` - Overview of wallet options
-- `wallet_API` - Wallet API reference
+- `beaconwallet-singleton` - BeaconWallet singleton
+- `walletconnect` - WalletConnect (BETA)
+- `wallets` - Wallets
 - `transaction_limits` - Transaction limits
 
 ### Michelson
-Working with Michelson data:
 - `maps_bigmaps` - Maps and BigMaps
 - `michelsonmap` - MichelsonMap class
-- `tickets` - Ticket operations
-- `michelson_encoder` - Michelson encoder package
-
-### Signers
-Transaction signing:
-- `signing` - Signing overview
-- `inmemory_signer` - In-memory signer
-- `ledger_signer` - Ledger hardware wallet
-
-### Contract and Token Metadata
-TZIP standards:
-- `tzip12` - TZIP-12 (FA2 token metadata)
-- `metadata-tzip16` - TZIP-16 (contract metadata)
+- `tickets` - Tickets
 
 ### Views
-Contract views:
-- `lambda_view` - Lambda views
+- `lambda_view` - Lambda View
 - `on_chain_views` - On-chain views
 
+### Contract and Token Metadata
+- `tzip12` - TZIP-12 Token Metadata
+- `metadata-tzip16` - TZIP-16 Contract Metadata and Views
+
+### Signers
+- `signing` - Signing data
+- `inmemory_signer` - In Memory Signer
+- `ledger_signer` - Ledger Signer
+
 ### Packages
-Individual package documentation:
-- `rpc_package` - @taquito/rpc
-- `michelson_encoder` - @taquito/michelson-encoder
-- `michel_codec` - @taquito/michel-codec
-- `contracts-library` - @taquito/contracts-library
-- `timelock` - Timelock operations
-- `taquito_utils` - @taquito/utils
-- `sapling` - Sapling (privacy) operations
+- `rpc_package` - RPC
+- `michelson_encoder` - Michelson Encoder
+- `michel_codec` - Michel Codec
+- `contracts-library` - Contracts Library
+- `timelock` - Timelock (BETA)
+- `taquito_utils` - Taquito Utils
+- **Sapling**
+  - `sapling` - Sapling Toolkit
+  - `sapling_in_memory_spending_key` - InMemorySpendingKey
+  - `sapling_in_memory_viewing_key` - InMemoryViewingKey
 
-### Advanced Topics
-- `complex_parameters` - Complex contract parameters
-- `confirmation_event_stream` - Operation confirmations
-- `events` - Contract events
-- `drain_account` - Draining accounts
-- `liquidity_baking` - Liquidity baking
-- `storage_annotations` - Storage annotations
-- `tezos_domains` - Tezos Domains integration
-- `ophash_before_injecting` - Get operation hash before injection
+### Advanced Scenarios
+- `ophash_before_injecting` - Getting the Operation Hash without Injecting
+- `drain_account` - Drain an account
+- `complex_parameters` - Working with contracts having complex storage/parameters
+- `confirmation_event_stream` - Confirmation Event Stream
+- `events` - Contract Events
+- `liquidity_baking` - Liquidity Baking interactions
+- `storage_annotations` - Storage with/without annotations
+- `tezos_domains` - Tezos Domains
 
-### Customization
-- `forger` - Custom forgers
+### Modules customization
+- `forger` - Forger
 - `rpc-cache` - RPC caching
-- `cancel_http_requests` - Request cancellation
-- `prepare` - Prepare provider
-- `estimate` - Fee estimation
+- `cancel_http_requests` - Cancel HTTP requests
 
-### DApp Development
-- `package_bundle` - Bundle optimization
-- `dapp_template` - Starter templates
-- `dapp_prelaunch` - Pre-launch checklist
+### Running integration tests
+- `ledger_integration_test` - Ledger tests
+- `rpc_nodes_integration_test` - RPC tests
+
+### Dapp Development
+- `package_bundle` - Client-Side Environments
+- `dapp_template` - Dapp Templates
+- `dapp_prelaunch` - Dapp pre-launch checklist
+
+### Taquito Public API
+- `wallet_API` - Wallet API
+- `batch-api` - Batch API
+
+### Misc
+- `tutorial_links` - Tutorial Links
+- `contract-test-collection` - Smart contract collection
+- `validators` - Validation functions
+
+### Other
+- `ballot` - Ballot Operation
+- `chatbot` - 💬 Support Chatbot
+- `failwith_errors` - Catching error messages
+- `testing_strategies` - Taquito Testing Strategies
+- `tzip16-sequence-diagram` - TZIP-16 Sequence diagrams
 
 ## API Reference
 

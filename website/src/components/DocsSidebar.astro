@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import { sidebarConfig } from '../config/docs-sidebar.mjs';
 
 interface Props {
   currentSlug?: string;
@@ -30,13 +31,13 @@ interface Category {
 const organizeDocs = (docs: typeof versionDocs): Category[] => {
   const existingFilenames = new Set<string>();
   const docMap = new Map<string, DocItem>();
-  
+
   docs.forEach((doc) => {
     const filePath = doc.id;
     const slug = filePath.replace('src/content/docs/', '').replace(/\.mdx?$/, '');
     const filename = slug.split('/').pop() || '';
     const title = doc.data.title || filename.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-    
+
     existingFilenames.add(filename);
     docMap.set(filename, {
       title,
@@ -49,163 +50,25 @@ const organizeDocs = (docs: typeof versionDocs): Category[] => {
     return existingFilenames.has(filename) ? docMap.get(filename) : undefined;
   };
 
-  const categories: Category[] = [
-    {
-      name: 'Getting Started',
-      items: [
-        getDoc('quick_start'),
-        getDoc('tutorial'),
-        getDoc('operation_flow'),
-        getDoc('rpc_nodes'),
-        getDoc('web3js_taquito'),
-        getDoc('fallback_rpc')
-      ].filter((item): item is DocItem => item !== undefined),
-    },
-    {
-      name: 'Taquito Providers',
-      items: [
-        getDoc('prepare'),
-        getDoc('estimate'),
-      ].filter((item): item is DocItem => item !== undefined),
-    },
-    {
-      name: 'Operations',
-      items: [
-        getDoc('making_transfers'),
-        getDoc('originate'),
-        getDoc('consensus_key'),
-        getDoc('global_constant'),
-        getDoc('increase_paid_storage'),
-        getDoc('set_delegate'),
-        getDoc('smart_rollups'),
-        getDoc('proposal_and_ballot'),
-        getDoc('failing_noop'),
-        getDoc('staking'),
-      ].filter((item): item is DocItem => item !== undefined),
-    },
-    {
-      name: 'Smart Contracts',
-      items: [
-        getDoc('smartcontracts'),
-        getDoc('contract_call_parameters'),
-        getDoc('fa2_parameters'),
-        getDoc('manager_lambda'),
-        getDoc('multisig_doc'),
-      ].filter((item): item is DocItem => item !== undefined),
-    },
-    {
-      name: 'Wallets',
-      items: [
-        getDoc('beaconwallet-singleton'),
-        getDoc('walletconnect'),
-        getDoc('wallets'),
-        getDoc('transaction_limits'),
-      ].filter((item): item is DocItem => item !== undefined),
-    },
-    {
-      name: 'Michelson',
-      items: [
-        getDoc('maps_bigmaps'),
-        getDoc('michelsonmap'),
-        getDoc('tickets'),
-      ].filter((item): item is DocItem => item !== undefined),
-    },
-    {
-      name: 'Views',
-      items: [
-        getDoc('lambda_view'),
-        getDoc('on_chain_views'),
-      ].filter((item): item is DocItem => item !== undefined),
-    },
-    {
-      name: 'Contract and Token Metadata',
-      items: [
-        getDoc('tzip12'),
-        getDoc('metadata-tzip16'),
-      ].filter((item): item is DocItem => item !== undefined),
-    },
-    {
-      name: 'Signers',
-      items: [
-        getDoc('signing'),
-        getDoc('inmemory_signer'),
-        getDoc('ledger_signer'),
-      ].filter((item): item is DocItem => item !== undefined),
-    },
-    {
-      name: 'Packages',
-      items: [
-        getDoc('rpc_package'),
-        getDoc('michelson_encoder'),
-        getDoc('michel_codec'),
-        getDoc('contracts-library'),
-        getDoc('timelock'),
-        getDoc('taquito_utils'),
-        {
-          title: 'Sapling',
-          items: [
-            getDoc('sapling'),
-            getDoc('sapling_in_memory_spending_key'),
-            getDoc('sapling_in_memory_viewing_key'),
-          ].filter((item): item is DocItem => item !== undefined),
-        },
-      ].filter((item): item is DocItem | { title: string; items: DocItem[] } => {
-        if (!item) return false;
-        if ('items' in item) return item.items.length > 0;
-        return true;
-      }),
-    },
-    {
-      name: 'Advanced Scenarios',
-      items: [
-        getDoc('ophash_before_injecting'),
-        getDoc('drain_account'),
-        getDoc('complex_parameters'),
-        getDoc('confirmation_event_stream'),
-        getDoc('events'),
-        getDoc('liquidity_baking'),
-        getDoc('storage_annotations'),
-        getDoc('tezos_domains'),
-      ].filter((item): item is DocItem => item !== undefined),
-    },
-    {
-      name: 'Modules customization',
-      items: [
-        getDoc('forger'),
-        getDoc('rpc-cache'),
-        getDoc('cancel_http_requests'),
-      ].filter((item): item is DocItem => item !== undefined),
-    },
-    {
-      name: 'Running integration tests',
-      items: [
-        getDoc('ledger_integration_test'),
-        getDoc('rpc_nodes_integration_test'),
-      ].filter((item): item is DocItem => item !== undefined),
-    },
-    {
-      name: 'Dapp Development',
-      items: [
-        getDoc('package_bundle'),
-        getDoc('dapp_template'),
-        getDoc('dapp_prelaunch'),
-      ].filter((item): item is DocItem => item !== undefined),
-    },
-    {
-      name: 'Taquito Public API',
-      items: [
-        getDoc('wallet_API'),
-        getDoc('batch-api'),
-      ].filter((item): item is DocItem => item !== undefined),
-    },
-    {
-      name: 'Misc',
-      items: [
-        getDoc('tutorial_links'),
-        getDoc('contract-test-collection'),
-      ].filter((item): item is DocItem => item !== undefined),
-    },
-  ].filter((cat) => cat.items.length > 0);
+  // Build categories from shared config
+  const categories: Category[] = sidebarConfig.map((cat: { name: string; items: (string | { title: string; items: string[] })[] }) => ({
+    name: cat.name,
+    items: cat.items.map((item: string | { title: string; items: string[] }) => {
+      if (typeof item === 'string') {
+        return getDoc(item);
+      } else {
+        // Subcategory
+        return {
+          title: item.title,
+          items: item.items.map((subItem: string) => getDoc(subItem)).filter((d): d is DocItem => d !== undefined),
+        };
+      }
+    }).filter((item): item is DocItem | { title: string; items: DocItem[] } => {
+      if (!item) return false;
+      if ('items' in item) return item.items.length > 0;
+      return true;
+    }),
+  })).filter((cat: Category) => cat.items.length > 0);
 
   return categories;
 };
