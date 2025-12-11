@@ -12,4 +12,3 @@ export type BatchKinds =
   | OpKind.ORIGINATION
   | OpKind.TRANSACTION
   | OpKind.DELEGATION;
-

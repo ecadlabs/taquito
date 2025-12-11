@@ -1,0 +1,312 @@
+---
+import { getCollection } from 'astro:content';
+import { sidebarConfig } from '../config/docs-sidebar.mjs';
+
+interface Props {
+  currentSlug?: string;
+  version?: string;
+}
+
+const { currentSlug, version } = Astro.props;
+
+const allDocs = await getCollection('docs');
+const versionDocs = allDocs.filter((doc) => {
+  const filePath = doc.id;
+  const slug = filePath.replace('src/content/docs/', '').replace(/\.mdx?$/, '');
+  const docVersion = slug.split('/')[0];
+  return docVersion === version;
+});
+
+interface DocItem {
+  title: string;
+  slug: string;
+  filename: string;
+}
+
+interface Category {
+  name: string;
+  items: (DocItem | { title: string; items: DocItem[] })[];
+}
+
+const organizeDocs = (docs: typeof versionDocs): Category[] => {
+  const existingFilenames = new Set<string>();
+  const docMap = new Map<string, DocItem>();
+
+  docs.forEach((doc) => {
+    const filePath = doc.id;
+    const slug = filePath.replace('src/content/docs/', '').replace(/\.mdx?$/, '');
+    const filename = slug.split('/').pop() || '';
+    const title = doc.data.title || filename.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+
+    existingFilenames.add(filename);
+    docMap.set(filename, {
+      title,
+      slug,
+      filename,
+    });
+  });
+
+  const getDoc = (filename: string): DocItem | undefined => {
+    return existingFilenames.has(filename) ? docMap.get(filename) : undefined;
+  };
+
+  // Build categories from shared config
+  const categories: Category[] = sidebarConfig.map((cat: { name: string; items: (string | { title: string; items: string[] })[] }) => ({
+    name: cat.name,
+    items: cat.items.map((item: string | { title: string; items: string[] }) => {
+      if (typeof item === 'string') {
+        return getDoc(item);
+      } else {
+        // Subcategory
+        return {
+          title: item.title,
+          items: item.items.map((subItem: string) => getDoc(subItem)).filter((d): d is DocItem => d !== undefined),
+        };
+      }
+    }).filter((item): item is DocItem | { title: string; items: DocItem[] } => {
+      if (!item) return false;
+      if ('items' in item) return item.items.length > 0;
+      return true;
+    }),
+  })).filter((cat: Category) => cat.items.length > 0);
+
+  return categories;
+};
+
+const categories = organizeDocs(versionDocs);
+
+const isActive = (slug: string) => {
+  return currentSlug === slug;
+};
+
+const isParentActive = (items: DocItem[]) => {
+  return items.some((item) => isActive(item.slug));
+};
+---
+
+<aside
+  id="docs-sidebar"
+  class="hidden lg:block w-64 pb-4 pt-12 pl-8 pr-4 shrink-0 sticky top-0 self-start max-h-screen overflow-y-auto border-r-2 border-secondary bg-background-primary relative"
+>
+  <nav>
+    <ul class="list-none p-0 m-0 space-y-4">
+      {categories.map((category) => (
+        <li>
+          <div class="font-bold text-text-secondary mb-2 text-sm uppercase tracking-wide">
+            {category.name}
+          </div>
+          <ul class="list-none p-0 m-0 space-y-1">
+            {category.items.map((item) => {
+              if ('items' in item) {
+                const parentActive = isParentActive(item.items);
+                return (
+                  <li>
+                    <div class="text-text-secondary font-semibold text-sm py-1 px-2">
+                      {item.title}
+                    </div>
+                    <ul class="list-none p-0 m-0 ml-4 space-y-1">
+                      {item.items.map((subItem) => (
+                        <li>
+                          <a
+                            href={`/docs/${subItem.slug}`}
+                            class={`block py-1 px-2 text-sm no-underline transition-all border-l-2 ${
+                              isActive(subItem.slug)
+                                ? 'text-primary border-primary font-medium'
+                                : 'text-gray-600 border-transparent hover:text-primary hover:border-primary'
+                            }`}
+                          >
+                            {subItem.title}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </li>
+                );
+              } else {
+                return (
+                  <li>
+                    <a
+                      href={`/docs/${item.slug}`}
+                      class={`block py-1 px-2 text-sm no-underline transition-all border-l-2 ${
+                        isActive(item.slug)
+                          ? 'text-primary border-primary font-medium'
+                          : 'text-gray-600 border-transparent hover:text-primary hover:border-primary'
+                      }`}
+                    >
+                      {item.title}
+                    </a>
+                  </li>
+                );
+              }
+            })}
+          </ul>
+        </li>
+      ))}
+    </ul>
+  </nav>
+</aside>
+
+<div
+  id="docs-sidebar-mobile"
+  class="fixed inset-0 z-110 lg:hidden hidden"
+>
+  <div
+    id="docs-sidebar-overlay"
+    class="absolute inset-0 bg-black/30"
+  ></div>
+  <aside
+    id="docs-sidebar-panel"
+    class="absolute left-0 top-0 bottom-0 w-64 bg-white shadow-lg transform -translate-x-full transition-transform duration-300 ease-in-out overflow-y-auto"
+  >
+    <div class="p-4 border-b border-gray-200 flex items-center justify-between">
+      <h2 class="text-lg font-bold text-text-secondary">Documentation</h2>
+      <button
+        id="docs-sidebar-close"
+        class="p-2 hover:bg-gray-100 rounded"
+        aria-label="Close sidebar"
+      >
+        <svg
+          class="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
+    </div>
+    <nav class="p-4">
+      <ul class="list-none p-0 m-0 space-y-4">
+        {categories.map((category) => (
+          <li>
+            <div class="font-bold text-text-secondary mb-2 text-sm uppercase tracking-wide">
+              {category.name}
+            </div>
+            <ul class="list-none p-0 m-0 space-y-1">
+              {category.items.map((item) => {
+                if ('items' in item) {
+                  return (
+                    <li>
+                      <div class="text-text-secondary font-semibold text-sm py-1 px-2">
+                        {item.title}
+                      </div>
+                      <ul class="list-none p-0 m-0 ml-4 space-y-1">
+                        {item.items.map((subItem) => (
+                          <li>
+                            <a
+                              href={`/docs/${subItem.slug}`}
+                              class={`block py-1 px-2 text-sm no-underline transition-all border-l-2 ${
+                                isActive(subItem.slug)
+                                  ? 'text-primary border-primary font-medium'
+                                  : 'text-gray-600 border-transparent hover:text-primary hover:border-primary'
+                              }`}
+                            >
+                              {subItem.title}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    </li>
+                  );
+                } else {
+                  return (
+                    <li>
+                      <a
+                        href={`/docs/${item.slug}`}
+                        class={`block py-1 px-2 text-sm no-underline transition-all border-l-2 ${
+                          isActive(item.slug)
+                            ? 'text-primary border-primary font-medium'
+                            : 'text-gray-600 border-transparent hover:text-primary hover:border-primary'
+                        }`}
+                      >
+                        {item.title}
+                      </a>
+                    </li>
+                  );
+                }
+              })}
+            </ul>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </aside>
+</div>
+
+<script>
+  const sidebarToggle = document.getElementById('docs-sidebar-toggle');
+  const sidebarMobile = document.getElementById('docs-sidebar-mobile');
+  const sidebarOverlay = document.getElementById('docs-sidebar-overlay');
+  const sidebarClose = document.getElementById('docs-sidebar-close');
+  const sidebarPanel = document.getElementById('docs-sidebar-panel');
+
+  function openSidebar() {
+    if (sidebarMobile && sidebarPanel) {
+      sidebarMobile.classList.remove('hidden');
+      setTimeout(() => {
+        sidebarPanel.classList.remove('-translate-x-full');
+      }, 10);
+    }
+  }
+
+  function closeSidebar() {
+    if (sidebarPanel) {
+      sidebarPanel.classList.add('-translate-x-full');
+      setTimeout(() => {
+        if (sidebarMobile) {
+          sidebarMobile.classList.add('hidden');
+        }
+      }, 300);
+    }
+  }
+
+  if (sidebarToggle) {
+    sidebarToggle.addEventListener('click', openSidebar);
+  }
+
+  if (sidebarClose) {
+    sidebarClose.addEventListener('click', closeSidebar);
+  }
+
+  if (sidebarOverlay) {
+    sidebarOverlay.addEventListener('click', closeSidebar);
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && sidebarMobile && !sidebarMobile.classList.contains('hidden')) {
+      closeSidebar();
+    }
+  });
+
+  if (sidebarPanel) {
+    sidebarPanel.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      if (target.tagName === 'A') {
+        closeSidebar();
+      }
+    });
+  }
+</script>
+
+<style>
+  @media (min-width: 1024px) {
+    #docs-sidebar::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 16rem;
+      height: 100vh;
+      background: var(--color-background-primary);
+      border-right: 2px solid var(--color-secondary);
+      pointer-events: none;
+      z-index: -1;
+    }
+  }
+</style>
+

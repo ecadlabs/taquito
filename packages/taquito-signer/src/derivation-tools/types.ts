@@ -10,4 +10,3 @@ export interface ExtendedPrivateKey extends ExtendedKey {
   derive(index: number): ExtendedPrivateKey;
   derivePath(path: number[]): ExtendedPrivateKey;
 }
-

@@ -766,9 +766,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
    *
    * @param Estimate
    */
-  async contractCall(
-    contractMethod: ContractMethodObject<ContractProvider>
-  ) {
+  async contractCall(contractMethod: ContractMethodObject<ContractProvider>) {
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
     const preparedOperation = await this.prepare.contractCall(contractMethod);
 

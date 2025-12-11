@@ -15,7 +15,11 @@ import {
  */
 export class BigMapValidationError extends TokenValidationError {
   name = 'BigMapValidationError';
-  constructor(public value: any, public token: BigMapToken, message: string) {
+  constructor(
+    public value: any,
+    public token: BigMapToken,
+    message: string
+  ) {
     super(value, token, message);
   }
 }

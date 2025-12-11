@@ -1,0 +1,118 @@
+---
+interface Props {
+  network: string;
+  rpcUrl: string;
+}
+
+const { network, rpcUrl } = Astro.props;
+---
+
+<span class="block-received-ago" data-network={network} data-rpc-url={rpcUrl}>Loading...</span>
+
+<script>
+  import {
+    getController,
+    ensureVisibilityHandler
+  } from '../../scripts/rpc-block-controller';
+
+  function initBlockReceivedAgo(element: HTMLElement) {
+    const rpcUrl = element.dataset.rpcUrl;
+    const network = element.dataset.network;
+
+    if (!rpcUrl || !network) return;
+
+    ensureVisibilityHandler();
+    const controller = getController(rpcUrl, network);
+    let isVisible = false;
+    let secondsIntervalId: number | null = null;
+
+    const updateSecondsAgo = () => {
+      if (!controller.state.data?.header?.timestamp) return;
+      const now = Date.now();
+      const blockTime = new Date(controller.state.data.header.timestamp).getTime();
+      const diffInSeconds = Math.max(0, Math.floor((now - blockTime) / 1000));
+      element.textContent = `${diffInSeconds}s ago`;
+      element.style.color = '';
+    };
+
+    const updateDisplay = () => {
+      if (controller.state.loading) {
+        element.textContent = 'Loading...';
+      } else if (controller.state.error) {
+        element.textContent = 'Error';
+        element.style.color = '#999';
+      } else if (controller.state.data?.header?.timestamp) {
+        updateSecondsAgo();
+        if (secondsIntervalId === null && isVisible) {
+          secondsIntervalId = window.setInterval(updateSecondsAgo, 1000);
+        }
+      } else {
+        element.textContent = 'Unknown';
+      }
+    };
+
+    const unsubscribe = controller.subscribe(updateDisplay);
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && !isVisible) {
+          isVisible = true;
+          controller.incrementVisibility();
+          if (controller.state.data?.header?.timestamp && secondsIntervalId === null) {
+            updateSecondsAgo();
+            secondsIntervalId = window.setInterval(updateSecondsAgo, 1000);
+          }
+        } else if (!entry.isIntersecting && isVisible) {
+          isVisible = false;
+          controller.decrementVisibility();
+          if (secondsIntervalId !== null) {
+            clearInterval(secondsIntervalId);
+            secondsIntervalId = null;
+          }
+        }
+      });
+    }, { threshold: 0 });
+
+    observer.observe(element);
+
+    (element as any)._cleanup = () => {
+      unsubscribe();
+      observer.disconnect();
+      if (isVisible) {
+        controller.decrementVisibility();
+      }
+      if (secondsIntervalId !== null) {
+        clearInterval(secondsIntervalId);
+      }
+    };
+  }
+
+  function initAllReceivedAgo() {
+    document.querySelectorAll<HTMLElement>('.block-received-ago').forEach((el) => {
+      if (!(el as any)._initialized) {
+        (el as any)._initialized = true;
+        initBlockReceivedAgo(el);
+      }
+    });
+  }
+
+  document.addEventListener('astro:page-load', initAllReceivedAgo);
+
+  const observer = new MutationObserver(() => {
+    initAllReceivedAgo();
+  });
+
+  if (document.body) {
+    observer.observe(document.body, { childList: true, subtree: true });
+  }
+
+  document.addEventListener('astro:before-swap', () => {
+    observer.disconnect();
+    document.querySelectorAll<HTMLElement>('.block-received-ago').forEach((el) => {
+      if ((el as any)._cleanup) {
+        (el as any)._cleanup();
+        (el as any)._initialized = false;
+      }
+    });
+  });
+</script>

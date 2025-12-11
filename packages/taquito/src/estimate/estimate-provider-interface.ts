@@ -185,9 +185,7 @@ export interface EstimationProvider {
    *
    * @param Estimate
    */
-  contractCall(
-    contractMethod: ContractMethodObject<ContractProvider>
-  ): Promise<Estimate>;
+  contractCall(contractMethod: ContractMethodObject<ContractProvider>): Promise<Estimate>;
 
   /**
    * @description Estimate gasLimit, storageLimit and fees for an Smart Rollup Originate operation

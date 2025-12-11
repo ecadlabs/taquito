@@ -1,0 +1,112 @@
+---
+interface TabValue {
+  label: string;
+  value: string;
+}
+
+interface Props {
+  defaultValue: string;
+  values: TabValue[];
+}
+
+const { defaultValue, values } = Astro.props;
+const id = `tabs-${Math.random().toString(36).substr(2, 9)}`;
+---
+
+<div class="tabs-container" data-tabs-id={id}>
+  <div class="tabs-buttons">
+    {values.map((tab, index) => (
+      <button
+        class={`tab-button ${tab.value === defaultValue ? 'active' : ''}`}
+        data-tab={tab.value}
+        type="button"
+      >
+        {tab.label}
+      </button>
+    ))}
+  </div>
+  <div class="tabs-content">
+    <slot />
+  </div>
+</div>
+
+<style>
+  .tabs-container {
+    margin: 2rem 0;
+  }
+
+  .tabs-buttons {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .tab-button {
+    padding: 0.5rem 1.5rem;
+    border: none;
+    border-radius: 9999px;
+    background-color: transparent;
+    color: #6b7280;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .tab-button:hover {
+    color: #374151;
+  }
+
+  .tab-button.active {
+    background-color: #f4dcc4;
+    color: #1f2937;
+  }
+
+  .tabs-content {
+    position: relative;
+  }
+</style>
+
+<script>
+  document.querySelectorAll('.tabs-container').forEach((container) => {
+    const buttons = container.querySelectorAll('.tab-button');
+    const tabItems = container.querySelectorAll('[data-tab-item]');
+    
+    const showTab = (targetValue: string) => {
+      buttons.forEach((btn) => {
+        const button = btn as HTMLButtonElement;
+        if (button.dataset.tab === targetValue) {
+          button.classList.add('active');
+        } else {
+          button.classList.remove('active');
+        }
+      });
+      
+      tabItems.forEach((item) => {
+        const tabItem = item as HTMLElement;
+        if (tabItem.dataset.tabItem === targetValue) {
+          tabItem.style.display = 'block';
+        } else {
+          tabItem.style.display = 'none';
+        }
+      });
+    };
+    
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const btn = button as HTMLButtonElement;
+        const targetValue = btn.dataset.tab;
+        if (targetValue) {
+          showTab(targetValue);
+        }
+      });
+    });
+    
+    const activeButton = container.querySelector('.tab-button.active') as HTMLButtonElement;
+    if (activeButton?.dataset.tab) {
+      showTab(activeButton.dataset.tab);
+    }
+  });
+</script>
+

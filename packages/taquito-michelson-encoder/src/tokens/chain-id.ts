@@ -14,7 +14,11 @@ import { BaseTokenSchema } from '../schema/types';
  */
 export class ChainIDValidationError extends TokenValidationError {
   name = 'ChainIDValidationError';
-  constructor(public value: any, public token: ChainIDToken, message: string) {
+  constructor(
+    public value: any,
+    public token: ChainIDToken,
+    message: string
+  ) {
     super(value, token, message);
   }
 }

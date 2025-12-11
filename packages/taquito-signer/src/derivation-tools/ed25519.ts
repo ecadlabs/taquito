@@ -20,7 +20,10 @@ export class PrivateKey implements ExtendedPrivateKey {
    * @param priv generated keypair 0->32 private key 32->n public key
    * @param chainCode new HMAC hash with new key
    */
-  constructor(readonly priv: Uint8Array, readonly chainCode: Uint8Array) {}
+  constructor(
+    readonly priv: Uint8Array,
+    readonly chainCode: Uint8Array
+  ) {}
 
   /**
    *

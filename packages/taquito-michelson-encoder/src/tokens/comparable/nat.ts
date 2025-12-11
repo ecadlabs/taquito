@@ -14,7 +14,11 @@ import { BaseTokenSchema } from '../../schema/types';
  */
 export class NatValidationError extends TokenValidationError {
   name = 'NatValidationError';
-  constructor(public value: any, public token: NatToken, message: string) {
+  constructor(
+    public value: any,
+    public token: NatToken,
+    message: string
+  ) {
     super(value, token, message);
   }
 }

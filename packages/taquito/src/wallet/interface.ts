@@ -34,7 +34,10 @@ export type WalletIncreasePaidStorageParams = Omit<IncreasePaidStorageParams, Wa
 
 export type WalletTransferTicketParams = Omit<TransferTicketParams, WalletDefinedFields>;
 
-export type WalletRegisterGlobalConstantParams = Omit<RegisterGlobalConstantParams, WalletDefinedFields>;
+export type WalletRegisterGlobalConstantParams = Omit<
+  RegisterGlobalConstantParams,
+  WalletDefinedFields
+>;
 
 export interface WalletProvider {
   /**

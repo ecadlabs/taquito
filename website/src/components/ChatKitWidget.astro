@@ -1,0 +1,170 @@
+---
+const apiEndpoint = 'https://taquito-chatkit.ops-taquito-cloudflare.workers.dev/api/chatkit/session';
+---
+
+<button id="chat-toggle" aria-label="Open chat">
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+  </svg>
+</button>
+
+<div id="chatkit-container" class="hidden">
+  <button id="chat-close" aria-label="Close chat">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="18" y1="6" x2="6" y2="18"></line>
+      <line x1="6" y1="6" x2="18" y2="18"></line>
+    </svg>
+  </button>
+  <div id="chatkit-widget"></div>
+</div>
+
+<script is:inline src="https://cdn.platform.openai.com/deployments/chatkit/chatkit.js"></script>
+
+<script define:vars={{ apiEndpoint }}>
+  let chatkitInitialized = false;
+
+  function initChatKit() {
+    if (chatkitInitialized) return;
+
+    if (!customElements.get('openai-chatkit')) {
+      setTimeout(initChatKit, 100);
+      return;
+    }
+
+    const chatkit = document.createElement('openai-chatkit');
+
+    chatkit.setOptions({
+      api: {
+        async getClientSecret() {
+          const res = await fetch(apiEndpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+          });
+          if (!res.ok) throw new Error('Failed to create session');
+          const { client_secret } = await res.json();
+          return client_secret;
+        },
+      },
+      startScreen: {
+        greeting: 'Hi! How can I help you?',
+        prompts: [
+          { label: 'Getting started', prompt: 'How do I get started?', icon: "sparkle" },
+          { label: 'Search docs', prompt: "Help me find what I'm looking for", icon: "search" },
+        ],
+      },
+      composer: {
+        placeholder: 'Ask a question...',
+      },
+      theme: {
+        colorScheme: 'light',
+        radius: 'round',
+      },
+    });
+
+    document.getElementById('chatkit-widget').appendChild(chatkit);
+    chatkitInitialized = true;
+  }
+
+  function setupToggle() {
+    const toggleBtn = document.getElementById('chat-toggle');
+    const closeBtn = document.getElementById('chat-close');
+    const container = document.getElementById('chatkit-container');
+
+    toggleBtn.addEventListener('click', () => {
+      container.classList.remove('hidden');
+      toggleBtn.classList.add('hidden');
+      initChatKit();
+    });
+
+    closeBtn.addEventListener('click', () => {
+      container.classList.add('hidden');
+      toggleBtn.classList.remove('hidden');
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupToggle);
+  } else {
+    setupToggle();
+  }
+</script>
+
+<style>
+  #chat-toggle {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    z-index: 50;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: none;
+    background: #E2AA6C;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s, background 0.2s;
+  }
+
+  #chat-toggle:hover {
+    background: #FFE5A5;
+    transform: scale(1.05);
+  }
+
+  #chat-toggle.hidden {
+    display: none;
+  }
+
+  #chatkit-container {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    z-index: 50;
+  }
+
+  #chatkit-container.hidden {
+    display: none;
+  }
+
+  #chat-close {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    z-index: 60;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+  }
+
+  #chat-close:hover {
+    background: rgba(0, 0, 0, 0.8);
+  }
+
+  #chatkit-widget {
+    height: 500px;
+    width: 380px;
+    max-width: calc(100vw - 3rem);
+    max-height: calc(100vh - 6rem);
+    border-radius: 1rem;
+    overflow: hidden;
+    background: #fff;
+    -webkit-box-shadow: 0px 0px 15px 5px rgba(0,0,0,0.27);
+    box-shadow: 0px 0px 15px 5px rgba(0,0,0,0.27);
+  }
+
+  #chatkit-widget :global(openai-chatkit) {
+    height: 100%;
+    width: 100%;
+  }
+</style>

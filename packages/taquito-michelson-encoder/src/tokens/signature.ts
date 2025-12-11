@@ -14,7 +14,11 @@ import { BaseTokenSchema } from '../schema/types';
  */
 export class SignatureValidationError extends TokenValidationError {
   name = 'SignatureValidationError';
-  constructor(public value: any, public token: SignatureToken, message: string) {
+  constructor(
+    public value: any,
+    public token: SignatureToken,
+    message: string
+  ) {
     super(value, token, message);
   }
 }

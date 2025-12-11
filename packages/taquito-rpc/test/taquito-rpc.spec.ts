@@ -4316,7 +4316,8 @@ describe('RpcClient test', () => {
     it('should query the correct url and return active staking parameters', async () => {
       const baker = 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD';
       httpBackend.createRequest.mockReturnValue(Promise.resolve(activeStakingParametersResponse));
-      const response: ActiveStakingParametersResponse = await client.getActiveStakingParameters(baker);
+      const response: ActiveStakingParametersResponse =
+        await client.getActiveStakingParameters(baker);
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
@@ -4332,7 +4333,10 @@ describe('RpcClient test', () => {
       const baker = 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD';
       const block = 'BLUjvteWShd6gkbkPqNmCz1rzoBSLd5MghbdMwieVynSnhxgKVs';
       httpBackend.createRequest.mockReturnValue(Promise.resolve(activeStakingParametersResponse));
-      const response: ActiveStakingParametersResponse = await client.getActiveStakingParameters(baker, { block });
+      const response: ActiveStakingParametersResponse = await client.getActiveStakingParameters(
+        baker,
+        { block }
+      );
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
@@ -4347,7 +4351,8 @@ describe('RpcClient test', () => {
     it('should query the correct url and return pending staking parameters', async () => {
       const baker = 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD';
       httpBackend.createRequest.mockReturnValue(Promise.resolve(pendingStakingParametersResponse));
-      const response: PendingStakingParametersResponse = await client.getPendingStakingParameters(baker);
+      const response: PendingStakingParametersResponse =
+        await client.getPendingStakingParameters(baker);
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
@@ -4368,7 +4373,10 @@ describe('RpcClient test', () => {
       const baker = 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD';
       const block = 'BLUjvteWShd6gkbkPqNmCz1rzoBSLd5MghbdMwieVynSnhxgKVs';
       httpBackend.createRequest.mockReturnValue(Promise.resolve(pendingStakingParametersResponse));
-      const response: PendingStakingParametersResponse = await client.getPendingStakingParameters(baker, { block });
+      const response: PendingStakingParametersResponse = await client.getPendingStakingParameters(
+        baker,
+        { block }
+      );
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
