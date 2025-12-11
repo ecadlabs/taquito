@@ -17,7 +17,7 @@ The constructor of the `Tzip12Module` takes an optional `MetadataProvider` as a 
 
 ```js
 import { TezosToolkit } from '@taquito/taquito';
-import { Tzip12Module } from '@taquito/tzip12';
+import { Tzip12Module, tzip12 } from '@taquito/tzip12';
 
 const Tezos = new TezosToolkit('rpcUrl');
 Tezos.addExtension(new Tzip12Module());
@@ -38,6 +38,7 @@ Thus, all methods of the `ContractAbstraction`, `Tzip12ContractAbstraction` and 
 
 ```js
 import { compose } from '@taquito/taquito';
+import { tzip16 } from "@taquito/tzip16";
 
 const contract = await Tezos.contract.at('contractAddress', compose(tzip16, tzip12));
 
@@ -93,7 +94,7 @@ values={[
 Tezos.addExtension(new Tzip12Module());
 
 const contractAddress = "KT1NMtSQq484bDYSFvNrBjfkGtpug2Fm1rrr";
-const tokenId = 1;
+const tokenId = BigNumber(1);
 
 Tezos.contract.at(contractAddress, compose(tzip12, tzip16))
 .then(contract => {
@@ -117,7 +118,7 @@ Tezos.contract.at(contractAddress, compose(tzip12, tzip16))
 Tezos.addExtension(new Tzip12Module());
 
 const contractAddress = "KT1NMtSQq484bDYSFvNrBjfkGtpug2Fm1rrr";
-const tokenId = 1;
+const tokenId = BigNumber(1);
 
 Tezos.wallet.at(contractAddress, compose(tzip12, tzip16))
 .then(wallet => {
@@ -150,7 +151,7 @@ values={[
 Tezos.addExtension(new Tzip16Module());
 
 const contractAddress = "KT1NMtSQq484bDYSFvNrBjfkGtpug2Fm1rrr";
-const tokenId = 1;
+const tokenId = BigNumber(1);
 
 Tezos.contract.at(contractAddress, tzip16)
 .then(contract => {
@@ -179,7 +180,7 @@ Tezos.contract.at(contractAddress, tzip16)
 Tezos.addExtension(new Tzip16Module());
 
 const contractAddress = "KT1NMtSQq484bDYSFvNrBjfkGtpug2Fm1rrr";
-const tokenId = 1;
+const tokenId = BigNumber(1);
 
 Tezos.wallet.at(contractAddress, tzip16)
 .then(wallet => {
@@ -258,7 +259,7 @@ values={[
 Tezos.addExtension(new Tzip12Module());
 
 const contractAddress = "KT1NMtSQq484bDYSFvNrBjfkGtpug2Fm1rrr";
-const tokenId = 1;
+const tokenId = BigNumber(1);
 
 Tezos.contract.at(contractAddress, tzip12)
 .then(contract => {
@@ -281,7 +282,7 @@ Tezos.contract.at(contractAddress, tzip12)
 Tezos.addExtension(new Tzip12Module());
 
 const contractAddress = "KT1NMtSQq484bDYSFvNrBjfkGtpug2Fm1rrr";
-const tokenId = 1;
+const tokenId = BigNumber(1);
 
 Tezos.wallet.at(contractAddress, tzip12)
 .then(wallet => {
