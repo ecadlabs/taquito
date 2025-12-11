@@ -63,15 +63,7 @@ export class ChestToken extends Token {
   Execute(val: any): string {
     return val.bytes;
   }
-
-  /**
-   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
-   *
-   */
-  public ExtractSchema() {
-    return ChestToken.prim;
-  }
-
+  
   generateSchema(): BaseTokenSchema {
     return {
       __michelsonType: ChestToken.prim,

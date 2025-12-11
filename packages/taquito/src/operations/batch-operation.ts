@@ -5,7 +5,7 @@ import {
   OperationContentsAndResultOrigination,
 } from '@taquito/rpc';
 import BigNumber from 'bignumber.js';
-import { BATCH_KINDS } from '../batch/rpc-batch-provider';
+import { BATCH_KINDS } from '../batch/constants';
 import { Context } from '../context';
 import { flattenErrors, flattenOperationResult } from './errors';
 import { Operation } from './operations';
