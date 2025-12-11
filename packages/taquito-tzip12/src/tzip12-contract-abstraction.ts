@@ -1,12 +1,7 @@
 import { MichelsonMap, Schema } from '@taquito/michelson-encoder';
 import { ContractAbstraction, ContractProvider, Wallet } from '@taquito/taquito';
-import {
-  Tzip16ContractAbstraction,
-  MetadataContext,
-  View,
-  bytesToString,
-  BigMapId,
-} from '@taquito/tzip16';
+import { Tzip16ContractAbstraction, MetadataContext, View, BigMapId } from '@taquito/tzip16';
+import { bytesToString } from '@taquito/utils';
 import BigNumber from 'bignumber.js';
 import { InvalidTokenMetadata, TokenIdNotFound, TokenMetadataNotFound } from './errors';
 

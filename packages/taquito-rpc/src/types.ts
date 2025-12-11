@@ -2581,12 +2581,9 @@ export interface BlockMetadata {
   liquidity_baking_escape_ema?: number;
 }
 
-export type RPCRunOperationParam = {
+export interface RPCSimulateOperationParam {
   operation: OperationObject;
   chain_id: string;
-};
-
-export interface RPCSimulateOperationParam extends RPCRunOperationParam {
   blocks_before_activation?: number;
   latency?: number;
 }
@@ -2891,7 +2888,7 @@ export interface SmartRollupTimeoutStakers {
 
 export interface ActiveStakingParametersResponse {
   limit_of_staking_over_baking_millionth: number;
-	edge_of_baking_over_staking_billionth: number;
+  edge_of_baking_over_staking_billionth: number;
 }
 
 export type PendingStakingParametersResponse = Array<{

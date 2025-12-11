@@ -22,8 +22,6 @@ import {
   UnstakeRequestsResponse,
   BallotListResponse,
   BallotsResponse,
-  BigMapGetResponse,
-  BigMapKey,
   BigMapResponse,
   BlockHeaderResponse,
   BlockMetadata,
@@ -49,7 +47,6 @@ import {
   ProposalsResponse,
   ProtocolsResponse,
   RPCRunCodeParam,
-  RPCRunOperationParam,
   RPCRunViewParam,
   RPCRunScriptViewParam,
   RunCodeResult,
@@ -499,30 +496,6 @@ export class RpcClient implements RpcClientInterface {
   }
 
   /**
-   * @deprecated Deprecated in favor of getBigMapKeyByID
-   * @param address contract address from which we want to retrieve the big map key
-   * @param options contains generic configuration for rpc calls to specified block (default to head)
-   * @description Access the value associated with a key in the big map storage of the contract.
-   * @see https://tezos.gitlab.io/active/rpc.html#post-block-id-context-contracts-contract-id-big-map-get
-   */
-  async getBigMapKey(
-    address: string,
-    key: BigMapKey,
-    { block }: { block: string } = defaultRPCOptions
-  ): Promise<BigMapGetResponse> {
-    this.validateAddress(address);
-    return this.httpBackend.createRequest<BigMapGetResponse>(
-      {
-        url: this.createURL(
-          `/chains/${this.chain}/blocks/${block}/context/contracts/${address}/big_map_get`
-        ),
-        method: 'POST',
-      },
-      key
-    );
-  }
-
-  /**
    * @param id Big Map ID
    * @param expr Expression hash to query (A b58check encoded Blake2b hash of the expression (The expression can be packed using the pack_data method))
    * @param options contains generic configuration for rpc calls to specified block (default to head)
@@ -955,27 +928,6 @@ export class RpcClient implements RpcClientInterface {
   }
 
   /**
-   * @deprecated Deprecated in favor of simulateOperation
-   * @param op Operation to run
-   * @param options contains generic configuration for rpc calls to specified block and version
-   * @description Run an operation with the context of the given block and without signature checks and return the operation application result, including the consumed gas.
-   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/alpha-openapi.json
-   */
-  async runOperation(
-    op: RPCRunOperationParam,
-    { block, version }: RPCOptions = defaultRPCOptions
-  ): Promise<PreapplyResponse> {
-    const requestOptions: HttpRequestOptions = {
-      url: this.createURL(`/chains/${this.chain}/blocks/${block}/helpers/scripts/run_operation`),
-      method: 'POST',
-    };
-    if (version !== undefined) {
-      requestOptions.query = { version };
-    }
-    return await this.httpBackend.createRequest<any>(requestOptions, op);
-  }
-
-  /**
    * @param op Operation to simulate
    * @param options contains generic configuration for rpc calls to specified block and version
    * @description Simulate running an operation at some future moment (based on the number of blocks given in the `latency` argument), and return the operation application result.
@@ -1322,9 +1274,14 @@ export class RpcClient implements RpcClientInterface {
    * @description Returns the currently active staking parameters for the given delegate
    * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-delegates-pkh-active-staking-parameters
    */
-  async getActiveStakingParameters(delegate: string, { block }: RPCOptions = defaultRPCOptions): Promise<ActiveStakingParametersResponse> {
+  async getActiveStakingParameters(
+    delegate: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<ActiveStakingParametersResponse> {
     const response = await this.httpBackend.createRequest<ActiveStakingParametersResponse>({
-      url: this.createURL(`/chains/${this.chain}/blocks/${block}/context/delegates/${delegate}/active_staking_parameters`),
+      url: this.createURL(
+        `/chains/${this.chain}/blocks/${block}/context/delegates/${delegate}/active_staking_parameters`
+      ),
       method: 'GET',
     });
 
@@ -1337,9 +1294,14 @@ export class RpcClient implements RpcClientInterface {
    * @description Returns the pending values for the given delegate's staking parameters
    * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-delegates-pkh-pending-staking-parameters
    */
-  async getPendingStakingParameters(delegate: string, { block }: RPCOptions = defaultRPCOptions): Promise<PendingStakingParametersResponse> {
+  async getPendingStakingParameters(
+    delegate: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<PendingStakingParametersResponse> {
     const response = await this.httpBackend.createRequest<PendingStakingParametersResponse>({
-      url: this.createURL(`/chains/${this.chain}/blocks/${block}/context/delegates/${delegate}/pending_staking_parameters`),
+      url: this.createURL(
+        `/chains/${this.chain}/blocks/${block}/context/delegates/${delegate}/pending_staking_parameters`
+      ),
       method: 'GET',
     });
 

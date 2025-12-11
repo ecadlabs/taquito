@@ -2,7 +2,7 @@
 import { HMAC } from '@stablelib/hmac';
 import { SHA512 } from '@stablelib/sha512';
 import { generateKeyPairFromSeed } from '@stablelib/ed25519';
-import { ExtendedPrivateKey, Hard } from './index';
+import { ExtendedPrivateKey, Hard } from './types';
 import { parseHex } from './utils';
 import { InvalidSeedLengthError } from '../errors';
 import { InvalidDerivationPathError } from '@taquito/core';
@@ -20,7 +20,10 @@ export class PrivateKey implements ExtendedPrivateKey {
    * @param priv generated keypair 0->32 private key 32->n public key
    * @param chainCode new HMAC hash with new key
    */
-  constructor(readonly priv: Uint8Array, readonly chainCode: Uint8Array) {}
+  constructor(
+    readonly priv: Uint8Array,
+    readonly chainCode: Uint8Array
+  ) {}
 
   /**
    *

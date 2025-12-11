@@ -1,6 +1,5 @@
 import { Context } from '../context';
 import { ContractStorageType, DefaultContractType } from '../contract/contract';
-import { ContractMethod } from '../contract/contract-methods/contract-method-flat-param';
 import { SendParams } from '../contract/contract-methods/contract-method-interface';
 import { ContractProvider } from '../contract/interface';
 import {
@@ -53,18 +52,7 @@ import {
 } from '@taquito/core';
 import { Provider } from '../provider';
 import { PrepareProvider } from '../prepare';
-
-export const BATCH_KINDS = [
-  OpKind.ACTIVATION,
-  OpKind.ORIGINATION,
-  OpKind.TRANSACTION,
-  OpKind.DELEGATION,
-];
-export type BatchKinds =
-  | OpKind.ACTIVATION
-  | OpKind.ORIGINATION
-  | OpKind.TRANSACTION
-  | OpKind.DELEGATION;
+export { BATCH_KINDS, BatchKinds } from './constants';
 
 export class OperationBatch extends Provider {
   private operations: ParamsWithKind[] = [];
@@ -119,7 +107,7 @@ export class OperationBatch extends Provider {
    * @param options Generic operation parameters
    */
   withContractCall(
-    params: ContractMethod<ContractProvider> | ContractMethodObject<ContractProvider>,
+    params: ContractMethodObject<ContractProvider>,
     options: Partial<SendParams> = {}
   ) {
     return this.withTransfer(params.toTransferParams(options));
@@ -132,7 +120,7 @@ export class OperationBatch extends Provider {
    * @param params Delegation operation parameter
    */
   withDelegation(params: DelegateParams) {
-    const sourceValidation = validateAddress(params.source);
+    const sourceValidation = validateAddress(params.source ?? '');
     if (params.source && sourceValidation !== ValidationResult.VALID) {
       throw new InvalidAddressError(params.source, sourceValidation);
     }

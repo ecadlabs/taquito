@@ -1,20 +1,24 @@
 import { createToken } from '../../src/tokens/createToken';
 import { PairToken } from '../../src/tokens/pair';
-import { NeverToken, NeverTokenError } from '../../src/tokens/never'
+import { NeverToken, NeverTokenError } from '../../src/tokens/never';
 import { OptionToken } from '../../src/tokens/option';
 import { ParameterSchema } from '../../src/taquito-michelson-encoder';
 
 describe('Never token', () => {
-
-  let tokenNever: NeverToken
+  let tokenNever: NeverToken;
   let tokenNeverOption: OptionToken;
   let tokenNeverPair: PairToken;
 
-
   beforeEach(() => {
-    tokenNever = createToken({ "prim": "never" }, 0) as NeverToken;
-    tokenNeverOption = createToken({ "prim": "option", "args": [{ "prim": "never" }], "annots": ["%setApprover"] }, 0) as OptionToken;
-    tokenNeverPair = createToken({ "prim": "pair", "args": [{ "prim": "nat" }, { "prim": "never" }] }, 0) as PairToken;
+    tokenNever = createToken({ prim: 'never' }, 0) as NeverToken;
+    tokenNeverOption = createToken(
+      { prim: 'option', args: [{ prim: 'never' }], annots: ['%setApprover'] },
+      0
+    ) as OptionToken;
+    tokenNeverPair = createToken(
+      { prim: 'pair', args: [{ prim: 'nat' }, { prim: 'never' }] },
+      0
+    ) as PairToken;
   });
 
   describe('EncodeObject', () => {
@@ -44,32 +48,31 @@ describe('Never token', () => {
   describe('Never parameter encoding', () => {
     it('Never parameter are encoded properly', () => {
       const schema = new ParameterSchema({ prim: 'never' });
-      const result = schema.ExtractSchema();
-      expect(result).toEqual('never');
       expect(schema.generateSchema()).toEqual({
         __michelsonType: 'never',
-        schema: 'never'
+        schema: 'never',
       });
     });
 
-    it('Never parameter are encoded properly', () => {
-      const schema = new ParameterSchema({ "prim": "pair", "args": [{ "prim": "nat" }, { "prim": "never" }] });
-      const result = schema.ExtractSchema();
-      expect(result).toEqual({ 0: 'nat', 1: 'never' });
+    it('Never parameter in pair are encoded properly', () => {
+      const schema = new ParameterSchema({
+        prim: 'pair',
+        args: [{ prim: 'nat' }, { prim: 'never' }],
+      });
 
       expect(schema.generateSchema()).toEqual({
         __michelsonType: 'pair',
         schema: {
           0: {
             __michelsonType: 'nat',
-            schema: 'nat'
-          }, 1: {
+            schema: 'nat',
+          },
+          1: {
             __michelsonType: 'never',
-            schema: 'never'
-          }
-        }
+            schema: 'never',
+          },
+        },
       });
     });
   });
-
 });

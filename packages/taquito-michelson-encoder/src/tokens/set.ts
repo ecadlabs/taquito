@@ -14,7 +14,11 @@ import {
  */
 export class SetValidationError extends TokenValidationError {
   name = 'SetValidationError';
-  constructor(public value: any, public token: SetToken, message: string) {
+  constructor(
+    public value: any,
+    public token: SetToken,
+    message: string
+  ) {
     super(value, token, message);
   }
 }
@@ -79,14 +83,6 @@ export class SetToken extends Token {
       .reduce((prev: any, current: any) => {
         return [...prev, this.KeySchema.EncodeObject(current)];
       }, []);
-  }
-
-  /**
-   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
-   *
-   */
-  public ExtractSchema() {
-    return SetToken.prim;
   }
 
   generateSchema(): SetTokenSchema {

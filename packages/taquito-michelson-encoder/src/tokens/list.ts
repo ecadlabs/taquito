@@ -7,7 +7,11 @@ import { Token, TokenFactory, Semantic, TokenValidationError, SemanticEncoding }
  */
 export class ListValidationError extends TokenValidationError {
   name = 'ListValidationError';
-  constructor(public value: any, public token: ListToken, message: string) {
+  constructor(
+    public value: any,
+    public token: ListToken,
+    message: string
+  ) {
     super(value, token, message);
   }
 }
@@ -82,16 +86,6 @@ export class ListToken extends Token {
     return args.reduce((prev: any, current: any) => {
       return [...prev, schema.EncodeObject(current)];
     }, []);
-  }
-
-  /**
-   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
-   *
-   */
-  public ExtractSchema() {
-    return {
-      [ListToken.prim]: this.valueSchema.ExtractSchema(),
-    };
   }
 
   generateSchema(): ListTokenSchema {
