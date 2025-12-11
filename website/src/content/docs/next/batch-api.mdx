@@ -6,31 +6,18 @@ author: Claude Barde
 
 ## What is the Batch API?
 
-Taquito provides a simple way of forging and sending transactions to the blockchain, whether you wish to send a few tez to a certain address or interact with a smart contract. Each Tezos account holds a counter that increments every time an operation is included in a block on the network. This feature prevents users from sending two or multiple transactions in a row as illustrated in this code snippet:
+Taquito provides a simple way of forging and sending transactions to the blockchain, whether you wish to send a few tez to a certain address or interact with a smart contract. Each Tezos account holds a counter that increments every time an operation is included in a block on the network. This feature prevents users from sending multiple transactions in a row like so:
 
 ```js
 /*
  * ONE OF THESE TRANSACTIONS WILL FAIL
- * AND YOU WILL GET AN ERROR MESSAGE
  */
 const op1 = await contract.methodsObject.interact({ 0: 'tezos' }).send();
 const op2 = await contract.methodsObject.wait({ 0: UnitValue }).send();
 
 await op1.confirmation();
 await op2.confirmation();
-
-/*
- * Error Message returned by the node (since Kathmandu):
- * Error while applying operation opHash:
- * Only one manager operation per manager per block allowed (found opHash2 with Xtez fee).
- *
- * Error Message that was returned by the node (before Kathmandu):
- * "Error while applying operation opWH2nEcmmzUwK4T6agHg3bn9GDR7fW1ynqWL58AVRAb7aZFciD:
- * branch refused (Error:
- * Counter 1122148 already used for contract tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb (expected 1122149))"
- */
 ```
-
 
 ## How does it work?
 
@@ -42,7 +29,8 @@ import { TezosToolkit } from '@taquito/taquito';
 const Tezos = new TezosToolkit('RPC address here');
 const batch = Tezos.wallet.batch(); // or Tezos.contract.batch()
 
-// Add here the operations to be emitted together
+// Add here the operations to be emitted together 
+// (i.e, batch.withTransfer, batch.withOrigination, etc)
 
 const batchOp = await batch.send();
 console.log('Operation hash:', batchOp.hash);
@@ -151,5 +139,5 @@ In addition to that, only a single account can sign batched operations.
 
 ## References
 
-- [Integration tests](https://github.com/ecadlabs/taquito/blob/master/integration-tests/batch-api.spec.ts)
-- [Documentation](https://taquito.io/typedoc/classes/_taquito_taquito.walletoperationbatch.html)
+- [Integration tests](https://github.com/ecadlabs/taquito/blob/master/integration-tests/__tests__/wallet/batch.spec.ts)
+- [Documentation](https://taquito.io/typedoc/classes/_taquito_taquito.walletoperationbatch.htmlhttps://taquito.io/typedoc/classes/_taquito_taquito.WalletOperationBatch)

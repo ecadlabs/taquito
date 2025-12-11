@@ -4,10 +4,10 @@ id: ballot
 author: Davis Sawali
 ---
 
-The `Ballot` operation allows delegates to cast one `Yay`, `Nay`, or `Pass` ballot on a selected proposal. Delegates are only able to cast their votes during the **Exploration period** and the **Promotion period**
+The `Ballot` operation allows delegates to cast one `Yay`, `Nay`, or `Pass` ballot on a selected proposal. Delegates are only able to cast their votes during the **Exploration period** and the **Promotion period**.
 
 ## Examples
-The `Ballot` operation is currently available in the Contract API, and can be used as such:
+The `Ballot` operation is currently only available in the Contract API, and can be used as such:
 ```typescript
 const op = await Tezos.contract.ballot({
   proposal: 'PROPOSAL_HASH',
@@ -20,4 +20,4 @@ await op.confirmation();
 - `ballot` is your ballot vote (`yay`, `nay`, or `pass`)
 
 
-For more information in regards to the Amendment (and Voting) Process refer to [this document](https://tezos.gitlab.io/alpha/voting.html)
+For more information regarding the amendment (and voting) process, refer to [this document](https://tezos.gitlab.io/alpha/voting.html).
