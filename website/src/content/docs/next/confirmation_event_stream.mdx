@@ -11,7 +11,7 @@ For example, if you want to wait 10 confirmations before giving a final confirma
 ## Forging the operation
 The operation is forged like any other operation you would create with Taquito. For example, if you wish to create a contract call:
 ```typescript
-const TezosToolkit = new TezosToolkit(RPC_URL);
+const Tezos = new TezosToolkit(RPC_URL);
 const contract = await Tezos.wallet.at(contractAddress);
 const op = await contract.methodsObject.entrypoint(param).send();
 ```
@@ -50,4 +50,5 @@ Next, we set up the Observable. The operation we created earlier has a `confirma
 In this example, we save the current block level and the confirmation status in the `evts` array.
 Finally, when the Observable reaches the number of confirmations required, the wrapping promise resolves and returns the `evts` array.
 
-> Note: the length of the `evts` array is equal to `n confirmations + 1` because the Observable sends a `confirmation 0` value with the block level at which the operation was injected.
+>[!NOTE]
+> The length of the `evts` array is equal to `n confirmations + 1` because the Observable sends a `confirmation 0` value with the block level at which the operation was injected.
