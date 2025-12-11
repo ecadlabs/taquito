@@ -8,9 +8,7 @@ This is the documentation website for Taquito at https://taquito.io. Use this gu
 
 Documentation pages follow this pattern:
 - `/docs/{version}/{page}` - Versioned documentation
-- Example: `/docs/next/quick_start` or `/docs/23.0.0/making_transfers`
-
-Available versions: 20.0.0, 20.1.0, 21.0.0, 22.0.0, 23.0.0, next (development)
+- Example: `/docs/next/quick_start` or `/docs/next/making_transfers`
 
 The `next` version contains the latest unreleased documentation.
 
