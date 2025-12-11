@@ -7,6 +7,7 @@ import Footer from '../components/Footer.astro';
 import DocsSidebar from '../components/DocsSidebar.astro';
 import FeedbackWidget from '../components/docs/FeedbackWidget.astro';
 import ChatKitWidget from '@components/ChatKitWidget.astro';
+import { DEFAULT_VERSION } from '../pages/api/search/[version].json.ts'
 
 interface Props {
   title?: string;
@@ -27,10 +28,10 @@ const formatAuthors = (author: string | string[] | undefined): string | null => 
 
 const formattedAuthors = formatAuthors(author);
 const isDocsPage = Astro.url.pathname.startsWith('/docs');
-const isOldVersion = isDocsPage && version && version !== '23.0.0' && version !== 'next';
+const isOldVersion = isDocsPage && version && version !== DEFAULT_VERSION && version !== 'next';
 const isNextVersion = isDocsPage && version === 'next';
 const pageSlug = currentSlug?.split('/').slice(1).join('/') || 'quick_start';
-const stableVersionUrl = `/docs/23.0.0/${pageSlug}`;
+const stableVersionUrl = `/docs/${DEFAULT_VERSION}/${pageSlug}`;
 ---
 
 <html lang="en">

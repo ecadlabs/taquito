@@ -3,9 +3,7 @@ import discordIcon from "../images/icons/discord.svg";
 import twitterIcon from "../images/icons/twitter.svg";
 import githubIcon from "../images/icons/github.svg";
 import SearchModal from "./SearchModal.astro";
-
-const VERSIONS = ["next", "23.0.0", "22.0.0", "21.0.0", "20.1.0", "20.0.0"] as const;
-const DEFAULT_VERSION = "23.0.0";
+import { VERSIONS, DEFAULT_VERSION } from "../pages/api/search/[version].json.ts"
 
 const pathname = Astro.url.pathname;
 const versionMatch = pathname.match(/\/docs\/([^/]+)/);
@@ -281,9 +279,9 @@ const currentVersion = versionMatch?.[1] && VERSIONS.includes(versionMatch[1] as
   if (hamburgerBtn && mobileMenu) {
     hamburgerBtn.addEventListener("click", () => {
       const isOpen = hamburgerBtn.getAttribute("aria-expanded") === "true";
-      
+
       hamburgerBtn.setAttribute("aria-expanded", isOpen ? "false" : "true");
-      
+
       if (isOpen) {
         mobileMenu.style.maxHeight = "0";
         hamburgerBtn.classList.remove("open");
@@ -348,16 +346,16 @@ const currentVersion = versionMatch?.[1] && VERSIONS.includes(versionMatch[1] as
   if (mobileVersionBtn && mobileVersionMenu) {
     mobileVersionBtn.addEventListener("click", () => {
       const isOpen = mobileVersionBtn.getAttribute("aria-expanded") === "true";
-      
+
       mobileVersionBtn.setAttribute("aria-expanded", isOpen ? "false" : "true");
-      
+
       if (isOpen) {
         mobileVersionMenu.style.maxHeight = "0";
         mobileVersionChevron?.classList.remove("rotate-180");
       } else {
         mobileVersionMenu.style.maxHeight = mobileVersionMenu.scrollHeight + "px";
         mobileVersionChevron?.classList.add("rotate-180");
-        
+
         // Recalculate mobile menu height
         if (mobileMenu && hamburgerBtn?.getAttribute("aria-expanded") === "true") {
           mobileMenu.style.maxHeight = mobileMenu.scrollHeight + mobileVersionMenu.scrollHeight + "px";

@@ -6,7 +6,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "docs:version": "node src/scripts/version-docs.mjs"
   },
   "dependencies": {
     "@airgap/beacon-sdk": "^4.6.3",
@@ -17,12 +18,12 @@
     "@lucide/astro": "^0.554.0",
     "@taquito/beacon-wallet": "^23.0.3",
     "@taquito/ledger-signer": "^23.0.3",
-    "@taquito/michel-codec": "^23.0.2",
-    "@taquito/signer": "^23.0.2",
-    "@taquito/taquito": "^23.0.2",
+    "@taquito/michel-codec": "^23.0.3",
+    "@taquito/signer": "^23.0.3",
+    "@taquito/taquito": "^23.0.3",
     "@taquito/tzip12": "^23.0.3",
     "@taquito/tzip16": "^23.0.3",
-    "@taquito/utils": "^23.0.2",
+    "@taquito/utils": "^23.0.3",
     "@taquito/wallet-connect": "^23.0.3",
     "astro": "^5.16.4",
     "astro-auto-import": "^0.4.5",
