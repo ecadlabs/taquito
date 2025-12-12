@@ -20,6 +20,7 @@ import {
   RPCTransferTicketOperation,
   RPCIncreasePaidStorageOperation,
   RPCRegisterGlobalConstantOperation,
+  RPCRevealOperation,
   WalletDelegateParams,
   WalletOriginateParams,
   WalletProvider,
@@ -30,6 +31,8 @@ import {
   WalletFinalizeUnstakeParams,
   WalletIncreasePaidStorageParams,
   WalletRegisterGlobalConstantParams,
+  WalletRevealParams,
+  createRevealOperation,
 } from '@taquito/taquito';
 import { getSdkError } from '@walletconnect/utils';
 import {
@@ -569,6 +572,7 @@ export class WalletConnect implements WalletProvider {
       | WalletDelegateParams
       | WalletIncreasePaidStorageParams
       | WalletRegisterGlobalConstantParams
+      | WalletRevealParams
   ) {
     const formatedParams: any = params;
     if (typeof params.fee !== 'undefined') {
@@ -590,7 +594,8 @@ export class WalletConnect implements WalletProvider {
       | WalletOriginateParams
       | WalletDelegateParams
       | WalletIncreasePaidStorageParams
-      | WalletRegisterGlobalConstantParams,
+      | WalletRegisterGlobalConstantParams
+      | WalletRevealParams,
     operatedParams:
       | Partial<RPCTransferOperation>
       | Partial<RPCTransferTicketOperation>
@@ -598,6 +603,7 @@ export class WalletConnect implements WalletProvider {
       | Partial<RPCDelegateOperation>
       | Partial<RPCIncreasePaidStorageOperation>
       | Partial<RPCRegisterGlobalConstantOperation>
+      | Partial<RPCRevealOperation>
   ) {
     if (typeof params.fee === 'undefined') {
       delete operatedParams.fee;
@@ -683,12 +689,25 @@ export class WalletConnect implements WalletProvider {
     );
   }
 
-  async mapRegisterGlobalConstantParamsToWalletParams(params: () => Promise<WalletRegisterGlobalConstantParams>) {
+  async mapRegisterGlobalConstantParamsToWalletParams(
+    params: () => Promise<WalletRegisterGlobalConstantParams>
+  ) {
     const walletParams: WalletRegisterGlobalConstantParams = await params();
-  
+
     return this.removeDefaultLimits(
       walletParams,
       await createRegisterGlobalConstantOperation(this.formatParameters(walletParams))
+    );
+  }
+
+  async mapRevealParamsToWalletParams(params: () => Promise<WalletRevealParams>) {
+    const walletParams: WalletRevealParams = await params();
+    const source = await this.getPKH();
+    const publicKey = await this.getPK();
+
+    return this.removeDefaultLimits(
+      walletParams,
+      await createRevealOperation(this.formatParameters(walletParams), source, publicKey)
     );
   }
 }
