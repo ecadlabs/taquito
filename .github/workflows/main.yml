@@ -46,6 +46,9 @@ jobs:
           - testnet: seoulnet
             testnet_uppercase: SEOULNET
             rpc_url: https://rpc.seoulnet.teztnets.com/
+          # - testnet: tallinnnet
+          #   testnet_uppercase: TALLINNNET
+          #   rpc_url: https://rpc.tallinnnet.teztnets.com/
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -64,27 +67,27 @@ jobs:
         env:
           # Ternary operator workaround
           TEZOS_RPC_${{ matrix.testnet_uppercase }}: ${{ github.event.pull_request.head.repo.fork && matrix.rpc_url || null }}
-  # integration-tests-testnet-seoulnet-secret-key:
-  #   runs-on: ubuntu-latest
-  #   continue-on-error: true
-  #   strategy:
-  #     matrix:
-  #       include:
-  #         - testnet: seoulnet
-  #           testnet_uppercase: SEOULNET
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - uses: actions/setup-node@v4
-  #       with:
-  #         node-version: lts/Iron
-  #     - run: npm ci
-  #     - run: npm run build
-  #     - if: ${{ !github.event.pull_request.head.repo.fork }}
-  #       name: Tailscale
-  #       uses: tailscale/github-action@v1
-  #       with:
-  #         authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
-  #         version: 1.32.2
-  #     - run: npm -w integration-tests run test:seoulnet-secret-key
-  #       env:
-  #         RUN_${{ matrix.testnet_uppercase }}_WITH_SECRET_KEY: true
+  integration-tests-testnet-tallinnnet-secret-key:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    strategy:
+      matrix:
+        include:
+          - testnet: talinnnet
+            testnet_uppercase: TALLINNNET
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/Iron
+      - run: npm ci
+      - run: npm run build
+      - if: ${{ !github.event.pull_request.head.repo.fork }}
+        name: Tailscale
+        uses: tailscale/github-action@v1
+        with:
+          authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
+          version: 1.32.2
+      - run: npm -w integration-tests run test:tallinnnet-secret-key
+        env:
+          RUN_${{ matrix.testnet_uppercase }}_WITH_SECRET_KEY: true
