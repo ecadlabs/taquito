@@ -7,8 +7,6 @@ author: Davis Sawali & Hui-An Yang
 This feature is a work in progress and might go through refinements in the near future. We encourage Taquito users to try this feature and reach out to us if you have any issues or concerns.
 :::
 
-# Timelock (BETA)
-
 Timelock is a cryptographic primitive that can be used as a part of a commit & reveal scheme, it provides a guarantee that the information associated to the commit phase is eventually revealed.
 
 ## Commit & Reveal
@@ -68,7 +66,7 @@ This example is an excerpt from [Tezos docs](https://tezos.gitlab.io/active/time
 
 This game emulates a time constrained "guess who" game using timelocks. The goal of the game is for the challenger to guess which value was stored by the administrator. The challenger has one guess, and must submit it within 10 blocks of the game initialization.
 
-Please note that the contract used in this example is for educational purposes only and might not be secure. 
+Please note that the contract used in this example is for educational purposes only and might not be secure.
 
 Its storage consists of 4 values, `level` and `chest` that relates to the initial value stored in the timelock during the start of the game. `guess` that relates to what value the player guesses to be the result of the coinflip, and `result` that indicates the status of the game.
 

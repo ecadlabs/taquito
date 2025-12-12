@@ -1,24 +1,7 @@
 ---
-title: Taquito Utils
-author: Davis Sawali & Roxane Letourneau
+title: Validation functions
+author: Roxane Letourneau
 ---
-
-## Description
-The `@taquito/utils` package provides developers with utility functions in Taquito.
-
-You can find a full list of available utility functions in Taquito [here](https://taquito.io/typedoc/modules/_taquito_utils.html)
-
-## Usage Example
-To use the functions, simply import the function you need as such:
-
-```js
-import { getPkhfromPk, b58cencode, b58cdecode } from '@taquito/utils';
-
-const publicKeyHash = getPkhfromPk('replace_with_publickey');
-const encoded = b58cencode('replace_with_publickey');
-```
-
-## Using Validation Functions from `@taquito/utils`
 
 Taquito provides functions that allow us to see if an address, a chain, a key hash, a contract address, a public key, or a signature is valid. Note that these validations do not rely on a node but are done based on checksums. Thus, they allow us to check if a value is valid and not if it exists on a chain. The `ValidationResult` returned by these functions is an enum that can take the following values:
 
@@ -26,7 +9,10 @@ Taquito provides functions that allow us to see if an address, a chain, a key ha
 0 = NO_PREFIX_MATCHED,
 1 = INVALID_CHECKSUM,
 2 = INVALID_LENGTH,
-3 = VALID
+3 = VALID,
+4 = PREFIX_NOT_ALLOWED,
+5 = INVALID_ENCODING,
+6 = OTHER,
 ```
 
 ### Validate an address

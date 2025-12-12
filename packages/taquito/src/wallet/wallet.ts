@@ -25,11 +25,7 @@ import {
   InvalidStakingAddressError,
   InvalidFinalizeUnstakeAmountError,
 } from '@taquito/core';
-import {
-  validateAddress,
-  validateContractAddress,
-  ValidationResult,
-} from '@taquito/utils';
+import { validateAddress, validateContractAddress, ValidationResult } from '@taquito/utils';
 import { OperationContentsFailingNoop } from '@taquito/rpc';
 
 export interface PKHOption {
@@ -50,7 +46,7 @@ export class WalletOperationBatch {
   constructor(
     private walletProvider: WalletProvider,
     private context: Context
-  ) { }
+  ) {}
 
   /**
    * @description Add a transaction operation to the batch
@@ -70,10 +66,7 @@ export class WalletOperationBatch {
    * @param params Call a contract method
    * @param options Generic operation parameters
    */
-  withContractCall(
-    params: ContractMethodObject<Wallet>,
-    options: Partial<SendParams> = {}
-  ) {
+  withContractCall(params: ContractMethodObject<Wallet>, options: Partial<SendParams> = {}) {
     return this.withTransfer(params.toTransferParams(options));
   }
 
@@ -127,6 +120,15 @@ export class WalletOperationBatch {
     return this;
   }
 
+  /**
+   * @description Add a RegisterGlobalConstant operation to the batch
+   * @param param RegisterGlobalConstant operation parameter
+   */
+  withRegisterGlobalConstant(params: WalletRegisterGlobalConstantParams) {
+    this.operations.push({ kind: OpKind.REGISTER_GLOBAL_CONSTANT, ...params });
+    return this;
+  }
+
   private async mapOperation(param: WalletParamsWithKind) {
     switch (param.kind) {
       case OpKind.TRANSACTION:
@@ -143,6 +145,8 @@ export class WalletOperationBatch {
         return this.walletProvider.mapIncreasePaidStorageWalletParams(async () => param);
       case OpKind.REGISTER_GLOBAL_CONSTANT:
         return this.walletProvider.mapRegisterGlobalConstantParamsToWalletParams(async () => param);
+      case OpKind.TRANSFER_TICKET:
+        return this.walletProvider.mapTransferTicketParamsToWalletParams(async () => param);
       default:
         throw new InvalidOperationKindError(JSON.stringify((param as any).kind));
     }
@@ -167,6 +171,12 @@ export class WalletOperationBatch {
           break;
         case OpKind.INCREASE_PAID_STORAGE:
           this.withIncreasePaidStorage(param);
+          break;
+        case OpKind.REGISTER_GLOBAL_CONSTANT:
+          this.withRegisterGlobalConstant(param);
+          break;
+        case OpKind.TRANSFER_TICKET:
+          this.withTransferTicket(param);
           break;
         default:
           throw new InvalidOperationKindError(JSON.stringify((param as any).kind));
@@ -193,7 +203,7 @@ export class WalletOperationBatch {
 }
 
 export class Wallet {
-  constructor(private context: Context) { }
+  constructor(private context: Context) {}
 
   private get walletProvider() {
     return this.context.walletProvider;
@@ -453,19 +463,19 @@ export class Wallet {
   }
 
   /**
- * @description Register a Micheline expression in a global table of constants.
- * @returns a RegisterGlobalConstantWalletOperation promise object when followed by .send()
- * @param params operation parameter
- */
-registerGlobalConstant(params: WalletRegisterGlobalConstantParams) {
-  return this.walletCommand(async () => {
-    const mappedParams = await this.walletProvider.mapRegisterGlobalConstantParamsToWalletParams(
-      async () => params
-    );
-    const opHash = await this.walletProvider.sendOperations([mappedParams]);
-    return this.context.operationFactory.createRegisterGlobalConstantOperation(opHash);
-  });
-}
+   * @description Register a Micheline expression in a global table of constants.
+   * @returns a RegisterGlobalConstantWalletOperation promise object when followed by .send()
+   * @param params operation parameter
+   */
+  registerGlobalConstant(params: WalletRegisterGlobalConstantParams) {
+    return this.walletCommand(async () => {
+      const mappedParams = await this.walletProvider.mapRegisterGlobalConstantParamsToWalletParams(
+        async () => params
+      );
+      const opHash = await this.walletProvider.sendOperations([mappedParams]);
+      return this.context.operationFactory.createRegisterGlobalConstantOperation(opHash);
+    });
+  }
 
   /**
    * @description Create a batch of operation
