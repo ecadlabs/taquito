@@ -19,6 +19,8 @@ CONFIGS().forEach(({ lib, rpc, setup, signerConfig }) => {
 
             expect(op.opHash).toBeDefined();
             const status = await op.status();
+			console.log(op);
+			
             expect(status).toEqual('applied');
 
             // if the account is revealed, it has a manager
