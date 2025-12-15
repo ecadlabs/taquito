@@ -120,6 +120,15 @@ export class WalletOperationBatch {
     return this;
   }
 
+  /**
+   * @description Add a RegisterGlobalConstant operation to the batch
+   * @param param RegisterGlobalConstant operation parameter
+   */
+  withRegisterGlobalConstant(params: WalletRegisterGlobalConstantParams) {
+    this.operations.push({ kind: OpKind.REGISTER_GLOBAL_CONSTANT, ...params });
+    return this;
+  }
+
   private async mapOperation(param: WalletParamsWithKind) {
     switch (param.kind) {
       case OpKind.TRANSACTION:
@@ -136,6 +145,8 @@ export class WalletOperationBatch {
         return this.walletProvider.mapIncreasePaidStorageWalletParams(async () => param);
       case OpKind.REGISTER_GLOBAL_CONSTANT:
         return this.walletProvider.mapRegisterGlobalConstantParamsToWalletParams(async () => param);
+      case OpKind.TRANSFER_TICKET:
+        return this.walletProvider.mapTransferTicketParamsToWalletParams(async () => param);
       default:
         throw new InvalidOperationKindError(JSON.stringify((param as any).kind));
     }
@@ -160,6 +171,12 @@ export class WalletOperationBatch {
           break;
         case OpKind.INCREASE_PAID_STORAGE:
           this.withIncreasePaidStorage(param);
+          break;
+        case OpKind.REGISTER_GLOBAL_CONSTANT:
+          this.withRegisterGlobalConstant(param);
+          break;
+        case OpKind.TRANSFER_TICKET:
+          this.withTransferTicket(param);
           break;
         default:
           throw new InvalidOperationKindError(JSON.stringify((param as any).kind));

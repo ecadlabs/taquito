@@ -1,6 +1,6 @@
 {
   "name": "@taquito/sapling",
-  "version": "23.0.3",
+  "version": "23.1.0",
   "description": "Allows reading and preparing sapling transactions",
   "keywords": [
     "tezos",
@@ -24,7 +24,7 @@
   },
   "license": "Apache-2.0",
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "scripts": {
     "test": "jest --coverage",
@@ -68,10 +68,10 @@
     "@airgap/sapling-wasm": "0.0.9",
     "@stablelib/nacl": "^1.0.4",
     "@stablelib/random": "^1.0.2",
-    "@taquito/core": "^23.0.3",
-    "@taquito/rpc": "^23.0.3",
-    "@taquito/taquito": "^23.0.3",
-    "@taquito/utils": "^23.0.3",
+    "@taquito/core": "^23.1.0",
+    "@taquito/rpc": "^23.1.0",
+    "@taquito/taquito": "^23.1.0",
+    "@taquito/utils": "^23.1.0",
     "bignumber.js": "^9.1.2",
     "bip39": "3.1.0",
     "blakejs": "^1.2.1",

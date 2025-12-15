@@ -37,7 +37,11 @@ class CancellableHttpBackend extends HttpBackend {
     
     try {
       const response = await fetch(urlWithQuery, {
+<<<<<<<< HEAD:website/src/content/docs/23.1.0/cancel_http_requests.mdx
         keepalive: false,
+========
+        keepalive: false, // generally only for Node 19 and above
+>>>>>>>> master:website/versioned_docs/version-23.1.0/cancel_http_requests.md
         method,
         headers,
         body: JSON.stringify(data),
