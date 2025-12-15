@@ -112,9 +112,9 @@ The `next` version contains the latest unreleased documentation.
 - `tutorial_links` - Tutorial Links
 - `contract-test-collection` - Smart contract collection
 - `validators` - Validation functions
+- `ballot` - Ballot Operation
 
 ### Other
-- `ballot` - Ballot Operation
 - `failwith_errors` - Catching error messages
 - `testing_strategies` - Taquito Testing Strategies
 - `tzip16-sequence-diagram` - TZIP-16 Sequence diagrams

@@ -3,6 +3,95 @@ title: Versions
 author: Jev Bjorsell
 layout: ../layouts/MarkdownLayout.astro
 ---
+
+# Taquito v23.1.0
+
+## ⚠ **Breaking Change**⚠  
+
+- **Exported function `importKey` has been moved from `@taquito/signer` to `@taquito/taquito`** #3212  
+- Removed deprecated APIs, constants, and methods across packages #3228:  
+  - @taquito/taquito: `DEFAULT_GAS_LIMIT`, `DEFAULT_FEE`, `DEFAULT_STORAGE_LIMIT`, `tezos.contract.methods`, `tezos.contract.getBigMapKey`, `tezos.batch`, `tezos.wallet.getPK`
+  - @taquito/utils: `Prefix`, `prefix`, `prefixLength`, `b58cdecode`, `b58cencode`, `b58decode`, `b58decodeL2Address`, `encodePubKey`, `encodeL2Address`, `char2Bytes`, `bytes2Char`, `invalidDetail`, `PkPrefix`, `validatePkAndExtractPrefix`
+---
+
+## 🚀 New Features
+
+### `@taquito/taquito`
+- Supported `registerGlobalConstant` operation in WalletAPI and WalletBatchAPI #3219  
+
+### `@taquito/rpc`
+- Added RPC endpoints `getActiveStakingParameters` and `getPendingStakingParameters` #3211  
+
+---
+
+## 🧠 Improvements
+
+### `@taquito/taquito`
+- Updated constant `BATCH_KINDS` and type `BatchKinds` to include all batch supported operations #3249
+- Updated `minimumPollingInterval` to 700ms as the lowest threshold #3249
+- Updated `increasePaidStorage` params.amount=0 to throw error #3249
+
+### `@taquito/signer`
+- Replaced `elliptic` with `@noble/curves` due to security concerns #3217
+
+
+### `@taquito/michelson-encoder`
+- Refactored `compare` logic in ./src/tokens/key.ts to use `publicKeyFromString` from `@taquito/signer` #3217
+
+### `@taquito/beacon-wallet`
+- Updated `formatParameters` `params` type to ensure type safety #3229
+
+### Build & Tooling
+- Added node polyfills for better browser compatibility #3230
+
+---
+
+## 🧹 Deprecations
+
+### `@taquito/utils`
+- Removed deprecated `Prefix`, `prefix` and `prefixLength` #3228
+- Removed deprecated `b58cdecode`, `b58cencode`, `b58decode`, `b58decodeL2Address`, `encodePubKey`, `encodeL2Address`, `char2Bytes` and `bytes2Char` #3228
+- Removed deprecated `invalidDetail`, `PkPrefix` and `validatePkAndExtractPrefix` #3228
+
+### `@taquito/taquito`
+- Removed deprecated `DEFAULT_GAS_LIMIT`, `DEFAULT_FEE` and `DEFAULT_STORAGE_LIMIT` #3228
+- Removed deprecated smart contract call method `tezos.contract.methods`, please use `tezos.contract.methodsObject` instead #3228
+- Removed deprecated contractAPI method `tezos.contract.getBigMapKey`, please use `tezos.contract.getBigMapKeyByID` instead #3228
+- Removed deprecated batchAPI provider `tezos.batch`, please use `tezos.contract.batch` instead #3228
+- Removed deprecated walletAPI method `tezos.wallet.getPK`, please use `tezos.wallet.pk` instead #3228
+
+---
+
+## 🐞 Bug Fixes
+
+### `@taquito/taquito`
+- Added required parameter `source` to ballot and proposal operations #3222  
+
+### General Fixes
+- Fixed node-fetch failure in webpack-bundled builds #3246  
+
+---
+
+## 🛠 Internal
+
+### `@taquito/beacon-wallet`
+- updated Beacon version to v4.6.4 #3248
+
+### `Website`
+- Updated Docusaurus Sass packages #3225
+
+### Build & Tooling
+- Migrated Node.js support from lts18 to lts20 and above #3208  
+- Refactored multiple packages to avoid circular dependencies #3230  
+- Sorted all rollup warnings across packages #3230  
+- Upgraded Lerna and Nx tooling #3247  
+
+### Snyk Security Upgrades
+- Upgraded `@ledgerhq/devices` → **8.6.1** #3231  
+- Upgraded `@ledgerhq/hw-transport` → **6.31.12** #3232
+
+---
+
 # Taquito v23.0.0
 ## Seoul Protocol Support
 
