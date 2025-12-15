@@ -608,7 +608,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
    * @param params increasePaidStorage operation parameter
    */
   async increasePaidStorage(params: IncreasePaidStorageParams) {
-    if (params.amount < 0) {
+    if (params.amount <= 0) {
       throw new InvalidAmountError(params.amount.toString());
     }
     const publicKeyHash = await this.signer.publicKeyHash();
