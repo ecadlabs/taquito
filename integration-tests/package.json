@@ -3,13 +3,17 @@
   "scripts": {
     "test": "jest",
     "test:secret-key": "RUN_WITH_SECRET_KEY=true jest --runInBand",
+    "test:changed:secret-key": "RUN_WITH_SECRET_KEY=true jest --runInBand --changedSince=master",
     "test:seoulnet": "SEOULNET=true jest",
     "test:seoulnet-secret-key": "RUN_SEOULNET_WITH_SECRET_KEY=true jest --runInBand",
+    "test:changed:seoulnet-secret-key": "RUN_SEOULNET_WITH_SECRET_KEY=true jest --runInBand --changedSince=master",
     "test:ghostnet": "GHOSTNET=true jest",
     "test:ghostnet-secret-key": "RUN_GHOSTNET_WITH_SECRET_KEY=true jest --runInBand",
     "test:shadownet": "SHADOWNET=true jest",
     "test:shadownet-secret-key": "RUN_SHADOWNET_WITH_SECRET_KEY=true jest --runInBand",
+    "test:changed:shadownet-secret-key": "RUN_SHADOWNET_WITH_SECRET_KEY=true jest --runInBand --changedSince=master",
     "test:weeklynet-secret-key": "RUN_WEEKLYNET_WITH_SECRET_KEY=true jest --runInBand",
+    "test:changed:weekly-secret-key": "RUN_WEEKLYNET_WITH_SECRET_KEY=true jest --runInBand --changedSince=master",
     "originate-known-contracts": "node -r ts-node/register originate-known-contracts.ts",
     "originate-known-contracts-and-run-test": "node -r ts-node/register originate-known-contracts.ts && jest"
   },
