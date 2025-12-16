@@ -545,13 +545,6 @@ describe('Ticket_deprecated token', () => {
         args: [{ prim: 'string' }],
         annots: ['%receive'],
       });
-      const result = schema.ExtractSchema();
-      expect(result).toEqual({
-        ticketer: 'contract',
-        value: 'string',
-        amount: 'int',
-      });
-
       expect(schema.generateSchema()).toEqual({
         __michelsonType: 'ticket',
         schema: {

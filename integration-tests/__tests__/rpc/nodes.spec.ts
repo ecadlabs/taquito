@@ -1,5 +1,5 @@
 import { CONFIGS } from '../../config';
-import { DefaultContractType, Protocols } from "@taquito/taquito";
+import { DefaultContractType, } from "@taquito/taquito";
 import { RpcClientCache, RpcClient, RPCRunViewParam, RPCRunScriptViewParam, PendingOperationsV2 } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
 import { Schema } from '@taquito/michelson-encoder';
@@ -24,7 +24,6 @@ CONFIGS().forEach(
 
     beforeAll(async () => {
       await setup();
-
       try {
         // originate ticket contract
         const ticketOp = await Tezos.contract.originate({
@@ -34,7 +33,7 @@ CONFIGS().forEach(
         await ticketOp.confirmation();
         ticketContract = await ticketOp.contract();
         // contract call to issue tickets
-        const ticketCallOp = await ticketContract.methods.auto_call(1).send();
+        const ticketCallOp = await ticketContract.methodsObject.auto_call(1).send();
         await ticketCallOp.confirmation();
       } catch (e) {
         console.log('Failed to originate ticket contract', JSON.stringify(e));
@@ -362,7 +361,7 @@ CONFIGS().forEach(
           expect(chainId).toBeDefined();
         });
 
-        it('Verify that rpcClient.runOperation runs an operation without signature checks', async () => {
+        it('Verify that rpcClient.simulateOperation runs an operation without signature checks', async () => {
           try {
             const chainId = await rpcClient.getChainId();
             expect(chainId).toBeDefined();
@@ -391,7 +390,7 @@ CONFIGS().forEach(
               },
             };
 
-            await rpcClient.runOperation(operation);
+            await rpcClient.simulateOperation(operation);
           } catch (ex: any) {
             expect(ex.message).toMatch('contract.counter_in_the_past');
           }

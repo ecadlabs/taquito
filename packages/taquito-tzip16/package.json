@@ -1,6 +1,6 @@
 {
   "name": "@taquito/tzip16",
-  "version": "23.0.3",
+  "version": "23.1.0",
   "description": "Tzip16",
   "keywords": [
     "tezos",
@@ -24,7 +24,7 @@
   },
   "license": "Apache-2.0",
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "scripts": {
     "lint": "eslint --ext .js,.ts .",
@@ -61,12 +61,12 @@
     ]
   },
   "dependencies": {
-    "@taquito/core": "^23.0.3",
-    "@taquito/http-utils": "^23.0.3",
-    "@taquito/michelson-encoder": "^23.0.3",
-    "@taquito/rpc": "^23.0.3",
-    "@taquito/taquito": "^23.0.3",
-    "@taquito/utils": "^23.0.3",
+    "@taquito/core": "^23.1.0",
+    "@taquito/http-utils": "^23.1.0",
+    "@taquito/michelson-encoder": "^23.1.0",
+    "@taquito/rpc": "^23.1.0",
+    "@taquito/taquito": "^23.1.0",
+    "@taquito/utils": "^23.1.0",
     "bignumber.js": "^9.1.2",
     "crypto-js": "^4.2.0"
   },
@@ -74,7 +74,7 @@
     "@types/bluebird": "^3.5.42",
     "@types/crypto-js": "^4.2.2",
     "@types/jest": "^29.5.12",
-    "@types/node": "^18",
+    "@types/node": "^20",
     "@types/ws": "^8.5.12",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",

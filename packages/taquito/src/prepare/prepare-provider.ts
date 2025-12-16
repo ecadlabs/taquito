@@ -44,7 +44,6 @@ import {
   ProhibitedActionError,
 } from '@taquito/core';
 import { Context } from '../context';
-import { ContractMethod } from '../contract/contract-methods/contract-method-flat-param';
 import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
 import { ContractProvider } from '../contract/interface';
 import {
@@ -213,10 +212,10 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     return {
       pkh: isSignerConfigured
         ? await this.signer.publicKeyHash()
-        : await this.context.walletProvider.getPKH(),
+        : await this.context.wallet.pkh(),
       publicKey: isSignerConfigured
         ? await this.signer.publicKey()
-        : await this.context.walletProvider.getPK(),
+        : await this.context.wallet.pk(),
     };
   }
 
@@ -297,6 +296,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
           return {
             ...op,
             period: currentVotingPeriod?.voting_period.index,
+            ...this.getSource(op, pkh, source),
           };
         case OpKind.PROPOSALS:
           if (currentVotingPeriod === undefined) {
@@ -305,6 +305,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
           return {
             ...op,
             period: currentVotingPeriod?.voting_period.index,
+            ...this.getSource(op, pkh, source),
           };
         default:
           throw new InvalidOperationKindError((op as RPCOperation).kind);
@@ -922,7 +923,6 @@ export class PrepareProvider extends Provider implements PreparationProvider {
    */
   async ballot(params: BallotParams): Promise<PreparedOperation> {
     const { pkh } = await this.getKeys();
-
     const op = await createBallotOperation({
       ...params,
     });
@@ -947,7 +947,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       ops,
       headCounter,
       pkh,
-      undefined,
+      params.source,
       currentVotingPeriod
     );
 
@@ -994,7 +994,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       ops,
       headCounter,
       pkh,
-      undefined,
+      params.source,
       currentVotingPeriod
     );
 
@@ -1299,7 +1299,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
    * @returns a PreparedOperation object
    */
   async contractCall(
-    contractMethod: ContractMethod<ContractProvider> | ContractMethodObject<ContractProvider>
+    contractMethod: ContractMethodObject<ContractProvider>
   ): Promise<PreparedOperation> {
     const hash = await this.getBlockHash();
     const protocol = await this.getProtocolHash();

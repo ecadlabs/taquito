@@ -8,6 +8,7 @@ import {
   UnstakeParams,
   FinalizeUnstakeParams,
   TransferTicketParams,
+  RegisterGlobalConstantParams,
 } from '../operations/types';
 
 export type WalletDefinedFields = 'source';
@@ -33,6 +34,8 @@ export type WalletIncreasePaidStorageParams = Omit<IncreasePaidStorageParams, Wa
 
 export type WalletTransferTicketParams = Omit<TransferTicketParams, WalletDefinedFields>;
 
+export type WalletRegisterGlobalConstantParams = Omit<RegisterGlobalConstantParams, WalletDefinedFields>;
+
 export interface WalletProvider {
   /**
    * @description Request the public key hash from the wallet
@@ -40,7 +43,7 @@ export interface WalletProvider {
   getPKH: () => Promise<string>;
 
   /**
-   * @description Get the public key from the wallet
+   * @description Request the public key from the wallet
    */
   getPK: () => Promise<string>;
 
@@ -54,6 +57,13 @@ export interface WalletProvider {
    */
   mapTransferTicketParamsToWalletParams: (
     params: () => Promise<WalletTransferTicketParams>
+  ) => Promise<any>;
+
+  /**
+   * @description Transform WalletRegisterGlobalConstantParams into a format compliant with the underlying wallet
+   */
+  mapRegisterGlobalConstantParamsToWalletParams: (
+    params: () => Promise<WalletRegisterGlobalConstantParams>
   ) => Promise<any>;
 
   /**

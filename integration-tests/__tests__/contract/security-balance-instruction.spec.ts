@@ -96,7 +96,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       await Tezos.contract
         .at(TezTransferAContract.address)
         .then((contract) => {
-          return contract.methods.default(`${TezTransferBContract.address}`).send();
+          return contract.methodsObject.default(`${TezTransferBContract.address}`).send();
         })
         .then((op) => {
           return op.confirmation().then(() => op.hash);

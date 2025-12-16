@@ -1,0 +1,394 @@
+---
+import discordIcon from "../images/icons/discord.svg";
+import twitterIcon from "../images/icons/twitter.svg";
+import githubIcon from "../images/icons/github.svg";
+import SearchModal from "./SearchModal.astro";
+import { VERSIONS, DEFAULT_VERSION } from "../pages/api/search/[version].json.ts"
+
+const pathname = Astro.url.pathname;
+const versionMatch = pathname.match(/\/docs\/([^/]+)/);
+const currentVersion = versionMatch?.[1] && VERSIONS.includes(versionMatch[1] as typeof VERSIONS[number])
+  ? versionMatch[1]
+  : DEFAULT_VERSION;
+---
+
+<header
+  class="bg-background-primary border-b-2 border-secondary px-4 md:px-14 sticky top-0 z-100 shadow-sm transition-transform duration-300 ease-in-out"
+  id="main-header"
+>
+  <div class="mx-2 md:mx-8 flex justify-between items-center py-2">
+    <a href="/" class="logo no-underline flex items-center gap-2">
+      <div id="lottie-logo" class="w-32 md:w-40 flex items-center justify-center"></div>
+    </a>
+
+    <!-- Desktop Navigation -->
+    <nav class="hidden lg:flex items-center gap-8">
+      <!-- Search Button -->
+      <button
+        id="desktop-search-btn"
+        class="flex items-center gap-2 bg-white px-4 py-1.5 rounded-full hover:bg-gray-50 transition-colors border border-gray-200 text-gray-600 text-sm"
+        aria-label="Search documentation"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+        <span>Search</span>
+        <kbd class="hidden xl:inline-block ml-2 px-1.5 py-0.5 text-xs font-semibold text-gray-500 bg-gray-100 rounded">⌘K</kbd>
+      </button>
+      <!-- Version Dropdown -->
+      <div class="relative" id="version-dropdown-container">
+        <button
+          id="version-dropdown-btn"
+          class="font-medium flex items-center gap-1.5 hover:text-primary transition-colors"
+          aria-expanded="false"
+          aria-haspopup="true"
+        >
+          <span id="version-display">{currentVersion}</span>
+          <svg class="w-4 h-4 transition-transform duration-200" id="version-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+        <div
+          id="version-dropdown-menu"
+          class="absolute top-full left-0 mt-2 py-2 bg-white rounded-lg shadow-lg border border-gray-200 min-w-32 opacity-0 invisible transition-all duration-200 z-50"
+        >
+          {VERSIONS.map((version) => (
+            <a
+              href={`/docs/${version}/quick_start`}
+              class:list={[
+                "block px-4 py-2 text-sm hover:bg-primary/10 transition-colors",
+                version === currentVersion ? "text-primary font-medium bg-primary/5" : "text-gray-700"
+              ]}
+            >
+              {version}
+            </a>
+          ))}
+        </div>
+      </div>
+      <a href="/changelog" class="font-medium">Release Notes</a>
+      <a href={`/docs/${currentVersion}/quick_start`} class="bg-primary text-white hover:text-gray-300 transition-colors duration-150 px-3 py-1.5 rounded-full">Get Started</a>
+      <!-- Socials -->
+      <div class="flex items-center gap-6">
+        <a
+          href="https://discord.gg/JgvVdWV7BN"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-gray-800 hover:text-gray-600 transition-colors"
+        >
+          <img
+            src={discordIcon.src}
+            alt="Discord"
+            class="inline-block size-7 align-middle mr-1"
+          />
+        </a>
+        <a
+          href="https://x.com/tezostaquito"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-gray-800 hover:text-gray-600 transition-colors"
+        >
+          <img
+            src={twitterIcon.src}
+            alt="Twitter"
+            class="inline-block size-7 align-middle mr-1"
+          />
+        </a>
+        <a
+          href="https://github.com/ecadlabs/taquito"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-gray-800 hover:text-gray-600 transition-colors"
+        >
+          <img
+            src={githubIcon.src}
+            alt="GitHub"
+            class="inline-block size-7 align-middle mr-1"
+          />
+        </a>
+      </div>
+    </nav>
+
+    <!-- Hamburger Button -->
+    <button
+      id="hamburger-btn"
+      class="lg:hidden flex flex-col gap-1.5 p-2 focus:outline-none"
+      aria-label="Toggle menu"
+      aria-expanded="false"
+    >
+      <span class="hamburger-line block w-6 h-0.5 bg-gray-800 transition-transform duration-300"></span>
+      <span class="hamburger-line block w-6 h-0.5 bg-gray-800 transition-opacity duration-300"></span>
+      <span class="hamburger-line block w-6 h-0.5 bg-gray-800 transition-transform duration-300"></span>
+    </button>
+  </div>
+
+  <!-- Mobile Navigation -->
+  <nav
+    id="mobile-menu"
+    class="lg:hidden overflow-hidden transition-all duration-300 ease-in-out max-h-0"
+  >
+    <div class="flex flex-col gap-4 pb-4 px-2">
+      <!-- Search Button -->
+      <button
+        id="mobile-search-btn"
+        class="w-full bg-white px-4 py-2 rounded-full text-center hover:bg-gray-50 transition-colors border border-gray-200 text-gray-600 text-sm flex items-center justify-center gap-2"
+        aria-label="Search documentation"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+        <span>Search</span>
+      </button>
+      <!-- Mobile Version Dropdown -->
+      <div class="relative" id="mobile-version-dropdown-container">
+        <button
+          id="mobile-version-dropdown-btn"
+          class="w-full font-medium py-2 px-4 hover:bg-primary/20 rounded-lg transition-colors flex items-center justify-between"
+          aria-expanded="false"
+          aria-haspopup="true"
+        >
+          <span>Version: <span id="mobile-version-display">{currentVersion}</span></span>
+          <svg class="w-4 h-4 transition-transform duration-200" id="mobile-version-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+        <div
+          id="mobile-version-dropdown-menu"
+          class="overflow-hidden transition-all duration-200 max-h-0 bg-gray-50 rounded-lg mt-1"
+        >
+          {VERSIONS.map((version) => (
+            <a
+              href={`/docs/${version}/quick_start`}
+              class:list={[
+                "block px-6 py-2 text-sm hover:bg-primary/10 transition-colors",
+                version === currentVersion ? "text-primary font-medium bg-primary/5" : "text-gray-700"
+              ]}
+            >
+              {version}
+            </a>
+          ))}
+        </div>
+      </div>
+      <a href="/changelog" class="font-medium py-2 px-4 hover:bg-primary/20 rounded-lg transition-colors">Release Notes</a>
+      <a href={`/docs/${currentVersion}/quick_start`} class="bg-primary text-white hover:bg-primary/90 transition-colors duration-150 px-4 py-2 rounded-full text-center">Get Started</a>
+      <!-- Socials -->
+      <div class="flex items-center justify-center gap-6 pt-2">
+        <a
+          href="https://discord.gg/JgvVdWV7BN"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-gray-800 hover:text-gray-600 transition-colors"
+        >
+          <img
+            src={discordIcon.src}
+            alt="Discord"
+            class="inline-block size-7 align-middle"
+          />
+        </a>
+        <a
+          href="https://x.com/tezostaquito"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-gray-800 hover:text-gray-600 transition-colors"
+        >
+          <img
+            src={twitterIcon.src}
+            alt="Twitter"
+            class="inline-block size-7 align-middle"
+          />
+        </a>
+        <a
+          href="https://github.com/ecadlabs/taquito"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-gray-800 hover:text-gray-600 transition-colors"
+        >
+          <img
+            src={githubIcon.src}
+            alt="GitHub"
+            class="inline-block size-7 align-middle"
+          />
+        </a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<SearchModal currentVersion={currentVersion} />
+
+<script>
+  import lottie from "lottie-web";
+
+  const logoContainer = document.getElementById("lottie-logo");
+
+  if (logoContainer) {
+    const animation = lottie.loadAnimation({
+      container: logoContainer,
+      renderer: "svg",
+      loop: true,
+      autoplay: false,
+      path: "/Taquito_loop_logo.json",
+    });
+
+    const logoLink = logoContainer.closest(".logo");
+
+    if (logoLink) {
+      logoLink.addEventListener("mouseenter", () => {
+        animation.play();
+      });
+
+      logoLink.addEventListener("mouseleave", () => {
+        animation.stop();
+      });
+    }
+  }
+
+  // Header hide/show on scroll
+  let lastScrollY = window.scrollY;
+  let ticking = false;
+
+  const header = document.getElementById("main-header");
+
+  function updateHeader() {
+    const currentScrollY = window.scrollY;
+
+    if (currentScrollY <= 10) {
+      header?.classList.remove("-translate-y-full");
+    } else if (currentScrollY > lastScrollY) {
+      header?.classList.add("-translate-y-full");
+    } else {
+      header?.classList.remove("-translate-y-full");
+    }
+
+    lastScrollY = currentScrollY;
+    ticking = false;
+  }
+
+  function onScroll() {
+    if (!ticking) {
+      window.requestAnimationFrame(updateHeader);
+      ticking = true;
+    }
+  }
+
+  window.addEventListener("scroll", onScroll);
+
+  // Hamburger menu toggle
+  const hamburgerBtn = document.getElementById("hamburger-btn");
+  const mobileMenu = document.getElementById("mobile-menu");
+
+  if (hamburgerBtn && mobileMenu) {
+    hamburgerBtn.addEventListener("click", () => {
+      const isOpen = hamburgerBtn.getAttribute("aria-expanded") === "true";
+
+      hamburgerBtn.setAttribute("aria-expanded", isOpen ? "false" : "true");
+
+      if (isOpen) {
+        mobileMenu.style.maxHeight = "0";
+        hamburgerBtn.classList.remove("open");
+      } else {
+        mobileMenu.style.maxHeight = mobileMenu.scrollHeight + "px";
+        hamburgerBtn.classList.add("open");
+      }
+    });
+
+    window.addEventListener("resize", () => {
+      if (window.innerWidth >= 1024) {
+        mobileMenu.style.maxHeight = "0";
+        hamburgerBtn.setAttribute("aria-expanded", "false");
+        hamburgerBtn.classList.remove("open");
+      }
+    });
+  }
+
+  // Desktop version dropdown
+  const versionBtn = document.getElementById("version-dropdown-btn");
+  const versionMenu = document.getElementById("version-dropdown-menu");
+  const versionChevron = document.getElementById("version-chevron");
+
+  function closeDesktopDropdown() {
+    versionMenu?.classList.remove("opacity-100", "visible");
+    versionMenu?.classList.add("opacity-0", "invisible");
+    versionChevron?.classList.remove("rotate-180");
+    versionBtn?.setAttribute("aria-expanded", "false");
+  }
+
+  function openDesktopDropdown() {
+    versionMenu?.classList.remove("opacity-0", "invisible");
+    versionMenu?.classList.add("opacity-100", "visible");
+    versionChevron?.classList.add("rotate-180");
+    versionBtn?.setAttribute("aria-expanded", "true");
+  }
+
+  if (versionBtn && versionMenu) {
+    versionBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const isOpen = versionBtn.getAttribute("aria-expanded") === "true";
+      if (isOpen) {
+        closeDesktopDropdown();
+      } else {
+        openDesktopDropdown();
+      }
+    });
+
+    document.addEventListener("click", (e) => {
+      const container = document.getElementById("version-dropdown-container");
+      if (!container?.contains(e.target as Node)) {
+        closeDesktopDropdown();
+      }
+    });
+  }
+
+  // Mobile version dropdown
+  const mobileVersionBtn = document.getElementById("mobile-version-dropdown-btn");
+  const mobileVersionMenu = document.getElementById("mobile-version-dropdown-menu");
+  const mobileVersionChevron = document.getElementById("mobile-version-chevron");
+
+  if (mobileVersionBtn && mobileVersionMenu) {
+    mobileVersionBtn.addEventListener("click", () => {
+      const isOpen = mobileVersionBtn.getAttribute("aria-expanded") === "true";
+
+      mobileVersionBtn.setAttribute("aria-expanded", isOpen ? "false" : "true");
+
+      if (isOpen) {
+        mobileVersionMenu.style.maxHeight = "0";
+        mobileVersionChevron?.classList.remove("rotate-180");
+      } else {
+        mobileVersionMenu.style.maxHeight = mobileVersionMenu.scrollHeight + "px";
+        mobileVersionChevron?.classList.add("rotate-180");
+
+        // Recalculate mobile menu height
+        if (mobileMenu && hamburgerBtn?.getAttribute("aria-expanded") === "true") {
+          mobileMenu.style.maxHeight = mobileMenu.scrollHeight + mobileVersionMenu.scrollHeight + "px";
+        }
+      }
+    });
+  }
+
+  // Search button handlers
+  document.getElementById('desktop-search-btn')?.addEventListener('click', () => {
+    (window as any).openSearchModal?.();
+  });
+
+  document.getElementById('mobile-search-btn')?.addEventListener('click', () => {
+    (window as any).openSearchModal?.();
+    if (mobileMenu && hamburgerBtn) {
+      mobileMenu.style.maxHeight = "0";
+      hamburgerBtn.setAttribute("aria-expanded", "false");
+      hamburgerBtn.classList.remove("open");
+    }
+  });
+</script>
+
+<style>
+  #hamburger-btn.open .hamburger-line:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+  }
+
+  #hamburger-btn.open .hamburger-line:nth-child(2) {
+    opacity: 0;
+  }
+
+  #hamburger-btn.open .hamburger-line:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+  }
+</style>

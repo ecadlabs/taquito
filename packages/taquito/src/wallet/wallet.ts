@@ -1,12 +1,8 @@
 import { Context } from '../context';
-import {
-  ContractAbstraction,
-  ContractStorageType,
-  DefaultWalletType,
-  SendParams,
-} from '../contract';
-import { ContractMethod } from '../contract/contract-methods/contract-method-flat-param';
-import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
+import { ContractAbstraction } from '../contract/contract';
+import type { ContractStorageType, DefaultWalletType } from '../contract/contract';
+import { SendParams } from '../contract/contract-methods/contract-method-interface';
+import type { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
 import { OpKind, withKind } from '../operations/types';
 import { OriginationWalletOperation } from './origination-operation';
 import {
@@ -20,6 +16,7 @@ import {
   WalletUnstakeParams,
   WalletFinalizeUnstakeParams,
   WalletTransferTicketParams,
+  WalletRegisterGlobalConstantParams,
 } from './interface';
 import {
   InvalidAddressError,
@@ -28,11 +25,7 @@ import {
   InvalidStakingAddressError,
   InvalidFinalizeUnstakeAmountError,
 } from '@taquito/core';
-import {
-  validateAddress,
-  validateContractAddress,
-  ValidationResult,
-} from '@taquito/utils';
+import { validateAddress, validateContractAddress, ValidationResult } from '@taquito/utils';
 import { OperationContentsFailingNoop } from '@taquito/rpc';
 
 export interface PKHOption {
@@ -44,7 +37,8 @@ export type WalletParamsWithKind =
   | withKind<WalletOriginateParams, OpKind.ORIGINATION>
   | withKind<WalletDelegateParams, OpKind.DELEGATION>
   | withKind<WalletIncreasePaidStorageParams, OpKind.INCREASE_PAID_STORAGE>
-  | withKind<WalletTransferTicketParams, OpKind.TRANSFER_TICKET>;
+  | withKind<WalletTransferTicketParams, OpKind.TRANSFER_TICKET>
+  | withKind<WalletRegisterGlobalConstantParams, OpKind.REGISTER_GLOBAL_CONSTANT>;
 
 export class WalletOperationBatch {
   private operations: WalletParamsWithKind[] = [];
@@ -52,7 +46,7 @@ export class WalletOperationBatch {
   constructor(
     private walletProvider: WalletProvider,
     private context: Context
-  ) { }
+  ) {}
 
   /**
    * @description Add a transaction operation to the batch
@@ -72,10 +66,7 @@ export class WalletOperationBatch {
    * @param params Call a contract method
    * @param options Generic operation parameters
    */
-  withContractCall(
-    params: ContractMethod<Wallet> | ContractMethodObject<Wallet>,
-    options: Partial<SendParams> = {}
-  ) {
+  withContractCall(params: ContractMethodObject<Wallet>, options: Partial<SendParams> = {}) {
     return this.withTransfer(params.toTransferParams(options));
   }
 
@@ -129,6 +120,15 @@ export class WalletOperationBatch {
     return this;
   }
 
+  /**
+   * @description Add a RegisterGlobalConstant operation to the batch
+   * @param param RegisterGlobalConstant operation parameter
+   */
+  withRegisterGlobalConstant(params: WalletRegisterGlobalConstantParams) {
+    this.operations.push({ kind: OpKind.REGISTER_GLOBAL_CONSTANT, ...params });
+    return this;
+  }
+
   private async mapOperation(param: WalletParamsWithKind) {
     switch (param.kind) {
       case OpKind.TRANSACTION:
@@ -143,6 +143,10 @@ export class WalletOperationBatch {
         return this.walletProvider.mapDelegateParamsToWalletParams(async () => param);
       case OpKind.INCREASE_PAID_STORAGE:
         return this.walletProvider.mapIncreasePaidStorageWalletParams(async () => param);
+      case OpKind.REGISTER_GLOBAL_CONSTANT:
+        return this.walletProvider.mapRegisterGlobalConstantParamsToWalletParams(async () => param);
+      case OpKind.TRANSFER_TICKET:
+        return this.walletProvider.mapTransferTicketParamsToWalletParams(async () => param);
       default:
         throw new InvalidOperationKindError(JSON.stringify((param as any).kind));
     }
@@ -167,6 +171,12 @@ export class WalletOperationBatch {
           break;
         case OpKind.INCREASE_PAID_STORAGE:
           this.withIncreasePaidStorage(param);
+          break;
+        case OpKind.REGISTER_GLOBAL_CONSTANT:
+          this.withRegisterGlobalConstant(param);
+          break;
+        case OpKind.TRANSFER_TICKET:
+          this.withTransferTicket(param);
           break;
         default:
           throw new InvalidOperationKindError(JSON.stringify((param as any).kind));
@@ -193,7 +203,7 @@ export class WalletOperationBatch {
 }
 
 export class Wallet {
-  constructor(private context: Context) { }
+  constructor(private context: Context) {}
 
   private get walletProvider() {
     return this.context.walletProvider;
@@ -453,6 +463,21 @@ export class Wallet {
   }
 
   /**
+   * @description Register a Micheline expression in a global table of constants.
+   * @returns a RegisterGlobalConstantWalletOperation promise object when followed by .send()
+   * @param params operation parameter
+   */
+  registerGlobalConstant(params: WalletRegisterGlobalConstantParams) {
+    return this.walletCommand(async () => {
+      const mappedParams = await this.walletProvider.mapRegisterGlobalConstantParamsToWalletParams(
+        async () => params
+      );
+      const opHash = await this.walletProvider.sendOperations([mappedParams]);
+      return this.context.operationFactory.createRegisterGlobalConstantOperation(opHash);
+    });
+  }
+
+  /**
    * @description Create a batch of operation
    * @returns A batch object from which we can add more operation or send a command to the wallet to execute the batch
    * @param params List of operation to initialize the batch with
@@ -496,13 +521,5 @@ export class Wallet {
       readProvider
     );
     return contractAbstractionComposer(abs, this.context);
-  }
-
-  /**
-   * @deprecated Deprecated in favor of {@link Wallet.pk} will be removed in v19.1
-   * @description Retrieve the PK of the account that is currently in use by the wallet
-   */
-  async getPK() {
-    return await this.pk();
   }
 }

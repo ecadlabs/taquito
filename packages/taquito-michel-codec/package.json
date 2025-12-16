@@ -1,6 +1,6 @@
 {
   "name": "@taquito/michel-codec",
-  "version": "23.0.3",
+  "version": "23.1.0",
   "description": "Michelson parser/validator/formatter",
   "keywords": [
     "tezos",
@@ -24,7 +24,7 @@
   },
   "license": "Apache-2.0",
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "scripts": {
     "test": "jest --coverage",
@@ -66,12 +66,12 @@
     ]
   },
   "dependencies": {
-    "@taquito/core": "^23.0.3"
+    "@taquito/core": "^23.1.0"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.42",
     "@types/jest": "^29.5.12",
-    "@types/node": "^18",
+    "@types/node": "^20",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "eslint": "^8.57.0",

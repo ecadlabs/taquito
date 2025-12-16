@@ -3,20 +3,22 @@
  * @module @taquito/http-utils
  */
 
+import { Agent as HttpsAgent } from 'https';
+import { Agent as HttpAgent } from 'http';
+
 let fetch = globalThis?.fetch;
-let createAgent: ((url: string) => Promise<import('https').Agent | import('http').Agent>) | undefined = undefined;
+let createAgent: ((url: string) => HttpsAgent | HttpAgent) | undefined;
 // Will only use browser fetch if we are in a browser environment,
 // default to the more stable node-fetch otherwise
 const isNode = typeof process !== 'undefined' && !!process?.versions?.node;
 if (isNode) {
-  fetch = require('node-fetch');
+  // Handle both ESM and CJS default export patterns for webpack compatibility
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const nodeFetch = require('node-fetch');
+  fetch = nodeFetch.default || nodeFetch;
   if (Number(process.versions.node.split('.')[0]) >= 19) {
     // we need agent with keepalive false for node 19 and above
-    
-    createAgent = async (url: string) => {
-      const { Agent: HttpsAgent } = await import('https');
-      const { Agent: HttpAgent } = await import('http');
-
+    createAgent = (url: string) => {
       return url.startsWith('https')
         ? new HttpsAgent({ keepAlive: false })
         : new HttpAgent({ keepAlive: false });
@@ -109,7 +111,7 @@ export class HttpBackend {
         headers,
         body: JSON.stringify(data),
         signal: controller.signal,
-        ...(isNode && createAgent ? { agent: await createAgent(urlWithQuery) } : {}),
+        ...(isNode && createAgent ? { agent: createAgent(urlWithQuery) } : {}),
       });
 
       if (typeof response === 'undefined') {

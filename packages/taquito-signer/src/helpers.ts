@@ -31,7 +31,7 @@ export const generateSecretKey = (seed: Uint8Array, derivationPath: string, curv
         curve === 'secp256k1' ? PrefixV2.Secp256k1SecretKey : PrefixV2.P256SecretKey;
       let privKey = PrivateKeyEc.fromSeed(seed, curve);
       privKey = privKey.derivePath(path);
-      const uint8arr = new Uint8Array(privKey.keyPair.getPrivate().toArray());
+      const uint8arr = new Uint8Array(privKey.keyPair.secretKey.toArray());
       const sk = b58Encode(uint8arr, prefixType);
       return sk;
     }
