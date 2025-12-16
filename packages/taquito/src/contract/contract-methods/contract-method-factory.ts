@@ -7,10 +7,7 @@ import { OnChainView } from './contract-on-chain-view';
 import { TzReadProvider } from '../../read-provider/interface';
 
 export class ContractMethodFactory<T extends ContractProvider | Wallet> {
-  constructor(
-    private provider: T,
-    private contractAddress: string
-  ) {}
+  constructor(private provider: T, private contractAddress: string) {}
 
   createContractMethodObjectParam(
     smartContractMethodSchema: ParameterSchema,

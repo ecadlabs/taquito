@@ -160,7 +160,9 @@ export interface PreparationProvider {
    * @param contractMethod ContractMethodObject retrieved from smart contract
    * @returns a PreparedOperation object
    */
-  contractCall(contractMethod: ContractMethodObject<ContractProvider>): Promise<PreparedOperation>;
+  contractCall(
+    contractMethod: ContractMethodObject<ContractProvider>
+  ): Promise<PreparedOperation>;
 
   /**
    *

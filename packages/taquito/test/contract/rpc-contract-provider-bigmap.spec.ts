@@ -1,6 +1,12 @@
 import { RpcContractProvider } from '../../src/contract/rpc-contract-provider';
 import { HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
-import { sample, sampleStorage, tokenInit, tokenCode, sampleBigMapAbstractionValue } from './data';
+import {
+  sample,
+  sampleStorage,
+  tokenInit,
+  tokenCode,
+  sampleBigMapAbstractionValue,
+} from './data';
 import BigNumber from 'bignumber.js';
 import { Context } from '../../src/context';
 import { Schema } from '@taquito/michelson-encoder';

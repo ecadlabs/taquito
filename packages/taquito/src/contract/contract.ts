@@ -5,7 +5,11 @@ import {
   RpcClientInterface,
   ScriptResponse,
 } from '@taquito/rpc';
-import { validateChain, validateContractAddress, ValidationResult } from '@taquito/utils';
+import {
+  validateChain,
+  validateContractAddress,
+  ValidationResult,
+} from '@taquito/utils';
 import { ChainIds } from '../constants';
 import { TzReadProvider } from '../read-provider/interface';
 import type { Wallet } from '../wallet/wallet';
@@ -31,7 +35,7 @@ export class ContractView {
     private args: any[],
     private rpc: RpcClientInterface,
     private readProvider: TzReadProvider
-  ) {}
+  ) { }
 
   async read(chainId?: ChainIds) {
     const chainIdValidation = validateChain(chainId ?? '');
@@ -204,10 +208,9 @@ export class ContractAbstraction<
       // Deal with methods with no annotations which were not discovered by the RPC endpoint
       // Methods with no annotations are discovered using parameter schema
       const generatedSchema = parameterSchema.generateSchema();
-      const schemaKeys =
-        generatedSchema.schema && typeof generatedSchema.schema === 'object'
-          ? Object.keys(generatedSchema.schema)
-          : [];
+      const schemaKeys = generatedSchema.schema && typeof generatedSchema.schema === 'object'
+        ? Object.keys(generatedSchema.schema)
+        : [];
       const anonymousMethods = schemaKeys.filter(
         (key) => Object.keys(entrypoints).indexOf(key) === -1
       );

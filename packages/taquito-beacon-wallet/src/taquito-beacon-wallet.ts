@@ -212,9 +212,7 @@ export class BeaconWallet implements WalletProvider {
     );
   }
 
-  async mapRegisterGlobalConstantParamsToWalletParams(
-    params: () => Promise<WalletRegisterGlobalConstantParams>
-  ) {
+  async mapRegisterGlobalConstantParamsToWalletParams(params: () => Promise<WalletRegisterGlobalConstantParams>) {
     let walletParams: WalletRegisterGlobalConstantParams;
     await this.client.showPrepare();
     try {

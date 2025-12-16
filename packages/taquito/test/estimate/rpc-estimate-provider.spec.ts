@@ -1127,9 +1127,7 @@ describe('RPCEstimateProvider test signer', () => {
             },
           },
         },
-        sigs: [
-          'sigb1FKPeiRgPApxqBMpyBSMpwgnbzhaMcqQcTVwMz82MSzNLBrmRUuVZVgWTBFGcoWQcjTyhfJaxjFtfvB6GGHkfwpxBkFd',
-        ],
+        sigs: ['sigb1FKPeiRgPApxqBMpyBSMpwgnbzhaMcqQcTVwMz82MSzNLBrmRUuVZVgWTBFGcoWQcjTyhfJaxjFtfvB6GGHkfwpxBkFd'],
       });
 
       const estimate = await estimateProvider.contractCall(contractMethod);
