@@ -76,8 +76,8 @@ jobs:
             rpc_url: https://rpc.seoulnet.teztnets.com/
     steps:
       - uses: actions/checkout@v4
-      - name: Fetch base branch
-        run: git fetch origin ${{ github.base_ref || 'master' }}:${{ github.base_ref || 'master' }}
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: lts/Iron
