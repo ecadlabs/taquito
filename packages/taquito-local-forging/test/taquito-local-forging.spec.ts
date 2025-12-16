@@ -6,7 +6,7 @@ import {
   ProtocolsHash,
   Uint8ArrayConsumer,
 } from '../src/taquito-local-forging';
-import { commonCases } from '../../../integration-tests/data/allTestsCases';
+import { commonCases, tallinnCases } from '../../../integration-tests/data/allTestsCases';
 import { InvalidOperationSchemaError, UnsupportedOperationError } from '../src/errors';
 import {
   InvalidBlockHashError,
@@ -18,6 +18,12 @@ import { ProtoInferiorTo } from '../src/protocols';
 
 describe('Forge and parse operations default protocol', () => {
   const localForger = new LocalForger();
+  tallinnCases.forEach(({ name, operation }) => {
+    it(`Tallinn test: ${name}`, async () => {
+      const result = await localForger.forge(operation);
+      expect(await localForger.parse(result)).toEqual(operation);
+    });
+  });
   commonCases.forEach(({ name, operation, expected }) => {
     it(`Common test: ${name}`, async () => {
       if (
