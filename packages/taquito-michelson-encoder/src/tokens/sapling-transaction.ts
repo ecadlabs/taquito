@@ -7,11 +7,7 @@ import { SemanticEncoding, Token, TokenFactory, TokenValidationError } from './t
  */
 export class SaplingTransactionValidationError extends TokenValidationError {
   name = 'SaplingTransactionValidationError';
-  constructor(
-    public value: any,
-    public token: SaplingTransactionToken,
-    message: string
-  ) {
+  constructor(public value: any, public token: SaplingTransactionToken, message: string) {
     super(value, token, message);
   }
 }

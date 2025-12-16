@@ -65,7 +65,7 @@ export abstract class Token {
     protected idx: number,
     protected fac: TokenFactory,
     protected parentTokenType?: 'Or' | 'Pair' | 'Other'
-  ) {}
+  ) { }
 
   protected typeWithoutAnnotations() {
     const handleMichelsonExpression = (val: MichelsonV1Expression): MichelsonV1Expression => {

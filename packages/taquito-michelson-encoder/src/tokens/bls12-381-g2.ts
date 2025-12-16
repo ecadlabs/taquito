@@ -7,11 +7,7 @@ import { SemanticEncoding, Token, TokenFactory, TokenValidationError } from './t
  */
 export class Bls12381g2ValidationError extends TokenValidationError {
   name = 'Bls12381g2ValidationError';
-  constructor(
-    public value: any,
-    public token: Bls12381g2Token,
-    message: string
-  ) {
+  constructor(public value: any, public token: Bls12381g2Token, message: string) {
     super(value, token, message);
   }
 }

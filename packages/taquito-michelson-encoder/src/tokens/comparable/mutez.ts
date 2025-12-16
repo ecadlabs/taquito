@@ -14,11 +14,7 @@ import { BaseTokenSchema } from '../../schema/types';
  */
 export class MutezValidationError extends TokenValidationError {
   name = 'MutezValidationError';
-  constructor(
-    public value: any,
-    public token: MutezToken,
-    message: string
-  ) {
+  constructor(public value: any, public token: MutezToken, message: string) {
     super(value, token, message);
   }
 }

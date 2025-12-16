@@ -1,24 +1,20 @@
 import { createToken } from '../../src/tokens/createToken';
 import { PairToken } from '../../src/tokens/pair';
-import { NeverToken, NeverTokenError } from '../../src/tokens/never';
+import { NeverToken, NeverTokenError } from '../../src/tokens/never'
 import { OptionToken } from '../../src/tokens/option';
 import { ParameterSchema } from '../../src/taquito-michelson-encoder';
 
 describe('Never token', () => {
-  let tokenNever: NeverToken;
+
+  let tokenNever: NeverToken
   let tokenNeverOption: OptionToken;
   let tokenNeverPair: PairToken;
 
+
   beforeEach(() => {
-    tokenNever = createToken({ prim: 'never' }, 0) as NeverToken;
-    tokenNeverOption = createToken(
-      { prim: 'option', args: [{ prim: 'never' }], annots: ['%setApprover'] },
-      0
-    ) as OptionToken;
-    tokenNeverPair = createToken(
-      { prim: 'pair', args: [{ prim: 'nat' }, { prim: 'never' }] },
-      0
-    ) as PairToken;
+    tokenNever = createToken({ "prim": "never" }, 0) as NeverToken;
+    tokenNeverOption = createToken({ "prim": "option", "args": [{ "prim": "never" }], "annots": ["%setApprover"] }, 0) as OptionToken;
+    tokenNeverPair = createToken({ "prim": "pair", "args": [{ "prim": "nat" }, { "prim": "never" }] }, 0) as PairToken;
   });
 
   describe('EncodeObject', () => {
@@ -75,4 +71,5 @@ describe('Never token', () => {
       });
     });
   });
+
 });

@@ -79,7 +79,7 @@ describe('Bls12-381-g1 token', () => {
     it('test schema', () => {
       expect(token.generateSchema()).toEqual({
         __michelsonType: 'bls12_381_g1',
-        schema: 'bls12_381_g1',
+        schema: 'bls12_381_g1'
       });
     });
   });

@@ -14,11 +14,7 @@ import {
  */
 export class SetValidationError extends TokenValidationError {
   name = 'SetValidationError';
-  constructor(
-    public value: any,
-    public token: SetToken,
-    message: string
-  ) {
+  constructor(public value: any, public token: SetToken, message: string) {
     super(value, token, message);
   }
 }

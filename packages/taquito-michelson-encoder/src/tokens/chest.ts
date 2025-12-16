@@ -7,11 +7,7 @@ import { SemanticEncoding, Token, TokenFactory, TokenValidationError } from './t
  */
 export class ChestValidationError extends TokenValidationError {
   name = 'ChestValidationError';
-  constructor(
-    public value: any,
-    public token: ChestToken,
-    message: string
-  ) {
+  constructor(public value: any, public token: ChestToken, message: string) {
     super(value, token, message);
   }
 }
@@ -67,7 +63,7 @@ export class ChestToken extends Token {
   Execute(val: any): string {
     return val.bytes;
   }
-
+  
   generateSchema(): BaseTokenSchema {
     return {
       __michelsonType: ChestToken.prim,

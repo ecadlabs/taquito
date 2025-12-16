@@ -14,11 +14,7 @@ import { stripHexPrefix } from '@taquito/utils';
  */
 export class BytesValidationError extends TokenValidationError {
   name = 'BytesValidationError';
-  constructor(
-    public value: any,
-    public token: BytesToken,
-    message: string
-  ) {
+  constructor(public value: any, public token: BytesToken, message: string) {
     super(value, token, message);
   }
 }

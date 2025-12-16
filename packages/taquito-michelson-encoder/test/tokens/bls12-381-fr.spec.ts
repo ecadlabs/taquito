@@ -74,7 +74,7 @@ describe('Bls12-381-fr token', () => {
     it('test schema', () => {
       expect(token.generateSchema()).toEqual({
         __michelsonType: 'bls12_381_fr',
-        schema: 'bls12_381_fr',
+        schema: 'bls12_381_fr'
       });
     });
   });

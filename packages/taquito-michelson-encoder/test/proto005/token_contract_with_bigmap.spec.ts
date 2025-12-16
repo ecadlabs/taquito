@@ -19,45 +19,45 @@ describe('Token contract with big map', () => {
           schema: {
             key: {
               __michelsonType: 'address',
-              schema: 'address',
+              schema: 'address'
             },
             value: {
               __michelsonType: 'pair',
               schema: {
                 '0': {
                   __michelsonType: 'nat',
-                  schema: 'nat',
+                  schema: 'nat'
                 },
                 '1': {
                   __michelsonType: 'map',
                   schema: {
                     key: {
                       __michelsonType: 'address',
-                      schema: 'address',
+                      schema: 'address'
                     },
                     value: {
                       __michelsonType: 'nat',
-                      schema: 'nat',
+                      schema: 'nat'
                     },
                   },
                 },
-              },
+              }
             },
           },
         },
         '1': {
           __michelsonType: 'address',
-          schema: 'address',
+          schema: 'address'
         },
         '2': {
           __michelsonType: 'bool',
-          schema: 'bool',
+          schema: 'bool'
         },
         '3': {
           __michelsonType: 'nat',
-          schema: 'nat',
+          schema: 'nat'
         },
-      },
+      }
     });
   });
 

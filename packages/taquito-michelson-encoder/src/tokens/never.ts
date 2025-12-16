@@ -7,11 +7,7 @@ import { SemanticEncoding, Token, TokenFactory, TokenValidationError } from './t
  */
 export class NeverTokenError extends TokenValidationError {
   name = 'NeverTokenError';
-  constructor(
-    public value: any,
-    public token: NeverToken,
-    message: string
-  ) {
+  constructor(public value: any, public token: NeverToken, message: string) {
     super(value, token, message);
   }
 }

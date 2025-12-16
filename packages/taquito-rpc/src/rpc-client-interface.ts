@@ -137,14 +137,8 @@ export interface RpcClientInterface {
   getAllTicketBalances(contract: string, options?: RPCOptions): Promise<AllTicketBalances>;
   getAdaptiveIssuanceLaunchCycle(options?: RPCOptions): Promise<AILaunchCycleResponse>;
   getPendingOperations(args: PendingOperationsQueryArguments): Promise<PendingOperationsV2>;
-  getActiveStakingParameters(
-    delegate: string,
-    options?: RPCOptions
-  ): Promise<ActiveStakingParametersResponse>;
-  getPendingStakingParameters(
-    delegate: string,
-    options?: RPCOptions
-  ): Promise<PendingStakingParametersResponse>;
+  getActiveStakingParameters(delegate: string, options?: RPCOptions): Promise<ActiveStakingParametersResponse>;
+  getPendingStakingParameters(delegate: string, options?: RPCOptions): Promise<PendingStakingParametersResponse>;
 }
 
 export enum RPCMethodName {

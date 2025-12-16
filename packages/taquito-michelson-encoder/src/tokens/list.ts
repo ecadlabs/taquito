@@ -7,11 +7,7 @@ import { Token, TokenFactory, Semantic, TokenValidationError, SemanticEncoding }
  */
 export class ListValidationError extends TokenValidationError {
   name = 'ListValidationError';
-  constructor(
-    public value: any,
-    public token: ListToken,
-    message: string
-  ) {
+  constructor(public value: any, public token: ListToken, message: string) {
     super(value, token, message);
   }
 }

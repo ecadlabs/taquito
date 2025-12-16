@@ -14,11 +14,7 @@ import { BaseTokenSchema } from '../../schema/types';
  */
 export class IntValidationError extends TokenValidationError {
   name = 'IntValidationError';
-  constructor(
-    public value: any,
-    public token: IntToken,
-    message: string
-  ) {
+  constructor(public value: any, public token: IntToken, message: string) {
     super(value, token, message);
   }
 }

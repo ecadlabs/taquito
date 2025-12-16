@@ -2888,7 +2888,7 @@ export interface SmartRollupTimeoutStakers {
 
 export interface ActiveStakingParametersResponse {
   limit_of_staking_over_baking_millionth: number;
-  edge_of_baking_over_staking_billionth: number;
+	edge_of_baking_over_staking_billionth: number;
 }
 
 export type PendingStakingParametersResponse = Array<{

@@ -21,16 +21,17 @@ describe('List token type structure', () => {
       schema: {
         __michelsonType: 'pair',
         schema: {
-          from: {
-            __michelsonType: 'address',
-            schema: 'address',
+          "from": {
+            __michelsonType: "address",
+            schema: "address"
           },
-          to: {
-            __michelsonType: 'address',
-            schema: 'address',
-          },
-        },
-      },
+          "to": {
+            __michelsonType: "address",
+            schema: "address"
+          }
+        }
+      }
     });
+
   });
 });

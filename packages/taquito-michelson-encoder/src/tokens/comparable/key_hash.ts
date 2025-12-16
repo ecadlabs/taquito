@@ -5,13 +5,7 @@ import {
   TokenValidationError,
   SemanticEncoding,
 } from '../token';
-import {
-  b58DecodePublicKeyHash,
-  compareArrays,
-  encodeKeyHash,
-  validateKeyHash,
-  ValidationResult,
-} from '@taquito/utils';
+import { b58DecodePublicKeyHash, compareArrays, encodeKeyHash, validateKeyHash, ValidationResult } from '@taquito/utils';
 import { BaseTokenSchema } from '../../schema/types';
 
 /**
@@ -20,11 +14,7 @@ import { BaseTokenSchema } from '../../schema/types';
  */
 export class KeyHashValidationError extends TokenValidationError {
   name = 'KeyHashValidationError';
-  constructor(
-    public value: any,
-    public token: KeyHashToken,
-    message: string
-  ) {
+  constructor(public value: any, public token: KeyHashToken, message: string) {
     super(value, token, message);
   }
 }

@@ -74,7 +74,7 @@ export class TicketDeprecatedToken extends Token {
       amount: amount.Execute(val.args[2], semantics),
     };
   }
-
+  
   generateSchema(): TicketDeprecatedTokenSchema {
     return {
       __michelsonType: TicketDeprecatedToken.prim,

@@ -15,11 +15,7 @@ import {
  */
 export class MapValidationError extends TokenValidationError {
   name = 'MapValidationError';
-  constructor(
-    public value: any,
-    public token: MapToken,
-    message: string
-  ) {
+  constructor(public value: any, public token: MapToken, message: string) {
     super(value, token, message);
   }
 }

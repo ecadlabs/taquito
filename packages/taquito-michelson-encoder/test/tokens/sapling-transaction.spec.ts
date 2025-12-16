@@ -95,7 +95,7 @@ describe('Sapling Transaction token', () => {
       expect(token.generateSchema()).toEqual({
         __michelsonType: 'sapling_transaction',
         schema: {
-          memoSize: '8',
+          memoSize: '8'
         },
       });
     });

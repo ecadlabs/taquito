@@ -78,24 +78,10 @@ describe('Schema test', () => {
     );
     expect(schema.isMultipleEntryPoint).toBeTruthy();
 
-    expect(schema.ExtractSignatures()).toContainEqual([
-      'transfer',
-      {
-        __michelsonType: 'list',
-        schema: {
-          __michelsonType: 'pair',
-          schema: {
-            amount: { __michelsonType: 'mutez', schema: 'mutez' },
-            beneficiary: {
-              __michelsonType: 'contract',
-              schema: { parameter: { __michelsonType: 'unit', schema: 'unit' } },
-            },
-          },
-        },
-      },
-      { __michelsonType: 'key_hash', schema: 'key_hash' },
-      { __michelsonType: 'key', schema: 'key' },
-      { __michelsonType: 'signature', schema: 'signature' },
-    ]);
+    expect(schema.ExtractSignatures()).toContainEqual(["transfer",
+        {__michelsonType: 'list', schema: {__michelsonType: 'pair', schema: {"amount": {__michelsonType: 'mutez', schema: 'mutez'}, "beneficiary": {__michelsonType: 'contract', schema: {parameter: {__michelsonType: 'unit', schema: 'unit'}}}}}},
+        {__michelsonType: 'key_hash', schema: 'key_hash'},
+        {__michelsonType: 'key', schema: 'key'},
+        {__michelsonType: 'signature', schema: 'signature'}]);
   });
 });

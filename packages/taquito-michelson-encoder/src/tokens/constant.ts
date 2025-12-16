@@ -7,11 +7,7 @@ import { Semantic, SemanticEncoding, Token, TokenFactory, TokenValidationError }
  */
 export class GlobalConstantEncodingError extends TokenValidationError {
   name = 'GlobalConstantEncodingError';
-  constructor(
-    public value: any,
-    public token: GlobalConstantToken,
-    message: string
-  ) {
+  constructor(public value: any, public token: GlobalConstantToken, message: string) {
     super(value, token, message);
   }
 }
@@ -22,11 +18,7 @@ export class GlobalConstantEncodingError extends TokenValidationError {
  */
 export class GlobalConstantDecodingError extends TokenValidationError {
   name = 'GlobalConstantDecodingError';
-  constructor(
-    public value: any,
-    public token: GlobalConstantToken,
-    message: string
-  ) {
+  constructor(public value: any, public token: GlobalConstantToken, message: string) {
     super(value, token, message);
   }
 }

@@ -7,11 +7,7 @@ import { SemanticEncoding, Token, TokenFactory, TokenValidationError } from './t
  */
 export class ChestKeyValidationError extends TokenValidationError {
   name = 'ChestKeyValidationError';
-  constructor(
-    public value: any,
-    public token: ChestKeyToken,
-    message: string
-  ) {
+  constructor(public value: any, public token: ChestKeyToken, message: string) {
     super(value, token, message);
   }
 }
