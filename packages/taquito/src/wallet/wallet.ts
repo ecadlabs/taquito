@@ -544,7 +544,7 @@ export class Wallet {
    * @returns a createRevealOperation promise object when followed by .send()
    * @param params operation parameter
    */
-  reveal(params: WalletRevealParams) {
+  reveal(params: WalletRevealParams = {}) {
     return this.walletCommand(async () => {
       const mappedParams = await this.walletProvider.mapRevealParamsToWalletParams(
         async () => params
