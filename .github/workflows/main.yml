@@ -76,13 +76,12 @@ jobs:
             rpc_url: https://rpc.seoulnet.teztnets.com/
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
       - uses: actions/setup-node@v4
         with:
           node-version: lts/Iron
-      - run: |
-          git fetch --no-tags --prune --depth=1 origin +refs/heads/*:refs/remotes/origin/*
-          git checkout -b ${{ github.base_ref || 'master' }}
-          git checkout ${{ github.event.pull_request.head.sha }}
       - run: npm ci
       - run: npm run build
       - if: ${{ !github.event.pull_request.head.repo.fork }}
@@ -92,7 +91,7 @@ jobs:
           authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
           version: 1.32.2
       - id: run-tests
-        run: npm -w integration-tests run test:${{ matrix.testnet }} -- --maxWorkers=4 --changedSince=${{ github.base_ref || 'master' }}
+        run: npm -w integration-tests run test:${{ matrix.testnet }} -- --maxWorkers=4 --changedSince=origin/${{ github.base_ref || 'master' }}
         env:
           # Ternary operator workaround
           TEZOS_RPC_${{ matrix.testnet_uppercase }}: ${{ github.event.pull_request.head.repo.fork && matrix.rpc_url || null }}
