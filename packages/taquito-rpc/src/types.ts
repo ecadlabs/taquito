@@ -148,7 +148,7 @@ export type PendingConsensusKey = {
 
 export type ConsensusPower = {
   slots: number;
-  baking_power?: number;
+  baking_power: number;
 };
 
 export type VotingInfoResponse = {
