@@ -205,8 +205,6 @@ if (process.env['RUN_WITH_SECRET_KEY']) {
   providers.push(seoulnetSecretKey);
 } else if (process.env['RUN_WEEKLYNET_WITH_SECRET_KEY']) {
   providers.push(weeklynetSecretKey);
-} else if (process.env['RUN_TALLINNNET_WITH_SECRET_KEY']) {
-  providers.push(tallinnnetSecretKey);
 } else if (process.env['GHOSTNET']) {
   providers.push(ghostnetEphemeral);
 } else if (process.env['SHADOWNET']) {
@@ -215,8 +213,6 @@ if (process.env['RUN_WITH_SECRET_KEY']) {
   providers.push(tallinnnetEphemeral);
 } else if (process.env['SEOULNET']) {
   providers.push(seoulnetEphemeral);
-} else if (process.env['TALLINNNET']) {
-  providers.push(tallinnnetEphemeral)
 } else {
   providers.push(ghostnetEphemeral, shadownetEphemeral, seoulnetEphemeral, tallinnnetEphemeral);
 }
