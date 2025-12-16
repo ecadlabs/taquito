@@ -1,6 +1,6 @@
 {
   "name": "@taquito/rpc",
-  "version": "23.0.3",
+  "version": "23.1.0",
   "description": "Provides low level methods, and types to invoke RPC calls from a Nomadic Tezos RPC node",
   "keywords": [
     "tezos",
@@ -24,7 +24,7 @@
   },
   "license": "Apache-2.0",
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "scripts": {
     "test": "jest --coverage",
@@ -66,9 +66,9 @@
     ]
   },
   "dependencies": {
-    "@taquito/core": "^23.0.3",
-    "@taquito/http-utils": "^23.0.3",
-    "@taquito/utils": "^23.0.3",
+    "@taquito/core": "^23.1.0",
+    "@taquito/http-utils": "^23.1.0",
+    "@taquito/utils": "^23.1.0",
     "bignumber.js": "^9.1.2"
   },
   "devDependencies": {
@@ -91,6 +91,7 @@
     "rimraf": "^6.0.1",
     "rollup": "^4.22.4",
     "rollup-plugin-json": "^4.0.0",
+    "rollup-plugin-polyfill-node": "^0.13.0",
     "rollup-plugin-typescript2": "^0.36.0",
     "shelljs": "^0.8.5",
     "ts-jest": "^29.2.3",

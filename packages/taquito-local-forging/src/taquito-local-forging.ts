@@ -12,16 +12,13 @@ if (typeof globalThis.TextDecoder === 'undefined') {
 }
 import { ForgeParams, Forger } from './interface';
 import { CODEC } from './constants';
-import { CODEC as CODECPROTO022 } from './constants-proto022';
 import { decoders } from './decoder';
-import { decoders as decodersProto022 } from './decoder-proto022';
 import { encoders } from './encoder';
-import { encoders as encodersProto022 } from './encoder-proto022';
 import { Uint8ArrayConsumer } from './uint8array-consumer';
 import { validateBlock, ValidationResult } from '@taquito/utils';
 import { InvalidOperationSchemaError } from './errors';
 import { validateMissingProperty, validateOperationKind } from './validator';
-import { ProtocolsHash, ProtoInferiorTo } from './protocols';
+import { ProtocolsHash } from './protocols';
 import { InvalidBlockHashError, InvalidOperationKindError } from '@taquito/core';
 
 export { CODEC, opMapping, opMappingReverse } from './constants';
@@ -32,35 +29,16 @@ export * from './interface';
 export { VERSION } from './version';
 export { ProtocolsHash } from './protocols';
 
-const PROTOCOL_CURRENT = ProtocolsHash.PtSeouLou;
+const PROTOCOL_CURRENT = ProtocolsHash.PtTALLiNt;
 
-export function getCodec(codec: CODEC | CODECPROTO022, _proto: ProtocolsHash) {
-  // use encodersProto022 & decodersProto022 if it's rio or prior
-  if (_proto === ProtocolsHash.PsRiotuma || ProtoInferiorTo(_proto, ProtocolsHash.PsRiotuma)) {
-    return {
-      encoder: encodersProto022[codec],
-      decoder: (hex: string) => {
-        const consumer = Uint8ArrayConsumer.fromHexString(hex);
-        return decodersProto022[codec](consumer) as any;
-      },
-    };
-  } else {
-    return {
-      encoder: encoders[codec],
-      decoder: (hex: string) => {
-        const consumer = Uint8ArrayConsumer.fromHexString(hex);
-        return decoders[codec](consumer) as any;
-      },
-    };
-  }
-  // TODO: Remove above if else once mainnet migrated into rio protocol and uncommon the return block below
-  // return {
-  //   encoder: encoders[codec],
-  //   decoder: (hex: string) => {
-  //     const consumer = Uint8ArrayConsumer.fromHexString(hex);
-  //     return decoders[codec](consumer) as any;
-  //   },
-  // };
+export function getCodec(codec: CODEC, _proto: ProtocolsHash) {
+  return {
+    encoder: encoders[codec],
+    decoder: (hex: string) => {
+      const consumer = Uint8ArrayConsumer.fromHexString(hex);
+      return decoders[codec](consumer) as any;
+    },
+  };
 }
 
 export class LocalForger implements Forger {

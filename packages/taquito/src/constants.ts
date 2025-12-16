@@ -1,33 +1,3 @@
-/**
- * @deprecated default reveal gasLimit please use getRevealGasLimit(address) instead, removing hardcoded gasLimit of delegation, origination and transfer
- */
-export const DEFAULT_GAS_LIMIT = {
-  DELEGATION: 10600,
-  ORIGINATION: 10600,
-  TRANSFER: 10600,
-  REVEAL_TZ1: 1000,
-  REVEAL_TZ2: 1000,
-  REVEAL_TZ3: 2000,
-  REVEAL_TZ4: 2000,
-};
-/**
- * @deprecated default reveal fee please use getRevealFee(address) instead, removing hardcoded fee of delegation, origination and transfer
- */
-export const DEFAULT_FEE = {
-  DELEGATION: 1257,
-  ORIGINATION: 10000,
-  TRANSFER: 10000,
-  REVEAL: 374,
-};
-/**
- * @deprecated default reveal storageLimit please use REVEAL_STORAGE_LIMIT instead, removing hardcoded storageLimit of delegation, origination and transfer
- */
-export const DEFAULT_STORAGE_LIMIT = {
-  DELEGATION: 0,
-  ORIGINATION: 257,
-  TRANSFER: 257,
-  REVEAL: 0,
-};
 // value is based on octez-client reveal operation gasLimit of each address type in Seoul Protocol
 const REVEAL_GAS_LIMIT = {
   TZ1: 171,
@@ -73,6 +43,7 @@ export enum Protocols {
   PsQuebecn = 'PsQuebecnLByd3JwTiGadoG4nGWi3HYiLXUjkibeFV8dCFeVMUg',
   PsRiotuma = 'PsRiotumaAMotcRoDWW1bysEhQy2n1M5fy8JgRp8jjRfHGmfeA7',
   PtSeouLou = 'PtSeouLouXkxhg39oWzjxDWaCydNfR3RxCUrNe4Q9Ro8BTehcbh',
+  PtTALLiNt = 'PtTALLiNtPec7mE7yY4m3k26J8Qukef3E3ehzhfXgFZKGtDdAXu',
   ProtoALpha = 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK',
 }
 
@@ -96,7 +67,8 @@ export const protocols = {
   '021': [Protocols.PsQuebecn],
   '022': [Protocols.PsRiotuma],
   '023': [Protocols.PtSeouLou],
-  '024': [Protocols.ProtoALpha],
+  '024': [Protocols.PtTALLiNt],
+  '025': [Protocols.ProtoALpha],
 };
 
 export enum ChainIds {
@@ -122,6 +94,7 @@ export enum ChainIds {
   QUEBECNET = 'NetXuTeGinLEqxp',
   RIONET = 'NetXPdgaoabtBth',
   SEOULNET = 'NetXd56aBs1aeW3',
+  TALLINNNET = 'NetXe8DbhW9A1eS',
 }
 
 export const getRevealGasLimit = (address: string) =>

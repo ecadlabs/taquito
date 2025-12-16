@@ -1,6 +1,6 @@
 {
   "name": "@taquito/signer",
-  "version": "23.0.3",
+  "version": "23.1.0",
   "description": "Provide signing functionality to be with taquito",
   "keywords": [
     "tezos",
@@ -24,7 +24,7 @@
   },
   "license": "Apache-2.0",
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "scripts": {
     "test": "jest --coverage",
@@ -66,25 +66,22 @@
     ]
   },
   "dependencies": {
-    "@noble/curves": "^1.9.6",
+    "@noble/curves": "^1.9.7",
     "@stablelib/blake2b": "^1.0.1",
     "@stablelib/ed25519": "^1.0.3",
     "@stablelib/hmac": "^1.0.1",
     "@stablelib/nacl": "^1.0.4",
     "@stablelib/pbkdf2": "^1.0.1",
     "@stablelib/sha512": "^1.0.1",
-    "@taquito/core": "^23.0.3",
-    "@taquito/taquito": "^23.0.3",
-    "@taquito/utils": "^23.0.3",
+    "@taquito/core": "^23.1.0",
+    "@taquito/utils": "^23.1.0",
     "@types/bn.js": "^5.1.5",
     "bip39": "3.1.0",
-    "elliptic": "^6.6.1",
     "pbkdf2": "^3.1.2",
     "typedarray-to-buffer": "^4.0.0"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.42",
-    "@types/elliptic": "^6.4.18",
     "@types/jest": "^29.5.12",
     "@types/node": "^20",
     "@types/pbkdf2": "^3.1.2",
@@ -104,6 +101,7 @@
     "rimraf": "^6.0.1",
     "rollup": "^4.22.4",
     "rollup-plugin-json": "^4.0.0",
+    "rollup-plugin-polyfill-node": "^0.13.0",
     "rollup-plugin-typescript2": "^0.36.0",
     "shelljs": "^0.8.5",
     "ts-jest": "^29.2.3",

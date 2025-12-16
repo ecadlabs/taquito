@@ -39,7 +39,7 @@ import {
   payloadLength as sigSize,
 } from '@taquito/utils';
 import { RevealEstimateError } from './errors';
-import { ContractMethod, ContractMethodObject, ContractProvider } from '../contract';
+import { ContractMethodObject, ContractProvider } from '../contract';
 import { Provider } from '../provider';
 import { PrepareProvider } from '../prepare/prepare-provider';
 import { PreparedOperation } from '../prepare';
@@ -71,10 +71,10 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
     return {
       publicKeyHash: isSignerConfigured
         ? await this.signer.publicKeyHash()
-        : await this.context.walletProvider.getPKH(),
+        : await this.context.wallet.pkh(),
       publicKey: isSignerConfigured
         ? await this.signer.publicKey()
-        : await this.context.walletProvider.getPK(),
+        : await this.context.wallet.pk(),
     };
   }
 
@@ -433,7 +433,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
    * @param Estimate
    */
   async setDelegate({ fee, gasLimit, storageLimit, ...rest }: DelegateParams) {
-    const sourceValidation = validateAddress(rest.source);
+    const sourceValidation = validateAddress(rest.source ?? '');
     if (rest.source && sourceValidation !== ValidationResult.VALID) {
       throw new InvalidAddressError(rest.source, sourceValidation);
     }
@@ -598,7 +598,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
    * @param params increasePaidStorage operation parameters
    */
   async increasePaidStorage({ fee, storageLimit, gasLimit, ...rest }: IncreasePaidStorageParams) {
-    if (rest.amount < 0) {
+    if (rest.amount <= 0) {
       throw new InvalidAmountError(rest.amount.toString());
     }
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
@@ -766,9 +766,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
    *
    * @param Estimate
    */
-  async contractCall(
-    contractMethod: ContractMethod<ContractProvider> | ContractMethodObject<ContractProvider>
-  ) {
+  async contractCall(contractMethod: ContractMethodObject<ContractProvider>) {
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
     const preparedOperation = await this.prepare.contractCall(contractMethod);
 

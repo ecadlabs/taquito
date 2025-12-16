@@ -1,6 +1,6 @@
 {
   "name": "@taquito/beacon-wallet",
-  "version": "23.0.3",
+  "version": "23.1.0",
   "description": "Beacon wallet provider",
   "keywords": [
     "tezos",
@@ -24,7 +24,7 @@
   },
   "license": "Apache-2.0",
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "scripts": {
     "test": "jest --coverage",
@@ -100,9 +100,9 @@
     ]
   },
   "dependencies": {
-    "@airgap/beacon-dapp": "^4.6.2",
-    "@taquito/core": "^23.0.3",
-    "@taquito/taquito": "^23.0.3",
+    "@airgap/beacon-dapp": "^4.6.4",
+    "@taquito/core": "^23.1.0",
+    "@taquito/taquito": "^23.1.0",
     "crypto-browserify": "^3.12.1",
     "util": "^0.12.5"
   },
@@ -129,6 +129,7 @@
     "rimraf": "^6.0.1",
     "rollup": "^4.22.4",
     "rollup-plugin-json": "^4.0.0",
+    "rollup-plugin-polyfill-node": "^0.13.0",
     "rollup-plugin-typescript2": "^0.36.0",
     "shelljs": "^0.8.5",
     "ts-jest": "^29.2.3",

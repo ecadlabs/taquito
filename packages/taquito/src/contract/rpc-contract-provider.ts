@@ -129,41 +129,6 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
 
   /**
    *
-   * @description Return a well formatted json object of the contract big map storage
-   *
-   * @param contract contract address you want to get the storage from
-   * @param key contract big map key to fetch value from
-   * @param schema optional schema can either be the contract script rpc response or a michelson-encoder schema
-   * @throws {@link InvalidContractAddressError}
-   * @deprecated Deprecated in favor of getBigMapKeyByID
-   *
-   * @see https://tezos.gitlab.io/api/rpc.html#post-block-id-context-contracts-contract-id-big-map-get
-   */
-  async getBigMapKey<T>(contract: string, key: string, schema?: ContractSchema): Promise<T> {
-    const contractValidation = validateContractAddress(contract);
-    if (contractValidation !== ValidationResult.VALID) {
-      throw new InvalidContractAddressError(contract, contractValidation);
-    }
-    if (!schema) {
-      schema = (await this.rpc.getContract(contract)).script;
-    }
-
-    let contractSchema: Schema;
-    if (Schema.isSchema(schema as Schema)) {
-      contractSchema = schema as Schema;
-    } else {
-      contractSchema = Schema.fromRPCResponse({ script: schema as ScriptResponse });
-    }
-
-    const encodedKey = contractSchema.EncodeBigMapKey(key);
-
-    const val = await this.rpc.getBigMapKey(contract, encodedKey);
-
-    return contractSchema.ExecuteOnBigMapValue(val) as T; // Cast into T because only the caller can know the true type of the storage
-  }
-
-  /**
-   *
    * @description Return a well formatted json object of a big map value
    *
    * @param id Big Map ID
@@ -186,13 +151,13 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
 
     const bigMapValue = block
       ? await this.context.readProvider.getBigMapValue(
-        { id: id.toString(), expr: encodedExpr },
-        block
-      )
+          { id: id.toString(), expr: encodedExpr },
+          block
+        )
       : await this.context.readProvider.getBigMapValue(
-        { id: id.toString(), expr: encodedExpr },
-        'head'
-      );
+          { id: id.toString(), expr: encodedExpr },
+          'head'
+        );
 
     return schema.ExecuteOnBigMapValue(bigMapValue, smartContractAbstractionSemantic(this)) as T;
   }
@@ -321,7 +286,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
    * @param SetDelegate operation parameter
    */
   async setDelegate(params: DelegateParams) {
-    const sourceValidation = validateAddress(params.source);
+    const sourceValidation = validateAddress(params.source ?? '');
     if (params.source && sourceValidation !== ValidationResult.VALID) {
       throw new InvalidAddressError(params.source, sourceValidation);
     }
@@ -331,8 +296,8 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
     }
 
     // Since babylon delegation source cannot smart contract
-    if (/^kt1/i.test(params.source)) {
-      throw new InvalidDelegationSource(params.source);
+    if (/^kt1/i.test(params.source ?? '')) {
+      throw new InvalidDelegationSource(params.source ?? '');
     }
 
     const publicKeyHash = await this.signer.publicKeyHash();
@@ -643,7 +608,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
    * @param params increasePaidStorage operation parameter
    */
   async increasePaidStorage(params: IncreasePaidStorageParams) {
-    if (params.amount < 0) {
+    if (params.amount <= 0) {
       throw new InvalidAmountError(params.amount.toString());
     }
     const publicKeyHash = await this.signer.publicKeyHash();

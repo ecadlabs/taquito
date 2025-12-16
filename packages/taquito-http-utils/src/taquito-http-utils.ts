@@ -12,7 +12,10 @@ let createAgent: ((url: string) => HttpsAgent | HttpAgent) | undefined;
 // default to the more stable node-fetch otherwise
 const isNode = typeof process !== 'undefined' && !!process?.versions?.node;
 if (isNode) {
-  fetch = require('node-fetch');
+  // Handle both ESM and CJS default export patterns for webpack compatibility
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const nodeFetch = require('node-fetch');
+  fetch = nodeFetch.default || nodeFetch;
   if (Number(process.versions.node.split('.')[0]) >= 19) {
     // we need agent with keepalive false for node 19 and above
     createAgent = (url: string) => {
@@ -108,7 +111,7 @@ export class HttpBackend {
         headers,
         body: JSON.stringify(data),
         signal: controller.signal,
-        ...(isNode && createAgent ? { agent: await createAgent(urlWithQuery) } : {}),
+        ...(isNode && createAgent ? { agent: createAgent(urlWithQuery) } : {}),
       });
 
       if (typeof response === 'undefined') {

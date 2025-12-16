@@ -75,18 +75,6 @@ export class TicketToken extends Token {
     };
   }
 
-  /**
-   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
-   *
-   */
-  public ExtractSchema() {
-    return {
-      ticketer: ContractToken.prim,
-      value: this.valueToken.ExtractSchema(),
-      amount: IntToken.prim,
-    };
-  }
-
   generateSchema(): TicketTokenSchema {
     return {
       __michelsonType: TicketToken.prim,

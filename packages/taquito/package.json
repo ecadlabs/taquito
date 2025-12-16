@@ -1,6 +1,6 @@
 {
   "name": "@taquito/taquito",
-  "version": "23.0.3",
+  "version": "23.1.0",
   "description": "High level functionality that builds upon the other packages in the Tezos Typescript Library Suite.",
   "keywords": [
     "tezos",
@@ -28,7 +28,7 @@
   },
   "license": "Apache-2.0",
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "scripts": {
     "test": "jest --coverage",
@@ -77,13 +77,14 @@
     ]
   },
   "dependencies": {
-    "@taquito/core": "^23.0.3",
-    "@taquito/http-utils": "^23.0.3",
-    "@taquito/local-forging": "^23.0.3",
-    "@taquito/michel-codec": "^23.0.3",
-    "@taquito/michelson-encoder": "^23.0.3",
-    "@taquito/rpc": "^23.0.3",
-    "@taquito/utils": "^23.0.3",
+    "@taquito/core": "^23.1.0",
+    "@taquito/http-utils": "^23.1.0",
+    "@taquito/local-forging": "^23.1.0",
+    "@taquito/michel-codec": "^23.1.0",
+    "@taquito/michelson-encoder": "^23.1.0",
+    "@taquito/rpc": "^23.1.0",
+    "@taquito/signer": "^23.1.0",
+    "@taquito/utils": "^23.1.0",
     "bignumber.js": "^9.1.2",
     "rxjs": "^7.8.2"
   },
@@ -111,6 +112,7 @@
     "rimraf": "^6.0.1",
     "rollup": "^4.22.4",
     "rollup-plugin-json": "^4.0.0",
+    "rollup-plugin-polyfill-node": "^0.13.0",
     "rollup-plugin-typescript2": "^0.36.0",
     "rx-sandbox": "^2.0.5",
     "shelljs": "^0.8.5",
