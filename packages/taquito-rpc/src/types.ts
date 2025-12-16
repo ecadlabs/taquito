@@ -682,7 +682,7 @@ export type OperationContents =
 export interface OperationContentsAndResultMetadataExtended1 {
   balance_updates?: OperationMetadataBalanceUpdates[];
   delegate: string;
-  consensus_power: ConsensusPower;
+  consensus_power: ConsensusPower | null;
   consensus_key: string;
 }
 
@@ -699,13 +699,13 @@ export interface OperationContentsAndResultMetadataAttestationsAggregate {
     delegate: string;
     consensus_pkh: string;
   }[];
-  consensus_power: ConsensusPower;
+  consensus_power: ConsensusPower | null;
 }
 
 export interface OperationContentsAndResultMetadataPreattestation {
   balance_updates?: OperationMetadataBalanceUpdates[];
   delegate: string;
-  consensus_power: ConsensusPower;
+  consensus_power: ConsensusPower | null;
   consensus_key?: string;
 }
 
@@ -715,7 +715,7 @@ export interface OperationContentsAndResultMetadataPreattestationsAggregate {
     delegate: string;
     consensus_pkh: string;
   }[];
-  consensus_power: ConsensusPower;
+  consensus_power: ConsensusPower | null;
 }
 export interface OperationContentsAndResultMetadataPreEndorsement {
   balance_updates?: OperationMetadataBalanceUpdates[];
@@ -1776,7 +1776,7 @@ export type OperationResult =
 
 export interface AddressRegistryDiff {
   address: string;
-  counter: string;
+  index: string;
 }
 
 export interface OperationResultTransaction {
@@ -2599,7 +2599,7 @@ export interface BlockMetadata {
   voting_period_kind?: string;
   consumed_gas?: string;
   liquidity_baking_escape_ema?: number;
-  all_bakers_attest_activation_level?: number;
+  all_bakers_attest_activation_level?: LevelInfo | null;
   attestations?: Attestations;
   preattestations?: PreAttestations;
 }

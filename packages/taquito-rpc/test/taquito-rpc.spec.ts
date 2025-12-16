@@ -3270,6 +3270,7 @@ describe('RpcClient test', () => {
                       delegate: 'tz1Zt8QQ9aBznYNk5LUBjtME9DuExomw9YRs',
                       consensus_power: {
                         slots: 532,
+                        baking_power: '38656061275500',
                       },
                       consensus_key: 'tz1Zt8QQ9aBznYNk5LUBjtME9DuExomw9YRs',
                     },
