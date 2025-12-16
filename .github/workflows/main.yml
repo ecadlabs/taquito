@@ -76,6 +76,8 @@ jobs:
             rpc_url: https://rpc.seoulnet.teztnets.com/
     steps:
       - uses: actions/checkout@v4
+      - name: Fetch base branch
+        run: git fetch origin ${{ github.base_ref || 'master' }}:${{ github.base_ref || 'master' }}
       - uses: actions/setup-node@v4
         with:
           node-version: lts/Iron
@@ -88,7 +90,7 @@ jobs:
           authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
           version: 1.32.2
       - id: run-tests
-        run: npm -w integration-tests run test:${{ matrix.testnet }} -- --maxWorkers=4 --changedSince=master
+        run: npm -w integration-tests run test:${{ matrix.testnet }} -- --maxWorkers=4 --changedSince=${{ github.base_ref || 'master' }}
         env:
           # Ternary operator workaround
           TEZOS_RPC_${{ matrix.testnet_uppercase }}: ${{ github.event.pull_request.head.repo.fork && matrix.rpc_url || null }}
