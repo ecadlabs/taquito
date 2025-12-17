@@ -1,0 +1,18 @@
+---
+interface Props {
+  value: string;
+}
+
+const { value } = Astro.props;
+---
+
+<div data-tab-item={value} class="tab-item">
+  <slot />
+</div>
+
+<style>
+  .tab-item {
+    display: none;
+  }
+</style>
+
