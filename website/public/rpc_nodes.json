@@ -1,0 +1,101 @@
+{
+  "providers": [
+    {
+      "id": "ecadinfra",
+      "name": "ECAD Infra",
+      "website": "https://www.ecadinfra.com/",
+      "status_page": ""
+    },
+    {
+      "id": "smartpy",
+      "name": "SmartPy",
+      "website": "https://smartpy.io",
+      "status_page": ""
+    },
+    {
+      "id": "tezosfoundation",
+      "name": "Tezos Foundation",
+      "website": "https://tezos.foundation",
+      "status_page": ""
+    },
+    {
+      "id": "tzkt",
+      "name": "TzKT",
+      "website": "https://tzkt.io",
+      "status_page": ""
+    }
+  ],
+  "rpc_endpoints": [
+    {
+      "net": "mainnet",
+      "url": "https://mainnet.tezos.ecadinfra.com",
+      "provider": "ecadinfra"
+    },
+    {
+      "net": "ghostnet",
+      "url": "https://ghostnet.tezos.ecadinfra.com",
+      "provider": "ecadinfra"
+    },
+    {
+      "net": "shadownet",
+      "url": "https://shadownet.tezos.ecadinfra.com",
+      "provider": "ecadinfra"
+    },
+    {
+      "net": "seoulnet",
+      "url": "https://seoulnet.tezos.ecadinfra.com",
+      "provider": "ecadinfra"
+    },
+
+    {
+      "net": "mainnet",
+      "url": "https://mainnet.smartpy.io",
+      "provider": "smartpy"
+    },
+    {
+      "net": "ghostnet",
+      "url": "https://ghostnet.smartpy.io",
+      "provider": "smartpy"
+    },
+    {
+      "net": "mainnet",
+      "url": "https://rpc.tzbeta.net",
+      "provider": "tezosfoundation"
+    },
+    {
+      "net": "ghostnet",
+      "url": "https://rpc.ghostnet.teztnets.com",
+      "provider": "tezosfoundation"
+    },
+    {
+      "net": "shadownet",
+      "url": "https://rpc.shadownet.teztnets.com",
+      "provider": "tezosfoundation"
+    },
+    {
+      "net": "seoulnet",
+      "url": "https://rpc.seoulnet.teztnets.com",
+      "provider": "tezosfoundation"
+    },
+    {
+      "net": "mainnet",
+      "url": "https://rpc.tzkt.io/mainnet",
+      "provider": "tzkt"
+    },
+    {
+      "net": "ghostnet",
+      "url": "https://rpc.tzkt.io/ghostnet",
+      "provider": "tzkt"
+    },
+    {
+      "net": "shadownet",
+      "url": "https://rpc.tzkt.io/shadownet",
+      "provider": "tzkt"
+    },
+    {
+      "net": "seoulnet",
+      "url": "https://rpc.tzkt.io/seoulnet",
+      "provider": "tzkt"
+    }
+  ]
+}
