@@ -6,4 +6,5 @@ export const knownContractsShadownet: KnownContracts = {
   saplingContract: "KT1X2Y12axiKCiPkHhnvS5aBHcnPKYWgWxnN",
   onChainViewContractAddress: "KT1GeT5vTQu24zgP275kEGCcAWk7SjqL9hZv",
   ticketContract: "KT1LAbD14CzzK88e67hpyiCfrB3XgfPVku68",
+  indexContract: "",
 };
