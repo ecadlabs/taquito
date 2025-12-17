@@ -14,6 +14,7 @@ import {
   createSmartRollupExecuteOutboxMessageOperation,
   createUpdateConsensusKeyOperation,
   createUpdateCompanionKeyOperation,
+  createRevealOperation,
 } from '../contract/prepare';
 import { BatchOperation } from '../operations/batch-operation';
 import {
@@ -30,6 +31,7 @@ import {
   SmartRollupExecuteOutboxMessageParams,
   UpdateConsensusKeyParams,
   UpdateCompanionKeyParams,
+  RevealParams,
 } from '../operations/types';
 import { OpKind } from '@taquito/rpc';
 import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
@@ -257,6 +259,17 @@ export class OperationBatch extends Provider {
     return this;
   }
 
+  /**
+   *
+   * @description Reveal a wallet on the blockchain
+   *
+   * @param params Reveal operation parameter
+   */
+  withReveal(params: RevealParams) {
+    this.operations.push({ kind: OpKind.REVEAL, ...params });
+    return this;
+  }
+
   async getRPCOp(param: ParamsWithKind) {
     switch (param.kind) {
       case OpKind.TRANSACTION:
@@ -305,6 +318,12 @@ export class OperationBatch extends Provider {
         return createSmartRollupExecuteOutboxMessageOperation({
           ...param,
         });
+      case OpKind.REVEAL:
+        return createRevealOperation(
+          param,
+          await this.signer.publicKeyHash(),
+          await this.signer.publicKey()
+        );
       default:
         throw new InvalidOperationKindError(JSON.stringify((param as any).kind));
     }
@@ -349,6 +368,9 @@ export class OperationBatch extends Provider {
           break;
         case OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE:
           this.withSmartRollupExecuteOutboxMessage(param);
+          break;
+        case OpKind.REVEAL:
+          this.withReveal(param);
           break;
         default:
           throw new InvalidOperationKindError(JSON.stringify((param as any).kind));

@@ -7,3 +7,4 @@ export * from './transfer-ticket-operation';
 export * from './register-global-constant-operation';
 export * from './interface';
 export * from './legacy';
+export * from './reveal-operation';
