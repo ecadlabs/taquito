@@ -2697,6 +2697,6 @@ export const pendingStakingParametersResponse = [
   },
 ];
 
-export const destinationIndexResponse = 42;
+export const destinationIndexResponse = '42';
 
 export const destinationIndexNullResponse = null;

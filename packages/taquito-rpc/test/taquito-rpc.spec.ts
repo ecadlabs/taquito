@@ -4401,7 +4401,7 @@ describe('RpcClient test', () => {
         url: `root/chains/test/blocks/head/context/destination/${destination}/index`,
       });
 
-      expect(response).toEqual(42);
+      expect(response).toEqual('42');
     });
 
     it('should query the correct url with custom block parameter', async () => {
@@ -4415,7 +4415,7 @@ describe('RpcClient test', () => {
         url: `root/chains/test/blocks/${block}/context/destination/${destination}/index`,
       });
 
-      expect(response).toEqual(42);
+      expect(response).toEqual('42');
     });
 
     it('should return null for non-indexed destination', async () => {

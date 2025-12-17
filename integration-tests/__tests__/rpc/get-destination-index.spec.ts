@@ -1,5 +1,6 @@
 import { CONFIGS } from '../../config';
 import { RpcClient } from '@taquito/rpc';
+import { TaquitoLocalForger } from '@taquito/taquito';
 import { indexAddressCode, indexAddressStorage } from '../../data/code_with_index_address_index';
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
@@ -9,6 +10,11 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   describe(`Test getDestinationIndex RPC: ${rpc}`, () => {
     beforeAll(async () => {
       await setup(true);
+      // Use only the local forger for INDEX_ADDRESS operations
+      // The local forger correctly handles INDEX_ADDRESS
+      // This avoids potential ForgingMismatchError with CompositeForger
+      const localForger = Tezos.getFactory(TaquitoLocalForger)();
+      Tezos.setProvider({ forger: localForger });
     });
 
     it('should return null for a non-indexed address', async () => {
@@ -37,10 +43,12 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       // Now query the destination index via RPC
       const index = await rpcClient.getDestinationIndex(addressToIndex);
 
-      // The index should be a number (not null)
+      // The index should be a numeric string (not null)
       expect(index).not.toBeNull();
-      expect(typeof index).toBe('number');
-      expect(index).toBeGreaterThanOrEqual(0);
+      expect(typeof index).toBe('string');
+      const indexNum = parseInt(index!, 10);
+      expect(isNaN(indexNum)).toBe(false);
+      expect(indexNum).toBeGreaterThanOrEqual(0);
     });
   });
 });

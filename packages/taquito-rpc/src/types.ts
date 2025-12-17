@@ -2928,4 +2928,4 @@ export type PendingStakingParametersResponse = Array<{
   };
 }>;
 
-export type DestinationIndexResponse = number | null;
+export type DestinationIndexResponse = string | null;
