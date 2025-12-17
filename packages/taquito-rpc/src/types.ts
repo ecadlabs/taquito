@@ -2101,7 +2101,8 @@ export interface ConstantsResponseCommon {
 
 export type Ratio = { numerator: number; denominator: number };
 
-export interface ConstantsResponseProto024 extends Omit<ConstantsResponseProto023, | 'all_bakers_attest_activation_level'> {
+export interface ConstantsResponseProto024
+  extends Omit<ConstantsResponseProto023, 'all_bakers_attest_activation_level'> {
   all_bakers_attest_activation_threshold: Ratio;
 }
 
@@ -2926,3 +2927,5 @@ export type PendingStakingParametersResponse = Array<{
     edge_of_baking_over_staking_billionth: number;
   };
 }>;
+
+export type DestinationIndexResponse = number | null;
