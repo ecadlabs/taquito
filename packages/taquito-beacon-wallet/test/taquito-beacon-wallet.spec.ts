@@ -4,7 +4,8 @@ import {
   MissingRequiredScopes,
 } from '../src/taquito-beacon-wallet';
 import LocalStorageMock from './mock-local-storage';
-import { PermissionScope, LocalStorage, SigningType } from '@airgap/beacon-dapp';
+import { LocalStorage } from '@airgap/beacon-dapp';
+import { PermissionScope, SigningType } from '@airgap/beacon-types';
 import { indexedDB } from 'fake-indexeddb';
 global.localStorage = new LocalStorageMock();
 global.indexedDB = indexedDB;
