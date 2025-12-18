@@ -46,7 +46,11 @@
       "url": "https://seoulnet.tezos.ecadinfra.com",
       "provider": "ecadinfra"
     },
-
+    {
+      "net": "tallinnnet",
+      "url": "https://tallinnnet.tezos.ecadinfra.com",
+      "provider": "ecadinfra"
+    },
     {
       "net": "mainnet",
       "url": "https://mainnet.smartpy.io",
