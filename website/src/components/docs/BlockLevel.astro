@@ -1,0 +1,101 @@
+---
+interface Props {
+  network: string;
+  rpcUrl: string;
+}
+
+const { network, rpcUrl } = Astro.props;
+---
+
+<a class="block-level" data-network={network} data-rpc-url={rpcUrl}>Loading...</a>
+
+<script>
+  import {
+    getController,
+    ensureVisibilityHandler
+  } from '../../scripts/rpc-block-controller';
+
+  function initBlockLevel(element: HTMLElement) {
+    const rpcUrl = element.dataset.rpcUrl;
+    const network = element.dataset.network;
+
+    if (!rpcUrl || !network) return;
+
+    ensureVisibilityHandler();
+    const controller = getController(rpcUrl, network);
+    let isVisible = false;
+
+    const updateDisplay = () => {
+      if (controller.state.loading) {
+        element.textContent = 'Loading...';
+        element.removeAttribute('href');
+      } else if (controller.state.error) {
+        element.textContent = 'Error';
+        element.style.color = '#999';
+        element.removeAttribute('href');
+      } else if (controller.state.data?.header?.level) {
+        element.textContent = controller.state.data.header.level.toLocaleString();
+        element.setAttribute('href', `${rpcUrl}/chains/main/blocks/head/header`);
+        element.setAttribute('target', '_blank');
+        element.setAttribute('rel', 'noopener noreferrer');
+        element.style.color = '';
+      } else {
+        element.textContent = 'Unknown';
+        element.removeAttribute('href');
+      }
+    };
+
+    const unsubscribe = controller.subscribe(updateDisplay);
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && !isVisible) {
+          isVisible = true;
+          controller.incrementVisibility();
+        } else if (!entry.isIntersecting && isVisible) {
+          isVisible = false;
+          controller.decrementVisibility();
+        }
+      });
+    }, { threshold: 0 });
+
+    observer.observe(element);
+
+    (element as any)._cleanup = () => {
+      unsubscribe();
+      observer.disconnect();
+      if (isVisible) {
+        controller.decrementVisibility();
+      }
+    };
+  }
+
+  function initAllLevels() {
+    document.querySelectorAll<HTMLElement>('.block-level').forEach((el) => {
+      if (!(el as any)._initialized) {
+        (el as any)._initialized = true;
+        initBlockLevel(el);
+      }
+    });
+  }
+
+  document.addEventListener('astro:page-load', initAllLevels);
+
+  const observer = new MutationObserver(() => {
+    initAllLevels();
+  });
+
+  if (document.body) {
+    observer.observe(document.body, { childList: true, subtree: true });
+  }
+
+  document.addEventListener('astro:before-swap', () => {
+    observer.disconnect();
+    document.querySelectorAll<HTMLElement>('.block-level').forEach((el) => {
+      if ((el as any)._cleanup) {
+        (el as any)._cleanup();
+        (el as any)._initialized = false;
+      }
+    });
+  });
+</script>

@@ -9,17 +9,8 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-${{ github.ref != 'refs/heads/master' || github.run_number }}
   cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull/') }}
 env:
-  ALGOLIA_APPLICATION_ID: ${{ secrets.ALGOLIA_APPLICATION_ID }}
-  ALGOLIA_SEARCH_API_KEY: ${{ secrets.ALGOLIA_SEARCH_API_KEY }}
-  DOCUSAURUS_CLOUDFLARE_WORKER_URL: ${{ secrets.DOCUSAURUS_CLOUDFLARE_WORKER_URL }}
-  FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
-  FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
-  FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
-  FIREBASE_MEASUREMENT_ID: ${{ secrets.FIREBASE_MEASUREMENT_ID }}
-  FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
-  FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
-  FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
-  NODE_OPTIONS: "\"--max-old-space-size=2048\""
+  OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+  CHATKIT_WORKFLOW_ID: ${{ secrets.CHATKIT_WORKFLOW_ID }}
 jobs:
   publish-website:
     name: Publish taquito.io to Cloudflare Pages
@@ -28,13 +19,16 @@ jobs:
       deployments: write
       pull-requests: write
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: website
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 18.18.2
+          node-version: 22.18.0
       - run: npm ci
-      - run: npm run build-website; npm run build-docs
+      - run: npm run build
 
       - name: Publish to Cloudflare Pages
         id: cloudflare_publish
@@ -43,7 +37,7 @@ jobs:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           accountId: ${{ secrets.CF_ACCOUNT_ID}}
           projectName: taquito
-          directory: website/build
+          directory: website/dist
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
           wranglerVersion: '3'
 
