@@ -82,6 +82,11 @@
       "provider": "tezosfoundation"
     },
     {
+      "net": "tallinnnet",
+      "url": "https://rpc.tallinnnet.teztnets.com",
+      "provider": "tezosfoundation"
+    },
+    {
       "net": "mainnet",
       "url": "https://rpc.tzkt.io/mainnet",
       "provider": "tzkt"
@@ -99,6 +104,11 @@
     {
       "net": "seoulnet",
       "url": "https://rpc.tzkt.io/seoulnet",
+      "provider": "tzkt"
+    },
+    {
+      "net": "tallinnnet",
+      "url": "https://rpc.tzkt.io/tallinnnet",
       "provider": "tzkt"
     }
   ]
