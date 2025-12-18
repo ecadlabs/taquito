@@ -1,4 +1,4 @@
-import { PermissionScope } from '@airgap/beacon-dapp';
+import { PermissionScope } from '@airgap/beacon-types';
 import { PermissionDeniedError } from '@taquito/core';
 
 /**

@@ -12,7 +12,8 @@
     "generate:rpc": "node src/scripts/generate-rpc-table.js"
   },
   "dependencies": {
-    "@airgap/beacon-sdk": "^4.6.3",
+    "@airgap/beacon-dapp": "^5.0.0-beta.2",
+    "@airgap/beacon-sdk": "^5.0.0-beta.2",
     "@astrojs/mdx": "^4.3.12",
     "@astrojs/sitemap": "^3.6.0",
     "@cloudflare/workers-types": "^4.20251126.0",
