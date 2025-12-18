@@ -67,7 +67,7 @@ jobs:
         env:
           # Ternary operator workaround
           TEZOS_RPC_${{ matrix.testnet_uppercase }}: ${{ github.event.pull_request.head.repo.fork && matrix.rpc_url || null }}
-  integration-tests-testnet-tallinnnet-secret-key:
+  integration-tests-testnet-tallinnnet:
     runs-on: ubuntu-latest
     continue-on-error: true
     strategy:
@@ -88,6 +88,6 @@ jobs:
         with:
           authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
           version: 1.32.2
-      - run: npm -w integration-tests run test:tallinnnet-secret-key
+      - run: npm -w integration-tests run test:tallinnnet -- --maxWorkers=4
         env:
           RUN_${{ matrix.testnet_uppercase }}_WITH_SECRET_KEY: true
