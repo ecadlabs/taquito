@@ -1,30 +1,26 @@
 import { CONFIGS } from '../../config';
 import { RpcClient } from '@taquito/rpc';
-import { TaquitoLocalForger } from '@taquito/taquito';
+import { Protocols } from '@taquito/taquito';
 import { indexAddressCode, indexAddressStorage } from '../../data/code_with_index_address_index';
 
-CONFIGS().forEach(({ lib, rpc, setup }) => {
+CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
   const rpcClient = new RpcClient(rpc);
+  const tallinnnetAndAlpha = protocol === Protocols.PtTALLiNt || protocol === Protocols.ProtoALpha ? test: test.skip;
 
   describe(`Test getDestinationIndex RPC: ${rpc}`, () => {
     beforeAll(async () => {
       await setup(true);
-      // Use only the local forger for INDEX_ADDRESS operations
-      // The local forger correctly handles INDEX_ADDRESS
-      // This avoids potential ForgingMismatchError with CompositeForger
-      const localForger = Tezos.getFactory(TaquitoLocalForger)();
-      Tezos.setProvider({ forger: localForger });
     });
 
-    it('should return null for a non-indexed address', async () => {
+    tallinnnetAndAlpha('should return null for a non-indexed address', async () => {
       // Use a random address that has never been indexed
       const nonIndexedAddress = 'tz1burnburnburnburnburnburnburjAYjjX';
       const result = await rpcClient.getDestinationIndex(nonIndexedAddress);
       expect(result).toBeNull();
     });
 
-    it('should return the index for an address that has been indexed via INDEX_ADDRESS', async () => {
+    tallinnnetAndAlpha('should return the index for an address that has been indexed via INDEX_ADDRESS', async () => {
       // Originate a contract that uses INDEX_ADDRESS
       const originationOp = await Tezos.contract.originate({
         code: indexAddressCode,
