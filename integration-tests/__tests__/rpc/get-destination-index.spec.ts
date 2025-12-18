@@ -6,7 +6,7 @@ import { indexAddressCode, indexAddressStorage } from '../../data/code_with_inde
 CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const Tezos = lib;
   const rpcClient = new RpcClient(rpc);
-  const tallinnnetAndAlpha = protocol === Protocols.PtTALLiNt || protocol === Protocols.ProtoALpha ? test: test.skip;
+  const tallinnnetAndAlpha = protocol === Protocols.PtTALLiNt || protocol === Protocols.ProtoALpha ? test : test.skip;
 
   describe(`Test getDestinationIndex RPC: ${rpc}`, () => {
     beforeAll(async () => {
