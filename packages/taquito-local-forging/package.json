@@ -70,7 +70,8 @@
     "@taquito/core": "^23.1.0",
     "@taquito/utils": "^23.1.0",
     "bignumber.js": "^9.1.2",
-    "fast-text-encoding": "^1.0.6"
+    "fast-text-encoding": "^1.0.6",
+    "whatwg-url": "^15.1.0"
   },
   "devDependencies": {
     "@taquito/rpc": "^23.1.0",

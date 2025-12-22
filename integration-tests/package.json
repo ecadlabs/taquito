@@ -3,6 +3,8 @@
   "scripts": {
     "test": "jest",
     "test:secret-key": "RUN_WITH_SECRET_KEY=true jest --runInBand",
+    "test:tallinnnet": "TALLINNNET=true jest",
+    "test:tallinnnet-secret-key": "RUN_TALLINNNET_WITH_SECRET_KEY=true jest --runInBand",
     "test:seoulnet": "SEOULNET=true jest",
     "test:seoulnet-secret-key": "RUN_SEOULNET_WITH_SECRET_KEY=true jest --runInBand",
     "test:ghostnet": "GHOSTNET=true jest",
@@ -17,7 +19,7 @@
   "dependencies": {
     "@ledgerhq/devices": "8.6.1",
     "@ledgerhq/hw-transport": "6.31.12",
-    "@ledgerhq/hw-transport-node-hid": "6.29.5",
+    "@ledgerhq/hw-transport-node-hid": "6.29.14",
     "@ledgerhq/hw-transport-node-hid-noevents": "6.30.14",
     "@taquito/contracts-library": "^23.1.0",
     "@taquito/core": "^23.1.0",

@@ -1,0 +1,279 @@
+---
+import Prism from 'prismjs';
+import 'prismjs/components/prism-javascript';
+import 'prismjs/themes/prism.css';
+
+interface Props {
+  code: string;
+  language?: string;
+  title?: string;
+  wallet?: boolean;
+}
+
+const { code, language = 'javascript', title, wallet = false } = Astro.props;
+
+const html = Prism.highlight(code, Prism.languages[language] || Prism.languages.javascript, language);
+---
+
+<live-code-runner data-code={code} data-wallet={wallet ? "true" : "false"} class="pre">
+  <div class="mb-4">
+      <pre class={`language-${language} m-0 p-4 overflow-x-auto code`} set:html={html} />
+      <button class="run-button bg-green-600 text-white border-none py-2 px-4 rounded text-sm font-medium cursor-pointer transition-colors duration-200 hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed">
+        Run Code
+      </button>
+
+    <div class="output mt-2" hidden>
+      <pre class="output-content m-0 p-3 bg-gray-50 border border-gray-300 rounded font-mono text-sm text-red-500 whitespace-pre-wrap"></pre>
+    </div>
+  </div>
+</live-code-runner>
+
+<script>
+  class LiveCodeRunner extends HTMLElement {
+    private button: HTMLButtonElement | null;
+
+    constructor() {
+      super();
+      this.button = this.querySelector('.run-button');
+      this.button?.addEventListener('click', () => this.runCode());
+    }
+
+    async waitForTaquito(timeoutMs = 15000): Promise<void> {
+      const win = window as any;
+      
+      // Check if already ready
+      if (win.Tezos) return;
+      
+      // If we have a promise, await it
+      if (win.__taquitoReady) {
+        // Race against timeout
+        const timeoutPromise = new Promise((_, reject) => 
+          setTimeout(() => reject(new Error("Taquito initialization timed out")), timeoutMs)
+        );
+        await Promise.race([win.__taquitoReady, timeoutPromise]);
+        return;
+      }
+
+      // Fallback polling if no promise (shouldn't happen with updated init script)
+      return new Promise((resolve, reject) => {
+        const startTime = Date.now();
+        const check = () => {
+          if (win.Tezos) resolve();
+          else if (win.__taquitoError) reject(win.__taquitoError);
+          else if (Date.now() - startTime > timeoutMs) reject(new Error("Taquito initialization timed out (polling)"));
+          else setTimeout(check, 250); // Check every 250ms
+        };
+        check();
+      });
+    }
+
+    async runCode() {
+      const outputDiv = this.querySelector('.output') as HTMLElement;
+      const outputContent = this.querySelector('.output-content') as HTMLElement;
+
+      if (!outputDiv || !outputContent || !this.button) return;
+
+      // Get code from data attribute
+      const sourceCodeContent = this.getAttribute('data-code') || '';
+      const isWalletMode = this.getAttribute('data-wallet') === 'true';
+
+      if (!sourceCodeContent) {
+        outputContent.textContent = "Error: No code to execute";
+        outputDiv.hidden = false;
+        return;
+      }
+
+      // Reset UI
+      outputContent.textContent = "Initializing Taquito...";
+      outputDiv.hidden = false;
+
+      // Disable ALL run buttons to prevent multiple runners at once
+      const allButtons = document.querySelectorAll<HTMLButtonElement>('.run-button');
+      allButtons.forEach(btn => btn.disabled = true);
+      this.button.textContent = "Loading...";
+
+      try {
+        // Wait for Taquito
+        await this.waitForTaquito();
+        this.button.textContent = "Running...";
+        outputContent.textContent = ""; // Clear loading message
+        
+        const win = window as any;
+        if (!win.Tezos) {
+          throw new Error("Taquito failed to load.");
+        }
+
+        // For wallet mode, connect wallet; otherwise configure signer
+        if (isWalletMode) {
+          // Connect wallet for wallet API examples
+          if (win.connectWallet && !win.__walletConnected) {
+            try {
+              outputContent.textContent = "Connecting wallet...";
+              const address = await win.connectWallet();
+              if (!address) {
+                throw new Error("Wallet connection completed but no address was returned");
+              }
+              outputContent.textContent = ""; // Clear wallet message
+            } catch (error: any) {
+              const errorMsg = error instanceof Error ? error.message : String(error);
+              outputContent.textContent = `Warning: Wallet connection failed: ${errorMsg}\n\nPlease make sure you have a Tezos wallet (like Temple) installed.\n\n`;
+              console.error("Wallet connection failed:", error);
+            }
+          }
+        } else {
+          // Automatically configure signer if not already configured
+          if (win.configureSigner && !win.__signerConfigured) {
+            try {
+              outputContent.textContent = "Configuring signer...";
+              const address = await win.configureSigner();
+              // Verify signer is actually configured by checking the flag
+              if (!win.__signerConfigured) {
+                throw new Error("Signer configuration completed but __signerConfigured flag is not set");
+              }
+              // Also verify we got an address back
+              if (!address) {
+                throw new Error("Signer configuration completed but no address was returned");
+              }
+              outputContent.textContent = ""; // Clear signer message
+            } catch (error: any) {
+              // If signer configuration fails, show the error but allow code to run
+              // Some examples (like balance checks) don't need a signer
+              const errorMsg = error instanceof Error ? error.message : String(error);
+              const errorDetails = error instanceof Error && error.stack ? `\n${error.stack}` : '';
+              outputContent.textContent = `Warning: Signer configuration failed: ${errorMsg}${errorDetails}\n\nAttempting to run code anyway (read-only operations may still work)...\n\n`;
+              console.error("Signer configuration failed:", error);
+            }
+          }
+        }
+
+        // Capture console.log and console.error
+        const originalLog = console.log;
+        const originalError = console.error;
+        let logs: string[] = [];
+
+        const formatArg = (arg: any): string => {
+          try {
+            if (arg instanceof Error) {
+              return `${arg.name}: ${arg.message}`;
+            }
+            if (typeof arg === 'object' && arg !== null) {
+              return JSON.stringify(arg, null, 2);
+            }
+            return String(arg);
+          } catch {
+            return String(arg);
+          }
+        };
+
+        const captureLog = (...args: any[]) => {
+          originalLog(...args);
+          const logText = args.map(formatArg).join(' ');
+          logs.push(logText);
+          outputContent.textContent = logs.join('\n');
+        };
+
+        console.log = captureLog;
+        console.error = captureLog;
+
+        // Capture unhandled promise rejections (e.g., errors inside setTimeout async callbacks)
+        const rejectionHandler = (event: PromiseRejectionEvent) => {
+          event.preventDefault();
+          const error = event.reason;
+          const errorMessage = error instanceof Error ? `${error.name}: ${error.message}` : String(error);
+          logs.push(errorMessage);
+          outputContent.textContent = logs.join('\n');
+        };
+        window.addEventListener('unhandledrejection', rejectionHandler);
+
+        // Execute code
+        try {
+          // Create async function from string
+          const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
+
+          const func = new AsyncFunction(
+            'Tezos',
+            'TezosToolkit',
+            'InMemorySigner',
+            'BeaconWallet',
+            'wallet',
+            'configureSigner',
+            'connectWallet',
+            'MichelsonMap',
+            'importKey',
+            'BigNumber',
+            // Ledger globals
+            'TransportWebHID',
+            'LedgerSigner',
+            'DerivationType',
+            'HDPathTemplate',
+            // Contract globals
+            'genericMultisigJSONfile',
+            'genericMultisig',
+            'contractMapTacoShop',
+            'contractMapPairKey',
+            'contractMap8pairs',
+            'contractMapBigMap',
+            'secretKey',
+            'contractJson',
+            'contractStorageAnnot',
+            'contractStorageWithAndWithoutAnnot',
+            'contractStorageWithoutAnnot',
+            'managerCode',
+            sourceCodeContent
+          );
+
+          await func(
+            win.Tezos,
+            win.TezosToolkit,
+            win.InMemorySigner,
+            win.BeaconWallet,
+            win.wallet,
+            win.configureSigner,
+            win.connectWallet,
+            win.MichelsonMap,
+            win.importKey,
+            win.BigNumber,
+            // Ledger globals
+            win.TransportWebHID,
+            win.LedgerSigner,
+            win.DerivationType,
+            win.HDPathTemplate,
+            // Contract globals
+            win.genericMultisigJSONfile,
+            win.genericMultisig,
+            win.contractMapTacoShop,
+            win.contractMapPairKey,
+            win.contractMap8pairs,
+            win.contractMapBigMap,
+            win.secretKey,
+            win.contractJson,
+            win.contractStorageAnnot,
+            win.contractStorageWithAndWithoutAnnot,
+            win.contractStorageWithoutAnnot,
+            win.managerCode
+          );
+
+          if (logs.length === 0) {
+             outputContent.textContent = "Code executed successfully (no output)";
+          }
+        } finally {
+          console.log = originalLog;
+          console.error = originalError;
+          window.removeEventListener('unhandledrejection', rejectionHandler);
+        }
+
+      } catch (error: any) {
+        console.error(error);
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        outputContent.textContent += (outputContent.textContent ? '\n' : '') + `Error: ${errorMessage}`;
+      } finally {
+        // Re-enable ALL run buttons
+        const allButtons = document.querySelectorAll<HTMLButtonElement>('.run-button');
+        allButtons.forEach(btn => btn.disabled = false);
+        this.button.textContent = "Run Code";
+      }
+    }
+  }
+
+  customElements.define('live-code-runner', LiveCodeRunner);
+</script>
