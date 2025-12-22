@@ -1,0 +1,354 @@
+---
+import { Frown, Meh, Smile, Check, X } from '@lucide/astro';
+
+interface Props {
+  version?: string;
+  pageTitle?: string;
+}
+
+const { version, pageTitle } = Astro.props;
+const feedbackApiBase = import.meta.env.PUBLIC_FEEDBACK_API_URL || 'https://taquito-feedback-worker.ops-taquito-cloudflare.workers.dev';
+---
+
+<div class="feedback-widget py-8 border-t border-gray-200" data-version={version} data-page-title={pageTitle} data-api-base={feedbackApiBase}>
+  <div class="flex flex-col items-center gap-4">
+    <p class="text-sm text-gray-500 m-0">Was this page helpful?</p>
+
+    <div class="feedback-buttons flex gap-3">
+      <button
+        type="button"
+        class="feedback-btn p-2 bg-transparent border-2 border-gray-200 rounded-lg cursor-pointer transition-all duration-200 text-gray-400 hover:scale-110 hover:border-gray-300 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary/25 data-[vote='1']:hover:border-red-300 data-[vote='1']:hover:text-red-500 data-[vote='2']:hover:border-amber-300 data-[vote='2']:hover:text-amber-500 data-[vote='3']:hover:border-green-300 data-[vote='3']:hover:text-green-500"
+        data-vote="1"
+        aria-label="Not helpful"
+        title="Not helpful"
+      >
+        <Frown class="w-7 h-7" />
+      </button>
+
+      <button
+        type="button"
+        class="feedback-btn p-2 bg-transparent border-2 border-gray-200 rounded-lg cursor-pointer transition-all duration-200 text-gray-400 hover:scale-110 hover:border-gray-300 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary/25 data-[vote='1']:hover:border-red-300 data-[vote='1']:hover:text-red-500 data-[vote='2']:hover:border-amber-300 data-[vote='2']:hover:text-amber-500 data-[vote='3']:hover:border-green-300 data-[vote='3']:hover:text-green-500"
+        data-vote="2"
+        aria-label="Somewhat helpful"
+        title="Somewhat helpful"
+      >
+        <Meh class="w-7 h-7" />
+      </button>
+
+      <button
+        type="button"
+        class="feedback-btn p-2 bg-transparent border-2 border-gray-200 rounded-lg cursor-pointer transition-all duration-200 text-gray-400 hover:scale-110 hover:border-gray-300 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary/25 data-[vote='1']:hover:border-red-300 data-[vote='1']:hover:text-red-500 data-[vote='2']:hover:border-amber-300 data-[vote='2']:hover:text-amber-500 data-[vote='3']:hover:border-green-300 data-[vote='3']:hover:text-green-500"
+        data-vote="3"
+        aria-label="Very helpful"
+        title="Very helpful"
+      >
+        <Smile class="w-7 h-7" />
+      </button>
+    </div>
+
+    <button type="button" class="detailed-feedback-btn text-xs text-gray-500 bg-transparent border-none cursor-pointer underline p-1 hover:text-primary">
+      Leave detailed feedback
+    </button>
+
+    <div class="feedback-success hidden items-center gap-2 text-green-500 text-sm">
+      <Check class="w-5 h-5" />
+      <span>Thanks for your feedback!</span>
+    </div>
+  </div>
+
+  <!-- Detailed Feedback Modal -->
+  <div class="feedback-modal hidden fixed inset-0 z-50 items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="feedback-modal-title">
+    <div class="feedback-modal-backdrop absolute inset-0 bg-black/50"></div>
+    <div class="relative bg-white rounded-xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between p-4 border-b border-gray-200">
+        <h3 id="feedback-modal-title" class="m-0 text-lg font-semibold text-gray-900">Share your feedback</h3>
+        <button type="button" class="feedback-modal-close p-1 bg-transparent border-none cursor-pointer text-gray-500 rounded hover:text-gray-900 hover:bg-gray-100" aria-label="Close">
+          <X class="w-5 h-5" />
+        </button>
+      </div>
+
+      <form class="feedback-form p-6">
+        <div class="mb-4">
+          <label for="feedback-category" class="block text-sm font-medium text-gray-700 mb-1.5">Category</label>
+          <select id="feedback-category" name="category" required class="w-full px-3 py-2.5 border border-gray-300 rounded-md text-sm text-gray-900 bg-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/25">
+            <option value="">Select a category...</option>
+            <option value="content">Content issue</option>
+            <option value="code">Code example problem</option>
+            <option value="clarity">Needs clarification</option>
+            <option value="missing">Missing information</option>
+            <option value="suggestion">Suggestion</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div class="mb-4">
+          <label for="feedback-text" class="block text-sm font-medium text-gray-700 mb-1.5">Your feedback</label>
+          <textarea
+            id="feedback-text"
+            name="feedback"
+            rows="4"
+            placeholder="Tell us what could be improved..."
+            required
+            class="w-full px-3 py-2.5 border border-gray-300 rounded-md text-sm text-gray-900 bg-white resize-y min-h-24 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/25"
+          ></textarea>
+        </div>
+
+        <div class="flex gap-3 justify-end pt-2">
+          <button type="button" class="btn-cancel px-4 py-2 text-sm font-medium rounded-md cursor-pointer transition-all duration-200 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50">Cancel</button>
+          <button type="submit" class="btn-submit px-4 py-2 text-sm font-medium rounded-md cursor-pointer transition-all duration-200 bg-primary border border-primary text-white hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed">Submit feedback</button>
+        </div>
+      </form>
+
+      <div class="feedback-modal-success hidden py-12 px-6 text-center">
+        <Check class="w-12 h-12 text-green-500 mx-auto mb-4" />
+        <p class="m-0 text-base font-medium text-gray-900">Thank you for your feedback!</p>
+        <p class="mt-1 text-sm font-normal text-gray-500">Your input helps us improve the documentation.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  class FeedbackWidget {
+    private widget: HTMLElement;
+    private apiBase: string;
+    private version: string;
+    private pageTitle: string;
+    private csrfToken: string | null = null;
+    private sessionId: string | null = null;
+    private hasVoted: boolean = false;
+
+    constructor(widget: HTMLElement) {
+      this.widget = widget;
+      this.apiBase = widget.dataset.apiBase || '';
+      this.version = widget.dataset.version || '';
+      this.pageTitle = widget.dataset.pageTitle || document.title;
+      this.init();
+    }
+
+    private async init() {
+      await this.fetchCsrfToken();
+      this.bindEvents();
+    }
+
+    private async fetchCsrfToken() {
+      try {
+        const response = await fetch(`${this.apiBase}/api/vote/csrf`, {
+          method: 'GET',
+          credentials: 'include',
+        });
+        if (response.ok) {
+          const data = await response.json();
+          this.csrfToken = data.csrf;
+          this.sessionId = data.sid;
+        }
+      } catch (error) {
+        console.error('Failed to fetch CSRF token:', error);
+      }
+    }
+
+    private bindEvents() {
+      // Vote buttons
+      const voteButtons = this.widget.querySelectorAll<HTMLButtonElement>('.feedback-btn');
+      voteButtons.forEach((btn) => {
+        btn.addEventListener('click', () => this.handleVote(btn));
+      });
+
+      // Detailed feedback button
+      const detailedBtn = this.widget.querySelector('.detailed-feedback-btn');
+      detailedBtn?.addEventListener('click', () => this.openModal());
+
+      // Modal close buttons
+      const modal = this.widget.querySelector('.feedback-modal');
+      const closeBtn = modal?.querySelector('.feedback-modal-close');
+      const backdrop = modal?.querySelector('.feedback-modal-backdrop');
+      const cancelBtn = modal?.querySelector('.btn-cancel');
+
+      closeBtn?.addEventListener('click', () => this.closeModal());
+      backdrop?.addEventListener('click', () => this.closeModal());
+      cancelBtn?.addEventListener('click', () => this.closeModal());
+
+      // Form submission
+      const form = this.widget.querySelector<HTMLFormElement>('.feedback-form');
+      form?.addEventListener('submit', (e) => this.handleFormSubmit(e));
+
+      // Close modal on escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !modal?.classList.contains('hidden')) {
+          this.closeModal();
+        }
+      });
+    }
+
+    private async handleVote(button: HTMLButtonElement) {
+      if (this.hasVoted) return;
+
+      const vote = parseInt(button.dataset.vote || '0', 10) as 1 | 2 | 3;
+      if (![1, 2, 3].includes(vote)) return;
+
+      // Visual feedback - add selected state
+      const buttons = this.widget.querySelectorAll('.feedback-btn');
+      buttons.forEach((btn) => {
+        btn.classList.remove('scale-110', '!border-red-500', '!text-red-500', '!bg-red-50', '!border-amber-500', '!text-amber-500', '!bg-amber-50', '!border-green-500', '!text-green-500', '!bg-green-50');
+      });
+
+      button.classList.add('scale-110');
+      if (vote === 1) {
+        button.classList.add('!border-red-500', '!text-red-500', '!bg-red-50');
+      } else if (vote === 2) {
+        button.classList.add('!border-amber-500', '!text-amber-500', '!bg-amber-50');
+      } else if (vote === 3) {
+        button.classList.add('!border-green-500', '!text-green-500', '!bg-green-50');
+      }
+
+      // Submit vote
+      const success = await this.submitFeedback({ vote });
+
+      if (success) {
+        this.hasVoted = true;
+        this.showSuccess();
+      }
+    }
+
+    private openModal() {
+      const modal = this.widget.querySelector('.feedback-modal');
+      modal?.classList.remove('hidden');
+      modal?.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+
+      // Focus the first input
+      const firstInput = modal?.querySelector<HTMLSelectElement>('select');
+      firstInput?.focus();
+    }
+
+    private closeModal() {
+      const modal = this.widget.querySelector('.feedback-modal');
+      modal?.classList.add('hidden');
+      modal?.classList.remove('flex');
+      document.body.style.overflow = '';
+
+      // Reset form
+      const form = this.widget.querySelector<HTMLFormElement>('.feedback-form');
+      form?.reset();
+    }
+
+    private async handleFormSubmit(e: Event) {
+      e.preventDefault();
+
+      const form = e.target as HTMLFormElement;
+      const formData = new FormData(form);
+      const category = formData.get('category') as string;
+      const feedback = formData.get('feedback') as string;
+
+      if (!category || !feedback) return;
+
+      const submitBtn = form.querySelector<HTMLButtonElement>('.btn-submit');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Submitting...';
+      }
+
+      const success = await this.submitFeedback({ category, feedback });
+
+      if (success) {
+        // Show success in modal
+        const formEl = this.widget.querySelector('.feedback-form');
+        const successEl = this.widget.querySelector('.feedback-modal-success');
+        formEl?.classList.add('hidden');
+        successEl?.classList.remove('hidden');
+
+        // Close modal after delay
+        setTimeout(() => {
+          this.closeModal();
+          // Reset for potential future use
+          formEl?.classList.remove('hidden');
+          successEl?.classList.add('hidden');
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Submit feedback';
+          }
+        }, 2000);
+      } else {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Submit feedback';
+        }
+      }
+    }
+
+    private async submitFeedback(data: {
+      vote?: 1 | 2 | 3;
+      category?: string;
+      feedback?: string;
+    }): Promise<boolean> {
+      if (!this.csrfToken || !this.sessionId) {
+        await this.fetchCsrfToken();
+        if (!this.csrfToken || !this.sessionId) {
+          console.error('Unable to get CSRF token');
+          return false;
+        }
+      }
+
+      // Include version in the title for Slack message clarity
+      const titleWithVersion = this.version
+        ? `${this.pageTitle} (${this.version})`
+        : this.pageTitle;
+
+      try {
+        const response = await fetch(`${this.apiBase}/api/vote`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF': this.csrfToken,
+            'X-Session-ID': this.sessionId,
+          },
+          credentials: 'include',
+          body: JSON.stringify({
+            url: window.location.href,
+            title: titleWithVersion,
+            ...data,
+          }),
+        });
+
+        return response.ok || response.status === 204;
+      } catch (error) {
+        console.error('Failed to submit feedback:', error);
+        return false;
+      }
+    }
+
+    private showSuccess() {
+      const buttons = this.widget.querySelector('.feedback-buttons');
+      const detailedBtn = this.widget.querySelector('.detailed-feedback-btn');
+      const question = this.widget.querySelector('p');
+      const success = this.widget.querySelector('.feedback-success');
+
+      buttons?.classList.add('hidden');
+      detailedBtn?.classList.add('hidden');
+      question?.classList.add('hidden');
+      success?.classList.remove('hidden');
+      success?.classList.add('flex');
+    }
+  }
+
+  // Initialize all feedback widgets on the page
+  function initFeedbackWidgets() {
+    document.querySelectorAll<HTMLElement>('.feedback-widget').forEach((widget) => {
+      // Check if already initialized
+      if (!widget.dataset.initialized) {
+        widget.dataset.initialized = 'true';
+        new FeedbackWidget(widget);
+      }
+    });
+  }
+
+  // Initialize on page load and for Astro page transitions
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initFeedbackWidgets);
+  } else {
+    initFeedbackWidgets();
+  }
+
+  // Support Astro View Transitions
+  document.addEventListener('astro:page-load', initFeedbackWidgets);
+</script>
