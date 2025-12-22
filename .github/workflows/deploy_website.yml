@@ -29,6 +29,9 @@ jobs:
           node-version: 22.18.0
       - run: npm ci
       - run: npm run build
+      - name: Build TypeDoc API docs
+        working-directory: .
+        run: npm ci && npm run build-docs
 
       - name: Publish to Cloudflare Pages
         id: cloudflare_publish
