@@ -8,7 +8,8 @@
     "preview": "astro preview",
     "astro": "astro",
     "docs:version": "node src/scripts/version-docs.mjs",
-    "generate:llms": "node src/scripts/generate-llms-txt.mjs"
+    "generate:llms": "node src/scripts/generate-llms-txt.mjs",
+    "generate:rpc": "node src/scripts/generate-rpc-table.js"
   },
   "dependencies": {
     "@airgap/beacon-sdk": "^4.6.3",
