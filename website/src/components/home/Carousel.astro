@@ -1,0 +1,122 @@
+---
+import hero1 from '../../images/carousel/hero-1.png';
+import hero2 from '../../images/carousel/hero-2.png';
+
+const images = [
+  { src: hero1, alt: 'Hero 1' },
+  { src: hero2, alt: 'Hero 2' }
+];
+---
+
+<section class="carousel-container px-8 pb-4">
+  <div class="md:w-1/2 mx-auto max-w-4xl">
+    <div class="carousel-wrapper relative">
+      <div class="carousel-track-container relative overflow-hidden rounded-3xl border-24 border-primary bg-primary">
+        <div class="carousel-track flex transition-transform duration-700 ease-in-out">
+          {images.map((image, index) => (
+            <img
+              src={image.src.src}
+              alt={image.alt}
+              class="carousel-image w-full h-auto shrink-0"
+              data-index={index}
+            />
+          ))}
+          <img
+            src={images[0].src.src}
+            alt={images[0].alt}
+            class="carousel-image w-full h-auto shrink-0"
+            data-index="clone"
+          />
+        </div>
+      </div>
+      
+      <div class="carousel-dots flex justify-center gap-3 mt-6">
+        {images.map((_, index) => (
+          <div
+            class={`carousel-dot w-3 h-3 rounded-full transition-all duration-300 ${index === 0 ? 'bg-primary w-6' : 'bg-primary/40'}`}
+            data-index={index}
+          />
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  let currentIndex = 0;
+  const track = document.querySelector('.carousel-track') as HTMLElement;
+  const dots = document.querySelectorAll('.carousel-dot') as NodeListOf<HTMLElement>;
+  const totalRealSlides = dots.length;
+  let autoPlayInterval: number;
+  let isAnimating = false;
+
+  function updateDots(index: number) {
+    dots.forEach((dot, i) => {
+      if (i === index) {
+        dot.classList.remove('bg-primary/40', 'w-3');
+        dot.classList.add('bg-primary', 'w-6');
+      } else {
+        dot.classList.add('bg-primary/40', 'w-3');
+        dot.classList.remove('bg-primary', 'w-6');
+      }
+    });
+  }
+
+  function slideToPosition(position: number, animate: boolean = true) {
+    if (!track) return;
+    
+    const slideWidth = 100;
+    if (!animate) {
+      track.style.transition = 'none';
+    }
+    track.style.transform = `translateX(-${position * slideWidth}%)`;
+    
+    if (!animate) {
+      void track.offsetHeight;
+      track.style.transition = '';
+    }
+  }
+
+  function showImage(index: number, animate: boolean = true) {
+    if (!track) return;
+    
+    slideToPosition(index, animate);
+    updateDots(index % totalRealSlides);
+    currentIndex = index;
+  }
+
+  function nextImage() {
+    if (isAnimating) return;
+    isAnimating = true;
+    
+    const nextIndex = currentIndex + 1;
+    showImage(nextIndex, true);
+    
+    if (nextIndex === totalRealSlides) {
+      setTimeout(() => {
+        showImage(0, false);
+        isAnimating = false;
+      }, 700);
+    } else {
+      setTimeout(() => {
+        isAnimating = false;
+      }, 700);
+    }
+  }
+
+  function startAutoPlay() {
+    autoPlayInterval = window.setInterval(nextImage, 8000);
+  }
+
+  startAutoPlay();
+</script>
+
+<style>
+  .carousel-image {
+    display: block;
+  }
+
+  .carousel-dot {
+    pointer-events: none;
+  }
+</style>

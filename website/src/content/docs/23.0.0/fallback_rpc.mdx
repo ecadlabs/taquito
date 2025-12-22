@@ -1,0 +1,67 @@
+---
+title: Fallback RPC URLs
+author: Maxwell Ward
+---
+
+There are times where it's beneficial to have a fallback URL when initializing your `TezosToolkit` instance. While this behaviour is not support by Taquito directly, you can extend the `TezosToolkit` class using a proxy to achieve the fallback behaviour yourself.
+
+```typescript
+import { RpcClient, type RpcClientInterface } from '@taquito/rpc';
+
+export function createFallbackRpcClient(rpcUrls: string[], chain: string = 'main'): RpcClientInterface {
+	if (rpcUrls.length === 0) {
+		throw new Error('At least one RPC URL is required');
+	}
+
+	const clients = rpcUrls.map(url => new RpcClient(url, chain));
+	let currentIndex = 0;
+
+	const handler: ProxyHandler<RpcClient> = {
+		get(target, prop, receiver) {
+		const value = Reflect.get(target, prop, receiver);
+		
+		// Only wrap methods (functions), not properties
+		if (typeof value !== 'function') {
+			return value;
+		}
+
+		// Return a wrapped function with fallback logic
+		return async (...args: unknown[]) => {
+			const startIndex = currentIndex;
+			let lastError: unknown;
+
+			do {
+				try {
+					const client = clients[currentIndex];
+					const method = client[prop as keyof RpcClient];
+					if (typeof method === 'function') {
+						return await method.apply(client, args);
+					}
+				} catch (error) {
+					lastError = error;
+					console.warn(`RPC ${clients[currentIndex].getRpcUrl()} failed, trying next...`);
+					currentIndex = (currentIndex + 1) % clients.length;
+				}
+			} while (currentIndex !== startIndex);
+
+			throw lastError;
+		};
+		},
+	};
+
+	// Used for TypeScript type inference
+	return new Proxy({} as RpcClientInterface, handler);
+}
+```
+
+You can then import the `createFallbackRpcClient` function where you initialize your `TezosToolkit` and use it like so:
+
+```typescript
+  const fallbackClient = createFallbackRpcClient([
+    'https://example.com',
+    'https://example.org',
+	'https://ghostnet.tezos.ecadinfra.com'
+  ])
+
+  const Tezos = new TezosToolkit(fallbackClient);
+```
