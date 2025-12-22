@@ -19,19 +19,26 @@ jobs:
       deployments: write
       pull-requests: write
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: website
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22.18.0
-      - run: npm ci
-      - run: npm run build
+      # Install and build all packages (required for TypeDoc)
+      - name: Install root dependencies
+        run: npm ci
+      - name: Build packages
+        run: npm run build
+      # Build website
+      - name: Install website dependencies
+        run: npm ci
+        working-directory: website
+      - name: Build website
+        run: npm run build
+        working-directory: website
+      # Build TypeDoc (after packages are built)
       - name: Build TypeDoc API docs
-        working-directory: .
-        run: npm ci && npm run build-docs
+        run: npm run build-docs
 
       - name: Publish to Cloudflare Pages
         id: cloudflare_publish
