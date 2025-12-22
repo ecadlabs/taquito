@@ -45,10 +45,10 @@ jobs:
         include:
           - testnet: seoulnet
             testnet_uppercase: SEOULNET
-            rpc_url: https://rpc.seoulnet.teztnets.com/
+            rpc_url: http://ecad-tezos-seoulnet-rolling-1.i.ecadinfra.com//
           - testnet: tallinnnet
             testnet_uppercase: TALLINNNET
-            rpc_url: https://rpc.tallinnnet.teztnets.com/
+            rpc_url: http://ecad-tezos-tallinnnet-rolling-1.i.ecadinfra.com//
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
