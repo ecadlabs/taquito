@@ -90,6 +90,8 @@ const noArgInstructionIDs: Record<MichelsonNoArgInstruction['prim'], true> = {
   BYTES: true,
   NAT: true,
   IS_IMPLICIT_ACCOUNT: true,
+  INDEX_ADDRESS: true,
+  GET_ADDRESS_INDEX: true,
 };
 
 export const instructionIDs: Record<MichelsonInstruction['prim'], true> = Object.assign(

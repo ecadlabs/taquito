@@ -10,7 +10,9 @@ const example = async () => {
                         0x0501000000026869) }
             10000000)
       (Pair 2 333))`;
-      const ex3 = `{parameter address; storage (option key_hash); code { CAR; IS_IMPLICIT_ACCOUNT; NIL operation; PAIR }}`
+    const ex3 = `{parameter address; storage (option key_hash); code { CAR; IS_IMPLICIT_ACCOUNT; NIL operation; PAIR }}`
+    const ex4 = `{parameter address; storage (option nat); code { CAR; INDEX_ADDRESS; SOME; NIL operation; PAIR }}`
+    const ex5 = `{parameter address; storage (option nat); code { CAR; GET_ADDRESS_INDEX; NIL operation; PAIR }}`
 
     const p = new Parser()
 
@@ -26,6 +28,13 @@ const example = async () => {
     const exp3 = p.parseMichelineExpression(ex3)
     console.log(JSON.stringify(exp3))
 
+    console.log('Example 4 with INDEX_ADDRESS instruction')
+    const exp4 = p.parseMichelineExpression(ex4)
+    console.log(JSON.stringify(exp4, null, 2))
+
+    console.log('Example 5 with GET_ADDRESS_INDEX instruction')
+    const exp5 = p.parseMichelineExpression(ex5)
+    console.log(JSON.stringify(exp5, null, 2))
   } catch (ex) {
     console.log(ex)
   }

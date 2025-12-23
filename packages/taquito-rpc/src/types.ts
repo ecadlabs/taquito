@@ -146,6 +146,11 @@ export type PendingConsensusKey = {
   pkh: string;
 };
 
+export type ConsensusPower = {
+  slots: number;
+  baking_power: number;
+};
+
 export type VotingInfoResponse = {
   voting_power?: string;
   current_ballot?: BallotListResponseEnum;
@@ -185,7 +190,6 @@ export interface BlockFullHeader {
   proof_of_work_nonce: string;
   seed_nonce_hash?: string;
   liquidity_baking_toggle_vote?: LiquidityBakingToggleVotes;
-  adaptive_issuance_vote?: AdaptiveIssuanceVote;
   liquidity_baking_escape_vote?: boolean | LiquidityBakingToggleVotes;
   signature: string;
 }
@@ -678,7 +682,7 @@ export type OperationContents =
 export interface OperationContentsAndResultMetadataExtended1 {
   balance_updates?: OperationMetadataBalanceUpdates[];
   delegate: string;
-  consensus_power: number;
+  consensus_power: ConsensusPower | null;
   consensus_key: string;
 }
 
@@ -695,13 +699,13 @@ export interface OperationContentsAndResultMetadataAttestationsAggregate {
     delegate: string;
     consensus_pkh: string;
   }[];
-  consensus_power: number;
+  consensus_power: ConsensusPower | null;
 }
 
 export interface OperationContentsAndResultMetadataPreattestation {
   balance_updates?: OperationMetadataBalanceUpdates[];
   delegate: string;
-  consensus_power: number;
+  consensus_power: ConsensusPower | null;
   consensus_key?: string;
 }
 
@@ -711,7 +715,7 @@ export interface OperationContentsAndResultMetadataPreattestationsAggregate {
     delegate: string;
     consensus_pkh: string;
   }[];
-  consensus_power: number;
+  consensus_power: ConsensusPower | null;
 }
 export interface OperationContentsAndResultMetadataPreEndorsement {
   balance_updates?: OperationMetadataBalanceUpdates[];
@@ -1770,6 +1774,11 @@ export type OperationResult =
   | OperationResultSmartRollupExecuteOutboxMessage
   | OperationResultDalPublishCommitment;
 
+export interface AddressRegistryDiff {
+  address: string;
+  index: string;
+}
+
 export interface OperationResultTransaction {
   status: OperationResultStatusEnum;
   storage?: MichelsonV1Expression;
@@ -1786,6 +1795,7 @@ export interface OperationResultTransaction {
   consumed_milligas?: string;
   lazy_storage_diff?: LazyStorageDiff[];
   ticket_hash?: string;
+  address_registry_diff?: AddressRegistryDiff[];
 }
 
 export interface OperationResultReveal {
@@ -2042,6 +2052,7 @@ export interface OperationContentsAndResultMetadataOrigination {
 }
 
 export type ConstantsResponse = ConstantsResponseCommon &
+  ConstantsResponseProto024 &
   ConstantsResponseProto023 &
   ConstantsResponseProto022 &
   ConstantsResponseProto021 &
@@ -2089,6 +2100,10 @@ export interface ConstantsResponseCommon {
 }
 
 export type Ratio = { numerator: number; denominator: number };
+
+export interface ConstantsResponseProto024 extends Omit<ConstantsResponseProto023, | 'all_bakers_attest_activation_level'> {
+  all_bakers_attest_activation_threshold: Ratio;
+}
 
 export type ConstantsResponseProto023 = ConstantsResponseProto022;
 
@@ -2552,6 +2567,18 @@ export interface LevelInfo {
   expected_commitment: boolean;
 }
 
+export interface Attestations {
+  total_committee_power: number;
+  threshold: number;
+  recorded_power: number;
+}
+
+export interface PreAttestations {
+  total_committee_power: number;
+  threshold: number;
+  recorded_power: number;
+}
+
 export interface BlockMetadata {
   protocol: string;
   next_protocol: string;
@@ -2568,8 +2595,6 @@ export interface BlockMetadata {
   deactivated?: string[];
   balance_updates?: OperationBalanceUpdates;
   liquidity_baking_toggle_ema?: number;
-  adaptive_issuance_vote_ema?: number;
-  adaptive_issuance_activation_cycle?: number;
   implicit_operations_results?: SuccessfulManagerOperationResult[];
   proposer_consensus_key?: string;
   baker_consensus_key?: string;
@@ -2579,6 +2604,9 @@ export interface BlockMetadata {
   voting_period_kind?: string;
   consumed_gas?: string;
   liquidity_baking_escape_ema?: number;
+  all_bakers_attest_activation_level?: LevelInfo | null;
+  attestations?: Attestations;
+  preattestations?: PreAttestations;
 }
 
 export interface RPCSimulateOperationParam {
@@ -2888,7 +2916,7 @@ export interface SmartRollupTimeoutStakers {
 
 export interface ActiveStakingParametersResponse {
   limit_of_staking_over_baking_millionth: number;
-	edge_of_baking_over_staking_billionth: number;
+  edge_of_baking_over_staking_billionth: number;
 }
 
 export type PendingStakingParametersResponse = Array<{

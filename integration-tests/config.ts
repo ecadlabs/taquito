@@ -214,7 +214,7 @@ if (process.env['RUN_WITH_SECRET_KEY']) {
 } else if (process.env['SEOULNET']) {
   providers.push(seoulnetEphemeral);
 } else {
-  providers.push(ghostnetEphemeral, shadownetEphemeral, tallinnnetEphemeral, seoulnetEphemeral);
+  providers.push(ghostnetEphemeral, shadownetEphemeral, seoulnetEphemeral, tallinnnetEphemeral);
 }
 
 const setupForger = (Tezos: TezosToolkit, forger: ForgerType): void => {
