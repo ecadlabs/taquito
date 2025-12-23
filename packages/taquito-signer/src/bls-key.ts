@@ -11,30 +11,35 @@ import { bls12_381 } from '@noble/curves/bls12-381';
 import { hash } from '@stablelib/blake2b';
 import { PublicKey, SigningKeyWithProofOfPossession } from './key-interface';
 import { RawSignResult } from '@taquito/core';
+import { deriveChildSK, hkdfModR } from './bls-utils';
 
 const bls = bls12_381.longSignatures; // AKA MinPK
+
 
 export class BLSKey implements SigningKeyWithProofOfPossession {
   #key: Uint8Array;
   #publicKey: Uint8Array;
 
-  constructor(key: string, decrypt?: (k: Uint8Array) => Uint8Array) {
-    const tmp = b58DecodeAndCheckPrefix(key, [
-      PrefixV2.BLS12_381EncryptedSecretKey,
-      PrefixV2.BLS12_381SecretKey,
-    ]);
-    let [keyData] = tmp;
-    const [, prefix] = tmp;
+  constructor(key: string | Uint8Array, decrypt?: (k: Uint8Array) => Uint8Array) {
+    if (typeof key === 'string') {
+      const tmp = b58DecodeAndCheckPrefix(key, [
+        PrefixV2.BLS12_381EncryptedSecretKey,
+        PrefixV2.BLS12_381SecretKey,
+      ]);
+      let [keyData] = tmp;
+      const [, prefix] = tmp;
 
-    if (prefix === PrefixV2.BLS12_381EncryptedSecretKey) {
-      if (decrypt !== undefined) {
-        keyData = decrypt(keyData);
-      } else {
-        throw new Error('decryption function is not provided');
+      if (prefix === PrefixV2.BLS12_381EncryptedSecretKey) {
+        if (decrypt !== undefined) {
+          keyData = decrypt(keyData);
+        } else {
+          throw new Error('decryption function is not provided');
+        }
       }
+      this.#key = keyData;
+    } else {
+      this.#key = key;
     }
-
-    this.#key = keyData;
     this.#publicKey = bls.getPublicKey(this.sk()).toBytes();
   }
 
@@ -66,6 +71,20 @@ export class BLSKey implements SigningKeyWithProofOfPossession {
 
   secretKey(): string {
     return b58Encode(this.#key, PrefixV2.BLS12_381SecretKey);
+  }
+
+  bytes(): Uint8Array {
+    return this.#key;
+  }
+
+  derive(index: number): BLSKey {
+    const sk = deriveChildSK(this.sk(), index).reverse();
+    return new BLSKey(sk);
+  }
+
+  static fromSeed(seed: Uint8Array): BLSKey {
+    const sk = hkdfModR(seed).reverse();
+    return new BLSKey(sk);
   }
 }
 
