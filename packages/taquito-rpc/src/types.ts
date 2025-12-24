@@ -1372,10 +1372,10 @@ export interface BakingRightsQueryArgumentsBase {
 export interface BakingRightsResponseItem {
   level: number;
   delegate: string;
-  priority?: number;
   round?: number;
   estimated_time?: Date;
   consensus_key?: string;
+  priority?: number;
 }
 
 export type BakingRightsResponse = BakingRightsResponseItem[];
@@ -1394,16 +1394,17 @@ export interface AttestationRightsQueryArguments {
 export interface AttestationRightsResponseItemDelegates {
   delegate: string;
   first_slot: number;
-  attestation_power: number;
+  attesting_power: number;
   consensus_key: string;
+  attestation_power?: number;
 }
 
 export interface AttestationRightsResponseItem {
   level: number;
-  delegate?: string;
   delegates?: AttestationRightsResponseItemDelegates[];
-  slots?: number[];
   estimated_time?: Date;
+  delegate?: string;
+  slots?: number[];
 }
 
 export type AttestationRightsResponse = AttestationRightsResponseItem[];
@@ -2101,7 +2102,8 @@ export interface ConstantsResponseCommon {
 
 export type Ratio = { numerator: number; denominator: number };
 
-export interface ConstantsResponseProto024 extends Omit<ConstantsResponseProto023, | 'all_bakers_attest_activation_level'> {
+export interface ConstantsResponseProto024
+  extends Omit<ConstantsResponseProto023, 'all_bakers_attest_activation_level'> {
   all_bakers_attest_activation_threshold: Ratio;
 }
 

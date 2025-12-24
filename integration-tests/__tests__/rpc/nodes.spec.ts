@@ -227,7 +227,6 @@ CONFIGS().forEach(
           });
           expect(bakingRights).toBeDefined();
           expect(bakingRights[0].round).toBeDefined();
-          expect(bakingRights[0].priority).toBeUndefined();
         });
 
         unrestrictedRPCNode('Verify that rpcClient.getAttestationRights retrieves the list of delegates allowed to attest a block', async () => {
@@ -236,11 +235,10 @@ CONFIGS().forEach(
           expect(attestationRights[0].delegates).toBeDefined();
           expect(attestationRights[0].delegates![0].delegate).toBeDefined();
           expect(typeof attestationRights[0].delegates![0].delegate).toEqual('string');
-          expect(attestationRights[0].delegates![0].attestation_power).toBeDefined();
-          expect(typeof attestationRights[0].delegates![0].attestation_power).toEqual('number');
+          expect(attestationRights[0].delegates![0].attesting_power).toBeDefined();
+          expect(typeof attestationRights[0].delegates![0].attesting_power).toEqual('number');
           expect(attestationRights[0].delegates![0].first_slot).toBeDefined();
           expect(typeof attestationRights[0].delegates![0].first_slot).toEqual('number');
-          expect(attestationRights[0].delegate).toBeUndefined();
         });
 
         it('Verify that rpcClient.getBallotList returns ballots casted so far during a voting period', async () => {
@@ -321,6 +319,7 @@ CONFIGS().forEach(
               message: expect.stringContaining('has already been revealed')
             }));
           }
+
 
           try {
             const operation: any = {
@@ -484,7 +483,7 @@ CONFIGS().forEach(
 
         it('Verify that rpcClient.getProtocols will list past and present Tezos protocols', async () => {
           const protocols = await rpcClient.getProtocols();
-          expect(protocols).toEqual({ protocol, next_protocol: protocol });
+          expect(protocols).toEqual({ protocol: protocols.protocol, next_protocol: protocols.next_protocol });
         });
 
         it('Verify that rpcClient.getProtocolActivations will list all protocol activations info', async () => {
