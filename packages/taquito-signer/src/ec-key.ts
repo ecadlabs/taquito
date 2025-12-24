@@ -233,14 +233,34 @@ export class ExtendedECKey extends ECKey {
 }
 
 export class P256Key extends ExtendedECKey {
+  constructor(seed: Uint8Array);
+  constructor(privateKey: Uint8Array, chainCode: Uint8Array);
+  constructor(privateKey: Uint8Array, chainCode?: Uint8Array) {
+    if (chainCode !== undefined) {
+      super(privateKey, chainCode, 'p256');
+    } else {
+      super(privateKey /* seed */, 'p256');
+    }
+  }
+
   static fromSeed(seed: Uint8Array): P256Key {
-    return new P256Key(seed, 'p256');
+    return new P256Key(seed);
   }
 }
 
 export class Secp256k1Key extends ExtendedECKey {
+  constructor(seed: Uint8Array);
+  constructor(privateKey: Uint8Array, chainCode: Uint8Array);
+  constructor(privateKey: Uint8Array, chainCode?: Uint8Array) {
+    if (chainCode !== undefined) {
+      super(privateKey, chainCode, 'secp256k1');
+    } else {
+      super(privateKey /* seed */, 'secp256k1');
+    }
+  }
+
   static fromSeed(seed: Uint8Array): Secp256k1Key {
-    return new Secp256k1Key(seed, 'secp256k1');
+    return new Secp256k1Key(seed);
   }
 }
 
