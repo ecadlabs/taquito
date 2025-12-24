@@ -1375,6 +1375,7 @@ export interface BakingRightsResponseItem {
   round?: number;
   estimated_time?: Date;
   consensus_key?: string;
+  priority?: number;
 }
 
 export type BakingRightsResponse = BakingRightsResponseItem[];
@@ -1395,12 +1396,15 @@ export interface AttestationRightsResponseItemDelegates {
   first_slot: number;
   attesting_power: number;
   consensus_key: string;
+  attestation_power?: number;
 }
 
 export interface AttestationRightsResponseItem {
   level: number;
   delegates?: AttestationRightsResponseItemDelegates[];
   estimated_time?: Date;
+  delegate?: string;
+  slots?: number[];
 }
 
 export type AttestationRightsResponse = AttestationRightsResponseItem[];
@@ -2098,29 +2102,28 @@ export interface ConstantsResponseCommon {
 
 export type Ratio = { numerator: number; denominator: number };
 
-export interface ConstantsResponseProto024 extends Omit<
-  ConstantsResponseProto023,
-  'all_bakers_attest_activation_level'
-> {
+export interface ConstantsResponseProto024
+  extends Omit<ConstantsResponseProto023, 'all_bakers_attest_activation_level'> {
   all_bakers_attest_activation_threshold: Ratio;
 }
 
 export type ConstantsResponseProto023 = ConstantsResponseProto022;
 
-export interface ConstantsResponseProto022 extends Omit<
-  ConstantsResponseProto021,
-  | 'adaptive_issuance_activation_vote_enable'
-  | 'adaptive_issuance_force_activation'
-  | 'adaptive_issuance_launch_ema_threshold'
-  | 'autostaking_enable'
-  | 'consensus_threshold'
-  | 'issuance_weights'
-  | 'dal_parametric'
-  | 'max_slashing_period'
-  | 'max_slashing_threshold'
-  | 'ns_enable'
-  | 'percentage_of_frozen_deposits_slashed_per_double_attestation'
-> {
+export interface ConstantsResponseProto022
+  extends Omit<
+    ConstantsResponseProto021,
+    | 'adaptive_issuance_activation_vote_enable'
+    | 'adaptive_issuance_force_activation'
+    | 'adaptive_issuance_launch_ema_threshold'
+    | 'autostaking_enable'
+    | 'consensus_threshold'
+    | 'issuance_weights'
+    | 'dal_parametric'
+    | 'max_slashing_period'
+    | 'max_slashing_threshold'
+    | 'ns_enable'
+    | 'percentage_of_frozen_deposits_slashed_per_double_attestation'
+  > {
   aggregate_attestation: boolean;
   all_bakers_attest_activation_level: null | number;
   allow_tz4_delegate_enable: boolean;
@@ -2159,16 +2162,17 @@ export interface ConstantsResponseProto022 extends Omit<
 
 export type ConstantsResponseProto021 = ConstantsResponseProto020;
 
-export interface ConstantsResponseProto020 extends Omit<
-  ConstantsResponseProto019,
-  | 'adaptive_rewards_params'
-  | 'blocks_per_stake_snapshot'
-  | 'dal_parametric'
-  | 'issuance_weights'
-  | 'liquidity_baking_subsidy_weight'
-  | 'preserved_cycles'
-  | 'smart_rollup_reveal_activation_level'
-> {
+export interface ConstantsResponseProto020
+  extends Omit<
+    ConstantsResponseProto019,
+    | 'adaptive_rewards_params'
+    | 'blocks_per_stake_snapshot'
+    | 'dal_parametric'
+    | 'issuance_weights'
+    | 'liquidity_baking_subsidy_weight'
+    | 'preserved_cycles'
+    | 'smart_rollup_reveal_activation_level'
+  > {
   adaptive_issuance_force_activation: boolean;
   adaptive_rewards_params: {
     center_dz: {
@@ -2241,33 +2245,34 @@ export interface ConstantsResponseProto020 extends Omit<
   };
 }
 
-export interface ConstantsResponseProto019 extends Omit<
-  ConstantsResponseProto017,
-  | 'baking_reward_bonus_per_slot'
-  | 'baking_reward_fixed_portion'
-  | 'double_baking_punishment'
-  | 'endorsing_reward_per_slot'
-  | 'frozen_deposits_percentage'
-  | 'liquidity_baking_subsidy'
-  | 'ratio_of_frozen_deposits_slashed_per_double_endorsement'
-  | 'seed_nonce_revelation_tip'
-  | 'smart_rollup_enable'
-  | 'tx_rollup_commitment_bond'
-  | 'tx_rollup_cost_per_byte_ema_factor'
-  | 'tx_rollup_enable'
-  | 'tx_rollup_finality_period'
-  | 'tx_rollup_hard_size_limit_per_inbox'
-  | 'tx_rollup_hard_size_limit_per_message'
-  | 'tx_rollup_max_commitments_count'
-  | 'tx_rollup_max_inboxes_count'
-  | 'tx_rollup_max_messages_per_inbox'
-  | 'tx_rollup_max_ticket_payload_size'
-  | 'tx_rollup_max_withdrawals_per_batch'
-  | 'tx_rollup_origination_size'
-  | 'tx_rollup_rejection_max_proof_size'
-  | 'tx_rollup_sunset_level'
-  | 'tx_rollup_withdraw_period'
-> {
+export interface ConstantsResponseProto019
+  extends Omit<
+    ConstantsResponseProto017,
+    | 'baking_reward_bonus_per_slot'
+    | 'baking_reward_fixed_portion'
+    | 'double_baking_punishment'
+    | 'endorsing_reward_per_slot'
+    | 'frozen_deposits_percentage'
+    | 'liquidity_baking_subsidy'
+    | 'ratio_of_frozen_deposits_slashed_per_double_endorsement'
+    | 'seed_nonce_revelation_tip'
+    | 'smart_rollup_enable'
+    | 'tx_rollup_commitment_bond'
+    | 'tx_rollup_cost_per_byte_ema_factor'
+    | 'tx_rollup_enable'
+    | 'tx_rollup_finality_period'
+    | 'tx_rollup_hard_size_limit_per_inbox'
+    | 'tx_rollup_hard_size_limit_per_message'
+    | 'tx_rollup_max_commitments_count'
+    | 'tx_rollup_max_inboxes_count'
+    | 'tx_rollup_max_messages_per_inbox'
+    | 'tx_rollup_max_ticket_payload_size'
+    | 'tx_rollup_max_withdrawals_per_batch'
+    | 'tx_rollup_origination_size'
+    | 'tx_rollup_rejection_max_proof_size'
+    | 'tx_rollup_sunset_level'
+    | 'tx_rollup_withdraw_period'
+  > {
   adaptive_issuance_activation_vote_enable: boolean;
   adaptive_issuance_launch_ema_threshold: number;
   adaptive_rewards_params: {
@@ -2324,23 +2329,24 @@ export interface ConstantsResponseProto019 extends Omit<
 
 export type ConstantsResponseProto017 = ConstantsResponseProto016;
 
-export interface ConstantsResponseProto016 extends Omit<
-  ConstantsResponseProto015,
-  | 'sc_max_wrapped_proof_binary_size'
-  | 'sc_rollup_challenge_window_in_blocks'
-  | 'sc_rollup_commitment_period_in_blocks'
-  | 'sc_rollup_enable'
-  | 'sc_rollup_max_active_outbox_levels'
-  | 'sc_rollup_max_lookahead_in_blocks'
-  | 'sc_rollup_max_number_of_cemented_commitments'
-  | 'sc_rollup_max_number_of_messages_per_commitment_period'
-  | 'sc_rollup_max_outbox_messages_per_level'
-  | 'sc_rollup_message_size_limit'
-  | 'sc_rollup_number_of_sections_in_dissection'
-  | 'sc_rollup_origination_size'
-  | 'sc_rollup_stake_amount'
-  | 'sc_rollup_timeout_period_in_blocks'
-> {
+export interface ConstantsResponseProto016
+  extends Omit<
+    ConstantsResponseProto015,
+    | 'sc_max_wrapped_proof_binary_size'
+    | 'sc_rollup_challenge_window_in_blocks'
+    | 'sc_rollup_commitment_period_in_blocks'
+    | 'sc_rollup_enable'
+    | 'sc_rollup_max_active_outbox_levels'
+    | 'sc_rollup_max_lookahead_in_blocks'
+    | 'sc_rollup_max_number_of_cemented_commitments'
+    | 'sc_rollup_max_number_of_messages_per_commitment_period'
+    | 'sc_rollup_max_outbox_messages_per_level'
+    | 'sc_rollup_message_size_limit'
+    | 'sc_rollup_number_of_sections_in_dissection'
+    | 'sc_rollup_origination_size'
+    | 'sc_rollup_stake_amount'
+    | 'sc_rollup_timeout_period_in_blocks'
+  > {
   smart_rollup_arith_pvm_enable: boolean;
   smart_rollup_challenge_window_in_blocks: number;
   smart_rollup_commitment_period_in_blocks: number;
@@ -2359,13 +2365,14 @@ export interface ConstantsResponseProto016 extends Omit<
   smart_rollup_timeout_period_in_blocks: number;
 }
 
-export interface ConstantsResponseProto015 extends Omit<
-  ConstantsResponseProto014,
-  | 'max_wrapped_proof_binary_size'
-  | 'tokens_per_roll'
-  | 'liquidity_baking_sunset_level'
-  | 'sc_rollup_max_available_messages'
-> {
+export interface ConstantsResponseProto015
+  extends Omit<
+    ConstantsResponseProto014,
+    | 'max_wrapped_proof_binary_size'
+    | 'tokens_per_roll'
+    | 'liquidity_baking_sunset_level'
+    | 'sc_rollup_max_available_messages'
+  > {
   minimal_stake: BigNumber;
   sc_max_wrapped_proof_binary_size: number;
   sc_rollup_message_size_limit: number;
@@ -2405,13 +2412,14 @@ export interface ConstantsResponseProto014 extends ConstantsResponseProto013 {
   sc_rollup_max_outbox_messages_per_level?: number;
 }
 
-export interface ConstantsResponseProto013 extends Omit<
-  ConstantsResponseProto012,
-  | 'blocks_per_voting_period'
-  | 'cache_layout'
-  | 'delegate_selection'
-  | 'liquidity_baking_escape_ema_threshold'
-> {
+export interface ConstantsResponseProto013
+  extends Omit<
+    ConstantsResponseProto012,
+    | 'blocks_per_voting_period'
+    | 'cache_layout'
+    | 'delegate_selection'
+    | 'liquidity_baking_escape_ema_threshold'
+  > {
   cache_layout_size?: number;
   cache_sampler_state_cycles?: number;
   cache_script_size?: number;
@@ -2440,19 +2448,20 @@ export interface ConstantsResponseProto013 extends Omit<
   sc_rollup_max_available_messages?: number;
 }
 
-export interface ConstantsResponseProto012 extends Omit<
-  ConstantsResponseProto011,
-  | 'baking_reward_per_endorsement'
-  | 'initial_endorsers'
-  | 'delay_per_missing_endorsement'
-  | 'test_chain_duration'
-  | 'blocks_per_roll_snapshot'
-  | 'time_between_blocks'
-  | 'endorsers_per_block'
-  | 'block_security_deposit'
-  | 'endorsement_security_deposit'
-  | 'endorsement_reward'
-> {
+export interface ConstantsResponseProto012
+  extends Omit<
+    ConstantsResponseProto011,
+    | 'baking_reward_per_endorsement'
+    | 'initial_endorsers'
+    | 'delay_per_missing_endorsement'
+    | 'test_chain_duration'
+    | 'blocks_per_roll_snapshot'
+    | 'time_between_blocks'
+    | 'endorsers_per_block'
+    | 'block_security_deposit'
+    | 'endorsement_security_deposit'
+    | 'endorsement_reward'
+  > {
   blocks_per_stake_snapshot?: number;
   baking_reward_fixed_portion?: BigNumber;
   baking_reward_bonus_per_slot?: BigNumber;
@@ -2488,10 +2497,8 @@ export interface ConstantsResponseProto009 extends ConstantsResponseProto008 {}
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface ConstantsResponseProto008 extends ConstantsResponseProto007 {}
 
-export interface ConstantsResponseProto007 extends Omit<
-  ConstantsResponseProto006,
-  'max_revelations_per_block'
-> {
+export interface ConstantsResponseProto007
+  extends Omit<ConstantsResponseProto006, 'max_revelations_per_block'> {
   max_anon_ops_per_block?: number;
 }
 
@@ -2511,10 +2518,8 @@ export interface ConstantsResponseProto004 extends ConstantsResponseProto003 {
   test_chain_duration?: BigNumber;
 }
 
-export interface ConstantsResponseProto003 extends Omit<
-  ConstantsResponseProto001And002,
-  'origination_burn'
-> {
+export interface ConstantsResponseProto003
+  extends Omit<ConstantsResponseProto001And002, 'origination_burn'> {
   origination_size?: number;
   max_proposals_per_delegate?: number;
 }

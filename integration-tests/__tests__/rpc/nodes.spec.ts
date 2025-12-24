@@ -320,7 +320,6 @@ CONFIGS().forEach(
             }));
           }
 
-          const proto = (await rpcClient.getProtocols()).protocol;
 
           try {
             const operation: any = {
@@ -340,7 +339,7 @@ CONFIGS().forEach(
                   },
                 },
               ],
-              protocol: `${proto}`,
+              protocol: `${protocol}`,
               signature:
                 'edsigtkpiSSschcaCt9pUVrpNPf7TTcgvgDEDD6NCEHMy8NNQJCGnMfLZzYoQj74yLjo9wx6MPVV29CvVzgi7qEcEUok3k7AuMg',
             };
