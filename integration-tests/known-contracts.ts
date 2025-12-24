@@ -5,5 +5,4 @@ export type KnownContracts = {
   saplingContract: string;
   tzip12BigMapOffChainContract: string;
   ticketContract: string;
-  indexContract: string;
 }

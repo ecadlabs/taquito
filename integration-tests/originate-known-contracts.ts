@@ -9,7 +9,6 @@ import { knownBigMapContract } from './data/knownBigMapContract';
 import { knownContract } from './data/knownContract';
 import * as fs from 'fs/promises';
 import { ticketsSendTz } from './data/code_with_ticket_transfer';
-import { indexAddressCode, indexAddressStorage } from './data/code_with_index_address_index';
 
 // before running the test with secret key make sure tz2RqxsYQyFuP9amsmrr25x9bUcBMWXGvjuD is funded
 const MUTEZ_UNIT = new BigNumber(1000000);
@@ -180,12 +179,6 @@ CONFIGS().forEach(({ lib, setup, networkName }) => {
     await originateKnownContract('ticketContract', tezos, {
       code: ticketsSendTz,
       storage: null
-    });
-
-    // knownIndexContract
-    await originateKnownContract('indexContract', tezos, {
-      code: indexAddressCode,
-      init: indexAddressStorage
     });
 
     await appendOutput('};');

@@ -6,5 +6,4 @@ export const knownContractsGhostnet: KnownContracts = {
   saplingContract: "KT1F8BoKHeFTPDsTwSQmThwjSBjAjYgGgAGy",
   onChainViewContractAddress: "KT1LdBJDGN9svUfootxSGksoC7d78gNuzVXV",
   ticketContract: "KT1Ly6RnCB4DDbfptwJxG6rxAvQjxyq6oJW7",
-  indexContract: "",
 };

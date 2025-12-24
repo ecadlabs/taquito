@@ -5,6 +5,7 @@ import { encodeExpr } from '@taquito/utils';
 import { Schema } from '@taquito/michelson-encoder';
 import { tokenBigmapCode, tokenBigmapStorage } from '../../data/token_bigmap';
 import { ticketCode, ticketStorage } from '../../data/code_with_ticket';
+import { indexAddressCode, indexAddressStorage } from '../../data/code_with_index_address_index';
 
 CONFIGS().forEach(
   ({
@@ -17,15 +18,18 @@ CONFIGS().forEach(
     knownBigMapContract,
     knownSaplingContract,
     knownViewContract,
+    createAddress,
   }) => {
     const Tezos = lib;
-    const unrestricted = rpc.includes("teztnets.com") || rpc.includes("net-rolling-1.i.ecadinfra.com") ? true : false;
-    const unrestrictedNode = unrestricted ?  test : test.skip;
-    const seoulnet = protocol === Protocols.PtSeouLou ? true: false;
-    const unrestrictedSeoulnet = seoulnet && unrestricted ? test : test.skip;
-    const tallinnnetAndAlpha = protocol === Protocols.PtTALLiNt || protocol === Protocols.ProtoALpha ? true: false;
-    const unrestrictedTallinnnetAndAlpha = tallinnnetAndAlpha && unrestricted ? test : test.skip;
+    const isUnrestricted = rpc.includes("teztnets.com") || rpc.includes("net-rolling-1.i.ecadinfra.com") ? true : false;
+    const isSeoulnet = protocol === Protocols.PtSeouLou ? true : false;
+    const isTallinnnetAndAlpha = protocol === Protocols.PtTALLiNt || protocol === Protocols.ProtoALpha ? true : false;
+    const unrestrictedNode = isUnrestricted ? test : test.skip;
+    const unrestrictedSeoulnet = isSeoulnet && isUnrestricted ? test : test.skip;
+    const unrestrictedTallinnnetAndAlpha = isTallinnnetAndAlpha && isUnrestricted ? test : test.skip;
+    const tallinnnetAndAlpha = isTallinnnetAndAlpha ? test : test.skip;
     let ticketContract: DefaultContractType;
+    let freshAddress: string;
 
     beforeAll(async () => {
       await setup();
@@ -40,6 +44,8 @@ CONFIGS().forEach(
         // contract call to issue tickets
         const ticketCallOp = await ticketContract.methodsObject.auto_call(1).send();
         await ticketCallOp.confirmation();
+        // generate a fresh(unindexed) address
+        freshAddress = await (await createAddress()).signer.publicKeyHash();
       } catch (e) {
         console.log('Failed to originate ticket contract', JSON.stringify(e));
       }
@@ -196,14 +202,38 @@ CONFIGS().forEach(
         });
 
         it(`Verify that rpcClient.getPendingStakingParameters for known baker returns pending staking parameters`, async () => {
-            const pendingStakingParams = await rpcClient.getPendingStakingParameters(knownBaker);
-            expect(pendingStakingParams).toBeDefined();
-            if (Array.isArray(pendingStakingParams) && pendingStakingParams.length > 0) {
-              expect(typeof pendingStakingParams[0].cycle).toBe('number');
-              expect(pendingStakingParams[0].parameters).toBeDefined();
-              expect(typeof pendingStakingParams[0].parameters.limit_of_staking_over_baking_millionth).toBe('number');
-              expect(typeof pendingStakingParams[0].parameters.edge_of_baking_over_staking_billionth).toBe('number');
-            }
+          const pendingStakingParams = await rpcClient.getPendingStakingParameters(knownBaker);
+          expect(pendingStakingParams).toBeDefined();
+          if (Array.isArray(pendingStakingParams) && pendingStakingParams.length > 0) {
+            expect(typeof pendingStakingParams[0].cycle).toBe('number');
+            expect(pendingStakingParams[0].parameters).toBeDefined();
+            expect(typeof pendingStakingParams[0].parameters.limit_of_staking_over_baking_millionth).toBe('number');
+            expect(typeof pendingStakingParams[0].parameters.edge_of_baking_over_staking_billionth).toBe('number');
+          }
+        });
+
+        tallinnnetAndAlpha('Verify that rpcClient.getDestinationIndex returns null when the address is not indexed', async () => {
+          const destinationIndex = await rpcClient.getDestinationIndex(freshAddress);
+          expect(destinationIndex).toBeNull();
+        });
+
+        tallinnnetAndAlpha('Verify that rpcClient.getDestinationIndex returns the index of the destination with a custom block', async () => {
+          // Originate a contract that uses INDEX_ADDRESS
+          const originateIndexAddress = await Tezos.contract.originate({
+            code: indexAddressCode,
+            init: indexAddressStorage,
+          });
+          await originateIndexAddress.confirmation();
+          const indexAddressContract = await originateIndexAddress.contract();
+
+          // Call the contract to index the address
+          const indexOp = await indexAddressContract.methodsObject.default(freshAddress).send();
+          await indexOp.confirmation();
+
+          // rpc call to get the destination index
+          const destinationIndexRpc = await rpcClient.getDestinationIndex(freshAddress);
+          expect(destinationIndexRpc).toBeDefined();
+          expect(typeof destinationIndexRpc).toBe('string');
         });
 
         it('Verify that rpcClient.getConstants returns all constants from RPC', async () => {

@@ -6,5 +6,4 @@ export const knownContractsTallinnnet: KnownContracts = {
   saplingContract: "KT1LdxaKP6VkU7h8m43zN4CSn8hmG7TWpaTd",
   onChainViewContractAddress: "KT1UsUzNLumGZ8F51AP3onTt161LWTSav1Uk",
   ticketContract: "KT1G5xyycnahnRB1UCCv2gCygByqyYjjfRTN",
-  indexContract: "",
 };

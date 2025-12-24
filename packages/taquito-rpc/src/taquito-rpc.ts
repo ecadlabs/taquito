@@ -1312,7 +1312,7 @@ export class RpcClient implements RpcClientInterface {
   /**
    * @param destination address to retrieve the index for
    * @param options contains generic configuration for rpc calls to specified block (default to head)
-   * @description Returns the index of a registered destination address
+   * @description Returns the index assigned to the address if it was indexed by the opcode INDEX_ADDRESS, otherwise returns null
    * @see https://octez.tezos.com/docs/alpha/rpc.html#get-block-id-context-destination-destination-id-index
    */
   async getDestinationIndex(

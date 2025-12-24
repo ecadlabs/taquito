@@ -6,5 +6,4 @@ export const knownContractsSeoulnet: KnownContracts = {
   saplingContract: "KT1CFjFcLiLTkAkpXba6aDHHuvDrqyR2D224",
   onChainViewContractAddress: "KT1CDKFVPs2ZgMxNuUcjsXTPXQCfhYCrCdfe",
   ticketContract: "KT1ArVFYBMk3uv3d1AqwztYpf4HepN8ADfTv",
-  indexContract: "",
 };

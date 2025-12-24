@@ -6,5 +6,4 @@ export const knownContractsWeeklynet: KnownContracts = {
   saplingContract: "KT1A5WvdvVd8i9R7DtuBViJv4oiwqdW96kHR",
   onChainViewContractAddress: "KT1HPCMYYcaqgQqzxpBcSnK1Lkfb6YVhDBpr",
   ticketContract: "KT1LwExfPmiDWbqAdriNpf1YBD8SP5mXvnD2",
-  indexContract: "",
 };

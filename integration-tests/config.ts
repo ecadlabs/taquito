@@ -49,7 +49,6 @@ interface Config {
   knownSaplingContract: string;
   knownViewContract: string;
   knownTicketContract: string;
-  knownIndexContract: string;
   protocol: Protocols;
   signerConfig: EphemeralConfig | SecretKeyConfig;
   networkType: NetworkType;
@@ -129,7 +128,6 @@ const defaultConfig = ({
     knownSaplingContract: process.env[`TEZOS_${networkName}_SAPLINGCONTRACT_ADDRESS`] || knownContracts.saplingContract,
     knownViewContract: process.env[`TEZOS_${networkName}_ON_CHAIN_VIEW_CONTRACT`] || knownContracts.onChainViewContractAddress,
     knownTicketContract: process.env[`TEZOS_${networkName}_TICKET_CONTRACT`] || knownContracts.ticketContract,
-    knownIndexContract: process.env[`TEZOS_${networkName}_INDEX_CONTRACT`] || knownContracts.indexContract,
     protocol: protocol,
     signerConfig: signerConfig,
     networkType: networkType
@@ -308,7 +306,6 @@ export const CONFIGS = () => {
         knownSaplingContract,
         knownViewContract,
         knownTicketContract,
-        knownIndexContract,
         signerConfig,
         networkType
       }) => {
@@ -333,7 +330,6 @@ export const CONFIGS = () => {
           knownSaplingContract,
           knownViewContract,
           knownTicketContract,
-          knownIndexContract,
           signerConfig,
           networkType,
           setup: async (preferFreshKey: boolean = false) => {
