@@ -5,7 +5,6 @@ import {
   PrefixV2,
   buf2hex,
   b58DecodeAndCheckPrefix,
-  b58Encode,
 } from '@taquito/utils';
 import { deriveKey as pbkdf2 } from '@stablelib/pbkdf2';
 import { EdKey, EdPublicKey } from './ed-key';
@@ -53,7 +52,7 @@ export class InMemorySigner implements Signer {
       throw new InvalidMnemonicError(mnemonic);
     }
     const seed = Bip39.mnemonicToSeedSync(mnemonic, `${email}${password}`);
-    const key = b58Encode(seed.subarray(0, 32), PrefixV2.Ed25519Seed);
+    const key = new EdKey(seed.subarray(0, 32));
     return new InMemorySigner(key);
   }
 
