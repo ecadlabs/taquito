@@ -1,12 +1,13 @@
 import { HKDF } from '@stablelib/hkdf';
 import { SHA256, hash as sha256 } from '@stablelib/sha256';
+import { arrayToBigInt, bigIntToArray } from './derivation-utils';
 
 function ikmToLamportSK(ikm: Uint8Array, salt: Uint8Array): Uint8Array[] {
   const prk = new HKDF(SHA256, ikm, salt);
   const okm = prk.expand(255 * 32);
   const out = [];
   for (let off = 0; off < okm.length; off += 32) {
-    out.push(okm.slice(off, off + 32));
+    out.push(okm.subarray(off, off + 32));
   }
   return out;
 }
@@ -33,26 +34,6 @@ export function parentSKToLamportPK(parentSK: Uint8Array, index: number): { lamp
   return { lamport0, lamport1, compressed: out.digest() };
 }
 
-export function arrayToBigInt(src: Uint8Array): bigint {
-  let out = BigInt(0);
-  for (const x of src) {
-    out = (out << BigInt(8)) | BigInt(x);
-  }
-  return out;
-}
-
-export function bigIntToArray(n: bigint): Uint8Array {
-  const out = [];
-  while (n !== BigInt(0)) {
-    out.push(Number(BigInt.asUintN(8, n)));
-    n = n >> BigInt(8);
-  }
-  if (out.length === 0) {
-    out.push(0);
-  }
-  return new Uint8Array(out.reverse());
-}
-
 export function hkdfModR(ikm: Uint8Array, info: Uint8Array = new Uint8Array(0)): Uint8Array {
   const r = BigInt("52435875175126190479447740508185965837690552500527637822603658699938581184513");
   let salt = new TextEncoder().encode("BLS-SIG-KEYGEN-SALT-");
@@ -67,7 +48,7 @@ export function hkdfModR(ikm: Uint8Array, info: Uint8Array = new Uint8Array(0)):
     const okm = prk.expand(48);
     const sk = arrayToBigInt(okm) % r;
     if (sk !== BigInt(0)) {
-      return bigIntToArray(sk);
+      return bigIntToArray(sk, 32);
     }
   }
 }

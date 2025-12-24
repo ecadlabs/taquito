@@ -1,6 +1,7 @@
 import { InvalidCurveError, InvalidMnemonicError, ToBeImplemented } from '../src/errors';
 import { InMemorySigner } from '../src/taquito-signer';
 import { InvalidDerivationPathError, InvalidKeyError } from '@taquito/core';
+import { Curve } from '../src/derivation-utils';
 
 describe('inmemory-signer', () => {
   const mnemonic = 'prefer wait flock brown volume recycle scrub elder rate pair twenty giant';
@@ -318,7 +319,7 @@ describe('inmemory-signer', () => {
         derivationPath: "44'/1729'/0'/0'",
         curve: 'bip25519',
       })
-    ).toThrowError(ToBeImplemented);
+    ).toThrow(ToBeImplemented);
   });
 
   it('Should throw error with wrong curve', () => {
@@ -328,8 +329,8 @@ describe('inmemory-signer', () => {
       InMemorySigner.fromMnemonic({
         mnemonic,
         derivationPath: "44'/1729'/0'/0'",
-        curve: 'wrong' as any,
+        curve: 'wrong' as Curve,
       })
-    ).toThrowError(InvalidCurveError);
+    ).toThrow(InvalidCurveError);
   });
 });

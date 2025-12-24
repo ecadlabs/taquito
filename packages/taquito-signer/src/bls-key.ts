@@ -15,7 +15,6 @@ import { deriveChildSK, hkdfModR } from './bls-utils';
 
 const bls = bls12_381.longSignatures; // AKA MinPK
 
-
 export class BLSKey implements SigningKeyWithProofOfPossession {
   #key: Uint8Array;
   #publicKey: Uint8Array;

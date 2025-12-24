@@ -77,16 +77,12 @@
     "@stablelib/sha512": "^1.0.1",
     "@taquito/core": "^23.1.0",
     "@taquito/utils": "^23.1.0",
-    "@types/bn.js": "^5.1.5",
-    "bip39": "3.1.0",
-    "pbkdf2": "^3.1.2",
-    "typedarray-to-buffer": "^4.0.0"
+    "bip39": "3.1.0"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.42",
     "@types/jest": "^29.5.12",
     "@types/node": "^20",
-    "@types/pbkdf2": "^3.1.2",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "colors": "^1.4.0",

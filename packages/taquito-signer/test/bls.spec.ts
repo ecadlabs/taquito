@@ -1,6 +1,7 @@
 import { hex2buf } from '@taquito/utils';
 import { BLSKey } from '../src/bls-key';
-import { arrayToBigInt, bigIntToArray, hkdfModR, parentSKToLamportPK } from '../src/bls-utils';
+import { hkdfModR, parentSKToLamportPK } from '../src/bls-utils';
+import { arrayToBigInt, bigIntToArray } from '../src/derivation-utils';
 
 describe('BLS', () => {
   it('should decode the secret key (tezos uses little endian format)', async () => {
