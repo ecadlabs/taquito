@@ -6,6 +6,9 @@ import { Curve as ECCurve } from "./ec-key";
 
 export type Curve = ECCurve | 'ed25519' | 'bip25519' | 'bls12-381';
 
+/**
+ * @description Converts big endian unsigned integer to bigint
+ */
 export function arrayToBigInt(src: Uint8Array): bigint {
   let out = BigInt(0);
   for (const x of src) {
@@ -14,6 +17,9 @@ export function arrayToBigInt(src: Uint8Array): bigint {
   return out;
 }
 
+/**
+ * @description Converts bigint to big endian array with optional padding
+ */
 export function bigIntToArray(n: bigint, size?: number): Uint8Array {
   const out = [];
   let i = 0;
@@ -32,10 +38,18 @@ export function bigIntToArray(n: bigint, size?: number): Uint8Array {
 }
 
 export interface ParentSigningKey extends SigningKey {
+  /**
+   * @description Derive Nth child using curve-specific algorithm
+   * @returns the child key
+   */
   derive(index: number): this;
 }
 
 export interface FromSeedConstructor<T extends SigningKey> {
+  /**
+   * @description constructs a signing key from BIP-32/ERC-2333 seed
+   * @returns the signing key
+   */
   fromSeed(seed: Uint8Array): T;
 }
 
@@ -43,9 +57,8 @@ export type Path = Iterable<number>;
 export const Hard = 0x80000000;
 
 /**
- *
- * @param s derivation path eg: 44'/1729'/0'/0'
- * @returns applied hardened values
+ * @description returns numeric representation of the derivation path
+ * @param s derivation path string eg: 44'/1729'/0'/0'
  */
 export function pathFromString(s: string): number[] {
   if (s.length === 0) {
@@ -72,6 +85,10 @@ export function pathFromString(s: string): number[] {
   return out;
 }
 
+
+/**
+ * @description returns string representation of the path in canonical format starting with 'm/'
+ */
 export function pathToString(path: Path): string {
   let out = "m";
   for (const x of path) {
@@ -83,6 +100,9 @@ export function pathToString(path: Path): string {
   return out;
 }
 
+/**
+ * @description returns derived child key
+ */
 export function derivePath<T extends ParentSigningKey>(parent: T, path: Path | string): T {
   const p = typeof path === 'string' ? pathFromString(path) : path;
   for (const x of p) {
@@ -104,6 +124,9 @@ export const minSeedSize = 16;
 // MaxSeedSize is the maximal allowed seed byte length
 export const maxSeedSize = 64;
 
+/**
+ * @description constructs a signing key from BIP-32/ERC-2333 seed and returns its derivative (a child key)
+ */
 export function deriveSigningKeyFromSeed<T extends ParentSigningKey, C extends FromSeedConstructor<T>>(ctor: C, seed: Uint8Array, path: Path | string): T {
   if (seed.length < minSeedSize || seed.length > maxSeedSize) {
     throw new InvalidSeedLengthError(seed.length);
@@ -112,18 +135,10 @@ export function deriveSigningKeyFromSeed<T extends ParentSigningKey, C extends F
   return derivePath(parent, path);
 }
 
+/**
+ * @description constructs a signing key from BIP-39 mnemonic
+ */
 export function signingKeyFromMnemonic<T extends SigningKey, C extends FromSeedConstructor<T>>(ctor: C, mnemonic: string, password?: string): T {
-  if (!Bip39.validateMnemonic(mnemonic)) {
-    throw new InvalidMnemonicError(mnemonic);
-  }
-  const seed = Bip39.mnemonicToSeedSync(mnemonic, password);
-  if (seed.length < minSeedSize || seed.length > maxSeedSize) {
-    throw new InvalidSeedLengthError(seed.length);
-  }
-  return ctor.fromSeed(seed);
-}
-
-export function signingKeyFromSeed<T extends SigningKey, C extends FromSeedConstructor<T>>(ctor: C, mnemonic: string, password?: string): T {
   if (!Bip39.validateMnemonic(mnemonic)) {
     throw new InvalidMnemonicError(mnemonic);
   }
@@ -142,6 +157,9 @@ export interface FromMnemonicParams {
   derivationPath?: string | Path;
 }
 
+/**
+ * @description constructs a signing key from BIP-39 mnemonic and returns its derivative (a child key)
+ */
 export function deriveSigningKeyFromMnemonic<T extends ParentSigningKey, C extends FromSeedConstructor<T>>(ctor: C, { mnemonic, password, derivationPath = DefaultPath }: FromMnemonicParams): T {
   const parent = signingKeyFromMnemonic<T, C>(ctor, mnemonic, password);
   return derivePath<T>(parent, derivationPath);
