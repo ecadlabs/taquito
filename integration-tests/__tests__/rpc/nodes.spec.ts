@@ -1,5 +1,5 @@
 import { CONFIGS } from '../../config';
-import { DefaultContractType, } from "@taquito/taquito";
+import { DefaultContractType, Protocols } from "@taquito/taquito";
 import { RpcClientCache, RpcClient, RPCRunViewParam, RPCRunScriptViewParam, PendingOperationsV2 } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
 import { Schema } from '@taquito/michelson-encoder';
@@ -19,7 +19,12 @@ CONFIGS().forEach(
     knownViewContract,
   }) => {
     const Tezos = lib;
-    const unrestrictedRPCNode = rpc.includes("teztnets.com") || rpc.includes("net-rolling-1.i.ecadinfra.com") ? test : test.skip;
+    const unrestricted = rpc.includes("teztnets.com") || rpc.includes("net-rolling-1.i.ecadinfra.com") ? true : false;
+    const unrestrictedNode = unrestricted ?  test : test.skip;
+    const seoulnet = protocol === Protocols.PtSeouLou ? true: false;
+    const unrestrictedSeoulnet = seoulnet && unrestricted ? test : test.skip;
+    const tallinnnetAndAlpha = protocol === Protocols.PtTALLiNt || protocol === Protocols.ProtoALpha ? true: false;
+    const unrestrictedTallinnnetAndAlpha = tallinnnetAndAlpha && unrestricted ? test : test.skip;
     let ticketContract: DefaultContractType;
 
     beforeAll(async () => {
@@ -221,7 +226,7 @@ CONFIGS().forEach(
           expect(blockMetadata).toBeDefined();
         });
 
-        unrestrictedRPCNode('Verify that rpcClient.getBakingRights retrieves the list of delegates allowed to bake a block', async () => {
+        unrestrictedNode('Verify that rpcClient.getBakingRights retrieves the list of delegates allowed to bake a block', async () => {
           const bakingRights = await rpcClient.getBakingRights({
             max_round: '2'
           });
@@ -229,7 +234,19 @@ CONFIGS().forEach(
           expect(bakingRights[0].round).toBeDefined();
         });
 
-        unrestrictedRPCNode('Verify that rpcClient.getAttestationRights retrieves the list of delegates allowed to attest a block', async () => {
+        unrestrictedSeoulnet('Verify that rpcClient.getAttestationRights retrieves the list of delegates allowed to attest a block', async () => {
+          const attestationRights = await rpcClient.getAttestationRights();
+          expect(attestationRights).toBeDefined();
+          expect(attestationRights[0].delegates).toBeDefined();
+          expect(attestationRights[0].delegates![0].delegate).toBeDefined();
+          expect(typeof attestationRights[0].delegates![0].delegate).toEqual('string');
+          expect(attestationRights[0].delegates![0].attestation_power).toBeDefined();
+          expect(typeof attestationRights[0].delegates![0].attestation_power).toEqual('number');
+          expect(attestationRights[0].delegates![0].first_slot).toBeDefined();
+          expect(typeof attestationRights[0].delegates![0].first_slot).toEqual('number');
+        });
+
+        unrestrictedTallinnnetAndAlpha('Verify that rpcClient.getAttestationRights retrieves the list of delegates allowed to attest a block', async () => {
           const attestationRights = await rpcClient.getAttestationRights();
           expect(attestationRights).toBeDefined();
           expect(attestationRights[0].delegates).toBeDefined();
@@ -319,7 +336,6 @@ CONFIGS().forEach(
               message: expect.stringContaining('has already been revealed')
             }));
           }
-
 
           try {
             const operation: any = {
