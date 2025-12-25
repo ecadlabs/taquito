@@ -1,12 +1,12 @@
-name: Weeklynet Integration Tests
+name: Tezlinknet Integration Tests
 
 on:
   push:
     branches:
-      - '**weekly**'
+      - '**tezlink**'
 
 jobs:
-  integration-tests-weeklynet:
+  integration-tests-tezlinknet:
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:
@@ -17,5 +17,5 @@ jobs:
       - run: npm ci
       - run: npm run build
       - if: always()
-        id: integration-tests-weeklynet
-        run: npm -w integration-tests run test:weeklynet-secret-key
+        id: integration-tests-tezlinknet
+        run: npm -w integration-tests run test:tezlinknet-secret-key
