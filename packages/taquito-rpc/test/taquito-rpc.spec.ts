@@ -66,6 +66,8 @@ import {
   protocolActivation,
   activeStakingParametersResponse,
   pendingStakingParametersResponse,
+  destinationIndexResponse,
+  destinationIndexNullResponse,
 } from './data/rpc-responses';
 
 /**
@@ -4385,6 +4387,48 @@ describe('RpcClient test', () => {
       });
 
       expect(response).toEqual(pendingStakingParametersResponse);
+    });
+  });
+
+  describe('getDestinationIndex', () => {
+    it('should query the correct url and return destination index', async () => {
+      const destination = 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD';
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(destinationIndexResponse));
+      const response = await client.getDestinationIndex(destination);
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/head/context/destination/${destination}/index`,
+      });
+
+      expect(response).toEqual('42');
+    });
+
+    it('should query the correct url with custom block parameter', async () => {
+      const destination = 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD';
+      const block = 'BLUjvteWShd6gkbkPqNmCz1rzoBSLd5MghbdMwieVynSnhxgKVs';
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(destinationIndexResponse));
+      const response = await client.getDestinationIndex(destination, { block });
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/${block}/context/destination/${destination}/index`,
+      });
+
+      expect(response).toEqual('42');
+    });
+
+    it('should return null for non-indexed destination', async () => {
+      const destination = 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb';
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(destinationIndexNullResponse));
+      const response = await client.getDestinationIndex(destination);
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/head/context/destination/${destination}/index`,
+      });
+
+      expect(response).toBeNull();
     });
   });
 });

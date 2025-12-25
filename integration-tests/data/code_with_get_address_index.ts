@@ -1,6 +1,4 @@
-export const getAddressIndexStorage = {
-  string: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-};
+export const getAddressIndexStorage = { prim: 'None' };
 
 export const getAddressIndexCode = [
   {

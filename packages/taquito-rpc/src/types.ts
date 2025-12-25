@@ -2928,3 +2928,5 @@ export type PendingStakingParametersResponse = Array<{
     edge_of_baking_over_staking_billionth: number;
   };
 }>;
+
+export type DestinationIndexResponse = string | null;
