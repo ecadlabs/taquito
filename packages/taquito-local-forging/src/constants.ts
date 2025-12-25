@@ -226,6 +226,8 @@ export const opMapping: { [key: string]: string } = {
   '9c': 'NAT',
   '9d': 'Ticket',
   '9e': 'IS_IMPLICIT_ACCOUNT',
+  '9f': 'INDEX_ADDRESS',
+  'a0': 'GET_ADDRESS_INDEX',
 };
 
 export const opMappingReverse = (() => {
