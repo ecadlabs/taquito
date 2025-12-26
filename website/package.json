@@ -17,7 +17,7 @@
     "@astrojs/sitemap": "^3.6.0",
     "@cloudflare/workers-types": "^4.20251126.0",
     "@ledgerhq/hw-transport-webhid": "^6.30.9",
-    "@lucide/astro": "^0.554.0",
+    "@lucide/astro": "^0.555.0",
     "@taquito/beacon-wallet": "^23.1.0",
     "@taquito/ledger-signer": "^23.1.0",
     "@taquito/michel-codec": "^23.1.0",
