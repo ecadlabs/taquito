@@ -6,7 +6,6 @@ import type {
   TrezorTransactionOp,
   TrezorRevealOp,
   TrezorDelegationOp,
-  TrezorOriginationOp,
   TrezorProposalOp,
   TrezorBallotOp,
   TrezorBallotType,
@@ -28,9 +27,6 @@ export function mapOperationsToTrezor(contents: OperationContents[]): TrezorOper
         break;
       case 'delegation':
         result.delegation = mapDelegationOperation(op);
-        break;
-      case 'origination':
-        result.origination = mapOriginationOperation(op);
         break;
       case 'proposals':
         result.proposal = mapProposalOperation(op);
@@ -101,33 +97,6 @@ function mapDelegationOperation(op: OperationContents): TrezorDelegationOp {
     storage_limit: parseInt(op.storage_limit, 10),
     delegate: op.delegate,
   };
-}
-
-function mapOriginationOperation(op: OperationContents): TrezorOriginationOp {
-  if (op.kind !== 'origination') throw new Error('Expected origination operation');
-  const result: TrezorOriginationOp = {
-    source: op.source,
-    fee: parseInt(op.fee, 10),
-    counter: parseInt(op.counter, 10),
-    gas_limit: parseInt(op.gas_limit, 10),
-    storage_limit: parseInt(op.storage_limit, 10),
-    balance: parseInt(op.balance, 10),
-    script: [], // Script encoding would require full Michelson serialization
-  };
-
-  if (op.delegate) {
-    result.delegate = op.delegate;
-  }
-
-  // Note: Full script encoding is complex and would require Michelson serialization
-  // For now, origination with complex scripts may not be fully supported
-  if (op.script) {
-    throw new Error(
-      'Origination operations with scripts are not yet fully supported for Trezor signing'
-    );
-  }
-
-  return result;
 }
 
 function mapProposalOperation(op: OperationContents): TrezorProposalOp {
