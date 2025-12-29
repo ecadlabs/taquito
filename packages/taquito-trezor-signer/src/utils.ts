@@ -16,8 +16,17 @@ import type {
  */
 export function mapOperationsToTrezor(contents: OperationContents[]): TrezorOperation {
   const result: TrezorOperation = {};
+  const seenKinds = new Set<string>();
 
   for (const op of contents) {
+    if (seenKinds.has(op.kind)) {
+      throw new Error(
+        `Trezor does not support batch operations with multiple ${op.kind} operations. ` +
+          'Please sign each operation separately.'
+      );
+    }
+    seenKinds.add(op.kind);
+
     switch (op.kind) {
       case 'reveal':
         result.reveal = mapRevealOperation(op);
