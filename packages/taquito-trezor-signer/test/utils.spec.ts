@@ -411,5 +411,34 @@ describe('mapOperationsToTrezor', () => {
         'Unsupported operation kind for Trezor signing'
       );
     });
+
+    it('should throw error for duplicate operation kinds', () => {
+      const ops: OperationContents[] = [
+        {
+          kind: OpKind.TRANSACTION,
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          counter: '1',
+          gas_limit: '10',
+          storage_limit: '10',
+          amount: '1000000',
+          destination: 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
+        },
+        {
+          kind: OpKind.TRANSACTION,
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          counter: '2',
+          gas_limit: '10',
+          storage_limit: '10',
+          amount: '2000000',
+          destination: 'tz1aWXP237BLwNHJcCD4b3DutCevhqq2T1Z9',
+        },
+      ];
+
+      expect(() => mapOperationsToTrezor(ops)).toThrow(
+        'Trezor does not support batch operations with multiple transaction operations'
+      );
+    });
   });
 });
