@@ -389,7 +389,7 @@ describe('mapOperationsToTrezor', () => {
       ];
 
       expect(() => mapOperationsToTrezor(ops)).toThrow(
-        'Unsupported operation kind for Trezor signing: origination'
+        "Operation 'origination' is not supported by Trezor"
       );
     });
 
@@ -408,7 +408,7 @@ describe('mapOperationsToTrezor', () => {
       ];
 
       expect(() => mapOperationsToTrezor(ops)).toThrow(
-        'Unsupported operation kind for Trezor signing'
+        "Operation 'increase_paid_storage' is not supported by Trezor"
       );
     });
 
@@ -437,7 +437,7 @@ describe('mapOperationsToTrezor', () => {
       ];
 
       expect(() => mapOperationsToTrezor(ops)).toThrow(
-        'Trezor does not support batch operations with multiple transaction operations'
+        'Trezor does not support batch operations with multiple operations of the same type'
       );
     });
   });

@@ -1,6 +1,7 @@
 import { OperationContents } from '@taquito/rpc';
 import { hex2buf } from '@taquito/utils';
 import { encoders, CODEC } from '@taquito/local-forging';
+import { TrezorUnsupportedOperationError } from './errors';
 import type {
   TrezorOperation,
   TrezorTransactionOp,
@@ -20,9 +21,9 @@ export function mapOperationsToTrezor(contents: OperationContents[]): TrezorOper
 
   for (const op of contents) {
     if (seenKinds.has(op.kind)) {
-      throw new Error(
-        `Trezor does not support batch operations with multiple ${op.kind} operations. ` +
-          'Please sign each operation separately.'
+      throw new TrezorUnsupportedOperationError(
+        op.kind,
+        'Trezor does not support batch operations with multiple operations of the same type. Please sign each operation separately.'
       );
     }
     seenKinds.add(op.kind);
@@ -44,7 +45,7 @@ export function mapOperationsToTrezor(contents: OperationContents[]): TrezorOper
         result.ballot = mapBallotOperation(op);
         break;
       default:
-        throw new Error(`Unsupported operation kind for Trezor signing: ${op.kind}`);
+        throw new TrezorUnsupportedOperationError(op.kind);
     }
   }
 
