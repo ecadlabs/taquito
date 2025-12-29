@@ -6,7 +6,7 @@
 	// Environment variables
 	"vars": {
 		// Secret keys are stored in the Cloudflare Secrets Manager (npx wrangler secret put)
-		"ALLOWED_ORIGINS": "https://taquito.io" // use http://localhost:4321 and `npx wrangler dev` for local development
+		"ALLOWED_ORIGINS": "https://taquito.io,https://www.taquito.io,taquito.io" // use http://localhost:4321 and `npx wrangler dev` for local development
 		// "ALLOWED_ORIGINS": "http://localhost:4321"
 	},
 
