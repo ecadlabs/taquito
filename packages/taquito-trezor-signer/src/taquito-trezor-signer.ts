@@ -13,6 +13,7 @@ import {
   TrezorSigningError,
   TrezorInitializationError,
   TrezorActionRejectedError,
+  TrezorUnsupportedOperationError,
 } from './errors';
 import { mapOperationsToTrezor } from './utils';
 import type {
@@ -205,6 +206,10 @@ export class TrezorSigner implements Signer {
     try {
       trezorOperation = mapOperationsToTrezor(parsedOp.contents);
     } catch (error) {
+      // Rethrow TrezorUnsupportedOperationError directly to preserve specific error type
+      if (error instanceof TrezorUnsupportedOperationError) {
+        throw error;
+      }
       const message = error instanceof Error ? error.message : String(error);
       throw new TrezorSigningError(`Failed to map operations: ${message}`);
     }
