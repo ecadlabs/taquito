@@ -6,12 +6,7 @@
 import { Signer, ProhibitedActionError, InvalidDerivationPathError } from '@taquito/core';
 import TrezorConnect from '@trezor/connect-web';
 import { LocalForger } from '@taquito/local-forging';
-import {
-  b58Encode,
-  b58DecodeAndCheckPrefix,
-  PrefixV2,
-  signaturePrefixes,
-} from '@taquito/utils';
+import { b58Encode, b58DecodeAndCheckPrefix, PrefixV2, signaturePrefixes } from '@taquito/utils';
 import {
   TrezorNotInitializedError,
   TrezorPublicKeyRetrievalError,
@@ -190,13 +185,19 @@ export class TrezorSigner implements Signer {
     this.ensureInitialized();
 
     // Parse the operation bytes to get structured data
+    // Trezor only supports signing structured Tezos operations, not arbitrary payloads (like user defined strings)
     const forger = new LocalForger();
     let parsedOp;
     try {
       parsedOp = await forger.parse(op);
     } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-      throw new TrezorSigningError(`Failed to parse operation bytes: ${message}`);
+      // If parsing fails, the bytes are not a valid forged operation
+      // Trezor cannot sign arbitrary payloads, only structured operations
+      throw new TrezorSigningError(
+        'Trezor can only sign Tezos operations, not arbitrary payloads. ' +
+          'The provided bytes could not be parsed as a valid forged operation. ' +
+          'Arbitrary message signing (e.g., TZIP-17 off-chain signatures) is not supported by Trezor.'
+      );
     }
 
     // Map operations to Trezor format
@@ -238,14 +239,6 @@ export class TrezorSigner implements Signer {
 
     // Extract operation bytes (everything except last 128 hex chars which is 64-byte signature)
     const trezorBytes = sigOpContents.slice(0, -128);
-
-    // Debug: Log comparison between Taquito's bytes and Trezor's bytes
-    if (trezorBytes !== op) {
-      console.warn('[TrezorSigner] Byte mismatch detected:');
-      console.warn('  Taquito bytes:', op);
-      console.warn('  Trezor bytes: ', trezorBytes);
-      console.warn('  Using Trezor bytes for broadcast (signature matches these bytes)');
-    }
 
     // Use Trezor's bytes and sig_op_contents since the signature is for those bytes
     return {

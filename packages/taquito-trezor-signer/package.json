@@ -60,6 +60,7 @@
   },
   "dependencies": {
     "@taquito/core": "^23.0.3",
+    "@taquito/local-forging": "^23.0.3",
     "@taquito/taquito": "^23.0.3",
     "@taquito/utils": "^23.0.3",
     "@trezor/connect-web": "^9.7.1"

@@ -122,6 +122,32 @@ export interface TrezorOriginationOp {
 }
 
 /**
+ * Trezor proposal operation format
+ * Used for proposing protocol amendments during the proposal period
+ */
+export interface TrezorProposalOp {
+  source: string;
+  period: number;
+  proposals: string[];
+}
+
+/**
+ * Trezor ballot type enum
+ */
+export type TrezorBallotType = 0 | 1 | 2; // 0 = Yay, 1 = Nay, 2 = Pass
+
+/**
+ * Trezor ballot operation format
+ * Used for voting on protocol amendments during voting periods
+ */
+export interface TrezorBallotOp {
+  source: string;
+  period: number;
+  proposal: string;
+  ballot: TrezorBallotType;
+}
+
+/**
  * Trezor operation object containing operation details
  */
 export interface TrezorOperation {
@@ -129,4 +155,6 @@ export interface TrezorOperation {
   transaction?: TrezorTransactionOp;
   origination?: TrezorOriginationOp;
   delegation?: TrezorDelegationOp;
+  proposal?: TrezorProposalOp;
+  ballot?: TrezorBallotOp;
 }
