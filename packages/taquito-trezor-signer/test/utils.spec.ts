@@ -251,7 +251,7 @@ describe('mapOperationsToTrezor', () => {
       ];
 
       expect(() => mapOperationsToTrezor(ops)).toThrow(
-        'Undelegation (removing delegate) is not supported by Trezor'
+        "Operation 'delegation' is not supported by Trezor: Undelegation (removing delegate) is not supported. A delegate address must be specified."
       );
     });
   });
