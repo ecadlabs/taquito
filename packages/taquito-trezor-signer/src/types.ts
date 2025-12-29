@@ -108,20 +108,6 @@ export interface TrezorDelegationOp {
 }
 
 /**
- * Trezor origination operation format
- */
-export interface TrezorOriginationOp {
-  source: string;
-  fee: number;
-  counter: number;
-  gas_limit: number;
-  storage_limit: number;
-  balance: number;
-  delegate?: string;
-  script: number[];
-}
-
-/**
  * Trezor proposal operation format
  * Used for proposing protocol amendments during the proposal period
  */
@@ -153,7 +139,6 @@ export interface TrezorBallotOp {
 export interface TrezorOperation {
   reveal?: TrezorRevealOp;
   transaction?: TrezorTransactionOp;
-  origination?: TrezorOriginationOp;
   delegation?: TrezorDelegationOp;
   proposal?: TrezorProposalOp;
   ballot?: TrezorBallotOp;

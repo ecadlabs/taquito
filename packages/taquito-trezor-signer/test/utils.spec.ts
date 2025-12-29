@@ -280,50 +280,6 @@ describe('mapOperationsToTrezor', () => {
     });
   });
 
-  describe('origination operations', () => {
-    it('should map a simple origination without script', () => {
-      const ops: OperationContents[] = [
-        {
-          kind: OpKind.ORIGINATION,
-          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-          fee: '10000',
-          counter: '1',
-          gas_limit: '10',
-          storage_limit: '10',
-          balance: '1000000',
-        },
-      ];
-
-      const result = mapOperationsToTrezor(ops);
-
-      expect(result.origination).toBeDefined();
-      expect(result.origination?.source).toBe('tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn');
-      expect(result.origination?.balance).toBe(1000000);
-    });
-
-    it('should throw error for origination with script', () => {
-      const ops: OperationContents[] = [
-        {
-          kind: OpKind.ORIGINATION,
-          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-          fee: '10000',
-          counter: '1',
-          gas_limit: '10',
-          storage_limit: '10',
-          balance: '1000000',
-          script: {
-            code: [{ prim: 'parameter', args: [{ prim: 'unit' }] }],
-            storage: { prim: 'Unit' },
-          },
-        },
-      ];
-
-      expect(() => mapOperationsToTrezor(ops)).toThrow(
-        'Origination operations with scripts are not yet fully supported for Trezor signing'
-      );
-    });
-  });
-
   describe('proposal operations', () => {
     it('should map a proposal operation', () => {
       const ops: OperationContents[] = [
@@ -419,7 +375,25 @@ describe('mapOperationsToTrezor', () => {
   });
 
   describe('unsupported operations', () => {
-    it('should throw error for unsupported operation kinds', () => {
+    it('should throw error for origination operations', () => {
+      const ops: OperationContents[] = [
+        {
+          kind: OpKind.ORIGINATION,
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: '10000',
+          counter: '1',
+          gas_limit: '10',
+          storage_limit: '10',
+          balance: '1000000',
+        },
+      ];
+
+      expect(() => mapOperationsToTrezor(ops)).toThrow(
+        'Unsupported operation kind for Trezor signing: origination'
+      );
+    });
+
+    it('should throw error for increase_paid_storage operations', () => {
       const ops: OperationContents[] = [
         {
           kind: 'increase_paid_storage' as any,
