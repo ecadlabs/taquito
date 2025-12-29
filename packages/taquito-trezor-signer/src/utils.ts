@@ -94,8 +94,9 @@ function mapDelegationOperation(op: OperationContents): TrezorDelegationOp {
 
   // Trezor requires a delegate to be specified, undelegation is not supported yet
   if (!op.delegate) {
-    throw new Error(
-      'Undelegation (removing delegate) is not supported by Trezor. A delegate address must be specified.'
+    throw new TrezorUnsupportedOperationError(
+      'delegation',
+      'Undelegation (removing delegate) is not supported. A delegate address must be specified.'
     );
   }
 
