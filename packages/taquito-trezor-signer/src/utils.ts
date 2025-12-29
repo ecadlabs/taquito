@@ -103,7 +103,7 @@ function mapProposalOperation(op: OperationContents): TrezorProposalOp {
   if (op.kind !== 'proposals') throw new Error('Expected proposals operation');
   return {
     source: op.source,
-    period: op.period,
+    period: typeof op.period === 'string' ? parseInt(op.period, 10) : op.period,
     proposals: op.proposals,
   };
 }
@@ -112,7 +112,7 @@ function mapBallotOperation(op: OperationContents): TrezorBallotOp {
   if (op.kind !== 'ballot') throw new Error('Expected ballot operation');
   return {
     source: op.source,
-    period: op.period,
+    period: typeof op.period === 'string' ? parseInt(op.period, 10) : op.period,
     proposal: op.proposal,
     ballot: ballotStringToType(op.ballot),
   };
@@ -169,17 +169,4 @@ function encodeParameters(params: unknown): string | null {
   }
 
   return encoded;
-}
-
-/**
- * Prepend watermark to operation bytes
- */
-export function appendWatermark(bytes: string, watermark?: Uint8Array): string {
-  if (!watermark) {
-    return bytes;
-  }
-  const hexWatermark = Array.from(watermark)
-    .map((b) => b.toString(16).padStart(2, '0'))
-    .join('');
-  return hexWatermark + bytes;
 }
