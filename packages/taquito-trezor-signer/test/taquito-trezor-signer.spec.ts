@@ -4,13 +4,18 @@ import {
   TrezorNotInitializedError,
   TrezorPublicKeyRetrievalError,
   TrezorActionRejectedError,
+  TrezorSigningError,
 } from '../src/taquito-trezor-signer';
 import { InvalidDerivationPathError, ProhibitedActionError } from '@taquito/core';
+import { LocalForger } from '@taquito/local-forging';
+import { OpKind } from '@taquito/rpc';
 
 // Mock functions
 const mockInit = jest.fn().mockResolvedValue(undefined);
 const mockDispose = jest.fn();
 const mockTezosGetAddress = jest.fn();
+const mockTezosGetPublicKey = jest.fn();
+const mockTezosSignTransaction = jest.fn();
 
 // Mock @trezor/connect-web
 jest.mock('@trezor/connect-web', () => ({
@@ -19,6 +24,8 @@ jest.mock('@trezor/connect-web', () => ({
     init: (...args: unknown[]) => mockInit(...args),
     dispose: () => mockDispose(),
     tezosGetAddress: (...args: unknown[]) => mockTezosGetAddress(...args),
+    tezosGetPublicKey: (...args: unknown[]) => mockTezosGetPublicKey(...args),
+    tezosSignTransaction: (...args: unknown[]) => mockTezosSignTransaction(...args),
   },
 }));
 
@@ -62,28 +69,31 @@ describe('TrezorSigner', () => {
     it('should initialize Trezor Connect', async () => {
       await TrezorSigner.init({ appName: 'Test App', appUrl: 'https://test.com' });
 
-      expect(mockInit).toHaveBeenCalledWith({
-        manifest: {
-          appUrl: 'https://test.com',
-          email: 'info@ecadlabs.com',
-          appName: 'Test App',
-        },
-        lazyLoad: false,
-      });
+      expect(mockInit).toHaveBeenCalledWith(
+        expect.objectContaining({
+          manifest: {
+            appUrl: 'https://test.com',
+            email: 'info@ecadlabs.com',
+            appName: 'Test App',
+          },
+          lazyLoad: false,
+        })
+      );
       expect(TrezorSigner.isInitialized()).toBe(true);
     });
 
     it('should use default appUrl when not provided', async () => {
       await TrezorSigner.init({});
 
-      expect(mockInit).toHaveBeenCalledWith({
-        manifest: {
-          appUrl: 'https://taquito.io',
-          email: 'info@ecadlabs.com',
-          appName: 'Taquito',
-        },
-        lazyLoad: false,
-      });
+      expect(mockInit).toHaveBeenCalledWith(
+        expect.objectContaining({
+          manifest: {
+            appUrl: 'https://taquito.io',
+            email: 'info@ecadlabs.com',
+            appName: 'Taquito',
+          },
+        })
+      );
     });
 
     it('should not re-initialize if already initialized', async () => {
@@ -113,6 +123,7 @@ describe('TrezorSigner', () => {
 
   describe('publicKeyHash', () => {
     const mockAddress = 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb';
+    const mockPublicKey = 'edpkvGfYw3LyB1UcCahKQk4rF2tvbMUk8GFiTuMjL75uGXrpvKXhjn';
 
     beforeEach(async () => {
       await TrezorSigner.init();
@@ -123,6 +134,14 @@ describe('TrezorSigner', () => {
         success: true,
         payload: {
           address: mockAddress,
+          path: [2147483692, 2147485377, 2147483648],
+          serializedPath: "m/44'/1729'/0'",
+        },
+      });
+      mockTezosGetPublicKey.mockResolvedValue({
+        success: true,
+        payload: {
+          publicKey: mockPublicKey,
           path: [2147483692, 2147485377, 2147483648],
           serializedPath: "m/44'/1729'/0'",
         },
@@ -143,6 +162,14 @@ describe('TrezorSigner', () => {
         success: true,
         payload: {
           address: mockAddress,
+          path: [2147483692, 2147485377, 2147483648],
+          serializedPath: "m/44'/1729'/0'",
+        },
+      });
+      mockTezosGetPublicKey.mockResolvedValue({
+        success: true,
+        payload: {
+          publicKey: mockPublicKey,
           path: [2147483692, 2147485377, 2147483648],
           serializedPath: "m/44'/1729'/0'",
         },
@@ -193,6 +220,14 @@ describe('TrezorSigner', () => {
           serializedPath: "m/44'/1729'/0'",
         },
       });
+      mockTezosGetPublicKey.mockResolvedValue({
+        success: true,
+        payload: {
+          publicKey: mockPublicKey,
+          path: [2147483692, 2147485377, 2147483648],
+          serializedPath: "m/44'/1729'/0'",
+        },
+      });
 
       const signer = new TrezorSigner("m/44'/1729'/0'", false);
       await signer.publicKeyHash();
@@ -213,15 +248,101 @@ describe('TrezorSigner', () => {
   });
 
   describe('sign', () => {
+    // We'll generate valid forged bytes using LocalForger
+    let forgedTransferOp: string;
+
+    beforeAll(async () => {
+      const forger = new LocalForger();
+      // Create a simple transaction operation
+      const operation = {
+        branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+        contents: [
+          {
+            kind: OpKind.TRANSACTION as const,
+            source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+            fee: '10000',
+            counter: '1',
+            gas_limit: '10',
+            storage_limit: '10',
+            amount: '1000000',
+            destination: 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
+          },
+        ],
+      };
+      forgedTransferOp = await forger.forge(operation);
+    });
+
     beforeEach(async () => {
       await TrezorSigner.init();
     });
 
-    it('should throw error indicating signing is not implemented', async () => {
+    it('should sign a transaction and return signature data', async () => {
+      // Mock signature from Trezor (64 bytes = 128 hex chars)
+      const mockSigHex = 'a'.repeat(128);
+      const mockSignature =
+        'edsigtXomBKi5CTRf5cjATJWSyaRvhfYNHqSUGrn4SdbYRcGwQrUGjzEfQDTuqHhuA8b2d8NarZjz8TRf65WkpQmo423BtomS8Q';
+
+      mockTezosSignTransaction.mockResolvedValue({
+        success: true,
+        payload: {
+          signature: mockSignature,
+          sig_op_contents: forgedTransferOp + mockSigHex,
+          operation_hash: 'ooSomething',
+        },
+      });
+
+      const signer = new TrezorSigner();
+      const result = await signer.sign(forgedTransferOp);
+
+      expect(result).toHaveProperty('bytes');
+      expect(result).toHaveProperty('sig');
+      expect(result).toHaveProperty('prefixSig');
+      expect(result).toHaveProperty('sbytes');
+      expect(result.prefixSig).toBe(mockSignature);
+      expect(mockTezosSignTransaction).toHaveBeenCalled();
+    });
+
+    it('should throw TrezorNotInitializedError if not initialized', async () => {
+      TrezorSigner.dispose();
       const signer = new TrezorSigner();
 
-      await expect(signer.sign('050000')).rejects.toThrow(
-        'Transaction signing not yet implemented in this prototype'
+      await expect(signer.sign(forgedTransferOp)).rejects.toThrow(TrezorNotInitializedError);
+    });
+
+    it('should throw TrezorSigningError on Trezor failure', async () => {
+      mockTezosSignTransaction.mockResolvedValue({
+        success: false,
+        payload: { error: 'Signing failed' },
+      });
+
+      const signer = new TrezorSigner();
+
+      await expect(signer.sign(forgedTransferOp)).rejects.toThrow(TrezorSigningError);
+    });
+
+    it('should throw TrezorActionRejectedError when user cancels', async () => {
+      mockTezosSignTransaction.mockResolvedValue({
+        success: false,
+        payload: { error: 'Action cancelled', code: 'Failure_ActionCancelled' },
+      });
+
+      const signer = new TrezorSigner();
+
+      await expect(signer.sign(forgedTransferOp)).rejects.toThrow(TrezorActionRejectedError);
+    });
+
+    it('should throw TrezorSigningError for invalid operation bytes', async () => {
+      const signer = new TrezorSigner();
+
+      await expect(signer.sign('invalid')).rejects.toThrow(TrezorSigningError);
+    });
+
+    it('should throw TrezorSigningError with clear message for unparseable bytes', async () => {
+      const signer = new TrezorSigner();
+      // 'invalid' is not valid hex, which will cause LocalForger.parse to fail
+      // This tests the error message when bytes can't be parsed as a forged operation
+      await expect(signer.sign('invalid')).rejects.toThrow(
+        /Trezor can only sign Tezos operations, not arbitrary payloads/
       );
     });
   });
