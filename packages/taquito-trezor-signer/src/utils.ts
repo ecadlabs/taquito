@@ -176,7 +176,13 @@ function encodeParameters(params: unknown): string | null {
   // Use the parameters encoder from local-forging which handles all Michelson types
   // It returns '00' for absent parameters (default Unit), or 'ff...' for present parameters
   const parametersEncoder = encoders[CODEC.PARAMETERS];
-  const encoded = parametersEncoder({ entrypoint: p.entrypoint, value: p.value });
+  let encoded: string;
+  try {
+    encoded = parametersEncoder({ entrypoint: p.entrypoint, value: p.value });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    throw new Error(`Failed to encode parameters for entrypoint '${p.entrypoint}': ${message}`);
+  }
 
   // '00' means no parameters (default Unit) - Trezor doesn't need the parameters field
   if (encoded === '00') {
