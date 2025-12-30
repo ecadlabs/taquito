@@ -49,7 +49,13 @@ await wallet.requestPermissions({
     }
 });
 
-const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
+const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL', {
+  clientInfo: {
+    appName: 'My App',
+    appUrl: 'https://example.com',
+    sendSdkVersion: true,
+  }
+});
 Tezos.setWalletProvider(wallet);
 ```
 

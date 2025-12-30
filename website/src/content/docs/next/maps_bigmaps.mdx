@@ -37,7 +37,13 @@ values={[
 ```js live 
 // import { MichelsonMap } from '@taquito/taquito';
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
+/* const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL', {
+  clientInfo: {
+    appName: 'My App',
+    appUrl: 'https://example.com',
+    sendSdkVersion: true,
+  }
+}); */
 
 const storageMap = new MichelsonMap();
 storageMap.set('1', { current_stock: '10000', max_price: '50' });
@@ -67,7 +73,13 @@ console.log(`Origination completed.`);
 ```js live
 // import { MichelsonMap } from '@taquito/taquito';
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
+/* const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL', {
+  clientInfo: {
+    appName: 'My App',
+    appUrl: 'https://example.com',
+    sendSdkVersion: true,
+  }
+}); */
 
 const storageMap = new MichelsonMap();
 storageMap.set('1', { current_stock: '10000', max_price: '50' });
@@ -855,7 +867,13 @@ values={[
 
 ```js live
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
+/* const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL', {
+  clientInfo: {
+    appName: 'My App',
+    appUrl: 'https://example.com',
+    sendSdkVersion: true,
+  }
+}); */
 
 try {
   const contract = await Tezos.contract.at('KT1LPdW47Aba3kVpNMpRt7sx5yM1M4A8XmAW');
@@ -881,7 +899,13 @@ try {
 
 ```js live
 // import { TezosToolkit } from '@taquito/taquito';
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
+/* const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL', {
+  clientInfo: {
+    appName: 'My App',
+    appUrl: 'https://example.com',
+    sendSdkVersion: true,
+  }
+}); */
 
 try {
   const contract = await Tezos.wallet.at('KT1LPdW47Aba3kVpNMpRt7sx5yM1M4A8XmAW');
