@@ -147,6 +147,12 @@ export interface RpcClientInterface {
     options?: RPCOptions
   ): Promise<PendingStakingParametersResponse>;
   getDestinationIndex(destination: string, options?: RPCOptions): Promise<DestinationIndexResponse>;
+  verifyCorsSupport(): Promise<{
+    sdkHeader: boolean;
+    appNameHeader: boolean;
+    appUrlHeader: boolean;
+    allowedHeaders: string[];
+  }>;
 }
 
 export enum RPCMethodName {
