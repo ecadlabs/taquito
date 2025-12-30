@@ -21,7 +21,13 @@ Using a Composite forger can provide additional security because the binary retu
 import { TezosToolkit, RpcForger, CompositeForger } from '@taquito/taquito';
 import { localForger } from '@taquito/local-forging';
 
-const tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
+const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL', {
+  clientInfo: {
+    appName: 'My App',
+    appUrl: 'https://example.com',
+    sendSdkVersion: true,
+  }
+});
 const rpcForger = tezos.getFactory(RpcForger)();
 const composite = new CompositeForger([rpcForger, localForger]);
 tezos.setForgerProvider(composite);
@@ -34,6 +40,12 @@ When the node is trusted, the forger can be set to an instance of `RpcForger` as
 ```js
 import { TezosToolkit, RpcForger } from '@taquito/taquito';
 
-const tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
+const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL', {
+  clientInfo: {
+    appName: 'My App',
+    appUrl: 'https://example.com',
+    sendSdkVersion: true,
+  }
+});
 tezos.setForgerProvider(Tezos.getFactory(RpcForger)());
 ```

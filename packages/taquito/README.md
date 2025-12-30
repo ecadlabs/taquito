@@ -30,7 +30,13 @@ The `TezosToolkit` constructor takes at least an RPC URL as a parameter. When in
 ```ts
 import { TezosToolkit } from '@taquito/taquito';
 
-const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
+const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL', {
+  clientInfo: {
+    appName: 'My App',
+    appUrl: 'https://example.com',
+    sendSdkVersion: true,
+  }
+});
 ```
 
 It is also possible to instantiate the `TezosToolkit` with a class that implements the `RpcClientInterface`. See the `RpcClientCache` from the `@taquito/rpc` package as an example that provides caching functionality.
@@ -47,7 +53,13 @@ Sending operations using the Contract API requires a signer to be configured. Ta
 import { InMemorySigner } from '@taquito/signer';
 import { TezosToolkit } from '@taquito/taquito';
 
-const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
+const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL', {
+  clientInfo: {
+    appName: 'My App',
+    appUrl: 'https://example.com',
+    sendSdkVersion: true,
+  }
+});
 
 Tezos.setProvider({ signer: await InMemorySigner.fromSecretKey('edsk...') });
 
@@ -63,7 +75,13 @@ Sending operations using the Wallet API requires a wallet to be configured. The 
 import { TezosToolkit } from '@taquito/taquito';
 import { BeaconWallet } from '@taquito/beacon-wallet';
 
-const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
+const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL', {
+  clientInfo: {
+    appName: 'My App',
+    appUrl: 'https://example.com',
+    sendSdkVersion: true,
+  }
+});
 const wallet = new BeaconWallet(options);
 
 await wallet.requestPermissions(network);

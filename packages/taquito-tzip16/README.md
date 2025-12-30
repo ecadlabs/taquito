@@ -34,7 +34,13 @@ import { TezosToolkit } from '@taquito/taquito';
 import { Tzip16Module } from '@taquito/tzip16';
 import { tzip16 } from '@taquito/tzip16';
 
-const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
+const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL', {
+  clientInfo: {
+    appName: 'My App',
+    appUrl: 'https://example.com',
+    sendSdkVersion: true,
+  }
+});
 Tezos.addExtension(new Tzip16Module());
 
 const contract = await Tezos.contract.at("contractAddress", tzip16)

@@ -53,7 +53,13 @@ import { LedgerSigner } from '@taquito/ledger-signer';
 import TransportWeb from '@ledgerhq/hw-transport-webhid';
 import { TezosToolkit } from '@taquito/taquito';
 
-const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
+const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL', {
+  clientInfo: {
+    appName: 'My App',
+    appUrl: 'https://example.com',
+    sendSdkVersion: true,
+  }
+});
 
 const transport = await TransportWeb.create();
 const ledgerSigner = new LedgerSigner(transport);
