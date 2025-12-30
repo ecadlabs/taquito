@@ -21,6 +21,7 @@ The `next` version contains the latest unreleased documentation.
 - `rpc_nodes` - RPC nodes
 - `web3js_taquito` - web3js vs Taquito
 - `fallback_rpc` - Fallback RPC URLs
+- `rpc_analytics_headers` - RPC Analytics Headers
 
 ### Taquito Providers
 - `prepare` - Prepare Provider

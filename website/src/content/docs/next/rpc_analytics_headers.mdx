@@ -1,0 +1,149 @@
+---
+title: RPC Analytics Headers
+author: Maxwell Ward
+---
+
+When creating a `TezosToolkit`, you can optionally pass in a `clientInfo` parameter to send analytics headers with your RPC requests. These headers help RPC providers understand how their infrastructure is being used and can improve their services.
+
+## Overview
+
+The `clientInfo` configuration allows you to send the following optional HTTP headers with each RPC request:
+
+| Header | Description |
+|--------|-------------|
+| `X-Tezos-SDK` | The Taquito version (e.g., `taquito/23.1.0`) |
+| `X-Tezos-App-Name` | Your application's name |
+| `X-Tezos-App-Url` | Your application's URL |
+
+> [!NOTE]
+> This feature is **opt-in only**. No analytics headers are sent unless you explicitly configure `clientInfo`.
+
+## Basic Usage
+
+The simplest way to enable analytics headers is in the `TezosToolkit` constructor:
+
+```typescript
+import { TezosToolkit } from '@taquito/taquito';
+
+const Tezos = new TezosToolkit('https://mainnet.tezos.ecadinfra.com', {
+  clientInfo: {
+    appName: 'MyDapp',
+    sendSdkVersion: true,
+  },
+});
+```
+
+## Configuration Options
+
+The `clientInfo` object supports the following properties:
+
+```typescript
+interface ClientInfo {
+  /** Custom application name to send in X-Tezos-App-Name header */
+  appName?: string;
+
+  /** Application URL to send in X-Tezos-App-Url header.
+   *  In browsers, auto-detected from window.location.origin if not specified */
+  appUrl?: string;
+
+  /** Whether to send the SDK version in X-Tezos-SDK header */
+  sendSdkVersion?: boolean;
+
+  /** Callback for warnings about unsupported headers (e.g., CORS issues) */
+  onCorsWarning?: (warning: CorsWarning) => void;
+}
+```
+
+### Full Example
+
+```typescript
+import { TezosToolkit, CorsWarning } from '@taquito/taquito';
+
+const Tezos = new TezosToolkit('https://mainnet.tezos.ecadinfra.com', {
+  clientInfo: {
+    appName: 'MyDapp',
+    appUrl: 'https://mydapp.com',
+    sendSdkVersion: true,
+    onCorsWarning: (warning: CorsWarning) => {
+      console.warn(`Header ${warning.header} not supported by ${warning.url}`);
+    },
+  },
+});
+```
+
+## Browser Auto-Detection
+
+In browser environments, if you don't specify `appUrl`, Taquito will automatically detect it from `window.location.origin`. This means in most browser dapps, you only need to specify `appName`:
+
+```typescript
+const Tezos = new TezosToolkit('https://mainnet.tezos.ecadinfra.com', {
+  clientInfo: {
+    appName: 'MyDapp',
+    sendSdkVersion: true,
+    // appUrl is auto-detected in browsers
+  },
+});
+```
+
+## CORS Handling
+
+Not all RPC providers support custom headers due to CORS (Cross-Origin Resource Sharing) restrictions. Taquito handles this automatically:
+
+1. **Automatic verification**: On the first request to each RPC origin, Taquito verifies which headers are supported
+2. **Only sends supported headers**: Headers that aren't allowed by the server's CORS policy are silently omitted
+3. **Warning callbacks**: If you provide an `onCorsWarning` callback, you'll be notified about unsupported headers
+
+```typescript
+const Tezos = new TezosToolkit('https://mainnet.tezos.ecadinfra.com', {
+  clientInfo: {
+    appName: 'MyDapp',
+    sendSdkVersion: true,
+    onCorsWarning: (warning) => {
+      // warning.header - the header that isn't supported
+      // warning.url - the RPC server URL
+      // warning.message - human-readable explanation
+      console.warn(warning.message);
+    },
+  },
+});
+```
+
+### Manual CORS Verification
+
+You can also manually verify CORS support before making requests:
+
+```typescript
+const corsSupport = await Tezos.rpc.verifyCorsSupport();
+
+console.log('SDK header supported:', corsSupport.sdkHeader);
+console.log('App name header supported:', corsSupport.appNameHeader);
+console.log('App URL header supported:', corsSupport.appUrlHeader);
+console.log('All allowed headers:', corsSupport.allowedHeaders);
+```
+
+## Changing RPC Providers
+
+When you change RPC providers using `setRpcProvider`, the `clientInfo` from the constructor is preserved:
+
+```typescript
+const Tezos = new TezosToolkit('https://mainnet.tezos.ecadinfra.com', {
+  clientInfo: { appName: 'MyDapp', sendSdkVersion: true },
+});
+
+// Later, switch to a different RPC - clientInfo is preserved
+Tezos.setRpcProvider('https://other-rpc.example.com');
+
+// Or override clientInfo for the new RPC
+Tezos.setRpcProvider('https://other-rpc.example.com', {
+  clientInfo: { appName: 'DifferentName' },
+});
+```
+
+## Privacy Considerations
+
+> [!CAUTION]
+> The analytics headers you configure will be sent to the RPC provider with every request. Only include information you're comfortable sharing.
+
+- **`appName`**: Consider using a generic name if you don't want to identify your specific application
+- **`appUrl`**: In browsers, this may be auto-detected. Set it explicitly to `undefined` in `clientInfo` if you want to prevent sending it
+- **`sendSdkVersion`**: Reveals that you're using Taquito and which version
