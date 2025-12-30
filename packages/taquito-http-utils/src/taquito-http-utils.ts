@@ -85,6 +85,8 @@ export class HttpBackend {
   // Track if we've already warned about specific headers for specific URLs
   private allowedHeadersCache: Map<string, Set<string>> = new Map();
   private warnedHeaders: Set<string> = new Set();
+  // Track in-flight CORS verification promises to avoid duplicate requests
+  private pendingCorsChecks: Map<string, Promise<void>> = new Map();
 
   constructor(
     private timeout: number = 30000,
@@ -140,24 +142,52 @@ export class HttpBackend {
     } catch {
       // If OPTIONS request fails, assume no custom headers are allowed
       this.allowedHeadersCache.set(origin, new Set());
-      return {
+      const result = {
         sdkHeader: false,
         appNameHeader: false,
         appUrlHeader: false,
         allowedHeaders: [],
       };
+      // Still emit warnings since headers won't be sent
+      this.emitWarningsForUnsupportedHeaders(url, result);
+      return result;
     }
   }
 
   /**
+   * Ensures CORS verification has been done for the given URL.
+   * Uses caching to avoid duplicate requests. Called lazily on first request.
+   */
+  private async ensureCorsVerified(url: string): Promise<void> {
+    const origin = this.getUrlOrigin(url);
+
+    // Already verified
+    if (this.allowedHeadersCache.has(origin)) {
+      return;
+    }
+
+    // Check if verification is already in progress
+    const pending = this.pendingCorsChecks.get(origin);
+    if (pending) {
+      return pending;
+    }
+
+    // Start verification and track the promise
+    const verifyPromise = this.verifyCorsSupport(url).then(() => {
+      this.pendingCorsChecks.delete(origin);
+    });
+    this.pendingCorsChecks.set(origin, verifyPromise);
+    return verifyPromise;
+  }
+
+  /**
    * Checks if a specific header is allowed for the given URL based on cached CORS info.
-   * Returns false if we haven't verified yet (pessimistic) or if the header is allowed.
    */
   private isHeaderAllowed(url: string, header: string): boolean {
     const origin = this.getUrlOrigin(url);
     const allowedHeaders = this.allowedHeadersCache.get(origin);
 
-    // If not verified, assume disallowed (pessimistic approach)
+    // Should not happen if ensureCorsVerified was called first
     if (!allowedHeaders) {
       return false;
     }
@@ -279,7 +309,10 @@ export class HttpBackend {
     }
 
     // Adds client info headers for RPC analytics (only if allowed by CORS)
+    // Lazily verify CORS support on first request to this origin
     if (this.clientInfo) {
+      await this.ensureCorsVerified(url);
+
       if (this.clientInfo.sendSdkVersion && this.isHeaderAllowed(url, HEADER_SDK)) {
         headers[HEADER_SDK] = `taquito/${VERSION.version}`;
       }
