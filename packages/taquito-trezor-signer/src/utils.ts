@@ -128,18 +128,26 @@ function mapDelegationOperation(op: OperationContents): TrezorDelegationOp {
 
 function mapProposalOperation(op: OperationContents): TrezorProposalOp {
   if (op.kind !== 'proposals') throw new Error('Expected proposals operation');
+  const period = typeof op.period === 'string' ? parseIntChecked(op.period, 'period') : op.period;
+  if (typeof period !== 'number' || Number.isNaN(period)) {
+    throw new Error('Invalid period: expected a number');
+  }
   return {
     source: op.source,
-    period: typeof op.period === 'string' ? parseIntChecked(op.period, 'period') : op.period,
+    period,
     proposals: op.proposals,
   };
 }
 
 function mapBallotOperation(op: OperationContents): TrezorBallotOp {
   if (op.kind !== 'ballot') throw new Error('Expected ballot operation');
+  const period = typeof op.period === 'string' ? parseIntChecked(op.period, 'period') : op.period;
+  if (typeof period !== 'number' || Number.isNaN(period)) {
+    throw new Error('Invalid period: expected a number');
+  }
   return {
     source: op.source,
-    period: typeof op.period === 'string' ? parseIntChecked(op.period, 'period') : op.period,
+    period,
     proposal: op.proposal,
     ballot: ballotStringToType(op.ballot),
   };
