@@ -94,7 +94,7 @@ export class RpcClientCache implements RpcClientInterface {
   constructor(
     private rpcClient: RpcClientInterface,
     private ttl = defaultTtl
-  ) { }
+  ) {}
 
   getAllCachedData() {
     return this._cache;
@@ -1346,50 +1346,62 @@ export class RpcClientCache implements RpcClientInterface {
     }
   }
 
-    /**
+  /**
    * @param delegate delegate address which we want to retrieve active staking parameters
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Returns the currently active staking parameters for the given delegate
    * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-delegates-pkh-active-staking-parameters
    */
-    async getActiveStakingParameters(delegate: string, { block }: RPCOptions = defaultRPCOptions) {
-      this.validateAddress(delegate);
-      const key = this.formatCacheKey(
-        this.rpcClient.getRpcUrl(),
-        RPCMethodName.GET_ACTIVE_STAKING_PARAMETERS,
-        [block, delegate]
-      );
-  
-      if (this.has(key)) {
-        return this.get(key);
-      } else {
-        const response = this.rpcClient.getActiveStakingParameters(delegate, { block });
-        this.put(key, response);
-        return response;
-      }
-    }
-  
-    /**
-     * @param delegate delegate address which we want to retrieve pending staking parameters
-     * @param options contains generic configuration for rpc calls to specified block (default to head)
-     * @description Returns the pending values for the given delegate's staking parameters
-     * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-delegates-pkh-pending-staking-parameters
-     */
-    async getPendingStakingParameters(delegate: string, { block }: RPCOptions = defaultRPCOptions) {
-      this.validateAddress(delegate);
-      const key = this.formatCacheKey(
-        this.rpcClient.getRpcUrl(),
-        RPCMethodName.GET_PENDING_STAKING_PARAMETERS,
-        [block, delegate]
-      );
-  
-      if (this.has(key)) {
-        return this.get(key);
-      } else {
-        const response = this.rpcClient.getPendingStakingParameters(delegate, { block });
-        this.put(key, response);
-        return response;
-      }
-    }
-}
+  async getActiveStakingParameters(delegate: string, { block }: RPCOptions = defaultRPCOptions) {
+    this.validateAddress(delegate);
+    const key = this.formatCacheKey(
+      this.rpcClient.getRpcUrl(),
+      RPCMethodName.GET_ACTIVE_STAKING_PARAMETERS,
+      [block, delegate]
+    );
 
+    if (this.has(key)) {
+      return this.get(key);
+    } else {
+      const response = this.rpcClient.getActiveStakingParameters(delegate, { block });
+      this.put(key, response);
+      return response;
+    }
+  }
+
+  /**
+   * @param delegate delegate address which we want to retrieve pending staking parameters
+   * @param options contains generic configuration for rpc calls to specified block (default to head)
+   * @description Returns the pending values for the given delegate's staking parameters
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-delegates-pkh-pending-staking-parameters
+   */
+  async getPendingStakingParameters(delegate: string, { block }: RPCOptions = defaultRPCOptions) {
+    this.validateAddress(delegate);
+    const key = this.formatCacheKey(
+      this.rpcClient.getRpcUrl(),
+      RPCMethodName.GET_PENDING_STAKING_PARAMETERS,
+      [block, delegate]
+    );
+
+    if (this.has(key)) {
+      return this.get(key);
+    } else {
+      const response = this.rpcClient.getPendingStakingParameters(delegate, { block });
+      this.put(key, response);
+      return response;
+    }
+  }
+
+  /**
+   * @description Verifies which analytics headers are supported by the RPC server via CORS.
+   * Delegates to the underlying RPC client.
+   */
+  async verifyCorsSupport(): Promise<{
+    sdkHeader: boolean;
+    appNameHeader: boolean;
+    appUrlHeader: boolean;
+    allowedHeaders: string[];
+  }> {
+    return this.rpcClient.verifyCorsSupport();
+  }
+}
