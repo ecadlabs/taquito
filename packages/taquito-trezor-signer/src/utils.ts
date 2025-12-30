@@ -28,6 +28,10 @@ function parseIntChecked(value: string, fieldName: string): number {
  * Convert Taquito operation contents to Trezor operation format
  */
 export function mapOperationsToTrezor(contents: OperationContents[]): TrezorOperation {
+  if (contents.length === 0) {
+    throw new Error('No operations to sign');
+  }
+
   const result: TrezorOperation = {};
   const seenKinds = new Set<string>();
 
