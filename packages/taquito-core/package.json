@@ -1,6 +1,6 @@
 {
   "name": "@taquito/core",
-  "version": "23.0.3",
+  "version": "23.1.0",
   "description": "Classes, interfaces, and types shared across Taquito packages",
   "keywords": [
     "tezos",
@@ -23,7 +23,7 @@
   },
   "license": "Apache-2.0",
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "scripts": {
     "lint": "eslint --ext .js,.ts .",

@@ -1,0 +1,32 @@
+---
+import ecadLogo from "../../images/ECAD_logo.svg";
+---
+
+<section class="bg-background-primary w-full pb-16">
+  <div class="slant-container pb-12 pt-24">
+    <div class="bg-slant"></div>
+  </div>
+  <div class="ml-auto w-fit flex items-start">
+    <p class="font-bold text-sm">Powered by</p>
+    <img src={ecadLogo.src} alt="ECAD Labs" class="size-64 h-fit -mt-9" />
+  </div>
+  
+</section>
+
+<style>
+  .slant-container {
+    position: relative;
+    background: var(--color-background-primary);
+  }
+
+  .bg-slant {
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    width: calc(100% + 2px);
+    height: calc(100% + 2px);
+    background: #ffffff;
+    clip-path: polygon(0 0, 100% 0, 100% 10%, 0 90%);
+    z-index: 0;
+  }
+</style>

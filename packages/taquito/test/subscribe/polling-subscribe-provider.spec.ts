@@ -74,13 +74,13 @@ describe('Configurations for the PollingSubscribeProvider', () => {
     );
   });
 
-  it('should use default polling interval if minimal_block_delay is 0 (sandbox)', async () => {
+  it('should use minimum polling interval if minimal_block_delay is 0 (sandbox)', async () => {
     const pollingSubscribeProvider = new PollingSubscribeProvider(mockContext);
     mockReadProvider.getProtocolConstants.mockResolvedValue({
       minimal_block_delay: new BigNumber('0'),
     });
     await pollingSubscribeProvider['getConfirmationPollingInterval']();
-    expect(pollingSubscribeProvider.config.pollingIntervalMilliseconds).toEqual(1000);
+    expect(pollingSubscribeProvider.config.pollingIntervalMilliseconds).toEqual(700);
     expect(pollingSubscribeProvider.config.shouldObservableSubscriptionRetry).toBeFalsy();
     expect(pollingSubscribeProvider.config.observableSubscriptionRetryFunction.prototype).toEqual(
       retry().prototype
