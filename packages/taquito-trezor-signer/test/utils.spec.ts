@@ -440,5 +440,24 @@ describe('mapOperationsToTrezor', () => {
         'Trezor does not support batch operations with multiple operations of the same type'
       );
     });
+
+    it('should throw error for invalid numeric fields', () => {
+      const ops: OperationContents[] = [
+        {
+          kind: OpKind.TRANSACTION,
+          source: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+          fee: 'invalid',
+          counter: '1',
+          gas_limit: '10',
+          storage_limit: '10',
+          amount: '1000000',
+          destination: 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
+        },
+      ];
+
+      expect(() => mapOperationsToTrezor(ops)).toThrow(
+        'Invalid fee: expected a numeric string but got "invalid"'
+      );
+    });
   });
 });
