@@ -8,6 +8,9 @@ import {
   HttpResponseError,
   STATUS_CODE,
 } from '@taquito/http-utils';
+
+export type { ClientInfo, CorsWarning, CorsWarningCallback } from '@taquito/http-utils';
+import type { ClientInfo } from '@taquito/http-utils';
 import BigNumber from 'bignumber.js';
 import {
   defaultChain,
@@ -104,16 +107,31 @@ export class RpcClient implements RpcClientInterface {
    *
    * @param url rpc root url
    * @param chain chain (default main)
-   * @param httpBackend Http backend that issue http request.
-   * You can override it by providing your own if you which to hook in the request/response
+   * @param httpBackend Http backend that issue http request. If clientInfo is provided and httpBackend is not specified, a new HttpBackend will be created with the clientInfo configuration.
+   * @param clientInfo Client information to pass to the RPC as telemetry headers. If httpBackend is provided, this parameter is ignored (configure clientInfo in the HttpBackend constructor instead).
+   * You can override httpBackend by providing your own if you wish to hook in the request/response
    *
    * @example new RpcClient('https://mainnet.tezos.ecadinfra.com/', 'main') this will use https://mainnet.tezos.ecadinfra.com//chains/main
+   * @example new RpcClient('https://mainnet.tezos.ecadinfra.com/', 'main', undefined, { appName: 'MyApp', sendSdkVersion: true })
    */
   constructor(
     protected url: string,
     protected chain: string = defaultChain,
-    protected httpBackend: HttpBackend = new HttpBackend()
-  ) {}
+    httpBackend?: HttpBackend,
+    clientInfo?: ClientInfo
+  ) {
+    // If clientInfo is provided and no custom httpBackend, create one with clientInfo
+    // If a custom httpBackend is provided, use it directly (clientInfo should be configured in the HttpBackend)
+    if (httpBackend) {
+      this.httpBackend = httpBackend;
+    } else if (clientInfo) {
+      this.httpBackend = new HttpBackend(30000, clientInfo);
+    } else {
+      this.httpBackend = new HttpBackend();
+    }
+  }
+
+  protected httpBackend: HttpBackend;
 
   protected createURL(path: string) {
     // Trim trailing slashes because it is assumed to be included in path
@@ -1062,6 +1080,26 @@ export class RpcClient implements RpcClientInterface {
   }
 
   /**
+   * @description Verifies which analytics headers are supported by the RPC server via CORS.
+   * This performs a preflight-style OPTIONS request to check Access-Control-Allow-Headers.
+   * Call this method before making requests to avoid CORS errors with custom headers.
+   * Results are cached per URL origin.
+   *
+   * @returns Object indicating which headers are supported
+   * @example
+   * const corsSupport = await rpcClient.verifyCorsSupport();
+   * console.log(corsSupport.sdkHeader); // true if X-Tezos-SDK header is supported
+   */
+  async verifyCorsSupport(): Promise<{
+    sdkHeader: boolean;
+    appNameHeader: boolean;
+    appUrlHeader: boolean;
+    allowedHeaders: string[];
+  }> {
+    return this.httpBackend.verifyCorsSupport(this.url);
+  }
+
+  /**
    * @param options contains generic configuration for rpc calls to specified block (default to head)
    * @description Returns the voting period (index, kind, starting position) and related information (position, remaining) of the interrogated block
    * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-votes-current-period
@@ -1274,9 +1312,14 @@ export class RpcClient implements RpcClientInterface {
    * @description Returns the currently active staking parameters for the given delegate
    * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-delegates-pkh-active-staking-parameters
    */
-  async getActiveStakingParameters(delegate: string, { block }: RPCOptions = defaultRPCOptions): Promise<ActiveStakingParametersResponse> {
+  async getActiveStakingParameters(
+    delegate: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<ActiveStakingParametersResponse> {
     const response = await this.httpBackend.createRequest<ActiveStakingParametersResponse>({
-      url: this.createURL(`/chains/${this.chain}/blocks/${block}/context/delegates/${delegate}/active_staking_parameters`),
+      url: this.createURL(
+        `/chains/${this.chain}/blocks/${block}/context/delegates/${delegate}/active_staking_parameters`
+      ),
       method: 'GET',
     });
 
@@ -1289,9 +1332,14 @@ export class RpcClient implements RpcClientInterface {
    * @description Returns the pending values for the given delegate's staking parameters
    * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-delegates-pkh-pending-staking-parameters
    */
-  async getPendingStakingParameters(delegate: string, { block }: RPCOptions = defaultRPCOptions): Promise<PendingStakingParametersResponse> {
+  async getPendingStakingParameters(
+    delegate: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<PendingStakingParametersResponse> {
     const response = await this.httpBackend.createRequest<PendingStakingParametersResponse>({
-      url: this.createURL(`/chains/${this.chain}/blocks/${block}/context/delegates/${delegate}/pending_staking_parameters`),
+      url: this.createURL(
+        `/chains/${this.chain}/blocks/${block}/context/delegates/${delegate}/pending_staking_parameters`
+      ),
       method: 'GET',
     });
 
