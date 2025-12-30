@@ -13,6 +13,18 @@ import type {
 } from './types';
 
 /**
+ * Parse a string to an integer and validate the result
+ * @throws Error if the value cannot be parsed as a valid integer
+ */
+function parseIntChecked(value: string, fieldName: string): number {
+  const parsed = parseInt(value, 10);
+  if (Number.isNaN(parsed)) {
+    throw new Error(`Invalid ${fieldName}: expected a numeric string but got "${value}"`);
+  }
+  return parsed;
+}
+
+/**
  * Convert Taquito operation contents to Trezor operation format
  */
 export function mapOperationsToTrezor(contents: OperationContents[]): TrezorOperation {
@@ -56,10 +68,10 @@ function mapRevealOperation(op: OperationContents): TrezorRevealOp {
   if (op.kind !== 'reveal') throw new Error('Expected reveal operation');
   return {
     source: op.source,
-    fee: parseInt(op.fee, 10),
-    counter: parseInt(op.counter, 10),
-    gas_limit: parseInt(op.gas_limit, 10),
-    storage_limit: parseInt(op.storage_limit, 10),
+    fee: parseIntChecked(op.fee, 'fee'),
+    counter: parseIntChecked(op.counter, 'counter'),
+    gas_limit: parseIntChecked(op.gas_limit, 'gas_limit'),
+    storage_limit: parseIntChecked(op.storage_limit, 'storage_limit'),
     public_key: op.public_key,
   };
 }
@@ -68,11 +80,11 @@ function mapTransactionOperation(op: OperationContents): TrezorTransactionOp {
   if (op.kind !== 'transaction') throw new Error('Expected transaction operation');
   const result: TrezorTransactionOp = {
     source: op.source,
-    fee: parseInt(op.fee, 10),
-    counter: parseInt(op.counter, 10),
-    gas_limit: parseInt(op.gas_limit, 10),
-    storage_limit: parseInt(op.storage_limit, 10),
-    amount: parseInt(op.amount, 10),
+    fee: parseIntChecked(op.fee, 'fee'),
+    counter: parseIntChecked(op.counter, 'counter'),
+    gas_limit: parseIntChecked(op.gas_limit, 'gas_limit'),
+    storage_limit: parseIntChecked(op.storage_limit, 'storage_limit'),
+    amount: parseIntChecked(op.amount, 'amount'),
     destination: op.destination,
   };
 
@@ -102,10 +114,10 @@ function mapDelegationOperation(op: OperationContents): TrezorDelegationOp {
 
   return {
     source: op.source,
-    fee: parseInt(op.fee, 10),
-    counter: parseInt(op.counter, 10),
-    gas_limit: parseInt(op.gas_limit, 10),
-    storage_limit: parseInt(op.storage_limit, 10),
+    fee: parseIntChecked(op.fee, 'fee'),
+    counter: parseIntChecked(op.counter, 'counter'),
+    gas_limit: parseIntChecked(op.gas_limit, 'gas_limit'),
+    storage_limit: parseIntChecked(op.storage_limit, 'storage_limit'),
     delegate: op.delegate,
   };
 }
@@ -114,7 +126,7 @@ function mapProposalOperation(op: OperationContents): TrezorProposalOp {
   if (op.kind !== 'proposals') throw new Error('Expected proposals operation');
   return {
     source: op.source,
-    period: typeof op.period === 'string' ? parseInt(op.period, 10) : op.period,
+    period: typeof op.period === 'string' ? parseIntChecked(op.period, 'period') : op.period,
     proposals: op.proposals,
   };
 }
@@ -123,7 +135,7 @@ function mapBallotOperation(op: OperationContents): TrezorBallotOp {
   if (op.kind !== 'ballot') throw new Error('Expected ballot operation');
   return {
     source: op.source,
-    period: typeof op.period === 'string' ? parseInt(op.period, 10) : op.period,
+    period: typeof op.period === 'string' ? parseIntChecked(op.period, 'period') : op.period,
     proposal: op.proposal,
     ballot: ballotStringToType(op.ballot),
   };
