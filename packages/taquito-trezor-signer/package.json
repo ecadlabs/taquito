@@ -1,0 +1,90 @@
+{
+  "name": "@taquito/trezor-signer",
+  "version": "23.0.3",
+  "description": "Trezor hardware wallet signer provider for Taquito",
+  "keywords": [
+    "tezos",
+    "blockchain",
+    "trezor",
+    "hardware-wallet",
+    "signer"
+  ],
+  "main": "dist/taquito-trezor-signer.umd.js",
+  "module": "dist/taquito-trezor-signer.es6.js",
+  "typings": "dist/types/taquito-trezor-signer.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "ECAD Labs <info@ecadlabs.com>",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "lint": "eslint --ext .js,.ts .",
+    "precommit": "lint-staged",
+    "prebuild": "rimraf dist",
+    "version-stamp": "node ../taquito/version-stamping.js",
+    "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts --bundleConfigAsCjs",
+    "start": "rollup -c rollup.config.ts --bundleConfigAsCjs -w",
+    "test": "jest --coverage"
+  },
+  "lint-staged": {
+    "{src,test}/**/*.ts": [
+      "prettier --write",
+      "eslint --fix"
+    ]
+  },
+  "jest": {
+    "transform": {
+      ".(ts|tsx)": "ts-jest"
+    },
+    "testEnvironment": "node",
+    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/test/"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.{js,ts}"
+    ]
+  },
+  "dependencies": {
+    "@taquito/core": "^23.0.3",
+    "@taquito/local-forging": "^23.0.3",
+    "@taquito/rpc": "^23.1.0",
+    "@taquito/utils": "^23.0.3",
+    "@trezor/connect-web": "^9.7.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "coveralls": "^3.1.1",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.57.0",
+    "jest": "^29.7.0",
+    "jest-config": "^29.7.0",
+    "lint-staged": "^15.2.7",
+    "lodash.camelcase": "^4.3.0",
+    "prettier": "^3.3.3",
+    "rimraf": "^6.0.1",
+    "rollup": "^4.22.4",
+    "rollup-plugin-json": "^4.0.0",
+    "rollup-plugin-typescript2": "^0.36.0",
+    "ts-jest": "^29.2.3",
+    "ts-node": "^10.9.2",
+    "typescript": "~5.5.4"
+  },
+  "gitHead": "551e35aeff7d6dcde1c72284238c0ed3c3aae77e"
+}

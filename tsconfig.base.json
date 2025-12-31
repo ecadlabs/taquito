@@ -74,6 +74,9 @@
       ],
       "@taquito/wallet-connect": [
         "taquito-wallet-connect/src/taquito-wallet-connect.ts"
+      ],
+      "@taquito/trezor-signer": [
+        "taquito-trezor-signer/src/taquito-trezor-signer.ts"
       ]
     }
   }
