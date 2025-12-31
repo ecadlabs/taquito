@@ -31,6 +31,8 @@ import {
   WalletRegisterGlobalConstantParams,
   createTransferTicketOperation,
   ParamsWithOptionalFees,
+  WalletRevealParams,
+  createRevealOperation,
 } from '@taquito/taquito';
 import { buf2hex, hex2buf, mergebuf } from '@taquito/utils';
 import { UnsupportedActionError } from '@taquito/core';
@@ -212,7 +214,9 @@ export class BeaconWallet implements WalletProvider {
     );
   }
 
-  async mapRegisterGlobalConstantParamsToWalletParams(params: () => Promise<WalletRegisterGlobalConstantParams>) {
+  async mapRegisterGlobalConstantParamsToWalletParams(
+    params: () => Promise<WalletRegisterGlobalConstantParams>
+  ) {
     let walletParams: WalletRegisterGlobalConstantParams;
     await this.client.showPrepare();
     try {
@@ -225,6 +229,25 @@ export class BeaconWallet implements WalletProvider {
     return this.removeDefaultParams(
       walletParams,
       await createRegisterGlobalConstantOperation(this.formatParameters(walletParams))
+    );
+  }
+
+  async mapRevealParamsToWalletParams(params: () => Promise<WalletRevealParams>) {
+    let walletParams: WalletRevealParams;
+    await this.client.showPrepare();
+    try {
+      walletParams = await params();
+    } catch (err) {
+      await this.client.hideUI(['alert']);
+      throw err;
+    }
+
+    const source = await this.getPKH();
+    const publicKey = await this.getPK();
+
+    return this.removeDefaultParams(
+      walletParams,
+      await createRevealOperation(this.formatParameters(walletParams), source, publicKey)
     );
   }
 
@@ -251,7 +274,8 @@ export class BeaconWallet implements WalletProvider {
       | WalletDelegateParams
       | WalletRegisterGlobalConstantParams
       | WalletTransferTicketParams
-      | WalletIncreasePaidStorageParams,
+      | WalletIncreasePaidStorageParams
+      | WalletRevealParams,
     operatedParams: RPCOperationWithLimits
   ) {
     // If fee, storageLimit or gasLimit is undefined by user
