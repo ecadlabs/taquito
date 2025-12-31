@@ -176,7 +176,13 @@ values={[
 // import { TezosToolkit } from '@taquito/taquito'
 // import { InMemorySigner } from '@taquito/signer'
 // import { stringToBytes, num2PaddedHex } from '@taquito/utils';
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
+/* const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL', {
+  clientInfo: {
+    appName: 'My App',
+    appUrl: 'https://example.com',
+    sendSdkVersion: true,
+  }
+}); */
 
 let magicByte = '0x80'
 let magicString = 'tezos signed offchain message'
@@ -203,7 +209,13 @@ try {
 // import { TezosToolkit } from '@taquito/taquito'
 // import { InMemorySigner } from '@taquito/signer'
 // import { stringToBytes, num2PaddedHex } from '@taquito/utils';
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
+/* const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL', {
+  clientInfo: {
+    appName: 'My App',
+    appUrl: 'https://example.com',
+    sendSdkVersion: true,
+  }
+}); */
 
 let magicByte = '0x80'
 let magicString = 'tezos signed offchain message'
@@ -230,7 +242,13 @@ Taquito also offers the possibility to sign Michelson code. This feature can be 
 ```js live
 // import { TezosToolkit } from '@taquito/taquito';
 // import { Parser, packDataBytes, MichelsonData, MichelsonType } from '@taquito/michel-codec';
-// const Tezos = new TezosToolkit(NODE_RPC_URL);
+/* const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL', {
+  clientInfo: {
+    appName: 'My App',
+    appUrl: 'https://example.com',
+    sendSdkVersion: true,
+  }
+}); */
 
 const data = `(Pair (Pair { Elt 1
                   (Pair (Pair "tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN" "tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx")

@@ -4,6 +4,9 @@
  */
 
 import { RpcClient, RpcClientInterface } from '@taquito/rpc';
+import type { ClientInfo } from '@taquito/rpc';
+
+export type { ClientInfo, CorsWarning, CorsWarningCallback } from '@taquito/rpc';
 import { Forger } from '@taquito/local-forging';
 import { Protocols } from './constants';
 import { ConfigConfirmation, Context, TaquitoProvider } from './context';
@@ -95,22 +98,36 @@ export interface VersionInfo {
   version: string;
 }
 
+export interface TezosToolkitOptions {
+  /** Client information for RPC analytics headers */
+  clientInfo?: ClientInfo;
+}
+
 /**
  * @description Facade class that surfaces all of the libraries capability and allow it's configuration
  *
  * @param _rpc The RPC server to use
+ * @param options Optional configuration including clientInfo for RPC analytics headers
+ *
+ * @example new TezosToolkit('https://mainnet.tezos.ecadinfra.com/')
+ * @example new TezosToolkit('https://mainnet.tezos.ecadinfra.com/', { clientInfo: { appName: 'MyDapp', sendSdkVersion: true } })
  */
 export class TezosToolkit {
   private _options: SetProviderOptions = {};
   private _rpcClient: RpcClientInterface;
   private _wallet: Wallet;
   private _context: Context;
+  private _clientInfo?: ClientInfo;
 
   public readonly format = format;
 
-  constructor(private _rpc: RpcClientInterface | string) {
+  constructor(
+    private _rpc: RpcClientInterface | string,
+    options?: TezosToolkitOptions
+  ) {
+    this._clientInfo = options?.clientInfo;
     if (typeof this._rpc === 'string') {
-      this._rpcClient = new RpcClient(this._rpc);
+      this._rpcClient = new RpcClient(this._rpc, undefined, undefined, this._clientInfo);
     } else {
       this._rpcClient = this._rpc;
     }
@@ -181,14 +198,19 @@ export class TezosToolkit {
   /**
    * @description Sets rpc provider on the Tezos Taquito instance
    *
-   * @param options rpc url or rpcClient to use to interact with the Tezos network
+   * @param rpc rpc url or rpcClient to use to interact with the Tezos network
+   * @param options optional configuration including clientInfo for RPC analytics headers.
+   *                If not provided, uses the clientInfo from the constructor (if any).
    *
    * @example Tezos.setRpcProvider('https://mainnet.tezos.ecadinfra.com/')
+   * @example Tezos.setRpcProvider('https://mainnet.tezos.ecadinfra.com/', { clientInfo: { appName: 'MyDapp', sendSdkVersion: true } })
    *
    */
-  setRpcProvider(rpc?: SetProviderOptions['rpc']) {
+  setRpcProvider(rpc?: SetProviderOptions['rpc'], options?: { clientInfo?: ClientInfo }) {
     if (typeof rpc === 'string') {
-      this._rpcClient = new RpcClient(rpc);
+      // Use provided clientInfo, or fall back to the one from constructor
+      const clientInfo = options?.clientInfo ?? this._clientInfo;
+      this._rpcClient = new RpcClient(rpc, undefined, undefined, clientInfo);
     } else if (rpc === undefined) {
       // do nothing, RPC is required in the constructor, do not override it
     } else {

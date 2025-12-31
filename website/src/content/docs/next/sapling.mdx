@@ -156,9 +156,14 @@ Here is an example of how to prepare and inject a shielded transaction using Taq
 // import { RpcClient } from '@taquito/rpc';
 
 const saplingContractAddress = 'KT1ToBD7bovonshNrxs3i4KMFuZ8PE2LUmQf'
-const rpcUrl = 'https://ghostnet.tezos.ecadinfra.com/';
 const readProvider = new RpcReadAdapter(new RpcClient(rpcUrl));
-// const Tezos = new TezosToolkit(rpcUrl);
+/* const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL', {
+  clientInfo: {
+    appName: 'My App',
+    appUrl: 'https://example.com',
+    sendSdkVersion: true,
+  }
+}); */
 // Note: you need to set up your signer on the TezosToolkit as usual
 
 // Alice spending key
@@ -228,9 +233,14 @@ Here is an example of how to prepare and inject a Sapling transaction using Taqu
 // import { RpcClient } from '@taquito/rpc';
 
 const saplingContractAddress = 'KT1ToBD7bovonshNrxs3i4KMFuZ8PE2LUmQf'
-const rpcUrl = 'https://ghostnet.tezos.ecadinfra.com/';
 const readProvider = new RpcReadAdapter(new RpcClient(rpcUrl));
-// const Tezos = new TezosToolkit(rpcUrl);
+/* const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL', {
+  clientInfo: {
+    appName: 'My App',
+    appUrl: 'https://example.com',
+    sendSdkVersion: true,
+  }
+}); */
 // Note: you need to set up your signer on the TezosToolkit as usual
 
 // Alice spending key
@@ -286,9 +296,14 @@ Here is an example of how to prepare and inject an unshielded transaction using 
 // import { RpcClient } from '@taquito/rpc';
 
 const saplingContractAddress = 'KT1ToBD7bovonshNrxs3i4KMFuZ8PE2LUmQf'
-const rpcUrl = 'https://ghostnet.tezos.ecadinfra.com/';
 const readProvider = new RpcReadAdapter(new RpcClient(rpcUrl));
-// const Tezos = new TezosToolkit(rpcUrl);
+/* const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL', {
+  clientInfo: {
+    appName: 'My App',
+    appUrl: 'https://example.com',
+    sendSdkVersion: true,
+  }
+}); */
 // Note: you need to set up your signer on the TezosToolkit as usual
 
 // Alice spending key

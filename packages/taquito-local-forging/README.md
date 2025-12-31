@@ -45,7 +45,13 @@ npm install @taquito/local-forging
 import { TezosToolkit } from '@taquito/taquito'
 import { LocalForger } from '@taquito/local-forging'
 
-const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
+const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL', {
+  clientInfo: {
+    appName: 'My App',
+    appUrl: 'https://example.com',
+    sendSdkVersion: true,
+  }
+});
 Tezos.setProvider({ forger: localForger })
 ```
 

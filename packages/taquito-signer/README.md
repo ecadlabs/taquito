@@ -26,7 +26,13 @@ npm i --save @taquito/signer
 import { InMemorySigner } from '@taquito/signer';
 import { TezosToolkit } from '@taquito/taquito';
 
-const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
+const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL', {
+  clientInfo: {
+    appName: 'My App',
+    appUrl: 'https://example.com',
+    sendSdkVersion: true,
+  }
+});
 
 Tezos.setProvider({ signer: await InMemorySigner.fromSecretKey('edsk...') });
 ```
@@ -39,7 +45,13 @@ If your private key is encrypted, you can specify a passphrase to decrypt it. Do
 import { InMemorySigner } from '@taquito/signer';
 import { TezosToolkit } from '@taquito/taquito';
 
-const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
+const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL', {
+  clientInfo: {
+    appName: 'My App',
+    appUrl: 'https://example.com',
+    sendSdkVersion: true,
+  }
+});
 Tezos.setProvider({
   signer: await InMemorySigner.fromSecretKey('your_private_key', 'your_passphrase'),
 });
