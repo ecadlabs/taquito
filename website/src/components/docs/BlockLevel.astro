@@ -35,7 +35,7 @@ const { network, rpcUrl } = Astro.props;
         element.removeAttribute('href');
       } else if (controller.state.data?.header?.level) {
         element.textContent = controller.state.data.header.level.toLocaleString();
-        element.setAttribute('href', `${rpcUrl}/chains/main/blocks/head/header`);
+        element.setAttribute('href', `${rpcUrl}/chains/main/blocks/head/`);
         element.setAttribute('target', '_blank');
         element.setAttribute('rel', 'noopener noreferrer');
         element.style.color = '';
