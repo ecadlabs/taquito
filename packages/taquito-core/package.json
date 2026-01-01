@@ -1,6 +1,6 @@
 {
   "name": "@taquito/core",
-  "version": "24.0.0-beta.0",
+  "version": "24.0.0-RC.0",
   "description": "Classes, interfaces, and types shared across Taquito packages",
   "keywords": [
     "tezos",
