@@ -1257,7 +1257,7 @@ export class RpcClient implements RpcClientInterface {
    * @description List the prevalidated operations in mempool (accessibility of mempool depends on each rpc endpoint)
    * @param args has 5 optional properties
    * @default args { version: '2', validated: true, refused: true, outdated, true, branchRefused: true, branchDelayed: true, validationPass: undefined, source: undefined, operationHash: undefined }
-   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/seoul-mempool-openapi.json
+   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/tallinn-mempool-openapi-rc.json
    */
   async getPendingOperations(
     args: PendingOperationsQueryArguments = {}
@@ -1279,14 +1279,12 @@ export class RpcClient implements RpcClientInterface {
     delegate: string,
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<ActiveStakingParametersResponse> {
-    const response = await this.httpBackend.createRequest<ActiveStakingParametersResponse>({
+    return await this.httpBackend.createRequest<ActiveStakingParametersResponse>({
       url: this.createURL(
         `/chains/${this.chain}/blocks/${block}/context/delegates/${delegate}/active_staking_parameters`
       ),
       method: 'GET',
     });
-
-    return response;
   }
 
   /**
@@ -1299,14 +1297,12 @@ export class RpcClient implements RpcClientInterface {
     delegate: string,
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<PendingStakingParametersResponse> {
-    const response = await this.httpBackend.createRequest<PendingStakingParametersResponse>({
+    return await this.httpBackend.createRequest<PendingStakingParametersResponse>({
       url: this.createURL(
         `/chains/${this.chain}/blocks/${block}/context/delegates/${delegate}/pending_staking_parameters`
       ),
       method: 'GET',
     });
-
-    return response;
   }
 
   /**
@@ -1319,13 +1315,11 @@ export class RpcClient implements RpcClientInterface {
     destination: string,
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<DestinationIndexResponse> {
-    const response = await this.httpBackend.createRequest<DestinationIndexResponse>({
+    return await this.httpBackend.createRequest<DestinationIndexResponse>({
       url: this.createURL(
         `/chains/${this.chain}/blocks/${block}/context/destination/${destination}/index`
       ),
       method: 'GET',
     });
-
-    return response;
   }
 }

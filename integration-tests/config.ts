@@ -159,7 +159,7 @@ const shadownetEphemeral: Config =
 const shadownetSecretKey: Config =
   { ...shadownetEphemeral, ...{ signerConfig: defaultSecretKey, rpc: 'https://shadownet.tezos.ecadinfra.com' } };
 
-  const tallinnnetEphemeral: Config =
+const tallinnnetEphemeral: Config =
   defaultConfig({
     networkName: 'TALLINNNET',
     protocol: Protocols.PtTALLiNt,
@@ -226,7 +226,7 @@ if (process.env['RUN_WITH_SECRET_KEY']) {
 } else if (process.env['SEOULNET']) {
   providers.push(seoulnetEphemeral);
 } else {
-  providers.push(ghostnetEphemeral, shadownetEphemeral, seoulnetEphemeral, tallinnnetEphemeral);
+  providers.push(ghostnetEphemeral, shadownetEphemeral, tallinnnetEphemeral, seoulnetEphemeral);
 }
 
 const setupForger = (Tezos: TezosToolkit, forger: ForgerType): void => {
