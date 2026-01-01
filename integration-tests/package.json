@@ -12,6 +12,7 @@
     "test:shadownet": "SHADOWNET=true jest",
     "test:shadownet-secret-key": "RUN_SHADOWNET_WITH_SECRET_KEY=true jest --runInBand",
     "test:weeklynet-secret-key": "RUN_WEEKLYNET_WITH_SECRET_KEY=true jest --runInBand",
+    "test:tezlinknet-secret-key": "RUN_TEZLINKNET_WITH_SECRET_KEY=true jest --runInBand",
     "originate-known-contracts": "node -r ts-node/register originate-known-contracts.ts",
     "originate-known-contracts-and-run-test": "node -r ts-node/register originate-known-contracts.ts && jest"
   },

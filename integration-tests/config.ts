@@ -10,6 +10,7 @@ import { knownContractsShadownet } from './known-contracts-shadownet';
 import { knownContractsSeoulnet } from './known-contracts-seoulnet';
 import { knownContractsTallinnnet } from './known-contracts-tallinnnet';
 import { knownContractsWeeklynet } from './known-contracts-weeklynet';
+import { knownContractsTezlinknet } from './known-contracts-tezlinknet';
 
 const nodeCrypto = require('crypto');
 
@@ -191,10 +192,19 @@ const weeklynetSecretKey: Config =
     signerConfig: defaultSecretKey
   });
 
+const tezlinknetSecretKey: Config =
+  defaultConfig({
+    networkName: 'TEZLINKNET',
+    protocol: Protocols.PtSeouLou,
+    defaultRpc: 'https://node.shared.tezlink.nomadic-labs.com/.',
+    knownContracts: knownContractsTezlinknet,
+    signerConfig: defaultSecretKey,
+  });
+
 const providers: Config[] = [];
 
 if (process.env['RUN_WITH_SECRET_KEY']) {
-  providers.push(ghostnetSecretKey, shadownetSecretKey, tallinnnetSecretKey, seoulnetSecretKey, weeklynetSecretKey);
+  providers.push(ghostnetSecretKey, shadownetSecretKey, tallinnnetSecretKey, seoulnetSecretKey, weeklynetSecretKey, tezlinknetSecretKey);
 } else if (process.env['RUN_GHOSTNET_WITH_SECRET_KEY']) {
   providers.push(ghostnetSecretKey);
 } else if (process.env['RUN_SHADOWNET_WITH_SECRET_KEY']) {
@@ -205,6 +215,8 @@ if (process.env['RUN_WITH_SECRET_KEY']) {
   providers.push(seoulnetSecretKey);
 } else if (process.env['RUN_WEEKLYNET_WITH_SECRET_KEY']) {
   providers.push(weeklynetSecretKey);
+} else if (process.env['RUN_TEZLINKNET_WITH_SECRET_KEY']) {
+  providers.push(tezlinknetSecretKey);
 } else if (process.env['GHOSTNET']) {
   providers.push(ghostnetEphemeral);
 } else if (process.env['SHADOWNET']) {
