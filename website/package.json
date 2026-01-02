@@ -27,7 +27,7 @@
     "@taquito/tzip16": "^23.1.0",
     "@taquito/utils": "^23.1.0",
     "@taquito/wallet-connect": "^23.1.0",
-    "astro": "^5.16.4",
+    "astro": "^5.16.5",
     "astro-auto-import": "^0.4.5",
     "buffer": "^6.0.3",
     "fuse.js": "^7.1.0",
