@@ -68,3 +68,11 @@ export class InvalidPassphraseError extends ParameterValidationError {
     this.name = 'InvalidPassphraseError';
   }
 }
+
+export class InvalidDerivationIndexError extends ParameterValidationError {
+  constructor(public readonly index: number) {
+    super();
+    this.name = 'InvalidDerivationIndexError';
+    this.message = `Invalid derivation index "${index}"`;
+  }
+}
