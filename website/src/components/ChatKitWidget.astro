@@ -82,10 +82,31 @@ const apiEndpoint = 'https://taquito-chatkit.ops-taquito-cloudflare.workers.dev/
     });
   }
 
+  function openChatbot() {
+    const toggleBtn = document.getElementById('chat-toggle');
+    const container = document.getElementById('chatkit-container');
+    if (toggleBtn && container) {
+      container.classList.remove('hidden');
+      toggleBtn.classList.add('hidden');
+      initChatKit();
+    }
+  }
+
+  function checkAutoOpen() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('chatbot') === 'open') {
+      openChatbot();
+    }
+  }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', setupToggle);
+    document.addEventListener('DOMContentLoaded', () => {
+      setupToggle();
+      checkAutoOpen();
+    });
   } else {
     setupToggle();
+    checkAutoOpen();
   }
 </script>
 
