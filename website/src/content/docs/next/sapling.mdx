@@ -6,9 +6,8 @@ author: Roxane Letourneau
 Sapling is a protocol allowing private transactions in a decentralized environment.
 Sapling was introduced in Tezos in the Edo protocol. Refer to the Tezos documentation for more information on Sapling: https://tezos.gitlab.io/active/sapling.html
 
-:::note[Terminology: Shielded Set vs Shielded Pool]
-We use the term "shielded set" rather than "shielded pool" in our documentation. While both terms refer to the collection of shielded assets in a Sapling contract, "shielded set" more accurately reflects that assets are kept separately with only amounts and ownership identities being private on-chain, rather than being commingled together. This distinction is important for accurate understanding of how Sapling privacy works. See the [Tezos Agora discussion](https://forum.tezosagora.org/t/growing-the-shielded-set-on-tezos/6922) for more context.
-:::
+>[!NOTE]
+> We use the term "shielded set" rather than "shielded pool" in our documentation. While both terms refer to the collection of shielded assets in a Sapling contract, "shielded set" more accurately reflects that assets are kept separately with only amounts and ownership identities being private on-chain, rather than being commingled together. This distinction is important for accurate understanding of how Sapling privacy works. See the [Tezos Agora discussion](https://forum.tezosagora.org/t/growing-the-shielded-set-on-tezos/6922) for more context.
 
 ## Keys
 
@@ -220,9 +219,8 @@ The `ParametersSaplingTransaction` is an object made of:
 
 The `prepareSaplingTransaction` method returns the crafted Sapling transaction parameter but does not perform any change on the shielded set. A subsequent step where the Sapling transaction parameter is submitted to the smart contract must be done.
 
-:::note
-A user should not use their own implicit account (tz1, tz2, tz3) to submit a Sapling transaction but rather have a third party inject it.
-:::
+>[!NOTE]
+> A user should not use their own implicit account (tz1, tz2, tz3) to submit a Sapling transaction but rather have a third party inject it.
 
 Here is an example of how to prepare and inject a Sapling transaction using Taquito:
 
