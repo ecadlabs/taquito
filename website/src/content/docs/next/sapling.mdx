@@ -6,6 +6,10 @@ author: Roxane Letourneau
 Sapling is a protocol allowing private transactions in a decentralized environment.
 Sapling was introduced in Tezos in the Edo protocol. Refer to the Tezos documentation for more information on Sapling: https://tezos.gitlab.io/active/sapling.html
 
+:::note[Terminology: Shielded Set vs Shielded Pool]
+We use the term "shielded set" rather than "shielded pool" in our documentation. While both terms refer to the collection of shielded assets in a Sapling contract, "shielded set" more accurately reflects that assets are kept separately with only amounts and ownership identities being private on-chain, rather than being commingled together. This distinction is important for accurate understanding of how Sapling privacy works. See the [Tezos Agora discussion](https://forum.tezosagora.org/t/growing-the-shielded-set-on-tezos/6922) for more context.
+:::
+
 ## Keys
 
 **Spending key**
@@ -66,11 +70,11 @@ const saplingToolkit = new SaplingToolkit(
 )
 ```
 
-## How to retrieve my balance in the Sapling shielded pool?
+## How to retrieve my balance in the Sapling shielded set?
 
 When calling the `getSaplingTransactionViewer` method of the `SaplingToolkit` class, an instance of the `SaplingTransactionViewer` class is returned. The `SaplingTransactionViewer` class allows retrieving and decrypting Sapling transactions for the specified viewing key and calculating the unspent balance.
 
-For each entry in the shielded pool, the `SaplingTransactionViewer` class will try to decrypt them using the viewing key as if it were the receiver. If a ciphertext is successfully decrypted, the configured account was the receiver of the output. The `SaplingTransactionViewer` will find which inputs were not spent by computing their nullifier. If an input is spent, its nullifier will be in the Sapling state. If the nullifier is not present, the input has not been spent, and its value will be considered in the calculated balance.
+For each entry in the shielded set, the `SaplingTransactionViewer` class will try to decrypt them using the viewing key as if it were the receiver. If a ciphertext is successfully decrypted, the configured account was the receiver of the output. The `SaplingTransactionViewer` will find which inputs were not spent by computing their nullifier. If an input is spent, its nullifier will be in the Sapling state. If the nullifier is not present, the input has not been spent, and its value will be considered in the calculated balance.
 
 Note that the balance is represented in mutez.
 
@@ -96,7 +100,7 @@ const saplingToolkit = new SaplingToolkit(
 
 saplingToolkit.getSaplingTransactionViewer()
   .then((txViewer) => {
-    console.log(`Fetching Alice balance in the shielded pool...`);
+    console.log(`Fetching Alice balance in the shielded set...`);
     return txViewer.getBalance();
   })
   .then((balance) => console.log(`Alice's balance is ${balance.toString()} mutez`))
@@ -129,7 +133,7 @@ const saplingToolkit = new SaplingToolkit(
 
 saplingToolkit.getSaplingTransactionViewer()
   .then((txViewer) => {
-    console.log(`Fetching Alice's history of transactions in the shielded pool...`);
+    console.log(`Fetching Alice's history of transactions in the shielded set...`);
     return txViewer.getIncomingAndOutgoingTransactions();
   })
   .then((history) => console.log(`Alice's transaction history is ${JSON.stringify(history, null, 2)}`))
@@ -146,7 +150,7 @@ The `ParametersSaplingTransaction` is an object made of:
 - an optional `memo` that cannot be longer than the specified memo size
 - an optional `mutez` property that must be set to true if the specified amount is in mutez rather than tez
 
-The `prepareShieldedTransaction` method returns the crafted Sapling transaction parameter but does not perform any change on the shielded pool. A subsequent step where the Sapling transaction parameter is submitted to the smart contract must be done. Note that in a case of a shielded transaction, the shielded amount must be sent along when calling the smart contract to transfer the tez to the shielded pool, or it will result in an error.
+The `prepareShieldedTransaction` method returns the crafted Sapling transaction parameter but does not perform any change on the shielded set. A subsequent step where the Sapling transaction parameter is submitted to the smart contract must be done. Note that in a case of a shielded transaction, the shielded amount must be sent along when calling the smart contract to transfer the tez to the shielded set, or it will result in an error.
 
 Here is an example of how to prepare and inject a shielded transaction using Taquito:
 
@@ -192,7 +196,7 @@ inMemorySpendingKey.getSaplingViewingKeyProvider()
     Tezos.contract.at(saplingContractAddress)
     .then((saplingContract) => {
         console.log(`Injecting the Sapling transaction using the ContractAbstraction...`);
-        // The amount MUST be specified in the send method to transfer the 3 tez to the shielded pool
+        // The amount MUST be specified in the send method to transfer the 3 tez to the shielded set
         return saplingContract.methodsObject.default([shieldedTx]).send({ amount: 3 });
     })
     .then((op) => {
@@ -214,7 +218,7 @@ The `ParametersSaplingTransaction` is an object made of:
 - an optional `memo` that cannot be longer than the specified memo size
 - an optional `mutez` property that must be set to true if the specified amount is in mutez rather than tez
 
-The `prepareSaplingTransaction` method returns the crafted Sapling transaction parameter but does not perform any change on the shielded pool. A subsequent step where the Sapling transaction parameter is submitted to the smart contract must be done.
+The `prepareSaplingTransaction` method returns the crafted Sapling transaction parameter but does not perform any change on the shielded set. A subsequent step where the Sapling transaction parameter is submitted to the smart contract must be done.
 
 :::note
 A user should not use their own implicit account (tz1, tz2, tz3) to submit a Sapling transaction but rather have a third party inject it.
@@ -276,7 +280,7 @@ The `ParametersUnshieldedTransaction` is an object made of:
 - an `amount` property, which is the amount to shield in tez by default
 - an optional `mutez` property that must be set to true if the specified amount is in mutez rather than tez
 
-The `prepareUnshieldedTransaction` method returns the crafted Sapling transaction parameter but does not perform any change on the shielded pool. A subsequent step where the Sapling transaction parameter is submitted to the smart contract must be done to retrieve the tokens from the pool.
+The `prepareUnshieldedTransaction` method returns the crafted Sapling transaction parameter but does not perform any change on the shielded set. A subsequent step where the Sapling transaction parameter is submitted to the smart contract must be done to retrieve the tokens from the shielded set.
 
 Here is an example of how to prepare and inject an unshielded transaction using Taquito:
 
@@ -357,4 +361,4 @@ const saplingTransactionViewer = new SaplingTransactionViewer(
 )
 ```
 
-Refer to these sections to [retrieve the balance](sapling#how-to-retrieve-my-balance-in-the-sapling-shielded-pool) and [view the transaction history](sapling#how-to-retrieve-my-transaction-history).
+Refer to these sections to [retrieve the balance](sapling#how-to-retrieve-my-balance-in-the-sapling-shielded-set) and [view the transaction history](sapling#how-to-retrieve-my-transaction-history).
