@@ -183,7 +183,7 @@ const tezlinknetSecretKey: Config =
   defaultConfig({
     networkName: 'TEZLINKNET',
     protocol: Protocols.PtSeouLou,
-    defaultRpc: 'https://node.shared.tezlink.nomadic-labs.com/.',
+    defaultRpc: 'https://rpc.shadownet.tezlink.nomadic-labs.com/',
     knownContracts: knownContractsTezlinknet,
     signerConfig: defaultSecretKey,
   });

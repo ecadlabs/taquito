@@ -1,6 +1,6 @@
 import { CONFIGS } from "../../config";
 
-CONFIGS().forEach(({ lib, rpc, setup }) => {
+CONFIGS().forEach(({ lib, rpc, setup, networkName }) => {
   const Tezos = lib;
 
   describe(`Test contract origination with invalid data through contract api using: ${rpc}`, () => {
@@ -23,7 +23,11 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
           init: `"Copyright ©"`
         })
       } catch (ex) {
-        expect(ex).toEqual(expect.objectContaining({ message: expect.stringContaining('non_printable_character') }))
+        if (networkName === 'TEZLINKNET') {
+          expect(ex.lastError.error_message).toContain('forbidden character in string')
+        } else {
+          expect(ex.message).toContain('non_printable_character')
+        }
       }
     });
   });
