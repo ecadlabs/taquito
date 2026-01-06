@@ -1,0 +1,440 @@
+---
+title: Bun Migration
+---
+
+This document tracks the migration of Taquito's build system from npm to Bun as the primary package manager and runtime.
+
+## Goal
+
+Use Bun as the primary package manager and runtime for Taquito development, keeping npm only for publishing to the npm registry.
+
+## Performance Comparison
+
+| Operation | npm (before) | Bun | Improvement |
+|-----------|--------------|-----|-------------|
+| Install (clean) | ~15s | ~3s | 80% faster |
+| Build (18 packages) | 22.8s | 14s | 39% faster |
+| Build (cached) | 1.9s | 1.9s | Nx cache |
+| Lint | 6.7s | 6.7s | Nx cache |
+| Tests | 61s | ~30s | 51% faster |
+
+## Key Changes
+
+### Bun-Only Development
+
+All CI workflows now use Bun for:
+- `bun install --frozen-lockfile` - Install dependencies
+- `bun run build` - Build packages
+- `bun run lint` - Run linting
+- `bun run test` - Run tests
+
+npm is only used for:
+- `npm version` - Versioning packages (workspaces support)
+- `npm publish` - Publishing to npm registry
+
+### Lockfile
+
+- Deleted `package-lock.json`
+- Added `package-lock.json` to `.gitignore`
+- Using `bun.lock` as the single source of truth
+
+### Lerna Removed
+
+Lerna was eliminated and replaced with Nx + npm workspaces. This reduced the dependency footprint by 612 packages.
+
+**Script replacements:**
+
+| Before (Lerna) | After (Nx/npm) |
+|----------------|----------------|
+| `lerna run lint` | `nx run-many --target=lint` |
+| `lerna clean --yes` | `rm -rf packages/*/node_modules packages/*/dist node_modules` |
+| `lerna run --concurrency 1 --stream precommit` | `nx run-many --target=precommit --parallel=1` |
+| `lerna run version-stamp` | `nx run-many --target=version-stamp` |
+
+### Publishing: Lerna vs npm Workspaces
+
+The most significant change is how packages are versioned and published.
+
+**Before (Lerna):**
+```bash
+# Version all packages (Lerna managed inter-package dependencies)
+npx lerna version "1.0.0" --no-push --no-git-tag-version --yes
+
+# Publish all packages to registry
+npx lerna publish from-package --dist-tag edge --yes --registry https://npm.preview.tezostaquito.io/
+```
+
+Lerna features we used:
+- Automatic inter-package dependency updates (bumping `@taquito/core` would update all packages that depend on it)
+- `from-package` mode to publish based on package.json versions
+- Coordinated publishing with retry logic
+
+**After (npm workspaces):**
+```bash
+# Version all packages in workspaces
+npm version "1.0.0" --no-git-tag-version --workspaces
+
+# Publish all packages to registry
+npm publish --tag edge --registry https://npm.preview.tezostaquito.io/ --workspaces
+```
+
+Key differences:
+| Feature | Lerna | npm Workspaces |
+|---------|-------|----------------|
+| Version command | `lerna version` | `npm version --workspaces` |
+| Publish command | `lerna publish from-package` | `npm publish --workspaces` |
+| Inter-package deps | Auto-updated | Manual (use `^` ranges) |
+| Config file | `lerna.json` | None needed |
+| Retry on failure | Built-in | Manual |
+
+**CI Workflow Example (deploy_edge.yml):**
+
+```yaml
+# Before (Lerna)
+- run: npx lerna version "${TARGET_VERSION}" --no-push --no-git-tag-version --yes
+- run: npx lerna publish from-package --dist-tag edge --yes --registry https://npm.preview.tezostaquito.io/
+
+# After (npm workspaces)
+- run: npm version "${TARGET_VERSION}" --no-git-tag-version --workspaces
+- run: npm publish --tag edge --registry https://npm.preview.tezostaquito.io/ --workspaces
+```
+
+**Note:** For production releases, the same pattern applies. The `--workspaces` flag tells npm to operate on all packages defined in the root `package.json` workspaces array.
+
+### CI Workflows Updated
+
+All workflows now use `oven-sh/setup-bun@v2`:
+
+**Updated workflows:**
+- `.github/workflows/main.yml` - Main CI (lint, test, build)
+- `.github/workflows/deploy_edge.yml` - Edge package deployment
+- `.github/workflows/bundle_webpack.yml` - Webpack bundle builds
+- `.github/workflows/deploy_website.yml` - Website deployment
+- `.github/workflows/shadownet.yml` - Shadownet integration tests
+- `.github/workflows/tezlinknet.yml` - Tezlinknet integration tests
+- `.github/workflows/weeklynet.yml` - Weeklynet integration tests
+
+**Example workflow pattern:**
+```yaml
+steps:
+  - uses: actions/checkout@v4
+  - uses: oven-sh/setup-bun@v2
+    with:
+      bun-version: latest
+  - uses: actions/setup-node@v4  # Still needed for Node.js runtime
+    with:
+      node-version: lts/Iron
+  - run: bun install --frozen-lockfile
+  - run: bun run build
+  - run: bun run test
+```
+
+**deploy_edge.yml specifics:**
+```yaml
+# Bun for install/build
+- run: bun install --frozen-lockfile
+- run: bun run build
+
+# npm for versioning (better workspaces support)
+- run: npm version "${TARGET_VERSION}" --no-git-tag-version --workspaces
+
+# npm for publishing (better registry auth handling)
+- run: npm publish --tag edge --registry https://npm.preview.tezostaquito.io/ --workspaces
+```
+
+### Enhanced nx.json Configuration
+
+```json
+{
+  "namedInputs": {
+    "production": [
+      "default",
+      "!{projectRoot}/**/*.spec.ts",
+      "!{projectRoot}/**/*.test.ts",
+      "!{projectRoot}/test/**/*"
+    ]
+  },
+  "targetDefaults": {
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": ["production", "^production"],
+      "outputs": ["{projectRoot}/dist"],
+      "cache": true
+    },
+    "build-webpack": {
+      "dependsOn": ["build"],
+      "outputs": ["{projectRoot}/dist"],
+      "cache": true
+    }
+  },
+  "parallel": 4,
+  "cacheDirectory": ".nx/cache"
+}
+```
+
+---
+
+## Technical Changes
+
+### rollup-plugin-typescript2 Removed
+
+**Problem:** `rollup-plugin-typescript2` (rpt2) couldn't resolve `tslib` from Bun's `.bun` cache structure.
+
+**Fix:** Removed rpt2 entirely. Changed rollup configs to:
+1. Read from `dist/lib/*.js` (output of `tsc`) instead of `src/*.ts`
+2. Added `@rollup/plugin-commonjs` and `@rollup/plugin-node-resolve` to bundle CJS modules
+
+**Before:**
+```typescript
+import typescript from 'rollup-plugin-typescript2';
+export default {
+  input: 'src/taquito-core.ts',
+  plugins: [
+    typescript({ tsconfig: './tsconfig.prod.json' }),
+  ],
+};
+```
+
+**After:**
+```typescript
+import commonjs from '@rollup/plugin-commonjs';
+import resolve from '@rollup/plugin-node-resolve';
+export default {
+  input: 'dist/lib/taquito-core.js',
+  plugins: [
+    resolve(),
+    commonjs(),
+  ],
+};
+```
+
+### ts-loader Replaced with esbuild-loader
+
+**Problem:** Webpack's `ts-loader` has the same module resolution issues as rpt2 with Bun's cache structure.
+
+**Fix:** Replaced `ts-loader` with `esbuild-loader` in webpack configs.
+
+**Before:**
+```javascript
+module: {
+  rules: [{
+    test: /\.ts$/,
+    use: 'ts-loader',
+    exclude: /node_modules/
+  }]
+}
+```
+
+**After:**
+```javascript
+module: {
+  rules: [{
+    test: /\.ts$/,
+    use: {
+      loader: 'esbuild-loader',
+      options: { target: 'es2020' }
+    },
+    exclude: /node_modules/
+  }]
+}
+```
+
+### Stale Dependencies Removed
+
+Removed from all sub-package package.json files:
+- `rollup-plugin-typescript2` (17 packages)
+- `ts-loader` (2 packages)
+
+### Phantom Dependencies Fixed
+
+**Problem:** Bun doesn't hoist transitive dependencies as aggressively as npm. Code that imports packages not explicitly declared (relying on npm hoisting) will fail.
+
+**Examples fixed:**
+
+1. **`@taquito/signer`** - Was importing `bn.js` but only had `@types/bn.js` declared. With npm, `bn.js` was hoisted from `crypto-browserify` (a transitive dep of `@taquito/beacon-wallet`).
+   ```json
+   // Added to dependencies
+   "bn.js": "^5.2.1"
+   ```
+
+2. **`@taquito/beacon-wallet`** - Tests mock `@airgap/beacon-transport-postmessage` but it wasn't declared.
+   ```json
+   // Added to devDependencies
+   "@airgap/beacon-transport-postmessage": "^4.6.4"
+   ```
+
+### Jest moduleNameMapper Configuration
+
+**Problem:** Jest tests couldn't resolve workspace packages (`@taquito/*`). npm creates symlinks that Jest follows; Bun's resolution differs.
+
+**Solution:** Added comprehensive `moduleNameMapper` entries to each package's Jest config:
+
+```json
+"moduleNameMapper": {
+  "^@taquito/core$": "<rootDir>/../taquito-core/src/taquito-core.ts",
+  "^@taquito/utils$": "<rootDir>/../taquito-utils/src/taquito-utils.ts",
+  "^@taquito/rpc$": "<rootDir>/../taquito-rpc/src/taquito-rpc.ts"
+}
+```
+
+**Packages updated:** `taquito`, `taquito-rpc`, `taquito-remote-signer`, `taquito-sapling`, `taquito-ledger-signer`, `taquito-contracts-library`, `taquito-tzip12`, `taquito-tzip16`, `taquito-beacon-wallet`
+
+### Jest transformIgnorePatterns for Bun
+
+**Problem:** Bun stores packages in `node_modules/.bun/@pkg+version/node_modules/@pkg/` rather than npm's flat `node_modules/@pkg/`. Jest's `transformIgnorePatterns` regex didn't match.
+
+**Solution:** Updated regex to handle both structures:
+
+```json
+// Before (npm only)
+"transformIgnorePatterns": ["/node_modules/(?!(@airgap|@stablelib)/.*)"]
+
+// After (npm + bun)
+"transformIgnorePatterns": ["/node_modules/(?!(\\.bun/)?(@airgap|@stablelib)[+/])"]
+```
+
+This regex now matches:
+- npm: `node_modules/@airgap/...`
+- Bun: `node_modules/.bun/@airgap+version/...`
+
+---
+
+## Files Modified
+
+### Root Configuration
+- `package.json` - Removed `apps/` workspace, removed Lerna, updated scripts to use Nx
+- `nx.json` - Enhanced with named inputs, caching config, parallel settings
+- `lerna.json` - Deleted
+- `.gitignore` - Added `package-lock.json`
+- `package-lock.json` - Deleted
+
+### CI Workflows (all updated to use Bun)
+- `.github/workflows/main.yml`
+- `.github/workflows/deploy_edge.yml`
+- `.github/workflows/bundle_webpack.yml`
+- `.github/workflows/deploy_website.yml`
+- `.github/workflows/shadownet.yml`
+- `.github/workflows/tezlinknet.yml`
+- `.github/workflows/weeklynet.yml`
+
+### Rollup Configs (18 files)
+All files in `packages/*/rollup.config.ts`:
+- Changed input from `src/*.ts` to `dist/lib/*.js`
+- Added `@rollup/plugin-commonjs` and `@rollup/plugin-node-resolve`
+- Removed `rollup-plugin-typescript2`
+
+### Webpack Configs
+- `packages/taquito-local-forging/webpack.config.js`
+- `packages/taquito-beacon-wallet/webpack.config.js`
+- `packages/taquito-michel-codec/webpack.config.js` (new)
+
+Changes:
+- Replaced `ts-loader` with `esbuild-loader`
+- Added `buffer` to resolve.fallback
+
+### Package.json (Jest & Dependencies)
+Modified for Jest `moduleNameMapper` and/or dependency fixes:
+- `packages/taquito/package.json`
+- `packages/taquito-rpc/package.json`
+- `packages/taquito-signer/package.json` (added `bn.js`)
+- `packages/taquito-remote-signer/package.json`
+- `packages/taquito-sapling/package.json`
+- `packages/taquito-ledger-signer/package.json`
+- `packages/taquito-contracts-library/package.json`
+- `packages/taquito-tzip12/package.json`
+- `packages/taquito-tzip16/package.json`
+- `packages/taquito-beacon-wallet/package.json` (added `@airgap/beacon-transport-postmessage`, fixed `transformIgnorePatterns`)
+
+---
+
+## Current Status
+
+| Component | Status | Notes |
+|-----------|--------|-------|
+| Install | ✅ | `bun install --frozen-lockfile` |
+| Build (rollup) | ✅ | All 18 packages |
+| Webpack local-forging | ✅ | 250 KiB |
+| Webpack beacon-wallet | ✅ | 2.8 MB |
+| Webpack michel-codec | ✅ | 82 KiB |
+| CI Workflows | ✅ | All updated to Bun |
+| Unit Tests | ✅ | All 17 test suites pass |
+
+---
+
+## Dependencies Changed
+
+**Added:**
+```json
+{
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^28.0.0",
+    "@rollup/plugin-node-resolve": "^16.0.0",
+    "esbuild-loader": "^4.4.2"
+  }
+}
+```
+
+**Removed:**
+```json
+{
+  "devDependencies": {
+    "lerna": "^9.0.3",
+    "rollup-plugin-typescript2": "...",
+    "ts-loader": "..."
+  }
+}
+```
+
+**Net result:** 612 fewer packages installed
+
+---
+
+## How to Use
+
+```bash
+# Install dependencies
+bun install
+
+# Build all packages
+bun run build
+
+# Run linting
+bun run lint
+
+# Run tests
+bun run test
+
+# Build webpack bundles (standalone vanilla JS for Swift/iOS/browser)
+cd packages/taquito-local-forging && bun run build-webpack  # 250 KiB
+cd packages/taquito-beacon-wallet && bun run build-webpack  # 2.8 MB
+cd packages/taquito-michel-codec && bun run build-webpack   # 82 KiB
+```
+
+---
+
+## Why Keep npm for Publishing?
+
+1. **Registry authentication** - npm has better established auth flows for npm registries
+2. **Workspaces versioning** - `npm version --workspaces` is well-tested
+3. **Verdaccio compatibility** - The edge preview registry uses Verdaccio which is npm-native
+4. **Risk mitigation** - Publishing is the most critical operation; keeping npm here reduces risk
+
+---
+
+## Rollback
+
+If issues arise with Bun, you can restore npm:
+
+```bash
+# Remove Bun lockfile
+rm bun.lock
+
+# Remove from .gitignore
+sed -i '' '/package-lock.json/d' .gitignore
+
+# Install with npm
+npm install
+
+# Build
+npm run build
+```

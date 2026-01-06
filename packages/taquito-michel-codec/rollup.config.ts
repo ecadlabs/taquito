@@ -1,13 +1,14 @@
 import camelCase from 'lodash.camelcase';
-import typescript from 'rollup-plugin-typescript2';
 import json from 'rollup-plugin-json';
+import commonjs from '@rollup/plugin-commonjs';
+import resolve from '@rollup/plugin-node-resolve';
 
 const pkg = require('./package.json');
 
 const libraryName = 'taquito-michel-codec';
 
 export default {
-  input: `src/taquito-michel-codec.ts`,
+  input: `dist/lib/taquito-michel-codec.js`,
   output: [
     { file: pkg.main, name: camelCase(libraryName), format: 'umd', sourcemap: true, globals: {
       '@taquito/core': 'core'
@@ -24,7 +25,8 @@ export default {
   plugins: [
     // Allow json resolution
     json(),
+    resolve(),
+    commonjs(),
     // Compile TypeScript files
-    typescript({ tsconfig: './tsconfig.prod.json', useTsconfigDeclarationDir: true }),
   ],
 };

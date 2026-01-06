@@ -11,11 +11,14 @@ jobs:
     continue-on-error: true
     steps:
       - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
       - uses: actions/setup-node@v4
         with:
           node-version: lts/Iron
-      - run: npm ci
-      - run: npm run build
+      - run: bun install --frozen-lockfile
+      - run: bun run build
       - if: always()
         id: integration-tests-tezlinknet
-        run: npm -w integration-tests run test:tezlinknet-secret-key
+        run: cd integration-tests && bun run test:tezlinknet-secret-key

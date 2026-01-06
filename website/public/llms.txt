@@ -114,6 +114,9 @@ The `next` version contains the latest unreleased documentation.
 - `validators` - Validation functions
 - `ballot` - Ballot Operation
 
+### Contributing
+- `bun-migration` - Bun Migration
+
 ### Other
 - `failwith_errors` - Catching error messages
 - `testing_strategies` - Taquito Testing Strategies

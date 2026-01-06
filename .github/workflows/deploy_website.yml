@@ -21,24 +21,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
       - uses: actions/setup-node@v4
         with:
           node-version: 22.18.0
       # Install and build all packages (required for TypeDoc)
       - name: Install root dependencies
-        run: npm ci
+        run: bun install --frozen-lockfile
       - name: Build packages
-        run: npm run build
+        run: bun run build
       # Build website
       - name: Install website dependencies
-        run: npm ci
+        run: bun install --frozen-lockfile
         working-directory: website
       - name: Build website
-        run: npm run build
+        run: bun run build
         working-directory: website
       # Build TypeDoc (after packages are built)
       - name: Build TypeDoc API docs
-        run: npm run build-docs
+        run: bun run build-docs
 
       - name: Publish to Cloudflare Pages
         id: cloudflare_publish

@@ -65,7 +65,6 @@
   "devDependencies": {
     "@types/json-stringify-safe": "^5.0.3",
     "@types/node": "^20",
-    "rollup": "^4.22.4",
-    "rollup-plugin-typescript2": "^0.36.0"
+    "rollup": "^4.22.4"
   }
 }

@@ -1,13 +1,14 @@
 import camelCase from 'lodash.camelcase';
-import typescript from 'rollup-plugin-typescript2';
 import json from 'rollup-plugin-json';
+import commonjs from '@rollup/plugin-commonjs';
+import resolve from '@rollup/plugin-node-resolve';
 
 const pkg = require('./package.json');
 
 const libraryName = 'taquito-sapling';
 
 export default {
-  input: `src/${libraryName}.ts`,
+  input: `dist/lib/${libraryName}.js`,
   output: [
     { 
       file: pkg.main, 
@@ -52,7 +53,8 @@ export default {
   plugins: [
     // Allow json resolution
     json(),
+    resolve(),
+    commonjs(),
     // Compile TypeScript files
-    typescript({ tsconfig: './tsconfig.prod.json', useTsconfigDeclarationDir: true }),
   ],
 };
