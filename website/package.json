@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
-    "build": "npm run generate:llms && astro build",
+    "build": "bun run generate:llms && astro build",
     "preview": "astro preview",
     "astro": "astro",
     "docs:version": "node src/scripts/version-docs.mjs",

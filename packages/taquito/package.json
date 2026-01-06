@@ -31,7 +31,7 @@
     "node": ">=20"
   },
   "scripts": {
-    "test": "jest --coverage",
+    "test": "jest --coverage --forceExit",
     "test:watch": "jest --coverage --watch",
     "test:prod": "npm run lint && npm run test -- --no-cache",
     "lint": "eslint --ext .js,.ts .",
@@ -62,10 +62,14 @@
       "js"
     ],
     "moduleNameMapper": {
+      "^@taquito/taquito$": "<rootDir>/src/taquito.ts",
+      "^@taquito/core$": "<rootDir>/../taquito-core/src/taquito-core.ts",
       "^@taquito/rpc$": "<rootDir>/../taquito-rpc/src/taquito-rpc.ts",
       "^@taquito/michelson-encoder$": "<rootDir>/../taquito-michelson-encoder/src/taquito-michelson-encoder.ts",
       "^@taquito/michel-codec$": "<rootDir>/../taquito-michel-codec/src/taquito-michel-codec.ts",
+      "^@taquito/local-forging$": "<rootDir>/../taquito-local-forging/src/taquito-local-forging.ts",
       "^@taquito/http-utils$": "<rootDir>/../taquito-http-utils/src/taquito-http-utils.ts",
+      "^@taquito/signer$": "<rootDir>/../taquito-signer/src/taquito-signer.ts",
       "^@taquito/utils$": "<rootDir>/../taquito-utils/src/taquito-utils.ts"
     },
     "coveragePathIgnorePatterns": [
@@ -113,7 +117,6 @@
     "rollup": "^4.22.4",
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-polyfill-node": "^0.13.0",
-    "rollup-plugin-typescript2": "^0.36.0",
     "rx-sandbox": "^2.0.5",
     "shelljs": "^0.8.5",
     "stream-browserify": "^3.0.0",

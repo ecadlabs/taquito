@@ -1,24 +1,46 @@
 {
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "extends": "nx/presets/npm.json",
+  "namedInputs": {
+    "default": ["{projectRoot}/**/*", "sharedGlobals"],
+    "sharedGlobals": ["{workspaceRoot}/tsconfig.json", "{workspaceRoot}/tsconfig.*.json"],
+    "production": [
+      "default",
+      "!{projectRoot}/**/*.spec.ts",
+      "!{projectRoot}/**/*.test.ts",
+      "!{projectRoot}/test/**/*"
+    ]
+  },
   "targetDefaults": {
     "build": {
       "dependsOn": ["^build"],
+      "inputs": ["production", "^production"],
+      "outputs": ["{projectRoot}/dist"],
       "cache": true
     },
     "test": {
+      "inputs": ["default", "^production"],
       "cache": true
     },
     "lint": {
+      "inputs": ["default", "{workspaceRoot}/.eslintrc.*"],
       "cache": true
     },
-    "example": {
+    "precommit": {
       "cache": true
     },
-    "docusaurus": {
+    "version-stamp": {
+      "cache": false
+    },
+    "build-webpack": {
+      "dependsOn": ["build"],
+      "outputs": ["{projectRoot}/dist"],
       "cache": true
     }
   },
   "affected": {
     "defaultBase": "master"
-  }
+  },
+  "parallel": 4,
+  "cacheDirectory": ".nx/cache"
 }

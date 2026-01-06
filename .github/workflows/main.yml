@@ -1,4 +1,4 @@
-name: Node.js CI
+name: CI
 
 on:
   pull_request:
@@ -21,14 +21,17 @@ jobs:
           - 'lts/Jod'
     steps:
       - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
-      - run: npm ci
-      - run: npm run build
-      - run: npm run lint
-      - run: npm run build-docs
-      - run: npm run test -- --runInBand
+      - run: bun install --frozen-lockfile
+      - run: bun run build
+      - run: bun run lint
+      - run: bun run build-docs
+      - run: bun run test -- --runInBand
       - name: Codecov
         uses: codecov/codecov-action@v3.1.1
         with:
@@ -48,11 +51,14 @@ jobs:
             rpc_url: https://rpc.seoulnet.teztnets.com/
     steps:
       - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
       - uses: actions/setup-node@v4
         with:
           node-version: lts/Iron
-      - run: npm ci
-      - run: npm run build
+      - run: bun install --frozen-lockfile
+      - run: bun run build
       - if: ${{ !github.event.pull_request.head.repo.fork }}
         name: Tailscale
         uses: tailscale/github-action@v1
@@ -60,11 +66,11 @@ jobs:
           authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
           version: 1.32.2
       - id: run-tests
-        run: npm -w integration-tests run test:${{ matrix.testnet }} -- --maxWorkers=4
+        run: cd integration-tests && bun run test:${{ matrix.testnet }} -- --maxWorkers=4
         env:
           # Ternary operator workaround
           TEZOS_RPC_${{ matrix.testnet_uppercase }}: ${{ github.event.pull_request.head.repo.fork && matrix.rpc_url || null }}
-  
+
   integration-tests-testnet-changed:
     runs-on: ubuntu-latest
     continue-on-error: true
@@ -79,11 +85,14 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
       - uses: actions/setup-node@v4
         with:
           node-version: lts/Iron
-      - run: npm ci
-      - run: npm run build
+      - run: bun install --frozen-lockfile
+      - run: bun run build
       - if: ${{ !github.event.pull_request.head.repo.fork }}
         name: Tailscale
         uses: tailscale/github-action@v1
@@ -91,32 +100,7 @@ jobs:
           authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
           version: 1.32.2
       - id: run-tests
-        run: npm -w integration-tests run test:${{ matrix.testnet }} -- --maxWorkers=4 --changedSince=origin/${{ github.base_ref || 'master' }}
+        run: cd integration-tests && bun run test:${{ matrix.testnet }} -- --maxWorkers=4 --changedSince=origin/${{ github.base_ref || 'master' }}
         env:
           # Ternary operator workaround
           TEZOS_RPC_${{ matrix.testnet_uppercase }}: ${{ github.event.pull_request.head.repo.fork && matrix.rpc_url || null }}
-
-          # integration-tests-testnet-seoulnet-secret-key:
-  #   runs-on: ubuntu-latest
-  #   continue-on-error: true
-  #   strategy:
-  #     matrix:
-  #       include:
-  #         - testnet: seoulnet
-  #           testnet_uppercase: SEOULNET
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - uses: actions/setup-node@v4
-  #       with:
-  #         node-version: lts/Iron
-  #     - run: npm ci
-  #     - run: npm run build
-  #     - if: ${{ !github.event.pull_request.head.repo.fork }}
-  #       name: Tailscale
-  #       uses: tailscale/github-action@v1
-  #       with:
-  #         authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
-  #         version: 1.32.2
-  #     - run: npm -w integration-tests run test:seoulnet-secret-key
-  #       env:
-  #         RUN_${{ matrix.testnet_uppercase }}_WITH_SECRET_KEY: true
