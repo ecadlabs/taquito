@@ -58,7 +58,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       }])
 
       // Inject the sapling transaction using the ContractAbstraction by calling the default entrypoint
-      // The amount MUST be specified in the send method in order to transfer the 3 tez to the shielded pool
+      // The amount MUST be specified in the send method in order to transfer the 3 tez to the shielded set
       const op = await saplingContract.methodsObject.default([shieldedTx]).send({ amount: amountToAlice });
       await op.confirmation();
 
