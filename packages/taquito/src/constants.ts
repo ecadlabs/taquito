@@ -1,22 +1,22 @@
-// value is based on octez-client reveal operation gasLimit of each address type in Seoul Protocol
+// value is based on octez-client reveal operation gasLimit of each address type in Tallinn Protocol
 const REVEAL_GAS_LIMIT = {
   TZ1: 171,
   TZ2: 157,
   TZ3: 447,
   TZ4: 3252,
 };
-// value is based on octez-client reveal operation fee of each address type in Seoul Protocol
+// value is based on octez-client reveal operation fee of each address type in Tallinn Protocol
 const REVEAL_FEE = {
   TZ1: 278,
   TZ2: 277,
   TZ3: 306,
   TZ4: 736,
 };
-// value is based on octez-client reveal operation storageLimit of all address type in Seoul Protocol
+// value is based on octez-client reveal operation storageLimit of all address type in Tallinn Protocol
 export const REVEAL_STORAGE_LIMIT = 0;
-// protocol constants in Seoul Protocol
+// protocol constants in Tallinn Protocol
 export const ORIGINATION_SIZE = 257;
-// protocol constants in Seoul Protocol
+// protocol constants in Tallinn Protocol
 export const COST_PER_BYTE = 250;
 
 export enum Protocols {
