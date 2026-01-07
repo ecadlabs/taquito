@@ -10,6 +10,10 @@ const versionMatch = pathname.match(/\/docs\/([^/]+)/);
 const currentVersion = versionMatch?.[1] && VERSIONS.includes(versionMatch[1] as typeof VERSIONS[number])
   ? versionMatch[1]
   : DEFAULT_VERSION;
+
+// Extract the current page slug (everything after /docs/{version}/)
+const pageSlugMatch = pathname.match(/\/docs\/[^/]+\/(.+)/);
+const currentPageSlug = pageSlugMatch?.[1] || "quick_start";
 ---
 
 <header
@@ -54,7 +58,7 @@ const currentVersion = versionMatch?.[1] && VERSIONS.includes(versionMatch[1] as
         >
           {VERSIONS.map((version) => (
             <a
-              href={`/docs/${version}/quick_start`}
+              href={`/docs/${version}/${currentPageSlug}`}
               class:list={[
                 "block px-4 py-2 text-sm hover:bg-primary/10 transition-colors",
                 version === currentVersion ? "text-primary font-medium bg-primary/5" : "text-gray-700"
@@ -157,7 +161,7 @@ const currentVersion = versionMatch?.[1] && VERSIONS.includes(versionMatch[1] as
         >
           {VERSIONS.map((version) => (
             <a
-              href={`/docs/${version}/quick_start`}
+              href={`/docs/${version}/${currentPageSlug}`}
               class:list={[
                 "block px-6 py-2 text-sm hover:bg-primary/10 transition-colors",
                 version === currentVersion ? "text-primary font-medium bg-primary/5" : "text-gray-700"
