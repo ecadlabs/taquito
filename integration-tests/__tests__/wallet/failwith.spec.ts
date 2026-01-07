@@ -1,7 +1,7 @@
 import { CONFIGS } from "../../config";
 import { failwithContractCode } from "../../data/failwith";
 
-CONFIGS().forEach(({ lib, rpc, setup }) => {
+CONFIGS().forEach(({ lib, rpc, setup, networkName }) => {
   const Tezos = lib;
   describe(`Test contract origination that throws FAILWITH api through wallet api using: ${rpc}`, () => {
 
@@ -21,14 +21,22 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       try {
         await contract.methodsObject.default(null).send()
       } catch (ex: any) {
-        expect(ex.message).toMatch('test')
+        if (networkName === 'TEZLINKNET') {
+          expect(ex.lastError.error_message).toMatch('failed with: String(\\\"test\\\")')
+        } else {
+          expect(ex.message).toMatch('test')
+        }
       }
 
       try {
         // Bypass estimation by specify int fee & limits
         await contract.methodsObject.default(null).send({ fee: 20000, gasLimit: 20000, storageLimit: 0 })
       } catch (ex: any) {
-        expect(ex.message).toMatch('test')
+        if (networkName === 'TEZLINKNET') {
+          expect(ex.lastError.error_message).toMatch('failed with: String(\\\"test\\\")')
+        } else {
+          expect(ex.message).toMatch('test')
+        }
       }
     });
   });

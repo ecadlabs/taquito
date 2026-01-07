@@ -3,7 +3,7 @@ import { failwithContractCode } from "../../data/failwith";
 import { managerCode } from "../../data/manager_code";
 import { DefaultContractType, MANAGER_LAMBDA, OriginationOperation } from "@taquito/taquito";
 
-CONFIGS().forEach(({ lib, rpc, setup }) => {
+CONFIGS().forEach(({ lib, rpc, setup, networkName }) => {
   const Tezos = lib;
 
   let contract: DefaultContractType;
@@ -28,7 +28,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
           init: { "string": await Tezos.signer.publicKeyHash() },
         });
         await opManager.confirmation();
-      } catch(e) {
+      } catch (e) {
         console.log(`Error when preparing the test: ${e}`);
       }
     });
@@ -43,7 +43,11 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         await managerContract.methodsObject.do(MANAGER_LAMBDA.transferToContract(contract.address, 1)).send({ amount: 0 })
         fail('Expected transfer operation to throw error')
       } catch (ex: any) {
-        expect(ex.message).toMatch('test')
+        if (networkName === 'TEZLINKNET') {
+          expect(ex.lastError.error_message).toContain('test')
+        } else {
+          expect(ex.message).toMatch('test')
+        }
       }
     });
   });

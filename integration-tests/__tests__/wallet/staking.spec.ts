@@ -1,27 +1,29 @@
-import { TezosToolkit, TezosOperationError } from "@taquito/taquito";
+import { TezosToolkit } from "@taquito/taquito";
 import { CONFIGS } from '../../config';
 import { InvalidStakingAddressError, InvalidFinalizeUnstakeAmountError } from '@taquito/core';
 
-CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
-
+CONFIGS().forEach(({ lib, rpc, setup, createAddress, networkName }) => {
   const Tezos = lib;
+  const notTezlinknet = networkName === 'TEZLINKNET' ? test.skip : test
   let thirdParty: TezosToolkit
   describe(`Test staking pseudo operations using: ${rpc}`, () => {
     beforeAll(async () => {
-      await setup(true);
-      try{
-        const address = await Tezos.signer.publicKeyHash()
-        if(!await Tezos.rpc.getDelegate(address)){
-          const delegateOp = await Tezos.contract.registerDelegate({});
-          await delegateOp.confirmation();
-        }
-        thirdParty = await createAddress();
-        const op = await Tezos.contract.transfer({amount: 1, to: await thirdParty.signer.publicKeyHash() });
-        await op.confirmation();
-      }catch(e){console.log}
+      if (networkName !== 'TEZLINKNET') {
+        await setup(true);
+        try {
+          const address = await Tezos.signer.publicKeyHash()
+          if (!await Tezos.rpc.getDelegate(address)) {
+            const delegateOp = await Tezos.contract.registerDelegate({});
+            await delegateOp.confirmation();
+          }
+          thirdParty = await createAddress();
+          const op = await Tezos.contract.transfer({ amount: 1, to: await thirdParty.signer.publicKeyHash() });
+          await op.confirmation();
+        } catch (e) { console.log }
+      }
     });
 
-    it(`should be able to stake successfully: ${rpc}`, async () => {
+    notTezlinknet(`should be able to stake successfully: ${rpc}`, async () => {
       const op = await Tezos.wallet.stake({ amount: 3 }).send()
       await op.confirmation();
       expect(await op.status()).toBe('applied');
@@ -31,7 +33,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       expect(Math.round(stakedBalance.toNumber() / 1000000)).toBeGreaterThanOrEqual(3);
     });
 
-    it(`should be able to unstake successfully: ${rpc}`, async () => {
+    notTezlinknet(`should be able to unstake successfully: ${rpc}`, async () => {
       const op = await Tezos.wallet.unstake({ amount: 1 }).send()
       await op.confirmation();
       expect(await op.status()).toBe('applied');
@@ -41,20 +43,20 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       expect(Math.round(UnstakedBalance.toNumber() / 1000000)).toBeGreaterThanOrEqual(1);
     });
 
-    it(`should be able to finalizeUnstake successfully: ${rpc}`, async () => {
+    notTezlinknet(`should be able to finalizeUnstake successfully: ${rpc}`, async () => {
       const op = await Tezos.wallet.finalizeUnstake({}).send()
       await op.confirmation();
       expect(await op.status()).toBe('applied');
     });
 
-    it(`should be able to finalizeUnstake with different source and destination successfully: ${rpc}`, async () => {
+    notTezlinknet(`should be able to finalizeUnstake with different source and destination successfully: ${rpc}`, async () => {
       const op = await thirdParty.wallet.finalizeUnstake({ to: await Tezos.signer.publicKeyHash() }).send()
       await op.confirmation();
       expect(await op.status()).toBe('applied');
     });
 
 
-    it('should throw error when param is against pseudo operation', async () => {
+    notTezlinknet('should throw error when param is against pseudo operation', async () => {
       expect(async () => {
         const op = await Tezos.wallet.stake({ amount: 1, to: 'tz1PZY3tEWmXGasYeehXYqwXuw2Z3iZ6QDnA' }).send();
         await op.confirmation()

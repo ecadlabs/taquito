@@ -1,13 +1,14 @@
 import { CONFIGS } from "../../config";
 
-CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
+CONFIGS().forEach(({ lib, rpc, setup, knownBaker, networkName }) => {
+  const notTezlinknet = networkName === 'TEZLINKNET' ? test.skip : test
   const Tezos = lib;
   describe(`Test account delegation with estimation through wallet api using: ${rpc}`, () => {
 
     beforeEach(async () => {
       await setup(true)
     })
-    it('Verify that an address can be delegated to a known baker with an automatic estimate', async () => {
+    notTezlinknet('Verify that an address can be delegated to a known baker with an automatic estimate', async () => {
       const delegate = knownBaker
       const pkh = await Tezos.signer.publicKeyHash();
       try {

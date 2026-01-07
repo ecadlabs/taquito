@@ -1,6 +1,6 @@
 import { CONFIGS } from '../../config';
 
-CONFIGS().forEach(({ lib, rpc, setup }) => {
+CONFIGS().forEach(({ lib, rpc, setup, networkName }) => {
   const Tezos = lib;
 
   describe(`Test contract call with amount using: ${rpc}`, () => {
@@ -43,7 +43,11 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
           init: `0`,
         });
       } catch (error: any) {
-        expect(error.message).toContain("michelson_v1.deprecated_instruction")
+        if (networkName === 'TEZLINKNET') {
+          expect(error.lastError.error_message).toContain("(\"Script : no matching overload for SUB")
+        } else {
+          expect(error.message).toContain("michelson_v1.deprecated_instruction")
+        }
       }
     });
 
