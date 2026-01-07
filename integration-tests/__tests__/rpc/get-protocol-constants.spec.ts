@@ -476,7 +476,6 @@ CONFIGS().forEach(({ lib, rpc, networkName }) => {
       using ${rpc}`, async () => {
       Tezos.setRpcProvider(rpc);
       const constants: ConstantsResponseProto023 = await Tezos.rpc.getConstants();
-      console.log(JSON.stringify(constants, null, 2));
       expect(constants).toEqual({
         proof_of_work_nonce_size: 8,
         nonce_length: 32,

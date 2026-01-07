@@ -3,8 +3,9 @@ import { OpKind } from '@taquito/taquito';
 import { CONFIGS } from '../config';
 import { LocalForger } from '@taquito/local-forging';
 
-CONFIGS().forEach(({ lib, setup, protocol, createAddress }) => {
+CONFIGS().forEach(({ lib, setup, protocol, createAddress, networkName }) => {
   const Tezos = lib;
+  const notTezlinknet = networkName === 'TEZLINKNET' ? test.skip : test
   let contractAddress: string;
 
   describe(`Test Preparation of operations using the PrepareProvider`, () => {
@@ -79,7 +80,7 @@ CONFIGS().forEach(({ lib, setup, protocol, createAddress }) => {
 
     });
 
-    it('should be able to prepare a proposals operation', async () => {
+    notTezlinknet('should be able to prepare a proposals operation', async () => {
       const prepared = await Tezos.prepare.proposals({
         proposals: ['PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg']
       });
@@ -97,7 +98,7 @@ CONFIGS().forEach(({ lib, setup, protocol, createAddress }) => {
       expect(prepared.opOb.protocol).toEqual(protocol);
     });
 
-    it('should be able to prepare a ballot operation', async () => {
+    notTezlinknet('should be able to prepare a ballot operation', async () => {
       const prepared = await Tezos.prepare.ballot({
         proposal: 'PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg',
         ballot: 'yay'
@@ -183,7 +184,7 @@ CONFIGS().forEach(({ lib, setup, protocol, createAddress }) => {
       expect(preparedProposals.opOb.contents[0]).toHaveProperty('source');
       expect(preparedProposals.opOb.contents[0]).toHaveProperty('period');
       expect(preparedProposals.opOb.contents[0]).toHaveProperty('proposals');
-      
+
       // Verify source is not undefined
       expect((preparedProposals.opOb.contents[0] as OperationContentsProposals).source).toBeDefined();
     });

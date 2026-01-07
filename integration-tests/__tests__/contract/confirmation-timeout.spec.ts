@@ -1,18 +1,19 @@
 import BigNumber from "bignumber.js";
 import { CONFIGS, sleep } from "../../config";
 
-CONFIGS().forEach(({ lib, rpc, setup }) => {
+CONFIGS().forEach(({ lib, rpc, setup, networkName }) => {
   const Tezos = lib;
-  let timeBetweenBlocks: BigNumber;
+  const notTezlinknet = networkName === 'TEZLINKNET' ? test.skip : test
+  let minimalBlockDelay: BigNumber;
   describe(`Test confirmationPollingTimeoutSecond with contract API using: ${rpc}`, () => {
 
     beforeEach(async () => {
       await setup();
-      timeBetweenBlocks = (await Tezos.rpc.getConstants()).delay_increment_per_round ?? new BigNumber(15);
+      minimalBlockDelay = (await Tezos.rpc.getConstants()).minimal_block_delay ?? new BigNumber(4);
     });
 
     it('Verify a timeout error is thrown when an operation is never confirmed', async () => {
-      const timeout = Number(timeBetweenBlocks.multipliedBy(2));
+      const timeout = Number(minimalBlockDelay.multipliedBy(2));
       Tezos.setProvider({ config: { confirmationPollingTimeoutSecond: timeout } })
       expect(async () => {
         const op = await Tezos.contract.originate({

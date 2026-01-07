@@ -2,9 +2,11 @@ import { CONFIGS, isSandbox } from "../../config";
 import { MANAGER_LAMBDA, TezosToolkit } from "@taquito/taquito";
 import { genericMultisig } from "../../data/multisig";
 
-CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
+CONFIGS().forEach(({ lib, rpc, setup, createAddress, networkName }) => {
   const Funder = lib;
   let Tezos: TezosToolkit;
+  const notTezlinknet = networkName === 'TEZLINKNET' ? test.skip : test
+
   describe(`Generic Multisig set delegate: ${rpc}`, () => {
     beforeAll(async () => {
       await setup(true);
@@ -19,8 +21,8 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         Tezos = Funder;
       }
     })
-    test('test manager transfers set delegate scenarios', async () => {
 
+    notTezlinknet('test manager transfers set delegate scenarios', async () => {
       const account1 = await createAddress();
       const account2 = await createAddress();
       const account3 = await createAddress();
