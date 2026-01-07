@@ -1,0 +1,144 @@
+---
+title: RPC nodes
+author: [Roxane Letourneau, Maxwell Ward]
+---
+
+import BlockTimestamp from '@components/docs/BlockTimestamp.astro';
+import BlockReceivedAgo from '@components/docs/BlockReceivedAgo.astro';
+import BlockLevel from '@components/docs/BlockLevel.astro';
+import BlockProtocol from '@components/docs/BlockProtocol.astro';
+
+An RPC (Remote Procedure Call) node is a server that provides an interface for interacting with the Tezos blockchain. It allows applications like Taquito to query blockchain data (such as account balances, contract storage, and block information) and broadcast transactions to the network. Rather than running your own Tezos node, you can connect to public or commercial RPC nodes to access the blockchain.
+
+## What to consider when choosing a node
+
+- **Trust**: Choose a node that you can trust the people who operate it.
+  - It should not alter your requests. For example: changing the operation data before forging it.
+  - It should not censor your operations; you want to know that your operations will reach the network.
+- **Reliability**: Consider your requirements for uptime, and choose your node option accordingly. If node availability is critical for your user-case, consider self-hosting a node or contracting someone to operate a node specifically for you.
+- **End-points support**: Public nodes have different policies on the end-points that they expose. Your use case may require specific end-points to be available to your app. We have made a suite of [integration tests](rpc_nodes_integration_test) for the Taquito RPC package. These tests show what RPC end-points are available on a given node. These tests are available here: [integration-tests/rpc-nodes.spec.ts](https://github.com/ecadlabs/taquito/blob/master/integration-tests/rpc-nodes.spec.ts).
+
+### Community Nodes
+
+<Tabs defaultValue="mainnet" values={[{"label": "Mainnet", "value": "mainnet"},{"label": "Ghostnet", "value": "ghostnet"},{"label": "Shadownet", "value": "shadownet"},{"label": "Seoulnet", "value": "seoulnet"},{"label": "Tallinnnet", "value": "tallinnnet"}]}>
+
+<TabItem value="mainnet">
+
+<div style={{"overflowX":"auto","width":"100%","display":"block"}}>
+
+<div style={{"minWidth":"1000px"}}>
+
+
+| Provider         | URL                                   | Block | Protocol | Timestamp                                                                           | Received                                                                      |
+| ---------------- | ------------------------------------- | ----- | -------- | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| ECAD Infra       | https://mainnet.tezos.ecadinfra.com   | <BlockLevel network="mainnet" rpcUrl="https://mainnet.tezos.ecadinfra.com" /> | <BlockProtocol network="mainnet" rpcUrl="https://mainnet.tezos.ecadinfra.com" /> | <BlockTimestamp network="mainnet" rpcUrl="https://mainnet.tezos.ecadinfra.com" /> | <BlockReceivedAgo network="mainnet" rpcUrl="https://mainnet.tezos.ecadinfra.com" /> |
+| SmartPy          | https://mainnet.smartpy.io            | <BlockLevel network="mainnet" rpcUrl="https://mainnet.smartpy.io" /> | <BlockProtocol network="mainnet" rpcUrl="https://mainnet.smartpy.io" /> | <BlockTimestamp network="mainnet" rpcUrl="https://mainnet.smartpy.io" /> | <BlockReceivedAgo network="mainnet" rpcUrl="https://mainnet.smartpy.io" /> |
+| Tezos Foundation | https://rpc.tzbeta.net                | <BlockLevel network="mainnet" rpcUrl="https://rpc.tzbeta.net" /> | <BlockProtocol network="mainnet" rpcUrl="https://rpc.tzbeta.net" /> | <BlockTimestamp network="mainnet" rpcUrl="https://rpc.tzbeta.net" /> | <BlockReceivedAgo network="mainnet" rpcUrl="https://rpc.tzbeta.net" /> |
+| TzKT             | https://rpc.tzkt.io/mainnet           | <BlockLevel network="mainnet" rpcUrl="https://rpc.tzkt.io/mainnet" /> | <BlockProtocol network="mainnet" rpcUrl="https://rpc.tzkt.io/mainnet" /> | <BlockTimestamp network="mainnet" rpcUrl="https://rpc.tzkt.io/mainnet" /> | <BlockReceivedAgo network="mainnet" rpcUrl="https://rpc.tzkt.io/mainnet" /> |
+
+</div>
+
+</div>
+
+</TabItem>
+
+<TabItem value="ghostnet">
+
+<div style={{"overflowX":"auto","width":"100%","display":"block"}}>
+
+<div style={{"minWidth":"1000px"}}>
+
+
+| Provider         | URL                                   | Block | Protocol | Timestamp                                                                           | Received                                                                      |
+| ---------------- | ------------------------------------- | ----- | -------- | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| ECAD Infra       | https://ghostnet.tezos.ecadinfra.com  | <BlockLevel network="ghostnet" rpcUrl="https://ghostnet.tezos.ecadinfra.com" /> | <BlockProtocol network="ghostnet" rpcUrl="https://ghostnet.tezos.ecadinfra.com" /> | <BlockTimestamp network="ghostnet" rpcUrl="https://ghostnet.tezos.ecadinfra.com" /> | <BlockReceivedAgo network="ghostnet" rpcUrl="https://ghostnet.tezos.ecadinfra.com" /> |
+| SmartPy          | https://ghostnet.smartpy.io           | <BlockLevel network="ghostnet" rpcUrl="https://ghostnet.smartpy.io" /> | <BlockProtocol network="ghostnet" rpcUrl="https://ghostnet.smartpy.io" /> | <BlockTimestamp network="ghostnet" rpcUrl="https://ghostnet.smartpy.io" /> | <BlockReceivedAgo network="ghostnet" rpcUrl="https://ghostnet.smartpy.io" /> |
+| Tezos Foundation | https://rpc.ghostnet.teztnets.com     | <BlockLevel network="ghostnet" rpcUrl="https://rpc.ghostnet.teztnets.com" /> | <BlockProtocol network="ghostnet" rpcUrl="https://rpc.ghostnet.teztnets.com" /> | <BlockTimestamp network="ghostnet" rpcUrl="https://rpc.ghostnet.teztnets.com" /> | <BlockReceivedAgo network="ghostnet" rpcUrl="https://rpc.ghostnet.teztnets.com" /> |
+| TzKT             | https://rpc.tzkt.io/ghostnet          | <BlockLevel network="ghostnet" rpcUrl="https://rpc.tzkt.io/ghostnet" /> | <BlockProtocol network="ghostnet" rpcUrl="https://rpc.tzkt.io/ghostnet" /> | <BlockTimestamp network="ghostnet" rpcUrl="https://rpc.tzkt.io/ghostnet" /> | <BlockReceivedAgo network="ghostnet" rpcUrl="https://rpc.tzkt.io/ghostnet" /> |
+
+</div>
+
+</div>
+
+</TabItem>
+
+<TabItem value="seoulnet">
+
+<div style={{"overflowX":"auto","width":"100%","display":"block"}}>
+
+<div style={{"minWidth":"1000px"}}>
+
+
+| Provider         | URL                                   | Block | Protocol | Timestamp                                                                           | Received                                                                      |
+| ---------------- | ------------------------------------- | ----- | -------- | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| ECAD Infra       | https://seoulnet.tezos.ecadinfra.com  | <BlockLevel network="seoulnet" rpcUrl="https://seoulnet.tezos.ecadinfra.com" /> | <BlockProtocol network="seoulnet" rpcUrl="https://seoulnet.tezos.ecadinfra.com" /> | <BlockTimestamp network="seoulnet" rpcUrl="https://seoulnet.tezos.ecadinfra.com" /> | <BlockReceivedAgo network="seoulnet" rpcUrl="https://seoulnet.tezos.ecadinfra.com" /> |
+| Tezos Foundation | https://rpc.seoulnet.teztnets.com     | <BlockLevel network="seoulnet" rpcUrl="https://rpc.seoulnet.teztnets.com" /> | <BlockProtocol network="seoulnet" rpcUrl="https://rpc.seoulnet.teztnets.com" /> | <BlockTimestamp network="seoulnet" rpcUrl="https://rpc.seoulnet.teztnets.com" /> | <BlockReceivedAgo network="seoulnet" rpcUrl="https://rpc.seoulnet.teztnets.com" /> |
+| TzKT             | https://rpc.tzkt.io/seoulnet          | <BlockLevel network="seoulnet" rpcUrl="https://rpc.tzkt.io/seoulnet" /> | <BlockProtocol network="seoulnet" rpcUrl="https://rpc.tzkt.io/seoulnet" /> | <BlockTimestamp network="seoulnet" rpcUrl="https://rpc.tzkt.io/seoulnet" /> | <BlockReceivedAgo network="seoulnet" rpcUrl="https://rpc.tzkt.io/seoulnet" /> |
+
+</div>
+
+</div>
+
+</TabItem>
+
+<TabItem value="shadownet">
+
+<div style={{"overflowX":"auto","width":"100%","display":"block"}}>
+
+<div style={{"minWidth":"1000px"}}>
+
+
+| Provider         | URL                                   | Block | Protocol | Timestamp                                                                           | Received                                                                      |
+| ---------------- | ------------------------------------- | ----- | -------- | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| ECAD Infra       | https://shadownet.tezos.ecadinfra.com | <BlockLevel network="shadownet" rpcUrl="https://shadownet.tezos.ecadinfra.com" /> | <BlockProtocol network="shadownet" rpcUrl="https://shadownet.tezos.ecadinfra.com" /> | <BlockTimestamp network="shadownet" rpcUrl="https://shadownet.tezos.ecadinfra.com" /> | <BlockReceivedAgo network="shadownet" rpcUrl="https://shadownet.tezos.ecadinfra.com" /> |
+| Tezos Foundation | https://rpc.shadownet.teztnets.com    | <BlockLevel network="shadownet" rpcUrl="https://rpc.shadownet.teztnets.com" /> | <BlockProtocol network="shadownet" rpcUrl="https://rpc.shadownet.teztnets.com" /> | <BlockTimestamp network="shadownet" rpcUrl="https://rpc.shadownet.teztnets.com" /> | <BlockReceivedAgo network="shadownet" rpcUrl="https://rpc.shadownet.teztnets.com" /> |
+| TzKT             | https://rpc.tzkt.io/shadownet         | <BlockLevel network="shadownet" rpcUrl="https://rpc.tzkt.io/shadownet" /> | <BlockProtocol network="shadownet" rpcUrl="https://rpc.tzkt.io/shadownet" /> | <BlockTimestamp network="shadownet" rpcUrl="https://rpc.tzkt.io/shadownet" /> | <BlockReceivedAgo network="shadownet" rpcUrl="https://rpc.tzkt.io/shadownet" /> |
+
+</div>
+
+</div>
+
+</TabItem>
+
+<TabItem value="tallinnnet">
+
+<div style={{"overflowX":"auto","width":"100%","display":"block"}}>
+
+<div style={{"minWidth":"1000px"}}>
+
+
+| Provider         | URL                                   | Block | Protocol | Timestamp                                                                           | Received                                                                      |
+| ---------------- | ------------------------------------- | ----- | -------- | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| ECAD Infra       | https://tallinnnet.tezos.ecadinfra.com | <BlockLevel network="tallinnnet" rpcUrl="https://tallinnnet.tezos.ecadinfra.com" /> | <BlockProtocol network="tallinnnet" rpcUrl="https://tallinnnet.tezos.ecadinfra.com" /> | <BlockTimestamp network="tallinnnet" rpcUrl="https://tallinnnet.tezos.ecadinfra.com" /> | <BlockReceivedAgo network="tallinnnet" rpcUrl="https://tallinnnet.tezos.ecadinfra.com" /> |
+| Tezos Foundation | https://rpc.tallinnnet.teztnets.com   | <BlockLevel network="tallinnnet" rpcUrl="https://rpc.tallinnnet.teztnets.com" /> | <BlockProtocol network="tallinnnet" rpcUrl="https://rpc.tallinnnet.teztnets.com" /> | <BlockTimestamp network="tallinnnet" rpcUrl="https://rpc.tallinnnet.teztnets.com" /> | <BlockReceivedAgo network="tallinnnet" rpcUrl="https://rpc.tallinnnet.teztnets.com" /> |
+| TzKT             | https://rpc.tzkt.io/tallinnnet        | <BlockLevel network="tallinnnet" rpcUrl="https://rpc.tzkt.io/tallinnnet" /> | <BlockProtocol network="tallinnnet" rpcUrl="https://rpc.tzkt.io/tallinnnet" /> | <BlockTimestamp network="tallinnnet" rpcUrl="https://rpc.tzkt.io/tallinnnet" /> | <BlockReceivedAgo network="tallinnnet" rpcUrl="https://rpc.tzkt.io/tallinnnet" /> |
+
+</div>
+
+</div>
+
+</TabItem>
+
+</Tabs>
+
+You can find a machine readable list of RPC nodes in [rpc_nodes.json](/rpc_nodes.json).
+
+If you are aware of a public node missing from our list or our information is inaccurate, please let us know by submitting an issue or pull request on our [GitHub page](https://github.com/ecadlabs/taquito).
+
+### Commerical Nodes
+
+| Provider | Values                 |
+| -------- | ----------------------- |
+| Exaion   | https://node.exaion.com |
+
+If you are aware of a commerical node missing from our list or our information is inaccurate, please let us know by submitting an issue or pull request on our [GitHub page](https://github.com/ecadlabs/taquito).
+
+## How to run a node
+
+Running a node is a good way of contributing to Tezos by increasing the decentralization of the network.
+
+There are many ways to set up a node, but that is beyond the scope of our documentation. You can find some general information about doing so here:
+
+- [Using Docker images](https://octez.tezos.com/docs/introduction/howtoget.html#docker-images)
+- [Building from source](https://octez.tezos.com/docs/introduction/howtobuild.html)
+- [Using Ansible Role](https://github.com/ecadlabs/ansible-role-tezos-node/blob/master/README.md)
