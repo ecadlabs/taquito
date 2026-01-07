@@ -52,6 +52,13 @@
       "tsx",
       "js"
     ],
+    "moduleNameMapper": {
+      "^@taquito/core$": "<rootDir>/../taquito-core/src/taquito-core.ts",
+      "^@taquito/michelson-encoder$": "<rootDir>/../taquito-michelson-encoder/src/taquito-michelson-encoder.ts",
+      "^@taquito/taquito$": "<rootDir>/../taquito/src/taquito.ts",
+      "^@taquito/tzip16$": "<rootDir>/../taquito-tzip16/src/taquito-tzip16.ts",
+      "^@taquito/utils$": "<rootDir>/../taquito-utils/src/taquito-utils.ts"
+    },
     "coveragePathIgnorePatterns": [
       "/node_modules/",
       "/test/",
@@ -65,7 +72,9 @@
     "@taquito/core": "^23.1.0",
     "@taquito/michelson-encoder": "^23.1.0",
     "@taquito/taquito": "^23.1.0",
-    "@taquito/tzip16": "^23.1.0"
+    "@taquito/tzip16": "^23.1.0",
+    "@taquito/utils": "^23.1.0",
+    "bignumber.js": "^9.1.2"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.42",
@@ -88,7 +97,6 @@
     "rimraf": "^6.0.1",
     "rollup": "^4.22.4",
     "rollup-plugin-json": "^4.0.0",
-    "rollup-plugin-typescript2": "^0.36.0",
     "shelljs": "^0.8.5",
     "ts-jest": "^29.2.3",
     "ts-node": "^10.9.2",

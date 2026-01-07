@@ -16,12 +16,15 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
       - uses: actions/setup-node@v4
         with:
           node-version: lts/Iron
-      - run: npm ci
-      - run: npm run build
-      - run: npm -w packages/taquito-local-forging run build-webpack
+      - run: bun install --frozen-lockfile
+      - run: bun run build
+      - run: cd packages/taquito-local-forging && bun run build-webpack
       - uses: actions/upload-artifact@v4
         with:
           name: taquito-local-forging-vanilla
@@ -29,7 +32,7 @@ jobs:
             packages/taquito-local-forging/dist/taquito_local_forging.js
             packages/taquito-local-forging/dist/taquito_local_forging.js.map
 
-      - run: npm -w packages/taquito-beacon-wallet run build-webpack
+      - run: cd packages/taquito-beacon-wallet && bun run build-webpack
       - uses: actions/upload-artifact@v4
         with:
           name: taquito-beacon-wallet-vanilla

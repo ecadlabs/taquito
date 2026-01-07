@@ -55,7 +55,9 @@
       "js"
     ],
     "moduleNameMapper": {
-      "^@taquito/http-utils$": "<rootDir>/../taquito-http-utils/src/taquito-http-utils.ts"
+      "^@taquito/core$": "<rootDir>/../taquito-core/src/taquito-core.ts",
+      "^@taquito/http-utils$": "<rootDir>/../taquito-http-utils/src/taquito-http-utils.ts",
+      "^@taquito/utils$": "<rootDir>/../taquito-utils/src/taquito-utils.ts"
     },
     "coveragePathIgnorePatterns": [
       "/node_modules/",
@@ -92,7 +94,6 @@
     "rollup": "^4.22.4",
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-polyfill-node": "^0.13.0",
-    "rollup-plugin-typescript2": "^0.36.0",
     "shelljs": "^0.8.5",
     "ts-jest": "^29.2.3",
     "ts-node": "^10.9.2",

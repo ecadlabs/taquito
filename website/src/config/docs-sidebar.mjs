@@ -120,6 +120,10 @@ export const sidebarConfig = [
     name: "Misc",
     items: ["tutorial_links", "contract-test-collection", "validators", "ballot"],
   },
+  {
+    name: "Contributing",
+    items: ["bun-migration"],
+  },
 ];
 
 /**

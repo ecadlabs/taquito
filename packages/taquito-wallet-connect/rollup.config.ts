@@ -1,7 +1,8 @@
 // import sourceMaps from 'rollup-plugin-sourcemaps';
 import camelCase from 'lodash.camelcase';
-import typescript from 'rollup-plugin-typescript2';
 import json from 'rollup-plugin-json';
+import commonjs from '@rollup/plugin-commonjs';
+import resolve from '@rollup/plugin-node-resolve';
 import nodePolyfills from 'rollup-plugin-polyfill-node';
 
 const pkg = require('./package.json');
@@ -9,7 +10,7 @@ const pkg = require('./package.json');
 const libraryName = 'taquito-wallet-connect';
 
 export default {
-  input: `src/${libraryName}.ts`,
+  input: `dist/lib/${libraryName}.js`,
   output: [
     {
       file: pkg.main,
@@ -37,8 +38,9 @@ export default {
   plugins: [
     // Allow json resolution
     json(),
+    resolve(),
+    commonjs(),
     // Compile TypeScript files
-    typescript({ tsconfig: './tsconfig.prod.json', useTsconfigDeclarationDir: true }),
     nodePolyfills(),
 
     // Resolve source maps to the original source

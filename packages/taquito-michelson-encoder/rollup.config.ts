@@ -1,6 +1,7 @@
 import camelCase from 'lodash.camelcase';
-import typescript from 'rollup-plugin-typescript2';
 import json from 'rollup-plugin-json';
+import commonjs from '@rollup/plugin-commonjs';
+import resolve from '@rollup/plugin-node-resolve';
 import nodePolyfills from 'rollup-plugin-polyfill-node';
 
 const pkg = require('./package.json');
@@ -8,7 +9,7 @@ const pkg = require('./package.json');
 const libraryName = 'taquito-michelson-encoder';
 
 export default {
-  input: `src/${libraryName}.ts`,
+  input: `dist/lib/${libraryName}.js`,
   output: [
     {
       file: pkg.main,
@@ -18,6 +19,7 @@ export default {
       globals: {
         'fast-json-stable-stringify': 'stringify',
         '@taquito/core': 'taquitoCore',
+        '@taquito/signer': 'taquitoSigner',
         'bignumber.js': 'BigNumber',
         '@taquito/utils': 'taquitoUtils',
         elliptic: 'elliptic',
@@ -30,6 +32,7 @@ export default {
     'fast-json-stable-stringify',
     '@taquito/core',
     '@taquito/rpc',
+    '@taquito/signer',
     'bignumber.js',
     '@taquito/utils',
     'elliptic',
@@ -40,8 +43,9 @@ export default {
   plugins: [
     // Allow json resolution
     json(),
+    resolve(),
+    commonjs(),
     // Compile TypeScript files
-    typescript({ tsconfig: './tsconfig.prod.json', useTsconfigDeclarationDir: true }),
     nodePolyfills(),
   ],
 };

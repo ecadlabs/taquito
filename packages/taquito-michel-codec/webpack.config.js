@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const webpack = require('webpack');
 const path = require('path');
 
 module.exports = {
   entry: {
-    "taquito_beacon_wallet": ['./src/taquito-beacon-wallet.ts']
+    "taquito_michel_codec": ['./src/taquito-michel-codec.ts']
   },
   mode: 'production',
   module: {
@@ -29,13 +28,8 @@ module.exports = {
       path.resolve(__dirname, '../../node_modules'),
       'node_modules'
     ],
-    fallback: {
-      fs: false,
-      stream: require.resolve("stream-browserify"),
-      util: require.resolve("util"),
-      crypto: require.resolve("crypto-browserify"),
-      buffer: require.resolve("buffer/"),
-      vm: require.resolve("vm-browserify")
+    alias: {
+      '@taquito/core': path.resolve(__dirname, '../taquito-core/src/taquito-core.ts')
     }
   },
   output: {
@@ -43,8 +37,5 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     library: ['[name]'],
     libraryTarget: "var"
-  },
-  plugins: [
-    new webpack.ProvidePlugin({ Buffer: ['buffer', 'Buffer'] })
-  ]
+  }
 };
