@@ -1,5 +1,6 @@
 ---
 import { Binary, Download, PlugZap } from "@lucide/astro";
+import { DEFAULT_VERSION } from "../../pages/api/search/[version].json.ts";
 ---
 
 <section class="bg-background-secondary">
@@ -9,7 +10,7 @@ import { Binary, Download, PlugZap } from "@lucide/astro";
       Just a few simple steps and you are set to start building your own app.
     </h3>
     <a
-      href="/docs/23.0.0/quick_start"
+      href={`/docs/${DEFAULT_VERSION}/quick_start`}
       class="bg-primary text-white hover:text-gray-300 transition-colors duration-150 px-4 py-2 rounded-full text-lg"
       >Get Started</a
     >
@@ -81,7 +82,7 @@ import { Binary, Download, PlugZap } from "@lucide/astro";
         <div class="absolute bottom-0 right-4 3xl:right-1/5 md:right-24">
             <p class="text-lg text-black mb-4">Ready to start?</p>
             <a
-            href="/docs/23.0.0/quick_start"
+            href={`/docs/${DEFAULT_VERSION}/quick_start`}
             class="bg-primary text-white hover:text-gray-300 transition-colors duration-150 px-6 py-2.5 rounded-full text-lg"
             >Get Started</a>
         </div>
