@@ -5,15 +5,13 @@ import {
   PrefixV2,
   buf2hex,
   b58DecodeAndCheckPrefix,
-  b58Encode,
 } from '@taquito/utils';
-import toBuffer from 'typedarray-to-buffer';
+import { deriveKey as pbkdf2 } from '@stablelib/pbkdf2';
 import { EdKey, EdPublicKey } from './ed-key';
-import { ECKey, ECPublicKey } from './ec-key';
-import pbkdf2 from 'pbkdf2';
+import { ECKey, ECPublicKey, P256Key, Secp256k1Key } from './ec-key';
+import { BLSKey, BLSPublicKey } from './bls-key';
 import * as Bip39 from 'bip39';
-import { Curves, generateSecretKey } from './helpers';
-import { InvalidMnemonicError, InvalidPassphraseError } from './errors';
+import { InvalidCurveError, InvalidMnemonicError, InvalidPassphraseError, ToBeImplemented } from './errors';
 import {
   InvalidKeyError,
   ProhibitedActionError,
@@ -22,13 +20,11 @@ import {
   Signer,
 } from '@taquito/core';
 import { SigningKey, isPOP, PublicKey } from './key-interface';
-import { BLSKey, BLSPublicKey } from './bls-key';
+import { Curve, deriveSigningKeyFromMnemonic, deriveSigningKeyFromSeed, FromMnemonicParams as FromMnemonicParamsBase, Path } from './derivation-utils';
+import { SHA512 } from '@stablelib/sha512';
 
-export interface FromMnemonicParams {
-  mnemonic: string;
-  password?: string;
-  derivationPath?: string;
-  curve?: Curves;
+export interface FromMnemonicParams extends FromMnemonicParamsBase {
+  curve?: Curve;
 }
 
 type KeyPrefix =
@@ -56,7 +52,7 @@ export class InMemorySigner implements Signer {
       throw new InvalidMnemonicError(mnemonic);
     }
     const seed = Bip39.mnemonicToSeedSync(mnemonic, `${email}${password}`);
-    const key = b58Encode(seed.subarray(0, 32), PrefixV2.Ed25519Seed);
+    const key = new EdKey(seed.subarray(0, 32));
     return new InMemorySigner(key);
   }
 
@@ -74,21 +70,55 @@ export class InMemorySigner implements Signer {
    * @returns InMemorySigner
    * @throws {@link InvalidMnemonicError}
    */
-  static fromMnemonic({
-    mnemonic,
-    password = '',
-    derivationPath = "44'/1729'/0'/0'",
-    curve = 'ed25519',
-  }: FromMnemonicParams) {
-    // check if curve is defined if not default tz1
-    if (!Bip39.validateMnemonic(mnemonic)) {
-      // avoiding exposing mnemonic again in case of mistake making invalid
-      throw new InvalidMnemonicError(mnemonic);
+  static fromMnemonic(params: FromMnemonicParams): InMemorySigner {
+    let sk: SigningKey;
+    const curve = params.curve || 'ed25519';
+    switch (curve) {
+      case 'p256':
+        sk = deriveSigningKeyFromMnemonic(P256Key, params);
+        break;
+      case 'secp256k1':
+        sk = deriveSigningKeyFromMnemonic(Secp256k1Key, params);
+        break;
+      case 'ed25519':
+        sk = deriveSigningKeyFromMnemonic(EdKey, params);
+        break;
+      case 'bls12-381':
+        sk = deriveSigningKeyFromMnemonic(BLSKey, params);
+        break;
+      case 'bip25519':
+        throw new ToBeImplemented();
+      default:
+        throw new InvalidCurveError(
+          `Unsupported curve "${curve}" expecting one of the following "ed25519", "secp256k1", "p256", "bls12-381"`
+        );
     }
-    const seed = Bip39.mnemonicToSeedSync(mnemonic, password);
+    return new InMemorySigner(sk);
+  }
 
-    const sk = generateSecretKey(seed, derivationPath, curve);
-
+  static fromSeed(seed: Uint8Array | string, path: Path | string, curve: Curve = 'ed25519'): InMemorySigner {
+    const s = typeof seed === 'string' ? hex2buf(seed) : seed;
+    let sk: SigningKey;
+    switch (curve) {
+      case 'p256':
+        sk = deriveSigningKeyFromSeed(P256Key, s, path);
+        break;
+      case 'secp256k1':
+        sk = deriveSigningKeyFromSeed(Secp256k1Key, s, path);
+        break;
+      case 'ed25519':
+        sk = deriveSigningKeyFromSeed(EdKey, s, path);
+        break;
+      case 'bls12-381':
+        sk = deriveSigningKeyFromSeed(BLSKey, s, path);
+        break;
+      case 'bip25519':
+        throw new ToBeImplemented();
+      default:
+        throw new InvalidCurveError(
+          `Unsupported curve "${curve}" expecting one of the following "ed25519", "secp256k1", "p256", "bls12-381"`
+        );
+    }
     return new InMemorySigner(sk);
   }
   /**
@@ -98,75 +128,81 @@ export class InMemorySigner implements Signer {
    * @throws {@link InvalidKeyError}
    *
    */
-  constructor(key: string, passphrase?: string) {
-    const keyPrefixes: KeyPrefix[] = [
-      PrefixV2.Ed25519EncryptedSeed,
-      PrefixV2.Ed25519Seed,
-      PrefixV2.Ed25519SecretKey,
-      PrefixV2.Secp256k1EncryptedSecretKey,
-      PrefixV2.Secp256k1SecretKey,
-      PrefixV2.P256EncryptedSecretKey,
-      PrefixV2.P256SecretKey,
-      PrefixV2.BLS12_381EncryptedSecretKey,
-      PrefixV2.BLS12_381SecretKey,
-    ];
-    const pre = (() => {
-      try {
-        const [, pre] = b58DecodeAndCheckPrefix(key, keyPrefixes);
-        return pre;
-      } catch {
-        throw new InvalidKeyError(
-          `Invalid private key, expecting one of the following prefixes '${keyPrefixes}'.`
-        );
-      }
-    })();
-
-    const encrypted =
-      pre === PrefixV2.Ed25519EncryptedSeed ||
-      pre === PrefixV2.Secp256k1EncryptedSecretKey ||
-      pre === PrefixV2.P256EncryptedSecretKey ||
-      pre === PrefixV2.BLS12_381EncryptedSecretKey;
-
-    let decrypt: ((k: Uint8Array) => Uint8Array) | undefined;
-    if (encrypted) {
-      if (!passphrase) {
-        throw new InvalidPassphraseError('No passphrase provided to decrypt encrypted key');
-      }
-      decrypt = (data: Uint8Array) => {
-        const salt = toBuffer(data.slice(0, 8));
-        const encryptedSk = data.slice(8);
-        const encryptionKey = pbkdf2.pbkdf2Sync(passphrase, salt, 32768, 32, 'sha512');
-
-        const res = openSecretBox(
-          new Uint8Array(encryptionKey),
-          new Uint8Array(24),
-          new Uint8Array(encryptedSk)
-        );
-        if (!res) {
-          throw new Error("can't decrypt secret key");
+  constructor(key: SigningKey);
+  constructor(key: string, passphrase?: string | Uint8Array);
+  constructor(key: string | SigningKey, passphrase?: string | Uint8Array) {
+    if (typeof key === 'string') {
+      const keyPrefixes: KeyPrefix[] = [
+        PrefixV2.Ed25519EncryptedSeed,
+        PrefixV2.Ed25519Seed,
+        PrefixV2.Ed25519SecretKey,
+        PrefixV2.Secp256k1EncryptedSecretKey,
+        PrefixV2.Secp256k1SecretKey,
+        PrefixV2.P256EncryptedSecretKey,
+        PrefixV2.P256SecretKey,
+        PrefixV2.BLS12_381EncryptedSecretKey,
+        PrefixV2.BLS12_381SecretKey,
+      ];
+      const pre = (() => {
+        try {
+          const [, pre] = b58DecodeAndCheckPrefix(key, keyPrefixes);
+          return pre;
+        } catch {
+          throw new InvalidKeyError(
+            `Invalid private key, expecting one of the following prefixes '${keyPrefixes}'.`
+          );
         }
-        return res;
-      };
-    }
+      })();
 
-    switch (pre) {
-      case PrefixV2.Ed25519EncryptedSeed:
-      case PrefixV2.Ed25519Seed:
-      case PrefixV2.Ed25519SecretKey:
-        this.#key = new EdKey(key, decrypt);
-        break;
+      const encrypted =
+        pre === PrefixV2.Ed25519EncryptedSeed ||
+        pre === PrefixV2.Secp256k1EncryptedSecretKey ||
+        pre === PrefixV2.P256EncryptedSecretKey ||
+        pre === PrefixV2.BLS12_381EncryptedSecretKey;
 
-      case PrefixV2.Secp256k1EncryptedSecretKey:
-      case PrefixV2.Secp256k1SecretKey:
-      case PrefixV2.P256EncryptedSecretKey:
-      case PrefixV2.P256SecretKey:
-        this.#key = new ECKey(key, decrypt);
-        break;
+      let decrypt: ((k: Uint8Array) => Uint8Array) | undefined;
+      if (encrypted) {
+        if (!passphrase) {
+          throw new InvalidPassphraseError('No passphrase provided to decrypt encrypted key');
+        }
+        const pass = typeof passphrase === 'string' ? new TextEncoder().encode(passphrase) : passphrase;
+        decrypt = (data: Uint8Array) => {
+          const salt = data.subarray(0, 8);
+          const encryptedSk = data.subarray(8);
+          const encryptionKey = pbkdf2(SHA512, pass, salt, 32768, 32);
+          const res = openSecretBox(
+            new Uint8Array(encryptionKey),
+            new Uint8Array(24),
+            new Uint8Array(encryptedSk)
+          );
+          if (!res) {
+            throw new Error("can't decrypt secret key");
+          }
+          return res;
+        };
+      }
 
-      case PrefixV2.BLS12_381EncryptedSecretKey:
-      case PrefixV2.BLS12_381SecretKey:
-        this.#key = new BLSKey(key, decrypt);
-        break;
+      switch (pre) {
+        case PrefixV2.Ed25519EncryptedSeed:
+        case PrefixV2.Ed25519Seed:
+        case PrefixV2.Ed25519SecretKey:
+          this.#key = new EdKey(key, decrypt);
+          break;
+
+        case PrefixV2.Secp256k1EncryptedSecretKey:
+        case PrefixV2.Secp256k1SecretKey:
+        case PrefixV2.P256EncryptedSecretKey:
+        case PrefixV2.P256SecretKey:
+          this.#key = new ECKey(key, decrypt);
+          break;
+
+        case PrefixV2.BLS12_381EncryptedSecretKey:
+        case PrefixV2.BLS12_381SecretKey:
+          this.#key = new BLSKey(key, decrypt);
+          break;
+      }
+    } else {
+      this.#key = key;
     }
   }
 

@@ -1,6 +1,8 @@
-import { Ed25519, Hard } from '../src/derivation-tools';
+import { Hard, derivePath } from '../src/derivation-utils';
+import { EdKey } from '../src/ed-key';
 import * as Bip39 from 'bip39';
 import { InvalidSeedLengthError } from '../src/errors';
+import { hex2buf } from '@taquito/utils';
 
 interface TestKeyData {
   path: number[];
@@ -128,22 +130,22 @@ const badSeed =
 describe('Ed25519', () => {
   for (const d of testData) {
     describe(d.seed || 'mnemonic', () => {
-      const seed = d.seed || Bip39.mnemonicToSeedSync(d.mnemonic || '');
-      const root = Ed25519.PrivateKey.fromSeed(seed);
+      const seed = d.seed !== undefined ? hex2buf(d.seed) : Bip39.mnemonicToSeedSync(d.mnemonic || '');
+      const root = EdKey.fromSeed(seed);
       for (const keyData of d.keys) {
         it(JSON.stringify(keyData.path.map((x) => x >>> 0)), () => {
-          const key = root.derivePath(keyData.path);
+          const key = derivePath(root, keyData.path);
           if (keyData.chain) {
-            expect(Buffer.from(key.chainCode).toString('hex')).toBe(keyData.chain);
+            expect(key.chainCode).toEqual(hex2buf(keyData.chain));
           }
           if (keyData.priv) {
-            expect(Buffer.from(key.seed()).toString('hex')).toBe(keyData.priv);
+            expect(key.bytes()).toEqual(hex2buf(keyData.priv));
           }
         });
       }
     });
   }
   it('Should reject with bad seed', () => {
-    expect(() => Ed25519.PrivateKey.fromSeed(badSeed)).toThrowError(InvalidSeedLengthError);
+    expect(() => EdKey.fromSeed(hex2buf(badSeed))).toThrow(InvalidSeedLengthError);
   });
 });

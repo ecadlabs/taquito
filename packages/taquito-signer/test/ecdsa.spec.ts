@@ -1,4 +1,6 @@
-import { ECDSA, Hard } from '../src/derivation-tools';
+import { hex2buf } from '@taquito/utils';
+import { Hard, derivePath } from '../src/derivation-utils';
+import { Curve, ExtendedECKey } from '../src/ec-key';
 import * as Bip39 from 'bip39';
 
 interface TestKeyData {
@@ -14,7 +16,7 @@ interface TestChain {
 }
 
 interface CurveTestData {
-  curve: ECDSA.CurveName;
+  curve: Curve;
   chain: TestChain[];
 }
 
@@ -265,16 +267,16 @@ describe('ECDSA', () => {
     describe(curve.curve, () => {
       for (const chain of curve.chain) {
         describe(chain.seed || 'mnemonic', () => {
-          const seed = chain.seed || Bip39.mnemonicToSeedSync(chain.mnemonic || '', '');
-          const root = ECDSA.PrivateKey.fromSeed(seed, curve.curve);
+          const seed = chain.seed !== undefined ? hex2buf(chain.seed) : new Uint8Array(Bip39.mnemonicToSeedSync(chain.mnemonic || '', ''));
+          const root = new ExtendedECKey(seed, curve.curve);
           for (const keyData of chain.keys) {
             it(JSON.stringify(keyData.path.map((x) => x >>> 0)), () => {
-              const key = root.derivePath(keyData.path);
+              const key = derivePath(root, keyData.path);
               if (keyData.chain) {
-                expect(Buffer.from(key.chainCode).toString('hex')).toBe(keyData.chain);
+                expect(key.chainCode).toEqual(hex2buf(keyData.chain));
               }
               if (keyData.priv) {
-                expect(Buffer.from(key.bytes()).toString('hex')).toBe(keyData.priv);
+                expect(key.bytes()).toEqual(hex2buf(keyData.priv));
               }
             });
           }
