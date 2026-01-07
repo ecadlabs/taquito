@@ -1,5 +1,5 @@
 ---
-
+import { DEFAULT_VERSION } from "../../pages/api/search/[version].json.ts";
 ---
 
 <section class="bg-background-primary py-20 px-8">
@@ -12,7 +12,7 @@
       blockchain apps faster and easier
     </p>
     <a
-      href="/docs/23.0.0/quick_start"
+      href={`/docs/${DEFAULT_VERSION}/quick_start`}
       class="bg-primary text-white hover:text-gray-300 transition-colors duration-150 px-5 py-2.5 rounded-full text-lg"
       >Get Started</a
     >
