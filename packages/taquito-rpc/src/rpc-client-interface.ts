@@ -50,6 +50,7 @@ import {
   ProtocolActivationsResponse,
   ActiveStakingParametersResponse,
   PendingStakingParametersResponse,
+  DestinationIndexResponse,
 } from './types';
 
 export interface RPCOptions {
@@ -137,8 +138,15 @@ export interface RpcClientInterface {
   getAllTicketBalances(contract: string, options?: RPCOptions): Promise<AllTicketBalances>;
   getAdaptiveIssuanceLaunchCycle(options?: RPCOptions): Promise<AILaunchCycleResponse>;
   getPendingOperations(args: PendingOperationsQueryArguments): Promise<PendingOperationsV2>;
-  getActiveStakingParameters(delegate: string, options?: RPCOptions): Promise<ActiveStakingParametersResponse>;
-  getPendingStakingParameters(delegate: string, options?: RPCOptions): Promise<PendingStakingParametersResponse>;
+  getActiveStakingParameters(
+    delegate: string,
+    options?: RPCOptions
+  ): Promise<ActiveStakingParametersResponse>;
+  getPendingStakingParameters(
+    delegate: string,
+    options?: RPCOptions
+  ): Promise<PendingStakingParametersResponse>;
+  getDestinationIndex(destination: string, options?: RPCOptions): Promise<DestinationIndexResponse>;
 }
 
 export enum RPCMethodName {
@@ -192,4 +200,5 @@ export enum RPCMethodName {
   GET_ALL_TICKET_BALANCES = 'getAllTicketBalances',
   GET_ADAPTIVE_ISSUANCE_LAUNCH_CYCLE = 'getAdaptiveIssuanceLaunchCycle',
   GET_PENDING_OPERATIONS = 'getPendingOperations',
+  GET_DESTINATION_INDEX = 'getDestinationIndex',
 }

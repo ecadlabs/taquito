@@ -1,7 +1,8 @@
 {
-  "name": "",
+  "name": "@taquito/website",
+  "private": true,
   "type": "module",
-  "version": "0.0.1",
+  "version": "24.0.0",
   "scripts": {
     "dev": "astro dev",
     "build": "npm run generate:llms && astro build",

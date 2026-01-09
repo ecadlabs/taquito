@@ -8,9 +8,9 @@
 const path = require('path');
 const rpcData: RpcType = require(path.resolve(__dirname, '../website/static/docs/rpc_nodes.json'));
 
-type Provider = {id: string, name: string, website: string, status_page: string};
-type RpcEndpoint = {provider: string, url: string, net: string}
-type RpcType = {providers: Provider[], rpc_endpoints: RpcEndpoint[]};
+type Provider = { id: string, name: string, website: string, status_page: string };
+type RpcEndpoint = { provider: string, url: string, net: string }
+type RpcType = { providers: Provider[], rpc_endpoints: RpcEndpoint[] };
 
 // Create a mapping of provider IDs to their names
 const providers = rpcData.providers.reduce((providerMapping: Record<string, string>, provider) => {
@@ -28,8 +28,8 @@ rpcData.rpc_endpoints.forEach((endpoint: RpcEndpoint) => {
   endpointsByNetwork[endpoint.net].push(endpoint);
 });
 
-// Determine network ordering (prefer mainnet, ghostnet, shadownet, seoulnet)
-const preferredOrder = ['mainnet', 'ghostnet', 'shadownet', 'seoulnet'];
+// Determine network ordering (prefer mainnet, ghostnet, shadownet, seoulnet, tallinnnet)
+const preferredOrder = ['mainnet', 'ghostnet', 'shadownet', 'seoulnet', 'tallinnnet'];
 const networks = Object.keys(endpointsByNetwork).sort((a, b) => {
   const ai = preferredOrder.indexOf(a);
   const bi = preferredOrder.indexOf(b);

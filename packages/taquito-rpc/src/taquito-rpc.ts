@@ -68,6 +68,7 @@ import {
   ProtocolActivationsResponse,
   ActiveStakingParametersResponse,
   PendingStakingParametersResponse,
+  DestinationIndexResponse,
 } from './types';
 import { castToBigNumber } from './utils/utils';
 import {
@@ -1256,7 +1257,7 @@ export class RpcClient implements RpcClientInterface {
    * @description List the prevalidated operations in mempool (accessibility of mempool depends on each rpc endpoint)
    * @param args has 5 optional properties
    * @default args { version: '2', validated: true, refused: true, outdated, true, branchRefused: true, branchDelayed: true, validationPass: undefined, source: undefined, operationHash: undefined }
-   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/seoul-mempool-openapi.json
+   * @see https://gitlab.com/tezos/tezos/-/blob/master/docs/api/tallinn-mempool-openapi-rc.json
    */
   async getPendingOperations(
     args: PendingOperationsQueryArguments = {}
@@ -1274,13 +1275,16 @@ export class RpcClient implements RpcClientInterface {
    * @description Returns the currently active staking parameters for the given delegate
    * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-delegates-pkh-active-staking-parameters
    */
-  async getActiveStakingParameters(delegate: string, { block }: RPCOptions = defaultRPCOptions): Promise<ActiveStakingParametersResponse> {
-    const response = await this.httpBackend.createRequest<ActiveStakingParametersResponse>({
-      url: this.createURL(`/chains/${this.chain}/blocks/${block}/context/delegates/${delegate}/active_staking_parameters`),
+  async getActiveStakingParameters(
+    delegate: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<ActiveStakingParametersResponse> {
+    return await this.httpBackend.createRequest<ActiveStakingParametersResponse>({
+      url: this.createURL(
+        `/chains/${this.chain}/blocks/${block}/context/delegates/${delegate}/active_staking_parameters`
+      ),
       method: 'GET',
     });
-
-    return response;
   }
 
   /**
@@ -1289,12 +1293,33 @@ export class RpcClient implements RpcClientInterface {
    * @description Returns the pending values for the given delegate's staking parameters
    * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-delegates-pkh-pending-staking-parameters
    */
-  async getPendingStakingParameters(delegate: string, { block }: RPCOptions = defaultRPCOptions): Promise<PendingStakingParametersResponse> {
-    const response = await this.httpBackend.createRequest<PendingStakingParametersResponse>({
-      url: this.createURL(`/chains/${this.chain}/blocks/${block}/context/delegates/${delegate}/pending_staking_parameters`),
+  async getPendingStakingParameters(
+    delegate: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<PendingStakingParametersResponse> {
+    return await this.httpBackend.createRequest<PendingStakingParametersResponse>({
+      url: this.createURL(
+        `/chains/${this.chain}/blocks/${block}/context/delegates/${delegate}/pending_staking_parameters`
+      ),
       method: 'GET',
     });
+  }
 
-    return response;
+  /**
+   * @param destination address to retrieve the index for
+   * @param options contains generic configuration for rpc calls to specified block (default to head)
+   * @description Returns the index assigned to the address if it was indexed by the opcode INDEX_ADDRESS, otherwise returns null
+   * @see https://octez.tezos.com/docs/alpha/rpc.html#get-block-id-context-destination-destination-id-index
+   */
+  async getDestinationIndex(
+    destination: string,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<DestinationIndexResponse> {
+    return await this.httpBackend.createRequest<DestinationIndexResponse>({
+      url: this.createURL(
+        `/chains/${this.chain}/blocks/${block}/context/destination/${destination}/index`
+      ),
+      method: 'GET',
+    });
   }
 }

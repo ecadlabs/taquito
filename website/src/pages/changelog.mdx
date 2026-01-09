@@ -3,6 +3,39 @@ title: Versions
 author: Jev Bjorsell
 layout: ../layouts/MarkdownLayout.astro
 ---
+# Taquito v24.0.0
+
+# Summary
+
+## Tallinn Protocol Support
+> This is official release of v24.0.0.
+> There are only websites and internal changes since 24.0.0-RC.0
+
+### New Features
+
+- `@taquito/rpc` – Added support for the new RPC endpoint `getdestinationindex` #3261
+- `@taquito/michel-codec` – Added support for new Michelson instructions: `INDEX_ADDRESS` and `GET_ADDRESS_INDEX` #3238
+- `@taquito/local-forging` – Added support for Michelson instructions: `INDEX_ADDRESS` and `GET_ADDRESS_INDEX` #3238
+
+### Improvements & Fixes
+- `@taquito/rpc` – Updated multiple RPC types to align with **Protocol 24 (Tallinn)** schemas, including: VotingInfoResponse, OperationContentsAndResultMetadataExtended1, BakingRightsQueryArgumentsBase, AttestationRightsQueryArguments, OperationResultTransaction, ConstantsResponse, ConstantsResponseProto024, BlockMetadata #3244, #3245, #3261
+
+
+### Dependencies
+
+- Upgraded multiple Ledger-related dependencies via Snyk #3266
+- Switched to native `fetch` where applicable #3266
+- website dependencies update #3285 #3262
+
+### Website
+
+- kept page context when changing doc versions #3282
+- added ecadinfra status page url to rpc_nodes.json #3283
+- redirected old chatbot page to quick start with chatbot open #3284
+- updated hardcoded version links to use default version #3289
+- updated logo twitter to x #3288
+- updated sapling terminology from "shielded pool" to "shielded set" #3281
+
 # Taquito v23.1.0
 
 ## ⚠ **Breaking Change**⚠

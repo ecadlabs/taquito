@@ -1,22 +1,22 @@
-// value is based on octez-client reveal operation gasLimit of each address type in Seoul Protocol
+// value is based on octez-client reveal operation gasLimit of each address type in Tallinn Protocol
 const REVEAL_GAS_LIMIT = {
   TZ1: 171,
   TZ2: 157,
   TZ3: 447,
   TZ4: 3252,
 };
-// value is based on octez-client reveal operation fee of each address type in Seoul Protocol
+// value is based on octez-client reveal operation fee of each address type in Tallinn Protocol
 const REVEAL_FEE = {
   TZ1: 278,
   TZ2: 277,
   TZ3: 306,
   TZ4: 736,
 };
-// value is based on octez-client reveal operation storageLimit of all address type in Seoul Protocol
+// value is based on octez-client reveal operation storageLimit of all address type in Tallinn Protocol
 export const REVEAL_STORAGE_LIMIT = 0;
-// protocol constants in Seoul Protocol
+// protocol constants in Tallinn Protocol
 export const ORIGINATION_SIZE = 257;
-// protocol constants in Seoul Protocol
+// protocol constants in Tallinn Protocol
 export const COST_PER_BYTE = 250;
 
 export enum Protocols {
@@ -43,6 +43,7 @@ export enum Protocols {
   PsQuebecn = 'PsQuebecnLByd3JwTiGadoG4nGWi3HYiLXUjkibeFV8dCFeVMUg',
   PsRiotuma = 'PsRiotumaAMotcRoDWW1bysEhQy2n1M5fy8JgRp8jjRfHGmfeA7',
   PtSeouLou = 'PtSeouLouXkxhg39oWzjxDWaCydNfR3RxCUrNe4Q9Ro8BTehcbh',
+  PtTALLiNt = 'PtTALLiNtPec7mE7yY4m3k26J8Qukef3E3ehzhfXgFZKGtDdAXu',
   ProtoALpha = 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK',
 }
 
@@ -66,7 +67,8 @@ export const protocols = {
   '021': [Protocols.PsQuebecn],
   '022': [Protocols.PsRiotuma],
   '023': [Protocols.PtSeouLou],
-  '024': [Protocols.ProtoALpha],
+  '024': [Protocols.PtTALLiNt],
+  '025': [Protocols.ProtoALpha],
 };
 
 export enum ChainIds {
@@ -92,6 +94,7 @@ export enum ChainIds {
   QUEBECNET = 'NetXuTeGinLEqxp',
   RIONET = 'NetXPdgaoabtBth',
   SEOULNET = 'NetXd56aBs1aeW3',
+  TALLINNNET = 'NetXe8DbhW9A1eS',
 }
 
 export const getRevealGasLimit = (address: string) =>
