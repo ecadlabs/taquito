@@ -3,34 +3,26 @@ title: Estimate Provider
 author: Edmond Lee & Roxane Letourneau
 ---
 
-
 Taquito's estimate method can be used to estimate fees, gas, and storage associated with an operation.
 
-:::note
-Our estimation of `fee`, `gasLimit` and `storageLimit` is based on the RPC call response to `simulate_operation` plus a small buffer. The context and volume at the time of `simulate_operation` might differ from `preapply/operations` and `injection/operation`, potentially causing errors like `fees_too_low`, `storage_exhausted.operation` and `gas_exhausted.operation`.
-:::
+>[!NOTE]
+> Our estimation of `fee`, `gasLimit` and `storageLimit` is based on the RPC call response to `simulate_operation` plus a small buffer. The context and volume at the time of `simulate_operation` might differ from `preapply/operations` and `injection/operation`, potentially causing errors like `fees_too_low`, `storage_exhausted.operation` and `gas_exhausted.operation`.
 
 ## The `Estimate` object
 
-The `Estimate` object has the following properties:
+The `Estimate` object has the following properties (all values are numbers):
 
-[`burnFeeMutez`]: The number of Mutez that will be burned for the storage of the operation. Returns a number.
-
-[`gasLimit`]: The limit on the amount of gas a given operation can consume. Returns a number.
-
-[`minimalFeeMutez`]: Minimum fees for the operation according to baker defaults. Returns a number.
-
-[`storageLimit`]: The limit on the amount of storage an operation can use. Returns a number.
-
-[`suggestedFeeMutez:`]: The suggested fee for the operation includes minimal fees and a small buffer. Returns a number.
-
-[`totalCost`]: The sum of `minimalFeeMutez` + `burnFeeMutez`. Returns a number.
-
-[`usingBaseFeeMutez`]: Fees according to your specified base fee will ensure that at least minimum fees are used.
+- **`burnFeeMutez`**: The number of mutez that will be burned for the storage of the operation.
+- **`gasLimit`**: The limit on the amount of gas a given operation can consume.
+- **`minimalFeeMutez`**: Minimum fees for the operation according to baker defaults.
+- **`storageLimit`**: The limit on the amount of storage an operation can use.
+- **`suggestedFeeMutez`**: The suggested fee for the operation, including minimal fees and a small buffer.
+- **`totalCost`**: The sum of `minimalFeeMutez` + `burnFeeMutez`.
+- **`usingBaseFeeMutez`**: Fees according to your specified base fee, ensuring that at least minimum fees are used.
 
 ### Estimate a transfer operation
 
-The following example shows an estimate of the fees associated with transferring 2ꜩ to `tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY` address. The configuration of the signer is to use a throw-away private key for demonstration purposes.
+The following example shows an estimate of the fees associated with transferring 2ꜩ to `tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY` address.
 
 <Tabs
 defaultValue="signer"
@@ -44,17 +36,17 @@ values={[
 const amount = 2;
 const address = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY';
 
-console.log(`Estimating the transfer of ${amount} ꜩ to ${address} : `);
+console.log(`Estimating the transfer of ${amount} ꜩ to ${address}: `);
 
 try {
   const est = await Tezos.estimate.transfer({ to: address, amount: amount });
   console.log(`burnFeeMutez : ${est.burnFeeMutez},
-    gasLimit : ${est.gasLimit},
-    minimalFeeMutez : ${est.minimalFeeMutez},
-    storageLimit : ${est.storageLimit},
-    suggestedFeeMutez : ${est.suggestedFeeMutez},
-    totalCost : ${est.totalCost},
-    usingBaseFeeMutez : ${est.usingBaseFeeMutez}`);
+gasLimit : ${est.gasLimit},
+minimalFeeMutez : ${est.minimalFeeMutez},
+storageLimit : ${est.storageLimit},
+suggestedFeeMutez : ${est.suggestedFeeMutez},
+totalCost : ${est.totalCost},
+usingBaseFeeMutez : ${est.usingBaseFeeMutez}`);
 } catch (error) {
   console.table(`Error: ${JSON.stringify(error, null, 2)}`);
 }
@@ -67,17 +59,17 @@ try {
 const amount = 2;
 const address = 'tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY';
 
-console.log(`Estimating the transfer of ${amount} ꜩ to ${address} : `);
+console.log(`Estimating the transfer of ${amount} ꜩ to ${address}: `);
 
 try {
   const est = await Tezos.estimate.transfer({ to: address, amount: amount });
   console.log(`burnFeeMutez : ${est.burnFeeMutez},
-    gasLimit : ${est.gasLimit},
-    minimalFeeMutez : ${est.minimalFeeMutez},
-    storageLimit : ${est.storageLimit},
-    suggestedFeeMutez : ${est.suggestedFeeMutez},
-    totalCost : ${est.totalCost},
-    usingBaseFeeMutez : ${est.usingBaseFeeMutez}`);
+gasLimit : ${est.gasLimit},
+minimalFeeMutez : ${est.minimalFeeMutez},
+storageLimit : ${est.storageLimit},
+suggestedFeeMutez : ${est.suggestedFeeMutez},
+totalCost : ${est.totalCost},
+usingBaseFeeMutez : ${est.usingBaseFeeMutez}`);
 } catch (error) {
   console.table(`Error: ${JSON.stringify(error, null, 2)}`);
 }
@@ -98,9 +90,7 @@ values={[
 {label: 'Wallet', value: 'wallet'}
 ]}>
 <TabItem value="signer">
-
-We have updated the estimate provider to have a `contractCall()` method.
-The `contractCall()` member method can now be used to estimate contract calls as such:
+The `contractCall()` member method can be used to estimate contract calls as such:
 
 ```js live
 try {
@@ -111,12 +101,12 @@ try {
   const estimate = await Tezos.estimate.contractCall(op);
 
   console.log(`burnFeeMutez : ${estimate.burnFeeMutez},
-    gasLimit : ${estimate.gasLimit},
-    minimalFeeMutez : ${estimate.minimalFeeMutez},
-    storageLimit : ${estimate.storageLimit},
-    suggestedFeeMutez : ${estimate.suggestedFeeMutez},
-    totalCost : ${estimate.totalCost},
-    usingBaseFeeMutez : ${estimate.usingBaseFeeMutez}`);
+gasLimit : ${estimate.gasLimit},
+minimalFeeMutez : ${estimate.minimalFeeMutez},
+storageLimit : ${estimate.storageLimit},
+suggestedFeeMutez : ${estimate.suggestedFeeMutez},
+totalCost : ${estimate.totalCost},
+usingBaseFeeMutez : ${estimate.usingBaseFeeMutez}`);
 } catch (error) {
   console.table(`Error: ${JSON.stringify(error, null, 2)}`);
 }
@@ -135,12 +125,12 @@ try {
   const estimate = await Tezos.estimate.contractCall(op);
 
   console.log(`burnFeeMutez : ${estimate.burnFeeMutez},
-    gasLimit : ${estimate.gasLimit},
-    minimalFeeMutez : ${estimate.minimalFeeMutez},
-    storageLimit : ${estimate.storageLimit},
-    suggestedFeeMutez : ${estimate.suggestedFeeMutez},
-    totalCost : ${estimate.totalCost},
-    usingBaseFeeMutez : ${estimate.usingBaseFeeMutez}`);
+gasLimit : ${estimate.gasLimit},
+minimalFeeMutez : ${estimate.minimalFeeMutez},
+storageLimit : ${estimate.storageLimit},
+suggestedFeeMutez : ${estimate.suggestedFeeMutez},
+totalCost : ${estimate.totalCost},
+usingBaseFeeMutez : ${estimate.usingBaseFeeMutez}`);
 } catch (error) {
   console.table(`Error: ${JSON.stringify(error, null, 2)}`);
 }
@@ -163,7 +153,7 @@ values={[
 <TabItem value="signer">
 
 ```js live
-console.log(`Estimating the contract origination : `);
+console.log(`Estimating the contract origination: `);
 
 try {
   const originationOp = await Tezos.estimate.originate({
@@ -176,12 +166,12 @@ try {
   });
 
   console.log(`burnFeeMutez : ${originationOp.burnFeeMutez},
-    gasLimit : ${originationOp.gasLimit},
-    minimalFeeMutez : ${originationOp.minimalFeeMutez},
-    storageLimit : ${originationOp.storageLimit},
-    suggestedFeeMutez : ${originationOp.suggestedFeeMutez},
-    totalCost : ${originationOp.totalCost},
-    usingBaseFeeMutez : ${originationOp.usingBaseFeeMutez}`);
+gasLimit : ${originationOp.gasLimit},
+minimalFeeMutez : ${originationOp.minimalFeeMutez},
+storageLimit : ${originationOp.storageLimit},
+suggestedFeeMutez : ${originationOp.suggestedFeeMutez},
+totalCost : ${originationOp.totalCost},
+usingBaseFeeMutez : ${originationOp.usingBaseFeeMutez}`);
 } catch (error) {
   console.log(`Error: ${error}`);
 }
@@ -192,7 +182,7 @@ try {
 
 
 ```js live wallet
-console.log(`Estimating the contract origination : `);
+console.log(`Estimating the contract origination: `);
 
 try {
   const originationOp = await Tezos.estimate.originate({

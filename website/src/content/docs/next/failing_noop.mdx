@@ -1,14 +1,11 @@
 ---
 title: Failing Noop
-id: failing_noop
 author: Alireza Haghshenas
 ---
 
-## Introduction
+There are use cases for allowing users to sign arbitrary data. It is important to ensure that data cannot be injected into the blockchain. The `failing_noop` operation can wrap arbitrary data and is guaranteed to fail.
 
-There are use cases for allowing users to sign arbitrary data. It is important to ensure that data cannot be injected into the blockchain. The failing_noop operation can wrap arbitrary data and is guaranteed to fail.
-
-### Signing a failing_noop using the contract api
+## Signing a failing_noop using the contract api
 
 ```typescript
 const signed = await Tezos.contract.failingNoop({
@@ -17,16 +14,16 @@ const signed = await Tezos.contract.failingNoop({
 });
 ```
 
-The `params.arbitrary` is a `bytes` string, with the hex representation of the payload to be signed.
-The field `basedOnBlock` is a `BlockIdentifier`:
+- `arbitrary` is a `bytes` string, with the hex representation of the payload to be signed.
+- `basedOnBlock` is a `BlockIdentifier`:
 
 ```typescript
 type BlockIdentifier = 'head' | `head~${number}` | `B${string}` | number;
 ```
 
-The payload can be signed on `head`, or a specified number of blocks before `head`, or a block referenced by hash, or a block referenced by level.
+The payload can be signed on `head`, a specified number of blocks before `head`, a block referenced by hash, or a block referenced by level.
 
-### Signing a failing_noop using the wallet api
+## Signing a failing_noop using the wallet api
 
 ```typescript
 const signed = await Tezos.wallet.signFailingNoop({
@@ -36,7 +33,7 @@ const signed = await Tezos.wallet.signFailingNoop({
 
 ```
 
-Both APIs should return a signed object of the form:
+Both APIs return a signed object of the form:
 
 ```json
 {
@@ -54,10 +51,15 @@ Both APIs should return a signed object of the form:
 }
 ```
 
-You can verify the signature:
+You can then verify the signature:
 
 ```typescript
 //import { verifySignature } from "@taquito/utils";
 
-verifySignature(signed.bytes, await Tezos.signer.publicKey(), signed.prefixSig, new Uint8Array([3]))
+verifySignature(
+    signed.bytes, 
+    await Tezos.signer.publicKey(), 
+    signed.prefixSig, 
+    new Uint8Array([3])
+)
 ```
