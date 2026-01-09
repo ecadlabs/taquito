@@ -115,7 +115,7 @@ The `next` version contains the latest unreleased documentation.
 - `ballot` - Ballot Operation
 
 ### Other
-- `failwith_errors` - Catching error messages
+- `failwith_errors` - Catching FAILWITH errors
 - `testing_strategies` - Taquito Testing Strategies
 - `tzip16-sequence-diagram` - TZIP-16 Sequence diagrams
 
