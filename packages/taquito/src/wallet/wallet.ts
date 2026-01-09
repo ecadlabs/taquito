@@ -17,6 +17,7 @@ import {
   WalletFinalizeUnstakeParams,
   WalletTransferTicketParams,
   WalletRegisterGlobalConstantParams,
+  WalletRevealParams,
 } from './interface';
 import {
   InvalidAddressError,
@@ -38,7 +39,8 @@ export type WalletParamsWithKind =
   | withKind<WalletDelegateParams, OpKind.DELEGATION>
   | withKind<WalletIncreasePaidStorageParams, OpKind.INCREASE_PAID_STORAGE>
   | withKind<WalletTransferTicketParams, OpKind.TRANSFER_TICKET>
-  | withKind<WalletRegisterGlobalConstantParams, OpKind.REGISTER_GLOBAL_CONSTANT>;
+  | withKind<WalletRegisterGlobalConstantParams, OpKind.REGISTER_GLOBAL_CONSTANT>
+  | withKind<WalletRevealParams, OpKind.REVEAL>;
 
 export class WalletOperationBatch {
   private operations: WalletParamsWithKind[] = [];
@@ -129,6 +131,15 @@ export class WalletOperationBatch {
     return this;
   }
 
+  /**
+   * @description Add an Reveal operation to the batch
+   * @param param Reveal operation parameter
+   */
+  withReveal(params: WalletRevealParams) {
+    this.operations.push({ kind: OpKind.REVEAL, ...params });
+    return this;
+  }
+
   private async mapOperation(param: WalletParamsWithKind) {
     switch (param.kind) {
       case OpKind.TRANSACTION:
@@ -147,6 +158,8 @@ export class WalletOperationBatch {
         return this.walletProvider.mapRegisterGlobalConstantParamsToWalletParams(async () => param);
       case OpKind.TRANSFER_TICKET:
         return this.walletProvider.mapTransferTicketParamsToWalletParams(async () => param);
+      case OpKind.REVEAL:
+        return this.walletProvider.mapRevealParamsToWalletParams(async () => param);
       default:
         throw new InvalidOperationKindError(JSON.stringify((param as any).kind));
     }
@@ -177,6 +190,9 @@ export class WalletOperationBatch {
           break;
         case OpKind.TRANSFER_TICKET:
           this.withTransferTicket(param);
+          break;
+        case OpKind.REVEAL:
+          this.withReveal(param);
           break;
         default:
           throw new InvalidOperationKindError(JSON.stringify((param as any).kind));
@@ -521,5 +537,20 @@ export class Wallet {
       readProvider
     );
     return contractAbstractionComposer(abs, this.context);
+  }
+
+  /**
+   * @description Reveal a wallet on the blockchain.
+   * @returns a createRevealOperation promise object when followed by .send()
+   * @param params operation parameter
+   */
+  reveal(params: WalletRevealParams = {}) {
+    return this.walletCommand(async () => {
+      const mappedParams = await this.walletProvider.mapRevealParamsToWalletParams(
+        async () => params
+      );
+      const opHash = await this.walletProvider.sendOperations([mappedParams]);
+      return this.context.operationFactory.createRevealOperation(opHash);
+    });
   }
 }
