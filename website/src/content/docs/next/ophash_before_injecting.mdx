@@ -1,16 +1,11 @@
 ---
 title: Getting the Operation Hash without Injecting
-id: ophash_before_injecting
 author: Davis Sawali
 ---
 
-This section serves as a guide to get the operation hash without injecting it into the blockchain.
+There might come a time when you would like to retrieve the operation hash without injecting it into the blockchain.
 
-## Getting the Operation Hash
-
-There might come a time when you, the developer, would like to grab the operation hash without injecting it into the blockchain.
-
-To accomplish that, we have a utility function called `encodeOpHash()` in the `@taquito/utils` package. This function takes in the signed operation bytes in the form of a `string`, and outputs the operation hash of said transaction without injecting it.
+To accomplish this, we have a utility function called `encodeOpHash()` in the `@taquito/utils` package. This function takes in the signed operation bytes in the form of a `string`, and outputs the operation hash of said transaction without injecting it.
 
 ### Usage example
 
@@ -42,7 +37,6 @@ const signedBytes = await Tezos.signer.sign(forgedBytes);
 
 // get the operation hash using the encodeOpHash() function
 const opHash = encodeOpHash(signedBytes.sbytes, new Uint8Array([3]));
-
 ```
 
 
