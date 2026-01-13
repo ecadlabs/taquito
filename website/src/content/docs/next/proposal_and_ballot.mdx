@@ -1,6 +1,5 @@
 ---
 title: Proposal & Ballot
-id: proposal_and_ballot
 author: Davis Sawali
 ---
 
@@ -11,9 +10,8 @@ A `Proposals` operation can be injected during a **Proposal Period**. It allows 
 
 The proposal with the most support is selected and will move on to the **Exploration Period**.
 
-:::info
-Note: Each delegate can submit a maximum of 20 proposals
-:::
+>[!NOTE]
+> Each delegate can submit a maximum of 20 proposals
 
 ### Example
 The `Proposals` operation is currently available in the Contract API, and can be used as such:
@@ -39,8 +37,7 @@ const op = await Tezos.contract.ballot({
 
 await op.confirmation();
 ```
-- `proposal` is the string that you (a delegate) would like to point your ballot towards. Information on the current proposal can be obtained by calling [this RPC endpoint](https://tezos.gitlab.io/alpha/rpc.html#get-block-id-votes-current-proposal). Alternatively, you could also get the protocol hash by using Taquito's RPC Client method `RpcClient.getCurrentProposal`. For more information on the `RpcClient` refer to [this document](https://taquito.io/docs/rpc_package/)
+- `proposal` is the string that you (a delegate) would like to point your ballot towards. Information on the current proposal can be obtained by calling [this RPC endpoint](https://tezos.gitlab.io/alpha/rpc.html#get-block-id-votes-current-proposal). Alternatively, you could also get the protocol hash by using Taquito's RPC Client method `RpcClient.getCurrentProposal`. For more information on the `RpcClient` refer to [this document](./rpc_package).
 - `ballot` is your ballot vote (`yay`, `nay`, or `pass`)
-
 
 For more information in regards to the Amendment & Voting Process, refer to [this document](https://tezos.gitlab.io/alpha/voting.html)
