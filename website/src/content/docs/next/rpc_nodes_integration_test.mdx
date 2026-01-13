@@ -1,13 +1,13 @@
 ---
-title: RPC tests
-author: Roxane Letourneau
+title: RPC Tests
+author: [Roxane Letourneau, Hui-An Yang, Maxwell Ward]
 ---
 
-## Steps to run the tests
+Taquito has integration tests designed to check that the responses from the RPC node match what is expected.
 
- **tallinnnet**: `npm run test:tallinnnet __tests__/rpc/nodes.spec.ts`
+**Tallinnnet command**: `npm run test:tallinnnet __tests__/rpc/nodes.spec.ts`
 
-**When all endpoints are accessible for a node, you will obtain:**
+When all endpoints are accessible for a node, the tests will return something similar to:
 
 ```
   Test calling all methods from RPC node: https://rpc.tallinnnet.teztnets.com
@@ -73,7 +73,7 @@ author: Roxane Letourneau
     ○ skipped Verify that rpcClient.getAttestationRights retrieves the list of delegates allowed to attest a block
 ```
 
-**Otherwise, you will see which endpoints do not work for a specific node:**
+Otherwise, the endpoints that do not work for a specific node will be marked with an X in the log:
 
 ```
   Test calling all methods from RPC node: http://localhost:20000
