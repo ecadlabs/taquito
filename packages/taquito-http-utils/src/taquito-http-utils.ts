@@ -3,11 +3,8 @@
  * @module @taquito/http-utils
  */
 
-import { Agent as HttpsAgent } from 'https';
-import { Agent as HttpAgent } from 'http';
-
 let fetch = globalThis?.fetch;
-let createAgent: ((url: string) => HttpsAgent | HttpAgent) | undefined;
+let createAgent: ((url: string) => { keepAlive?: boolean; [key: string]: any }) | undefined;
 // Will only use browser fetch if we are in a browser environment,
 // default to the more stable node-fetch otherwise
 const isNode = typeof process !== 'undefined' && !!process?.versions?.node;
@@ -15,13 +12,17 @@ if (isNode) {
   // Handle both ESM and CJS default export patterns for webpack compatibility
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const nodeFetch = require('node-fetch');
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const https = require('https');
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const http = require('http');
   fetch = nodeFetch.default || nodeFetch;
   if (Number(process.versions.node.split('.')[0]) >= 19) {
     // we need agent with keepalive false for node 19 and above
     createAgent = (url: string) => {
       return url.startsWith('https')
-        ? new HttpsAgent({ keepAlive: false })
-        : new HttpAgent({ keepAlive: false });
+        ? new https.Agent({ keepAlive: false })
+        : new http.Agent({ keepAlive: false });
     };
   }
 }

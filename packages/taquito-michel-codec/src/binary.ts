@@ -198,6 +198,8 @@ const primitives: PrimID[] = [
   'NAT',
   'Ticket',
   'IS_IMPLICIT_ACCOUNT',
+  'INDEX_ADDRESS',
+  'GET_ADDRESS_INDEX',
 ];
 
 const primTags: { [key in PrimID]?: number } & { [key: string]: number | undefined } =

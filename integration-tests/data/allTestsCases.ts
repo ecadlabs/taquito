@@ -9,6 +9,8 @@ import {
   example10,
 } from './code_with_sapling';
 import { isImplicitAccountCode, isImplicitAccountStorage } from './code_with_is_implicit_account';
+import { indexAddressCode, indexAddressStorage } from './code_with_index_address_index';
+import { getAddressIndexCode, getAddressIndexStorage } from './code_with_get_address_index';
 import { ticketCode, ticketStorage } from './code_with_ticket';
 import { genericCode, genericStorage } from './generic_contract';
 import { tokenBigmapCode, tokenBigmapStorage } from './token_bigmap';
@@ -49,6 +51,48 @@ interface TestCase {
   operation: ForgeParams;
   expected?: object;
 }
+
+export const tallinnCases: TestCase[] = [{
+  name: 'Origination of a contract that contains the instructions INDEX_ADDRESS',
+  operation: {
+    branch: "BMFfghLG5oS4vRgqNvEvhjLKNQZdK8sW4ezyWLAWXoHhtfHPAzE",
+    contents: [
+      {
+        kind: OpKind.ORIGINATION,
+        source: "tz2RqxsYQyFuP9amsmrr25x9bUcBMWXGvjuD",
+        fee: "337",
+        counter: "1318",
+        gas_limit: "666",
+        storage_limit: "319",
+        balance: "0",
+        script: {
+          code: indexAddressCode,
+          storage: indexAddressStorage,
+        }
+      }
+    ]
+  },
+}, {
+  name: 'Origination of a contract that contains the instructions GET_ADDRESS_INDEX',
+  operation: {
+    branch: "BMFfghLG5oS4vRgqNvEvhjLKNQZdK8sW4ezyWLAWXoHhtfHPAzE",
+    contents: [
+      {
+        kind: OpKind.ORIGINATION,
+        source: "tz2RqxsYQyFuP9amsmrr25x9bUcBMWXGvjuD",
+        fee: "337",
+        counter: "1318",
+        gas_limit: "666",
+        storage_limit: "319",
+        balance: "0",
+        script: {
+          code: getAddressIndexCode,
+          storage: getAddressIndexStorage,
+        }
+      }
+    ]
+  },
+}]
 
 export const commonCases: TestCase[] = [
   {
