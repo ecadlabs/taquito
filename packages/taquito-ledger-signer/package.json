@@ -57,7 +57,7 @@
     ]
   },
   "dependencies": {
-    "@ledgerhq/hw-transport": "^6.31.4",
+    "@ledgerhq/hw-transport": "^6.31.14",
     "@stablelib/blake2b": "^1.0.1",
     "@taquito/core": "^24.0.0",
     "@taquito/taquito": "^24.0.0",

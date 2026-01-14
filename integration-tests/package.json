@@ -19,9 +19,9 @@
   "version": "24.0.0",
   "dependencies": {
     "@ledgerhq/devices": "8.7.0",
-    "@ledgerhq/hw-transport": "6.31.13",
-    "@ledgerhq/hw-transport-node-hid": "6.29.14",
-    "@ledgerhq/hw-transport-node-hid-noevents": "6.30.14",
+    "@ledgerhq/hw-transport": "6.31.14",
+    "@ledgerhq/hw-transport-node-hid": "6.29.15",
+    "@ledgerhq/hw-transport-node-hid-noevents": "6.30.15",
     "@taquito/contracts-library": "^24.0.0",
     "@taquito/core": "^24.0.0",
     "@taquito/http-utils": "^24.0.0",
