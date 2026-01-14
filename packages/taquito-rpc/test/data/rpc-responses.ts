@@ -18,7 +18,6 @@ export const blockResponse = {
     payload_round: 0,
     proof_of_work_nonce: '1a991a0300000000',
     liquidity_baking_toggle_vote: 'on',
-    adaptive_issuance_vote: 'pass',
     signature:
       'sigWZtc4cGRxY7Fm1uPWFqHLyZYTgouUvAyTFfPLtE669VGezRNpfLXuxjUrU4DjviZjJcQe59RvNE4wLj1zEXpYsmwF6AXs',
   },
@@ -142,8 +141,6 @@ export const blockResponse = {
       },
     ],
     liquidity_baking_toggle_ema: 2550,
-    adaptive_issuance_vote_ema: 2634186,
-    adaptive_issuance_activation_cycle: 0,
     implicit_operations_results: [
       {
         kind: 'transaction',
@@ -193,7 +190,10 @@ export const blockResponse = {
             block_payload_hash: 'vh3Y2ysro9mSgkGmB1uNmoGho98gCTF3ycSfSKGXGrYEowXbDraa',
             metadata: {
               delegate: 'tz1Zt8QQ9aBznYNk5LUBjtME9DuExomw9YRs',
-              consensus_power: 2558,
+              consensus_power: {
+                slots: 2558,
+                baking_power: '38656061275500',
+              },
               consensus_key: 'tz1Zt8QQ9aBznYNk5LUBjtME9DuExomw9YRs',
             },
           },
@@ -2696,3 +2696,7 @@ export const pendingStakingParametersResponse = [
     },
   },
 ];
+
+export const destinationIndexResponse = '42';
+
+export const destinationIndexNullResponse = null;
