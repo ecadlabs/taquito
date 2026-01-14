@@ -16,7 +16,7 @@ npm install @taquito/sapling
 ```
 ## Usage
 
-**Retrieve a balance in the Sapling shielded pool**
+**Retrieve a balance in the Sapling shielded set**
 
 The returned balance is in mutez.
 
@@ -77,7 +77,7 @@ const shieldedTx = await saplingToolkit.prepareShieldedTransaction([{
 }])
 
 // Inject the sapling transaction using the ContractAbstraction
-// The amount MUST be specified in the send method to transfer the 3 tez to the shielded pool
+// The amount MUST be specified in the send method to transfer the 3 tez to the shielded set
 const op = await saplingContract.methodsObject.default([shieldedTx]).send({ amount: 3 });
 await op.confirmation();
 ```
