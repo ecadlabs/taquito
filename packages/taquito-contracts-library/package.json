@@ -58,6 +58,9 @@
     "transform": {
       ".(ts|tsx)": "ts-jest"
     },
+    "transformIgnorePatterns": [
+      "node_modules/(?!(@scure/bip39|@noble/hashes|@scure/base)/)"
+    ],
     "testEnvironment": "node",
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
     "moduleFileExtensions": [
@@ -69,7 +72,8 @@
       "^@taquito/taquito$": "<rootDir>/../taquito/src/taquito.ts",
       "^@taquito/rpc$": "<rootDir>/../taquito-rpc/src/taquito-rpc.ts",
       "^@taquito/taquito-utils$": "<rootDir>/../taquito-utils/src/taquito-utils.ts",
-      "^@taquito/taquito-http-utils$": "<rootDir>/../taquito-http-utils/src/taquito-http-utils.ts"
+      "^@taquito/taquito-http-utils$": "<rootDir>/../taquito-http-utils/src/taquito-http-utils.ts",
+      "^@scure/bip39/wordlists/english$": "<rootDir>/../../node_modules/@scure/bip39/wordlists/english.js"
     },
     "coveragePathIgnorePatterns": [
       "/node_modules/",
