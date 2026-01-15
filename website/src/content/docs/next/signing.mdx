@@ -283,6 +283,6 @@ In the contract, we can use the `CHECK_SIGNATURE` instruction to compare the sig
 
 The signing functionality has been implemented recently by the web wallets on Tezos and it's still very little used because it presents a major security concern.
 
-A fraudulent dapp could convince less tech-savvy users to sign arbitrary data and hide it as another type of operation before sending the signature to a smart contract. If the signature is used by the contract to allow the signer to perform certain actions, this would allow the fraudulent dapp to pose as the signer, which could be disastrous for the user.
+A fraudulent dApp could convince less tech-savvy users to sign arbitrary data and hide it as another type of operation before sending the signature to a smart contract. If the signature is used by the contract to allow the signer to perform certain actions, this would allow the fraudulent dApp to pose as the signer, which could be disastrous for the user.
 
-A signature can also be used in a replay attack when a dapp uses the same signature multiple times to gain access to a contract functionality. A signature should be used one single time and destroyed and a smart contract should implement a verification process to ensure the signature hasn't been used already.
+A signature can also be used in a replay attack when a dApp uses the same signature multiple times to gain access to a contract functionality. A signature should be used one single time and destroyed and a smart contract should implement a verification process to ensure the signature hasn't been used already.

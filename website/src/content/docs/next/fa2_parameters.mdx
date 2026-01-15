@@ -197,7 +197,7 @@ const operator_params = [
 Just like a transfer operation, it is possible to add and remove multiple operators in the same transaction.
 
 ## Batching approval and transfer operations
-It can sometimes be useful or more practical to set an operator before sending a transfer transaction. If your dapp is built on a contract that will handle users' transfer operations on their behalf, it can be more convenient for your users to approve your contract and let it transfer their tokens in one click. In this case, you can use the Batch API to first approve the contract and then call an entrypoint of the contract that will transfer the user's tokens on his behalf:
+It can sometimes be useful or more practical to set an operator before sending a transfer transaction. If your dApp is built on a contract that will handle users' transfer operations on their behalf, it can be more convenient for your users to approve your contract and let it transfer their tokens in one click. In this case, you can use the Batch API to first approve the contract and then call an entrypoint of the contract that will transfer the user's tokens on his behalf:
 
 ```typescript
 import { TezosToolkit } from "@taquito/taquito";
@@ -220,5 +220,5 @@ const batchOp = await Tezos.wallet.batch()
 await batchOp.confirmation();
 ```
 
-In the first contract call (to the token contract), the user authorizes the dapp contract to transfer his tokens on his behalf.
-In the second contract call (to the dapp contract), the user calls a hypothetical `mint` entrypoint that sends a transaction under the hood to transfer the user's tokens to the contract account.
+In the first contract call (to the token contract), the user authorizes the dApp contract to transfer his tokens on his behalf.
+In the second contract call (to the dApp contract), the user calls a hypothetical `mint` entrypoint that sends a transaction under the hood to transfer the user's tokens to the contract account.

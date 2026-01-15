@@ -1,9 +1,9 @@
 ---
-title: Dapp pre-launch checklist
+title: dApp Pre-launch Checklist
 author: [Claude Barde, Maxwell Ward]
 ---
 
-Below are considerations for building your Tezos dapp or before publishing it. These pointers help prevent bugs and improve your users' experience.
+Below are considerations for building your Tezos dApp or before publishing it. These pointers help prevent bugs and improve your users' experience.
 
 ## Infrastructure
 
@@ -14,7 +14,7 @@ Running your own RPC node is often the best choice, especially if you anticipate
 ### Specify fees and storage limits
 
 Hard-coding fees and storage limits for smart contract calls has two advantages:
-- Your dapp makes fewer calls to the RPC node, making it faster
+- Your dApp makes fewer calls to the RPC node, making it faster
 - Fine-tuned gas and storage values reduce the likelihood of backtracked operations
 
 ## Performance
@@ -25,7 +25,7 @@ Local Pack reduces bigmap search time by 50%. Enable it by providing a `MichelCo
 
 ### Optimize HTTP requests
 
-JavaScript frameworks provide lifecycle hooks for DOM updates (React `useEffect`, Vue `beforeUpdate`, Svelte `afterUpdate`). If these trigger calls to Tezos nodes or indexers, optimize them carefully. Unnecessary HTTP requests increase server traffic and slow down your dapp.
+JavaScript frameworks provide lifecycle hooks for DOM updates (React `useEffect`, Vue `beforeUpdate`, Svelte `afterUpdate`). If these trigger calls to Tezos nodes or indexers, optimize them carefully. Unnecessary HTTP requests increase server traffic and slow down your dApp.
 
 ### Handle big numbers
 
@@ -39,7 +39,7 @@ Testing with Kukai and Temple wallets is essential. Testing with all wallets is 
 
 ### Create a single BeaconWallet instance
 
-Reuse one `BeaconWallet` instance throughout your dapp. JavaScript frameworks offer solutions to share data between components:
+Reuse one `BeaconWallet` instance throughout your dApp. JavaScript frameworks offer solutions to share data between components:
 - React: Context API
 - Vue: Pinia (Third-party)
 - Svelte: Stores

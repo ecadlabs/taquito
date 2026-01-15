@@ -48,7 +48,7 @@ This object exposes different methods we are going to use to set up our wallet. 
 
 ### TZIP-10 wallet
 
-The `BeaconWallet` is a package implementing the TZIP-10 standard that describes the communication between a dApp (decentralized application on Tezos) and a wallet (e.g., a browser extension). The Beacon wallet works with any wallet that supports the TZIP-10 standard (for example, the Beacon extension, Temple, or Kukai). This package is the recommended way of connecting your dapp to a wallet. In addition to being future-proof, it gives your users the freedom to choose the wallet they want.
+The `BeaconWallet` is a package implementing the TZIP-10 standard that describes the communication between a dApp (decentralized application on Tezos) and a wallet (e.g., a browser extension). The Beacon wallet works with any wallet that supports the TZIP-10 standard (for example, the Beacon extension, Temple, or Kukai). This package is the recommended way of connecting your dApp to a wallet. In addition to being future-proof, it gives your users the freedom to choose the wallet they want.
 
 First, the `BeaconWallet` class must be imported:
 
@@ -69,9 +69,9 @@ const wallet = new BeaconWallet(options);
 console.log(wallet);
 ```
 
-The necessary bare minimum to instantiate the wallet is an object with a `name` property that contains the name of your dapp and the network you want it to point to. In this case, we choose to point it to `ghostnet`.
+The necessary bare minimum to instantiate the wallet is an object with a `name` property that contains the name of your dApp and the network you want it to point to. In this case, we choose to point it to `ghostnet`.
 
-Beacon wallet allows you to customize your dapp responses to different events. In the example above, instead of getting the default Beacon pop-up after the user connects the wallet, it will display the available data in the console. You can use whatever solution you prefer for feedback. You can find a list of all the default handlers [in the beacon-sdk Github repo](https://github.com/airgap-it/beacon-sdk/blob/master/packages/beacon-dapp/src/events.ts).
+Beacon wallet allows you to customize your dApp responses to different events. In the example above, instead of getting the default Beacon pop-up after the user connects the wallet, it will display the available data in the console. You can use whatever solution you prefer for feedback. You can find a list of all the default handlers [in the beacon-sdk Github repo](https://github.com/airgap-it/beacon-sdk/blob/master/packages/beacon-dapp/src/events.ts).
 
 The `enableMetrics` property is an optional parameter that allows you to enable or disable the collection of metrics. It also allows the user to report bugs via a link in the wallet pop-up.
 
