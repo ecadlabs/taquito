@@ -54,7 +54,7 @@ export default {
     '@noble/curves/nist',
     '@stablelib/nacl',
     'pbkdf2',
-    'bip39',
+    '@scure/bip39',
     'typedarray-to-buffer'
   ],
   watch: {

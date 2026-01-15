@@ -3,7 +3,8 @@ import { CONFIGS } from '../../config';
 import { InMemorySpendingKey, InMemoryViewingKey, SaplingToolkit, SaplingTransactionViewer } from '@taquito/sapling';
 import BigNumber from 'bignumber.js';
 import { singleSaplingStateContractJProtocol } from '../../data/single_sapling_state_contract_jakarta_michelson';
-import * as bip39 from 'bip39';
+import * as bip39 from '@scure/bip39';
+import { wordlist } from '@scure/bip39/wordlists/english';
 import { sequentialTestSuite } from '../../sequential-test';
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
@@ -47,14 +48,14 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       await saplingContractOrigination.confirmation();
       saplingContract = await saplingContractOrigination.contract();
 
-      const mnemonic1: string = bip39.generateMnemonic();
+      const mnemonic1: string = bip39.generateMnemonic(wordlist);
       inMemorySpendingKey1 = await InMemorySpendingKey.fromMnemonic(mnemonic1);
       inMemoryViewingKey1 = await inMemorySpendingKey1.getSaplingViewingKeyProvider();
       saplingToolkit1 = new SaplingToolkit({ saplingSigner: inMemorySpendingKey1 }, { contractAddress: saplingContract.address, memoSize }, new RpcReadAdapter(Tezos.rpc));
       txViewer1 = await saplingToolkit1.getSaplingTransactionViewer();
       paymentAddress1Index0 = (await inMemoryViewingKey1.getAddress(0)).address;
 
-      const mnemonic2: string = bip39.generateMnemonic();
+      const mnemonic2: string = bip39.generateMnemonic(wordlist);
       inMemorySpendingKey2 = await InMemorySpendingKey.fromMnemonic(mnemonic2);
       inMemoryViewingKey2 = await inMemorySpendingKey2.getSaplingViewingKeyProvider();
       saplingToolkit2 = new SaplingToolkit({ saplingSigner: inMemorySpendingKey2 }, { contractAddress: saplingContract.address, memoSize }, new RpcReadAdapter(Tezos.rpc));
