@@ -60,10 +60,19 @@
   },
   "jest": {
     "transform": {
-      ".(ts|tsx)": "ts-jest"
+      "^.+\\.(ts|tsx|js|mjs)$": [
+        "ts-jest",
+        {
+          "useESM": true,
+          "tsconfig": {
+            "esModuleInterop": true,
+            "allowJs": true
+          }
+        }
+      ]
     },
     "transformIgnorePatterns": [
-      "node_modules/(?!(@scure/bip39|@noble/hashes|@scure/base)/)"
+      "/node_modules/(?!(@scure/bip39|@noble/hashes|@scure/base)/.*)"
     ],
     "testEnvironment": "node",
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
