@@ -1,5 +1,7 @@
 import { MichelsonMap, ViewSimulationError } from '@taquito/taquito';
-import { stringToBytes, InvalidUriError } from '@taquito/tzip16';
+import { InvalidUriError } from '@taquito/tzip16';
+import { stringToBytes } from '@taquito/utils';
+import BigNumber from 'bignumber.js';
 import { Tzip12ContractAbstraction } from '../src/tzip12-contract-abstraction';
 import { InvalidTokenMetadata, TokenIdNotFound, TokenMetadataNotFound } from '../src/errors';
 
@@ -140,9 +142,12 @@ describe('Tzip12 contract abstraction test', () => {
       '1': tokenMap,
     });
 
-    const tokenMetadata = await tzip12Abs['executeTokenMetadataView'](mockMichelsonStorageView, 0);
+    const tokenMetadata = await tzip12Abs['executeTokenMetadataView'](
+      mockMichelsonStorageView,
+      BigNumber(0)
+    );
     expect(tokenMetadata).toEqual({
-      token_id: 0,
+      token_id: BigNumber(0),
       name: 'Taquito',
       symbol: 'XTZ',
       decimals: 3,
@@ -154,9 +159,9 @@ describe('Tzip12 contract abstraction test', () => {
       throw new ViewSimulationError('view simulation failed', 'test');
     });
 
-    expect(tzip12Abs['executeTokenMetadataView'](mockMichelsonStorageView, 0)).rejects.toEqual(
-      new ViewSimulationError('view simulation failed', 'test')
-    );
+    expect(
+      tzip12Abs['executeTokenMetadataView'](mockMichelsonStorageView, BigNumber(0))
+    ).rejects.toEqual(new ViewSimulationError('view simulation failed', 'test'));
   });
 
   it('Test 3 for executeTokenMetadataView(): should throw TokenMetadataNotFound if the type of the view result is wrong (no map)', async () => {
@@ -165,17 +170,17 @@ describe('Tzip12 contract abstraction test', () => {
       '1': 'I am not a map',
     });
 
-    expect(tzip12Abs['executeTokenMetadataView'](mockMichelsonStorageView, 0)).rejects.toEqual(
-      new TokenMetadataNotFound(mockContractAbstraction.address)
-    );
+    expect(
+      tzip12Abs['executeTokenMetadataView'](mockMichelsonStorageView, BigNumber(0))
+    ).rejects.toEqual(new TokenMetadataNotFound(mockContractAbstraction.address));
   });
 
   it('Test 4 for executeTokenMetadataView(): should throw TokenMetadataNotFound if the type of the view result is wrong', async () => {
     mockMichelsonStorageView.executeView.mockResolvedValue('wrong type');
 
-    expect(tzip12Abs['executeTokenMetadataView'](mockMichelsonStorageView, 0)).rejects.toEqual(
-      new TokenMetadataNotFound(mockContractAbstraction.address)
-    );
+    expect(
+      tzip12Abs['executeTokenMetadataView'](mockMichelsonStorageView, BigNumber(0))
+    ).rejects.toEqual(new TokenMetadataNotFound(mockContractAbstraction.address));
   });
 
   it('Test 5 for executeTokenMetadataView(): Should properly return the TokenMetadata when the map contains a URI', async () => {
@@ -199,9 +204,12 @@ describe('Tzip12 contract abstraction test', () => {
       token_info: tokenMap,
     });
 
-    const tokenMetadata = await tzip12Abs['executeTokenMetadataView'](mockMichelsonStorageView, 0);
+    const tokenMetadata = await tzip12Abs['executeTokenMetadataView'](
+      mockMichelsonStorageView,
+      BigNumber(0)
+    );
     expect(tokenMetadata).toEqual({
-      token_id: 0,
+      token_id: BigNumber(0),
       name: 'Taquito test',
       decimals: 3,
       symbol: 'XTZ!',
@@ -260,9 +268,9 @@ describe('Tzip12 contract abstraction test', () => {
       token_info: tokenMap,
     });
 
-    const tokenMetadata = await tzip12Abs['retrieveTokenMetadataFromView'](0);
+    const tokenMetadata = await tzip12Abs['retrieveTokenMetadataFromView'](BigNumber(0));
     expect(tokenMetadata).toEqual({
-      token_id: 0,
+      token_id: BigNumber(0),
       name: 'Taquito',
       symbol: 'XTZ',
       decimals: 3,
@@ -270,7 +278,7 @@ describe('Tzip12 contract abstraction test', () => {
   });
 
   it('Test 2 for retrieveTokenMetadataFromView(): Should return undefined when there is no contract metadata', async () => {
-    const tokenMetadata = await tzip12Abs['retrieveTokenMetadataFromView'](0);
+    const tokenMetadata = await tzip12Abs['retrieveTokenMetadataFromView'](BigNumber(0));
     expect(tokenMetadata).toBeUndefined();
   });
 
@@ -282,7 +290,7 @@ describe('Tzip12 contract abstraction test', () => {
 
     mockTzip16ContractAbstraction.metadataViews.mockResolvedValue({});
 
-    const tokenMetadata = await tzip12Abs['retrieveTokenMetadataFromView'](0);
+    const tokenMetadata = await tzip12Abs['retrieveTokenMetadataFromView'](BigNumber(0));
     expect(tokenMetadata).toBeUndefined();
   });
 
@@ -300,9 +308,9 @@ describe('Tzip12 contract abstraction test', () => {
       token_info: tokenMap,
     });
 
-    const tokenMetadata = await tzip12Abs['retrieveTokenMetadataFromBigMap'](0);
+    const tokenMetadata = await tzip12Abs['retrieveTokenMetadataFromBigMap'](BigNumber(0));
     expect(tokenMetadata).toEqual({
-      token_id: 0,
+      token_id: BigNumber(0),
       name: 'Taquito',
       symbol: 'XTZ',
       decimals: 3,
@@ -312,7 +320,7 @@ describe('Tzip12 contract abstraction test', () => {
   it('Test 2 for retrieveTokenMetadataFromBigMap(): Should throw TokenMetadataNotFound', async () => {
     mockSchema.FindFirstInTopLevelPair.mockReturnValue(undefined);
     try {
-      await tzip12Abs['retrieveTokenMetadataFromBigMap'](0);
+      await tzip12Abs['retrieveTokenMetadataFromBigMap'](BigNumber(0));
     } catch (err) {
       expect(err).toBeInstanceOf(TokenMetadataNotFound);
     }
@@ -324,14 +332,18 @@ describe('Tzip12 contract abstraction test', () => {
       throw new Error();
     });
 
-    expect(tzip12Abs['retrieveTokenMetadataFromBigMap'](0)).rejects.toEqual(new TokenIdNotFound(0));
+    expect(tzip12Abs['retrieveTokenMetadataFromBigMap'](BigNumber(0))).rejects.toEqual(
+      new TokenIdNotFound(BigNumber(0))
+    );
   });
 
   it('Test 4 for retrieveTokenMetadataFromBigMap(): Should throw TokenIdNotFound', async () => {
     mockSchema.FindFirstInTopLevelPair.mockReturnValue({ int: '20350' });
     mockRpcContractProvider.getBigMapKeyByID.mockResolvedValue('I am not a pair');
 
-    expect(tzip12Abs['retrieveTokenMetadataFromBigMap'](0)).rejects.toEqual(new TokenIdNotFound(0));
+    expect(tzip12Abs['retrieveTokenMetadataFromBigMap'](BigNumber(0))).rejects.toEqual(
+      new TokenIdNotFound(BigNumber(0))
+    );
   });
 
   it('Test 1 for getTokenMetadata(): Should succeed to fetch the token metadata', async () => {
@@ -351,9 +363,9 @@ describe('Tzip12 contract abstraction test', () => {
       token_info: tokenMap,
     });
 
-    const tokenMetadata = await tzip12Abs.getTokenMetadata(0);
+    const tokenMetadata = await tzip12Abs.getTokenMetadata(BigNumber(0));
     expect(tokenMetadata).toEqual({
-      token_id: 0,
+      token_id: BigNumber(0),
       name: 'Taquito',
       symbol: 'XTZ',
       decimals: 3,
@@ -380,9 +392,9 @@ describe('Tzip12 contract abstraction test', () => {
       token_info: tokenMap,
     });
 
-    const tokenMetadata = await tzip12Abs.getTokenMetadata(0);
+    const tokenMetadata = await tzip12Abs.getTokenMetadata(BigNumber(0));
     expect(tokenMetadata).toEqual({
-      token_id: 0,
+      token_id: BigNumber(0),
       name: 'Taquito test',
       symbol: 'XTZ',
       decimals: 3,
@@ -420,9 +432,9 @@ describe('Tzip12 contract abstraction test', () => {
       token_info: tokenMap,
     });
 
-    const tokenMetadata = await tzip12Abs.getTokenMetadata(0);
+    const tokenMetadata = await tzip12Abs.getTokenMetadata(BigNumber(0));
     expect(tokenMetadata).toEqual({
-      token_id: 0,
+      token_id: BigNumber(0),
       name: 'Taquito test',
       symbol: 'XTZ',
       decimals: 3,
@@ -446,7 +458,7 @@ describe('Tzip12 contract abstraction test', () => {
     });
 
     try {
-      await tzip12Abs.getTokenMetadata(0);
+      await tzip12Abs.getTokenMetadata(BigNumber(0));
     } catch (err) {
       expect(err).toBeInstanceOf(InvalidTokenMetadata);
     }

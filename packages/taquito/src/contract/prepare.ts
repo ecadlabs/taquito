@@ -25,6 +25,8 @@ import {
   RPCProposalsOperation,
   UpdateConsensusKeyParams,
   RPCUpdateConsensusKeyOperation,
+  UpdateCompanionKeyParams,
+  RPCUpdateCompanionKeyOperation,
   SmartRollupAddMessagesParams,
   RPCSmartRollupAddMessagesOperation,
   SmartRollupOriginateParams,
@@ -164,7 +166,7 @@ export const createRegisterDelegateOperation = async (
 };
 
 export const createRevealOperation = async (
-  { fee, gasLimit, storageLimit }: RevealParams,
+  { fee, gasLimit, storageLimit, proof }: RevealParams,
   source: string,
   publicKey: string
 ) => {
@@ -175,6 +177,7 @@ export const createRevealOperation = async (
     source,
     gas_limit: gasLimit ?? getRevealGasLimit(source),
     storage_limit: storageLimit,
+    proof,
   } as RPCRevealOperation;
 };
 
@@ -277,6 +280,7 @@ export const createUpdateConsensusKeyOperation = async ({
   gasLimit,
   storageLimit,
   pk,
+  proof,
 }: UpdateConsensusKeyParams) => {
   return {
     kind: OpKind.UPDATE_CONSENSUS_KEY,
@@ -285,7 +289,27 @@ export const createUpdateConsensusKeyOperation = async ({
     gas_limit: gasLimit,
     storage_limit: storageLimit,
     pk,
+    proof,
   } as RPCUpdateConsensusKeyOperation;
+};
+
+export const createUpdateCompanionKeyOperation = async ({
+  source,
+  fee,
+  gasLimit,
+  storageLimit,
+  pk,
+  proof,
+}: UpdateCompanionKeyParams) => {
+  return {
+    kind: OpKind.UPDATE_COMPANION_KEY,
+    source,
+    fee,
+    gas_limit: gasLimit,
+    storage_limit: storageLimit,
+    pk,
+    proof,
+  } as RPCUpdateCompanionKeyOperation;
 };
 
 export const createSmartRollupAddMessagesOperation = async ({

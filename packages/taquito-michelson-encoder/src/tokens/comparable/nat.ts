@@ -14,7 +14,11 @@ import { BaseTokenSchema } from '../../schema/types';
  */
 export class NatValidationError extends TokenValidationError {
   name = 'NatValidationError';
-  constructor(public value: any, public token: NatToken, message: string) {
+  constructor(
+    public value: any,
+    public token: NatToken,
+    message: string
+  ) {
     super(value, token, message);
   }
 }
@@ -69,14 +73,6 @@ export class NatToken extends ComparableToken {
     }
 
     return { int: new BigNumber(val).toFixed() };
-  }
-
-  /**
-   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
-   *
-   */
-  public ExtractSchema() {
-    return NatToken.prim;
   }
 
   generateSchema(): BaseTokenSchema {

@@ -14,7 +14,11 @@ import { BaseTokenSchema } from '../../schema/types';
  */
 export class IntValidationError extends TokenValidationError {
   name = 'IntValidationError';
-  constructor(public value: any, public token: IntToken, message: string) {
+  constructor(
+    public value: any,
+    public token: IntToken,
+    message: string
+  ) {
     super(value, token, message);
   }
 }
@@ -32,14 +36,6 @@ export class IntToken extends ComparableToken {
 
   public Execute(val: { [key: string]: string }): { [key: string]: any } {
     return new BigNumber(val[Object.keys(val)[0]]);
-  }
-
-  /**
-   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
-   *
-   */
-  public ExtractSchema() {
-    return IntToken.prim;
   }
 
   generateSchema(): BaseTokenSchema {

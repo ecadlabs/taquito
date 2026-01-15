@@ -1,6 +1,5 @@
 import { Context } from '../context';
 import { ContractStorageType, DefaultContractType } from '../contract/contract';
-import { ContractMethod } from '../contract/contract-methods/contract-method-flat-param';
 import { SendParams } from '../contract/contract-methods/contract-method-interface';
 import { ContractProvider } from '../contract/interface';
 import {
@@ -13,6 +12,8 @@ import {
   createSmartRollupAddMessagesOperation,
   createSmartRollupOriginateOperation,
   createSmartRollupExecuteOutboxMessageOperation,
+  createUpdateConsensusKeyOperation,
+  createUpdateCompanionKeyOperation,
 } from '../contract/prepare';
 import { BatchOperation } from '../operations/batch-operation';
 import {
@@ -27,31 +28,31 @@ import {
   SmartRollupAddMessagesParams,
   SmartRollupOriginateParams,
   SmartRollupExecuteOutboxMessageParams,
+  UpdateConsensusKeyParams,
+  UpdateCompanionKeyParams,
 } from '../operations/types';
 import { OpKind } from '@taquito/rpc';
 import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
-import { validateAddress, validateKeyHash, ValidationResult, invalidDetail } from '@taquito/utils';
+import {
+  b58DecodeAndCheckPrefix,
+  PrefixV2,
+  publicKeyPrefixes,
+  validateAddress,
+  validateKeyHash,
+  ValidationResult,
+} from '@taquito/utils';
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
 import {
   InvalidAddressError,
   InvalidKeyHashError,
   InvalidOperationKindError,
   InvalidAmountError,
+  InvalidProofError,
+  ProhibitedActionError,
 } from '@taquito/core';
 import { Provider } from '../provider';
 import { PrepareProvider } from '../prepare';
-
-export const BATCH_KINDS = [
-  OpKind.ACTIVATION,
-  OpKind.ORIGINATION,
-  OpKind.TRANSACTION,
-  OpKind.DELEGATION,
-];
-export type BatchKinds =
-  | OpKind.ACTIVATION
-  | OpKind.ORIGINATION
-  | OpKind.TRANSACTION
-  | OpKind.DELEGATION;
+export { BATCH_KINDS, BatchKinds } from './constants';
 
 export class OperationBatch extends Provider {
   private operations: ParamsWithKind[] = [];
@@ -77,7 +78,7 @@ export class OperationBatch extends Provider {
       throw new InvalidAmountError(params.amount.toString());
     }
     if (toValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.to, invalidDetail(toValidation));
+      throw new InvalidAddressError(params.to, toValidation);
     }
     this.operations.push({ kind: OpKind.TRANSACTION, ...params });
     return this;
@@ -92,7 +93,7 @@ export class OperationBatch extends Provider {
   withTransferTicket(params: TransferTicketParams) {
     const destinationValidation = validateAddress(params.destination);
     if (destinationValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.destination, invalidDetail(destinationValidation));
+      throw new InvalidAddressError(params.destination, destinationValidation);
     }
     this.operations.push({ kind: OpKind.TRANSFER_TICKET, ...params });
     return this;
@@ -106,7 +107,7 @@ export class OperationBatch extends Provider {
    * @param options Generic operation parameters
    */
   withContractCall(
-    params: ContractMethod<ContractProvider> | ContractMethodObject<ContractProvider>,
+    params: ContractMethodObject<ContractProvider>,
     options: Partial<SendParams> = {}
   ) {
     return this.withTransfer(params.toTransferParams(options));
@@ -119,13 +120,13 @@ export class OperationBatch extends Provider {
    * @param params Delegation operation parameter
    */
   withDelegation(params: DelegateParams) {
-    const sourceValidation = validateAddress(params.source);
+    const sourceValidation = validateAddress(params.source ?? '');
     if (params.source && sourceValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.source, invalidDetail(sourceValidation));
+      throw new InvalidAddressError(params.source, sourceValidation);
     }
     const delegateValidation = validateAddress(params.delegate ?? '');
     if (params.delegate && delegateValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.delegate, invalidDetail(delegateValidation));
+      throw new InvalidAddressError(params.delegate, delegateValidation);
     }
     this.operations.push({ kind: OpKind.DELEGATION, ...params });
     return this;
@@ -141,7 +142,7 @@ export class OperationBatch extends Provider {
   withActivation({ pkh, secret }: ActivationParams) {
     const pkhValidation = validateKeyHash(pkh);
     if (pkhValidation !== ValidationResult.VALID) {
-      throw new InvalidKeyHashError(pkh, invalidDetail(pkhValidation));
+      throw new InvalidKeyHashError(pkh, pkhValidation);
     }
     this.operations.push({ kind: OpKind.ACTIVATION, pkh, secret });
     return this;
@@ -179,6 +180,47 @@ export class OperationBatch extends Provider {
    */
   withIncreasePaidStorage(params: IncreasePaidStorageParams) {
     this.operations.push({ kind: OpKind.INCREASE_PAID_STORAGE, ...params });
+    return this;
+  }
+
+  /**
+   *
+   * @description Add a update consensus key operation to the batch
+   *
+   * @param params UpdateConsensusKey operation parameter
+   */
+  withUpdateConsensusKey(params: UpdateConsensusKeyParams) {
+    const [, pkPrefix] = b58DecodeAndCheckPrefix(params.pk, publicKeyPrefixes);
+    if (pkPrefix === PrefixV2.BLS12_381PublicKey) {
+      if (!params.proof) {
+        throw new InvalidProofError('Proof is required to set a bls account as consensus key ');
+      }
+    } else {
+      if (params.proof) {
+        throw new ProhibitedActionError(
+          'Proof field is only allowed for a bls account as consensus key'
+        );
+      }
+    }
+    this.operations.push({ kind: OpKind.UPDATE_CONSENSUS_KEY, ...params });
+    return this;
+  }
+
+  /**
+   *
+   * @description Add a update companion key operation to the batch
+   *
+   * @param params UpdateCompanionKey operation parameter
+   */
+  withUpdateCompanionKey(params: UpdateCompanionKeyParams) {
+    const [, pkPrefix] = b58DecodeAndCheckPrefix(params.pk, publicKeyPrefixes);
+    if (pkPrefix !== PrefixV2.BLS12_381PublicKey) {
+      throw new ProhibitedActionError('companion key must be a bls account');
+    }
+    if (!params.proof) {
+      throw new InvalidProofError('Proof is required to set a bls account as companion key ');
+    }
+    this.operations.push({ kind: OpKind.UPDATE_COMPANION_KEY, ...params });
     return this;
   }
 
@@ -237,6 +279,14 @@ export class OperationBatch extends Provider {
         });
       case OpKind.INCREASE_PAID_STORAGE:
         return createIncreasePaidStorageOperation({
+          ...param,
+        });
+      case OpKind.UPDATE_CONSENSUS_KEY:
+        return createUpdateConsensusKeyOperation({
+          ...param,
+        });
+      case OpKind.UPDATE_COMPANION_KEY:
+        return createUpdateCompanionKeyOperation({
           ...param,
         });
       case OpKind.TRANSFER_TICKET:

@@ -1,0 +1,600 @@
+---
+title: Building Your First dApp
+author: [Alireza Haghshenas, Maxwell Ward]
+---
+
+## Introduction
+
+In this tutorial, we will walk through the process of creating a simple dApp (short for "Decentralized Application") using Taquito. We will:
+
+1. Create a simple command-line application that reads the balance of an address from the blockchain
+2. Establish a high-level understanding of the blockchain, Tezos, dApps, and Taquito
+3. Send a `Transfer` operation to the blockchain using Taquito
+4. Interact with a smart contract using Taquito
+5. Implement a simple GUI dApp
+
+Throughout this tutorial, we will also dive into the different concepts that make up Tezos, dApps, Taquito, and the blockchain.
+
+## Prerequisites
+
+### Prior knowledge
+
+In order to follow this tutorial, you need to have some understanding about the following concepts:
+- Basic knowledge of JavaScript and programming in general
+- A basic understanding of blockchain technology and the ecosystem (we will also cover this briefly in the tutorial)
+
+### Development machine
+
+We need a development machine with the following software installed:
+- [Node.js](https://nodejs.org): one of the current versions (LTS recommended)
+- A code editor like VSCode, or any other editor of your choice
+- Optional: Docker (for creating your own key pair)
+
+This tutorial should work on Windows, Linux, and macOS. On other systems like a Chromebook or a tablet, you might need additional setup not covered in this tutorial.
+
+> [!NOTE]
+> If you are using windows, there are two ways to run the commands in this tutorial: inside a WSL2 terminal, or inside the PowerShell. 
+>
+> Generally, WSL2 is recommended for programming. But if you prefer, you can still use PowerShell. If you use WSL2, you can use the same commands as Linux. For PowerShell, we will provide commands in a separate tab **only when they are different from Linux**.
+
+## Let's start with a simple command-line application
+
+In this section, we will create a simple command-line application that shows the balance of an address. This will help us understand the basics of Taquito and the flow of events in a dApp.
+
+Open a terminal and run the following commands:
+
+<Tabs
+defaultValue="linux"
+values={[
+{label: 'Linux & macOS', value: 'linux'},
+{label: 'Windows Powershell', value: 'windows'}
+]}>
+  <TabItem value="linux">
+
+```bash
+mkdir my-cli-dapp
+cd my-cli-dapp
+
+npm init -y
+npm i -D typescript ts-node
+```
+
+  </TabItem>
+  <TabItem value="windows">
+
+```bash
+md my-cli-dapp
+cd my-cli-dapp
+
+npm init -y
+npm i -D typescript ts-node
+```
+
+  </TabItem>
+</Tabs>
+Create a file named `index.ts` in the folder `my-cli-dapp` and add the following code:
+
+```
+console.log("Hello, Blockchain!");
+```
+
+Now, run the following command in the terminal:
+
+```
+npx ts-node index.ts
+```
+
+If everything is done right, you should be able to see the output `Hello, Blockchain!` in the terminal.
+Now we can start using Taquito to interact with the Tezos blockchain.
+
+Run the following command in your project directory to install Taquito:
+
+```
+npm i @taquito/taquito
+```
+
+Open the file `index.ts` and replace the code with the following:
+
+```ts
+import { TezosToolkit } from "@taquito/taquito";
+
+const Tezos = new TezosToolkit("https://ghostnet.tezos.ecadinfra.com");
+
+Tezos.tz.getBalance("tz1YvE7Sfo92ueEPEdZceNWd5MWNeMNSt16L").then(balance => {
+    console.log(balance.toNumber());
+});
+```
+
+Running `npx ts-node index.ts` should now show the spendable balance of the specified address. This balance is in units of Mutez (micro Tez). Tez is the currency of Tezos, its code is `XTZ`, and the symbol is `ꜩ`. 1 Tez is 1,000,000 Mutez.
+
+Congratulations! You have just interacted with the Tezos blockchain using Taquito. In the next section, we will establish a high-level understanding of the blockchain, Tezos, dApps, and Taquito. If you are already familiar with these concepts, you can skip to [Sending a Transfer operation to the blockchain using Taquito](#sending-a-transfer-operation-to-the-blockchain-using-taquito).
+
+## What is a blockchain?
+The blockchain is a way to trust a network of computers run by strangers (so you don't have to trust the individual people). It might seem impossible, but it works. How?
+
+All computers that form a blockchain run the same software. They also store all the information needed to verify the integrity of the data. So anyone can verify that the data is correct. Techniques from cryptography are used to make this possible.
+
+In order to work with a blockchain, a high level understanding is enough:
+
+1. The blockchain is a network of computers that run the same software.
+1. The blockchain stores data in a way that anyone can verify the integrity of the data.
+1. The data is split into "blocks". Each block contains a list of operations (like sending some tokens from one account to another).
+1. Once a block is created and the blockchain reaches a consensus on the information in it, it is impossible to change the data in the block.
+1. In order to send an operation to the blockchain, you can send it to any of the nodes participating in the consensus. The node will forward the data to the other nodes.
+1. In order to read data from the blockchain, you can send a request to any of the nodes.
+1. Anyone can read data from the blockchain. But to send an operation to the blockchain, it needs to be cryptographically signed.
+
+Like any complex system, the simple overview we just gave is vastly simplified by leaving out a lot of details, and avoiding unnecessary precision. For now, having a good mental model of the system is more important than being precise. As you keep working in the blockchain ecosystem, your mental model will become more accurate over time.
+
+<details>
+<summary>Learn more about how the blockchain works</summary>
+
+Here we will go over how the blockchain works in further detail. This is not necessary to understand the rest of the tutorial. But if you are curious, read on. This is by no means a complete explanation, and a lot of details are still left out, but it's a good starting point for a deeper dive into this technology.
+
+As mentioned earlier, the data to be written to the blockchain is divided into blocks. Each block contains a list of operations, and a cryptographic hash (like sha256) of the block is calculated. The hash is a short, unique string that identifies the block. The hash of the previous block is also stored in the current block, effectively making a chain, hence the name "blockchain".
+
+This chaining has an interesting property: if you change the data in a block, the hash of the block will change. Because the hash of this block is stored in the next block, the hash of the next block will also change, and now you have to change the hash of all blocks after that. This feels like branching out another chain from the block you changed. Your branch will never reconcile with the original, unmodified chain.
+
+This also has another interesting property: if you want to make sure that you agree with another computer on the entire contents of the blockchain, you just need to compare the hashes of the last blocks. If the hashes are the same, you agree on the entire contents of the blockchain before that block.
+
+This is fine as long as all computers agree on the hash. But what if an attacker wants to advertise the wrong block? The network needs a way to establish a "majority" of votes. So that the "honest" nodes can still agree on the correct block even if some nodes are dishonest. This is done using a "consensus algorithm".
+
+We need to make it hard for an attacker to dominate the honest votes. If every node on the network had the same vote, the attacker could just create a lot of nodes and vote for the wrong block. So, we need a way to have some voting power that favors the real majority.
+
+When Bitcoin was invented it used a consensus algorithm called "Proof of Work". In this algorithm the computers compete to solve a puzzle. The first computer to solve the puzzle gets to create the next block. If an attacker manages to beat the rest of the network on one block, the honest nodes still have a higher chance of finding the next block based on the block they agree on. So, the attacker needs to have more computing power than the rest of the network combined. With a large network like Bitcoin, this is very expensive and not practical.
+
+While Proof of Work is a genius solution, it is also very energy-intensive. It is estimated that the Bitcoin network uses as much energy as the entire country of Argentina. This is not sustainable.
+
+A later generation of blockchains introduced the "Proof of Stake". In this algorithm, the computers that participate in the consensus are selected based on the amount of tokens they have. The more tokens you have, the higher your chance of being selected to create the next block. This is much more energy-efficient, and the Tezos blockchain uses this algorithm.
+</details>
+
+## What makes Tezos different?
+
+Some interesting features in Tezos are designed to address the shortcomings of the earlier generations of blockchain. When Tezos was created it had these benefits over existing blockchains:
+
+1. Proof of stake (which has now been adopted by some other blockchains as well). This eliminates a big problem with earlier blockchains: the need for a lot of energy to run the network.
+1. Evolution of the blockchain. Remember that the blockchain is a network of computers that run the same software. This means that if you want to upgrade the software, all the nodes need to be upgraded at the same time. This is not easy to do. Tezos solves this problem by having evolution baked into the protocol. This means that the blockchain can evolve over time without the need for a "hard fork" (a new chain, effectively).
+1. Delegation: Users can "delegate" their funds to a "baker". The baker will participate in the network consensus and will receive rewards. The baker will then share the rewards with the delegators. This makes it possible for users to participate in the network consensus without the need to run a node themselves or give control of their funds to a third party.
+
+Because Tezos is designed to evolve, it is now much more than what it was when it was created.
+
+Different versions of Tezos protocol are named alphabetically after historic cities such as "Nairobi", "Oxford", and "Paris".
+
+The "mainnet" is the actual Tezos Blockchain with tokens that hold real-world value. However, there are several "testnets" that are used for testing and allow users to give themselves virtually unlimited tokens that hold no real-world value. One of them is named "shadownet", and it evolves to the new protocol much earlier than the mainnet, so that the ecosystem has enough time to implement and test the new protocol's features.
+
+## What is a dApp?
+
+A dApp is a web application that interacts with a blockchain. The blockchain is the source of truth for the dApp. The dApp usually interacts with the user, reads data from, and writes to the blockchain. The dApp might also communicate with other services, notably a blockchain indexer.
+
+But dApps are not limited to these ideas. For instance, one might create a dApp that works as part of an industrial process, and interacts with the blockchain to benefit from its features, like transparency, immutability, and provability.
+
+## What is Taquito?
+
+Taquito is a JavaScript/Typescript library that makes it easy to interact with the Tezos blockchain. It is designed to be used in dApps. It is also used in some wallets and other tools. It's also open-source, developed and maintained by ECAD Labs.
+
+Without Taquito, sending operations to the Tezos blockchain requires you to have to write a lot of code. Some of that is to:
+1. Estimate the costs for the operation
+2. Properly encode the operation
+3. Sign the operation
+4. Inject the operation
+5. Get the operation receipt
+6. Monitor the chain for inclusion of the operation
+
+And to implement all these, you need detailed information about different data types, protocols, constants, and algorithms used in the Tezos blockchain. Taquito abstracts away all this complexity and provides a simple API for interacting with the blockchain.
+
+## Sending a `Transfer` operation to the blockchain using Taquito
+Returning to our dApp, we now want to send an operation to the blockchain. When reading data from the blockchain we can simply send a read request. When sending an operation, we need to prove that we own the address. To do this we need to sign the operation with the private key of the address.
+
+For the purpose of this section, we are using a pre-defined address that is being shared with everyone else going through this tutorial. **Don't use this address for anything important.** Additionally, there are two possible reasons why the transfer operation may fail:
+1. Other people testing the code have consumed all the ꜩ in the address, so your operation will fail because of insufficient funds. You can head over to the [ghostnet faucet](https://faucet.ghostnet.teztnets.com/) and send some ꜩ to the address for free. Or you can get free Testnet Tez right from your terminal: `npx @oxheadalpha/get-tez <your-address> --amount 25 --network ghostnet`
+2. Another person is sending an operation from this address at the same time as you. One address can only send one operation to each block. This is very unlikely in this case, but if that happens you can simply wait a moment and try again.
+
+<details>
+  <summary>How do I create my own public/private key pair?</summary>
+
+  Most users can simply use a wallet to create addresses. This is useful for dApps that run inside a browser. If you are running a dApp as a desktop, mobile, or server process, you can create your own key pair as follows:
+
+  ```bash
+    docker run --pull always -it --entrypoint sh docker.io/tezos/tezos:latest
+
+    # You should now be inside the docker container
+    octez-client -E https://ghostnet.tezos.ecadinfra.com gen keys mysamplekey -s secp256k1
+    octez-client -E https://ghostnet.tezos.ecadinfra.com show address mysamplekey -S
+  ```
+
+  The new address you just created will have a balance of zero. For the testnet, You can go to [ghostnet faucet](https://faucet.ghostnet.teztnets.com/) and send some ꜩ to it for free. On mainnet, you need to buy actual Tez on an exchange.
+</details>
+
+> [!CAUTION]
+> In the next step, we will simply store the private key in the source code. **This is not secure**, and you should never do this in a production application.
+>
+> Even in a development environment, you should use environment variables that are never committed to your version control system.
+
+Due to the extensive nature of Taquito it is broken up into multiple packages that provide different functionality. In the example below, we use the `@taquito/signer` package which provides an "In Memory Signer" functionality. You can install it in your project like so:
+
+```bash
+npm i @taquito/signer
+```
+
+Open the file `index.ts` and replace the code with the following:
+
+```ts
+import { InMemorySigner } from "@taquito/signer";
+import { TezosToolkit } from "@taquito/taquito";
+
+const main = async () => {
+    const Tezos = new TezosToolkit("https://ghostnet.tezos.ecadinfra.com");
+
+    // DANGER: FOR DEMONSTRATION ONLY! DO NOT DO THIS IN PRODUCTION, KEEP YOUR SECRETS SAFE!
+    const signer = await InMemorySigner.fromSecretKey('spsk29SxqYRjnreqGzsYiAUEqxyhDwD8j2J57pJjaGgGtReZVD2UiD');
+
+    const pkh = await signer.publicKeyHash();
+    console.log(pkh); // Public Key Hash
+
+    Tezos.setProvider({ signer });
+
+    const op = await Tezos.contract.transfer({ to: 'tz1YvE7Sfo92ueEPEdZceNWd5MWNeMNSt16L', amount: 1 });
+    await op.confirmation();
+
+    console.log(op.hash); // Operation Hash
+}
+
+try {
+  await main();
+} catch (error) {
+  console.error(error);
+}
+```
+
+If you run your code you should be able to see the address of the signer (`tz2DZLWLuDRKUuR4BrWetimZ1C6Pg6pPAo3n`) and (after a few seconds) the hash of the transfer operation in the terminal.
+
+What is happening here? Let's break it down:
+
+1. We create a new instance of `TezosToolkit` and pass the URL of the RPC node we want to connect to.
+2. We create a new instance of `InMemorySigner` and pass the private key of the address we want to use to sign the operation.
+3. We get the public key hash of the address (not strictly necessary but good for informational purposes).
+4. We set the provider of the `TezosToolkit` instance to the signer we created in step 2.
+5. We send a `Transfer` operation to the blockchain. Taquito will automatically do the following behind the scenes:
+    1. Estimate the cost of the operation.
+    2. Encode the operation.
+    3. Sign the operation with the private key.
+    4. Send the signed operation to the blockchain.
+6. We wait for the operation to be included in a block.
+7. We print the hash of the operation.
+
+Congratulations! You have just sent an operation to the Tezos blockchain using Taquito.
+
+## Interacting with a smart contract using Taquito
+
+Next we will interact with a smart contract using Taquito. We will mint an NFT on the ghostnet version of [objkt.com](https://objkt.com), an NFT marketplace.
+
+The concepts you learn here are not limited to objkt.com or NFTs. You can use the same concepts to interact with any smart contract on the Tezos blockchain.
+
+Most dApps interact with smart contracts. You can think of a smart contract as a program that runs on the blockchain. The smart contract can store data and execute code. The code is executed when a user sends an operation to one of the smart contracts `entrypoint`s. The smart contract can also send operations to the blockchain, or to other smart contracts.
+
+In Tezos, smart contracts are written using one of the high-level languages (like Ligo), and compiled to Michelson. Then the contract is originated (deployed) to the blockchain. During origination, an address prefixed with `KT1` is created for the contract. You can then interact with the smart contract by sending operations to this address.
+
+On objkt.com, any user can create a number of collections and then mint NFTs in any of these collections. For this tutorial, we have a collection made and our test address (`tz2DZLWLuDRKUuR4BrWetimZ1C6Pg6pPAo3n`) is an operator of said collection, allowing it to mint NFTs. You can find the collection [here](https://ghostnet.objkt.com/collection/KT1XmD31NdBrTcL7bPF3md6i5g4BbE6s2YLv).
+
+Open the file `index.ts` and change the `main` function to the following:
+
+```ts
+const main = async () => {
+    const Tezos = new TezosToolkit("https://ghostnet.tezos.ecadinfra.com");
+
+    const signer = await InMemorySigner.fromSecretKey('spsk29SxqYRjnreqGzsYiAUEqxyhDwD8j2J57pJjaGgGtReZVD2UiD');
+    Tezos.setProvider({ signer });
+
+    const contract = await Tezos.contract.at('KT1JarALvhDLjtFhraeTMGGoeNLUkuL6jGtM');
+    const op = await contract.methodsObject.mint_artist({
+        collection_id: 71947,
+        editions: 1,
+        metadata_cid: '697066733a2f2f516d52325672336775713467594d45366268676b47474a34714656647652786867766e47516d7a6672346d364635',
+        target: 'tz2DZLWLuDRKUuR4BrWetimZ1C6Pg6pPAo3n'
+    }).send();
+
+    await op.confirmation();
+    console.log(op.hash);
+}
+```
+
+What happens here? Let's break it down:
+1. We set up the Tezos Toolkit and signer as before.
+2. We get the contract metadata from the blockchain. This metadata contains information about the contract, including its entrypoints.
+3. We call the `mint_artist` entrypoint of the contract. We need to provide the data it expects, which is provided as a JavaScript object. Taquito will automatically encode this data to be sent to the contract.
+4. We wait for the confirmation and print the hash as before.
+
+Now, if you run your code, you should be able to see the hash of the operation in the terminal.
+After about a minute, you should be able to see the new NFT in [the collection](https://ghostnet.objkt.com/collection/KT1XmD31NdBrTcL7bPF3md6i5g4BbE6s2YLv). Because everyone following this tutorial is minting NFTs with the same metadata, all the NFTs in this collection will look the same. However, the number of tokens in the collection should increase by one.
+
+Congratulations! You have just interacted with a smart contract using Taquito. Additionally, you programmatically minted an NFT.
+
+Up until now, we have created programs that run in a terminal. While some of the code written to interact with the blockchain might actually be such an application, most of the time we will create dApps that can be accessed in the browser.
+
+For these "browser dApps" we have a problem: how do we sign the operations? We can't store the secret key in the source code because anyone can see it. We also should not ask users to enter their secret key in our dApp as that requires them to fully trust our dApp, and places the responsibility on us to keep it safe.
+
+Luckily for us, there is an elegant solution to this problem.
+
+## dApps and Crypto Wallets
+
+A "wallet" is a program that stores the users secrets (like private keys) and signs operations on behalf of the user. The wallet is not part of the dApp, but rather a separate program such as a browser extension, separate website, mobile app, or hardware device. 
+
+The wallet is also responsible for showing the operations to the user and asking them to approve the operation. The user only needs to fully trust the wallet, as the dApp cannot make any write operations to the blockchain unless it is signed by the wallet. This moves most of the responsibility off the developer of the dApp and on to the developer of the wallet, creating a simpler and more cohesive ecosystem for the user.
+
+The Beacon SDK is a library that provides a standard way for dApps to connect to wallets. The Beacon SDK supports several wallets, including Umami, Temple, and Kukai. You don't need to use the Beacon SDK directly as Taquito has a package that provides simple access to the Beacon SDK.
+
+### The flow of events in the dApp
+
+Here is a high-level example of the flow of events in the dApp:
+
+1. The user visits the dApp in their browser
+2. At this stage the dApp can read data from the blockchain, as long as the data is public to everyone.
+3. The user makes an interaction that requires connecting a wallet
+4. The dApp shows a popup to the user, asking them to choose which wallet to connect to
+5. The user selects a wallet, sending a request to their wallet application
+6. The user visits their wallet (on their phone, computer, a browser extension, in another tab, or even a hardware wallet) and approves the connection
+7. The user returns to the dApp which has now received the information about the users account from the wallet
+8. The user makes an interaction that requires sending an operation to the blockchain (such as a transfer of tokens)
+9. The dApp sends the operation to the wallet
+10. The wallet shows the operation to the user (including details of the transaction and fees) and asks them to approve it
+11. The user approves the operation
+12. The wallet sends the signed operation to the blockchain and provides the dApp with the "unconfirmed" operation hash
+13. The blockchain processes the operation
+14. At the same time, the dApp waits for the operation to be included in a block ("confirmed")
+15. The dApp can then read the result of the confirmed operation from the blockchain
+
+Alternatively, in a slightly different flow, the wallet sends the signed operation to the dApp, and dApp sends it to the blockchain. From the user's point of view, both flows look the same.
+
+This may sound complicated, but once you start working with Taquito, all the pieces fall into place and it will make more sense.
+
+## Creating a simple dApp that transfers ꜩ from the users wallet to another address
+
+We will start by creating a simple dApp that transfers ꜩ from the user's wallet to another address. This will help you understand the flow of events in a dApp and the role of Taquito and Beacon SDK in the process.
+
+### Creating the React app
+
+Open your terminal and run this command to create a basic React app:
+
+```bash
+npm create vite@latest my-dapp -- --template react-ts
+```
+
+If the development server doesn't automatically start, you may also need to run:
+
+```bash
+cd my-dapp
+npm install
+npm run dev
+```
+
+The terminal should show a message that says: `➜  Local:   http://localhost:5173/`.
+Open a browser and visit the URL printed in the terminal. You should see a page that says: "Hello, Vite + React".
+
+### Adding Taquito and the Beacon SDK
+
+In the next step, we will add Taquito and the Beacon SDK to our app and create a minimal UI to connect to the wallet and transfer ꜩ.
+
+In a new terminal in your projects directory, install Taquito, Taquito's Beacon Wallet package, and Airgaps Beacon dApp package.
+```bash
+npm i @taquito/taquito @taquito/beacon-wallet @airgap/beacon-dapp
+```
+
+Open the file `src/App.tsx` and replace the content with the code below. There will be errors, but you can ignore those for now, we will create the missing files in the next step.
+
+```
+import { useState } from "react";
+import { TezosToolkit } from "@taquito/taquito";
+import "./App.css";
+import ConnectButton from "./components/ConnectWallet";
+import Transfer from "./components/Transfer";
+import { BeaconWallet } from "@taquito/beacon-wallet";
+
+const App = () => {
+  const [Tezos] = useState<TezosToolkit>(
+    new TezosToolkit("https://ghostnet.tezos.ecadinfra.com")
+  );
+  const [wallet, setWallet] = useState<BeaconWallet | undefined>(undefined);
+  const [userAddress, setUserAddress] = useState<string | undefined>(undefined);
+
+  switch (userAddress) {
+    case undefined: return <ConnectButton
+      Tezos={Tezos}
+      setUserAddress={setUserAddress}
+      setWallet={setWallet}
+      wallet={wallet}
+    />;
+    default: return <Transfer
+      Tezos={Tezos}
+    />;
+
+  }
+};
+
+export default App;
+```
+
+### Connecting to the wallet
+
+The first step in interacting with the blockchain is connecting to the user's wallet. Taquito provides a BeaconWallet class that abstracts away the complexity of connecting to the wallet. The BeaconWallet class is a wrapper around the Beacon SDK.
+
+Create a new file `src/components/ConnectWallet.tsx` and add the following code:
+
+```
+import { type Dispatch, type JSX, type SetStateAction, useEffect } from "react";
+import { TezosToolkit } from "@taquito/taquito";
+import { BeaconWallet } from "@taquito/beacon-wallet";
+import { NetworkType } from "@airgap/beacon-dapp";
+
+type ButtonProps = {
+	Tezos: TezosToolkit;
+	setUserAddress: Dispatch<SetStateAction<string | undefined>>;
+	setWallet: Dispatch<SetStateAction<BeaconWallet | undefined>>;
+	wallet: BeaconWallet | undefined;
+};
+
+const ConnectButton = ({
+	Tezos,
+	setUserAddress,
+	setWallet,
+	wallet,
+}: ButtonProps): JSX.Element => {
+	const connectWallet = async (): Promise<void> => {
+		try {
+			if(!wallet) throw new Error("Wallet is undefined");
+			await wallet.requestPermissions();
+			const userAddress = await wallet.getPKH();
+			setUserAddress(userAddress);
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	useEffect(() => {
+		(async () => {
+			const wallet = new BeaconWallet({
+				name: "My dApp",
+				network: {
+					type: NetworkType.GHOSTNET,
+					rpcUrl: "https://ghostnet.tezos.ecadinfra.com",
+				},
+				enableMetrics: true,
+			});
+			Tezos.setWalletProvider(wallet);
+			setWallet(wallet);
+		})();
+	}, [Tezos, setWallet]);
+
+	return (
+		<div>
+			<button disabled={!wallet} onClick={connectWallet}>
+				<span>
+					Connect wallet
+				</span>
+			</button>
+		</div>
+	);
+};
+
+export default ConnectButton;
+```
+
+### Transferring ꜩ from the users wallet to another address
+
+In this step, we will create a simple UI to transfer ꜩ from the user's wallet to another address.
+
+Create a new file `src/components/Transfer.tsx` and add the following code:
+
+```
+import { useState, type JSX } from "react";
+import { TezosToolkit } from "@taquito/taquito";
+
+const Transfer = ({
+  Tezos,
+}: {
+  Tezos: TezosToolkit;
+}): JSX.Element => {
+  const [recipient, setRecipient] = useState<string>("");
+  const [amount, setAmount] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const sendTez = async (): Promise<void> => {
+    if (recipient && amount) {
+      setLoading(true);
+      try {
+        const op = await Tezos.wallet
+          .transfer({ to: recipient, amount: parseInt(amount), mutez: true })
+          .send();
+        await op.confirmation();
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  return (
+    <div>
+      Recipient: <input
+        type="text"
+        placeholder="Recipient"
+        value={recipient}
+        onChange={e => setRecipient(e.target.value)}
+      />
+      <br />
+      Amount in Mutez:<input
+        type="number"
+        placeholder="Amount"
+        value={amount}
+        onChange={e => setAmount(e.target.value)}
+      />
+      <br />
+      <button
+        disabled={!recipient || !amount}
+        onClick={sendTez}
+      >
+        {loading ? (
+          <span>
+            Sending...
+          </span>
+        ) : (
+          <span>
+            Send
+          </span>
+        )}
+      </button>
+    </div>
+  );
+};
+
+export default Transfer;
+```
+
+### Fixing node-specific dependencies in the browser
+
+The libraries Taquito and Beacon SDK are designed to run in a Node.js environment. However, we are running them in a browser, which causes some issues. For example, the Beacon SDK uses the Node.js `buffer`, `stream`, and `util` modules. These modules are not available in the browser. Fortunately, there are browser-compatible versions of these modules that we can use instead of the Node.js versions. To do this, we need to install the following packages:
+
+```bash
+npm i -D vite-plugin-node-polyfills
+```
+
+Now we need to tell Vite to use this plugin. To do this, open the file `vite.config.ts` and import the `nodePolyfills` plugin, then add it to the plugins array:
+
+```ts
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import { nodePolyfills } from 'vite-plugin-node-polyfills'
+
+export default defineConfig({
+  plugins: [react(), nodePolyfills()],
+});
+```
+
+### Running the dApp
+
+Make sure that the command `npm run dev` is still running in the terminal and that there are no build errors.
+
+In your app you should now see the "Connect Wallet" button in the browser. Clicking on it opens the wallet selection modal where you can choose your favorite wallet and connect to it. Once connected, you should see the "Send" button. You can enter an address and an amount (in Mutez, notice the `mutez: true` in `Transfer.tsx`) and click on the "Send" button to send ꜩ to the address.
+
+If you have not set up a wallet before, clicking on the Kukai wallet opens a page that asks you to create a new wallet. Remember to visit the [ghostnet faucet](https://faucet.ghostnet.teztnets.com/) to fund your wallet with some ꜩ. If you want to use that wallet for real ꜩ, you need to back up the mnemonic phrase. But remember that the mnemonic phrase is a secret. Anyone who has access to it can steal your ꜩ.
+
+### Preparing for Production
+
+If you intend to continue using this example dApp and eventually deploy it to a production environment, please ensure you read and understand the checklist in our [dApp pre-launch checklist](dapp_prelaunch).
+
+## Closing thoughts
+
+We've come a long way:
+ 1. We started with a simple command-line application that reads the balance of an address from the blockchain.
+ 2. Then, we established a high-level understanding of the blockchain, Tezos, dApps, and Taquito.
+ 3. After that, we sent a `Transfer` operation to the blockchain using Taquito.
+ 4. Then, we interacted with a smart contract using Taquito.
+ 5. Finally, we implemented all the previous learnings as a simple web dApp.
+
+Your journey does not end here. There are many more things to learn. Here are some ideas:
+
+- Check out the [Taquito documentation](quick_start) to learn more about Taquito.
+- Learn a smart contract language like [Ligo](https://ligolang.org/).
+- Learn more about Tezos and its ecosystem, check out the [Tezos Developer Portal](https://tezos.com/developers/).
+- See what others are doing: Join Tezos community on [Discord](https://discord.gg/tezos), [Reddit](https://www.reddit.com/r/tezos/), [Twitter](https://twitter.com/tezos), and [Telegram](https://t.me/tezosplatform).
+- Start building. There is no better way to learn than to build something. Start small and iterate on an idea until you have something awesome.

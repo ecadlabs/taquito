@@ -21,6 +21,7 @@ import {
   BallotParams,
   ProposalsParams,
   UpdateConsensusKeyParams,
+  UpdateCompanionKeyParams,
   SmartRollupAddMessagesParams,
   SmartRollupOriginateParams,
   SmartRollupExecuteOutboxMessageParams,
@@ -36,6 +37,7 @@ import { DrainDelegateOperation } from '../operations';
 import { BallotOperation } from '../operations';
 import { ProposalsOperation } from '../operations/proposals-operation';
 import { UpdateConsensusKeyOperation } from '../operations/update-consensus-key-operation';
+import { UpdateCompanionKeyOperation } from '../operations/update-companion-key-operation';
 import { SmartRollupAddMessagesOperation } from '../operations/smart-rollup-add-messages-operation';
 import { SmartRollupOriginateOperation } from '../operations/smart-rollup-originate-operation';
 import { SmartRollupExecuteOutboxMessageOperation } from '../operations/smart-rollup-execute-outbox-message-operation';
@@ -54,20 +56,6 @@ export interface StorageProvider {
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-contracts-contract-id-script
    */
   getStorage<T>(contract: string, schema?: ContractSchema): Promise<T>;
-
-  /**
-   *
-   * @description Return a well formatted json object of the contract big map storage
-   *
-   * @param contract contract address you want to get the storage from
-   * @param key contract big map key to fetch value from
-   * @param schema optional schema can either be the contract script rpc response or a michelson-encoder schema
-   *
-   * @deprecated Deprecated in favor of getBigMapKeyByID
-   *
-   * @see https://tezos.gitlab.io/api/rpc.html#post-block-id-context-contracts-contract-id-big-map-get
-   */
-  getBigMapKey<T>(contract: string, key: string, schema?: ContractSchema): Promise<T>;
 
   /**
    *
@@ -204,7 +192,6 @@ export interface ContractProvider extends StorageProvider {
   /**
    *
    * @description Reveal the current address. Will throw an error if the address is already revealed.
-   *
    * @returns An operation handle with the result from the rpc node
    *
    * @param Reveal operation parameter
@@ -282,12 +269,20 @@ export interface ContractProvider extends StorageProvider {
   /**
    *
    * @description Update consensus key
-   *
    * @returns An operation handle with the result from the RPC node
    *
    * @param UpdateConsensusKeyParams UpdateConsensusKey operation parameter
    */
   updateConsensusKey(params: UpdateConsensusKeyParams): Promise<UpdateConsensusKeyOperation>;
+
+  /**
+   *
+   * @description Update companion key
+   * @returns An operation handle with the result from the RPC node
+   *
+   * @param UpdateCompanionKeyParams UpdateCompanionKey operation parameter
+   */
+  updateCompanionKey(params: UpdateCompanionKeyParams): Promise<UpdateCompanionKeyOperation>;
 
   /**
    *

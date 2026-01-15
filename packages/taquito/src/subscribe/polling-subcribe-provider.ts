@@ -8,9 +8,8 @@ import {
   concatMap,
   distinctUntilKeyChanged,
   first,
-  pluck,
-  publish,
-  refCount,
+  map,
+  share,
   retry,
   switchMap,
 } from 'rxjs/operators';
@@ -103,7 +102,7 @@ export class PollingSubscribeProvider implements SubscribeProvider {
       ...config,
     });
     this.timer$ = this._config$.pipe(
-      pluck('pollingIntervalMilliseconds'),
+      map((x) => x?.pollingIntervalMilliseconds),
       switchMap((pollingIntervalMilliseconds) => {
         if (!pollingIntervalMilliseconds) {
           return from(this.getConfirmationPollingInterval()).pipe(
@@ -119,8 +118,11 @@ export class PollingSubscribeProvider implements SubscribeProvider {
     this.newBlock$ = this.timer$.pipe(
       switchMap(() => getLastBlock(this.context)),
       distinctUntilKeyChanged('hash'),
-      publish(),
-      refCount()
+      share({
+        resetOnError: false,
+        resetOnComplete: false,
+        resetOnRefCountZero: true,
+      })
     );
   }
 
@@ -131,7 +133,7 @@ export class PollingSubscribeProvider implements SubscribeProvider {
   private async getConfirmationPollingInterval() {
     if (!this.config.pollingIntervalMilliseconds) {
       const defaultIntervalTestnetsMainnet = 5000;
-      const defaultIntervalSandbox = 1000;
+      const minimumPollingInterval = 700;
       try {
         const constants = await this.context.readProvider.getProtocolConstants('head');
         const blockTime = constants.minimal_block_delay
@@ -141,8 +143,8 @@ export class PollingSubscribeProvider implements SubscribeProvider {
 
         this.config.pollingIntervalMilliseconds =
           confirmationPollingInterval.toNumber() === 0
-            ? defaultIntervalSandbox
-            : confirmationPollingInterval.toNumber();
+            ? minimumPollingInterval
+            : Math.max(confirmationPollingInterval.toNumber(), minimumPollingInterval);
       } catch (exception) {
         return defaultIntervalTestnetsMainnet;
       }
@@ -160,7 +162,7 @@ export class PollingSubscribeProvider implements SubscribeProvider {
 
   subscribe(_filter: 'head'): Subscription<string> {
     return new ObservableSubscription(
-      this.newBlock$.pipe(pluck('hash')),
+      this.newBlock$.pipe(map((x) => x?.hash)),
       this.config.shouldObservableSubscriptionRetry,
       this.config.observableSubscriptionRetryFunction
     );

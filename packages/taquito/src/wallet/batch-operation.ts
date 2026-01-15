@@ -6,11 +6,20 @@ import {
   OpKind,
 } from '@taquito/rpc';
 import { Observable } from 'rxjs';
-import { BATCH_KINDS } from '../batch/rpc-batch-provider';
 import { Context } from '../context';
 import { hasMetadataWithResult } from '../operations/types';
 import { WalletOperation, OperationStatus } from './operation';
 import { ObservableError } from './errors';
+
+export const WALLET_BATCH_KINDS = [
+  OpKind.REVEAL,
+  OpKind.ORIGINATION,
+  OpKind.TRANSACTION,
+  OpKind.DELEGATION,
+  OpKind.REGISTER_GLOBAL_CONSTANT,
+  OpKind.INCREASE_PAID_STORAGE,
+  OpKind.TRANSFER_TICKET,
+];
 
 export class BatchWalletOperation extends WalletOperation {
   constructor(
@@ -61,7 +70,7 @@ export class BatchWalletOperation extends WalletOperation {
     if (op) {
       return (
         op
-          .filter((result) => BATCH_KINDS.indexOf(result.kind) !== -1)
+          .filter((result) => WALLET_BATCH_KINDS.indexOf(result.kind) !== -1)
           .map((result) => {
             if (hasMetadataWithResult(result)) {
               const opResult = result.metadata.operation_result as BatchOperationResult;

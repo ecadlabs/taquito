@@ -7,7 +7,11 @@ import { SemanticEncoding, Token, TokenFactory, TokenValidationError } from './t
  */
 export class ChestKeyValidationError extends TokenValidationError {
   name = 'ChestKeyValidationError';
-  constructor(public value: any, public token: ChestKeyToken, message: string) {
+  constructor(
+    public value: any,
+    public token: ChestKeyToken,
+    message: string
+  ) {
     super(value, token, message);
   }
 }
@@ -62,14 +66,6 @@ export class ChestKeyToken extends Token {
 
   Execute(val: any): string {
     return val.bytes;
-  }
-
-  /**
-   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
-   *
-   */
-  public ExtractSchema() {
-    return ChestKeyToken.prim;
   }
 
   generateSchema(): BaseTokenSchema {

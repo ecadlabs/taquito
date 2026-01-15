@@ -11,26 +11,6 @@ import { expectMichelsonMap } from '../utils';
 describe('Token contract with big map', () => {
   it('should extract schema properly', () => {
     const schema = Schema.fromRPCResponse(rpcContractResponse as any);
-    expect(schema.ExtractSchema()).toEqual({
-      '0': {
-        big_map: {
-          key: 'address',
-          value: {
-            '0': 'nat',
-            '1': {
-              map: {
-                key: 'address',
-                value: 'nat',
-              },
-            },
-          },
-        },
-      },
-      '1': 'address',
-      '2': 'bool',
-      '3': 'nat',
-    });
-
     expect(schema.generateSchema()).toEqual({
       __michelsonType: 'pair',
       schema: {
@@ -39,45 +19,45 @@ describe('Token contract with big map', () => {
           schema: {
             key: {
               __michelsonType: 'address',
-              schema: 'address'
+              schema: 'address',
             },
             value: {
               __michelsonType: 'pair',
               schema: {
                 '0': {
                   __michelsonType: 'nat',
-                  schema: 'nat'
+                  schema: 'nat',
                 },
                 '1': {
                   __michelsonType: 'map',
                   schema: {
                     key: {
                       __michelsonType: 'address',
-                      schema: 'address'
+                      schema: 'address',
                     },
                     value: {
                       __michelsonType: 'nat',
-                      schema: 'nat'
+                      schema: 'nat',
                     },
                   },
                 },
-              }
+              },
             },
           },
         },
         '1': {
           __michelsonType: 'address',
-          schema: 'address'
+          schema: 'address',
         },
         '2': {
           __michelsonType: 'bool',
-          schema: 'bool'
+          schema: 'bool',
         },
         '3': {
           __michelsonType: 'nat',
-          schema: 'nat'
+          schema: 'nat',
         },
-      }
+      },
     });
   });
 

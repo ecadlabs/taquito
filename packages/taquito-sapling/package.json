@@ -1,6 +1,6 @@
 {
   "name": "@taquito/sapling",
-  "version": "21.0.5",
+  "version": "24.0.1",
   "description": "Allows reading and preparing sapling transactions",
   "keywords": [
     "tezos",
@@ -24,7 +24,7 @@
   },
   "license": "Apache-2.0",
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "scripts": {
     "test": "jest --coverage",
@@ -69,20 +69,19 @@
     "@scure/bip39": "^1.6.0",
     "@stablelib/nacl": "^1.0.4",
     "@stablelib/random": "^1.0.2",
-    "@taquito/core": "^21.0.5",
-    "@taquito/rpc": "^21.0.5",
-    "@taquito/taquito": "^21.0.5",
-    "@taquito/utils": "^21.0.5",
+    "@taquito/core": "^24.0.1",
+    "@taquito/rpc": "^24.0.1",
+    "@taquito/taquito": "^24.0.1",
+    "@taquito/utils": "^24.0.1",
     "bignumber.js": "^9.1.2",
     "blakejs": "^1.2.1",
-    "node-fetch": "^2.7.0",
     "pbkdf2": "^3.1.2",
     "typedarray-to-buffer": "^4.0.0"
   },
   "devDependencies": {
     "@rollup/plugin-json": "^6.1.0",
     "@types/jest": "^29.5.12",
-    "@types/node": "^18",
+    "@types/node": "^20",
     "@types/pbkdf2": "^3.1.2",
     "@types/typedarray-to-buffer": "^4.0.4",
     "@typescript-eslint/eslint-plugin": "^6.21.0",

@@ -7,7 +7,11 @@ import { Semantic, SemanticEncoding, Token, TokenFactory, TokenValidationError }
  */
 export class GlobalConstantEncodingError extends TokenValidationError {
   name = 'GlobalConstantEncodingError';
-  constructor(public value: any, public token: GlobalConstantToken, message: string) {
+  constructor(
+    public value: any,
+    public token: GlobalConstantToken,
+    message: string
+  ) {
     super(value, token, message);
   }
 }
@@ -18,7 +22,11 @@ export class GlobalConstantEncodingError extends TokenValidationError {
  */
 export class GlobalConstantDecodingError extends TokenValidationError {
   name = 'GlobalConstantDecodingError';
-  constructor(public value: any, public token: GlobalConstantToken, message: string) {
+  constructor(
+    public value: any,
+    public token: GlobalConstantToken,
+    message: string
+  ) {
     super(value, token, message);
   }
 }
@@ -72,14 +80,6 @@ export class GlobalConstantToken extends Token {
       this,
       `Unable to encode a script containing global constants. Please provide an expanded script to the Michelson-Encoder. The following global constant hash was encountered: ${this.val.args[0]['string']}.`
     );
-  }
-
-  /**
-   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
-   *
-   */
-  public ExtractSchema() {
-    return GlobalConstantToken.prim;
   }
 
   generateSchema(): ConstantTokenSchema {

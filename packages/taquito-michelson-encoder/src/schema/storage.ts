@@ -26,7 +26,6 @@ import {
   StorageEncodingError,
   MissingArgumentError,
 } from './errors';
-import { RpcTransaction } from './model';
 import { TokenSchema } from './types';
 
 const schemaTypeSymbol = Symbol.for('taquito-schema-type-symbol');
@@ -165,20 +164,33 @@ export class Schema {
     return this.removeTopLevelAnnotation(storage);
   }
 
+  /**
+   * @description Validates that a value matches the schema type.
+   * Performs type checking with special handling for BigMap, Ticket, and nested Map tokens.
+   *
+   * @param val - The value to validate against the schema
+   * @returns Returns true if validation passes, false if validation fails
+   */
   Typecheck(val: any) {
     if (this.root instanceof BigMapToken && Number.isInteger(Number(val))) {
-      return;
+      return true;
     }
     if (this.root instanceof TicketToken && val.ticketer && val.value && val.amount) {
-      return;
+      return true;
     }
     if (this.root instanceof TicketDeprecatedToken && val.ticketer && val.value && val.amount) {
-      return;
+      return true;
     }
     if (this.root instanceof MapToken && this.root.ValueSchema instanceof BigMapToken) {
-      return;
+      return true;
     }
-    this.root.EncodeObject(val);
+
+    try {
+      this.root.EncodeObject(val);
+      return true;
+    } catch (error) {
+      return false;
+    }
   }
 
   /**
@@ -245,41 +257,11 @@ export class Schema {
   }
 
   /**
-   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
-   *
-   */
-  ExtractSchema() {
-    return this.removeTopLevelAnnotation(this.root.ExtractSchema());
-  }
-
-  /**
    * @description Produce a representation of the storage schema.
    * Note: Provide guidance on how to write the storage object for the origination operation with Taquito.
    */
   generateSchema(): TokenSchema {
     return this.removeTopLevelAnnotation(this.root.generateSchema());
-  }
-
-  /**
-   * @deprecated
-   * @throws {@link InvalidBigMapSchemaError}
-   */
-  ComputeState(tx: RpcTransaction[], state: any) {
-    if (!this.bigMap) {
-      throw new InvalidBigMapSchemaError('Big map schema is undefined');
-    }
-
-    const bigMap = tx.reduce((prev, current) => {
-      return {
-        ...prev,
-        ...this.ExecuteOnBigMapDiff(current.contents[0].metadata.operation_result.big_map_diff),
-      };
-    }, {});
-
-    return {
-      ...this.Execute(state),
-      [this.bigMap.annot()]: bigMap,
-    };
   }
 
   /**

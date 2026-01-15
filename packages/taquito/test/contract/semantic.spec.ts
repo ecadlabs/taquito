@@ -9,7 +9,6 @@ describe('smartContractAbstractionSemantic test', () => {
     getScript: jest.Mock<any, any>;
     getStorage: jest.Mock<any, any>;
     getBigMapExpr: jest.Mock<any, any>;
-    getBigMapKey: jest.Mock<any, any>;
     getBlockHeader: jest.Mock<any, any>;
     getEntrypoints: jest.Mock<any, any>;
     getManagerKey: jest.Mock<any, any>;
@@ -40,7 +39,6 @@ describe('smartContractAbstractionSemantic test', () => {
       getScript: jest.fn(),
       getManagerKey: jest.fn(),
       getStorage: jest.fn(),
-      getBigMapKey: jest.fn(),
       getBlockHeader: jest.fn(),
       getBlockMetadata: jest.fn(),
       getContract: jest.fn(),

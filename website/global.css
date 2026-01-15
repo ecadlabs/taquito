@@ -1,0 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@200;300;400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@layer base {
+  body {
+    font-family: 'Source Sans 3', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  }
+}
+
+@theme {
+    --color-background-primary: #FFE5A5;
+    --color-background-secondary: #E2AA6C;
+    --color-background-tertiary: #ECCDAA;
+    --color-primary: #D3822B;
+    --color-secondary: #FFB503;
+    --color-text-secondary: #333333;
+
+    --breakpoint-3xl: 120rem;
+    --breakpoint-4xl: 150rem;
+}

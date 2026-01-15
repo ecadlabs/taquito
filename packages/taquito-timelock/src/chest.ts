@@ -9,9 +9,9 @@ import {
   encodeBigInt,
   decodeBigInt,
 } from './timelock-util';
-import * as crypto from 'crypto';
 
-const defaultRNG: RNG = crypto;
+// globalThis.crypto is available in browsers and Node.js 20+
+const defaultRNG: RNG = globalThis.crypto as unknown as RNG;
 
 export class ChestKey extends TimelockProof {}
 

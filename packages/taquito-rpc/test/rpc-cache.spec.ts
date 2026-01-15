@@ -34,6 +34,10 @@ import {
   ticketBalancesResponse,
   pendingOperationsResponse,
   aiLaunchCycle,
+  protocolActivations,
+  activeStakingParametersResponse,
+  pendingStakingParametersResponse,
+  destinationIndexResponse,
 } from './data/rpc-responses';
 
 /**
@@ -96,10 +100,14 @@ describe('RpcClientCache test', () => {
       getCurrentPeriod: jest.fn(),
       getSuccessorPeriod: jest.fn(),
       getProtocols: jest.fn(),
+      getProtocolActivations: jest.fn(),
       getTicketBalance: jest.fn(),
       getAllTicketBalances: jest.fn(),
       getAdaptiveIssuanceLaunchCycle: jest.fn(),
       getPendingOperations: jest.fn(),
+      getActiveStakingParameters: jest.fn(),
+      getPendingStakingParameters: jest.fn(),
+      getDestinationIndex: jest.fn(),
     };
 
     mockRpcClient.getRpcUrl.mockReturnValue(rpcUrl);
@@ -144,10 +152,14 @@ describe('RpcClientCache test', () => {
     mockRpcClient.getCurrentPeriod.mockReturnValue(currentPeriod);
     mockRpcClient.getSuccessorPeriod.mockReturnValue(successorPeriod);
     mockRpcClient.getProtocols.mockReturnValue(protocols);
+    mockRpcClient.getProtocolActivations.mockReturnValue(protocolActivations);
     mockRpcClient.getTicketBalance.mockReturnValue('3');
     mockRpcClient.getAllTicketBalances.mockReturnValue(ticketBalancesResponse);
     mockRpcClient.getAdaptiveIssuanceLaunchCycle.mockReturnValue(aiLaunchCycle);
     mockRpcClient.getPendingOperations.mockReturnValue(pendingOperationsResponse);
+    mockRpcClient.getActiveStakingParameters.mockReturnValue(activeStakingParametersResponse);
+    mockRpcClient.getPendingStakingParameters.mockReturnValue(pendingStakingParametersResponse);
+    mockRpcClient.getDestinationIndex.mockReturnValue(destinationIndexResponse);
     rpcCache = new RpcClientCache(mockRpcClient);
   });
 
@@ -201,6 +213,7 @@ describe('RpcClientCache test', () => {
     await rpcCache.getCurrentPeriod();
     await rpcCache.getSuccessorPeriod();
     await rpcCache.getProtocols();
+    await rpcCache.getProtocolActivations();
     await rpcCache.getTicketBalance(contractAddress, {
       ticketer: contractAddress,
       content_type: { prim: 'string' },
@@ -209,6 +222,9 @@ describe('RpcClientCache test', () => {
     await rpcCache.getAllTicketBalances(contractAddress);
     await rpcCache.getAdaptiveIssuanceLaunchCycle();
     await rpcCache.getPendingOperations();
+    await rpcCache.getActiveStakingParameters(address);
+    await rpcCache.getPendingStakingParameters(address);
+    await rpcCache.getDestinationIndex(address);
 
     expect(rpcCache.getAllCachedData()['rpcTest/getBlockHash/head/'].response).toEqual(blockHash);
     expect(rpcCache.getAllCachedData()['rpcTest/getBlock/head/'].response).toEqual(blockResponse);
@@ -311,6 +327,9 @@ describe('RpcClientCache test', () => {
       successorPeriod
     );
     expect(rpcCache.getAllCachedData()['rpcTest/getProtocols/head/'].response).toEqual(protocols);
+    expect(rpcCache.getAllCachedData()['rpcTest/getProtocolActivations//'].response).toEqual(
+      protocolActivations
+    );
     expect(
       rpcCache.getAllCachedData()[
         `rpcTest/getTicketBalance/head/${contractAddress}/${JSON.stringify(ticketToken)}/`
@@ -325,6 +344,15 @@ describe('RpcClientCache test', () => {
     expect(rpcCache.getAllCachedData()[`rpcTest/getPendingOperations/{}/`].response).toEqual(
       pendingOperationsResponse
     );
+    expect(
+      rpcCache.getAllCachedData()[`rpcTest/getActiveStakingParameters/head/${address}/`].response
+    ).toEqual(activeStakingParametersResponse);
+    expect(
+      rpcCache.getAllCachedData()[`rpcTest/getPendingStakingParameters/head/${address}/`].response
+    ).toEqual(pendingStakingParametersResponse);
+    expect(
+      rpcCache.getAllCachedData()[`rpcTest/getDestinationIndex/head/${address}/`].response
+    ).toEqual(destinationIndexResponse);
 
     rpcCache.deleteAllCachedData();
   });
@@ -390,6 +418,9 @@ describe('RpcClientCache test', () => {
     );
     await rpcCache.getAllTicketBalances(contractAddress, block);
     await rpcCache.getAdaptiveIssuanceLaunchCycle(block);
+    await rpcCache.getActiveStakingParameters(address, block);
+    await rpcCache.getPendingStakingParameters(address, block);
+    await rpcCache.getDestinationIndex(address, block);
 
     expect(rpcCache.getAllCachedData()[`rpcTest/getBlockHash/${block.block}/`].response).toEqual(
       blockHash
@@ -466,7 +497,6 @@ describe('RpcClientCache test', () => {
         `rpcTest/getBigMapExpr/${block.block}/72/expruPtxxirR4BVqFH43VcmEFZqHaQHJhZQDRVTMgSYAGGgBhBRxfp/`
       ].response
     ).toEqual(bigmapValue);
-    console.log(`rpcTest/getAllDelegates/${block.block}/{}`);
     expect(
       rpcCache.getAllCachedData()[`rpcTest/getAllDelegates/${block.block}/{}/`].response
     ).toEqual([delegate]);
@@ -535,6 +565,17 @@ describe('RpcClientCache test', () => {
     expect(
       rpcCache.getAllCachedData()[`rpcTest/getAdaptiveIssuanceLaunchCycle/${block.block}/`].response
     ).toEqual(aiLaunchCycle);
+    expect(
+      rpcCache.getAllCachedData()[`rpcTest/getActiveStakingParameters/${block.block}/${address}/`]
+        .response
+    ).toEqual(activeStakingParametersResponse);
+    expect(
+      rpcCache.getAllCachedData()[`rpcTest/getPendingStakingParameters/${block.block}/${address}/`]
+        .response
+    ).toEqual(pendingStakingParametersResponse);
+    expect(
+      rpcCache.getAllCachedData()[`rpcTest/getDestinationIndex/${block.block}/${address}/`].response
+    ).toEqual(destinationIndexResponse);
     rpcCache.deleteAllCachedData();
   });
 
@@ -583,10 +624,14 @@ describe('RpcClientCache test', () => {
     await rpcCache.getCurrentPeriod();
     await rpcCache.getSuccessorPeriod();
     await rpcCache.getProtocols();
+    await rpcCache.getProtocolActivations();
     await rpcCache.getTicketBalance(contractAddress, ticketToken);
     await rpcCache.getAllTicketBalances(contractAddress);
     await rpcCache.getAdaptiveIssuanceLaunchCycle();
     await rpcCache.getPendingOperations();
+    await rpcCache.getActiveStakingParameters(address);
+    await rpcCache.getPendingStakingParameters(address);
+    await rpcCache.getDestinationIndex(address);
 
     rpcCache.deleteAllCachedData();
 

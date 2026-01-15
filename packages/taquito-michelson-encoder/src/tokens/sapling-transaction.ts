@@ -7,7 +7,11 @@ import { SemanticEncoding, Token, TokenFactory, TokenValidationError } from './t
  */
 export class SaplingTransactionValidationError extends TokenValidationError {
   name = 'SaplingTransactionValidationError';
-  constructor(public value: any, public token: SaplingTransactionToken, message: string) {
+  constructor(
+    public value: any,
+    public token: SaplingTransactionToken,
+    message: string
+  ) {
     super(value, token, message);
   }
 }
@@ -66,18 +70,6 @@ export class SaplingTransactionToken extends Token {
       return semantic[SaplingTransactionToken.prim](val);
     }
     return { bytes: String(val).toString() };
-  }
-
-  /**
-   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
-   *
-   */
-  ExtractSchema() {
-    return {
-      [SaplingTransactionToken.prim]: {
-        'memo-size': Number(this.val.args[0]['int']),
-      },
-    };
   }
 
   generateSchema(): SaplingTransactionTokenSchema {

@@ -5,7 +5,6 @@
 
 import { RpcClient, RpcClientInterface } from '@taquito/rpc';
 import { Forger } from '@taquito/local-forging';
-import { RPCBatchProvider } from './batch/rpc-batch-provider';
 import { Protocols } from './constants';
 import { ConfigConfirmation, Context, TaquitoProvider } from './context';
 import { ContractProvider } from './contract/interface';
@@ -18,7 +17,7 @@ import { RpcPacker } from './packer/rpc-packer';
 import { TzReadProvider } from './read-provider/interface';
 import { RpcReadAdapter } from './read-provider/rpc-read-adapter';
 import { PreparationProvider } from './prepare/interface';
-import { Signer } from './signer/interface';
+import { Signer } from '@taquito/core';
 import { NoopSigner } from './signer/noop';
 import { SubscribeProvider } from './subscribe/interface';
 import { PollingSubscribeProvider } from './subscribe/polling-subcribe-provider';
@@ -45,7 +44,7 @@ export { CompositeForger } from './forger/composite-forger';
 export { RpcForger } from './forger/rpc-forger';
 export * from './operations';
 export { OperationBatch } from './batch/rpc-batch-provider';
-export * from './signer/interface';
+export { Signer } from '@taquito/core';
 export * from './subscribe/interface';
 export { SubscribeProvider } from './subscribe/interface';
 export { PollingSubscribeProvider } from './subscribe/polling-subcribe-provider';
@@ -74,6 +73,7 @@ export { RpcReadAdapter } from './read-provider/rpc-read-adapter';
 export * from './estimate';
 export { TaquitoLocalForger } from './forger/taquito-local-forger';
 export * from './prepare';
+export { importKey } from './import-key';
 
 export interface SetProviderOptions {
   forger?: Forger;
@@ -105,11 +105,6 @@ export class TezosToolkit {
   private _rpcClient: RpcClientInterface;
   private _wallet: Wallet;
   private _context: Context;
-  /**
-   * @deprecated TezosToolkit.batch has been deprecated in favor of TezosToolkit.contract.batch
-   *
-   */
-  public batch: RPCBatchProvider['batch'];
 
   public readonly format = format;
 
@@ -122,7 +117,6 @@ export class TezosToolkit {
     this._context = new Context(_rpc);
     this._wallet = new Wallet(this._context);
     this.setProvider({ rpc: this._rpcClient });
-    this.batch = this._context.batch.batch.bind(this._context.batch);
   }
 
   /**

@@ -14,7 +14,11 @@ import { BaseTokenSchema } from '../../schema/types';
  */
 export class MutezValidationError extends TokenValidationError {
   name = 'MutezValidationError';
-  constructor(public value: any, public token: MutezToken, message: string) {
+  constructor(
+    public value: any,
+    public token: MutezToken,
+    message: string
+  ) {
     super(value, token, message);
   }
 }
@@ -32,14 +36,6 @@ export class MutezToken extends ComparableToken {
 
   public Execute(val: any) {
     return new BigNumber(val[Object.keys(val)[0]]);
-  }
-
-  /**
-   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
-   *
-   */
-  public ExtractSchema() {
-    return MutezToken.prim;
   }
 
   generateSchema(): BaseTokenSchema {

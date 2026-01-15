@@ -1,0 +1,30 @@
+{
+	"name": "taquito-feedback-worker",
+	"main": "./index.ts",
+	"compatibility_date": "2025-09-15",
+
+	// Environment variables
+	"vars": {
+		// Secret keys are stored in the Cloudflare Secrets Manager (npx wrangler secret put)
+		"ALLOWED_ORIGINS": "https://taquito.io,https://www.taquito.io,taquito.io" // use http://localhost:4321 and `npx wrangler dev` for local development
+		// "ALLOWED_ORIGINS": "http://localhost:4321"
+	},
+
+	// Durable Object binding
+	"durable_objects": {
+		"bindings": [
+			{
+				"name": "RATE_LIMITER",
+				"class_name": "RateLimiter"
+			}
+		]
+	},
+
+	// Required to create new DOs
+	"migrations": [
+		{
+			"tag": "v1",
+			"new_sqlite_classes": ["RateLimiter"]
+		}
+	]
+}

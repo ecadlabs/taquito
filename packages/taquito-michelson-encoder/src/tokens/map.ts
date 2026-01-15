@@ -15,7 +15,11 @@ import {
  */
 export class MapValidationError extends TokenValidationError {
   name = 'MapValidationError';
-  constructor(public value: any, public token: MapToken, message: string) {
+  constructor(
+    public value: any,
+    public token: MapToken,
+    message: string
+  ) {
     super(value, token, message);
   }
 }
@@ -114,19 +118,6 @@ export class MapToken extends Token {
           args: [this.KeySchema.EncodeObject(key), this.ValueSchema.EncodeObject(val.get(key))],
         };
       });
-  }
-
-  /**
-   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
-   *
-   */
-  public ExtractSchema() {
-    return {
-      map: {
-        key: this.KeySchema.ExtractSchema(),
-        value: this.ValueSchema.ExtractSchema(),
-      },
-    };
   }
 
   generateSchema(): MapTokenSchema {

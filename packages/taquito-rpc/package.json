@@ -1,6 +1,6 @@
 {
   "name": "@taquito/rpc",
-  "version": "21.0.5",
+  "version": "24.0.1",
   "description": "Provides low level methods, and types to invoke RPC calls from a Nomadic Tezos RPC node",
   "keywords": [
     "tezos",
@@ -24,7 +24,7 @@
   },
   "license": "Apache-2.0",
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "scripts": {
     "test": "jest --coverage",
@@ -66,15 +66,16 @@
     ]
   },
   "dependencies": {
-    "@taquito/core": "^21.0.5",
-    "@taquito/http-utils": "^21.0.5",
-    "@taquito/utils": "^21.0.5",
-    "bignumber.js": "^9.1.2"
+    "@taquito/core": "^24.0.1",
+    "@taquito/http-utils": "^24.0.1",
+    "@taquito/utils": "^24.0.1",
+    "bignumber.js": "^9.1.2",
+    "whatwg-url": "^15.1.0"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.42",
     "@types/jest": "^29.5.12",
-    "@types/node": "^18",
+    "@types/node": "^20",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "colors": "^1.4.0",
@@ -91,6 +92,7 @@
     "rimraf": "^6.0.1",
     "rollup": "^4.22.4",
     "rollup-plugin-json": "^4.0.0",
+    "rollup-plugin-polyfill-node": "^0.13.0",
     "rollup-plugin-typescript2": "^0.36.0",
     "shelljs": "^0.8.5",
     "ts-jest": "^29.2.3",

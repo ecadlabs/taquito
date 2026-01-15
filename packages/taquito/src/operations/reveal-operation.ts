@@ -3,6 +3,7 @@ import {
   OperationContentsAndResultReveal,
   OperationContentsReveal,
 } from '@taquito/rpc';
+import { ProhibitedActionError } from '@taquito/core';
 import { BigNumber } from 'bignumber.js';
 import { Context } from '../context';
 import { flattenErrors, flattenOperationResult } from './errors';
@@ -63,6 +64,14 @@ export class RevealOperation
 
   get publicKey() {
     return this.params.public_key;
+  }
+
+  get proof() {
+    if (this.params.proof) {
+      return this.params.proof;
+    } else {
+      throw new ProhibitedActionError('Only BLS key has proof');
+    }
   }
 
   private sumProp(arr: any[], prop: string) {

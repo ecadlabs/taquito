@@ -54,21 +54,74 @@ export interface Inode {
 }
 
 export interface DelegatesResponse {
+  deactivated: boolean;
+  is_forbidden?: boolean;
+  participation?: {
+    expected_cycle_activity: number;
+    minimal_cycle_activity: number;
+    missed_slots: number;
+    missed_levels: number;
+    remaining_allowed_missed_slots: number;
+    expected_attesting_rewards: string;
+  };
+  dal_participation?: {
+    expected_assigned_shards_per_slot: number;
+    delegate_attested_dal_slots: number;
+    delegate_attestable_dal_slots: number;
+    expected_dal_rewards: string;
+    sufficient_dal_participationa: true;
+    denounced: true;
+  };
+  grace_period: number;
+  active_staking_parameters?: StakingParameters;
+  pending_staking_parameters?: {
+    cycle: number;
+    parameters: StakingParameters;
+  }[];
+  baking_power?: string;
+  total_staked?: string;
+  total_delegated?: string;
+  min_delegated_in_current_cycle?: MinDelegatedInCurrentCycle;
+  own_full_balance?: string;
+  own_staked?: string;
+  own_delegated?: string;
+  external_staked?: string;
+  external_delegated?: string;
+  total_unstaked_per_cycle?: { cycle: number; deposit: string }[];
+  denunciations?: {
+    operation_hash: string;
+    rewarded: string;
+    misbehaviour: {
+      level: number;
+      round: number;
+      kind: 'attestation' | 'block' | 'preattestation';
+    };
+  }[];
+  estimated_shared_pending_slashed_amount?: string;
+  staking_denominator?: BigNumber;
+  current_voting_power?: BigNumber;
+  voting_power?: BigNumber;
+  voting_info?: VotingInfoResponse;
+  consensus_key?: {
+    active: { pkh: string; pk: string };
+    pendings?: { cycle: number; pkh: string; pk: string }[];
+  };
+  companion_key?: {
+    active: { pkh: string; pk: string } | null;
+    pendings?: { cycle: number; pkh: string; pk: string }[];
+  };
+  stakers?: { staker: string; frozen_deposits: string }[];
+  delegators?: string[];
   full_balance?: BigNumber;
   current_frozen_deposits?: BigNumber;
   frozen_deposits?: BigNumber;
-  staking_balance: BigNumber;
-  delegated_contracts: string[];
-  delegated_balance: BigNumber;
-  min_delegated_in_current_cycle?: MinDelegatedInCurrentCycle;
-  deactivated: boolean;
+  staking_balance?: BigNumber;
+  delegated_contracts?: string[];
+  delegated_balance?: BigNumber;
   total_delegated_stake?: BigNumber;
-  staking_denominator?: BigNumber;
   active_consensus_key?: string;
-  grace_period: number;
   pending_denunciations?: boolean;
   frozen_deposits_limit?: BigNumber;
-  voting_power?: BigNumber;
   current_ballot?: BallotVote;
   current_proposals?: string[];
   remaining_proposals?: number;
@@ -78,6 +131,11 @@ export interface DelegatesResponse {
   frozen_balance_by_cycle?: Frozenbalancebycycle[];
 }
 
+export type StakingParameters = {
+  limit_of_staking_over_baking_millionth: number;
+  edge_of_baking_over_staking_billionth: number;
+};
+
 export type MinDelegatedInCurrentCycle = {
   amount: string;
   level?: LevelInfo;
@@ -86,6 +144,11 @@ export type MinDelegatedInCurrentCycle = {
 export type PendingConsensusKey = {
   cycle: number;
   pkh: string;
+};
+
+export type ConsensusPower = {
+  slots: number;
+  baking_power: number;
 };
 
 export type VotingInfoResponse = {
@@ -127,22 +190,21 @@ export interface BlockFullHeader {
   proof_of_work_nonce: string;
   seed_nonce_hash?: string;
   liquidity_baking_toggle_vote?: LiquidityBakingToggleVotes;
-  adaptive_issuance_vote?: AdaptiveIssuanceVote;
   liquidity_baking_escape_vote?: boolean | LiquidityBakingToggleVotes;
   signature: string;
+  adaptive_issuance_vote?: AdaptiveIssuanceVote;
 }
 
 export type InlinedAttestationKindEnum = OpKind.ATTESTATION;
 
 export type InlinedEndorsementKindEnum = OpKind.ENDORSEMENT;
 
-export interface InlinedAttestationContents {
-  kind: InlinedAttestationKindEnum;
-  slot?: number;
-  round?: number;
-  block_payload_hash?: string;
-  level: number;
-}
+export type InlinedAttestationContents =
+  | OperationContentsPreattestation
+  | OperationContentsAttestation
+  | OperationContentsAttestationWithDal
+  | OperationContentsPreattestationsAggregate
+  | OperationContentsAttestationsAggregate;
 
 export interface InlinedEndorsementContents {
   kind: InlinedEndorsementKindEnum;
@@ -330,6 +392,7 @@ export interface OperationContentsReveal {
   gas_limit: string;
   storage_limit: string;
   public_key: string;
+  proof?: string;
 }
 
 export interface OperationContentsTransaction {
@@ -399,6 +462,18 @@ export interface OperationContentsUpdateConsensusKey {
   gas_limit: string;
   storage_limit: string;
   pk: string;
+  proof?: string;
+}
+
+export interface OperationContentsUpdateCompanionKey {
+  kind: OpKind.UPDATE_COMPANION_KEY;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  pk: string;
+  proof?: string;
 }
 
 export interface OperationContentsDrainDelegate {
@@ -524,6 +599,44 @@ export interface OperationContentsDalPublishCommitment {
   };
 }
 
+export interface OperationContentsDalEntrapmentEvidence {
+  kind: OpKind.DAL_ENTRAPMENT_EVIDENCE;
+  attestation: InlinedAttestation;
+  consensus_slot: number;
+  slot_index: number;
+  shard_with_proof: { shard: (number | string[])[]; proof: string };
+}
+
+export interface OperationContentsPreattestationsAggregate {
+  kind: OpKind.PREATTESTATIONS_AGGREGATE;
+  consensus_content: {
+    level: number;
+    round: number;
+    block_payload_hash: string;
+  };
+  committee: number[];
+}
+
+export interface OperationContentsAttestationsAggregate {
+  kind: OpKind.ATTESTATIONS_AGGREGATE;
+  consensus_content: {
+    level: number;
+    round: number;
+    block_payload_hash: string;
+  };
+  committee: {
+    slot: number;
+    dal_attestation?: string;
+  }[];
+}
+
+export interface OperationContentsDoubleConsensusOperationEvidence {
+  kind: OpKind.DOUBLE_CONSENSUS_OPERATION_EVIDENCE;
+  slot: number;
+  op1: InlinedAttestation;
+  op2: InlinedAttestation;
+}
+
 export type OperationContents =
   | OperationContentsAttestation
   | OperationContentsPreattestation
@@ -560,12 +673,17 @@ export type OperationContents =
   | OperationContentsSmartRollupRefute
   | OperationContentsSmartRollupRecoverBond
   | OperationContentsSmartRollupTimeout
-  | OperationContentsDalPublishCommitment;
+  | OperationContentsDalEntrapmentEvidence
+  | OperationContentsDalPublishCommitment
+  | OperationContentsDoubleConsensusOperationEvidence
+  | OperationContentsUpdateCompanionKey
+  | OperationContentsPreattestationsAggregate
+  | OperationContentsAttestationsAggregate;
 
 export interface OperationContentsAndResultMetadataExtended1 {
   balance_updates?: OperationMetadataBalanceUpdates[];
   delegate: string;
-  consensus_power: number;
+  consensus_power: ConsensusPower | null;
   consensus_key: string;
 }
 
@@ -576,13 +694,30 @@ export interface OperationContentsAndResultMetadataExtended0 {
   consensus_key?: string;
 }
 
+export interface OperationContentsAndResultMetadataAttestationsAggregate {
+  balance_updates?: OperationMetadataBalanceUpdates[];
+  committee: {
+    delegate: string;
+    consensus_pkh: string;
+  }[];
+  consensus_power: ConsensusPower | null;
+}
+
 export interface OperationContentsAndResultMetadataPreattestation {
   balance_updates?: OperationMetadataBalanceUpdates[];
   delegate: string;
-  consensus_power: number;
+  consensus_power: ConsensusPower | null;
   consensus_key?: string;
 }
 
+export interface OperationContentsAndResultMetadataPreattestationsAggregate {
+  balance_updates?: OperationMetadataBalanceUpdates[];
+  committee: {
+    delegate: string;
+    consensus_pkh: string;
+  }[];
+  consensus_power: ConsensusPower | null;
+}
 export interface OperationContentsAndResultMetadataPreEndorsement {
   balance_updates?: OperationMetadataBalanceUpdates[];
   delegate: string;
@@ -637,6 +772,12 @@ export interface OperationContentsAndResultMetadataIncreasePaidStorage {
 }
 
 export interface OperationContentsAndResultMetadataUpdateConsensusKey {
+  balance_updates?: OperationMetadataBalanceUpdates[];
+  operation_result: OperationResultUpdateConsensusKey;
+  internal_operation_results?: InternalOperationResult[];
+}
+
+export interface OperationContentsAndResultMetadataUpdateCompanionKey {
   balance_updates?: OperationMetadataBalanceUpdates[];
   operation_result: OperationResultUpdateConsensusKey;
   internal_operation_results?: InternalOperationResult[];
@@ -701,6 +842,30 @@ export interface OperationContentsAndResultMetadataDalPublishCommitment {
   internal_operation_results?: InternalOperationResult[];
 }
 
+export interface OperationContentsAndResultMetadataDalEntrapmentEvidence {
+  balance_updates?: OperationMetadataBalanceUpdates[];
+}
+
+export interface OperationContentsAndResultMetadataDoubleConsensusOperationEvidence {
+  punished_delegate: string;
+  rewarded_delegate: string;
+  misbehaviour: {
+    level: number;
+    round: number;
+    kind: 'attestation' | 'block' | 'preattestation';
+  };
+}
+
+export interface OperationContentsAndResultMetadataDoubleBaking {
+  punished_delegate: string;
+  rewarded_delegate: string;
+  misbehaviour: {
+    level: number;
+    round: number;
+    kind: 'attestation' | 'block' | 'preattestation';
+  };
+}
+
 export interface OperationContentsAndResultAttestation {
   kind: OpKind.ATTESTATION;
   block_payload_hash?: string;
@@ -708,6 +873,20 @@ export interface OperationContentsAndResultAttestation {
   round?: number;
   slot?: number;
   metadata: OperationContentsAndResultMetadataExtended1;
+}
+
+export interface OperationContentsAndResultAttestationsAggregate {
+  kind: OpKind.ATTESTATIONS_AGGREGATE;
+  consensus_content: {
+    level: number;
+    round: number;
+    block_payload_hash: string;
+  };
+  committee: {
+    slot: number;
+    dal_attestation?: string;
+  }[];
+  metadata: OperationContentsAndResultMetadataAttestationsAggregate;
 }
 
 export interface OperationContentsAndResultEndorsement {
@@ -726,6 +905,17 @@ export interface OperationContentsAndResultPreattestation {
   round: number;
   block_payload_hash: string;
   metadata: OperationContentsAndResultMetadataPreattestation;
+}
+
+export interface OperationContentsAndResultPreattestationsAggregate {
+  kind: OpKind.PREATTESTATIONS_AGGREGATE;
+  consensus_content: {
+    level: number;
+    round: number;
+    block_payload_hash: string;
+  };
+  committee: number[];
+  metadata: OperationContentsAndResultMetadataPreattestationsAggregate;
 }
 
 export interface OperationContentsAndResultPreEndorsement {
@@ -798,7 +988,7 @@ export interface OperationContentsAndResultDoubleBaking {
   kind: OpKind.DOUBLE_BAKING_EVIDENCE;
   bh1: BlockFullHeader;
   bh2: BlockFullHeader;
-  metadata: OperationContentsAndResultMetadata;
+  metadata: OperationContentsAndResultMetadataDoubleBaking;
 }
 
 export interface OperationContentsAndResultActivateAccount {
@@ -831,6 +1021,7 @@ export interface OperationContentsAndResultReveal {
   gas_limit: string;
   storage_limit: string;
   public_key: string;
+  proof?: string;
   metadata: OperationContentsAndResultMetadataReveal;
 }
 
@@ -904,9 +1095,21 @@ export interface OperationContentsAndResultUpdateConsensusKey {
   gas_limit: string;
   storage_limit: string;
   pk: string;
+  proof?: string;
   metadata: OperationContentsAndResultMetadataUpdateConsensusKey;
 }
 
+export interface OperationContentsAndResultUpdateCompanionKey {
+  kind: OpKind.UPDATE_COMPANION_KEY;
+  source: string;
+  fee: string;
+  counter: string;
+  gas_limit: string;
+  storage_limit: string;
+  pk: string;
+  proof?: string;
+  metadata: OperationContentsAndResultMetadataUpdateCompanionKey;
+}
 export interface OperationContentsAndResultDrainDelegate {
   kind: OpKind.DRAIN_DELEGATE;
   consensus_key: string;
@@ -1046,6 +1249,23 @@ export interface OperationContentsAndResultDalPublishCommitment {
   metadata: OperationContentsAndResultMetadataDalPublishCommitment;
 }
 
+export interface OperationContentsAndResultDalEntrapmentEvidence {
+  kind: OpKind.DAL_ENTRAPMENT_EVIDENCE;
+  attestation: InlinedAttestation;
+  consensus_slot: number;
+  slot_index: number;
+  shard_with_proof: { shard: (number | string[])[]; proof: string };
+  metadata: OperationContentsAndResultMetadataDalEntrapmentEvidence;
+}
+
+export interface OperationContentsAndResultDoubleConsensusOperationEvidence {
+  kind: OpKind.DOUBLE_CONSENSUS_OPERATION_EVIDENCE;
+  slot: number;
+  op1: InlinedAttestation;
+  op2: InlinedAttestation;
+  metadata: OperationContentsAndResultMetadataDoubleConsensusOperationEvidence;
+}
+
 export type OperationContentsAndResult =
   | OperationContentsAndResultAttestation
   | OperationContentsAndResultPreattestation
@@ -1081,7 +1301,12 @@ export type OperationContentsAndResult =
   | OperationContentsAndResultSmartRollupRefute
   | OperationContentsAndResultSmartRollupRecoverBond
   | OperationContentsAndResultSmartRollupTimeout
-  | OperationContentsAndResultDalPublishCommitment;
+  | OperationContentsAndResultDalPublishCommitment
+  | OperationContentsAndResultDalEntrapmentEvidence
+  | OperationContentsAndResultDoubleConsensusOperationEvidence
+  | OperationContentsAndResultUpdateCompanionKey
+  | OperationContentsAndResultPreattestationsAggregate
+  | OperationContentsAndResultAttestationsAggregate;
 
 export type OperationContentsAndResultWithFee =
   | OperationContentsAndResultTransaction
@@ -1096,7 +1321,8 @@ export type OperationContentsAndResultWithFee =
   | OperationContentsAndResultSmartRollupAddMessages
   | OperationContentsAndResultSmartRollupOriginate
   | OperationContentsAndResultSmartRollupExecuteOutboxMessage
-  | OperationContentsAndResultDalPublishCommitment;
+  | OperationContentsAndResultDalPublishCommitment
+  | OperationContentsAndResultUpdateCompanionKey;
 
 export enum OPERATION_METADATA {
   TOO_LARGE = 'too large',
@@ -1147,10 +1373,10 @@ export interface BakingRightsQueryArgumentsBase {
 export interface BakingRightsResponseItem {
   level: number;
   delegate: string;
-  priority?: number;
   round?: number;
   estimated_time?: Date;
   consensus_key?: string;
+  priority?: number;
 }
 
 export type BakingRightsResponse = BakingRightsResponseItem[];
@@ -1169,16 +1395,17 @@ export interface AttestationRightsQueryArguments {
 export interface AttestationRightsResponseItemDelegates {
   delegate: string;
   first_slot: number;
-  attestation_power: number;
+  attesting_power: number;
   consensus_key: string;
+  attestation_power?: number;
 }
 
 export interface AttestationRightsResponseItem {
   level: number;
-  delegate?: string;
   delegates?: AttestationRightsResponseItemDelegates[];
-  slots?: number[];
   estimated_time?: Date;
+  delegate?: string;
+  slots?: number[];
 }
 
 export type AttestationRightsResponse = AttestationRightsResponseItem[];
@@ -1380,6 +1607,7 @@ export interface OperationResultUpdateConsensusKey {
   status: OperationResultStatusEnum;
   consumed_milligas?: string;
   errors?: TezosGenericOperationError[];
+  kind?: boolean;
 }
 
 export interface OperationResultDelegation {
@@ -1548,6 +1776,11 @@ export type OperationResult =
   | OperationResultSmartRollupExecuteOutboxMessage
   | OperationResultDalPublishCommitment;
 
+export interface AddressRegistryDiff {
+  address: string;
+  index: string;
+}
+
 export interface OperationResultTransaction {
   status: OperationResultStatusEnum;
   storage?: MichelsonV1Expression;
@@ -1564,6 +1797,7 @@ export interface OperationResultTransaction {
   consumed_milligas?: string;
   lazy_storage_diff?: LazyStorageDiff[];
   ticket_hash?: string;
+  address_registry_diff?: AddressRegistryDiff[];
 }
 
 export interface OperationResultReveal {
@@ -1585,16 +1819,16 @@ export interface InternalOperationResult {
   amount?: string;
   destination?: string;
   parameters?: TransactionOperationParameter;
-  public_key?: string;
+  result: InternalOperationResultEnum;
   balance?: string;
   delegate?: string;
   script?: ScriptedContracts;
-  value?: MichelsonV1Expression;
-  limit?: string;
-  result: InternalOperationResultEnum;
   type?: MichelsonV1Expression;
   tag?: string;
   payload?: MichelsonV1Expression;
+  public_key?: string;
+  value?: MichelsonV1Expression;
+  limit?: string;
 }
 
 export interface SuccessfulManagerOperationResult {
@@ -1612,42 +1846,79 @@ export interface SuccessfulManagerOperationResult {
 
 export type MetadataBalanceUpdatesKindEnum =
   | 'contract'
-  | 'freezer'
   | 'accumulator'
+  | 'freezer'
+  | 'minted'
   | 'burned'
   | 'commitment'
-  | 'minted'
   | 'staking';
 
 export enum METADATA_BALANCE_UPDATES_CATEGORY {
+  ACTIVATION = 'activation',
+  ATTESTATION = 'attestation',
+  ATTESTATIONS_AGGREGATE = 'attestations_aggregate',
+  ATTESTATION_WITH_DAL = 'attestation_with_dal',
+  ATTESTING_REWARDS = 'attesting rewards',
   BAKING_BONUSES = 'baking bonuses',
   BAKING_REWARDS = 'baking rewards',
+  BALLOT = 'ballot',
   BLOCK_FEES = 'block fees',
   BONDS = 'bonds',
   BOOTSTRAP = 'bootstrap',
   BURNED = 'burned',
   COMMITMENT = 'commitment',
+  DAL_ATTESTING_REWARDS = 'dal attesting rewards',
+  DAL_ENTRAPMENT_EVIDENCE = 'dal_entrapment_evidence',
+  DAL_PUBLISH_COMMITMENT = 'dal_publish_commitment',
   DELEGATE_DENOMINATOR = 'delegate_denominator',
+  DELEGATION = 'delegation',
   DELEGATOR_NUMERATOR = 'delegator_numerator',
   DEPOSITS = 'deposits',
-  ENDORSING_REWARDS = 'endorsing rewards',
+  DOUBLE_ATTESTATION_EVIDENCE = 'double_attestation_evidence',
+  DOUBLE_BAKING_EVIDENCE = 'double_baking_evidence',
+  DOUBLE_ENDORSEMENT_EVIDENCE = 'double_endorsement_evidence',
+  DOUBLE_PREATTESTATION_EVIDENCE = 'double_preattestation_evidence',
+  DOUBLE_PREENDORSEMENT_EVIDENCE = 'double_preendorsement_evidence',
+  DRAIN_DELEGATE = 'drain_delegate',
+  ENDORSEMENT = 'endorsement',
+  ENDORSEMENT_WITH_DAL = 'endorsement_with_dal',
+  EVENT = 'event',
+  FAILING_NOOP = 'failing_noop',
+  INCREASE_PAID_STORAGE = 'increase_paid_storage',
   INVOICE = 'invoice',
-  LOST_ENDORSING_REWARDS = 'lost endorsing rewards',
   LOST_ATTESTING_REWARDS = 'lost attesting rewards',
+  LOST_DAL_ATTESTING_REWARDS = 'lost dal attesting rewards',
   MINTED = 'minted',
   NONCE_REVELATION_REWARDS = 'nonce revelation rewards',
+  ORIGINATION = 'origination',
+  PREATTESTATION = 'preattestation',
+  PREATTESTATIONS_AGGREGATE = 'preattestations_aggregate',
+  PREENDORSEMENT = 'preendorsement',
+  PROPOSALS = 'proposals',
   PUNISHMENTS = 'punishments',
+  REGISTER_GLOBAL_CONSTANT = 'register_global_constant',
+  REVEAL = 'reveal',
+  SEED_NONCE_REVELATION = 'seed_nonce_revelation',
+  SET_DEPOSITS_LIMIT = 'set_deposits_limit',
+  SMART_ROLLUP_ADD_MESSAGES = 'smart_rollup_add_messages',
+  SMART_ROLLUP_CEMENT = 'smart_rollup_cement',
+  SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE = 'smart_rollup_execute_outbox_message',
+  SMART_ROLLUP_ORIGINATE = 'smart_rollup_originate',
+  SMART_ROLLUP_PUBLISH = 'smart_rollup_publish',
+  SMART_ROLLUP_RECOVER_BOND = 'smart_rollup_recover_bond',
   SMART_ROLLUP_REFUTATION_PUNISHMENTS = 'smart_rollup_refutation_punishments',
   SMART_ROLLUP_REFUTATION_REWARDS = 'smart_rollup_refutation_rewards',
+  SMART_ROLLUP_REFUTE = 'smart_rollup_refute',
+  SMART_ROLLUP_TIMEOUT = 'smart_rollup_timeout',
   STORAGE_FEES = 'storage fees',
   SUBSIDY = 'subsidy',
+  TICKET_UPDATES = 'ticket_updates',
+  TRANSACTION = 'transaction',
+  TRANSFER_TICKET = 'transfer_ticket',
   UNSTAKED_DEPOSITS = 'unstaked_deposits',
-  DOUBLE_SIGNING_EVIDENCE_REWARDS = 'double signing evidence rewards',
-  FEES = 'fees',
-  LEGACY_DEPOSITS = 'legacy_deposits',
-  LEGACY_FEES = 'legacy_fees',
-  LEGACY_REWARDS = 'legacy_rewards',
-  REWARDS = 'rewards',
+  UPDATE_COMPANION_KEY = 'update_companion_key',
+  UPDATE_CONSENSUS_KEY = 'update_consensus_key',
+  VDF_REVELATION = 'vdf_revelation',
 }
 
 export type MetadataBalanceUpdatesCategoryEnum = METADATA_BALANCE_UPDATES_CATEGORY;
@@ -1783,6 +2054,9 @@ export interface OperationContentsAndResultMetadataOrigination {
 }
 
 export type ConstantsResponse = ConstantsResponseCommon &
+  ConstantsResponseProto024 &
+  ConstantsResponseProto023 &
+  ConstantsResponseProto022 &
   ConstantsResponseProto021 &
   ConstantsResponseProto020 &
   ConstantsResponseProto019 &
@@ -1829,19 +2103,77 @@ export interface ConstantsResponseCommon {
 
 export type Ratio = { numerator: number; denominator: number };
 
+export interface ConstantsResponseProto024 extends Omit<
+  ConstantsResponseProto023,
+  'all_bakers_attest_activation_level'
+> {
+  all_bakers_attest_activation_threshold: Ratio;
+}
+
+export type ConstantsResponseProto023 = ConstantsResponseProto022;
+
+export interface ConstantsResponseProto022 extends Omit<
+  ConstantsResponseProto021,
+  | 'adaptive_issuance_activation_vote_enable'
+  | 'adaptive_issuance_force_activation'
+  | 'adaptive_issuance_launch_ema_threshold'
+  | 'autostaking_enable'
+  | 'consensus_threshold'
+  | 'issuance_weights'
+  | 'dal_parametric'
+  | 'max_slashing_period'
+  | 'max_slashing_threshold'
+  | 'ns_enable'
+  | 'percentage_of_frozen_deposits_slashed_per_double_attestation'
+> {
+  aggregate_attestation: boolean;
+  all_bakers_attest_activation_level: null | number;
+  allow_tz4_delegate_enable: boolean;
+  consensus_key_activation_delay: number;
+  consensus_threshold_size: number;
+  dal_parametric: {
+    attestation_lag: number;
+    attestation_threshold: number;
+    feature_enable: boolean;
+    incentives_enable: boolean;
+    minimal_participation_ratio: Ratio;
+    number_of_shards: number;
+    number_of_slots: number;
+    page_size: number;
+    redundancy_factor: number;
+    rewards_ratio: Ratio;
+    slot_size: number;
+    traps_fraction: Ratio;
+  };
+  denunciation_period: number;
+  issuance_modification_delay: number;
+  issuance_weights: {
+    attesting_reward_weight: number;
+    baking_reward_bonus_weight: number;
+    baking_reward_fixed_portion_weight: number;
+    base_total_issued_per_minute: string;
+    dal_rewards_weight: number;
+    seed_nonce_revelation_tip_weight: number;
+    vdf_revelation_tip_weight: number;
+  };
+  max_slashing_threshold: Ratio;
+  slashing_delay: number;
+  tolerated_inactivity_period: number;
+  unstake_finalization_delay: number;
+}
+
 export type ConstantsResponseProto021 = ConstantsResponseProto020;
 
-export interface ConstantsResponseProto020
-  extends Omit<
-    ConstantsResponseProto019,
-    | 'adaptive_rewards_params'
-    | 'blocks_per_stake_snapshot'
-    | 'dal_parametric'
-    | 'issuance_weights'
-    | 'liquidity_baking_subsidy_weight'
-    | 'preserved_cycles'
-    | 'smart_rollup_reveal_activation_level'
-  > {
+export interface ConstantsResponseProto020 extends Omit<
+  ConstantsResponseProto019,
+  | 'adaptive_rewards_params'
+  | 'blocks_per_stake_snapshot'
+  | 'dal_parametric'
+  | 'issuance_weights'
+  | 'liquidity_baking_subsidy_weight'
+  | 'preserved_cycles'
+  | 'smart_rollup_reveal_activation_level'
+> {
   adaptive_issuance_force_activation: boolean;
   adaptive_rewards_params: {
     center_dz: {
@@ -1914,34 +2246,33 @@ export interface ConstantsResponseProto020
   };
 }
 
-export interface ConstantsResponseProto019
-  extends Omit<
-    ConstantsResponseProto017,
-    | 'baking_reward_bonus_per_slot'
-    | 'baking_reward_fixed_portion'
-    | 'double_baking_punishment'
-    | 'endorsing_reward_per_slot'
-    | 'frozen_deposits_percentage'
-    | 'liquidity_baking_subsidy'
-    | 'ratio_of_frozen_deposits_slashed_per_double_endorsement'
-    | 'seed_nonce_revelation_tip'
-    | 'smart_rollup_enable'
-    | 'tx_rollup_commitment_bond'
-    | 'tx_rollup_cost_per_byte_ema_factor'
-    | 'tx_rollup_enable'
-    | 'tx_rollup_finality_period'
-    | 'tx_rollup_hard_size_limit_per_inbox'
-    | 'tx_rollup_hard_size_limit_per_message'
-    | 'tx_rollup_max_commitments_count'
-    | 'tx_rollup_max_inboxes_count'
-    | 'tx_rollup_max_messages_per_inbox'
-    | 'tx_rollup_max_ticket_payload_size'
-    | 'tx_rollup_max_withdrawals_per_batch'
-    | 'tx_rollup_origination_size'
-    | 'tx_rollup_rejection_max_proof_size'
-    | 'tx_rollup_sunset_level'
-    | 'tx_rollup_withdraw_period'
-  > {
+export interface ConstantsResponseProto019 extends Omit<
+  ConstantsResponseProto017,
+  | 'baking_reward_bonus_per_slot'
+  | 'baking_reward_fixed_portion'
+  | 'double_baking_punishment'
+  | 'endorsing_reward_per_slot'
+  | 'frozen_deposits_percentage'
+  | 'liquidity_baking_subsidy'
+  | 'ratio_of_frozen_deposits_slashed_per_double_endorsement'
+  | 'seed_nonce_revelation_tip'
+  | 'smart_rollup_enable'
+  | 'tx_rollup_commitment_bond'
+  | 'tx_rollup_cost_per_byte_ema_factor'
+  | 'tx_rollup_enable'
+  | 'tx_rollup_finality_period'
+  | 'tx_rollup_hard_size_limit_per_inbox'
+  | 'tx_rollup_hard_size_limit_per_message'
+  | 'tx_rollup_max_commitments_count'
+  | 'tx_rollup_max_inboxes_count'
+  | 'tx_rollup_max_messages_per_inbox'
+  | 'tx_rollup_max_ticket_payload_size'
+  | 'tx_rollup_max_withdrawals_per_batch'
+  | 'tx_rollup_origination_size'
+  | 'tx_rollup_rejection_max_proof_size'
+  | 'tx_rollup_sunset_level'
+  | 'tx_rollup_withdraw_period'
+> {
   adaptive_issuance_activation_vote_enable: boolean;
   adaptive_issuance_launch_ema_threshold: number;
   adaptive_rewards_params: {
@@ -1998,24 +2329,23 @@ export interface ConstantsResponseProto019
 
 export type ConstantsResponseProto017 = ConstantsResponseProto016;
 
-export interface ConstantsResponseProto016
-  extends Omit<
-    ConstantsResponseProto015,
-    | 'sc_max_wrapped_proof_binary_size'
-    | 'sc_rollup_challenge_window_in_blocks'
-    | 'sc_rollup_commitment_period_in_blocks'
-    | 'sc_rollup_enable'
-    | 'sc_rollup_max_active_outbox_levels'
-    | 'sc_rollup_max_lookahead_in_blocks'
-    | 'sc_rollup_max_number_of_cemented_commitments'
-    | 'sc_rollup_max_number_of_messages_per_commitment_period'
-    | 'sc_rollup_max_outbox_messages_per_level'
-    | 'sc_rollup_message_size_limit'
-    | 'sc_rollup_number_of_sections_in_dissection'
-    | 'sc_rollup_origination_size'
-    | 'sc_rollup_stake_amount'
-    | 'sc_rollup_timeout_period_in_blocks'
-  > {
+export interface ConstantsResponseProto016 extends Omit<
+  ConstantsResponseProto015,
+  | 'sc_max_wrapped_proof_binary_size'
+  | 'sc_rollup_challenge_window_in_blocks'
+  | 'sc_rollup_commitment_period_in_blocks'
+  | 'sc_rollup_enable'
+  | 'sc_rollup_max_active_outbox_levels'
+  | 'sc_rollup_max_lookahead_in_blocks'
+  | 'sc_rollup_max_number_of_cemented_commitments'
+  | 'sc_rollup_max_number_of_messages_per_commitment_period'
+  | 'sc_rollup_max_outbox_messages_per_level'
+  | 'sc_rollup_message_size_limit'
+  | 'sc_rollup_number_of_sections_in_dissection'
+  | 'sc_rollup_origination_size'
+  | 'sc_rollup_stake_amount'
+  | 'sc_rollup_timeout_period_in_blocks'
+> {
   smart_rollup_arith_pvm_enable: boolean;
   smart_rollup_challenge_window_in_blocks: number;
   smart_rollup_commitment_period_in_blocks: number;
@@ -2034,14 +2364,13 @@ export interface ConstantsResponseProto016
   smart_rollup_timeout_period_in_blocks: number;
 }
 
-export interface ConstantsResponseProto015
-  extends Omit<
-    ConstantsResponseProto014,
-    | 'max_wrapped_proof_binary_size'
-    | 'tokens_per_roll'
-    | 'liquidity_baking_sunset_level'
-    | 'sc_rollup_max_available_messages'
-  > {
+export interface ConstantsResponseProto015 extends Omit<
+  ConstantsResponseProto014,
+  | 'max_wrapped_proof_binary_size'
+  | 'tokens_per_roll'
+  | 'liquidity_baking_sunset_level'
+  | 'sc_rollup_max_available_messages'
+> {
   minimal_stake: BigNumber;
   sc_max_wrapped_proof_binary_size: number;
   sc_rollup_message_size_limit: number;
@@ -2081,14 +2410,13 @@ export interface ConstantsResponseProto014 extends ConstantsResponseProto013 {
   sc_rollup_max_outbox_messages_per_level?: number;
 }
 
-export interface ConstantsResponseProto013
-  extends Omit<
-    ConstantsResponseProto012,
-    | 'blocks_per_voting_period'
-    | 'cache_layout'
-    | 'delegate_selection'
-    | 'liquidity_baking_escape_ema_threshold'
-  > {
+export interface ConstantsResponseProto013 extends Omit<
+  ConstantsResponseProto012,
+  | 'blocks_per_voting_period'
+  | 'cache_layout'
+  | 'delegate_selection'
+  | 'liquidity_baking_escape_ema_threshold'
+> {
   cache_layout_size?: number;
   cache_sampler_state_cycles?: number;
   cache_script_size?: number;
@@ -2117,20 +2445,19 @@ export interface ConstantsResponseProto013
   sc_rollup_max_available_messages?: number;
 }
 
-export interface ConstantsResponseProto012
-  extends Omit<
-    ConstantsResponseProto011,
-    | 'baking_reward_per_endorsement'
-    | 'initial_endorsers'
-    | 'delay_per_missing_endorsement'
-    | 'test_chain_duration'
-    | 'blocks_per_roll_snapshot'
-    | 'time_between_blocks'
-    | 'endorsers_per_block'
-    | 'block_security_deposit'
-    | 'endorsement_security_deposit'
-    | 'endorsement_reward'
-  > {
+export interface ConstantsResponseProto012 extends Omit<
+  ConstantsResponseProto011,
+  | 'baking_reward_per_endorsement'
+  | 'initial_endorsers'
+  | 'delay_per_missing_endorsement'
+  | 'test_chain_duration'
+  | 'blocks_per_roll_snapshot'
+  | 'time_between_blocks'
+  | 'endorsers_per_block'
+  | 'block_security_deposit'
+  | 'endorsement_security_deposit'
+  | 'endorsement_reward'
+> {
   blocks_per_stake_snapshot?: number;
   baking_reward_fixed_portion?: BigNumber;
   baking_reward_bonus_per_slot?: BigNumber;
@@ -2166,8 +2493,10 @@ export interface ConstantsResponseProto009 extends ConstantsResponseProto008 {}
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface ConstantsResponseProto008 extends ConstantsResponseProto007 {}
 
-export interface ConstantsResponseProto007
-  extends Omit<ConstantsResponseProto006, 'max_revelations_per_block'> {
+export interface ConstantsResponseProto007 extends Omit<
+  ConstantsResponseProto006,
+  'max_revelations_per_block'
+> {
   max_anon_ops_per_block?: number;
 }
 
@@ -2187,8 +2516,10 @@ export interface ConstantsResponseProto004 extends ConstantsResponseProto003 {
   test_chain_duration?: BigNumber;
 }
 
-export interface ConstantsResponseProto003
-  extends Omit<ConstantsResponseProto001And002, 'origination_burn'> {
+export interface ConstantsResponseProto003 extends Omit<
+  ConstantsResponseProto001And002,
+  'origination_burn'
+> {
   origination_size?: number;
   max_proposals_per_delegate?: number;
 }
@@ -2204,6 +2535,7 @@ export interface ContractResponse {
   script: ScriptedContracts;
   counter?: string;
   delegate?: string;
+  revealed?: boolean;
 }
 
 export interface TestChainStatus {
@@ -2237,6 +2569,18 @@ export interface LevelInfo {
   expected_commitment: boolean;
 }
 
+export interface Attestations {
+  total_committee_power: number;
+  threshold: number;
+  recorded_power: number;
+}
+
+export interface PreAttestations {
+  total_committee_power: number;
+  threshold: number;
+  recorded_power: number;
+}
+
 export interface BlockMetadata {
   protocol: string;
   next_protocol: string;
@@ -2253,8 +2597,6 @@ export interface BlockMetadata {
   deactivated?: string[];
   balance_updates?: OperationBalanceUpdates;
   liquidity_baking_toggle_ema?: number;
-  adaptive_issuance_vote_ema?: number;
-  adaptive_issuance_activation_cycle?: number;
   implicit_operations_results?: SuccessfulManagerOperationResult[];
   proposer_consensus_key?: string;
   baker_consensus_key?: string;
@@ -2264,14 +2606,16 @@ export interface BlockMetadata {
   voting_period_kind?: string;
   consumed_gas?: string;
   liquidity_baking_escape_ema?: number;
+  all_bakers_attest_activation_level?: LevelInfo | null;
+  attestations?: Attestations;
+  preattestations?: PreAttestations;
+  adaptive_issuance_vote_ema?: number;
+  adaptive_issuance_activation_cycle?: number;
 }
 
-export type RPCRunOperationParam = {
+export interface RPCSimulateOperationParam {
   operation: OperationObject;
   chain_id: string;
-};
-
-export interface RPCSimulateOperationParam extends RPCRunOperationParam {
   blocks_before_activation?: number;
   latency?: number;
 }
@@ -2373,6 +2717,17 @@ export type ProtocolsResponse = {
   next_protocol: string;
 };
 
+export type ProtocolActivationsResponse = ProtocolActivation[] | ProtocolActivation;
+
+export type ProtocolActivation = {
+  protocol: string;
+  proto_level: number;
+  activation_block: {
+    block_hash: string;
+    level: number;
+  };
+};
+
 export type Next =
   | {
       next: number;
@@ -2406,15 +2761,6 @@ type FailedProcessedOperation = Pick<
 > & {
   error: TezosGenericOperationError[];
 };
-// TODO: Remove once mainnet migrated into quebec protocol it's not supported anymore
-export interface PendingOperationsV1 {
-  applied: Pick<OperationEntry, 'hash' | 'branch' | 'contents' | 'signature'>[];
-  refused: FailedProcessedOperation[];
-  outdated: FailedProcessedOperation[];
-  branch_refused: FailedProcessedOperation[];
-  branch_delayed: FailedProcessedOperation[];
-  unprocessed: Pick<OperationEntry, 'hash' | 'protocol' | 'branch' | 'contents' | 'signature'>[];
-}
 
 export interface PendingOperationsV2 {
   validated: Pick<OperationEntry, 'hash' | 'branch' | 'contents' | 'signature'>[];
@@ -2571,3 +2917,18 @@ export interface SmartRollupTimeoutStakers {
   alice: string;
   bob: string;
 }
+
+export interface ActiveStakingParametersResponse {
+  limit_of_staking_over_baking_millionth: number;
+  edge_of_baking_over_staking_billionth: number;
+}
+
+export type PendingStakingParametersResponse = Array<{
+  cycle: number;
+  parameters: {
+    limit_of_staking_over_baking_millionth: number;
+    edge_of_baking_over_staking_billionth: number;
+  };
+}>;
+
+export type DestinationIndexResponse = string | null;

@@ -1,6 +1,6 @@
 {
   "name": "@taquito/beacon-wallet",
-  "version": "21.0.5",
+  "version": "24.0.1",
   "description": "Beacon wallet provider",
   "keywords": [
     "tezos",
@@ -24,7 +24,7 @@
   },
   "license": "Apache-2.0",
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "scripts": {
     "test": "jest --coverage",
@@ -46,18 +46,51 @@
   },
   "jest": {
     "transform": {
-      ".(ts|tsx)": "ts-jest"
+      ".(ts|tsx)": [
+        "ts-jest",
+        {
+          "useESM": true,
+          "allowJs": true,
+          "tsconfig": {
+            "allowJs": true,
+            "module": "es2020"
+          }
+        }
+      ],
+      ".(js|jsx|mjs)": [
+        "ts-jest",
+        {
+          "useESM": true,
+          "allowJs": true,
+          "tsconfig": {
+            "allowJs": true,
+            "module": "es2020"
+          }
+        }
+      ]
     },
     "testEnvironment": "node",
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
     "moduleFileExtensions": [
       "ts",
       "tsx",
-      "js"
+      "js",
+      "jsx",
+      "json",
+      "mjs"
     ],
     "moduleNameMapper": {
-      "^@taquito/taquito$": "<rootDir>/../taquito/src/taquito.ts"
+      "^@taquito/taquito$": "<rootDir>/../taquito/src/taquito.ts",
+      "^(\\.{1,2}/.*)\\.js$": "$1"
     },
+    "transformIgnorePatterns": [
+      "/node_modules/(?!(@airgap|@stablelib)/.*)"
+    ],
+    "extensionsToTreatAsEsm": [
+      ".ts",
+      ".tsx",
+      ".mts"
+    ],
     "coveragePathIgnorePatterns": [
       "/node_modules/",
       "/test/"
@@ -67,9 +100,9 @@
     ]
   },
   "dependencies": {
-    "@airgap/beacon-dapp": "4.5.1",
-    "@taquito/core": "^21.0.5",
-    "@taquito/taquito": "^21.0.5",
+    "@airgap/beacon-dapp": "^4.6.4",
+    "@taquito/core": "^24.0.1",
+    "@taquito/taquito": "^24.0.1",
     "crypto-browserify": "^3.12.1",
     "util": "^0.12.5"
   },
@@ -77,7 +110,7 @@
     "@types/bluebird": "^3.5.42",
     "@types/chrome": "0.0.269",
     "@types/jest": "^29.5.12",
-    "@types/node": "^18",
+    "@types/node": "^20",
     "@types/ws": "^8.5.12",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
@@ -96,6 +129,7 @@
     "rimraf": "^6.0.1",
     "rollup": "^4.22.4",
     "rollup-plugin-json": "^4.0.0",
+    "rollup-plugin-polyfill-node": "^0.13.0",
     "rollup-plugin-typescript2": "^0.36.0",
     "shelljs": "^0.8.5",
     "ts-jest": "^29.2.3",

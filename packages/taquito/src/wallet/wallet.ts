@@ -1,12 +1,8 @@
 import { Context } from '../context';
-import {
-  ContractAbstraction,
-  ContractStorageType,
-  DefaultWalletType,
-  SendParams,
-} from '../contract';
-import { ContractMethod } from '../contract/contract-methods/contract-method-flat-param';
-import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
+import { ContractAbstraction } from '../contract/contract';
+import type { ContractStorageType, DefaultWalletType } from '../contract/contract';
+import { SendParams } from '../contract/contract-methods/contract-method-interface';
+import type { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
 import { OpKind, withKind } from '../operations/types';
 import { OriginationWalletOperation } from './origination-operation';
 import {
@@ -20,6 +16,7 @@ import {
   WalletUnstakeParams,
   WalletFinalizeUnstakeParams,
   WalletTransferTicketParams,
+  WalletRegisterGlobalConstantParams,
 } from './interface';
 import {
   InvalidAddressError,
@@ -28,12 +25,7 @@ import {
   InvalidStakingAddressError,
   InvalidFinalizeUnstakeAmountError,
 } from '@taquito/core';
-import {
-  validateAddress,
-  validateContractAddress,
-  ValidationResult,
-  invalidDetail,
-} from '@taquito/utils';
+import { validateAddress, validateContractAddress, ValidationResult } from '@taquito/utils';
 import { OperationContentsFailingNoop } from '@taquito/rpc';
 
 export interface PKHOption {
@@ -45,7 +37,8 @@ export type WalletParamsWithKind =
   | withKind<WalletOriginateParams, OpKind.ORIGINATION>
   | withKind<WalletDelegateParams, OpKind.DELEGATION>
   | withKind<WalletIncreasePaidStorageParams, OpKind.INCREASE_PAID_STORAGE>
-  | withKind<WalletTransferTicketParams, OpKind.TRANSFER_TICKET>;
+  | withKind<WalletTransferTicketParams, OpKind.TRANSFER_TICKET>
+  | withKind<WalletRegisterGlobalConstantParams, OpKind.REGISTER_GLOBAL_CONSTANT>;
 
 export class WalletOperationBatch {
   private operations: WalletParamsWithKind[] = [];
@@ -62,7 +55,7 @@ export class WalletOperationBatch {
   withTransfer(params: WalletTransferParams) {
     const toValidation = validateAddress(params.to);
     if (toValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.to, invalidDetail(toValidation));
+      throw new InvalidAddressError(params.to, toValidation);
     }
     this.operations.push({ kind: OpKind.TRANSACTION, ...params });
     return this;
@@ -73,10 +66,7 @@ export class WalletOperationBatch {
    * @param params Call a contract method
    * @param options Generic operation parameters
    */
-  withContractCall(
-    params: ContractMethod<Wallet> | ContractMethodObject<Wallet>,
-    options: Partial<SendParams> = {}
-  ) {
+  withContractCall(params: ContractMethodObject<Wallet>, options: Partial<SendParams> = {}) {
     return this.withTransfer(params.toTransferParams(options));
   }
 
@@ -87,7 +77,7 @@ export class WalletOperationBatch {
   withDelegation(params: WalletDelegateParams) {
     const delegateValidation = validateAddress(params.delegate ?? '');
     if (params.delegate && delegateValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.delegate, invalidDetail(delegateValidation));
+      throw new InvalidAddressError(params.delegate, delegateValidation);
     }
     this.operations.push({ kind: OpKind.DELEGATION, ...params });
     return this;
@@ -111,7 +101,7 @@ export class WalletOperationBatch {
   withIncreasePaidStorage(params: WalletIncreasePaidStorageParams) {
     const destinationValidation = validateAddress(params.destination);
     if (destinationValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.destination, invalidDetail(destinationValidation));
+      throw new InvalidAddressError(params.destination, destinationValidation);
     }
     this.operations.push({ kind: OpKind.INCREASE_PAID_STORAGE, ...params });
     return this;
@@ -124,9 +114,18 @@ export class WalletOperationBatch {
   withTransferTicket(params: WalletTransferTicketParams) {
     const destinationValidation = validateAddress(params.destination);
     if (destinationValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.destination, invalidDetail(destinationValidation));
+      throw new InvalidAddressError(params.destination, destinationValidation);
     }
     this.operations.push({ kind: OpKind.TRANSFER_TICKET, ...params });
+    return this;
+  }
+
+  /**
+   * @description Add a RegisterGlobalConstant operation to the batch
+   * @param param RegisterGlobalConstant operation parameter
+   */
+  withRegisterGlobalConstant(params: WalletRegisterGlobalConstantParams) {
+    this.operations.push({ kind: OpKind.REGISTER_GLOBAL_CONSTANT, ...params });
     return this;
   }
 
@@ -144,6 +143,10 @@ export class WalletOperationBatch {
         return this.walletProvider.mapDelegateParamsToWalletParams(async () => param);
       case OpKind.INCREASE_PAID_STORAGE:
         return this.walletProvider.mapIncreasePaidStorageWalletParams(async () => param);
+      case OpKind.REGISTER_GLOBAL_CONSTANT:
+        return this.walletProvider.mapRegisterGlobalConstantParamsToWalletParams(async () => param);
+      case OpKind.TRANSFER_TICKET:
+        return this.walletProvider.mapTransferTicketParamsToWalletParams(async () => param);
       default:
         throw new InvalidOperationKindError(JSON.stringify((param as any).kind));
     }
@@ -168,6 +171,12 @@ export class WalletOperationBatch {
           break;
         case OpKind.INCREASE_PAID_STORAGE:
           this.withIncreasePaidStorage(param);
+          break;
+        case OpKind.REGISTER_GLOBAL_CONSTANT:
+          this.withRegisterGlobalConstant(param);
+          break;
+        case OpKind.TRANSFER_TICKET:
+          this.withTransferTicket(param);
           break;
         default:
           throw new InvalidOperationKindError(JSON.stringify((param as any).kind));
@@ -262,7 +271,7 @@ export class Wallet {
   setDelegate(params: WalletDelegateParams) {
     const delegateValidation = validateAddress(params.delegate ?? '');
     if (params.delegate && delegateValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.delegate, invalidDetail(delegateValidation));
+      throw new InvalidAddressError(params.delegate, delegateValidation);
     }
     return this.walletCommand(async () => {
       const mappedParams = await this.walletProvider.mapDelegateParamsToWalletParams(
@@ -327,7 +336,7 @@ export class Wallet {
   transfer(params: WalletTransferParams) {
     const toValidation = validateAddress(params.to);
     if (toValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.to, invalidDetail(toValidation));
+      throw new InvalidAddressError(params.to, toValidation);
     }
     return this.walletCommand(async () => {
       const mappedParams = await this.walletProvider.mapTransferParamsToWalletParams(
@@ -346,7 +355,7 @@ export class Wallet {
   transferTicket(params: WalletTransferTicketParams) {
     const toValidation = validateAddress(params.destination);
     if (toValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.destination, invalidDetail(toValidation));
+      throw new InvalidAddressError(params.destination, toValidation);
     }
     return this.walletCommand(async () => {
       const mappedParams = await this.walletProvider.mapTransferTicketParamsToWalletParams(
@@ -419,9 +428,6 @@ export class Wallet {
           if (!params.to) {
             params.to = source;
           }
-          if (params.to !== source) {
-            throw new InvalidStakingAddressError(params.to);
-          }
           if (!params.amount) {
             params.amount = 0;
           }
@@ -445,7 +451,7 @@ export class Wallet {
   increasePaidStorage(params: WalletIncreasePaidStorageParams) {
     const destinationValidation = validateAddress(params.destination);
     if (destinationValidation !== ValidationResult.VALID) {
-      throw new InvalidAddressError(params.destination, invalidDetail(destinationValidation));
+      throw new InvalidAddressError(params.destination, destinationValidation);
     }
     return this.walletCommand(async () => {
       const mappedParams = await this.walletProvider.mapIncreasePaidStorageWalletParams(
@@ -453,6 +459,21 @@ export class Wallet {
       );
       const opHash = await this.walletProvider.sendOperations([mappedParams]);
       return this.context.operationFactory.createIncreasePaidStorageOperation(opHash);
+    });
+  }
+
+  /**
+   * @description Register a Micheline expression in a global table of constants.
+   * @returns a RegisterGlobalConstantWalletOperation promise object when followed by .send()
+   * @param params operation parameter
+   */
+  registerGlobalConstant(params: WalletRegisterGlobalConstantParams) {
+    return this.walletCommand(async () => {
+      const mappedParams = await this.walletProvider.mapRegisterGlobalConstantParamsToWalletParams(
+        async () => params
+      );
+      const opHash = await this.walletProvider.sendOperations([mappedParams]);
+      return this.context.operationFactory.createRegisterGlobalConstantOperation(opHash);
     });
   }
 
@@ -484,7 +505,7 @@ export class Wallet {
   ): Promise<T> {
     const addressValidation = validateContractAddress(address);
     if (addressValidation !== ValidationResult.VALID) {
-      throw new InvalidContractAddressError(address, invalidDetail(addressValidation));
+      throw new InvalidContractAddressError(address, addressValidation);
     }
     const rpc = this.context.withExtensions().rpc;
     const readProvider = this.context.withExtensions().readProvider;
@@ -500,13 +521,5 @@ export class Wallet {
       readProvider
     );
     return contractAbstractionComposer(abs, this.context);
-  }
-
-  /**
-   * @deprecated Deprecated in favor of {@link Wallet.pk} will be removed in v19.1
-   * @description Retrieve the PK of the account that is currently in use by the wallet
-   */
-  async getPK() {
-    return await this.pk();
   }
 }

@@ -14,7 +14,11 @@ import { BaseTokenSchema } from '../schema/types';
  */
 export class SignatureValidationError extends TokenValidationError {
   name = 'SignatureValidationError';
-  constructor(public value: any, public token: SignatureToken, message: string) {
+  constructor(
+    public value: any,
+    public token: SignatureToken,
+    message: string
+  ) {
     super(value, token, message);
   }
 }
@@ -69,14 +73,6 @@ export class SignatureToken extends ComparableToken {
     }
 
     return { string: val };
-  }
-
-  /**
-   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
-   *
-   */
-  public ExtractSchema() {
-    return SignatureToken.prim;
   }
 
   generateSchema(): BaseTokenSchema {

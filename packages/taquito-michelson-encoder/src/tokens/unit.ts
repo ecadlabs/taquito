@@ -1,6 +1,6 @@
 import { ComparableToken, SemanticEncoding, Token, TokenFactory } from './token';
 import { BaseTokenSchema } from '../schema/types';
-import { UnitValue } from '../taquito-michelson-encoder';
+import { UnitValue } from '../constants';
 
 export class UnitToken extends ComparableToken {
   static prim: 'unit' = 'unit' as const;
@@ -27,14 +27,6 @@ export class UnitToken extends ComparableToken {
 
   public Execute(_val: { prim: string }) {
     return UnitValue;
-  }
-
-  /**
-   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
-   *
-   */
-  public ExtractSchema() {
-    return UnitToken.prim;
   }
 
   generateSchema(): BaseTokenSchema {

@@ -1,0 +1,118 @@
+---
+interface Props {
+  currentVersion: string;
+}
+
+const { currentVersion } = Astro.props;
+---
+
+<div
+  id="search-modal"
+  class="fixed inset-0 z-[200] hidden items-center justify-center bg-black/50 backdrop-blur-sm"
+  data-version={currentVersion}
+>
+  <div class="w-full max-w-2xl mx-4 bg-white rounded-lg shadow-2xl overflow-hidden flex flex-col max-h-[80vh]">
+    <div class="flex items-center gap-3 px-4 py-3 border-b border-gray-200">
+      <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+      </svg>
+      <input id="search-input" type="text" placeholder="Search documentation..." class="flex-1 outline-none text-lg" autocomplete="off" />
+      <kbd class="hidden sm:block px-2 py-1 text-xs font-semibold text-gray-600 bg-gray-100 rounded">ESC</kbd>
+    </div>
+
+    <div id="search-results" class="flex-1 overflow-y-auto p-2">
+      <p id="search-empty" class="py-8 text-center text-sm text-gray-500">Type to search v{currentVersion}</p>
+      <p id="search-loading" class="hidden py-8 text-center text-sm text-gray-500">Loading...</p>
+      <p id="search-no-results" class="hidden py-8 text-center text-sm text-gray-500">No results found</p>
+      <ul id="search-list" class="hidden space-y-1"></ul>
+    </div>
+
+    <div class="border-t border-gray-200 px-4 py-2 bg-gray-50 flex justify-between text-xs text-gray-500">
+      <span><kbd class="px-1.5 py-0.5 bg-white border border-gray-300 rounded">↑↓</kbd> Navigate <kbd class="ml-2 px-1.5 py-0.5 bg-white border border-gray-300 rounded">↵</kbd> Select</span>
+      <span>v{currentVersion}</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  import Fuse from 'fuse.js';
+
+  const $ = (id: string) => document.getElementById(id);
+  const modal = $('search-modal')!;
+  const input = $('search-input') as HTMLInputElement;
+  const list = $('search-list')!;
+  const states = { empty: $('search-empty')!, loading: $('search-loading')!, none: $('search-no-results')! };
+
+  let fuse: Fuse<any> | null = null;
+  let selected = 0;
+
+  const show = (el: HTMLElement) => el.classList.remove('hidden');
+  const hide = (el: HTMLElement) => el.classList.add('hidden');
+  const setState = (state: 'empty' | 'loading' | 'none' | 'results') => {
+    Object.values(states).forEach(hide);
+    hide(list);
+    if (state === 'results') show(list);
+    else if (states[state]) show(states[state]);
+  };
+
+  async function load() {
+    setState('loading');
+    try {
+      const res = await fetch(`/api/search/${modal.dataset.version}.json`);
+      const data = await res.json();
+      fuse = new Fuse(data, { keys: ['title', 'content'], threshold: 0.3 });
+    } catch {}
+    setState('empty');
+  }
+
+  function open() {
+    modal.classList.replace('hidden', 'flex');
+    input.focus();
+    if (!fuse) load();
+  }
+
+  function close() {
+    modal.classList.replace('flex', 'hidden');
+    input.value = '';
+    selected = 0;
+    setState('empty');
+  }
+
+  function search(q: string) {
+    if (!q.trim() || !fuse) return setState('empty');
+    const results = fuse.search(q).slice(0, 10);
+    if (!results.length) return setState('none');
+
+    list.innerHTML = results.map((r, i) => `
+      <li><a href="${r.item.url}" class="block p-3 rounded-md border ${i === 0 ? 'bg-primary/10 border-primary/20' : 'border-transparent hover:bg-gray-100'}">
+        <div class="font-medium text-gray-900">${r.item.title}</div>
+        <div class="text-sm text-gray-600 truncate">${r.item.excerpt}</div>
+      </a></li>
+    `).join('');
+    selected = 0;
+    setState('results');
+  }
+
+  function nav(dir: number) {
+    const items = list.querySelectorAll('a');
+    if (!items.length) return;
+    items[selected]?.classList.replace('bg-primary/10', 'hover:bg-gray-100');
+    items[selected]?.classList.replace('border-primary/20', 'border-transparent');
+    selected = (selected + dir + items.length) % items.length;
+    items[selected]?.classList.replace('hover:bg-gray-100', 'bg-primary/10');
+    items[selected]?.classList.replace('border-transparent', 'border-primary/20');
+    items[selected]?.scrollIntoView({ block: 'nearest' });
+  }
+
+  input.addEventListener('input', (e) => search((e.target as HTMLInputElement).value));
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown') { e.preventDefault(); nav(1); }
+    if (e.key === 'ArrowUp') { e.preventDefault(); nav(-1); }
+    if (e.key === 'Enter') { e.preventDefault(); (list.querySelectorAll('a')[selected] as HTMLAnchorElement)?.click(); }
+    if (e.key === 'Escape') close();
+  });
+  modal.addEventListener('click', (e) => e.target === modal && close());
+  document.addEventListener('keydown', (e) => (e.metaKey || e.ctrlKey) && e.key === 'k' && (e.preventDefault(), modal.classList.contains('hidden') ? open() : close()));
+
+  (window as any).openSearchModal = open;
+</script>

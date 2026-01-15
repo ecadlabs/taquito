@@ -1,0 +1,16 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "taquito-chatkit",
+	"main": "src/index.ts",
+	"compatibility_date": "2025-12-02",
+	"observability": {
+		"enabled": true
+	},
+	"kv_namespaces": [
+		{
+			"binding": "RATE_LIMIT",
+			"id": "c98657fb518c452ca5dcb608fe07221f",
+			"remote": true
+		}
+	]
+}

@@ -11,11 +11,11 @@ import {
   TransferParams,
   TransferTicketParams,
   UpdateConsensusKeyParams,
+  UpdateCompanionKeyParams,
   ActivationParams,
   SmartRollupAddMessagesParams,
   SmartRollupOriginateParams,
 } from '../operations/types';
-import { ContractMethod } from '../contract/contract-methods/contract-method-flat-param';
 import { ContractMethodObject } from '../contract/contract-methods/contract-method-object-param';
 import { ContractProvider } from '../contract/interface';
 import { ParamsWithKind } from '../operations/types';
@@ -87,6 +87,14 @@ export interface PreparationProvider {
   updateConsensusKey(params: UpdateConsensusKeyParams): Promise<PreparedOperation>;
 
   /**
+   * @description Method to prepare an update_companion_key operation
+   * @param params updateCompanionKey operation parameters
+   * @param source string or undefined source pkh
+   * @returns a PreparedOperation object
+   */
+  updateCompanionKey(params: UpdateCompanionKeyParams): Promise<PreparedOperation>;
+
+  /**
    *
    * @description Method to prepare a transfer_ticket operation
    * @param params TransferTicketx operation parameters
@@ -149,12 +157,10 @@ export interface PreparationProvider {
 
   /**
    * @description Method to prepare a contract call (transfer) operation
-   * @param contractMethod ContractMethod or ContractMethodObject retrieved from smart contract
+   * @param contractMethod ContractMethodObject retrieved from smart contract
    * @returns a PreparedOperation object
    */
-  contractCall(
-    contractMethod: ContractMethod<ContractProvider> | ContractMethodObject<ContractProvider>
-  ): Promise<PreparedOperation>;
+  contractCall(contractMethod: ContractMethodObject<ContractProvider>): Promise<PreparedOperation>;
 
   /**
    *

@@ -1,17 +1,9 @@
 import { RpcContractProvider } from '../../src/contract/rpc-contract-provider';
 import { HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
-import {
-  sample,
-  sampleStorage,
-  sampleBigMapValue,
-  tokenInit,
-  tokenCode,
-  sampleBigMapAbstractionValue,
-} from './data';
+import { sample, sampleStorage, tokenInit, tokenCode, sampleBigMapAbstractionValue } from './data';
 import BigNumber from 'bignumber.js';
 import { Context } from '../../src/context';
-import { ContractMethod } from '../../src/contract/contract-methods/contract-method-flat-param';
-import { MichelsonMap, Schema } from '@taquito/michelson-encoder';
+import { Schema } from '@taquito/michelson-encoder';
 import { BigMapAbstraction } from '../../src/contract/big-map';
 import { ContractMethodObject } from '../../src/contract/contract-methods/contract-method-object-param';
 import { smallNestedMapTypecheck, ticketTokenTestMock } from '../helpers';
@@ -25,7 +17,6 @@ describe('RpcContractProvider test', () => {
     getScript: jest.Mock<any, any>;
     getStorage: jest.Mock<any, any>;
     getBigMapExpr: jest.Mock<any, any>;
-    getBigMapKey: jest.Mock<any, any>;
     getBlockHeader: jest.Mock<any, any>;
     getEntrypoints: jest.Mock<any, any>;
     getManagerKey: jest.Mock<any, any>;
@@ -55,7 +46,6 @@ describe('RpcContractProvider test', () => {
       getScript: jest.fn(),
       getManagerKey: jest.fn(),
       getStorage: jest.fn(),
-      getBigMapKey: jest.fn(),
       getBlockHeader: jest.fn(),
       getBlockMetadata: jest.fn(),
       getContract: jest.fn(),
@@ -115,32 +105,6 @@ describe('RpcContractProvider test', () => {
         '1': 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
         '2': false,
         '3': new BigNumber('200'),
-      });
-    });
-  });
-
-  describe('getBigMapKey', () => {
-    it('should call getBigMapKey', async () => {
-      mockRpcClient.getBigMapKey.mockResolvedValue(sampleBigMapValue);
-      const result = await rpcContractProvider.getBigMapKey(
-        'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
-        'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn'
-      );
-      expect(result).toEqual({
-        '0': new BigNumber('261'),
-        '1': expect.objectContaining(
-          MichelsonMap.fromLiteral({
-            tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn: new BigNumber('100'),
-            KT1SawqvsVdAbDzqc4KwPpaS1S1veuFgF9AN: new BigNumber('100'),
-          })
-        ),
-      });
-      expect(mockRpcClient.getBigMapKey.mock.calls[0][0]).toEqual(
-        'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D'
-      );
-      expect(mockRpcClient.getBigMapKey.mock.calls[0][1]).toEqual({
-        key: { bytes: '000035e993d8c7aaa42b5e3ccd86a33390ececc73abd' },
-        type: { prim: 'bytes' },
       });
     });
   });
@@ -717,7 +681,6 @@ describe('RpcContractProvider test', () => {
       mockSigner.publicKey.mockResolvedValue('test_pub_key');
       mockSigner.publicKeyHash.mockResolvedValue('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM');
       const result = await rpcContractProvider.at('KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D');
-      expect(result.methods.mint('test', 100)).toBeInstanceOf(ContractMethod);
       expect(result.methodsObject.mint({ 0: 'test', 1: 100 })).toBeInstanceOf(ContractMethodObject);
     });
   });

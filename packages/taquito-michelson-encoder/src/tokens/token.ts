@@ -125,12 +125,6 @@ export abstract class Token {
 
   public createToken = this.fac;
 
-  /**
-   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
-   *
-   */
-  public abstract ExtractSchema(): any;
-
   abstract generateSchema(): TokenSchema;
 
   public abstract Execute(val: any, semantics?: Semantic): any;
@@ -140,7 +134,7 @@ export abstract class Token {
   public abstract EncodeObject(args: any, semantics?: SemanticEncoding): any;
 
   public ExtractSignature() {
-    return [[this.ExtractSchema()]];
+    return [[this.generateSchema()]];
   }
 
   abstract findAndReturnTokens(tokenToFind: string, tokens: Array<Token>): Array<Token>;
@@ -156,10 +150,6 @@ export abstract class ComparableToken extends Token {
   abstract ToKey(val: string | MichelsonV1Expression): any;
 
   compare(o1: string, o2: string): number {
-    if (o1 === o2) {
-      return 0;
-    }
-
-    return o1 < o2 ? -1 : 1;
+    return o1 < o2 ? -1 : o1 > o2 ? 1 : 0;
   }
 }

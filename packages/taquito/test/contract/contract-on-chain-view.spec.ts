@@ -56,8 +56,8 @@ describe('OnChainView test on K protocol', () => {
 
   it('should extract the signature of the view', () => {
     expect(view.getSignature()).toEqual({
-      parameter: 'nat',
-      result: 'nat',
+      parameter: { __michelsonType: 'nat', schema: 'nat' },
+      result: { __michelsonType: 'nat', schema: 'nat' },
     });
   });
 

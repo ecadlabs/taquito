@@ -1,5 +1,6 @@
 import { CONFIGS } from "../../config";
-import { tzip16, Tzip16Module, stringToBytes } from '@taquito/tzip16';
+import { tzip16, Tzip16Module } from '@taquito/tzip16';
+import { stringToBytes } from '@taquito/utils';
 import { MichelsonMap } from "@taquito/taquito";
 import { fa2ContractTzip16 } from "../../data/fa2_contract_with_metadata";
 

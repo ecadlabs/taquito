@@ -60,19 +60,12 @@ describe('Or token', () => {
           3: { __michelsonType: 'bool', schema: 'bool' },
         },
       });
-      schema3LevelMixedAnnots = token3LevelOrMixedAnnots.ExtractSchema();
-      expect(schema3LevelMixedAnnots).toEqual({
-        0: 'bytes',
-        1: 'int',
-        2: 'nat',
-        3: 'bool',
-      });
       schema3LevelMixedAnnots = token3LevelOrMixedAnnots.ExtractSignature();
       expect(schema3LevelMixedAnnots).toEqual([
-        ['0', 'bytes'],
-        ['1', 'int'],
-        ['2', 'nat'],
-        ['3', 'bool'],
+        ['0', { __michelsonType: 'bytes', schema: 'bytes' }],
+        ['1', { __michelsonType: 'int', schema: 'int' }],
+        ['2', { __michelsonType: 'nat', schema: 'nat' }],
+        ['3', { __michelsonType: 'bool', schema: 'bool' }],
       ]);
 
       const left = { prim: 'Left', args: [{ bytes: '5674' }] };
@@ -576,11 +569,6 @@ describe('Or token', () => {
 
   describe('ExtractSchema', () => {
     it('Should extract schema properly', () => {
-      expect(token.ExtractSchema()).toEqual({
-        intTest: 'int',
-        stringTest: 'string',
-      });
-
       expect(token.generateSchema()).toEqual({
         __michelsonType: 'or',
         schema: {
@@ -593,11 +581,6 @@ describe('Or token', () => {
             schema: 'string',
           },
         },
-      });
-
-      expect(tokenNoAnnots.ExtractSchema()).toEqual({
-        0: 'int',
-        1: 'string',
       });
 
       expect(tokenNoAnnots.generateSchema()).toEqual({
@@ -614,28 +597,7 @@ describe('Or token', () => {
         },
       });
 
-      let extractSchema_Legacy: object = {
-        0: { 0: 'nat', 1: 'nat', 2: 'timestamp' },
-        1: { 1: 'nat', 2: 'mutez', 3: 'nat', 4: 'timestamp' },
-        2: { 2: 'nat', 3: 'timestamp' },
-        3: { 3: 'nat', 4: 'mutez', 5: 'timestamp' },
-        4: 'nat',
-      };
-      let extractSchema_ResetFields: object = {
-        0: { 0: 'nat', 1: 'nat', 2: 'timestamp' },
-        1: { 0: 'nat', 1: 'mutez', 2: 'nat', 3: 'timestamp' },
-        2: { 0: 'nat', 1: 'timestamp' },
-        3: { 0: 'nat', 1: 'mutez', 2: 'timestamp' },
-        4: 'nat',
-      };
-      Token.fieldNumberingStrategy = 'Legacy';
-      expect(tokenComplexNoAnnots.ExtractSchema()).toEqual(extractSchema_Legacy);
-      Token.fieldNumberingStrategy = 'ResetFieldNumbersInNestedObjects';
-      expect(tokenComplexNoAnnots.ExtractSchema()).toEqual(extractSchema_ResetFields);
-      Token.fieldNumberingStrategy = 'Latest';
-      expect(tokenComplexNoAnnots.ExtractSchema()).toEqual(extractSchema_ResetFields);
-
-      let generateSchema_Legacy: object = {
+      const generateSchema_Legacy: object = {
         __michelsonType: 'or',
         schema: {
           0: {
@@ -796,28 +758,7 @@ describe('Or token', () => {
       Token.fieldNumberingStrategy = 'Latest';
       expect(tokenComplexNoAnnots.generateSchema()).toEqual(generateSchema_ResetFields);
 
-      extractSchema_Legacy = {
-        option0: { 0: 'nat', 1: 'nat', 2: 'timestamp' },
-        option1: { 1: 'nat', 2: 'mutez', 3: 'nat', 4: 'timestamp' },
-        option2: { 2: 'nat', 3: 'timestamp' },
-        option3: { 3: 'nat', 4: 'mutez', 5: 'timestamp' },
-        option4: 'nat',
-      };
-      extractSchema_ResetFields = {
-        option0: { 0: 'nat', 1: 'nat', 2: 'timestamp' },
-        option1: { 0: 'nat', 1: 'mutez', 2: 'nat', 3: 'timestamp' },
-        option2: { 0: 'nat', 1: 'timestamp' },
-        option3: { 0: 'nat', 1: 'mutez', 2: 'timestamp' },
-        option4: 'nat',
-      };
-      Token.fieldNumberingStrategy = 'Legacy';
-      expect(tokenComplex.ExtractSchema()).toEqual(extractSchema_Legacy);
-      Token.fieldNumberingStrategy = 'ResetFieldNumbersInNestedObjects';
-      expect(tokenComplex.ExtractSchema()).toEqual(extractSchema_ResetFields);
-      Token.fieldNumberingStrategy = 'Latest';
-      expect(tokenComplex.ExtractSchema()).toEqual(extractSchema_ResetFields);
-
-      generateSchema_Legacy = {
+      const generateSchemaWithAnnots_Legacy: object = {
         __michelsonType: 'or',
         schema: {
           option0: {
@@ -972,7 +913,7 @@ describe('Or token', () => {
         },
       };
       Token.fieldNumberingStrategy = 'Legacy';
-      expect(tokenComplex.generateSchema()).toEqual(generateSchema_Legacy);
+      expect(tokenComplex.generateSchema()).toEqual(generateSchemaWithAnnots_Legacy);
       Token.fieldNumberingStrategy = 'ResetFieldNumbersInNestedObjects';
       expect(tokenComplex.generateSchema()).toEqual(generateSchema_ResetFields);
       Token.fieldNumberingStrategy = 'Latest';

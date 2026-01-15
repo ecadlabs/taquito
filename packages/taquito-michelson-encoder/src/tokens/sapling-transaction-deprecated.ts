@@ -7,7 +7,11 @@ import { SemanticEncoding, Token, TokenFactory, TokenValidationError } from './t
  */
 export class SaplingTransactionDeprecatedValidationError extends TokenValidationError {
   name = 'SaplingTransactionDeprecatedValidationError';
-  constructor(public value: any, public token: SaplingTransactionDeprecatedToken, message: string) {
+  constructor(
+    public value: any,
+    public token: SaplingTransactionDeprecatedToken,
+    message: string
+  ) {
     super(value, token, message);
   }
 }
@@ -68,18 +72,6 @@ export class SaplingTransactionDeprecatedToken extends Token {
       return semantic[SaplingTransactionDeprecatedToken.prim](val);
     }
     return { bytes: String(val).toString() };
-  }
-
-  /**
-   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
-   *
-   */
-  ExtractSchema() {
-    return {
-      [SaplingTransactionDeprecatedToken.prim]: {
-        'memo-size': Number(this.val.args[0]['int']),
-      },
-    };
   }
 
   generateSchema(): SaplingTransactionDeprecatedTokenSchema {

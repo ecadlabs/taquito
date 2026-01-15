@@ -1,6 +1,5 @@
 import {
   OperationContentsAndResult,
-  RPCRunOperationParam,
   RPCSimulateOperationParam,
   RpcClientInterface,
 } from '@taquito/rpc';
@@ -22,6 +21,8 @@ import {
   createSmartRollupAddMessagesOperation,
   createSmartRollupOriginateOperation,
   createSmartRollupExecuteOutboxMessageOperation,
+  createUpdateConsensusKeyOperation,
+  createUpdateCompanionKeyOperation,
 } from './contract/prepare';
 import { OpKind } from '@taquito/rpc';
 import { InvalidOperationKindError } from '@taquito/utils';
@@ -112,6 +113,14 @@ export abstract class Provider {
         return createIncreasePaidStorageOperation({
           ...param,
         });
+      case OpKind.UPDATE_CONSENSUS_KEY:
+        return createUpdateConsensusKeyOperation({
+          ...param,
+        });
+      case OpKind.UPDATE_COMPANION_KEY:
+        return createUpdateCompanionKeyOperation({
+          ...param,
+        });
       case OpKind.TRANSFER_TICKET:
         return createTransferTicketOperation({
           ...param,
@@ -131,14 +140,6 @@ export abstract class Provider {
       default:
         throw new InvalidOperationKindError((param as any).kind);
     }
-  }
-
-  protected async runOperation(op: RPCRunOperationParam) {
-    return {
-      opResponse: await this.rpc.runOperation(op),
-      op,
-      context: this.context.clone(),
-    };
   }
 
   protected async simulate(op: RPCSimulateOperationParam) {

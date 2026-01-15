@@ -31,21 +31,24 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
       // The view "add" returns the result of adding the nat passed as a parameter to the nat in the storage.
       expect(contract.contractViews.add().getSignature()).toEqual({
-        parameter: 'nat',
-        result: 'nat'
+        parameter: { __michelsonType: 'nat', schema: 'nat' },
+        result: { __michelsonType: 'nat', schema: 'nat' }
       });
       const viewAddResult = await contract.contractViews.add(5).executeView({ viewCaller: contract.address });
       expect(viewAddResult).toEqual(new BigNumber(7));
 
       // return the current execution context of the view
       expect(contract.contractViews.step_constants().getSignature()).toEqual({
-        parameter: 'unit',
+        parameter: { __michelsonType: 'unit', schema: 'unit' },
         result: {
-          '0': 'mutez',
-          '1': 'mutez',
-          '2': 'address',
-          '3': 'address',
-          '4': 'address'
+          __michelsonType: 'pair',
+          schema: {
+            '0': { __michelsonType: 'mutez', schema: 'mutez' },
+            '1': { __michelsonType: 'mutez', schema: 'mutez' },
+            '2': { __michelsonType: 'address', schema: 'address' },
+            '3': { __michelsonType: 'address', schema: 'address' },
+            '4': { __michelsonType: 'address', schema: 'address' }
+          }
         }
       });
       const viewStepConstantsResult = await contract.contractViews.step_constants().executeView({ source, viewCaller: contract.address });
@@ -60,8 +63,14 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       // return parameter of the view and storage value
       const viewIdResult = await contract.contractViews.id(3).executeView({ viewCaller: contract.address });
       expect(contract.contractViews.id().getSignature()).toEqual({
-        parameter: 'nat',
-        result: { '0': 'nat', '1': 'nat' }
+        parameter: { __michelsonType: 'nat', schema: 'nat' },
+        result: {
+          __michelsonType: 'pair',
+          schema: {
+            '0': { __michelsonType: 'nat', schema: 'nat' },
+            '1': { __michelsonType: 'nat', schema: 'nat' }
+          }
+        }
       });
       expect(viewIdResult).toEqual({
         '0': new BigNumber(3), // int passed in parameter
@@ -78,23 +87,35 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
       const viewSuccResult = await contract.contractViews.succ({ 0: 16, 1: contract.address }).executeView({ source, viewCaller: contract.address });
       expect(contract.contractViews.succ().getSignature()).toEqual({
-        parameter: { '0': 'nat', '1': 'address' },
-        result: 'nat'
+        parameter: {
+          __michelsonType: 'pair',
+          schema: {
+            '0': { __michelsonType: 'nat', schema: 'nat' },
+            '1': { __michelsonType: 'address', schema: 'address' }
+          }
+        },
+        result: { __michelsonType: 'nat', schema: 'nat' }
       });
       expect(viewSuccResult).toEqual(new BigNumber(20));
 
       const viewIsTwentyResult = await contract.contractViews.is_twenty({ 0: 20, 1: contract.address }).executeView({ viewCaller: contract.address });
       expect(contract.contractViews.is_twenty().getSignature()).toEqual({
-        parameter: { '0': 'nat', '1': 'address' },
-        result: 'nat'
+        parameter: {
+          __michelsonType: 'pair',
+          schema: {
+            '0': { __michelsonType: 'nat', schema: 'nat' },
+            '1': { __michelsonType: 'address', schema: 'address' }
+          }
+        },
+        result: { __michelsonType: 'nat', schema: 'nat' }
       });
       expect(viewIsTwentyResult).toEqual(new BigNumber(20));
 
       // The view "fib" takes a number (position) as a parameter and returns the value of the Fibonacci sequence at this position.
       const viewFibResult = await contract.contractViews.fib(10).executeView({ viewCaller: contract.address });
       expect(contract.contractViews.fib().getSignature()).toEqual({
-        parameter: 'nat',
-        result: 'nat'
+        parameter: { __michelsonType: 'nat', schema: 'nat' },
+        result: { __michelsonType: 'nat', schema: 'nat' }
       });
       expect(viewFibResult).toEqual(new BigNumber(55));
 

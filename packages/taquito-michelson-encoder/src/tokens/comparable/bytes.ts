@@ -14,7 +14,11 @@ import { stripHexPrefix } from '@taquito/utils';
  */
 export class BytesValidationError extends TokenValidationError {
   name = 'BytesValidationError';
-  constructor(public value: any, public token: BytesToken, message: string) {
+  constructor(
+    public value: any,
+    public token: BytesToken,
+    message: string
+  ) {
     super(value, token, message);
   }
 }
@@ -84,14 +88,6 @@ export class BytesToken extends ComparableToken {
 
   public Execute(val: any): string {
     return val.bytes;
-  }
-
-  /**
-   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
-   *
-   */
-  public ExtractSchema() {
-    return BytesToken.prim;
   }
 
   generateSchema(): BaseTokenSchema {

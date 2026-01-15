@@ -43,14 +43,6 @@ export class TimestampToken extends ComparableToken {
     }
   }
 
-  /**
-   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
-   *
-   */
-  public ExtractSchema() {
-    return TimestampToken.prim;
-  }
-
   generateSchema(): BaseTokenSchema {
     return {
       __michelsonType: TimestampToken.prim,

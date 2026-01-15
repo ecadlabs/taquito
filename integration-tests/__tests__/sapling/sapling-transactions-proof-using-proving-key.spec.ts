@@ -65,10 +65,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       ]);
 
       // Inject the sapling transaction using the ContractAbstraction by calling the default entrypoint
-      // The amount MUST be specified in the send method in order to transfer the 3 tez to the shielded pool
-      const op = await saplingContract.methods
-        .default([shieldedTx])
-        .send({ amount: amountToAlice });
+      // The amount MUST be specified in the send method in order to transfer the 3 tez to the shielded set
+      const op = await saplingContract.methodsObject.default([shieldedTx]).send({ amount: amountToAlice });
       await op.confirmation();
 
       expect(op.status).toEqual('applied');
@@ -128,7 +126,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       ]);
 
       // Inject the sapling transaction using the ContractAbstraction by calling the default entrypoint
-      const op = await saplingContract.methods.default([tx]).send();
+      const op = await saplingContract.methodsObject.default([tx]).send();
       await op.confirmation();
 
       expect(op.status).toEqual('applied');
@@ -227,7 +225,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       });
 
       // Inject the sapling transaction using the ContractAbstraction by calling the default entrypoint
-      const op = await saplingContract.methods.default([unshieldedTx]).send();
+      const op = await saplingContract.methodsObject.default([unshieldedTx]).send();
       await op.confirmation(2);
 
       expect(op.status).toEqual('applied');

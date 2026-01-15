@@ -17,6 +17,7 @@ import {
   proposalsDecoder,
   publicKeyDecoder,
   depositsLimitDecoder,
+  signatureProofDecoder,
   pvmKindDecoder,
   smartContractAddressDecoder,
   smartRollupAddressDecoder,
@@ -36,6 +37,7 @@ import {
   AttestationWithDalSchema,
   IncreasePaidStorageSchema,
   UpdateConsensusKeySchema,
+  UpdateCompanionKeySchema,
   DrainDelegateSchema,
   ManagerOperationSchema,
   operationDecoder,
@@ -85,6 +87,7 @@ export const decoders: { [key: string]: Decoder } = {
   [CODEC.ENTRYPOINT]: entrypointNameDecoder,
   [CODEC.BURN_LIMIT]: burnLimitDecoder,
   [CODEC.DEPOSITS_LIMIT]: depositsLimitDecoder,
+  [CODEC.SIGNATURE_PROOF]: signatureProofDecoder,
   [CODEC.PVM_KIND]: pvmKindDecoder,
   [CODEC.PADDED_BYTES]: paddedBytesDecoder,
   [CODEC.SMART_ROLLUP_MESSAGE]: smartRollupMessageDecoder,
@@ -120,6 +123,8 @@ decoders[CODEC.OP_INCREASE_PAID_STORAGE] = (val: Uint8ArrayConsumer) =>
   schemaDecoder(decoders)(IncreasePaidStorageSchema)(val);
 decoders[CODEC.OP_UPDATE_CONSENSUS_KEY] = (val: Uint8ArrayConsumer) =>
   schemaDecoder(decoders)(UpdateConsensusKeySchema)(val);
+decoders[CODEC.OP_UPDATE_COMPANION_KEY] = (val: Uint8ArrayConsumer) =>
+  schemaDecoder(decoders)(UpdateCompanionKeySchema)(val);
 decoders[CODEC.OP_DRAIN_DELEGATE] = (val: Uint8ArrayConsumer) =>
   schemaDecoder(decoders)(DrainDelegateSchema)(val);
 decoders[CODEC.OP_SMART_ROLLUP_ORIGINATE] = (val: Uint8ArrayConsumer) =>

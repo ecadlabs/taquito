@@ -23,10 +23,10 @@ import {
   OperationContentsAndResultSmartRollupOriginate,
   OperationContentsAndResultSmartRollupAddMessages,
   OperationContentsAndResultSmartRollupExecuteOutboxMessage,
-  RPCRunOperationParam,
   OperationMetadataBalanceUpdates,
-  PendingOperationsV1,
   PendingOperationsV2,
+  ActiveStakingParametersResponse,
+  PendingStakingParametersResponse,
   OperationContentsAndResultSmartRollupCement,
   OperationContentsAndResultSmartRollupPublish,
   OperationContentsAndResultSmartRollupRefute,
@@ -47,6 +47,7 @@ import {
   blockWeeklynetResponse,
   delegatesIthacanetResponse,
   delegatesKathmandunetResponse,
+  delegatesRionetResponse,
   votingInfoKathmandunetResponse,
   ticketUpdatesResponse,
   ticketBalancesResponse,
@@ -61,6 +62,12 @@ import {
   smartRollupTimeoutResponse,
   aiLaunchCycle,
   unstakeRequestsResponse,
+  protocolActivations,
+  protocolActivation,
+  activeStakingParametersResponse,
+  pendingStakingParametersResponse,
+  destinationIndexResponse,
+  destinationIndexNullResponse,
 } from './data/rpc-responses';
 
 /**
@@ -531,6 +538,104 @@ describe('RpcClient test', () => {
     });
   });
 
+  it('should parse the response properly, proto22', async () => {
+    httpBackend.createRequest.mockResolvedValue(delegatesRionetResponse);
+    const response = await client.getDelegates(contractAddress);
+
+    expect(response).toEqual({
+      deactivated: false,
+      is_forbidden: false,
+      participation: {
+        expected_cycle_activity: 1213042,
+        minimal_cycle_activity: 808694,
+        missed_slots: 0,
+        missed_levels: 0,
+        remaining_allowed_missed_slots: 404348,
+        expected_attesting_rewards: '55053911170',
+      },
+      dal_participation: {
+        expected_assigned_shards_per_slot: 88725,
+        delegate_attested_dal_slots: 1713,
+        delegate_attestable_dal_slots: 2268,
+        expected_dal_rewards: '12235354950',
+        sufficient_dal_participation: true,
+        denounced: false,
+      },
+      grace_period: 484,
+      active_staking_parameters: {
+        limit_of_staking_over_baking_millionth: 0,
+        edge_of_baking_over_staking_billionth: 1000000000,
+      },
+      pending_staking_parameters: [],
+      baking_power: '57551867152447',
+      total_staked: '57551308701145',
+      total_delegated: '1678004730',
+      min_delegated_in_current_cycle: {
+        amount: '1675353907',
+        level: {
+          level: 433801,
+          level_position: 433800,
+          cycle: 482,
+          cycle_position: 0,
+          expected_commitment: false,
+        },
+      },
+      own_full_balance: '57552984687135',
+      own_staked: '57551308701145',
+      own_delegated: '1675985990',
+      external_staked: '0',
+      external_delegated: '2018740',
+      total_unstaked_per_cycle: [
+        {
+          cycle: 478,
+          deposit: '0',
+        },
+        {
+          cycle: 479,
+          deposit: '0',
+        },
+        {
+          cycle: 480,
+          deposit: '0',
+        },
+        {
+          cycle: 481,
+          deposit: '0',
+        },
+        {
+          cycle: 482,
+          deposit: '0',
+        },
+      ],
+      denunciations: [],
+      estimated_shared_pending_slashed_amount: '0',
+      staking_denominator: new BigNumber('0'),
+      current_voting_power: '57552986705875',
+      voting_power: new BigNumber('57510398676966'),
+      voting_info: {
+        voting_power: '57510398676966',
+        remaining_proposals: 20,
+      },
+      consensus_key: {
+        active: {
+          pkh: 'tz1Zt8QQ9aBznYNk5LUBjtME9DuExomw9YRs',
+          pk: 'edpkubw32gvTfUYRERGECHbMTsiLdM9z9JrEXGVEahbZf9yMhTozSg',
+        },
+      },
+      stakers: [
+        {
+          staker: 'tz1Zt8QQ9aBznYNk5LUBjtME9DuExomw9YRs',
+          frozen_deposits: '57551308701145',
+        },
+      ],
+      delegators: [
+        'tz3hTtJw23HdaLWLyjyaRDabYnK4yeXSHYhK',
+        'tz3XTGMVdBjGkJeKA33xk6aHaWYqiWJVQKd6',
+        'tz1Zt8QQ9aBznYNk5LUBjtME9DuExomw9YRs',
+      ],
+    });
+  });
+
   describe('getVotingInfo', () => {
     it('should query the right url', async () => {
       httpBackend.createRequest.mockResolvedValue(votingInfoKathmandunetResponse);
@@ -550,18 +655,6 @@ describe('RpcClient test', () => {
         voting_power: '1054404383333',
         remaining_proposals: 20,
       });
-    });
-  });
-
-  describe('getBigMapKey', () => {
-    it('should query the right url', async () => {
-      await client.getBigMapKey(contractAddress, { key: 'test', type: 'string' } as any);
-      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
-        method: 'POST',
-        url: `root/chains/test/blocks/head/context/contracts/${contractAddress}/big_map_get`,
-      });
-
-      expect(httpBackend.createRequest.mock.calls[0][1]).toEqual({ key: 'test', type: 'string' });
     });
   });
 
@@ -3156,7 +3249,6 @@ describe('RpcClient test', () => {
             payload_round: 0,
             proof_of_work_nonce: 'e38cf66600000000',
             liquidity_baking_toggle_vote: 'on',
-            adaptive_issuance_vote: 'on',
             signature:
               'sighpgD4aPxorZUvPxKvBHYNvnQEBRctF14bYXFX9qLbXbCGZv64S1dFVduBLzWBSEXCcHWiBuUT1iLZt9SE2mKCTkLtWuo5',
           },
@@ -3178,7 +3270,10 @@ describe('RpcClient test', () => {
                     dal_attestation: '0',
                     metadata: {
                       delegate: 'tz1Zt8QQ9aBznYNk5LUBjtME9DuExomw9YRs',
-                      consensus_power: 532,
+                      consensus_power: {
+                        slots: 532,
+                        baking_power: '38656061275500',
+                      },
                       consensus_key: 'tz1Zt8QQ9aBznYNk5LUBjtME9DuExomw9YRs',
                     },
                   },
@@ -3223,7 +3318,6 @@ describe('RpcClient test', () => {
             payload_round: 0,
             proof_of_work_nonce: 'e38cf66600000000',
             liquidity_baking_toggle_vote: 'on',
-            adaptive_issuance_vote: 'on',
             signature:
               'sighpgD4aPxorZUvPxKvBHYNvnQEBRctF14bYXFX9qLbXbCGZv64S1dFVduBLzWBSEXCcHWiBuUT1iLZt9SE2mKCTkLtWuo5',
           },
@@ -3516,64 +3610,6 @@ describe('RpcClient test', () => {
     });
   });
 
-  describe('runOperation', () => {
-    it('should query the right url and data', async () => {
-      const testData = {};
-
-      httpBackend.createRequest.mockResolvedValue({ content: {} });
-      await client.runOperation(testData as any);
-
-      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
-        method: 'POST',
-        url: 'root/chains/test/blocks/head/helpers/scripts/run_operation',
-      });
-
-      expect(httpBackend.createRequest.mock.calls[0][1]).toEqual(testData);
-    });
-
-    it('should use enum for property category to avoid space in name', async () => {
-      const testData = {};
-
-      httpBackend.createRequest.mockResolvedValue({
-        contents: [
-          {
-            metadata: {
-              balance_updates: [
-                {
-                  kind: 'minted',
-                  category: 'baking bonuses',
-                  change: '-266662',
-                  origin: 'block',
-                },
-                {
-                  kind: 'freezer',
-                  category: 'deposits',
-                  staker: {
-                    baker: 'tz1aWXP237BLwNHJcCD4b3DutCevhqq2T1Z9',
-                  },
-                  change: '266662',
-                  origin: 'block',
-                },
-              ],
-            },
-          },
-        ],
-      });
-      const response = await client.runOperation(testData as RPCRunOperationParam);
-
-      const balanceUpdate =
-        'metadata' in response.contents[0]
-          ? (response.contents[0]['metadata'][
-              'balance_updates'
-            ] as OperationMetadataBalanceUpdates[])
-          : [];
-      expect(balanceUpdate![0]['category']).toEqual(
-        METADATA_BALANCE_UPDATES_CATEGORY.BAKING_BONUSES
-      );
-      expect(balanceUpdate![1]['category']).toEqual(METADATA_BALANCE_UPDATES_CATEGORY.DEPOSITS);
-    });
-  });
-
   describe('simulateOperation', () => {
     it('should query the right url and data', async () => {
       const testData = {};
@@ -3621,7 +3657,7 @@ describe('RpcClient test', () => {
 
       const balanceUpdate =
         'metadata' in response.contents[0]
-          ? (response.contents[0]['metadata'][
+          ? ((response.contents[0] as any)['metadata'][
               'balance_updates'
             ] as OperationMetadataBalanceUpdates[])
           : [];
@@ -3655,7 +3691,7 @@ describe('RpcClient test', () => {
       });
     });
 
-    it('query the right url and data with unparsing_mode overriden', async () => {
+    it('query the right url and data with unparsing_mode overwritten', async () => {
       const testData: RPCRunScriptViewParam = {
         contract: 'test',
         view: 'test',
@@ -3704,7 +3740,7 @@ describe('RpcClient test', () => {
       });
     });
 
-    it('should query the right url and data with unparsing_mode overriden', async () => {
+    it('should query the right url and data with unparsing_mode overwritten', async () => {
       const testData: RPCRunViewParam = {
         contract: 'test',
         entrypoint: 'test',
@@ -3777,8 +3813,10 @@ describe('RpcClient test', () => {
       const url = 'https://mainnet.tezos.ecadinfra.com/';
       const rpcUrlMainnet = new RpcClient(url).getRpcUrl();
       expect(rpcUrlMainnet).toEqual('https://mainnet.tezos.ecadinfra.com/');
-      const rpcUrlCarthagenet = new RpcClient('https://ghostnet.tezos.ecadinfra.com').getRpcUrl();
-      expect(rpcUrlCarthagenet).toEqual('https://ghostnet.tezos.ecadinfra.com');
+      const rpcUrlGhostnet = new RpcClient('https://ghostnet.tezos.ecadinfra.com').getRpcUrl();
+      expect(rpcUrlGhostnet).toEqual('https://ghostnet.tezos.ecadinfra.com');
+      const rpcUrlShadownet = new RpcClient('https://shadownet.tezos.ecadinfra.com').getRpcUrl();
+      expect(rpcUrlShadownet).toEqual('https://shadownet.tezos.ecadinfra.com');
     });
   });
 
@@ -3890,6 +3928,28 @@ describe('RpcClient test', () => {
         'PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx'
       );
       expect(protocols.protocol).toEqual('PtHangz2aRngywmSRGGvrcTyMbbdpWdpFKuS4uMWxg2RaH9i1qx');
+    });
+  });
+
+  describe('getProtocolActivations', () => {
+    it('should query the right url and return a list of ProtocolActivations', async () => {
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(protocolActivations));
+      const response = await client.getProtocolActivations();
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/protocols/`,
+      });
+      expect(response).toEqual(protocolActivations);
+    });
+    it('should query the right url and return a ProtocolActivation', async () => {
+      const protocol = 'PsRiotumaAMotcRoDWW1bysEhQy2n1M5fy8JgRp8jjRfHGmfeA7';
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(protocolActivation));
+      const response = await client.getProtocolActivations(protocol);
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/protocols/${protocol}`,
+      });
+      expect(response).toEqual(protocolActivation);
     });
   });
 
@@ -4243,8 +4303,7 @@ describe('RpcClient test', () => {
   describe('getPendingOperations', () => {
     it('should query the correct url and return pending operations in mempool', async () => {
       httpBackend.createRequest.mockReturnValue(Promise.resolve(pendingOperationsResponse));
-      const response: PendingOperationsV1 | PendingOperationsV2 =
-        await client.getPendingOperations();
+      const response: PendingOperationsV2 = await client.getPendingOperations();
 
       expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
         method: 'GET',
@@ -4253,6 +4312,123 @@ describe('RpcClient test', () => {
       });
 
       expect(response).toEqual(pendingOperationsResponse);
+    });
+  });
+
+  describe('getActiveStakingParameters', () => {
+    it('should query the correct url and return active staking parameters', async () => {
+      const baker = 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD';
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(activeStakingParametersResponse));
+      const response: ActiveStakingParametersResponse =
+        await client.getActiveStakingParameters(baker);
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/head/context/delegates/${baker}/active_staking_parameters`,
+      });
+
+      expect(response).toEqual(activeStakingParametersResponse);
+      expect(response.limit_of_staking_over_baking_millionth).toEqual(1000000);
+      expect(response.edge_of_baking_over_staking_billionth).toEqual(500000000);
+    });
+
+    it('should query the correct url with custom block parameter', async () => {
+      const baker = 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD';
+      const block = 'BLUjvteWShd6gkbkPqNmCz1rzoBSLd5MghbdMwieVynSnhxgKVs';
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(activeStakingParametersResponse));
+      const response: ActiveStakingParametersResponse = await client.getActiveStakingParameters(
+        baker,
+        { block }
+      );
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/${block}/context/delegates/${baker}/active_staking_parameters`,
+      });
+
+      expect(response).toEqual(activeStakingParametersResponse);
+    });
+  });
+
+  describe('getPendingStakingParameters', () => {
+    it('should query the correct url and return pending staking parameters', async () => {
+      const baker = 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD';
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(pendingStakingParametersResponse));
+      const response: PendingStakingParametersResponse =
+        await client.getPendingStakingParameters(baker);
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/head/context/delegates/${baker}/pending_staking_parameters`,
+      });
+
+      expect(response).toEqual(pendingStakingParametersResponse);
+      expect(response).toHaveLength(2);
+      expect(response[0].cycle).toEqual(100);
+      expect(response[0].parameters.limit_of_staking_over_baking_millionth).toEqual(1200000);
+      expect(response[0].parameters.edge_of_baking_over_staking_billionth).toEqual(600000000);
+      expect(response[1].cycle).toEqual(101);
+      expect(response[1].parameters.limit_of_staking_over_baking_millionth).toEqual(1500000);
+      expect(response[1].parameters.edge_of_baking_over_staking_billionth).toEqual(750000000);
+    });
+
+    it('should query the correct url with custom block parameter', async () => {
+      const baker = 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD';
+      const block = 'BLUjvteWShd6gkbkPqNmCz1rzoBSLd5MghbdMwieVynSnhxgKVs';
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(pendingStakingParametersResponse));
+      const response: PendingStakingParametersResponse = await client.getPendingStakingParameters(
+        baker,
+        { block }
+      );
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/${block}/context/delegates/${baker}/pending_staking_parameters`,
+      });
+
+      expect(response).toEqual(pendingStakingParametersResponse);
+    });
+  });
+
+  describe('getDestinationIndex', () => {
+    it('should query the correct url and return destination index', async () => {
+      const destination = 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD';
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(destinationIndexResponse));
+      const response = await client.getDestinationIndex(destination);
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/head/context/destination/${destination}/index`,
+      });
+
+      expect(response).toEqual('42');
+    });
+
+    it('should query the correct url with custom block parameter', async () => {
+      const destination = 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD';
+      const block = 'BLUjvteWShd6gkbkPqNmCz1rzoBSLd5MghbdMwieVynSnhxgKVs';
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(destinationIndexResponse));
+      const response = await client.getDestinationIndex(destination, { block });
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/${block}/context/destination/${destination}/index`,
+      });
+
+      expect(response).toEqual('42');
+    });
+
+    it('should return null for non-indexed destination', async () => {
+      const destination = 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb';
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(destinationIndexNullResponse));
+      const response = await client.getDestinationIndex(destination);
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        url: `root/chains/test/blocks/head/context/destination/${destination}/index`,
+      });
+
+      expect(response).toBeNull();
     });
   });
 });

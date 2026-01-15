@@ -3,12 +3,19 @@
  * @module @taquito/local-forging
  */
 
+import 'fast-text-encoding';
+if (typeof globalThis.TextEncoder === 'undefined') {
+  globalThis.TextEncoder = TextEncoder as any;
+}
+if (typeof globalThis.TextDecoder === 'undefined') {
+  globalThis.TextDecoder = TextDecoder as any;
+}
 import { ForgeParams, Forger } from './interface';
 import { CODEC } from './constants';
 import { decoders } from './decoder';
 import { encoders } from './encoder';
 import { Uint8ArrayConsumer } from './uint8array-consumer';
-import { validateBlock, ValidationResult, invalidDetail } from '@taquito/utils';
+import { validateBlock, ValidationResult } from '@taquito/utils';
 import { InvalidOperationSchemaError } from './errors';
 import { validateMissingProperty, validateOperationKind } from './validator';
 import { ProtocolsHash } from './protocols';
@@ -22,7 +29,7 @@ export * from './interface';
 export { VERSION } from './version';
 export { ProtocolsHash } from './protocols';
 
-const PROTOCOL_CURRENT = ProtocolsHash.PsQuebecn;
+const PROTOCOL_CURRENT = ProtocolsHash.PtTALLiNt;
 
 export function getCodec(codec: CODEC, _proto: ProtocolsHash) {
   return {
@@ -33,7 +40,7 @@ export function getCodec(codec: CODEC, _proto: ProtocolsHash) {
     },
   };
 }
-//
+
 export class LocalForger implements Forger {
   constructor(public readonly protocolHash = PROTOCOL_CURRENT) {}
 
@@ -42,7 +49,7 @@ export class LocalForger implements Forger {
   forge(params: ForgeParams): Promise<string> {
     const branchValidation = validateBlock(params.branch);
     if (branchValidation !== ValidationResult.VALID) {
-      throw new InvalidBlockHashError(params.branch, invalidDetail(branchValidation));
+      throw new InvalidBlockHashError(params.branch, branchValidation);
     }
 
     for (const content of params.contents) {
@@ -61,6 +68,12 @@ export class LocalForger implements Forger {
         } else if (content.kind === 'set_deposits_limit' && diff[0] === 'limit') {
           continue;
         } else if (content.kind === 'smart_rollup_originate' && diff[0] === 'whitelist') {
+          continue;
+        } else if (content.kind === 'update_consensus_key' && diff[0] === 'proof') {
+          continue;
+        } else if (content.kind === 'update_companion_key' && diff[0] === 'proof') {
+          continue;
+        } else if (content.kind === 'reveal' && diff[0] === 'proof') {
           continue;
         } else {
           throw new InvalidOperationSchemaError(content, `missing properties "${diff.join(', ')}"`);

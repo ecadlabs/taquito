@@ -15,7 +15,11 @@ import {
  */
 export class BigMapValidationError extends TokenValidationError {
   name = 'BigMapValidationError';
-  constructor(public value: any, public token: BigMapToken, message: string) {
+  constructor(
+    public value: any,
+    public token: BigMapToken,
+    message: string
+  ) {
     super(value, token, message);
   }
 }
@@ -36,19 +40,6 @@ export class BigMapToken extends Token {
 
   get KeySchema(): ComparableToken {
     return this.createToken(this.val.args[0], 0) as unknown as ComparableToken;
-  }
-
-  /**
-   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
-   *
-   */
-  public ExtractSchema() {
-    return {
-      big_map: {
-        key: this.KeySchema.ExtractSchema(),
-        value: this.ValueSchema.ExtractSchema(),
-      },
-    };
   }
 
   generateSchema(): BigMapTokenSchema {

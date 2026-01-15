@@ -7,7 +7,11 @@ import { SemanticEncoding, Token, TokenFactory, TokenValidationError } from './t
  */
 export class Bls12381g2ValidationError extends TokenValidationError {
   name = 'Bls12381g2ValidationError';
-  constructor(public value: any, public token: Bls12381g2Token, message: string) {
+  constructor(
+    public value: any,
+    public token: Bls12381g2Token,
+    message: string
+  ) {
     super(value, token, message);
   }
 }
@@ -62,14 +66,6 @@ export class Bls12381g2Token extends Token {
 
   Execute(val: any): string {
     return val.bytes;
-  }
-
-  /**
-   * @deprecated ExtractSchema has been deprecated in favor of generateSchema
-   *
-   */
-  public ExtractSchema() {
-    return Bls12381g2Token.prim;
   }
 
   generateSchema(): BaseTokenSchema {

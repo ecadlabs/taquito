@@ -1,6 +1,6 @@
 {
   "name": "@taquito/timelock",
-  "version": "21.0.5",
+  "version": "24.0.1",
   "description": "TypeScript implementation of the Timelock feature in Tezos",
   "main": "./dist/taquito-timelock.umd.js",
   "module": "./dist/taquito-timelock.es6.js",
@@ -19,7 +19,7 @@
   },
   "license": "Apache-2.0",
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "scripts": {
     "test": "jest --coverage",
@@ -68,10 +68,10 @@
     "big-integer": "^1.6.52"
   },
   "devDependencies": {
-    "@taquito/signer": "^21.0.5",
-    "@taquito/taquito": "^21.0.5",
-    "@taquito/utils": "^21.0.5",
-    "@types/node": "^18",
+    "@taquito/signer": "^24.0.1",
+    "@taquito/taquito": "^24.0.1",
+    "@taquito/utils": "^24.0.1",
+    "@types/node": "^20",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "eslint": "^8.57.0",

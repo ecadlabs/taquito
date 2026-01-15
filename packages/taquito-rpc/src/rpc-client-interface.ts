@@ -6,8 +6,6 @@ import {
   UnstakeRequestsResponse,
   BallotListResponse,
   BallotsResponse,
-  BigMapGetResponse,
-  BigMapKey,
   BigMapResponse,
   BlockHeaderResponse,
   BlockMetadata,
@@ -30,7 +28,6 @@ import {
   ProposalsResponse,
   ProtocolsResponse,
   RPCRunCodeParam,
-  RPCRunOperationParam,
   RPCRunScriptViewParam,
   RPCRunViewParam,
   RunCodeResult,
@@ -45,12 +42,15 @@ import {
   VotingPeriodBlockResult,
   TicketTokenParams,
   AllTicketBalances,
-  PendingOperationsV1,
   PendingOperationsV2,
   PendingOperationsQueryArguments,
   RPCSimulateOperationParam,
   AILaunchCycleResponse,
   AllDelegatesQueryArguments,
+  ProtocolActivationsResponse,
+  ActiveStakingParametersResponse,
+  PendingStakingParametersResponse,
+  DestinationIndexResponse,
 } from './types';
 
 export interface RPCOptions {
@@ -83,7 +83,6 @@ export interface RpcClientInterface {
   getContract(address: string, options?: RPCOptions): Promise<ContractResponse>;
   getManagerKey(address: string, options?: RPCOptions): Promise<ManagerKeyResponse>;
   getDelegate(address: string, options?: RPCOptions): Promise<DelegateResponse>;
-  getBigMapKey(address: string, key: BigMapKey, options?: RPCOptions): Promise<BigMapGetResponse>;
   getBigMapExpr(id: string, expr: string, options?: RPCOptions): Promise<BigMapResponse>;
   getAllDelegates(args: AllDelegatesQueryArguments, options?: RPCOptions): Promise<string[]>;
   getDelegates(address: string, options?: RPCOptions): Promise<DelegatesResponse>;
@@ -110,7 +109,6 @@ export interface RpcClientInterface {
   injectOperation(signedOpBytes: string): Promise<OperationHash>;
   preapplyOperations(ops: PreapplyParams, options?: RPCOptions): Promise<PreapplyResponse[]>;
   getEntrypoints(contract: string, options?: RPCOptions): Promise<EntrypointsResponse>;
-  runOperation(op: RPCRunOperationParam, options?: RPCOptions): Promise<PreapplyResponse>;
   simulateOperation(op: RPCSimulateOperationParam, options?: RPCOptions): Promise<PreapplyResponse>;
   runCode(code: RPCRunCodeParam, options?: RPCOptions): Promise<RunCodeResult>;
   runScriptView(
@@ -129,6 +127,7 @@ export interface RpcClientInterface {
   getSaplingDiffById(id: string, options?: RPCOptions): Promise<SaplingDiffResponse>;
   getSaplingDiffByContract(contract: string, options?: RPCOptions): Promise<SaplingDiffResponse>;
   getProtocols(options?: RPCOptions): Promise<ProtocolsResponse>;
+  getProtocolActivations(protocol?: string): Promise<ProtocolActivationsResponse>;
   getStorageUsedSpace(contract: string, options?: RPCOptions): Promise<string>;
   getStoragePaidSpace(contract: string, options?: RPCOptions): Promise<string>;
   getTicketBalance(
@@ -138,16 +137,22 @@ export interface RpcClientInterface {
   ): Promise<string>;
   getAllTicketBalances(contract: string, options?: RPCOptions): Promise<AllTicketBalances>;
   getAdaptiveIssuanceLaunchCycle(options?: RPCOptions): Promise<AILaunchCycleResponse>;
-  getPendingOperations(
-    args: PendingOperationsQueryArguments
-  ): Promise<PendingOperationsV1 | PendingOperationsV2>;
+  getPendingOperations(args: PendingOperationsQueryArguments): Promise<PendingOperationsV2>;
+  getActiveStakingParameters(
+    delegate: string,
+    options?: RPCOptions
+  ): Promise<ActiveStakingParametersResponse>;
+  getPendingStakingParameters(
+    delegate: string,
+    options?: RPCOptions
+  ): Promise<PendingStakingParametersResponse>;
+  getDestinationIndex(destination: string, options?: RPCOptions): Promise<DestinationIndexResponse>;
 }
 
 export enum RPCMethodName {
   GET_BAKING_RIGHTS = 'getBakingRights',
   GET_BALLOTS = 'getBallots',
   GET_BALLOT_LIST = 'getBallotList',
-  GET_BIG_MAP_KEY = 'getBigMapKey',
   GET_BIG_MAP_EXPR = 'getBigMapExpr',
   GET_BLOCK_HASH = 'getBlockHash',
   GET_BLOCK = 'getBlock',
@@ -172,6 +177,8 @@ export enum RPCMethodName {
   GET_ALL_DELEGATES = 'getAllDelegates',
   GET_DELEGATES = 'getDelegates',
   GET_VOTING_INFO = 'getVotingInfo',
+  GET_ACTIVE_STAKING_PARAMETERS = 'getActiveStakingParameters',
+  GET_PENDING_STAKING_PARAMETERS = 'getPendingStakingParameters',
   GET_ATTESTATION_RIGHTS = 'getAttestationRights',
   GET_ENTRYPOINTS = 'getEntrypoints',
   GET_LIVE_BLOCKS = 'getLiveBlocks',
@@ -180,6 +187,7 @@ export enum RPCMethodName {
   GET_PROPOSALS = 'getProposals',
   GET_PROTOCOLS = 'getProtocols',
   GET_SAPLING_DIFF_BY_CONTRACT = 'getSaplingDiffByContract',
+  GET_PROTOCOL_ACTIVATIONS = 'getProtocolActivations',
   GET_SAPLING_DIFF_BY_ID = 'getSaplingDiffById',
   GET_SCRIPT = 'getScript',
   GET_STORAGE = 'getStorage',
@@ -192,4 +200,5 @@ export enum RPCMethodName {
   GET_ALL_TICKET_BALANCES = 'getAllTicketBalances',
   GET_ADAPTIVE_ISSUANCE_LAUNCH_CYCLE = 'getAdaptiveIssuanceLaunchCycle',
   GET_PENDING_OPERATIONS = 'getPendingOperations',
+  GET_DESTINATION_INDEX = 'getDestinationIndex',
 }

@@ -35,9 +35,9 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
 
       try {
         const batch = Tezos.contract.batch()
-          .withContractCall(contract.methods.add(2))
-          .withContractCall(contract.methods.sub(4))
-          .withContractCall(contract.methods.add(3));
+          .withContractCall(contract.methodsObject.add(2))
+          .withContractCall(contract.methodsObject.sub(4))
+          .withContractCall(contract.methodsObject.add(3));
 
         const batchOp = await batch.send();
         await batchOp.confirmation();

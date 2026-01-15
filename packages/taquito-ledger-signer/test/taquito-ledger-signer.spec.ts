@@ -28,9 +28,7 @@ describe('LedgerSigner test', () => {
   it('Should throw exception if path is incorrect', () => {
     expect(() => {
       new LedgerSigner(mockTransport, "4'/1729'/0'/0'", true, DerivationType.SECP256K1);
-    }).toThrow(
-      `Invalid derivation path "4'/1729'/0'/0'" with unsupported prefix expecting prefix "44'/1729'".`
-    );
+    }).toThrow(`Invalid derivation path "4'/1729'/0'/0'"`);
   });
 
   it('Should get public key and public key hash for default path and tz1 curve', async () => {

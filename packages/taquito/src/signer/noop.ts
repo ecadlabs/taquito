@@ -1,4 +1,4 @@
-import { Signer } from './interface';
+import { Signer } from '@taquito/core';
 import { UnconfiguredSignerError } from './errors';
 /**
  * @description Default signer implementation which does nothing and produce invalid signature

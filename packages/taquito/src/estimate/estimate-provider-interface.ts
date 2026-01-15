@@ -11,6 +11,7 @@ import {
   TransferTicketParams,
   IncreasePaidStorageParams,
   UpdateConsensusKeyParams,
+  UpdateCompanionKeyParams,
   SmartRollupAddMessagesParams,
   SmartRollupOriginateParams,
   SmartRollupExecuteOutboxMessageParams,
@@ -19,7 +20,7 @@ import {
   FinalizeUnstakeParams,
 } from '../operations/types';
 import { Estimate } from './estimate';
-import { ContractMethod, ContractMethodObject, ContractProvider } from '../contract';
+import { ContractMethodObject, ContractProvider } from '../contract';
 
 export interface EstimationProvider {
   /**
@@ -110,7 +111,6 @@ export interface EstimationProvider {
   /**
    *
    * @description Estimate gasLimit, storageLimit and fees for a reveal operation
-   *
    * @returns An estimation of gasLimit, storageLimit and fees for the operation or undefined if the account is already revealed
    *
    * @param Estimate
@@ -142,12 +142,20 @@ export interface EstimationProvider {
   /**
    *
    * @description Estimate gasLimit, storageLimit and fees for an Update Consensus Key operation
-   *
    * @returns An estimation of gasLimit, storageLimit and fees for the operation
    *
    * @param Estimate
    */
   updateConsensusKey(params: UpdateConsensusKeyParams): Promise<Estimate>;
+
+  /**
+   *
+   * @description Estimate gasLimit, storageLimit and fees for an Update Companion Key operation
+   * @returns An estimation of gasLimit, storageLimit and fees for the operation
+   *
+   * @param Estimate
+   */
+  updateCompanionKey(params: UpdateCompanionKeyParams): Promise<Estimate>;
 
   /**
    *
@@ -177,9 +185,7 @@ export interface EstimationProvider {
    *
    * @param Estimate
    */
-  contractCall(
-    contractMethod: ContractMethod<ContractProvider> | ContractMethodObject<ContractProvider>
-  ): Promise<Estimate>;
+  contractCall(contractMethod: ContractMethodObject<ContractProvider>): Promise<Estimate>;
 
   /**
    * @description Estimate gasLimit, storageLimit and fees for an Smart Rollup Originate operation
