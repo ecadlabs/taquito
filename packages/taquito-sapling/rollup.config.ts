@@ -1,6 +1,8 @@
 import camelCase from 'lodash.camelcase';
 import typescript from 'rollup-plugin-typescript2';
 import json from 'rollup-plugin-json';
+import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
 
 const pkg = require('./package.json');
 
@@ -23,7 +25,6 @@ export default {
         "blakejs": "blake",
         "@stablelib/nacl": "nacl",
         "@stablelib/random": "random",
-        "bip39": "bip39",
         "typedarray-to-buffer": "toBuffer",
         "pbkdf2": "pbkdf2"
       }
@@ -42,7 +43,6 @@ export default {
     '@airgap/sapling-wasm',
     '@stablelib/nacl',
     'pbkdf2',
-    '@scure/bip39',
     '@stablelib/random',
     '@taquito/taquito'
   ],
@@ -52,6 +52,9 @@ export default {
   plugins: [
     // Allow json resolution
     json(),
+    // Resolve node_modules (needed for @scure/bip39)
+    resolve({ preferBuiltins: false }),
+    commonjs(),
     // Compile TypeScript files
     typescript({ tsconfig: './tsconfig.prod.json', useTsconfigDeclarationDir: true }),
   ],
