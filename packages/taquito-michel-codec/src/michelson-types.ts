@@ -82,7 +82,9 @@ type MichelsonNoArgInstructionID =
   | 'MIN_BLOCK_TIME'
   | 'BYTES'
   | 'NAT'
-  | 'IS_IMPLICIT_ACCOUNT';
+  | 'IS_IMPLICIT_ACCOUNT'
+  | 'INDEX_ADDRESS'
+  | 'GET_ADDRESS_INDEX';
 
 type MichelsonRegularInstructionID =
   | 'CONTRACT'
@@ -229,18 +231,28 @@ export interface MichelsonTypeOption<T extends MichelsonType> extends TypeX<'opt
 export interface MichelsonTypeList<T extends MichelsonType> extends TypeX<'list', [T]> {}
 export interface MichelsonTypeContract<T extends MichelsonType> extends TypeX<'contract', [T]> {}
 export interface MichelsonTypeOr<T extends [MichelsonType, MichelsonType]> extends TypeX<'or', T> {}
-export interface MichelsonTypeLambda<Arg extends MichelsonType, Ret extends MichelsonType>
-  extends TypeX<'lambda', [Arg, Ret]> {}
+export interface MichelsonTypeLambda<
+  Arg extends MichelsonType,
+  Ret extends MichelsonType,
+> extends TypeX<'lambda', [Arg, Ret]> {}
 
 export interface MichelsonTypeSet<T extends MichelsonType> extends TypeX<'set', [T]> {}
-export interface MichelsonTypeMap<K extends MichelsonType, V extends MichelsonType>
-  extends TypeX<'map', [K, V]> {}
-export interface MichelsonTypeBigMap<K extends MichelsonType, V extends MichelsonType>
-  extends TypeX<'big_map', [K, V]> {}
-export interface MichelsonTypeSaplingState<S extends string = string>
-  extends TypeX<'sapling_state', [IntLiteral<S>]> {}
-export interface MichelsonTypeSaplingTransaction<S extends string = string>
-  extends TypeX<'sapling_transaction', [IntLiteral<S>]> {}
+export interface MichelsonTypeMap<K extends MichelsonType, V extends MichelsonType> extends TypeX<
+  'map',
+  [K, V]
+> {}
+export interface MichelsonTypeBigMap<
+  K extends MichelsonType,
+  V extends MichelsonType,
+> extends TypeX<'big_map', [K, V]> {}
+export interface MichelsonTypeSaplingState<S extends string = string> extends TypeX<
+  'sapling_state',
+  [IntLiteral<S>]
+> {}
+export interface MichelsonTypeSaplingTransaction<S extends string = string> extends TypeX<
+  'sapling_transaction',
+  [IntLiteral<S>]
+> {}
 export interface MichelsonTypeTicket<T extends MichelsonType> extends TypeX<'ticket', [T]> {}
 
 export type MichelsonType<T extends MichelsonTypeID = MichelsonTypeID> = T extends 'int'
@@ -413,10 +425,11 @@ export enum Protocol {
   PsQuebecn = 'PsQuebecnLByd3JwTiGadoG4nGWi3HYiLXUjkibeFV8dCFeVMUg',
   PsRiotuma = 'PsRiotumaAMotcRoDWW1bysEhQy2n1M5fy8JgRp8jjRfHGmfeA7',
   PtSeouLou = 'PtSeouLouXkxhg39oWzjxDWaCydNfR3RxCUrNe4Q9Ro8BTehcbh',
+  PtTALLiNt = 'PtTALLiNtPec7mE7yY4m3k26J8Qukef3E3ehzhfXgFZKGtDdAXu',
   ProtoALpha = 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK', // temporary protocol hash
 }
 
-export const DefaultProtocol = Protocol.PtSeouLou;
+export const DefaultProtocol = Protocol.PtTALLiNt;
 
 export type ProtocolID = `${Protocol}`;
 
@@ -451,7 +464,8 @@ const protoLevel: Record<ProtocolID, number> = {
   PsQuebecnLByd3JwTiGadoG4nGWi3HYiLXUjkibeFV8dCFeVMUg: 21,
   PsRiotumaAMotcRoDWW1bysEhQy2n1M5fy8JgRp8jjRfHGmfeA7: 22,
   PtSeouLouXkxhg39oWzjxDWaCydNfR3RxCUrNe4Q9Ro8BTehcbh: 23,
-  ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK: 23,
+  PtTALLiNtPec7mE7yY4m3k26J8Qukef3E3ehzhfXgFZKGtDdAXu: 24,
+  ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK: 25,
 };
 
 export function ProtoGreaterOrEqual(a: ProtocolID, b: ProtocolID): boolean {

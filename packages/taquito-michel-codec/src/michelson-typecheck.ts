@@ -2059,6 +2059,14 @@ function functionTypeInternal(
         args(0, ['address']);
         return [annotateVar({ prim: 'option', args: [{ prim: 'key_hash' }] }), ...stack.slice(1)];
 
+      case 'INDEX_ADDRESS':
+        args(0, ['address']);
+        return [annotateVar({ prim: 'nat' }), ...stack.slice(1)];
+
+      case 'GET_ADDRESS_INDEX':
+        args(0, ['address']);
+        return [annotateVar({ prim: 'option', args: [{ prim: 'nat' }] }), ...stack.slice(1)];
+
       default:
         throw new MichelsonError(
           instruction as MichelsonCode,

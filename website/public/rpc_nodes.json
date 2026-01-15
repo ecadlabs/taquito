@@ -4,7 +4,7 @@
       "id": "ecadinfra",
       "name": "ECAD Infra",
       "website": "https://www.ecadinfra.com/",
-      "status_page": ""
+      "status_page": "https://tezos.status.ecadinfra.com"
     },
     {
       "id": "smartpy",
@@ -46,7 +46,11 @@
       "url": "https://seoulnet.tezos.ecadinfra.com",
       "provider": "ecadinfra"
     },
-
+    {
+      "net": "tallinnnet",
+      "url": "https://tallinnnet.tezos.ecadinfra.com",
+      "provider": "ecadinfra"
+    },
     {
       "net": "mainnet",
       "url": "https://mainnet.smartpy.io",
@@ -78,6 +82,11 @@
       "provider": "tezosfoundation"
     },
     {
+      "net": "tallinnnet",
+      "url": "https://rpc.tallinnnet.teztnets.com",
+      "provider": "tezosfoundation"
+    },
+    {
       "net": "mainnet",
       "url": "https://rpc.tzkt.io/mainnet",
       "provider": "tzkt"
@@ -95,6 +104,11 @@
     {
       "net": "seoulnet",
       "url": "https://rpc.tzkt.io/seoulnet",
+      "provider": "tzkt"
+    },
+    {
+      "net": "tallinnnet",
+      "url": "https://rpc.tzkt.io/tallinnnet",
       "provider": "tzkt"
     }
   ]

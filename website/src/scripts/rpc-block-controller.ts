@@ -42,7 +42,7 @@ declare global {
 }
 
 export function getPollingIntervalByNetwork(network: string): number {
-  if (network === 'shadownet' || network === 'seoulnet') {
+  if (network === 'shadownet' || network === 'seoulnet' || network === 'tallinnnet') {
     return 4000;
   }
   if (network === 'mainnet' || network === 'ghostnet') {

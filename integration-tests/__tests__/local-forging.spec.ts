@@ -1,12 +1,13 @@
 import { ProhibitedActionError } from "@taquito/core";
 import { HttpResponseError } from '@taquito/http-utils'
 import { CONFIGS } from "../config";
-import { commonCases } from '../data/allTestsCases';
+import { commonCases, tallinnCases } from '../data/allTestsCases';
 import { LocalForger, ProtocolsHash } from '@taquito/local-forging'
-import { TezosToolkit } from "@taquito/taquito";
+import { TezosToolkit, Protocols } from "@taquito/taquito";
 
 CONFIGS().forEach(({ rpc, protocol }) => {
   const Tezos = new TezosToolkit(rpc);
+  const tallinnnetAndAlpha = protocol === Protocols.PtTALLiNt || protocol === Protocols.ProtoALpha ? test: test.skip;
 
   describe(`Test local forger: ${rpc}`, () => {
     // all protocols
@@ -24,5 +25,16 @@ CONFIGS().forEach(({ rpc, protocol }) => {
         }
       });
     });
+
+    tallinnCases.forEach(({ name, operation }) => {
+      tallinnnetAndAlpha(`Verify that .forge for local forge will return same result as for network forge for rpc: ${name} (${rpc})`, async () => {
+        const localForger = new LocalForger(protocol as unknown as ProtocolsHash);
+        const result = await localForger.forge(operation);
+        const rpcResult = await Tezos.rpc.forgeOperations(operation);
+        expect(result).toEqual(rpcResult);
+        expect(await localForger.parse(result)).toEqual(operation);
+      });
+    });
   });
+
 });

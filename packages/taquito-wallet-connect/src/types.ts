@@ -27,6 +27,7 @@ export enum NetworkType {
   QUEBECNET = 'quebecnet',
   RIONET = 'rionet',
   SEOULNET = 'seoulnet',
+  TALLINNNET = 'tallinnnet',
 }
 
 export interface PermissionScopeParam {
@@ -65,32 +66,23 @@ interface WalletOptionalFields {
 }
 
 export interface TransferParams
-  extends Omit<RPCTransferOperation, WalletDefinedFields>,
-    WalletOptionalFields {}
+  extends Omit<RPCTransferOperation, WalletDefinedFields>, WalletOptionalFields {}
 export interface OriginateParams
-  extends Omit<RPCOriginationOperation, WalletDefinedFields>,
-    WalletOptionalFields {}
+  extends Omit<RPCOriginationOperation, WalletDefinedFields>, WalletOptionalFields {}
 export interface RevealParams
-  extends Omit<RPCRevealOperation, WalletDefinedFields>,
-    WalletOptionalFields {}
+  extends Omit<RPCRevealOperation, WalletDefinedFields>, WalletOptionalFields {}
 export interface DelegateParams
-  extends Omit<RPCDelegateOperation, WalletDefinedFields>,
-    WalletOptionalFields {}
+  extends Omit<RPCDelegateOperation, WalletDefinedFields>, WalletOptionalFields {}
 export interface RegisterGlobalConstantParams
-  extends Omit<RPCRegisterGlobalConstantOperation, WalletDefinedFields>,
-    WalletOptionalFields {}
+  extends Omit<RPCRegisterGlobalConstantOperation, WalletDefinedFields>, WalletOptionalFields {}
 export interface TransferTicketParams
-  extends Omit<RPCTransferTicketOperation, WalletDefinedFields>,
-    WalletOptionalFields {}
+  extends Omit<RPCTransferTicketOperation, WalletDefinedFields>, WalletOptionalFields {}
 export interface IncreasePaidStorageParams
-  extends Omit<RPCIncreasePaidStorageOperation, WalletDefinedFields>,
-    WalletOptionalFields {}
+  extends Omit<RPCIncreasePaidStorageOperation, WalletDefinedFields>, WalletOptionalFields {}
 export interface UpdateConsensusKeyParams
-  extends Omit<RPCUpdateConsensusKeyOperation, WalletDefinedFields>,
-    WalletOptionalFields {}
+  extends Omit<RPCUpdateConsensusKeyOperation, WalletDefinedFields>, WalletOptionalFields {}
 export interface UpdateCompanionKeyParams
-  extends Omit<RPCUpdateCompanionKeyOperation, WalletDefinedFields>,
-    WalletOptionalFields {}
+  extends Omit<RPCUpdateCompanionKeyOperation, WalletDefinedFields>, WalletOptionalFields {}
 export type BallotParams = Omit<RPCBallotOperation, WalletDefinedFields>;
 export type DrainDelegateParams = Omit<RPCDrainDelegateOperation, WalletDefinedFields>;
 export type ProposalsParams = Omit<RPCProposalsOperation, WalletDefinedFields>;
