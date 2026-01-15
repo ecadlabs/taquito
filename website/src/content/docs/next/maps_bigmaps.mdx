@@ -16,7 +16,7 @@ Michelson offers two variants of `Maps` that are semantically the same but have 
 
 - [Michelson documentation for Map and BigMap](https://docs.tezos.com/smart-contracts/data-types/complex-data-types#big-maps)
 
-## A Contract with a single Map for storage
+## A contract with a single Map for storage
 
 ### Origination of the contract with an initial storage
 
@@ -32,7 +32,7 @@ values={[
 ]}>
 <TabItem value="contractAPI">
 
-```js live 
+```js live
 // import { MichelsonMap } from '@taquito/taquito';
 // import { TezosToolkit } from '@taquito/taquito';
 // const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
@@ -234,7 +234,7 @@ try {
   </TabItem>
 </Tabs>
 
-## A Contract with a Map using an unannotated pair/tuple as a key
+## A contract with a Map using an unannotated pair/tuple as a key
 
 Here we have the storage of our contract defined in Michelson.
 
@@ -369,7 +369,7 @@ try {
   </TabItem>
 </Tabs>
 
-### Accessing Map values using Pairs
+### Accessing Map values using pairs
 
 The `get` method of the `MichelsonMap` class accesses values of the map for a specified key.
 
@@ -421,7 +421,7 @@ try {
   </TabItem>
 </Tabs>
 
-## A Map with nested Pairs as keys
+## A map with nested Pairs as keys
 
 This contract schema has a key with eight nested pairs and the value of an int. This example type of key is impractical, but we offer it as an example to illustrate how to work with complex keys.
 

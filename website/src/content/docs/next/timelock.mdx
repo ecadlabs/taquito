@@ -17,7 +17,7 @@ A classic commit & reveal scheme consists of these 2 steps:
 
 This scheme makes it possible to prove a certain decision was made before the information is revealed. This information might be the decision of other participants, or some external independent information.
 
-## Taquito Implementation
+## Taquito implementation
 
 ### Creating a chest
 ```
@@ -60,7 +60,7 @@ const data = chest.open(chestKey, time);
 - `time` param being passed should not be mistaken with the 'time' it takes for a chest to open in Timelocks. The `time` param here relates to a complexity relating to the number of power by modulo operations required to compute the key. Without getting too much into the weeds, we recommend using a value of `10000` and adjust accordingly.
 - `payload` relates to the message payload you would like to lock in a chest.
 
-## Coinflip Contract Example
+## Coinflip contract example
 > This example is an excerpt from the [Tezos docs](https://tezos.gitlab.io/active/timelock.html?highlight=timelock#example) and contracts are taken from [timelock_flip.tz](https://gitlab.com/tezos/tezos/-/blob/master/src/proto_alpha/lib_protocol/contracts/timelock_flip.tz).
 
 This game emulates a time constrained "guess who" game using timelocks. The goal of the game is for the challenger to guess which value was stored by the administrator. The challenger has one guess, and must submit it within 10 blocks of the game initialization.

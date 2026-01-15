@@ -6,7 +6,7 @@ author: Zainen Suzuki
 >[!CAUTION]
 > Storing private keys in memory is suitable for development workflows but risky for production use-cases! Use the `InMemorySpendingKey` appropriately given your risk profile.
 
-### From Mnemonic
+### From mnemonic
 
 Instantiation of a `InMemorySpendingkey` from Mnemonic does not require a password as it is only used to change an unencrypted `sask...` to an encrypted `MMXj...` spending key or vice versa.
 
@@ -27,7 +27,7 @@ Returns:
 
 ```
 
-### From Encrypted Spending Key
+### From encrypted spending key
 
 If the spending key is encrypted prefixed with `MMXj...` then a password is required to decrypt to a unencrypted Spending Key `sask...`
 

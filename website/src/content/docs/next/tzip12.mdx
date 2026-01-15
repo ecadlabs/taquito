@@ -29,7 +29,7 @@ Tezos.addExtension(new Tzip12Module());
 const contract = await Tezos.contract.at("contractAddress", tzip12)
 ```
 
-## The Compose Function
+## The compose function
 The contract abstraction can also be extended to a `Tzip12ContractAbstraction` and a `Tzip16ContractAbstraction` (at the same time) by using the `compose` function.
 Thus, all methods of the `ContractAbstraction`, `Tzip12ContractAbstraction` and `Tzip16ContractAbstraction` classes will be available on the contract abstraction instance.
 

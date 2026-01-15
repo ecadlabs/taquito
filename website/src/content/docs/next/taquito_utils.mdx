@@ -7,7 +7,7 @@ The `@taquito/utils` package provides developers with utility functions in Taqui
 
 You can find a full list of available utility functions in Taquito [here](https://taquito.io/typedoc/modules/_taquito_utils.html).
 
-## Usage Example
+## Usage example
 To use the functions, simply import the function you need as such:
 
 ```js
@@ -20,7 +20,7 @@ const payload = b58DecodeAndCheckPrefix('tz1...', [PrefixV2.Ed25519PublicKeyHash
 const length = payloadLength[PrefixV2.Ed25519PublicKeyHash]
 ```
 
-## Using Validation Functions from `@taquito/utils`
+## Using validation functions from `@taquito/utils`
 
 Taquito provides functions that allow us to see if an address, a chain, a key hash, a contract address, a public key, or a signature is valid. Note that these validations do not rely on a node but are done based on checksums. Thus, they allow us to check if a value is valid and not if it exists on a chain. The `ValidationResult` returned by these functions is an enum that can take the following values:
 

@@ -19,7 +19,7 @@ Hard-coding fees and storage limits for smart contract calls has two advantages:
 
 ## Performance
 
-### Enable Local Pack
+### Enable local pack
 
 Local Pack reduces bigmap search time by 50%. Enable it by providing a `MichelCodecPacker` instance to the `setPackerProvider` method of `TezosToolkit`.
 
@@ -31,7 +31,7 @@ JavaScript frameworks provide lifecycle hooks for DOM updates (React `useEffect`
 
 Michelson uses arbitrary-precision numbers that can become very long. JavaScript switches to scientific notation for large numbers, which can confuse users. Use `bignumber.js` to handle potentially long numbers from the blockchain.
 
-## Wallet Integration
+## Wallet integration
 
 ### Test with popular wallets
 
@@ -46,7 +46,7 @@ Reuse one `BeaconWallet` instance throughout your dApp. JavaScript frameworks of
 
 Creating multiple `BeaconWallet` instances may cause errors when forging transactions.
 
-## User Experience
+## User experience
 
 ### Confirm operations and check results
 

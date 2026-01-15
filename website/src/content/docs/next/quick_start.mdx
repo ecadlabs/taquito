@@ -3,7 +3,7 @@ title: Quick Start
 author: [Simon Boissonneault-Robert, Maxwell Ward]
 ---
 
-## Installing Taquito Using npm
+## Installing Taquito using npm
 
 > If you just want to get started quickly with a new project, you can use our boilerplate [Vue](https://github.com/ecadlabs/taquito-vue-template) or [React](https://github.com/ecadlabs/taquito-react-template) templates.
 
@@ -17,7 +17,7 @@ This quick start guide and subsequent documentation assumes the following:
 npm install @taquito/taquito
 ```
 
-## Importing the Library
+## Importing the library
 
 A `TezosToolkit` is the core of your Taquito setup. The constructor of the `TezosToolkit` class takes an RPC URL as a parameter. It can be a string or a [RpcClient](rpc_package) object. A list of well-known public RPC nodes can be found [here](rpc_nodes).
 
@@ -33,7 +33,7 @@ You can use multiple instances to use with different providers or configurations
 
 We recommend creating your `TezosToolkit` instances in one place and then distributing them around your project with some sort of state management. The examples in this documentation will assume you have a `TezosToolkit` available via a `Tezos` variable.
 
-## Configuring the Signer
+## Configuring the signer
 
 Taquito's Contract API supports multiple different signers. There is no default signer configured, and a signer is required if you intend to inject operations into the Tezos blockchain.
 
@@ -58,7 +58,7 @@ The `InMemorySigner` package is useful for development and testing. It's an easy
 
 The `InMemorySigner` will import your private key into memory and sign operations using this key.
 
-> [!DANGER]
+>[!DANGER]
 > The `InMemorySigner` is only suitable for testing and development, and saves private keys in memory. When working in production environments with real value tokens, we **strongly** recommend that you use a RemoteSigner that an HSM backs or use the Wallet API.
 
 ```js
@@ -74,7 +74,7 @@ Tezos.setProvider({
 
 ## Examples
 
-> [!TIP]
+>[!TIP]
 > It's good practice to handle errors with try/catch blocks. This allows you to provide feedback to your users in the event something goes wrong.
 
 ### Get the current Tezos spendable balance for an address

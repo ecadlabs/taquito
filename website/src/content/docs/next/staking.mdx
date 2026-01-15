@@ -120,16 +120,16 @@ A cycle is 14400 blocks with each block being 6 seconds (in the Tallinn protocol
 ## Overstaking
 A delegate can set the maximum amount of staking they can accept, as a multiple of their own balance. If a delegates limit is exceeded, the exceeding stake is automatically considered as delegation for the delegates baking and voting power calculation, but it does remain slashable. That means it's your responsibility to make sure you're not overstaking. Remember that overstaking can even happen after you have staked successfully if your delegate changes their own balance, or their staking parameters.
 
-## Changing Delegate
+## Changing delegate
 When you change your delegate, your funds will be automatically unstaked. You will have to wait for 4 cycles before you can stake them again.
 
 ## No need to finalize_unstake in some cases
 The `stake` and `unstake` operations will automatically finalize all currently finalizable funds.
 
-## Adaptive Issuance
+## Adaptive issuance
 A concept related to staking is adaptive issuance. Adaptive issuance is a mechanism that adjusts the block reward based on the total amount of staked tez. In short, the reward will be adjusted to keep the staked funds about 50% of the total supply. To read more about the mechanism, you can check [this document](https://tezos.gitlab.io/tallinn/adaptive_issuance.html#adaptive-issuance).
 
-## Staking Rewards
+## Staking rewards
 In delegation, rewards were given to the baker, and it was the baker's responsibility to distribute the rewards to the delegators. In staking, the rewards are given directly to the staker. However, rewards are not given immediately, but are distributed through staked (frozen) balance, and the user can spend the reward along with their initial stake when they `unstake` and `finalize_unstake`.
 
 ## Lifetime of Staked Funds
