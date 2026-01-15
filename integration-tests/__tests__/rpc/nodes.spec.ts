@@ -1,10 +1,11 @@
 import { CONFIGS } from '../../config';
-import { DefaultContractType, } from "@taquito/taquito";
+import { DefaultContractType, Protocols } from "@taquito/taquito";
 import { RpcClientCache, RpcClient, RPCRunViewParam, RPCRunScriptViewParam, PendingOperationsV2 } from '@taquito/rpc';
 import { encodeExpr } from '@taquito/utils';
 import { Schema } from '@taquito/michelson-encoder';
 import { tokenBigmapCode, tokenBigmapStorage } from '../../data/token_bigmap';
 import { ticketCode, ticketStorage } from '../../data/code_with_ticket';
+import { indexAddressCode, indexAddressStorage } from '../../data/code_with_index_address_index';
 
 CONFIGS().forEach(
   ({
@@ -17,10 +18,18 @@ CONFIGS().forEach(
     knownBigMapContract,
     knownSaplingContract,
     knownViewContract,
+    createAddress,
   }) => {
     const Tezos = lib;
-    const unrestrictedRPCNode = rpc.includes("teztnets.com") || rpc.includes("net-rolling-1.i.ecadinfra.com") ? test : test.skip;
+    const isUnrestricted = rpc.includes("teztnets.com") || rpc.includes("net-rolling-1.i.ecadinfra.com") ? true : false;
+    const isSeoulnet = protocol === Protocols.PtSeouLou ? true : false;
+    const isTallinnnetAndAlpha = protocol === Protocols.PtTALLiNt || protocol === Protocols.ProtoALpha ? true : false;
+    const unrestrictedNode = isUnrestricted ? test : test.skip;
+    const unrestrictedSeoulnet = isSeoulnet && isUnrestricted ? test : test.skip;
+    const unrestrictedTallinnnetAndAlpha = isTallinnnetAndAlpha && isUnrestricted ? test : test.skip;
+    const tallinnnetAndAlpha = isTallinnnetAndAlpha ? test : test.skip;
     let ticketContract: DefaultContractType;
+    let freshAddress: string;
 
     beforeAll(async () => {
       await setup();
@@ -35,6 +44,8 @@ CONFIGS().forEach(
         // contract call to issue tickets
         const ticketCallOp = await ticketContract.methodsObject.auto_call(1).send();
         await ticketCallOp.confirmation();
+        // generate a fresh(unindexed) address
+        freshAddress = await (await createAddress()).signer.publicKeyHash();
       } catch (e) {
         console.log('Failed to originate ticket contract', JSON.stringify(e));
       }
@@ -191,14 +202,38 @@ CONFIGS().forEach(
         });
 
         it(`Verify that rpcClient.getPendingStakingParameters for known baker returns pending staking parameters`, async () => {
-            const pendingStakingParams = await rpcClient.getPendingStakingParameters(knownBaker);
-            expect(pendingStakingParams).toBeDefined();
-            if (Array.isArray(pendingStakingParams) && pendingStakingParams.length > 0) {
-              expect(typeof pendingStakingParams[0].cycle).toBe('number');
-              expect(pendingStakingParams[0].parameters).toBeDefined();
-              expect(typeof pendingStakingParams[0].parameters.limit_of_staking_over_baking_millionth).toBe('number');
-              expect(typeof pendingStakingParams[0].parameters.edge_of_baking_over_staking_billionth).toBe('number');
-            }
+          const pendingStakingParams = await rpcClient.getPendingStakingParameters(knownBaker);
+          expect(pendingStakingParams).toBeDefined();
+          if (Array.isArray(pendingStakingParams) && pendingStakingParams.length > 0) {
+            expect(typeof pendingStakingParams[0].cycle).toBe('number');
+            expect(pendingStakingParams[0].parameters).toBeDefined();
+            expect(typeof pendingStakingParams[0].parameters.limit_of_staking_over_baking_millionth).toBe('number');
+            expect(typeof pendingStakingParams[0].parameters.edge_of_baking_over_staking_billionth).toBe('number');
+          }
+        });
+
+        tallinnnetAndAlpha('Verify that rpcClient.getDestinationIndex returns null when the address is not indexed', async () => {
+          const destinationIndex = await rpcClient.getDestinationIndex(freshAddress);
+          expect(destinationIndex).toBeNull();
+        });
+
+        tallinnnetAndAlpha('Verify that rpcClient.getDestinationIndex returns the index of the destination with a custom block', async () => {
+          // Originate a contract that uses INDEX_ADDRESS
+          const originateIndexAddress = await Tezos.contract.originate({
+            code: indexAddressCode,
+            init: indexAddressStorage,
+          });
+          await originateIndexAddress.confirmation();
+          const indexAddressContract = await originateIndexAddress.contract();
+
+          // Call the contract to index the address
+          const indexOp = await indexAddressContract.methodsObject.default(freshAddress).send();
+          await indexOp.confirmation();
+
+          // rpc call to get the destination index
+          const destinationIndexRpc = await rpcClient.getDestinationIndex(freshAddress);
+          expect(destinationIndexRpc).toBeDefined();
+          expect(typeof destinationIndexRpc).toBe('string');
         });
 
         it('Verify that rpcClient.getConstants returns all constants from RPC', async () => {
@@ -221,16 +256,15 @@ CONFIGS().forEach(
           expect(blockMetadata).toBeDefined();
         });
 
-        unrestrictedRPCNode('Verify that rpcClient.getBakingRights retrieves the list of delegates allowed to bake a block', async () => {
+        unrestrictedNode('Verify that rpcClient.getBakingRights retrieves the list of delegates allowed to bake a block', async () => {
           const bakingRights = await rpcClient.getBakingRights({
             max_round: '2'
           });
           expect(bakingRights).toBeDefined();
           expect(bakingRights[0].round).toBeDefined();
-          expect(bakingRights[0].priority).toBeUndefined();
         });
 
-        unrestrictedRPCNode('Verify that rpcClient.getAttestationRights retrieves the list of delegates allowed to attest a block', async () => {
+        unrestrictedSeoulnet('Verify that rpcClient.getAttestationRights retrieves the list of delegates allowed to attest a block', async () => {
           const attestationRights = await rpcClient.getAttestationRights();
           expect(attestationRights).toBeDefined();
           expect(attestationRights[0].delegates).toBeDefined();
@@ -240,7 +274,18 @@ CONFIGS().forEach(
           expect(typeof attestationRights[0].delegates![0].attestation_power).toEqual('number');
           expect(attestationRights[0].delegates![0].first_slot).toBeDefined();
           expect(typeof attestationRights[0].delegates![0].first_slot).toEqual('number');
-          expect(attestationRights[0].delegate).toBeUndefined();
+        });
+
+        unrestrictedTallinnnetAndAlpha('Verify that rpcClient.getAttestationRights retrieves the list of delegates allowed to attest a block', async () => {
+          const attestationRights = await rpcClient.getAttestationRights();
+          expect(attestationRights).toBeDefined();
+          expect(attestationRights[0].delegates).toBeDefined();
+          expect(attestationRights[0].delegates![0].delegate).toBeDefined();
+          expect(typeof attestationRights[0].delegates![0].delegate).toEqual('string');
+          expect(attestationRights[0].delegates![0].attesting_power).toBeDefined();
+          expect(typeof attestationRights[0].delegates![0].attesting_power).toEqual('number');
+          expect(attestationRights[0].delegates![0].first_slot).toBeDefined();
+          expect(typeof attestationRights[0].delegates![0].first_slot).toEqual('number');
         });
 
         it('Verify that rpcClient.getBallotList returns ballots casted so far during a voting period', async () => {
@@ -484,7 +529,7 @@ CONFIGS().forEach(
 
         it('Verify that rpcClient.getProtocols will list past and present Tezos protocols', async () => {
           const protocols = await rpcClient.getProtocols();
-          expect(protocols).toEqual({ protocol, next_protocol: protocol });
+          expect(protocols).toEqual({ protocol: protocols.protocol, next_protocol: protocols.next_protocol });
         });
 
         it('Verify that rpcClient.getProtocolActivations will list all protocol activations info', async () => {

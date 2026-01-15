@@ -37,6 +37,7 @@ import {
   protocolActivations,
   activeStakingParametersResponse,
   pendingStakingParametersResponse,
+  destinationIndexResponse,
 } from './data/rpc-responses';
 
 /**
@@ -106,6 +107,7 @@ describe('RpcClientCache test', () => {
       getPendingOperations: jest.fn(),
       getActiveStakingParameters: jest.fn(),
       getPendingStakingParameters: jest.fn(),
+      getDestinationIndex: jest.fn(),
     };
 
     mockRpcClient.getRpcUrl.mockReturnValue(rpcUrl);
@@ -157,6 +159,7 @@ describe('RpcClientCache test', () => {
     mockRpcClient.getPendingOperations.mockReturnValue(pendingOperationsResponse);
     mockRpcClient.getActiveStakingParameters.mockReturnValue(activeStakingParametersResponse);
     mockRpcClient.getPendingStakingParameters.mockReturnValue(pendingStakingParametersResponse);
+    mockRpcClient.getDestinationIndex.mockReturnValue(destinationIndexResponse);
     rpcCache = new RpcClientCache(mockRpcClient);
   });
 
@@ -221,6 +224,7 @@ describe('RpcClientCache test', () => {
     await rpcCache.getPendingOperations();
     await rpcCache.getActiveStakingParameters(address);
     await rpcCache.getPendingStakingParameters(address);
+    await rpcCache.getDestinationIndex(address);
 
     expect(rpcCache.getAllCachedData()['rpcTest/getBlockHash/head/'].response).toEqual(blockHash);
     expect(rpcCache.getAllCachedData()['rpcTest/getBlock/head/'].response).toEqual(blockResponse);
@@ -346,6 +350,9 @@ describe('RpcClientCache test', () => {
     expect(
       rpcCache.getAllCachedData()[`rpcTest/getPendingStakingParameters/head/${address}/`].response
     ).toEqual(pendingStakingParametersResponse);
+    expect(
+      rpcCache.getAllCachedData()[`rpcTest/getDestinationIndex/head/${address}/`].response
+    ).toEqual(destinationIndexResponse);
 
     rpcCache.deleteAllCachedData();
   });
@@ -413,6 +420,7 @@ describe('RpcClientCache test', () => {
     await rpcCache.getAdaptiveIssuanceLaunchCycle(block);
     await rpcCache.getActiveStakingParameters(address, block);
     await rpcCache.getPendingStakingParameters(address, block);
+    await rpcCache.getDestinationIndex(address, block);
 
     expect(rpcCache.getAllCachedData()[`rpcTest/getBlockHash/${block.block}/`].response).toEqual(
       blockHash
@@ -558,11 +566,16 @@ describe('RpcClientCache test', () => {
       rpcCache.getAllCachedData()[`rpcTest/getAdaptiveIssuanceLaunchCycle/${block.block}/`].response
     ).toEqual(aiLaunchCycle);
     expect(
-      rpcCache.getAllCachedData()[`rpcTest/getActiveStakingParameters/${block.block}/${address}/`].response
+      rpcCache.getAllCachedData()[`rpcTest/getActiveStakingParameters/${block.block}/${address}/`]
+        .response
     ).toEqual(activeStakingParametersResponse);
     expect(
-      rpcCache.getAllCachedData()[`rpcTest/getPendingStakingParameters/${block.block}/${address}/`].response
+      rpcCache.getAllCachedData()[`rpcTest/getPendingStakingParameters/${block.block}/${address}/`]
+        .response
     ).toEqual(pendingStakingParametersResponse);
+    expect(
+      rpcCache.getAllCachedData()[`rpcTest/getDestinationIndex/${block.block}/${address}/`].response
+    ).toEqual(destinationIndexResponse);
     rpcCache.deleteAllCachedData();
   });
 
@@ -618,6 +631,7 @@ describe('RpcClientCache test', () => {
     await rpcCache.getPendingOperations();
     await rpcCache.getActiveStakingParameters(address);
     await rpcCache.getPendingStakingParameters(address);
+    await rpcCache.getDestinationIndex(address);
 
     rpcCache.deleteAllCachedData();
 

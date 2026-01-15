@@ -68,7 +68,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       }])
 
       // Inject the sapling transaction using the ContractAbstraction by calling the default entrypoint
-      // The amount MUST be specified in the send method in order to transfer the 6 tez to the shielded pool
+      // The amount MUST be specified in the send method in order to transfer the 6 tez to the shielded set
       // In this contract, if the bool param is set to true, the "left" state is updated, if the bool is set to false, the "right" state is updated
       const op = await saplingContract.methodsObject.default({
         0: true,

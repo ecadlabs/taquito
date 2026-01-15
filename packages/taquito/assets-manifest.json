@@ -5,6 +5,6 @@
   },
   "main.js": {
     "src": "dist/taquito.min.js",
-    "integrity": "sha256-rmAOO3RbeXakK8y2KvQGEibPjZ8AuhWOONFAZ0DpeOY= sha384-PVxslmdHBCJRKjh8NSLmE++Y/nOxgvU0oLjOq5Ir1h9syuB4S91gac9I8SLikEAq sha512-85cadMUOQ0Lzll/sCnFuwqgcCoEIz/MiRnEaWJ32J/lWpoeWWbK8IH8pgX8uFvhiyCXQ0EuVzXtUHL9PRn2yIA=="
+    "integrity": "sha256-Nc2HVWQy9WqkFg2MsvGD66fWvf8KQLXKhmv9dMv/aNg= sha384-x5ZecnJ0JT9QILnxAA2iuvsNiII5XiGMQSPZF9lRwDgodAxJlmku+uhs4IjrTwZK sha512-qC6/xg/khzzhSgyZQuVd4c+lmJdHzxu9VlDZbZl6WYUoHVziJ0rnCqziSu+Qn6dNcrhzHTx8fMZGvimYvLwGMA=="
   }
 }
