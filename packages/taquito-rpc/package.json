@@ -72,7 +72,7 @@
     ],
     "moduleNameMapper": {
       "^@taquito/http-utils$": "<rootDir>/../taquito-http-utils/src/taquito-http-utils.ts",
-      "^@scure/bip39/wordlists/english$": "<rootDir>/../../node_modules/@scure/bip39/wordlists/english.js"
+      "^@scure/bip39/wordlists/english.js$": "<rootDir>/../../node_modules/@scure/bip39/wordlists/english.js"
     },
     "coveragePathIgnorePatterns": [
       "/node_modules/",

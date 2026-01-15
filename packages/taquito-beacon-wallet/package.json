@@ -108,7 +108,7 @@
     "moduleNameMapper": {
       "^@taquito/taquito$": "<rootDir>/../taquito/src/taquito.ts",
       "^(\\.{1,2}/.*)\\.js$": "$1",
-      "^@scure/bip39/wordlists/english$": "<rootDir>/../../node_modules/@scure/bip39/wordlists/english.js"
+      "^@scure/bip39/wordlists/english.js$": "<rootDir>/../../node_modules/@scure/bip39/wordlists/english.js"
     },
     "transformIgnorePatterns": [
       "/node_modules/(?!(@ecadlabs|@stablelib|@scure/bip39|@noble/hashes|@scure/base)/.*)"
