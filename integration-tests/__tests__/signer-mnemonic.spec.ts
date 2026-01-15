@@ -1,7 +1,8 @@
 import { InMemorySigner } from '@taquito/signer';
 import { TezosToolkit } from '@taquito/taquito';
 import { CONFIGS } from '../config';
-import * as Bip39 from 'bip39';
+import * as bip39 from '@scure/bip39';
+import { wordlist } from '@scure/bip39/wordlists/english';
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   let Funder: TezosToolkit;
@@ -14,7 +15,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     let funderPKH: string;
 
     beforeAll(async () => {
-      mnemonic = Bip39.generateMnemonic();
+      mnemonic = bip39.generateMnemonic(wordlist);
       Funder = lib;
       await setup();
 
