@@ -24,6 +24,7 @@
     "@ledgerhq/hw-transport-node-hid-noevents": "6.31.0"
   },
   "dependencies": {
+    "@scure/bip39": "^2.0.1",
     "@taquito/contracts-library": "^24.2.0",
     "@taquito/core": "^24.2.0",
     "@taquito/http-utils": "^24.2.0",
@@ -39,7 +40,6 @@
     "@taquito/tzip16": "^24.2.0",
     "@taquito/utils": "^24.2.0",
     "bignumber.js": "^9.1.2",
-    "bip39": "3.1.0",
     "blakejs": "^1.2.1"
   },
   "private": true,

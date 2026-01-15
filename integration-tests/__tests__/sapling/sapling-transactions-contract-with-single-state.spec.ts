@@ -3,7 +3,8 @@ import { CONFIGS } from '../../config';
 import { InMemorySpendingKey, SaplingToolkit } from '@taquito/sapling';
 import BigNumber from 'bignumber.js';
 import { singleSaplingStateContractJProtocol } from '../../data/single_sapling_state_contract_jakarta_michelson';
-import * as bip39 from 'bip39';
+import * as bip39 from '@scure/bip39';
+import { wordlist } from '@scure/bip39/wordlists/english';
 import { sequentialTestSuite } from '../../sequential-test';
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
@@ -30,7 +31,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       saplingContract = await saplingContractOrigination.contract();
 
       // Generate a spending key and an InMemorySpendingKey instance for Bob using a mnemonic
-      const mnemonic: string = bip39.generateMnemonic();
+      const mnemonic: string = bip39.generateMnemonic(wordlist);
       bobInmemorySpendingKey = await InMemorySpendingKey.fromMnemonic(mnemonic);
 
       // Instantiate an InMemorySpendingKey from a spending key for Alice
