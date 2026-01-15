@@ -12,7 +12,7 @@ import { EdKey, EdPublicKey } from './ed-key';
 import { ECKey, ECPublicKey } from './ec-key';
 import pbkdf2 from 'pbkdf2';
 import * as bip39 from '@scure/bip39';
-import { wordlist } from '@scure/bip39/wordlists/english';
+import { wordlist } from '@scure/bip39/wordlists/english.js';
 import { Curves, generateSecretKey } from './helpers';
 import { InvalidMnemonicError, InvalidPassphraseError } from './errors';
 import {
