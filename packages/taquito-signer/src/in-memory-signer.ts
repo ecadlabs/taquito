@@ -11,7 +11,8 @@ import toBuffer from 'typedarray-to-buffer';
 import { EdKey, EdPublicKey } from './ed-key';
 import { ECKey, ECPublicKey } from './ec-key';
 import pbkdf2 from 'pbkdf2';
-import * as Bip39 from 'bip39';
+import * as bip39 from '@scure/bip39';
+import { wordlist } from '@scure/bip39/wordlists/english';
 import { Curves, generateSecretKey } from './helpers';
 import { InvalidMnemonicError, InvalidPassphraseError } from './errors';
 import {
@@ -52,10 +53,10 @@ export class InMemorySigner implements Signer {
   #key!: SigningKey;
 
   static fromFundraiser(email: string, password: string, mnemonic: string) {
-    if (!Bip39.validateMnemonic(mnemonic)) {
-      throw new InvalidMnemonicError();
+    if (!bip39.validateMnemonic(mnemonic, wordlist)) {
+      throw new InvalidMnemonicError(mnemonic);
     }
-    const seed = Bip39.mnemonicToSeedSync(mnemonic, `${email}${password}`);
+    const seed = bip39.mnemonicToSeedSync(mnemonic, `${email}${password}`);
     const key = b58Encode(seed.subarray(0, 32), PrefixV2.Ed25519Seed);
     return new InMemorySigner(key);
   }
@@ -77,10 +78,11 @@ export class InMemorySigner implements Signer {
     curve = 'ed25519',
   }: FromMnemonicParams) {
     // check if curve is defined if not default tz1
-    if (!Bip39.validateMnemonic(mnemonic)) {
-      throw new InvalidMnemonicError();
+    if (!bip39.validateMnemonic(mnemonic, wordlist)) {
+      // avoiding exposing mnemonic again in case of mistake making invalid
+      throw new InvalidMnemonicError(mnemonic)
     }
-    const seed = Bip39.mnemonicToSeedSync(mnemonic, password);
+    const seed = bip39.mnemonicToSeedSync(mnemonic, password);
 
     const sk = generateSecretKey(seed, derivationPath, curve);
 
@@ -249,4 +251,3 @@ export function publicKeyFromString(src: string): PublicKey {
       return new BLSPublicKey(keyData);
   }
 }
-

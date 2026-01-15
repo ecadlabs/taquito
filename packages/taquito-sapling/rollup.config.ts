@@ -42,7 +42,7 @@ export default {
     '@airgap/sapling-wasm',
     '@stablelib/nacl',
     'pbkdf2',
-    'bip39',
+    '@scure/bip39',
     '@stablelib/random',
     '@taquito/taquito'
   ],
