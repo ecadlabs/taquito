@@ -42,6 +42,8 @@ const signer = new RemoteSigner(pkh, rootUrl, { authSecretKey });
 // next steps as above
 ```
 
+Please note that the secret key should not be associated with an on-chain account.
+
 ## Additional info
 
 See the top-level [https://github.com/ecadlabs/taquito](https://github.com/ecadlabs/taquito) file for details on reporting issues, contributing, and versioning.
