@@ -290,5 +290,64 @@ describe('RemoteSigner test', () => {
         expect(error).toBeInstanceOf(BadSigningDataError);
       }
     });
+
+    it('Should include authentication query parameter when authSecretKey is provided', async () => {
+      const signer = new RemoteSigner(
+        'tz1iD5nmudc4QtfNW14WWaiP7JEDuUHnbXuv',
+        'http://127.0.0.1:6732',
+        { authSecretKey: 'edsk39CjLvKZhJ1NEaCTE6A1cgHjt5mK2mFdCqqMr1P54qLnwmiCAr' },
+        httpBackend as any
+      );
+
+      httpBackend.createRequest
+        .mockResolvedValueOnce({
+          signature:
+            'sigiGUGvWRkoYuf7ReH3wWAYnpgBFTa2DJ4Nxi7v1Wy5KqS7sZaxNhRiW6ivuoSUdKZnyGTABVk23WnppatuYqHty7uDtWRY',
+        })
+        .mockResolvedValueOnce({
+          public_key: 'edpkuAhkJ81xGyf4PcmRMHLSaQGbDEpkGhNbcjNVnKWKR8kqkgQR3f',
+        });
+
+      await signer.sign(
+        '0365cac93523b8c10346c0107cfea5e12ff3c759459020e532f299e2f41082f7cb6d0000f68c4abfa21dfc0c9efcf588190388cac85d9db60f81d6038b79d8030000000000b902000000b405000764045b0000000a2564656372656d656e74045b0000000a25696e6372656d656e740501035b0502020000008503210317057000010321057100020316072e020000002b032105700002032105710003034203210317057000010321057100020316034b051f020000000405200002020000002b0321057000020321057100030342032103170570000103210571000203160312051f0200000004052000020321053d036d0342051f020000000405200003000000020000'
+      );
+
+      // Verify the POST request includes the authentication query parameter
+      const postRequest = httpBackend.createRequest.mock.calls[0][0];
+      expect(postRequest.method).toEqual('POST');
+      expect(postRequest.url).toEqual(
+        'http://127.0.0.1:6732/keys/tz1iD5nmudc4QtfNW14WWaiP7JEDuUHnbXuv'
+      );
+      expect(postRequest.query).toBeDefined();
+      expect(postRequest.query.authentication).toBeDefined();
+      // The authentication signature should be a valid Tezos signature (starts with edsig, spsig, or p2sig)
+      expect(postRequest.query.authentication).toMatch(/^(edsig|spsig|p2sig)/);
+    });
+
+    it('Should not include authentication query parameter when authSecretKey is not provided', async () => {
+      const signer = new RemoteSigner(
+        'tz1iD5nmudc4QtfNW14WWaiP7JEDuUHnbXuv',
+        'http://127.0.0.1:6732',
+        {},
+        httpBackend as any
+      );
+
+      httpBackend.createRequest
+        .mockResolvedValueOnce({
+          signature:
+            'sigiGUGvWRkoYuf7ReH3wWAYnpgBFTa2DJ4Nxi7v1Wy5KqS7sZaxNhRiW6ivuoSUdKZnyGTABVk23WnppatuYqHty7uDtWRY',
+        })
+        .mockResolvedValueOnce({
+          public_key: 'edpkuAhkJ81xGyf4PcmRMHLSaQGbDEpkGhNbcjNVnKWKR8kqkgQR3f',
+        });
+
+      await signer.sign(
+        '0365cac93523b8c10346c0107cfea5e12ff3c759459020e532f299e2f41082f7cb6d0000f68c4abfa21dfc0c9efcf588190388cac85d9db60f81d6038b79d8030000000000b902000000b405000764045b0000000a2564656372656d656e74045b0000000a25696e6372656d656e740501035b0502020000008503210317057000010321057100020316072e020000002b032105700002032105710003034203210317057000010321057100020316034b051f020000000405200002020000002b0321057000020321057100030342032103170570000103210571000203160312051f0200000004052000020321053d036d0342051f020000000405200003000000020000'
+      );
+
+      // Verify the POST request does NOT include query parameter
+      const postRequest = httpBackend.createRequest.mock.calls[0][0];
+      expect(postRequest.query).toBeUndefined();
+    });
   });
 });
