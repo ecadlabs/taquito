@@ -57,7 +57,8 @@
   },
   "jest": {
     "transform": {
-      ".(ts|tsx)": "ts-jest"
+      ".(ts|tsx)": "ts-jest",
+      "node_modules/@noble/hashes/.+\\.(j|t)sx?$": "ts-jest"
     },
     "testEnvironment": "node",
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
@@ -69,7 +70,8 @@
     "moduleNameMapper": {
       "^@taquito/utils$": "<rootDir>/../taquito-utils/src/taquito-utils.ts",
       "^@taquito/signer$": "<rootDir>/../taquito-signer/src/taquito-signer.ts",
-      "^@taquito/taquito$": "<rootDir>/../taquito/src/taquito.ts"
+      "^@taquito/taquito$": "<rootDir>/../taquito/src/taquito.ts",
+      "^@noble/hashes/blake2$": "<rootDir>/../../node_modules/@noble/hashes/blake2.js"
     },
     "coveragePathIgnorePatterns": [
       "/node_modules/",
@@ -77,10 +79,13 @@
     ],
     "collectCoverageFrom": [
       "src/**/*.{js,ts}"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!@noble/hashes)"
     ]
   },
   "dependencies": {
-    "@stablelib/blake2b": "^1.0.1",
+    "@noble/hashes": "^2.0.1",
     "@stablelib/nacl": "^1.0.4",
     "big-integer": "^1.6.52"
   },
