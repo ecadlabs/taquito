@@ -1,5 +1,5 @@
 import bigInt, { BigInteger } from 'big-integer';
-import { hash } from '@stablelib/blake2b';
+import { blake2b } from '@noble/hashes/blake2';
 import { TimelockInit, RNG } from './interface';
 
 // globalThis.crypto is available in browsers and Node.js 20+
@@ -67,7 +67,7 @@ function hashToPrime(
     ...toLE(key),
   ];
 
-  const sum = hash(new Uint8Array(b), 32, { key: new Uint8Array([32]) });
+  const sum = blake2b(new Uint8Array(b), { dkLen: 32, key: new Uint8Array([32]) });
   const val = fromLE(Array.from(sum));
   return nextPrime(val);
 }
@@ -238,7 +238,7 @@ export class TimelockProof {
 
   symmetricKey(): Uint8Array {
     const updated = this.vdfTuple.unlockedValue.modPow(this.nonce, this.vdfTuple.modulus);
-    return hash(new TextEncoder().encode(String(updated)), 32, { key: KDF_KEY });
+    return blake2b(new TextEncoder().encode(String(updated)), { dkLen: 32, key: KDF_KEY });
   }
 
   encode(): Uint8Array {
