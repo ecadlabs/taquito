@@ -39,7 +39,8 @@
   },
   "jest": {
     "transform": {
-      ".(ts|tsx)": "ts-jest"
+      ".(ts|tsx)": "ts-jest",
+      "node_modules/@noble/hashes/.+\\.(j|t)sx?$": "ts-jest"
     },
     "testEnvironment": "node",
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
@@ -54,11 +55,17 @@
     ],
     "collectCoverageFrom": [
       "src/**/*.{js,ts}"
-    ]
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!@noble/hashes)"
+    ],
+    "moduleNameMapper": {
+      "^@noble/hashes/blake2$": "<rootDir>/../../node_modules/@noble/hashes/blake2.js"
+    }
   },
   "dependencies": {
     "@ledgerhq/hw-transport": "^6.31.14",
-    "@stablelib/blake2b": "^1.0.1",
+    "@noble/hashes": "^2.0.1",
     "@taquito/core": "^24.0.1",
     "@taquito/taquito": "^24.0.1",
     "@taquito/utils": "^24.0.1",
