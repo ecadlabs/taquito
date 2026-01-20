@@ -1,4 +1,4 @@
-import { hash as blake2b } from '@stablelib/blake2b';
+import { blake2b } from '@noble/hashes/blake2';
 import { generateKeyPairFromSeed, sign, KeyPair } from '@stablelib/ed25519';
 import {
   PrefixV2,
@@ -55,7 +55,7 @@ export class EdKey implements SigningKey {
    * @param bytesHash Blake2b hash of the bytes to sign
    */
   sign(bytes: Uint8Array): RawSignResult {
-    const hash = blake2b(bytes, 32);
+    const hash = blake2b(bytes, { dkLen: 32 });
     const signature = sign(this.#keyPair.secretKey, hash);
 
     return {
@@ -101,7 +101,7 @@ export class EdPublicKey implements PublicKey {
   }
 
   hash(): string {
-    return b58Encode(blake2b(this.#key, 20), PrefixV2.Ed25519PublicKeyHash);
+    return b58Encode(blake2b(this.#key, { dkLen: 20 }), PrefixV2.Ed25519PublicKeyHash);
   }
 
   bytes(): Uint8Array {
