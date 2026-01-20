@@ -18,7 +18,7 @@ export default {
       format: 'umd',
       sourcemap: true,
       globals: {
-        "@stablelib/blake2b": "blake2b",
+        "@noble/hashes/blake2": "blake2",
         "@stablelib/ed25519": "ed25519$1",
         "@taquito/utils": "utils",
         "@taquito/core": "core",
@@ -40,7 +40,7 @@ export default {
   ],
   // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
   external: [
-    '@stablelib/blake2b',
+    '@noble/hashes/blake2',
     '@stablelib/ed25519',
     '@taquito/utils',
     '@taquito/core',
