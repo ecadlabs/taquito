@@ -14,10 +14,10 @@ export default {
       name: camelCase(libraryName), 
       format: 'umd', 
       sourcemap: true, 
-      globals: { 
+      globals: {
         '@taquito/core': 'core',
         '@taquito/utils': 'utils',
-        '@stablelib/blake2b': 'blake2b'
+        '@noble/hashes/blake2': 'blake2'
       } 
     },
     { file: pkg.module, format: 'es', sourcemap: true },
@@ -26,7 +26,7 @@ export default {
   external: [
     '@taquito/core',
     '@taquito/utils',
-    '@stablelib/blake2b'
+    '@noble/hashes/blake2'
   ],
   watch: {
     include: 'src/**',

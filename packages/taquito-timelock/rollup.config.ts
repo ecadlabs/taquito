@@ -15,17 +15,17 @@ export default {
       name: camelCase(libraryName), 
       format: 'umd', 
       sourcemap: true, 
-      globals: { 
+      globals: {
         "@stablelib/nacl": "nacl",
         "big-integer": "bigInt",
-        "@stablelib/blake2b": "blake2b"
+        "@noble/hashes/blake2": "blake2"
       } 
     },
     { file: pkg.module, format: 'es', sourcemap: true },
   ],
   // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
   external: [
-  '@stablelib/blake2b',
+  '@noble/hashes/blake2',
   '@stablelib/nacl',
   'big-integer',
   ],
