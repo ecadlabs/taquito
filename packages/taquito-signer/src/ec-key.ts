@@ -1,4 +1,4 @@
-import { hash as blake2b } from '@stablelib/blake2b';
+import { blake2b } from '@noble/hashes/blake2';
 import {
   PrefixV2,
   b58DecodeAndCheckPrefix,
@@ -94,7 +94,7 @@ export class ECKey implements SigningKey {
    * @param bytesHash Blake2b hash of the bytes to sign
    */
   sign(bytes: Uint8Array): RawSignResult {
-    const hash = blake2b(bytes, 32);
+    const hash = blake2b(bytes, { dkLen: 32 });
 
     let signature: Uint8Array;
     if (this.#keyPair.curve === 'secp256k1') {
@@ -177,7 +177,7 @@ export class ECPublicKey implements PublicKey {
 
   hash(): string {
     const key = this.bytes();
-    return b58Encode(blake2b(key, 20), pref[this.curve].pkh);
+    return b58Encode(blake2b(key, { dkLen: 20 }), pref[this.curve].pkh);
   }
 
   bytes(compress: boolean = true): Uint8Array {
