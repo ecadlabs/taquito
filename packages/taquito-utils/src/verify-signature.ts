@@ -1,5 +1,5 @@
 import { verify as verifyEd25519 } from '@stablelib/ed25519';
-import { hash as blake2b } from '@stablelib/blake2b';
+import { blake2b } from '@noble/hashes/blake2';
 import {
   b58DecodeAndCheckPrefix,
   buf2hex,
@@ -105,7 +105,7 @@ export function verifySignature(
 }
 
 function verifyEdSignature(sig: Uint8Array, msg: Uint8Array, publicKey: Uint8Array): boolean {
-  const hash = blake2b(msg, 32);
+  const hash = blake2b(msg, { dkLen: 32 });
   try {
     return verifyEd25519(publicKey, hash, sig);
   } catch {
@@ -114,7 +114,7 @@ function verifyEdSignature(sig: Uint8Array, msg: Uint8Array, publicKey: Uint8Arr
 }
 
 function verifySpSignature(sig: Uint8Array, msg: Uint8Array, publicKey: Uint8Array): boolean {
-  const hash = blake2b(msg, 32);
+  const hash = blake2b(msg, { dkLen: 32 });
   try {
     return secp256k1.verify(sig, hash, publicKey);
   } catch {
@@ -123,7 +123,7 @@ function verifySpSignature(sig: Uint8Array, msg: Uint8Array, publicKey: Uint8Arr
 }
 
 function verifyP2Signature(sig: Uint8Array, msg: Uint8Array, publicKey: Uint8Array): boolean {
-  const hash = blake2b(msg, 32);
+  const hash = blake2b(msg, { dkLen: 32 });
   try {
     return p256.verify(sig, hash, publicKey);
   } catch {
