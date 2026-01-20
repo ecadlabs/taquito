@@ -17,7 +17,7 @@ export default {
       sourcemap: true,
       globals: {
         buffer: "buffer",
-        "@stablelib/blake2b": "blake2b",
+        "@noble/hashes/blake2": "blake2",
         bs58check: "bs58check",
         "bignumber.js": "BigNumber",
         "typedarray-to-buffer": "toBuffer",
@@ -36,7 +36,7 @@ export default {
     'typedarray-to-buffer',
     'blakejs',
     'bs58check',
-    '@stablelib/blake2b',
+    '@noble/hashes/blake2',
     '@taquito/core',
     '@stablelib/ed25519',
     'elliptic',
