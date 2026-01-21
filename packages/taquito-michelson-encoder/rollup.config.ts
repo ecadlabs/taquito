@@ -20,7 +20,6 @@ export default {
         '@taquito/core': 'taquitoCore',
         'bignumber.js': 'BigNumber',
         '@taquito/utils': 'taquitoUtils',
-        elliptic: 'elliptic',
       },
     },
     { file: pkg.module, format: 'es', sourcemap: true },
@@ -32,7 +31,6 @@ export default {
     '@taquito/rpc',
     'bignumber.js',
     '@taquito/utils',
-    'elliptic',
   ],
   watch: {
     include: 'src/**',
