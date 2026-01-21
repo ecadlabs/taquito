@@ -17,6 +17,7 @@ export default {
       globals: { 
         "bignumber.js": "BigNumber",
         "@taquito/taquito": "taquito",
+        "@noble/hashes/pbkdf2": "pbkdf2",
         "@taquito/utils": "utils",
         "@taquito/core": "core",
         "@airgap/sapling-wasm": "sapling",
@@ -25,7 +26,6 @@ export default {
         "@stablelib/random": "random",
         "bip39": "bip39",
         "typedarray-to-buffer": "toBuffer",
-        "pbkdf2": "pbkdf2"
       }
     },
     { file: pkg.module, format: 'es', sourcemap: true },
@@ -41,7 +41,7 @@ export default {
     'bignumber.js',
     '@airgap/sapling-wasm',
     '@stablelib/nacl',
-    'pbkdf2',
+    '@noble/hashes/pbkdf2',
     'bip39',
     '@stablelib/random',
     '@taquito/taquito'

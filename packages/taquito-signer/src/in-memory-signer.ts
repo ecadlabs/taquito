@@ -10,7 +10,7 @@ import {
 import toBuffer from 'typedarray-to-buffer';
 import { EdKey, EdPublicKey } from './ed-key';
 import { ECKey, ECPublicKey } from './ec-key';
-import pbkdf2 from 'pbkdf2';
+import { pbkdf2 } from '@noble/hashes/pbkdf2';
 import * as Bip39 from 'bip39';
 import { Curves, generateSecretKey } from './helpers';
 import { InvalidMnemonicError, InvalidPassphraseError } from './errors';
@@ -23,6 +23,7 @@ import {
 } from '@taquito/core';
 import { SigningKey, isPOP, PublicKey } from './key-interface';
 import { BLSKey, BLSPublicKey } from './bls-key';
+import { sha512 } from '@noble/hashes/sha2';
 
 export interface FromMnemonicParams {
   mnemonic: string;
@@ -135,7 +136,7 @@ export class InMemorySigner implements Signer {
       decrypt = (data: Uint8Array) => {
         const salt = toBuffer(data.slice(0, 8));
         const encryptedSk = data.slice(8);
-        const encryptionKey = pbkdf2.pbkdf2Sync(passphrase, salt, 32768, 32, 'sha512');
+        const encryptionKey = pbkdf2(sha512, passphrase, salt, { c: 32768, dkLen: 32 });
 
         const res = openSecretBox(
           new Uint8Array(encryptionKey),
@@ -250,4 +251,3 @@ export function publicKeyFromString(src: string): PublicKey {
       return new BLSPublicKey(keyData);
   }
 }
-

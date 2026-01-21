@@ -19,6 +19,7 @@ export default {
         "@noble/hashes/blake2": "blake2",
         "@noble/hashes/sha2": "sha2",
         "@noble/hashes/hmac": "hmac",
+        "@noble/hashes/pbkdf2": "pbkdf2",
         "@stablelib/ed25519": "ed25519$1",
         "@taquito/utils": "utils",
         "@taquito/core": "core",
@@ -31,7 +32,6 @@ export default {
         "@noble/curves/nist.js": "nist",
         "@noble/curves/nist": "nist",
         "@stablelib/nacl": "nacl",
-        "pbkdf2": "pbkdf2",
         "bip39": "Bip39",
         "typedarray-to-buffer": "toBuffer"
       }
@@ -43,6 +43,7 @@ export default {
     '@noble/hashes/blake2',
     '@noble/hashes/hmac',
     '@noble/hashes/sha2',
+    '@noble/hashes/pbkdf2',
     '@stablelib/ed25519',
     '@taquito/utils',
     '@taquito/core',
@@ -55,7 +56,6 @@ export default {
     '@noble/curves/nist.js',
     '@noble/curves/nist',
     '@stablelib/nacl',
-    'pbkdf2',
     'bip39',
     'typedarray-to-buffer'
   ],
