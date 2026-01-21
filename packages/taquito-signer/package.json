@@ -82,7 +82,9 @@
     "moduleNameMapper": {
       "^@taquito/utils$": "<rootDir>/../taquito-utils/src/taquito-utils.ts",
       "^@scure/bip39/wordlists/english.js$": "<rootDir>/../../node_modules/@scure/bip39/wordlists/english.js",
-      "^@noble/hashes/blake2$": "<rootDir>/../../node_modules/@noble/hashes/blake2.js"
+      "^@noble/hashes/blake2$": "<rootDir>/../../node_modules/@noble/hashes/blake2.js",
+      "^@noble/hashes/hmac$": "<rootDir>/../../node_modules/@noble/hashes/hmac.js",
+      "^@noble/hashes/sha2$": "<rootDir>/../../node_modules/@noble/hashes/sha2.js"
     },
     "coveragePathIgnorePatterns": [
       "/node_modules/",

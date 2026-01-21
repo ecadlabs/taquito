@@ -78,7 +78,9 @@
       "src/**/*.{js,ts}"
     ],
     "moduleNameMapper": {
-      "^@noble/hashes/blake2$": "<rootDir>/../../node_modules/@noble/hashes/blake2.js"
+      "^@noble/hashes/blake2$": "<rootDir>/../../node_modules/@noble/hashes/blake2.js",
+      "^@noble/hashes/hmac$": "<rootDir>/../../node_modules/@noble/hashes/hmac.js",
+      "^@noble/hashes/sha2$": "<rootDir>/../../node_modules/@noble/hashes/sha2.js"
     },
     "transformIgnorePatterns": [
       "node_modules/(?!@noble/hashes)"
