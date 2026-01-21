@@ -93,7 +93,8 @@
             "module": "es2020"
           }
         }
-      ]
+      ],
+      "node_modules/@noble/hashes/.+\\.(j|t)sx?$": "ts-jest"
     },
     "testEnvironment": "node",
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
@@ -108,7 +109,10 @@
     "moduleNameMapper": {
       "^@taquito/taquito$": "<rootDir>/../taquito/src/taquito.ts",
       "^(\\.{1,2}/.*)\\.js$": "$1",
-      "^@scure/bip39/wordlists/english.js$": "<rootDir>/../../node_modules/@scure/bip39/wordlists/english.js"
+      "^@scure/bip39/wordlists/english.js$": "<rootDir>/../../node_modules/@scure/bip39/wordlists/english.js",
+      "^(\\.{1,2}/.*)\\.js$": "$1",
+      "^@noble/hashes/blake2$": "<rootDir>/../../node_modules/@noble/hashes/blake2.js",
+      "^@stablelib/blake2b$": "<rootDir>/../../node_modules/@stablelib/blake2b/lib/blake2b.js"
     },
     "transformIgnorePatterns": [
       "/node_modules/(?!(@ecadlabs|@stablelib|@scure/bip39|@noble/hashes|@scure/base)/.*)"
