@@ -84,7 +84,9 @@
       "^@taquito/taquito$": "<rootDir>/../taquito/src/taquito.ts",
       "^(\\.{1,2}/.*)\\.js$": "$1",
       "^@noble/hashes/blake2$": "<rootDir>/../../node_modules/@noble/hashes/blake2.js",
-      "^@stablelib/blake2b$": "<rootDir>/../../node_modules/@stablelib/blake2b/lib/blake2b.js"
+      "^@stablelib/blake2b$": "<rootDir>/../../node_modules/@stablelib/blake2b/lib/blake2b.js",
+      "^@noble/hashes/hmac$": "<rootDir>/../../node_modules/@noble/hashes/hmac.js",
+      "^@noble/hashes/sha2$": "<rootDir>/../../node_modules/@noble/hashes/sha2.js"
     },
     "transformIgnorePatterns": [
       "node_modules/(?!@noble/hashes|@airgap|@stablelib)"
