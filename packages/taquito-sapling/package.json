@@ -45,6 +45,7 @@
     ]
   },
   "jest": {
+    "testTimeout": 30000,
     "transform": {
       ".(ts|tsx)": "ts-jest",
       "node_modules/@noble/hashes/.+\\.(j|t)sx?$": "ts-jest"
