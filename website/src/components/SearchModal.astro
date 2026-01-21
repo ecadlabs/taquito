@@ -83,12 +83,26 @@ const { currentVersion } = Astro.props;
     const results = fuse.search(q).slice(0, 10);
     if (!results.length) return setState('none');
 
-    list.innerHTML = results.map((r, i) => `
-      <li><a href="${r.item.url}" class="block p-3 rounded-md border ${i === 0 ? 'bg-primary/10 border-primary/20' : 'border-transparent hover:bg-gray-100'}">
-        <div class="font-medium text-gray-900">${r.item.title}</div>
-        <div class="text-sm text-gray-600 truncate">${r.item.excerpt}</div>
-      </a></li>
-    `).join('');
+    list.innerHTML = '';
+    results.forEach((r, i) => {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = r.item.url;
+      a.className = `block p-3 rounded-md border ${i === 0 ? 'bg-primary/10 border-primary/20' : 'border-transparent hover:bg-gray-100'}`;
+
+      const titleDiv = document.createElement('div');
+      titleDiv.className = 'font-medium text-gray-900';
+      titleDiv.textContent = r.item.title;
+
+      const excerptDiv = document.createElement('div');
+      excerptDiv.className = 'text-sm text-gray-600 truncate';
+      excerptDiv.textContent = r.item.excerpt;
+
+      a.appendChild(titleDiv);
+      a.appendChild(excerptDiv);
+      li.appendChild(a);
+      list.appendChild(li);
+    });
     selected = 0;
     setState('results');
   }
