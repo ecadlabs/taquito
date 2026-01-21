@@ -5,25 +5,30 @@
 
 let fetch = globalThis?.fetch;
 let createAgent: ((url: string) => { keepAlive?: boolean; [key: string]: any }) | undefined;
-// Will only use browser fetch if we are in a browser environment,
-// default to the more stable node-fetch otherwise
-const isNode = typeof process !== 'undefined' && !!process?.versions?.node;
-if (isNode) {
-  // Handle both ESM and CJS default export patterns for webpack compatibility
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const nodeFetch = require('node-fetch');
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const https = require('https');
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const http = require('http');
-  fetch = nodeFetch.default || nodeFetch;
-  if (Number(process.versions.node.split('.')[0]) >= 19) {
-    // we need agent with keepalive false for node 19 and above
-    createAgent = (url: string) => {
-      return url.startsWith('https')
-        ? new https.Agent({ keepAlive: false })
-        : new http.Agent({ keepAlive: false });
-    };
+let isNode = false;
+
+// Prefer native fetch when available (browser, Electron renderer, Node 18+)
+// Only fall back to node-fetch when native fetch is not available
+if (typeof fetch !== 'function') {
+  const hasNodeProcess = typeof process !== 'undefined' && !!process?.versions?.node;
+  if (hasNodeProcess) {
+    // Handle both ESM and CJS default export patterns for webpack compatibility
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const nodeFetch = require('node-fetch');
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const https = require('https');
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const http = require('http');
+    fetch = nodeFetch.default || nodeFetch;
+    isNode = true;
+    if (Number(process.versions.node.split('.')[0]) >= 19) {
+      // we need agent with keepalive false for node 19 and above
+      createAgent = (url: string) => {
+        return url.startsWith('https')
+          ? new https.Agent({ keepAlive: false })
+          : new http.Agent({ keepAlive: false });
+      };
+    }
   }
 }
 
