@@ -1,4 +1,4 @@
-import { verify as verifyEd25519 } from '@stablelib/ed25519';
+import { ed25519 } from '@noble/curves/ed25519';
 import { blake2b } from '@noble/hashes/blake2';
 import {
   b58DecodeAndCheckPrefix,
@@ -107,7 +107,7 @@ export function verifySignature(
 function verifyEdSignature(sig: Uint8Array, msg: Uint8Array, publicKey: Uint8Array): boolean {
   const hash = blake2b(msg, { dkLen: 32 });
   try {
-    return verifyEd25519(publicKey, hash, sig);
+    return ed25519.verify(sig, hash, publicKey);
   } catch {
     return false;
   }

@@ -1,11 +1,22 @@
 /* eslint-disable @typescript-eslint/no-this-alias */
 import { hmac } from '@noble/hashes/hmac';
 import { sha512 } from '@noble/hashes/sha2';
-import { generateKeyPairFromSeed } from '@stablelib/ed25519';
+import { ed25519 } from '@noble/curves/ed25519';
 import { ExtendedPrivateKey, Hard } from './types';
 import { parseHex } from './utils';
 import { InvalidSeedLengthError } from '../errors';
 import { InvalidDerivationPathError } from '@taquito/core';
+
+function generateKeyPairFromSeed(seed: Uint8Array): {
+  secretKey: Uint8Array;
+  publicKey: Uint8Array;
+} {
+  const publicKey = ed25519.getPublicKey(seed);
+  const secretKey = new Uint8Array(64);
+  secretKey.set(seed);
+  secretKey.set(publicKey, 32);
+  return { secretKey, publicKey };
+}
 
 // MinSeedSize is the minimal allowed seed byte length
 const minSeedSize = 16;
