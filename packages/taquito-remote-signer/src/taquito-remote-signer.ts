@@ -22,14 +22,34 @@ import {
   PublicKeyVerificationError,
   SignatureVerificationError,
 } from './errors';
-import { Signer } from '@taquito/core';
 import {
   InvalidSignatureError,
   InvalidKeyHashError,
   ProhibitedActionError,
   PublicKeyNotFoundError,
   ParameterValidationError,
+  Signer,
 } from '@taquito/core';
+import { authenticateRequest } from './auth';
+
+/**
+ *  @category Error
+ *  @description Error
+ */
+export class SignatureVerificationFailedError extends Error {
+  public name = 'SignatureVerificationFailedError';
+  constructor(public bytes: string, public signature: string) {
+    super(
+      `
+        Signature failed verification against public key: 
+        {
+          bytes: ${bytes},
+          signature: ${signature}
+        }
+      `
+    );
+  }
+}
 
 interface PublicKeyResponse {
   public_key: string;
@@ -41,6 +61,7 @@ interface SignResponse {
 
 export interface RemoteSignerOptions {
   headers?: { [key: string]: string };
+  authSecretKey?: string;
 }
 
 export { VERSION } from './version';
@@ -102,11 +123,15 @@ export class RemoteSigner implements Signer {
         bb = mergebuf(watermark, bb);
       }
       const watermarkedBytes = buf2hex(toBuffer(bb));
+      const auth = this.options.authSecretKey !== undefined ?
+        authenticateRequest(bb, this.options.authSecretKey, this.pkh) :
+        null;
       const { signature } = await this.http.createRequest<SignResponse>(
         {
           url: this.createURL(`/keys/${this.pkh}`),
           method: 'POST',
           headers: this.options.headers,
+          ...(auth !== null ? { query: { authentication: auth } } : undefined)
         },
         watermarkedBytes
       );
