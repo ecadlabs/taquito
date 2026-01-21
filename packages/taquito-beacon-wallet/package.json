@@ -108,6 +108,7 @@
     ],
     "moduleNameMapper": {
       "^@taquito/taquito$": "<rootDir>/../taquito/src/taquito.ts",
+      "^@taquito/utils$": "<rootDir>/../taquito-utils/src/taquito-utils.ts",
       "^(\\.{1,2}/.*)\\.js$": "$1",
       "^@scure/bip39/wordlists/english.js$": "<rootDir>/../../node_modules/@scure/bip39/wordlists/english.js",
       "^(\\.{1,2}/.*)\\.js$": "$1",
