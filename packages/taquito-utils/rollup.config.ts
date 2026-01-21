@@ -23,7 +23,6 @@ export default {
         "typedarray-to-buffer": "toBuffer",
         "@taquito/core": "core",
         "@noble/curves/ed25519": "ed25519",
-        elliptic: "elliptic",
         "@noble/curves/bls12-381": "bls12381",
         "@noble/curves/secp256k1": "secp256k1",
         "@noble/curves/nist": "nist"
@@ -39,7 +38,6 @@ export default {
     '@noble/hashes/blake2',
     '@taquito/core',
     '@noble/curves/ed25519',
-    'elliptic',
     '@noble/curves/bls12-381',
     '@noble/curves/secp256k1',
     '@noble/curves/nist',
