@@ -1,7 +1,8 @@
 import { InvalidSpendingKey } from '../errors';
 import toBuffer from 'typedarray-to-buffer';
 import { openSecretBox } from '@stablelib/nacl';
-import pbkdf2 from 'pbkdf2';
+import { pbkdf2 } from '@noble/hashes/pbkdf2';
+import { sha512 } from '@noble/hashes/sha2';
 import { PrefixV2, b58DecodeAndCheckPrefix } from '@taquito/utils';
 import { ParameterValidationError } from '@taquito/core';
 
@@ -29,7 +30,7 @@ export function decryptKey(spendingKey: string, password?: string) {
     const salt = toBuffer(keyArr.slice(0, 8));
     const encryptedSk = toBuffer(keyArr.slice(8));
 
-    const encryptionKey = pbkdf2.pbkdf2Sync(password, salt, 32768, 32, 'sha512');
+    const encryptionKey = pbkdf2(sha512, password, salt, { c: 32768, dkLen: 32 });
     // Zero nonce is safe: fresh random salt per encryption produces unique PBKDF2-derived key.
     // See: https://gitlab.com/tezos/tezos/-/blob/master/src/lib_signer_backends/encrypted.ml
     const decrypted = openSecretBox(
