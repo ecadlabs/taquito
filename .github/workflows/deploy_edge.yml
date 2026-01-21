@@ -18,23 +18,37 @@ jobs:
       VERDACCIO_TOKEN: ${{ secrets.EDGE_VERDACCIO_TOKEN }}
     steps:
       - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
       - uses: actions/setup-node@v4
         with:
           node-version: lts/Iron
       - run: echo "SHORT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
       - run: echo "PACKAGE_VERSION=`node -p "require('./packages/taquito/package.json').version"`" >> $GITHUB_ENV
-      - run: echo "BRANCH_NAME=$(git branch --show-current)" >> $GITHUB_ENV
-      - run: echo "TARGET_VERSION=${PACKAGE_VERSION}-${SHORT_SHA}--${BRANCH_NAME}" >> $GITHUB_ENV
-      - run: npm ci
+      - run: |
+          # Get branch name - works for both PRs (using GITHUB_HEAD_REF) and direct pushes
+          if [ -n "$GITHUB_HEAD_REF" ]; then
+            BRANCH_NAME="$GITHUB_HEAD_REF"
+          else
+            BRANCH_NAME="$(git branch --show-current)"
+          fi
+          # Sanitize branch name for npm version (replace / with -)
+          BRANCH_NAME="${BRANCH_NAME//\//-}"
+          echo "BRANCH_NAME=${BRANCH_NAME}" >> $GITHUB_ENV
+      - run: echo "TARGET_VERSION=${PACKAGE_VERSION}-${SHORT_SHA}-${BRANCH_NAME}" >> $GITHUB_ENV
       - run: find packages/ -mindepth 1 -maxdepth 2 -name README.md | xargs sed -i '1s/^/# WARNING This build is produced from a feature branch and could contain unreviewed changes from the public. Use with caution, do not use in production\n\n/'
-      - run: npx lerna version "${TARGET_VERSION}" --no-push --no-git-tag-version --yes
-      - run: npm run version-stamp
-      - run: npm run build
-      - run: npm run -w @taquito/taquito build:release
+      # Use npm for version/publish (npm install creates proper structure npm needs)
+      - run: npm install
+      - run: npm version "${TARGET_VERSION}" --no-git-tag-version --workspaces
+      - run: bun run version-stamp
+      - run: bun run build
+      - run: cd packages/taquito && bun run build:release
       - run: git config user.email "actions@github.com" && git config user.name "Github Actions"
-      - run: git add . && git commit -m "committing changes to files to make lerna happy in next step, this is expected to never be pushed to remote"
+      - run: git add . && git commit -m "committing version changes, this is expected to never be pushed to remote"
       - run: echo ${VERDACCIO_TOKEN} >> ~/.npmrc
-      - run: npx lerna publish --dist-tag edge from-package --yes --registry https://npm.preview.tezostaquito.io/
+      # Use npm for publishing as it handles npm registry auth better
+      - run: npm publish --tag edge --registry https://npm.preview.tezostaquito.io/ --workspaces
       - if: ${{ github.event_name == 'pull_request' }}
         run: |
           echo "COMMENT_BODY<<EOF"  >> $GITHUB_ENV
