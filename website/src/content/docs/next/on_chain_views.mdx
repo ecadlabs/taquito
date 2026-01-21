@@ -1,25 +1,19 @@
 ---
 title: On-chain views
-author: Roxane Letourneau
+author: [Roxane Letourneau, Maxwell Ward]
 ---
 
+On-chain views were introduced in the Hangzhou protocol. They allow contracts to call read-only functions defined on the same contract or on other contracts, eliminating the need for callbacks.
 
-## On-chain views description
+Views take arguments as input and may depend on the declaring contract's storage. They return a result immediately available on the caller's stack without modifying any storage.
 
-- The `On-chain views` feature was introduced in the Hangzhou protocol.
-- Views are meant to be called by a contract. It can be the contract where the view is defined or another contract.
-- Views help to avoid the need to use callbacks in contracts.
-- Views take arguments as input and may depend on the contract's storage declaring the view.
-- Views are read-only and won't modify the contract's storage where the view is defined.
-- Views return a result as output which is immediately available on the stack of the caller contract.
-- The types `ticket`, `operation`, `big_map`, and `sapling_state` are not allowed in the argument or return types of views.
+The types `ticket`, `operation`, `big_map`, and `sapling_state` are not allowed in view arguments or return types.
 
 ## Declaring an on-chain view
 
 A contract can define none, one, or multiple on-chain views. The views are declared at the top level of the contract script and are formed by a name, an argument type, a result type, and a sequence of instructions.
 
-**Example of a contract script that declares multiple views:**
-
+Here is an example of a contract script that declares multiple views:
 ```
 parameter nat ;
 storage nat ;
@@ -94,7 +88,7 @@ view "fib" nat nat
 
 Views are meant to be called by a contract using the Michelson Instruction `View` followed by the view name and its result type.
 
-**Example of a contract script having a call to a view named `fib`:**
+Here is an example of a contract script having a call to a view named `fib`:
 
 ```
 parameter (pair nat address) ;
@@ -107,11 +101,11 @@ code {
      }
 ```
 
-**Example of calling a contract entrypoint that makes a call to a view using Taquito:**
-
 The following live code example shows a contract (`contractCallFib`) calling the view `fib` of another contract (`contractTopLevelViews`).
 
-The example first shows the initial storage of the contract `contractCallFib`. It calls the default entry point of `contractCallFib` with the value of its storage + 1 and the address of the contract `contractTopLevelViews`. A call is made to the `fib` view of `contractTopLevelViews` with the `storage + 1` as argument. The view returns the value of the Fibonacci sequence at the position represented by `storage + 1`. The storage of `contractCallFib` is updated to the result of the view.
+The example first shows the initial storage of the contract `contractCallFib`. It calls the default entry point of `contractCallFib` with the value of its storage + 1 and the address of the contract `contractTopLevelViews`. 
+
+A call is made to the `fib` view of `contractTopLevelViews` with the `storage + 1` as argument. The view returns the value of the Fibonacci sequence at the position represented by `storage + 1`. The storage of `contractCallFib` is updated to the result of the view.
 
 <Tabs
 defaultValue="contractAPI"
@@ -169,13 +163,11 @@ try {
 
 Taquito offers the ability to simulate the result of on-chain views.
 
-The user can create an instance of `ContractAbstraction` using the `at` method of the Contract or Wallet API with the contract's address that defines the views. The `contractViews` member of the `ContractAbstraction` instance is dynamically populated with methods that match the on-chain view names.
+You can create an instance of `ContractAbstraction` using the `at` method of the Contract or Wallet API with the contract's address that defines the views. The `contractViews` member of the `ContractAbstraction` instance is dynamically populated with methods that match the on-chain view names.
 
-*`contractViews` is an object where the key is the view name, and the value is a function that takes the view arguments as a parameter and returns an instance of `OnChainView` class.*
+`contractViews` is an object where the key is the view name, and the value is a function that takes the view arguments as a parameter and returns an instance of `OnChainView` class.
 
 If the view takes multiple arguments, the view parameter is expected in an object format and not flattened arguments.
-
-*Note for reference, the flattened arguments are the expected format when calling a contract entry point using the `methods` member, but we plan to move away from this format in favor the object one, which is also used for the storage when deploying a contract [see the difference between `methodsObject` and `methods` members of the `ContractAbstraction`](smartcontracts.md#choosing-between-the-methods-or-methodsobject-members-to-interact-with-smart-contracts).*
 
 A method named `getSignature` on the `OnChainView` class allows inspecting the parameter and the returned type of the view.
 
@@ -224,8 +216,7 @@ try {
   </TabItem>
 </Tabs>
 
-:::caution
-On-chain views should not be confused with lambda views which are also available on the ContractAbstraction class. See the documentation for [lambda_view](lambda_view.md).
-:::
+>[!CAUTION]
+> On-chain views should not be confused with lambda views which are also available on the ContractAbstraction class. See the documentation for [lambda_view](./lambda_view).
 
-Follow this link for more information about on-chain views: https://tezos.gitlab.io/active/michelson.html#operations-on-views
+You can find more information about on-chain views [here](https://tezos.gitlab.io/active/michelson.html#operations-on-views).

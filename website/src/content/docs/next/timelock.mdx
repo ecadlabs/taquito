@@ -1,24 +1,23 @@
 ---
 title: Timelock (BETA)
-author: Davis Sawali & Hui-An Yang
+author: [Davis Sawali, Hui-An Yang]
 ---
 
-:::warning
-This feature is a work in progress and might go through refinements in the near future. We encourage Taquito users to try this feature and reach out to us if you have any issues or concerns.
-:::
+>[!WARNING]
+> This feature is a work in progress and might go through refinements in the near future. 
+>
+> We encourage Taquito users to try this feature and reach out to us if you have any issues or concerns.
 
 Timelock is a cryptographic primitive that can be used as a part of a commit & reveal scheme, it provides a guarantee that the information associated to the commit phase is eventually revealed.
 
 ## Commit & Reveal
-A classic commit & reveal scheme consists of these 2 stepsL
+A classic commit & reveal scheme consists of these 2 steps:
 - Before the deadline, each participant makes a decision and publishes a commitment, which is proof that they have made a decision that they are unable to change. The proof is the hash of the data they have decided on.
 - After the deadline, each participant reveals the data corresponding to their commitment. Other participants will be able to check that the hash of this data is indeed the same as the previous commitment
 
 This scheme makes it possible to prove a certain decision was made before the information is revealed. This information might be the decision of other participants, or some external independent information.
 
-above excerpt, taken from [here](https://docs.tezos.com/smart-contracts/data-types/crypto-data-types#classical-commit--reveal-scheme)
-
-## Taquito Implementation
+## Taquito implementation
 
 ### Creating a chest
 ```
@@ -59,10 +58,10 @@ const data = chest.open(chestKey, time);
 
 **Important Notes**:
 - `time` param being passed should not be mistaken with the 'time' it takes for a chest to open in Timelocks. The `time` param here relates to a complexity relating to the number of power by modulo operations required to compute the key. Without getting too much into the weeds, we recommend using a value of `10000` and adjust accordingly.
-- `payload` relates to the message payload you would like to lock in a chest
+- `payload` relates to the message payload you would like to lock in a chest.
 
-## Coinflip Contract Example
-This example is an excerpt from [Tezos docs](https://tezos.gitlab.io/active/timelock.html?highlight=timelock#example) and contracts are taken from [timelock_flip.tz](https://gitlab.com/tezos/tezos/-/blob/master/src/proto_alpha/lib_protocol/contracts/timelock_flip.tz).
+## Coinflip contract example
+> This example is an excerpt from the [Tezos docs](https://tezos.gitlab.io/active/timelock.html?highlight=timelock#example) and contracts are taken from [timelock_flip.tz](https://gitlab.com/tezos/tezos/-/blob/master/src/proto_alpha/lib_protocol/contracts/timelock_flip.tz).
 
 This game emulates a time constrained "guess who" game using timelocks. The goal of the game is for the challenger to guess which value was stored by the administrator. The challenger has one guess, and must submit it within 10 blocks of the game initialization.
 
@@ -138,7 +137,7 @@ code { UNPAIR 5;
 ### Originate the coinflip contract
 Let's originate the contract with initial storage values `level` of 0, a stub chest, `guess` value of 'ff' and `result` 'ff'.
 
-`timelockCode` and `timelockStorage` can be found [here](https://github.com/ecadlabs/taquito/blob/master/integration-tests/data/timelock-flip-contract.ts)
+`timelockCode` and `timelockStorage` can be found [here](https://github.com/ecadlabs/taquito/blob/master/integration-tests/data/timelock-flip-contract.ts).
 
 ```
 // import { TezosToolkit } from '@taquito/taquito';
@@ -162,7 +161,7 @@ const originateStorage: any = await contract.storage()
 ```
 
 ### Initialize the game
-Let us now generate `chest` and `chestKey` with a complexity of `1024`, and a payload message 'hi'.
+Now let's generate `chest` and `chestKey` with a complexity of `1024`, and a payload message 'hi'.
 
 Make a contract call to initialize the game, and the contract will update the storage values for `level` to be at head block, `chest` to point to the `chest` we generated, and both `guess` and `result` as 'a0'.
 

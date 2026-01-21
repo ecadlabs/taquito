@@ -1,39 +1,34 @@
 ---
 title: Global constants
-author: Roxane Letourneau
+author: [Roxane Letourneau, Maxwell Ward]
 ---
 
+Global constants allow users to originate larger contracts or share code between contracts by using registered constants, sort of like a variable or reusable function in traditional programming languages. 
 
+The global constants feature includes
+- A `register_global_constant` operation that allows users to register Micheline expressions in the global table of constants. 
+- A `constant` primitive that allows contracts to reference these constants by their index.
 
-## Description of the `Global Constants` feature
+A scenario where you would use a global constant could be something like:
 
-The `Global Constants` feature is introduced in the Hangzhou protocol. Its goal is to allow users to originate larger contracts or share code between contracts by using registered constants. 
-
-This feature brings the following: 
-- A new kind of operation, named `register_global_constant`, allows users to register Micheline expressions in the global table of constants. 
-- A new primitive, called `constant`, allows contracts to reference these constants by their index.
-
-**Here is a general scenario example of using the global constant:**
-
-- Alice wants to originate a contract, but its code is so large that it does not fit the Tezos size limit for contracts.
+- Alice wants to originate a contract, but its code is so large that it doesn't fit within the Tezos size limit for contracts.
 - Alice registers a chosen expression from her contract to the global table of constants by sending a `register_global_constant` operation to the node.
-- The precedent operation returns the index of the registered constant, which corresponds to the hash of the expression (Blake2b hash + Base58 encode + prefix expr)
+- The precedent operation returns the index of the registered constant, which corresponds to the hash of the expression (Blake2b hash + Base58 encode + prefix expr).
 - Alice replaces the newly registered expression in the code of her contract with the primitive `constant` and the corresponding hash.
-- Alice can now originate her contract, as its size has been compressed.
+- Alice can now originate her contract as its size has been compressed.
 
-## How to register a global constant with Taquito?
+## Registering a global constant with Taquito
 
 ### Contract API
 
-A `registerGlobalConstant` method is available on the `ContractProvider` class. A `value` representing the Micheline expression to register in its JSON format is minimally required as a parameter. The `registerGlobalConstant` method returns an instance of `RegisterGlobalConstantOperation` containing a `globalConstantHash` member that corresponds to the index(hash) of the newly registered constant.
+A `registerGlobalConstant` method is available on the `ContractProvider` class. A `value` representing the Micheline expression to register in its JSON format is minimally required as a parameter. The `registerGlobalConstant` method returns an instance of `RegisterGlobalConstantOperation` containing a `globalConstantHash` member that corresponds to the index (hash) of the newly registered constant.
 
-*Note that an expression can only be registered once and will result in an error from the node if trying to register the same constant multiple times.*
+Conversion between Micheline and its JSON format can be achieved using the `@taquito/michel-codec` if needed.
 
-*Note that the conversion between Micheline and its JSON format can be achieved using the `@taquito/michel-codec` if needed.*
+>[!NOTE]
+> An expression can only be registered once and will result in an error from the node if anyone tries to register the same constant multiple times.
 
-**Here is a simple example:**
-
-*Note that this example is for demonstration purposes but has no real value as the registered expression is very small.*
+*This example is for demonstration purposes and has no real value as the registered expression is very small.*
 
 ```ts
 const op = await Tezos.contract.registerGlobalConstant({
@@ -64,7 +59,7 @@ values={[
       [ { "prim": "or",
           "args":
             [ { "prim": "constant",
-                "args": [ { "string": "expr..." } ] },
+                "args": [ { "string": "expr..." } ] }, <-- Constant hash here
               { "prim": "unit", "annots": [ "%reset" ] } ] } ] },
   { "prim": "storage", "args": [ { "prim": "int" } ] },
   { "prim": "code",
@@ -162,15 +157,14 @@ const batchOp = await Tezos.contract.batch([
 await batchOp.confirmation();
 ```
 
-## How to deploy a contract using the storage property if I use global constant in the storage part of the code?
+## Deploying a contract with a storage property containing a global constant
 
-Taquito needs the Michelson value of global constants to encode the storage argument properly into the corresponding Michelson data. To do so, you will need to set a global constant provider on the `TezosToolkit` instance. 
+When deploying a contract with global constants in its storage, Taquito needs to know the Michelson values of those constants. You provide these by setting a global constant provider on your `TezosToolkit` instance.
 
-Note that there is no RPC endpoint available at that time (v11.1.0) that allows fetching global constant values based on their hashes. Taquito provides a default global constant provider named `DefaultGlobalConstantsProvider` where the hash and corresponding JSON Michelson value must be manually provisioned using its `loadGlobalConstant` method. 
+Taquito provides a `DefaultGlobalConstantsProvider` that lets you manually register global constants using the `loadGlobalConstant` method. For each constant, you provide its hash and corresponding JSON Michelson value.
 
-Instead of using the `DefaultGlobalConstantsProvider`, a user can inject a custom provider. The global constant provider needs to implement the `GlobalConstantsProvider` interface and define a `getGlobalConstantByHash` method. Different global constant providers (i.e., built on the RPC or indexers) will be included in Taquito in the future.
+Alternatively, you can create your own provider by implementing the `GlobalConstantsProvider` interface with a `getGlobalConstantByHash` method.
 
-**Here is a complete example:**
 ```ts
 import { TezosToolkit, DefaultGlobalConstantsProvider } from '@taquito/taquito';
 
@@ -185,7 +179,8 @@ globalConstantProvider.loadGlobalConstant({
 })
 Tezos.setGlobalConstantsProvider(globalConstantProvider);
 
-// The `getGlobalConstantByHash` method of the configured global constant provider is internally called when preparing the operation. This allows accessing the right Michelson type to encode the storage object into the corresponding Michelson data properly.
+// The `getGlobalConstantByHash` method of the configured global constant provider is internally called when preparing the operation. 
+// This allows accessing the right Michelson type to encode the storage object into the corresponding Michelson data properly.
 const op = await Tezos.contract.originate({
      code: [{
          prim: 'parameter',

@@ -9,7 +9,7 @@ One of these needs might be the ability to **cancel** HTTP requests to optimize 
 
 Here is one example to override `HttpBackend` and/or `RpcClient`:
 
-#### Create a custom `HttpBackend`  
+### Create a custom `HttpBackend`  
 Create a class called `CancellableHttpBackend` which extends the `HttpBackend` class. Override the `createRequest` method to utilize an [AbortController](https://developer.mozilla.org/en-US/docs/Web/API/AbortController) to handle and capture abort signals. 
 
 > [!WARNING]
@@ -71,7 +71,7 @@ class CancellableHttpBackend extends HttpBackend {
   }
 ```   
 
-#### Create a custom `RpcClient`  
+### Create a custom `RpcClient`  
 Create a class called `CancellableRpcClient` which extends the `RpcClient` class. Pass its constructor an instance of our `CancellableHttpBackend` class. Lastly, add the `cancelRequest` method which is used to trigger the abort signal.
 
 ``` ts
@@ -95,7 +95,7 @@ class CancellableRpcClient extends RpcClient {
 }
 ```   
 
-#### Set the RpcProvider
+### Set the RpcProvider
 Set `CancellableRpcClient` on our `TezosToolkit` instance instead of using the default `RpcClient` class:
 
 ``` ts
@@ -108,7 +108,7 @@ const Tezos = new TezosToolkit(customRpcClient);
 Tezos.setSignerProvider(signer);
 ```   
  
-#### Trigger the abort signal
+### Trigger the abort signal
 Now that we've setup the customRpcClient, we can trigger request cancellations by calling:
 ```
 await customRpcClient.cancelRequest();

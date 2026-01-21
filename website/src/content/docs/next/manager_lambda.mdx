@@ -14,6 +14,8 @@ The methods are the following:
 - `transferImplicit`: to transfer a given amount of XTZ to a given implicit account
 - `transferToContract`: to transfer a given amount of XTZ to a given contract
 
+You can find the source code for these [here](https://github.com/ecadlabs/taquito/blob/8933ca696822a727e36c3591f866043d9c3ee239/packages/taquito/src/contract/manager-lambda.ts).
+
 ## The `removeDelegate` method
 
 The method:
@@ -115,7 +117,3 @@ IF_NONE
 The method takes 2 parameters: the first one of type `string` whose value is the `key_hash` of the recipient address, the second one of type `number` whose value is the amount of XTZ to be transferred.
 
 It produces a list of operations with a single operation in it created by the `TRANSFER_TOKENS` instruction that will transfer the provided amount of XTZ to the provided contract address. The contract must take a parameter of type `unit` (which is the case for the manager contract), this condition is verified by the Michelson code in the lambda.
-
-## Information
-
-[Link to the MANAGER_LAMBDA code](https://github.com/ecadlabs/taquito/blob/8933ca696822a727e36c3591f866043d9c3ee239/packages/taquito/src/contract/manager-lambda.ts)

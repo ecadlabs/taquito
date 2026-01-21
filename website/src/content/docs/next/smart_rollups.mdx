@@ -3,17 +3,17 @@ title: Smart Rollups
 author: Davis Sawali & Andrew Skubarenko
 ---
 
-# Smart Optimistic Rollups
-
 Rollups are a permissionless scaling implementation for the Tezos blockchain. The idea is that anyone can originate and operate one or more rollups, increasing the overall throughput of the Tezos blockchain.
 
-In Taquito, we have implemented some of the operations included in Mumbai protocol update in regards to smart rollups. In this document, we will go through the operations we support. We also won't go too detailed on how rollups work behind the scenes, if you'd like to understand the feature a bit deeper, you can refer to [this document](https://tezos.gitlab.io/active/smart_rollups.html).
+In Taquito, we have implemented some of the operations in relation to smart rollups. In this document we will go through the operations we support, but we won't go into too much detail on how rollups work behind the scenes. If you'd like to understand the feature a bit deeper, you can refer to [this document](https://tezos.gitlab.io/active/smart_rollups.html).
 
 ## `smart_rollup_originate`
 
-The `Smart Rollup Originate` operation allows a user to originate a smart rollup. Users must pass a `kernel`, `pvmKind`, and `parameterType`.
+The `Smart Rollup Originate` operation allows a user to originate a smart rollup. 
 
-### Examples
+Users must pass a `kernel`, `pvmKind`, and `parameterType`.
+
+### Example
 
 ```typescript
 const op = await Tezos.contract.smartRollupOriginate({
@@ -25,19 +25,18 @@ const op = await Tezos.contract.smartRollupOriginate({
 await op.confirmation();
 ```
 
-##### please note
-- `pvmKind` at this time the only PVM supported is `wasm_2_0_0`
-- `kernel` is passed as a hexadecimal string examples can be found at [this tezos docs endpoint](https://tezos.gitlab.io/active/smart_rollups.html)
-- `parametersType` is a MichelsonV1Expression to define the type.
+Please note:
+- `pvmKind`: at this time, the only PVM supported is `wasm_2_0_0`
+- `kernel` is passed as a hexadecimal string. Examples can be found at [this tezos docs endpoint](https://tezos.gitlab.io/active/smart_rollups.html)
+- `parametersType` is a `MichelsonV1Expression` to define the type.
 
-For more information in regards to Smart Rollup Origination please refer to this [link](https://tezos.gitlab.io/active/smart_rollups.html#origination)
-
+For more information in regards to Smart Rollup Origination please refer to this [link](https://tezos.gitlab.io/active/smart_rollups.html#origination).
 
 ## `smart_rollup_add_messages`
-The add messages operation allows users to send external messages into a rollup inbox. We will go into a bit more detail down below on what that means.
+The add messages operation allows users to send external messages into a rollup inbox.
 
 ### Usage
-The main use case of sending messages, is usually to denote contract calls. These messages usually takes the form of this object:
+The main use case of sending messages is usually to denote contract calls. These messages usually take the form of this object:
 ```
 MESSAGE='[{\
   "destination" : "${CONTRACT}", \
@@ -46,11 +45,11 @@ MESSAGE='[{\
   }]'
 ```
 
-If you read closely, the message includes a `destination`, a `parameter`, and an `entrypoint` property. All components needed to **call an entrypoint** of a contract.
+The message includes a `destination`, a `parameter`, and an `entrypoint` property. All components needed to call an entrypoint of a contract.
 
-These messages can then be claimed back into L1 as a legitimate contract call using the `smart_rollup_execute_outbox_message` operation which we will go over in another section of this doc.
+These messages can then be claimed back into L1 as a legitimate contract call using the `smart_rollup_execute_outbox_message` operation which is explained below.
 
-for more information, refer to [this document](https://tezos.gitlab.io/active/smart_rollups.html#external-messages)
+For more information, refer to [this document](https://tezos.gitlab.io/active/smart_rollups.html#external-messages).
 
 ### Example
 ```typescript
@@ -72,8 +71,10 @@ The `Smart Rollup Execute Outbox Message` operation allows users to execute a tr
 ### Usage
 
 To execute an outbox message you need the Smart Rollup address (`sr1` address), a serialized output proof, and a commitment hash.
+
 You may obtain the serialized output proof and commitment hash through an RPC call to the Smart Rollup Node at the following URL:
 `<smart-rollup-node-base-url>/global/block/head/helpers/proofs/outbox/${outboxMessageLevel}/messages?index=${outboxMessageIndex}`
+
 Where:
 * `outboxMessageLevel` is the Tezos level of the outbox message;
 * `outboxMessageIndex` is the index (number) of the outbox message.
@@ -95,4 +96,4 @@ console.log(op.hash);
 
 - `rollup` is a rollup address (`sr1` address)
 - `cementedCommitment` is a hash of cemented commitment
-- `outputProof` is a serialized output proof containing the transaction to be executed on L1.
+- `outputProof` is a serialized output proof containing the transaction to be executed on L1

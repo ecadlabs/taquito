@@ -3,17 +3,18 @@ title: Increase Paid Storage
 author: Davis Sawali
 ---
 
-Increase Paid Storage is a new operation available for use starting from Protocol 14 (Kathmandu). It is a new operation that enables a payer to increase the paid storage of a smart contract by a certain byte amount.
+Increase Paid Storage is an operation that enables a payer to increase the paid storage of a smart contract by a certain byte amount.
 
 This helps resolve an issue where several operations on the same contract would fail when they are added at the same level due to the storage limit being lower than the `paid_storage_size_diff`.
 
-For more information on this change, refer to this [MR](https://gitlab.com/tezos/tezos/-/merge_requests/5605) in the Tezos codebase.
+For more information on this operation, refer to this [MR](https://gitlab.com/tezos/tezos/-/merge_requests/5605) in the Tezos codebase.
+
 ## Examples
-Similar to other operations, the Increase Paid Storage operation is available in the Contract and Wallet API
+Similar to other operations, the Increase Paid Storage operation is available in both the Contract and Wallet API
 
 ### Contract API
 
-#### Simple Usage
+#### Simple usage
 ```js
 const op = await Tezos.contract.increasePaidStorage({
   amount: 2,
@@ -23,7 +24,7 @@ const op = await Tezos.contract.increasePaidStorage({
 await op.confirmation();
 ```
 - `amount` is the number of `bytes` you want to increase the paid storage by
-- `destination` is the `KT1` address of the smart contract which storage you would like to increase
+- `destination` is the `KT1` address of the smart contract you'd like to increase the storage of
 
 After waiting for the operation confirmation, you will also have access to various getters of the operation such as `status`, `amount`, `destination`, `fee`, `gasLimit`, `errors`, `storageLimit`, `consumedMilligas`.
 
@@ -75,7 +76,7 @@ Both syntax will work fine for batching any operations, including `increase_paid
 
 ### Wallet API
 
-#### Usage Example
+#### Usage example
 ```typescript
 const op = await Tezos.wallet.increasePaidStorage({
   amount: 1,

@@ -3,15 +3,12 @@ title: In Memory Signer
 author: Simon Boissonneault-Robert
 ---
 
-:::caution Warning
-**Storing private keys in memory is suitable for development workflows but risky for
-production use-cases! Use the InMemorySigner appropriately given your risk profile**
-**More information on why can be found [here](https://github.com/ecadlabs/taquito/issues/1764)**
-:::
+>[!CAUTION]
+> Storing private keys in memory is suitable for development workflows but risky for production use-cases! Use the `InMemorySigner` appropriately given your risk profile.
+>
+> More information on why can be found [here](https://github.com/ecadlabs/taquito/issues/1764).
 
-Inmemory signer is a local signer implementation that allows you to directly use a private key in your browser or your nodejs app.
-
-This signer implementation is for development workflows.
+`InMemorySigner` is a local signer implementation that allows you to directly use a private key in your browser or your NodeJS app and is intended for development workflows.
 
 Using the InMemorySigner for operations on mainnet where your system uses tokens of real value is discouraged.
 
@@ -32,9 +29,8 @@ const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
 Tezos.setProvider({ signer: await InMemorySigner.fromSecretKey('your_private_key') });
 ```
 
-:::note
-The operation will be signed automatically using the signer (no prompt)
-:::
+>[!NOTE]
+> The operation will be signed automatically using the signer (no prompt)
 
 The `fromSecretKey` method takes a secret that is base58 encoded as a parameter. Here are three examples with unencrypted private keys:
 
@@ -60,7 +56,7 @@ try {
 }
 ```
 
-When required, Taquito offers the `b58Encode` function allowing to encode the secret in base58. The parameters of the function are the secret, that can be a `hex string` or an `Uint8Array`, and the desired prefix. Here is an example with a `hex string`:
+When required, Taquito offers the `b58Encode` function allowing to encode the secret in base58. The parameters of the function are the secret that can be a `hex string` or an `Uint8Array`, and the desired prefix. Here is an example with a `hex string`:
 
 ```js live
 // import { b58Encode, PrefixV2 } from '@taquito/utils';
@@ -146,9 +142,9 @@ try {
 
 The `fromMnemonic` method takes the mnemonic, password, derivationPath, and curve as parameters. Here is an example of an instantiation of an `InMemorySigner.fromMnemonic`
 
-derivation path MUST start with "44'/1729'/"
+derivation path MUST start with `"44'/1729'/"`
 
-With ed25519 default derivation path (Reminder Must be hardened with either h or ')
+With ed25519 default derivation path (must be hardened with either `h` or `'`)
 
 ```js live
 // ed25519 must have all hardened paths
@@ -187,17 +183,11 @@ try {
 }
 ```
 
-### Using a testnet faucet key
-
-~~To load a faucet key (available from https://faucet.tzalpha.net/) for working a public testnet use the `importKey` function.~~
-:::note
-Since August 2022, the JSON faucets we used to import with the `importKey` function are no longer available. You can use the following link to fund an address on the different testnets: https://teztnets.com/.
-:::
-
 ### A simple factory multiple keys/wallets
 
 If you require to sign operations with many different keys, then implementing a factory function can be useful.
-The `signerFactory` function example creates a new Tezos instance. Use the Tezos instance for signing, and discard it when complete.
+
+The `signerFactory` function example creates a new Tezos instance, uses it for signing, and then discards it when complete.
 
 ```js
 import { InMemorySigner } from '@taquito/signer';
