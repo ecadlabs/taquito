@@ -82,6 +82,7 @@
     ],
     "moduleNameMapper": {
       "^@taquito/taquito$": "<rootDir>/../taquito/src/taquito.ts",
+      "^@taquito/utils$": "<rootDir>/../taquito-utils/src/taquito-utils.ts",
       "^(\\.{1,2}/.*)\\.js$": "$1",
       "^@noble/hashes/blake2$": "<rootDir>/../../node_modules/@noble/hashes/blake2.js",
       "^@stablelib/blake2b$": "<rootDir>/../../node_modules/@stablelib/blake2b/lib/blake2b.js",
