@@ -63,6 +63,7 @@
       "node_modules/(?!@noble/hashes)"
     ],
     "moduleNameMapper": {
+      "^@taquito/utils$": "<rootDir>/../taquito-utils/src/taquito-utils.ts",
       "^@noble/hashes/blake2$": "<rootDir>/../../node_modules/@noble/hashes/blake2.js"
     }
   },
