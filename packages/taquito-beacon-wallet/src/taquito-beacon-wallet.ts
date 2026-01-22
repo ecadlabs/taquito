@@ -3,14 +3,8 @@
  * @module @taquito/beacon-wallet
  */
 
-import {
-  DAppClient,
-  DAppClientOptions,
-  RequestPermissionInput,
-  PermissionScope,
-  getDAppClientInstance,
-  SigningType,
-} from '@airgap/beacon-dapp';
+import { DAppClient, DAppClientOptions, getDAppClientInstance } from '@airgap/beacon-dapp';
+import { PermissionScope, SigningType, RequestPermissionInput } from '@airgap/beacon-types';
 import { BeaconWalletNotInitialized, MissingRequiredScopes } from './errors';
 import toBuffer from 'typedarray-to-buffer';
 import {
@@ -212,7 +206,9 @@ export class BeaconWallet implements WalletProvider {
     );
   }
 
-  async mapRegisterGlobalConstantParamsToWalletParams(params: () => Promise<WalletRegisterGlobalConstantParams>) {
+  async mapRegisterGlobalConstantParamsToWalletParams(
+    params: () => Promise<WalletRegisterGlobalConstantParams>
+  ) {
     let walletParams: WalletRegisterGlobalConstantParams;
     await this.client.showPrepare();
     try {
