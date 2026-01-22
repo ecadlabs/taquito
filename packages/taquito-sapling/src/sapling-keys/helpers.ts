@@ -1,8 +1,8 @@
 import { InvalidSpendingKey } from '../errors';
 import toBuffer from 'typedarray-to-buffer';
 import { openSecretBox } from '@stablelib/nacl';
-import { pbkdf2 } from '@noble/hashes/pbkdf2';
-import { sha512 } from '@noble/hashes/sha2';
+import { pbkdf2 } from '@noble/hashes/pbkdf2.js';
+import { sha512 } from '@noble/hashes/sha2.js';
 import { PrefixV2, b58DecodeAndCheckPrefix } from '@taquito/utils';
 import { ParameterValidationError } from '@taquito/core';
 

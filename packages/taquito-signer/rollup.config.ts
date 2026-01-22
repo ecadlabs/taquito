@@ -18,10 +18,6 @@ export default {
       format: 'umd',
       sourcemap: true,
       globals: {
-        "@noble/hashes/blake2": "blake2",
-        "@noble/hashes/sha2": "sha2",
-        "@noble/hashes/hmac": "hmac",
-        "@noble/hashes/pbkdf2": "pbkdf2",
         "@noble/curves/ed25519": "ed25519",
         "@taquito/utils": "utils",
         "@taquito/core": "core",
@@ -40,10 +36,6 @@ export default {
   ],
   // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
   external: [
-    '@noble/hashes/blake2',
-    '@noble/hashes/hmac',
-    '@noble/hashes/sha2',
-    '@noble/hashes/pbkdf2',
     '@noble/curves/ed25519',
     '@taquito/utils',
     '@taquito/core',

@@ -1,5 +1,5 @@
 import { ed25519 } from '@noble/curves/ed25519';
-import { blake2b } from '@noble/hashes/blake2';
+import { blake2b } from '@noble/hashes/blake2.js';
 import {
   b58DecodeAndCheckPrefix,
   buf2hex,

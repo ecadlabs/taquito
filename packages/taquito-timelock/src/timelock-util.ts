@@ -1,5 +1,5 @@
 import bigInt, { BigInteger } from 'big-integer';
-import { blake2b } from '@noble/hashes/blake2';
+import { blake2b } from '@noble/hashes/blake2.js';
 import { TimelockInit, RNG } from './interface';
 
 // globalThis.crypto is available in browsers and Node.js 20+

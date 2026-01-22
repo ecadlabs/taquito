@@ -8,7 +8,7 @@ import {
   InvalidPublicKeyError,
 } from '@taquito/utils';
 import { bls12_381 } from '@noble/curves/bls12-381';
-import { blake2b } from '@noble/hashes/blake2';
+import { blake2b } from '@noble/hashes/blake2.js';
 import { PublicKey, SigningKeyWithProofOfPossession } from './key-interface';
 import { RawSignResult } from '@taquito/core';
 

@@ -16,10 +16,9 @@ export default {
       name: camelCase(libraryName), 
       format: 'umd', 
       sourcemap: true, 
-      globals: { 
+      globals: {
         "bignumber.js": "BigNumber",
         "@taquito/taquito": "taquito",
-        "@noble/hashes/pbkdf2": "pbkdf2",
         "@taquito/utils": "utils",
         "@taquito/core": "core",
         "@airgap/sapling-wasm": "sapling",
@@ -42,7 +41,6 @@ export default {
     'bignumber.js',
     '@airgap/sapling-wasm',
     '@stablelib/nacl',
-    '@noble/hashes/pbkdf2',
     'bip39',
     '@stablelib/random',
     '@taquito/taquito'

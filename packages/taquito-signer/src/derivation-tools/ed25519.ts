@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-this-alias */
-import { hmac } from '@noble/hashes/hmac';
-import { sha512 } from '@noble/hashes/sha2';
+import { hmac } from '@noble/hashes/hmac.js';
+import { sha512 } from '@noble/hashes/sha2.js';
 import { ed25519 } from '@noble/curves/ed25519';
 import { ExtendedPrivateKey, Hard } from './types';
 import { parseHex } from './utils';

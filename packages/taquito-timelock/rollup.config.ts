@@ -2,6 +2,7 @@ import camelCase from 'lodash.camelcase';
 import typescript from 'rollup-plugin-typescript2';
 import json from 'rollup-plugin-json';
 import nodePolyfills from 'rollup-plugin-polyfill-node';
+import resolve from '@rollup/plugin-node-resolve';
 
 const pkg = require('./package.json');
 
@@ -17,22 +18,22 @@ export default {
       sourcemap: true, 
       globals: {
         "@stablelib/nacl": "nacl",
-        "big-integer": "bigInt",
-        "@noble/hashes/blake2": "blake2"
+        "big-integer": "bigInt"
       } 
     },
     { file: pkg.module, format: 'es', sourcemap: true },
   ],
   // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
   external: [
-  '@noble/hashes/blake2',
-  '@stablelib/nacl',
-  'big-integer',
+    '@stablelib/nacl',
+    'big-integer',
   ],
   watch: {
     include: 'src/**',
   },
   plugins: [
+    // Resolve node_modules
+    resolve(),
     // Allow json resolution
     json(),
     // Compile TypeScript files

@@ -1,6 +1,7 @@
 import camelCase from 'lodash.camelcase';
 import typescript from 'rollup-plugin-typescript2';
 import json from 'rollup-plugin-json';
+import resolve from '@rollup/plugin-node-resolve';
 
 const pkg = require('./package.json');
 
@@ -16,8 +17,7 @@ export default {
       sourcemap: true, 
       globals: {
         '@taquito/core': 'core',
-        '@taquito/utils': 'utils',
-        '@noble/hashes/blake2': 'blake2'
+        '@taquito/utils': 'utils'
       } 
     },
     { file: pkg.module, format: 'es', sourcemap: true },
@@ -25,13 +25,14 @@ export default {
   // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
   external: [
     '@taquito/core',
-    '@taquito/utils',
-    '@noble/hashes/blake2'
+    '@taquito/utils'
   ],
   watch: {
     include: 'src/**',
   },
   plugins: [
+    // Resolve node_modules
+    resolve(),
     // Allow json resolution
     json(),
     // Compile TypeScript files

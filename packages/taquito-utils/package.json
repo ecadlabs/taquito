@@ -93,6 +93,7 @@
     "typedarray-to-buffer": "^4.0.0"
   },
   "devDependencies": {
+    "@rollup/plugin-node-resolve": "^16.0.3",
     "@types/bluebird": "^3.5.42",
     "@types/jest": "^29.5.12",
     "@types/node": "^20",

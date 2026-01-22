@@ -12,7 +12,7 @@ import { EdKey, EdPublicKey } from './ed-key';
 import { ECKey, ECPublicKey } from './ec-key';
 import * as bip39 from '@scure/bip39';
 import { wordlist } from '@scure/bip39/wordlists/english.js';
-import { pbkdf2 } from '@noble/hashes/pbkdf2';
+import { pbkdf2 } from '@noble/hashes/pbkdf2.js';
 import { Curves, generateSecretKey } from './helpers';
 import { InvalidMnemonicError, InvalidPassphraseError } from './errors';
 import {
@@ -24,7 +24,7 @@ import {
 } from '@taquito/core';
 import { SigningKey, isPOP, PublicKey } from './key-interface';
 import { BLSKey, BLSPublicKey } from './bls-key';
-import { sha512 } from '@noble/hashes/sha2';
+import { sha512 } from '@noble/hashes/sha2.js';
 
 export interface FromMnemonicParams {
   mnemonic: string;

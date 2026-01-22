@@ -14,7 +14,7 @@ import {
   validateResponse,
   extractValue,
 } from './utils';
-import { blake2b } from '@noble/hashes/blake2';
+import { blake2b } from '@noble/hashes/blake2.js';
 import {
   PublicKeyHashRetrievalError,
   PublicKeyRetrievalError,
