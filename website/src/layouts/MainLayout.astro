@@ -18,7 +18,13 @@ const { title } = Astro.props;
     <meta name="generator" content={Astro.generator} />
     <title>{title ? title + " | Taquito" : "Taquito"}</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" media="print" onload="this.media='all'">
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap">
+    </noscript>
     <script src="../scripts/taquito-init.ts"></script>
   </head>
   <body class="flex flex-col min-h-screen bg-background-primary">
