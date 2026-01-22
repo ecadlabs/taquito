@@ -8,11 +8,11 @@ let createAgent: ((url: string) => { keepAlive?: boolean; [key: string]: any }) 
 let useNodeFetchAgent = false;
 
 const isNode = typeof process !== 'undefined' && !!process?.versions?.node;
-const isElectron = typeof process !== 'undefined' && !!process?.versions?.electron;
+const isBrowserLike = typeof window !== 'undefined';
 
-// In pure Node.js (not Electron), use node-fetch for better compatibility and keepAlive control
-// In other environments (browser, Electron renderer, etc.), use native fetch when available
-if (isNode && !isElectron) {
+// Use native fetch in browser-like environments (they have reliable native fetch)
+// Use node-fetch in pure Node.js CLI for better compatibility and keepAlive control
+if (isNode && !isBrowserLike) {
   // Handle both ESM and CJS default export patterns for webpack compatibility
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const nodeFetch = require('node-fetch');
