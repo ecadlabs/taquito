@@ -77,9 +77,9 @@
   },
   "dependencies": {
     "@airgap/sapling-wasm": "0.0.9",
+    "@noble/hashes": "^2.0.1",
     "@stablelib/nacl": "^1.0.4",
     "@stablelib/random": "^1.0.2",
-    "@noble/hashes": "^2.0.1",
     "@taquito/core": "^24.0.1",
     "@taquito/rpc": "^24.0.1",
     "@taquito/taquito": "^24.0.1",
@@ -91,6 +91,7 @@
   },
   "devDependencies": {
     "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^16.0.3",
     "@types/jest": "^29.5.12",
     "@types/node": "^20",
     "@types/typedarray-to-buffer": "^4.0.4",

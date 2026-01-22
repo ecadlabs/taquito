@@ -73,6 +73,7 @@
     "big-integer": "^1.6.52"
   },
   "devDependencies": {
+    "@rollup/plugin-node-resolve": "^16.0.3",
     "@taquito/signer": "^24.0.1",
     "@taquito/taquito": "^24.0.1",
     "@taquito/utils": "^24.0.1",

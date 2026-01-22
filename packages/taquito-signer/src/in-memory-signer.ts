@@ -10,7 +10,7 @@ import {
 import toBuffer from 'typedarray-to-buffer';
 import { EdKey, EdPublicKey } from './ed-key';
 import { ECKey, ECPublicKey } from './ec-key';
-import { pbkdf2 } from '@noble/hashes/pbkdf2';
+import { pbkdf2 } from '@noble/hashes/pbkdf2.js';
 import * as Bip39 from 'bip39';
 import { Curves, generateSecretKey } from './helpers';
 import { InvalidMnemonicError, InvalidPassphraseError } from './errors';
@@ -23,7 +23,7 @@ import {
 } from '@taquito/core';
 import { SigningKey, isPOP, PublicKey } from './key-interface';
 import { BLSKey, BLSPublicKey } from './bls-key';
-import { sha512 } from '@noble/hashes/sha2';
+import { sha512 } from '@noble/hashes/sha2.js';
 
 export interface FromMnemonicParams {
   mnemonic: string;

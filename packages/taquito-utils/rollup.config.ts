@@ -2,6 +2,7 @@ import camelCase from 'lodash.camelcase';
 import typescript from 'rollup-plugin-typescript2';
 import json from 'rollup-plugin-json';
 import nodePolyfills from 'rollup-plugin-polyfill-node';
+import resolve from '@rollup/plugin-node-resolve';
 
 const pkg = require('./package.json');
 
@@ -17,7 +18,6 @@ export default {
       sourcemap: true,
       globals: {
         buffer: "buffer",
-        "@noble/hashes/blake2": "blake2",
         bs58check: "bs58check",
         "bignumber.js": "BigNumber",
         "typedarray-to-buffer": "toBuffer",
@@ -35,7 +35,6 @@ export default {
     'typedarray-to-buffer',
     'blakejs',
     'bs58check',
-    '@noble/hashes/blake2',
     '@taquito/core',
     '@noble/curves/ed25519',
     '@noble/curves/bls12-381',
@@ -47,6 +46,8 @@ export default {
     include: 'src/**',
   },
   plugins: [
+    // Resolve node_modules
+    resolve(),
     // Allow json resolution
     json(),
     // Compile TypeScript files

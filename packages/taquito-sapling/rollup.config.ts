@@ -1,6 +1,7 @@
 import camelCase from 'lodash.camelcase';
 import typescript from 'rollup-plugin-typescript2';
 import json from 'rollup-plugin-json';
+import resolve from '@rollup/plugin-node-resolve';
 
 const pkg = require('./package.json');
 
@@ -14,10 +15,9 @@ export default {
       name: camelCase(libraryName), 
       format: 'umd', 
       sourcemap: true, 
-      globals: { 
+      globals: {
         "bignumber.js": "BigNumber",
         "@taquito/taquito": "taquito",
-        "@noble/hashes/pbkdf2": "pbkdf2",
         "@taquito/utils": "utils",
         "@taquito/core": "core",
         "@airgap/sapling-wasm": "sapling",
@@ -41,7 +41,6 @@ export default {
     'bignumber.js',
     '@airgap/sapling-wasm',
     '@stablelib/nacl',
-    '@noble/hashes/pbkdf2',
     'bip39',
     '@stablelib/random',
     '@taquito/taquito'
@@ -50,6 +49,8 @@ export default {
     include: 'src/**',
   },
   plugins: [
+    // Resolve node_modules
+    resolve(),
     // Allow json resolution
     json(),
     // Compile TypeScript files
