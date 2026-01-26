@@ -30,9 +30,11 @@ export function decryptKey(spendingKey: string, password?: string) {
     const encryptedSk = toBuffer(keyArr.slice(8));
 
     const encryptionKey = pbkdf2.pbkdf2Sync(password, salt, 32768, 32, 'sha512');
+    // Zero nonce is safe: fresh random salt per encryption produces unique PBKDF2-derived key.
+    // See: https://gitlab.com/tezos/tezos/-/blob/master/src/lib_signer_backends/encrypted.ml
     const decrypted = openSecretBox(
       new Uint8Array(encryptionKey),
-      new Uint8Array(24),
+      new Uint8Array(24), // zero nonce - uniqueness provided by per-encryption derived key
       new Uint8Array(encryptedSk)
     );
     if (!decrypted) {
