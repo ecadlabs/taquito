@@ -39,6 +39,7 @@ function polyfillShimsResolver() {
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://taquito.io',
   trailingSlash: 'never',
   integrations: [AutoImport({
     imports: [
@@ -48,7 +49,14 @@ export default defineConfig({
     ],
   }), mdx({
     extendMarkdownConfig: true,
-  }), sitemap()],
+  }), sitemap({
+    filter: (page) => {
+      // Exclude old documentation versions and 'next' from sitemap
+      // Only include current stable version (24.0.0) and non-versioned pages
+      const oldVersions = ['21.0.0', '22.0.0', '23.0.0', '23.1.0', 'next'];
+      return !oldVersions.some(version => page.includes(`/docs/${version}/`));
+    },
+  })],
   markdown: {
     remarkPlugins: [remarkRelativeLinks, remarkCallouts, remarkLiveCode],
     syntaxHighlight: false,
