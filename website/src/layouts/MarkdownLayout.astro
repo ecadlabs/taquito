@@ -11,12 +11,13 @@ import { DEFAULT_VERSION } from '../pages/api/search/[version].json.ts'
 
 interface Props {
   title?: string;
+  description?: string;
   version?: string;
   currentSlug?: string;
   author?: string | string[];
 }
 
-const { title, version, currentSlug, author } = Astro.props;
+const { title, description, version, currentSlug, author } = Astro.props;
 
 const formatAuthors = (author: string | string[] | undefined): string | null => {
   if (!author) return null;
@@ -32,6 +33,44 @@ const isOldVersion = isDocsPage && version && version !== DEFAULT_VERSION && ver
 const isNextVersion = isDocsPage && version === 'next';
 const pageSlug = currentSlug?.split('/').slice(1).join('/') || 'quick_start';
 const stableVersionUrl = `/docs/${DEFAULT_VERSION}/${pageSlug}`;
+
+const pageTitle = title ? `${title} | Taquito` : 'Taquito Documentation';
+const pageDescription = description || `${title || 'Documentation'} - Learn how to use Taquito, a TypeScript library for Tezos blockchain development.`;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const ogImageURL = new URL('/og-image.png', Astro.site);
+
+// For old versions, point canonical to the latest stable version
+const canonicalHref = isOldVersion ? new URL(stableVersionUrl, Astro.site) : canonicalURL;
+
+// JSON-LD structured data for documentation articles
+const authors = author ? (Array.isArray(author) ? author : [author]) : [];
+const articleJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": title || 'Taquito Documentation',
+  "description": pageDescription,
+  "url": canonicalURL.toString(),
+  "publisher": {
+    "@type": "Organization",
+    "name": "ECAD Labs",
+    "url": "https://ecadlabs.com"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": canonicalURL.toString()
+  },
+  ...(authors.length > 0 && {
+    "author": authors.map(name => ({
+      "@type": "Person",
+      "name": name
+    }))
+  }),
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "Taquito Documentation",
+    "url": Astro.site?.toString()
+  }
+};
 ---
 
 <html lang="en">
@@ -40,7 +79,32 @@ const stableVersionUrl = `/docs/${DEFAULT_VERSION}/${pageSlug}`;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    <title>{title ? title + ' | Taquito' : 'Taquito Documentation'}</title>
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+    <link rel="canonical" href={canonicalHref} />
+
+    <!-- Prevent indexing of old/next versions -->
+    {(isOldVersion || isNextVersion) && <meta name="robots" content="noindex, follow" />}
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:site_name" content="Taquito" />
+    <meta property="og:image" content={ogImageURL} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonicalURL} />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={pageDescription} />
+    <meta name="twitter:image" content={ogImageURL} />
+
+    <!-- Structured Data -->
+    <script type="application/ld+json" set:html={JSON.stringify(articleJsonLd)} />
 
     <link
       href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap"
