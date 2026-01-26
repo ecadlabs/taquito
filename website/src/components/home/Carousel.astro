@@ -25,6 +25,7 @@ const images = [
               class="carousel-image w-full h-auto shrink-0"
               data-index={index}
               aria-hidden={index !== 0}
+              fetchpriority={index === 0 ? "high" : undefined}
             />
           ))}
           <img
