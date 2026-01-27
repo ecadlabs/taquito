@@ -215,7 +215,7 @@ if (process.env['RUN_WITH_SECRET_KEY']) {
   providers.push(seoulnetSecretKey);
 } else if (process.env['RUN_WEEKLYNET_WITH_SECRET_KEY']) {
   providers.push(weeklynetSecretKey);
-} else if (process.env['RUN_TEZLINKNET_WITH_SECRET_KEY']) {
+} else if (process.env['RUN_TEZLINKSHADOWNET_WITH_SECRET_KEY']) {
   providers.push(tezlinkshadownetSecretKey);
 } else if (process.env['GHOSTNET']) {
   providers.push(ghostnetEphemeral);
