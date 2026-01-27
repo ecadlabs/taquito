@@ -1,9 +1,9 @@
 import { KnownContracts } from './known-contracts';
 export const knownContractsTezlinknet: KnownContracts = {
-  contract: "KT1CDwWfShtwrpNpPJpSFPJdfmjADdh3bTou",
-  bigMapContract: "KT1NDejutSZdeBKLy6h6deEru61n9G7ttw93",
-  tzip12BigMapOffChainContract: "KT1Bg8zKNtjXQcso1zukRGhfPYLNaWB6eBHn",
+  contract: "KT1DHofSh4vncnrphx2aE9HTY5ZxPP5ZZU5E",
+  bigMapContract: "KT1TWqivtMrVRgHbz7qVzsCEzrdFvGR2XuHz",
+  tzip12BigMapOffChainContract: "KT1QTgcg4xL9qjpKLk6Em6ZV62Cb4usRA5bY",
   saplingContract: "",
-  onChainViewContractAddress: "",
-  ticketContract: "KT1Srq4wG7F67Er48zoH2z7xRd2oJmPEu1ZA",
+  onChainViewContractAddress: "KT1HQ1rLiZ3qZA4YAYZWL3WKfd4fyHctifoy",
+  ticketContract: "KT1MT3i18gR6pKTTCzN1uEq81tJCgp4515z4",
 };

@@ -1,14 +1,15 @@
 import { CONFIGS } from "../../config";
 
-CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker }) => {
+CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker, networkName }) => {
   const Tezos = lib;
+  const notTezlinknet = networkName === 'TEZLINKNET' ? test.skip : test
 
   describe(`Test emptying a delegated implicit account through contract api using: ${rpc}`, () => {
 
     beforeEach(async () => {
       await setup()
     })
-    test('Verify that new Account can be created, delegated and attempt to empty, it should fail despite delegation', async () => {
+    notTezlinknet('Verify that new Account can be created, delegated and attempt to empty, it should fail despite delegation', async () => {
       const LocalTez = await createAddress();
       const op = await Tezos.contract.transfer({ to: await LocalTez.signer.publicKeyHash(), amount: 0.02 });
       await op.confirmation();

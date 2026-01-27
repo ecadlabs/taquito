@@ -3,7 +3,7 @@ import { failwithContractCode } from "../../data/failwith";
 import { managerCode } from "../../data/manager_code";
 import { MANAGER_LAMBDA } from "@taquito/taquito";
 
-CONFIGS().forEach(({ lib, rpc, setup }) => {
+CONFIGS().forEach(({ lib, rpc, setup, networkName }) => {
   const Tezos = lib;
 
   describe(`Test contract origination of a contract that calls 2nd contract that FAILs through wallet api: ${rpc}`, () => {
@@ -34,7 +34,11 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         await managerContract.methodsObject.do(MANAGER_LAMBDA.transferToContract(contract.address, 1)).send({ amount: 0 })
         fail('Expected transfer operation to throw error')
       } catch (ex: any) {
-        expect(ex.message).toMatch('test')
+        if (networkName === 'TEZLINKNET') {
+          expect(ex.lastError.error_message).toContain('test')
+        } else {
+          expect(ex.message).toMatch('test')
+        }
       }
     });
   });

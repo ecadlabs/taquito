@@ -3,7 +3,7 @@ import { ligoSample, ligoSampleMichelson } from '../../../data/ligo-simple-contr
 import { managerCode } from '../../../data/manager_code';
 import { MANAGER_LAMBDA, OpKind } from '@taquito/taquito';
 
-CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract, createAddress }) => {
+CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract, createAddress, networkName }) => {
   const Tezos = lib;
 
   describe(`Test contract.batch through contract api using: ${rpc}`, () => {
@@ -68,7 +68,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract, createAddress }
     })
 
     it('Verify handling of contract.batch simple transfers with bad origination', async () => {
-      expect.assertions(1);
+      isTezLink ? expect.assertions(0) : expect.assertions(1); // tezlink storage consumption is lower hence not throwing storage_exhausted
       try {
         await Tezos.contract
           .batch()
@@ -126,20 +126,29 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract, createAddress }
       const contract = await op.contract();
       expect(op.status).toEqual('applied');
 
-      const batch = Tezos.contract
-        .batch()
-        .withTransfer({ to: contract.address, amount: 1 })
-        .withContractCall(
-          contract.methodsObject.do(MANAGER_LAMBDA.transferImplicit('tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh', 5))
-        )
-        .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.setDelegate(knownBaker)))
-        .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.removeDelegate()));
-
-      const batchOp = await batch.send();
-
-      await batchOp.confirmation();
-
-      expect(batchOp.status).toEqual('applied');
+      if (networkName === 'TEZLINKNET') {
+        const batch = Tezos.contract
+          .batch()
+          .withTransfer({ to: contract.address, amount: 1 })
+          .withContractCall(
+            contract.methodsObject.do(MANAGER_LAMBDA.transferImplicit('tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh', 5))
+          )
+        const batchOp = await batch.send();
+        await batchOp.confirmation();
+        expect(batchOp.status).toEqual('applied');
+      } else {
+        const batch = Tezos.contract
+          .batch()
+          .withTransfer({ to: contract.address, amount: 1 })
+          .withContractCall(
+            contract.methodsObject.do(MANAGER_LAMBDA.transferImplicit('tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh', 5))
+          )
+          .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.setDelegate(knownBaker)))
+          .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.removeDelegate()));
+        const batchOp = await batch.send();
+        await batchOp.confirmation();
+        expect(batchOp.status).toEqual('applied');
+      }
     });
 
     it('Verify contract.batch of simple transfers and a contract entrypoint call using the array notation with kind', async () => {
@@ -188,24 +197,39 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract, createAddress }
       await op.confirmation();
       const contract = await op.contract();
 
-      const estimateOp = await Tezos.estimate.batch([
-        { ...(contract.methodsObject.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 5)).toTransferParams()), kind: OpKind.TRANSACTION },
-        { ...(contract.methodsObject.do(MANAGER_LAMBDA.setDelegate(knownBaker)).toTransferParams()), kind: OpKind.TRANSACTION },
-        { ...(contract.methodsObject.do(MANAGER_LAMBDA.removeDelegate()).toTransferParams()), kind: OpKind.TRANSACTION },
-      ])
+      if (networkName === 'TEZLINKNET') {
+        const estimateOp = await Tezos.estimate.batch([
+          { ...(contract.methodsObject.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 5)).toTransferParams()), kind: OpKind.TRANSACTION },
+          { ...(contract.methodsObject.do(MANAGER_LAMBDA.transferToContract(knownContract, 1)).toTransferParams()), kind: OpKind.TRANSACTION },
+        ])
+        const batch = Tezos.contract.batch()
+          .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 5)), { fee: estimateOp[0].suggestedFeeMutez, gasLimit: estimateOp[0].gasLimit, storageLimit: estimateOp[0].storageLimit })
+          .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.transferToContract(knownContract, 1)), { fee: estimateOp[1].suggestedFeeMutez, gasLimit: estimateOp[1].gasLimit, storageLimit: estimateOp[1].storageLimit })
+        const batchOp = await batch.send();
+        await batchOp.confirmation();
 
-      const batch = Tezos.contract.batch()
-        .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 5)), { fee: estimateOp[0].suggestedFeeMutez, gasLimit: estimateOp[0].gasLimit, storageLimit: estimateOp[0].storageLimit })
-        .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.setDelegate(knownBaker)), { fee: estimateOp[1].suggestedFeeMutez, gasLimit: estimateOp[1].gasLimit, storageLimit: estimateOp[1].storageLimit })
-        .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.removeDelegate()), { fee: estimateOp[2].suggestedFeeMutez, gasLimit: estimateOp[2].gasLimit, storageLimit: estimateOp[2].storageLimit })
-      const batchOp = await batch.send();
+        // The sum of fee is slightly different from estimates above due to the size of the operation length varying slightly when forged (default value of estimates have higher values than actual estimates, making the variable length smaller than initially estimated)
+        expect(batchOp.fee).toEqual(estimateOp[0].suggestedFeeMutez + estimateOp[1].suggestedFeeMutez);
+        expect(batchOp.gasLimit).toEqual(estimateOp[0].gasLimit + estimateOp[1].gasLimit)
+        expect(batchOp.storageLimit).toEqual(estimateOp[0].storageLimit + estimateOp[1].storageLimit)
+      } else {
+        const estimateOp = await Tezos.estimate.batch([
+          { ...(contract.methodsObject.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 5)).toTransferParams()), kind: OpKind.TRANSACTION },
+          { ...(contract.methodsObject.do(MANAGER_LAMBDA.setDelegate(knownBaker)).toTransferParams()), kind: OpKind.TRANSACTION },
+          { ...(contract.methodsObject.do(MANAGER_LAMBDA.removeDelegate()).toTransferParams()), kind: OpKind.TRANSACTION },
+        ])
+        const batch = Tezos.contract.batch()
+          .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 5)), { fee: estimateOp[0].suggestedFeeMutez, gasLimit: estimateOp[0].gasLimit, storageLimit: estimateOp[0].storageLimit })
+          .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.setDelegate(knownBaker)), { fee: estimateOp[1].suggestedFeeMutez, gasLimit: estimateOp[1].gasLimit, storageLimit: estimateOp[1].storageLimit })
+          .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.removeDelegate()), { fee: estimateOp[2].suggestedFeeMutez, gasLimit: estimateOp[2].gasLimit, storageLimit: estimateOp[2].storageLimit })
+        const batchOp = await batch.send();
+        await batchOp.confirmation();
 
-      await batchOp.confirmation();
-
-      // The sum of fee is slightly different from estimates above due to the size of the operation length varying slightly when forged (default value of estimates have higher values than actual estimates, making the variable length smaller than initially estimated)
-      expect(batchOp.fee).toEqual(estimateOp[0].suggestedFeeMutez + estimateOp[1].suggestedFeeMutez + estimateOp[2].suggestedFeeMutez);
-      expect(batchOp.gasLimit).toEqual(estimateOp[0].gasLimit + estimateOp[1].gasLimit + estimateOp[2].gasLimit)
-      expect(batchOp.storageLimit).toEqual(estimateOp[0].storageLimit + estimateOp[1].storageLimit + estimateOp[2].storageLimit)
+        // The sum of fee is slightly different from estimates above due to the size of the operation length varying slightly when forged (default value of estimates have higher values than actual estimates, making the variable length smaller than initially estimated)
+        expect(batchOp.fee).toEqual(estimateOp[0].suggestedFeeMutez + estimateOp[1].suggestedFeeMutez);
+        expect(batchOp.gasLimit).toEqual(estimateOp[0].gasLimit + estimateOp[1].gasLimit)
+        expect(batchOp.storageLimit).toEqual(estimateOp[0].storageLimit + estimateOp[1].storageLimit)
+      }
     })
   });
 });

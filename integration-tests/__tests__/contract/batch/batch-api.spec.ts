@@ -3,8 +3,9 @@ import { ligoSample, ligoSampleMichelson } from "../../../data/ligo-simple-contr
 import { managerCode } from "../../../data/manager_code";
 import { MANAGER_LAMBDA, OpKind } from "@taquito/taquito";
 
-CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
+CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress, networkName }) => {
   const Tezos = lib;
+  const isTezLink = networkName === 'TEZLINKNET'
   describe(`Test the Taquito batch api using: ${rpc}`, () => {
 
     beforeEach(async () => {
@@ -53,7 +54,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
     })
 
     it('Verify simple batch transfer with origination fails when storage_exhausted', async () => {
-      expect.assertions(1);
+      isTezLink ? expect.assertions(0) : expect.assertions(1); // tezlink storage consumption is lower hence not throwing storage_exhausted
       try {
         await Tezos.contract.batch()
           .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
@@ -105,17 +106,24 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
       const contract = await op.contract();
       expect(op.status).toEqual('applied')
 
-      const batch = Tezos.contract.batch()
-        .withTransfer({ to: contract.address, amount: 1 })
-        .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 5)))
-        .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.setDelegate(knownBaker)))
-        .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.removeDelegate()))
+      if (isTezLink) {
+        const batch = Tezos.contract.batch()
+          .withTransfer({ to: contract.address, amount: 1 })
+          .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 5)))
+        const batchOp = await batch.send();
+        await batchOp.confirmation();
+        expect(batchOp.status).toEqual('applied')
+      } else {
+        const batch = Tezos.contract.batch()
+          .withTransfer({ to: contract.address, amount: 1 })
+          .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 5)))
+          .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.setDelegate(knownBaker)))
+          .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.removeDelegate()))
+        const batchOp = await batch.send();
+        await batchOp.confirmation();
+        expect(batchOp.status).toEqual('applied')
+      }
 
-      const batchOp = await batch.send();
-
-      await batchOp.confirmation();
-
-      expect(batchOp.status).toEqual('applied')
     });
 
     it('Verify batch transfer with chained contract calls using the `methodsObject` method', async () => {
@@ -128,17 +136,23 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
       const contract = await op.contract();
       expect(op.status).toEqual('applied')
 
-      const batch = Tezos.contract.batch()
-        .withTransfer({ to: contract.address, amount: 1 })
-        .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 5)))
-        .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.setDelegate(knownBaker)))
-        .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.removeDelegate()))
-
-      const batchOp = await batch.send();
-
-      await batchOp.confirmation();
-
-      expect(batchOp.status).toEqual('applied')
+      if (isTezLink) {
+        const batch = Tezos.contract.batch()
+          .withTransfer({ to: contract.address, amount: 1 })
+          .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 5)))
+        const batchOp = await batch.send();
+        await batchOp.confirmation();
+        expect(batchOp.status).toEqual('applied')
+      } else {
+        const batch = Tezos.contract.batch()
+          .withTransfer({ to: contract.address, amount: 1 })
+          .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 5)))
+          .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.setDelegate(knownBaker)))
+          .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.removeDelegate()))
+        const batchOp = await batch.send();
+        await batchOp.confirmation();
+        expect(batchOp.status).toEqual('applied')
+      }
     });
 
     it('Verify simple batch transfers with origination from code in Michelson format', async () => {

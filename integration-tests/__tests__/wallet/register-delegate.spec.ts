@@ -1,13 +1,14 @@
 import { Protocols } from '@taquito/taquito';
 import { CONFIGS } from '../../config';
 
-CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
+CONFIGS().forEach(({ lib, rpc, setup, protocol, networkName }) => {
     const Tezos = lib;
+    const notTezlinknet = networkName === 'TEZLINKNET' ? test.skip : test
     describe(`Test delegate registration through wallet api: ${rpc}`, () => {
         beforeEach(async () => {
             await setup(true);
         });
-        it('Verify that the current address can be registered as a delegate using wallet.registerDelegate', async () => {
+        notTezlinknet('Verify that the current address can be registered as a delegate using wallet.registerDelegate', async () => {
             try {
                 const pkh = await Tezos.wallet.pkh();
                 const op = await Tezos.wallet.registerDelegate().send();

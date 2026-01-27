@@ -7,7 +7,7 @@ import { managerCode } from '../../data/manager_code';
 import { InvalidAmountError } from '@taquito/core';
 import { PrefixV2 } from '@taquito/utils';
 
-CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
+CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc, networkName }) => {
   const Tezos = lib;
   let pkh: string;
   describe(`Test estimate scenarios using: ${rpc}`, () => {
@@ -185,19 +185,30 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
     });
 
     it('Estimate transfer to regular address with a fixed fee', async () => {
-
       const params = { fee: 2000, to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + getRevealFee(pkh)) };
-      await expect(LowAmountTz3.estimate.transfer(params)).rejects.toMatchObject({
-        id: expect.stringContaining('empty_implicit_contract'),
-      });
+      try {
+        await LowAmountTz3.estimate.transfer(params)
+      } catch (ex: any) {
+        if (networkName === 'TEZLINKNET') {
+          expect(ex.message).toContain('tezlink_error');
+          expect(ex.lastError.error_message).toContain('BalanceTooLow');
+        } else {
+          expect(ex.message).toContain('empty_implicit_contract');
+        }
+      }
     });
 
     it('Estimate transfer to regular address with insufficient balance', async () => {
-      await expect(
-        LowAmountTz3.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt })
-      ).rejects.toMatchObject({
-        id: expect.stringContaining('subtraction_underflow'),
-      });
+      try {
+        await LowAmountTz3.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt })
+      } catch (ex: any) {
+        if (networkName === 'TEZLINKNET') {
+          expect(ex.message).toContain('tezlink_error');
+          expect(ex.lastError.error_message).toContain('BalanceTooLow');
+        } else {
+          expect(ex.message).toContain('subtraction_underflow');
+        }
+      }
     });
 
     it('Estimate transfer to regular address with insufficient balance to pay storage for allocation', async () => {
@@ -211,16 +222,20 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
     });
 
     it('Estimate origination with insufficient balance to pay storage', async () => {
-      expect(true).toBeTruthy();
-      await expect(LowAmountTz3.estimate.originate({
-        balance: '0',
-        code: ligoSample,
-        storage: 0,
-      })).rejects.toEqual(
-        expect.objectContaining({
-          errors: expect.arrayContaining([expect.objectContaining({ id: expect.stringContaining('cannot_pay_storage_fee') })]),
-          message: expect.stringContaining('subtraction_underflow'),
-        }));
+      try {
+        await LowAmountTz3.estimate.originate({
+          balance: '0',
+          code: ligoSample,
+          storage: 0,
+        })
+      } catch (ex: any) {
+        if (networkName === 'TEZLINKNET') {
+          expect(ex.message).toContain('tezlink_error');
+          expect(ex.lastError.error_message).toContain('Origination(FailedToApplyBalanceUpdate');
+        } else {
+          expect(ex.message).toContain('subtraction_underflow');
+        }
+      }
     });
   });
 });

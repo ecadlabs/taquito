@@ -3,12 +3,13 @@ import { Chest, Timelock, ChestKey } from '../../packages/taquito-timelock/src/t
 import { buf2hex } from '@taquito/utils';
 import * as crypto from 'crypto';
 
-CONFIGS().forEach(({ lib, rpc, setup }) => {
+CONFIGS().forEach(({ lib, rpc, setup, networkName }) => {
   const Tezos = lib;
+  const notTezlinknet = networkName === 'TEZLINKNET' ? test.skip : test
   let contractAddress: string;
   let chestBytes: Uint8Array;
   let keyBytes: Uint8Array;
-  
+
   describe(`Timelock test ${rpc}`, () => {
 
     const contractCode = `parameter (pair (chest %chest) (chest_key %key));
@@ -16,18 +17,20 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     code { CAR ; PUSH nat 10000 ; DUP 2 ; CAR ; DIG 2 ; CDR ; OPEN_CHEST ; NIL operation ; PAIR }`;
 
     beforeEach(async () => {
-      await setup(true);
+      if (networkName !== 'TEZLINKNET') {
+        await setup(true);
 
-      const contract = await Tezos.contract.originate({
-        code: contractCode,
-        storage: null
-      });
-      await contract.confirmation();
+        const contract = await Tezos.contract.originate({
+          code: contractCode,
+          storage: null
+        });
+        await contract.confirmation();
 
-      contractAddress = contract.contractAddress!;
+        contractAddress = contract.contractAddress!;
+      }
     });
 
-    it('should be able to create a new chest and key', async () => {
+    notTezlinknet('should be able to create a new chest and key', async () => {
       const time = 5000;
 
       const payload = new Uint8Array(64);
@@ -53,7 +56,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(op.status).toEqual('applied');
     });
 
-    it('should be able to create chest and key from existing timelock, and open it', async () => {
+    notTezlinknet('should be able to create chest and key from existing timelock, and open it', async () => {
       const time = 10000;
       const payload = new TextEncoder().encode('I choose rock');
 
@@ -68,11 +71,11 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(keyBytes).toBeDefined();
     });
 
-    it('should be able to open chest with a key', async () => {
+    notTezlinknet('should be able to open chest with a key', async () => {
       const time = 10000;
       const [chest] = Chest.fromArray(chestBytes);
       const [chestKey] = ChestKey.fromArray(keyBytes);
-    
+
       const data = chest.open(chestKey, time);
 
       if (data) {

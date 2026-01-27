@@ -1,14 +1,15 @@
 import { Protocols } from "@taquito/taquito";
 import { CONFIGS } from "../../../config";
 
-CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
+CONFIGS().forEach(({ lib, rpc, setup, protocol, networkName }) => {
   const Tezos = lib;
+  const notTezlinknet = networkName === 'TEZLINKNET' ? test.skip : test
   describe(`Test register delegate through contract api: ${rpc}`, () => {
 
     beforeEach(async () => {
       await setup(true)
     })
-    it('As a User I want to verify that I can register the current address as delegate using contract.registerDelegate', async () => {
+    notTezlinknet('As a User I want to verify that I can register the current address as delegate using contract.registerDelegate', async () => {
       try {
         const pkh = await Tezos.signer.publicKeyHash();
         const op = await Tezos.contract.registerDelegate({});

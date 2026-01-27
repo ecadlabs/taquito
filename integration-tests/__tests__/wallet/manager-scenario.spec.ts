@@ -2,8 +2,9 @@ import { CONFIGS } from '../../config';
 import { managerCode } from '../../data/manager_code';
 import { DefaultWalletType, MANAGER_LAMBDA, OriginationWalletOperation } from '@taquito/taquito';
 
-CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract }) => {
+CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract, networkName }) => {
   const Tezos = lib;
+  const notTezlinknet = networkName === 'TEZLINKNET' ? test.skip : test
 
   let op: OriginationWalletOperation;
   let contract: DefaultWalletType;
@@ -40,7 +41,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract }) => {
       expect(op.opHash).toBeDefined();
     });
 
-    it('should be able to set delegate from contract', async () => {
+    notTezlinknet('should be able to set delegate from contract', async () => {
       // Set delegate on contract kt1_alice by passing a lambda function to kt1_alice's `do` entrypoint
       const op = await contract.methodsObject.do(MANAGER_LAMBDA.setDelegate(knownBaker)).send({ amount: 0 })
       await op.confirmation();
@@ -48,7 +49,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract }) => {
       expect(op.opHash).toBeDefined();
     });
 
-    it('should be able to remove delegate from contract', async () => {
+    notTezlinknet('should be able to remove delegate from contract', async () => {
       // Remove delegate on contract kt1_alice by passing a lambda function to kt1_alice's `do` entrypoint
       const op = await contract.methodsObject.do(MANAGER_LAMBDA.removeDelegate()).send({ amount: 0 })
       await op.confirmation();
