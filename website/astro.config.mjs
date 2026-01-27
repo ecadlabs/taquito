@@ -10,6 +10,7 @@ import { fileURLToPath } from 'node:url';
 import tailwindcss from "@tailwindcss/vite";
 
 import sitemap from '@astrojs/sitemap';
+import { DEFAULT_VERSION } from './src/config/versions.mjs';
 
 const fetchPolyfillPath = fileURLToPath(
   new URL('./src/scripts/fetch-polyfill.ts', import.meta.url)
@@ -51,10 +52,21 @@ export default defineConfig({
     extendMarkdownConfig: true,
   }), sitemap({
     filter: (page) => {
-      // Exclude old documentation versions and 'next' from sitemap
-      // Only include current stable version (24.0.0) and non-versioned pages
-      const oldVersions = ['21.0.0', '22.0.0', '23.0.0', '23.1.0', 'next'];
-      return !oldVersions.some(version => page.includes(`/docs/${version}/`));
+      // Only include pages from the default version in sitemap
+      // Exclude old versions and 'next' version to prevent duplicate content issues
+      const url = new URL(page);
+      const pathname = url.pathname;
+
+      // Skip docs pages for old versions and 'next'
+      if (pathname.startsWith('/docs/')) {
+        const versionMatch = pathname.match(/^\/docs\/([^/]+)\//);
+        if (versionMatch) {
+          const version = versionMatch[1];
+          // Only include the default version in sitemap
+          return version === DEFAULT_VERSION;
+        }
+      }
+      return true;
     },
   })],
   markdown: {
