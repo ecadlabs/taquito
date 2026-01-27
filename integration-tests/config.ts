@@ -10,7 +10,7 @@ import { knownContractsShadownet } from './known-contracts-shadownet';
 import { knownContractsSeoulnet } from './known-contracts-seoulnet';
 import { knownContractsTallinnnet } from './known-contracts-tallinnnet';
 import { knownContractsWeeklynet } from './known-contracts-weeklynet';
-import { knownContractsTezlinknet } from './known-contracts-tezlinknet';
+import { knownContractsTezlinkshadownet } from './known-contracts-tezlinkshadownet';
 
 const nodeCrypto = require('crypto');
 
@@ -192,19 +192,19 @@ const weeklynetSecretKey: Config =
     signerConfig: defaultSecretKey
   });
 
-const tezlinknetSecretKey: Config =
+const tezlinkshadownetSecretKey: Config =
   defaultConfig({
     networkName: 'TEZLINKNET',
     protocol: Protocols.PtSeouLou,
-    defaultRpc: 'https://node.shared.tezlink.nomadic-labs.com/.',
-    knownContracts: knownContractsTezlinknet,
+    defaultRpc: 'https://rpc.shadownet.tezlink.nomadic-labs.com/',
+    knownContracts: knownContractsTezlinkshadownet,
     signerConfig: defaultSecretKey,
   });
 
 const providers: Config[] = [];
 
 if (process.env['RUN_WITH_SECRET_KEY']) {
-  providers.push(ghostnetSecretKey, shadownetSecretKey, tallinnnetSecretKey, seoulnetSecretKey, weeklynetSecretKey, tezlinknetSecretKey);
+  providers.push(ghostnetSecretKey, shadownetSecretKey, tallinnnetSecretKey, seoulnetSecretKey, weeklynetSecretKey, tezlinkshadownetSecretKey);
 } else if (process.env['RUN_GHOSTNET_WITH_SECRET_KEY']) {
   providers.push(ghostnetSecretKey);
 } else if (process.env['RUN_SHADOWNET_WITH_SECRET_KEY']) {
@@ -215,8 +215,8 @@ if (process.env['RUN_WITH_SECRET_KEY']) {
   providers.push(seoulnetSecretKey);
 } else if (process.env['RUN_WEEKLYNET_WITH_SECRET_KEY']) {
   providers.push(weeklynetSecretKey);
-} else if (process.env['RUN_TEZLINKNET_WITH_SECRET_KEY']) {
-  providers.push(tezlinknetSecretKey);
+} else if (process.env['RUN_TEZLINKSHADOWNET_WITH_SECRET_KEY']) {
+  providers.push(tezlinkshadownetSecretKey);
 } else if (process.env['GHOSTNET']) {
   providers.push(ghostnetEphemeral);
 } else if (process.env['SHADOWNET']) {
