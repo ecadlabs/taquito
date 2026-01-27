@@ -1,12 +1,11 @@
-name: Tezlinknet Integration Tests
-
+name: Tezlink_Shadownet Integration Tests
 on:
   push:
     branches:
-      - '**tezlink**'
+      - '**tezlinkshadownet**'
 
 jobs:
-  integration-tests-tezlinknet:
+  integration-tests-tezlinkshadownet:
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:
@@ -17,5 +16,5 @@ jobs:
       - run: npm ci
       - run: npm run build
       - if: always()
-        id: integration-tests-tezlinknet
-        run: npm -w integration-tests run test:tezlinknet-secret-key
+        id: integration-tests-tezlinkshadownet
+        run: npm -w integration-tests run test:tezlinkshadownet-secret-key
