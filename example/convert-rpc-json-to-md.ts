@@ -28,8 +28,8 @@ rpcData.rpc_endpoints.forEach((endpoint: RpcEndpoint) => {
   endpointsByNetwork[endpoint.net].push(endpoint);
 });
 
-// Determine network ordering (prefer mainnet, ghostnet, shadownet, seoulnet, tallinnnet)
-const preferredOrder = ['mainnet', 'ghostnet', 'shadownet', 'seoulnet', 'tallinnnet'];
+// Determine network ordering (prefer mainnet, ghostnet, shadownet, tallinnnet)
+const preferredOrder = ['mainnet', 'ghostnet', 'shadownet', 'tallinnnet'];
 const networks = Object.keys(endpointsByNetwork).sort((a, b) => {
   const ai = preferredOrder.indexOf(a);
   const bi = preferredOrder.indexOf(b);

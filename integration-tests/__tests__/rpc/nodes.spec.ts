@@ -22,10 +22,8 @@ CONFIGS().forEach(
   }) => {
     const Tezos = lib;
     const isUnrestricted = rpc.includes("teztnets.com") || rpc.includes("net-rolling-1.i.ecadinfra.com") ? true : false;
-    const isSeoulnet = protocol === Protocols.PtSeouLou ? true : false;
     const isTallinnnetAndAlpha = protocol === Protocols.PtTALLiNt || protocol === Protocols.ProtoALpha ? true : false;
     const unrestrictedNode = isUnrestricted ? test : test.skip;
-    const unrestrictedSeoulnet = isSeoulnet && isUnrestricted ? test : test.skip;
     const unrestrictedTallinnnetAndAlpha = isTallinnnetAndAlpha && isUnrestricted ? test : test.skip;
     const tallinnnetAndAlpha = isTallinnnetAndAlpha ? test : test.skip;
     let ticketContract: DefaultContractType;
@@ -262,18 +260,6 @@ CONFIGS().forEach(
           });
           expect(bakingRights).toBeDefined();
           expect(bakingRights[0].round).toBeDefined();
-        });
-
-        unrestrictedSeoulnet('Verify that rpcClient.getAttestationRights retrieves the list of delegates allowed to attest a block', async () => {
-          const attestationRights = await rpcClient.getAttestationRights();
-          expect(attestationRights).toBeDefined();
-          expect(attestationRights[0].delegates).toBeDefined();
-          expect(attestationRights[0].delegates![0].delegate).toBeDefined();
-          expect(typeof attestationRights[0].delegates![0].delegate).toEqual('string');
-          expect(attestationRights[0].delegates![0].attestation_power).toBeDefined();
-          expect(typeof attestationRights[0].delegates![0].attestation_power).toEqual('number');
-          expect(attestationRights[0].delegates![0].first_slot).toBeDefined();
-          expect(typeof attestationRights[0].delegates![0].first_slot).toEqual('number');
         });
 
         unrestrictedTallinnnetAndAlpha('Verify that rpcClient.getAttestationRights retrieves the list of delegates allowed to attest a block', async () => {

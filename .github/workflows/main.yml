@@ -43,9 +43,6 @@ jobs:
     strategy:
       matrix:
         include:
-          - testnet: seoulnet
-            testnet_uppercase: SEOULNET
-            rpc_url: http://ecad-tezos-seoulnet-rolling-1.i.ecadinfra.com/
           - testnet: tallinnnet
             testnet_uppercase: TALLINNNET
             rpc_url: http://ecad-tezos-tallinnnet-rolling-1.i.ecadinfra.com/

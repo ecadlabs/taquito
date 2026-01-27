@@ -7,7 +7,6 @@ import { RpcClient, RpcClientCache } from '@taquito/rpc';
 import { KnownContracts } from './known-contracts';
 import { knownContractsGhostnet } from './known-contracts-ghostnet';
 import { knownContractsShadownet } from './known-contracts-shadownet';
-import { knownContractsSeoulnet } from './known-contracts-seoulnet';
 import { knownContractsTallinnnet } from './known-contracts-tallinnnet';
 import { knownContractsWeeklynet } from './known-contracts-weeklynet';
 import { knownContractsTezlinknet } from './known-contracts-tezlinknet';
@@ -34,7 +33,7 @@ const forgers: ForgerType[] = [ForgerType.COMPOSITE];
 
 // user running integration test can pass environment variable TEZOS_NETWORK_TYPE=sandbox to specify which network to run against
 export enum NetworkType {
-  TESTNET,  // corresponds ghostnet, shadownet, tallinnnet, seoulnet and weeklynet etc.
+  TESTNET,  // corresponds ghostnet, shadownet, tallinnnet and weeklynet etc.
   SANDBOX,  // corresponds to flextesa local chain
 }
 
@@ -138,7 +137,7 @@ const defaultConfig = ({
 const ghostnetEphemeral: Config =
   defaultConfig({
     networkName: 'GHOSTNET',
-    protocol: Protocols.PtSeouLou,
+    protocol: Protocols.PtTALLiNt,
     defaultRpc: 'http://ecad-tezos-ghostnet-rolling-1.i.ecadinfra.com/',
     knownContracts: knownContractsGhostnet,
     signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/ghostnet')
@@ -150,7 +149,7 @@ const ghostnetSecretKey: Config =
 const shadownetEphemeral: Config =
   defaultConfig({
     networkName: 'SHADOWNET',
-    protocol: Protocols.PtSeouLou,
+    protocol: Protocols.PtTALLiNt,
     defaultRpc: 'https://rpc.shadownet.teztnets.com/',
     knownContracts: knownContractsShadownet,
     signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/shadownet')
@@ -170,18 +169,6 @@ const tallinnnetEphemeral: Config =
 
 const tallinnnetSecretKey: Config =
   { ...tallinnnetEphemeral, ...{ signerConfig: defaultSecretKey, rpc: 'https://rpc.tallinnnet.teztnets.com' } };
-
-const seoulnetEphemeral: Config =
-  defaultConfig({
-    networkName: 'SEOULNET',
-    protocol: Protocols.PtSeouLou,
-    defaultRpc: 'http://ecad-tezos-seoulnet-rolling-1.i.ecadinfra.com/',
-    knownContracts: knownContractsSeoulnet,
-    signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/seoulnet')
-  })
-
-const seoulnetSecretKey: Config =
-  { ...seoulnetEphemeral, ...{ signerConfig: defaultSecretKey, rpc: 'https://seoulnet.tezos.ecadinfra.com' } };
 
 const weeklynetSecretKey: Config =
   defaultConfig({
@@ -204,15 +191,13 @@ const tezlinknetSecretKey: Config =
 const providers: Config[] = [];
 
 if (process.env['RUN_WITH_SECRET_KEY']) {
-  providers.push(ghostnetSecretKey, shadownetSecretKey, tallinnnetSecretKey, seoulnetSecretKey, weeklynetSecretKey, tezlinknetSecretKey);
+  providers.push(ghostnetSecretKey, shadownetSecretKey, tallinnnetSecretKey, weeklynetSecretKey, tezlinknetSecretKey);
 } else if (process.env['RUN_GHOSTNET_WITH_SECRET_KEY']) {
   providers.push(ghostnetSecretKey);
 } else if (process.env['RUN_SHADOWNET_WITH_SECRET_KEY']) {
   providers.push(shadownetSecretKey);
 } else if (process.env['RUN_TALLINNNET_WITH_SECRET_KEY']) {
   providers.push(tallinnnetSecretKey);
-} else if (process.env['RUN_SEOULNET_WITH_SECRET_KEY']) {
-  providers.push(seoulnetSecretKey);
 } else if (process.env['RUN_WEEKLYNET_WITH_SECRET_KEY']) {
   providers.push(weeklynetSecretKey);
 } else if (process.env['RUN_TEZLINKNET_WITH_SECRET_KEY']) {
@@ -223,10 +208,8 @@ if (process.env['RUN_WITH_SECRET_KEY']) {
   providers.push(shadownetEphemeral);
 } else if (process.env['TALLINNNET']) {
   providers.push(tallinnnetEphemeral);
-} else if (process.env['SEOULNET']) {
-  providers.push(seoulnetEphemeral);
 } else {
-  providers.push(ghostnetEphemeral, shadownetEphemeral, tallinnnetEphemeral, seoulnetEphemeral);
+  providers.push(ghostnetEphemeral, shadownetEphemeral, tallinnnetEphemeral);
 }
 
 const setupForger = (Tezos: TezosToolkit, forger: ForgerType): void => {
