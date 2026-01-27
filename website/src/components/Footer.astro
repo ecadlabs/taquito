@@ -1,5 +1,6 @@
 ---
 import taquitoLogo from "../images/Taquito.png";
+import { DEFAULT_VERSION } from "../config/versions.mjs";
 ---
 
 <footer
@@ -42,7 +43,7 @@ import taquitoLogo from "../images/Taquito.png";
     <div>
       <h4 class="font-bold mb-2">Documentation</h4>
       <ul class="text-sm space-y-2">
-        <li><a href="https://taquito.io/docs/quick_start/">Quick Start</a></li>
+        <li><a href={`/docs/${DEFAULT_VERSION}/quick_start`}>Quick Start</a></li>
         <li><a href="https://taquito.io/typedoc/" target="_blank" rel="noopener noreferrer">TypeDoc Reference</a></li>
       </ul>
     </div>
