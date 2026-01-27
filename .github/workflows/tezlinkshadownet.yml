@@ -2,7 +2,7 @@ name: Tezlink_Shadownet Integration Tests
 on:
   push:
     branches:
-      - '**tezlinkshadownet**'
+      - '**tezlink**'
 
 jobs:
   integration-tests-tezlinkshadownet:
