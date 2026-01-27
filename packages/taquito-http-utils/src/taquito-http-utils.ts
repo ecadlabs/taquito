@@ -144,7 +144,7 @@ export class HttpBackend {
         return response.text() as unknown as T;
       }
     } catch (e: unknown) {
-      if (e instanceof Error && e.name === 'AbortError') {
+      if (e instanceof DOMException && e.name === 'AbortError') {
         throw new HttpTimeoutError(timeout, urlWithQuery);
       } else if (e instanceof HttpResponseError) {
         throw e;
