@@ -32,6 +32,7 @@ const websiteJsonLd = {
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
+    {description && <meta name="description" content={description} />}
     <title>{pageTitle}</title>
     <meta name="description" content={pageDescription} />
     <link rel="canonical" href={canonicalURL} />
@@ -66,11 +67,11 @@ const websiteJsonLd = {
   </head>
   <body class="flex flex-col min-h-screen bg-background-primary">
     <Header />
-    
+
     <main class="flex-1 text-text-secondary">
       <slot />
     </main>
-    
+
     <Footer />
   </body>
 </html>

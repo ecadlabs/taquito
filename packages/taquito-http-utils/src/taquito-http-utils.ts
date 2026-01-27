@@ -5,31 +5,33 @@
 
 let fetch = globalThis?.fetch;
 let createAgent: ((url: string) => { keepAlive?: boolean; [key: string]: any }) | undefined;
-let isNode = false;
+let useNodeFetchAgent = false;
 
-// Prefer native fetch when available (browser, Electron renderer, Node 18+)
-// Only fall back to node-fetch when native fetch is not available
-if (typeof fetch !== 'function') {
-  const hasNodeProcess = typeof process !== 'undefined' && !!process?.versions?.node;
-  if (hasNodeProcess) {
-    // Handle both ESM and CJS default export patterns for webpack compatibility
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const nodeFetch = require('node-fetch');
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const https = require('https');
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const http = require('http');
-    fetch = nodeFetch.default || nodeFetch;
-    isNode = true;
-    if (Number(process.versions.node.split('.')[0]) >= 19) {
-      // we need agent with keepalive false for node 19 and above
-      createAgent = (url: string) => {
-        return url.startsWith('https')
-          ? new https.Agent({ keepAlive: false })
-          : new http.Agent({ keepAlive: false });
-      };
-    }
+const isNode = typeof process !== 'undefined' && !!process?.versions?.node;
+const isBrowserLike = typeof window !== 'undefined';
+
+// Use native fetch in browser-like environments (they have reliable native fetch)
+// Use node-fetch in pure Node.js CLI for better compatibility and keepAlive control
+if (isNode && !isBrowserLike) {
+  // Handle both ESM and CJS default export patterns for webpack compatibility
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const nodeFetch = require('node-fetch');
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const https = require('https');
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const http = require('http');
+  fetch = nodeFetch.default || nodeFetch;
+  useNodeFetchAgent = true;
+  if (Number(process.versions.node.split('.')[0]) >= 19) {
+    // we need agent with keepalive false for node 19 and above
+    createAgent = (url: string) => {
+      return url.startsWith('https')
+        ? new https.Agent({ keepAlive: false })
+        : new http.Agent({ keepAlive: false });
+    };
   }
+} else if (typeof fetch !== 'function') {
+  throw new Error('No fetch implementation available');
 }
 
 import { STATUS_CODE } from './status_code';
@@ -117,7 +119,7 @@ export class HttpBackend {
         headers,
         body: JSON.stringify(data),
         signal: controller.signal,
-        ...(isNode && createAgent ? { agent: createAgent(urlWithQuery) } : {}),
+        ...(useNodeFetchAgent && createAgent ? { agent: createAgent(urlWithQuery) } : {}),
       });
 
       if (typeof response === 'undefined') {
