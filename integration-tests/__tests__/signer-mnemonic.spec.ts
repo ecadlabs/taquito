@@ -2,7 +2,7 @@ import { InMemorySigner } from '@taquito/signer';
 import { TezosToolkit } from '@taquito/taquito';
 import { CONFIGS } from '../config';
 import * as bip39 from '@scure/bip39';
-import { wordlist } from '@scure/bip39/wordlists/english';
+import { wordlist } from '@scure/bip39/wordlists/english.js';
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   let Funder: TezosToolkit;
