@@ -5,10 +5,14 @@
 
 let fetch = globalThis?.fetch;
 let createAgent: ((url: string) => { keepAlive?: boolean; [key: string]: any }) | undefined;
-// Will only use browser fetch if we are in a browser environment,
-// default to the more stable node-fetch otherwise
+let useNodeFetchAgent = false;
+
 const isNode = typeof process !== 'undefined' && !!process?.versions?.node;
-if (isNode) {
+const isBrowserLike = typeof window !== 'undefined';
+
+// Use native fetch in browser-like environments (they have reliable native fetch)
+// Use node-fetch in pure Node.js CLI for better compatibility and keepAlive control
+if (isNode && !isBrowserLike) {
   // Handle both ESM and CJS default export patterns for webpack compatibility
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const nodeFetch = require('node-fetch');
@@ -17,6 +21,7 @@ if (isNode) {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const http = require('http');
   fetch = nodeFetch.default || nodeFetch;
+  useNodeFetchAgent = true;
   if (Number(process.versions.node.split('.')[0]) >= 19) {
     // we need agent with keepalive false for node 19 and above
     createAgent = (url: string) => {
@@ -25,6 +30,8 @@ if (isNode) {
         : new http.Agent({ keepAlive: false });
     };
   }
+} else if (typeof fetch !== 'function') {
+  throw new Error('No fetch implementation available');
 }
 
 import { STATUS_CODE } from './status_code';
@@ -112,7 +119,7 @@ export class HttpBackend {
         headers,
         body: JSON.stringify(data),
         signal: controller.signal,
-        ...(isNode && createAgent ? { agent: createAgent(urlWithQuery) } : {}),
+        ...(useNodeFetchAgent && createAgent ? { agent: createAgent(urlWithQuery) } : {}),
       });
 
       if (typeof response === 'undefined') {

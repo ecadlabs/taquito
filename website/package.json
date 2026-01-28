@@ -2,7 +2,7 @@
   "name": "@taquito/website",
   "private": true,
   "type": "module",
-  "version": "24.0.1",
+  "version": "24.0.2",
   "scripts": {
     "dev": "astro dev",
     "build": "npm run generate:llms && astro build",
@@ -13,7 +13,7 @@
     "generate:rpc": "node src/scripts/generate-rpc-table.js"
   },
   "dependencies": {
-    "@airgap/beacon-sdk": "^4.6.4",
+    "@airgap/beacon-sdk": "^4.7.0",
     "@astrojs/mdx": "^4.3.13",
     "@astrojs/sitemap": "^3.6.0",
     "@cloudflare/workers-types": "^4.20251205.0",
@@ -28,7 +28,7 @@
     "@taquito/tzip16": "^23.1.0",
     "@taquito/utils": "^23.1.0",
     "@taquito/wallet-connect": "^23.1.0",
-    "astro": "^5.16.5",
+    "astro": "^5.16.10",
     "astro-auto-import": "^0.4.5",
     "buffer": "^6.0.3",
     "fuse.js": "^7.1.0",
