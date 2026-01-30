@@ -16,7 +16,7 @@
     "@airgap/beacon-sdk": "^4.7.0",
     "@astrojs/mdx": "^4.3.13",
     "@astrojs/sitemap": "^3.6.0",
-    "@cloudflare/workers-types": "^4.20251205.0",
+    "@cloudflare/workers-types": "^4.20260109.0",
     "@ledgerhq/hw-transport-webhid": "^6.30.10",
     "@lucide/astro": "^0.562.0",
     "@taquito/beacon-wallet": "^23.1.0",
