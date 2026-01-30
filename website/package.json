@@ -29,7 +29,7 @@
     "@taquito/utils": "^23.1.0",
     "@taquito/wallet-connect": "^23.1.0",
     "astro": "^5.16.10",
-    "astro-auto-import": "^0.4.5",
+    "astro-auto-import": "^0.5.1",
     "buffer": "^6.0.3",
     "fuse.js": "^7.1.0",
     "lottie-web": "^5.13.0",
