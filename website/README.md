@@ -1,6 +1,6 @@
 # Taquito Website & Documentation
 
-This directory contains the source code and content for the [Taquito website](https://taquito.io), built with [Docusaurus](https://docusaurus.io/) / [Astro](https://astro.build/).
+This directory contains the source code and content for the [Taquito website](https://taquito.io), built with [Astro](https://astro.build/).
 
 ## License
 
