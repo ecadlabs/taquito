@@ -10,15 +10,15 @@ This document presents a top-down, completeness framework for Taquito. Completen
 ## References
 
 - R1: [Token Standards (TZIP-12/FA2)](https://gitlab.com/tezos/tzip/-/blob/master/proposals/tzip-12/tzip-12.md)
-- R2: [Michelson](https://tezos.gitlab.io/active/michelson.html)
-- R3: [Micheline](https://tezos.gitlab.io/shell/micheline.html)
+- R2: [Michelson](https://octez.tezos.com/docs/active/michelson.html)
+- R3: [Micheline](https://octez.tezos.com/docs/shell/micheline.html)
 - R4: [Tezos Developer Documentation](https://docs.tezos.com)
-- R5: [Sapling](https://tezos.gitlab.io/active/sapling.html)
+- R5: [Sapling](https://octez.tezos.com/docs/active/sapling.html)
 - R6: Tezos Baker Fee
 - R7: [Tezos Software Architecture](https://octez.tezos.com/docs/introduction/tezos.html)
-- R8: [Tezos JSON/RPC Interface](https://tezos.gitlab.io/alpha/rpc.html)
+- R8: [Tezos JSON/RPC Interface](https://octez.tezos.com/docs/alpha/rpc.html)
 - R9: [Tezos RPC Nodes](rpc_nodes)
-- R10: [Tezos RPCs, Reference](https://tezos.gitlab.io/alpha/rpc.html)
+- R10: [Tezos RPCs, Reference](https://octez.tezos.com/docs/alpha/rpc.html)
 
 ## Crypto-Ledgers
 
@@ -77,7 +77,7 @@ Tezos is a self-amending Crypto-Ledger. The native cryptocurrency for the Tezos 
 
 The Tezos Blockchain is based on a Proof-of-Stake (PoS) protocol rather than PoW. Under PoS only persons with sufficient stake referred to as delegates, participate in the consensus-building process. The degree to which a person has a stake is directly related to their crypto coin balance. Those without sufficient stake, or the necessary computing infrastructure, can participate indirectly by delegating their stake to delegates, who participate on their behalf. Delegates contribute by either assembling transactions into new blockchain blocks (a process referred to as baking) or by endorsing blocks assembled by other delegates. In comparison with PoW, PoS avoids unnecessary computational work and represents an implicit alignment of stakeholder interests with those doing the actual baking. Bakers earn a crypto coin reward for baking, while implicitly increasing public confidence in the cryptocurrency that they are both rewarded with and are stakeholders for.
 
-Tezos supports smart contracts through a domain-specific language known as [Michelson](https://tezos.gitlab.io/active/michelson.html) (see R2). Michelson is a low-level, stack-based, strongly typed functional programming language. As a declarative language, Michelson programs can be formally verified, i.e., mathematically proven correct. This is particularly important in this context and relates to the earlier point regarding the importance of validating automated smart contract logic before deployment. Michelson's strong typing also enhances security, another real concern in an authoritative, decentralized, shared ledger. [Micheline](https://tezos.gitlab.io/shell/micheline.html) (see R3) is the concrete syntax for the Michelson language.
+Tezos supports smart contracts through a domain-specific language known as [Michelson](https://octez.tezos.com/docs/active/michelson.html) (see R2). Michelson is a low-level, stack-based, strongly typed functional programming language. As a declarative language, Michelson programs can be formally verified, i.e., mathematically proven correct. This is particularly important in this context and relates to the earlier point regarding the importance of validating automated smart contract logic before deployment. Michelson's strong typing also enhances security, another real concern in an authoritative, decentralized, shared ledger. [Micheline](https://octez.tezos.com/docs/shell/micheline.html) (see R3) is the concrete syntax for the Michelson language.
 
 ### Token-based Applications
 
@@ -203,7 +203,7 @@ Although both hold key-value pairs, `map` and `big_map` have different gas costs
 
 Blockchain Ledgers offer anonymity in the sense that cryptographically generated addresses act as pseudonyms for participants. This stops short of privacy in the sense that balances and transactions associated with these addresses are transparent. Once an address is correlated with an actual participant, transactions involving that participant are effectively in the public domain. Domains involving sensitive information require stronger privacy, the ability to limit the visibility of transactions to authorized parties.
 
-[Sapling](https://tezos.gitlab.io/active/sapling.html) (see R5) is a protocol that addresses the need of exchanging fungible tokens on a decentralized Ledger. For Taquito's Sapling support, see the [Sapling toolkit documentation](sapling). For a privacy-preserving transaction (aka shielded transaction) the sender and receiver are only visible to the parties involved.
+[Sapling](https://octez.tezos.com/docs/active/sapling.html) (see R5) is a protocol that addresses the need of exchanging fungible tokens on a decentralized Ledger. For Taquito's Sapling support, see the [Sapling toolkit documentation](sapling). For a privacy-preserving transaction (aka shielded transaction) the sender and receiver are only visible to the parties involved.
 
 Sapling protocol establishes a pool of fungible application tokens that can be exchanged between Sapling addresses. As per our earlier discussion on application tokens, crypto coins can be used to purchase so-called shielded application tokens (aka shielded tokens), which can then be exchanged in a privacy-preserving manner from one Sapling address to another. At any time, shielded tokens can be redeemed for their crypto coin value. This pool of shielded tokens and related transactions represents a ledger-within-a-ledger referred to as a shielded pool. Privacy is preserved through the use of cryptographically generated keys managed by a custodian. A Spending Key is needed to authorize payments from a Sapling address. A Viewing Key may be derived from a Spending Key and used to generate Sapling Addresses in the first place. It is a prerequisite for viewing incoming and outgoing transactions of Sapling addresses generated by the key.
 
@@ -296,7 +296,7 @@ As described in [R7](https://octez.tezos.com/docs/introduction/tezos.html), the 
 
 A Tezos Protocol can be instantiated as a Network (aka a Ledger or Chain). At any moment in time, a Network is based on a single Protocol. As per the amendment process, a Network can transition from one Protocol to another. A Network manifests itself as a decentralized set of computer Nodes communicating peer-to-peer. This community of Nodes is open to third parties who wish to participate.
 
-Token-based Applications interface to a Network through a protocol-specific API supported by the Nodes making up the Network. This API is implemented as a language-agnostic [RPC/JSON interface](https://tezos.gitlab.io/alpha/rpc.html), described in R8. It defines many RPC endpoints, some of which are protocol-independent. Many of the endpoints relevant to Taquito are protocol-dependent.
+Token-based Applications interface to a Network through a protocol-specific API supported by the Nodes making up the Network. This API is implemented as a language-agnostic [RPC/JSON interface](https://octez.tezos.com/docs/alpha/rpc.html), described in R8. It defines many RPC endpoints, some of which are protocol-independent. Many of the endpoints relevant to Taquito are protocol-dependent.
 
 *Figure 5: Tezos Protocols, Networks and Nodes*
 
@@ -314,9 +314,9 @@ A Network is created for each newly proposed Protocol. If this Protocol is accep
 
 ### RPC Endpoints
 
-As described in [R10](https://tezos.gitlab.io/alpha/rpc.html), the RPC Interface includes endpoints to Query the Ledger as well as several processing endpoints covering such things as operation injections and data serializations. The endpoints of interest to Taquito are covered here.
+As described in [R10](https://octez.tezos.com/docs/alpha/rpc.html), the RPC Interface includes endpoints to Query the Ledger as well as several processing endpoints covering such things as operation injections and data serializations. The endpoints of interest to Taquito are covered here.
 
-[JSON Micheline](https://tezos.gitlab.io/shell/micheline.html) is a JSON encoding of Micheline (see R3). It is used by RPC endpoints to represent Micheline.
+[JSON Micheline](https://octez.tezos.com/docs/shell/micheline.html) is a JSON encoding of Micheline (see R3). It is used by RPC endpoints to represent Micheline.
 
 #### Query Endpoints
 
