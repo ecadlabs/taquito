@@ -89,6 +89,17 @@ export const sidebarConfig = [
     ],
   },
   {
+    name: "Architecture",
+    items: [
+      "arch_framework",
+      "arch_tezos_toolkit",
+      "arch_entry_points",
+      "arch_operations",
+      "arch_michelson_encoder",
+      "arch_runcode_rpc",
+    ],
+  },
+  {
     name: "Advanced Scenarios",
     items: [
       "ophash_before_injecting",
