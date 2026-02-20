@@ -82,6 +82,14 @@ The `next` version contains the latest unreleased documentation.
   - `sapling_in_memory_spending_key` - InMemorySpendingKey
   - `sapling_in_memory_viewing_key` - InMemoryViewingKey
 
+### Architecture
+- `arch_framework` - The Taquito Framework
+- `arch_tezos_toolkit` - A First Look at TezosToolkit
+- `arch_entry_points` - Taquito Entry Points
+- `arch_operations` - Operations and Injection Model
+- `arch_michelson_encoder` - Michelson Encoder Internals
+- `arch_runcode_rpc` - Understanding the RunCode RPC
+
 ### Advanced Scenarios
 - `ophash_before_injecting` - Getting the Operation Hash without Injecting
 - `drain_account` - Drain an account
