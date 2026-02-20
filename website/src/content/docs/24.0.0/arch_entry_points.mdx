@@ -1,0 +1,100 @@
+---
+title: Taquito Entry Points
+author: Peter McDonald
+---
+
+## Use Taquito to Develop a dApp
+
+- Construct a [RpcClient](rpc_package)
+- Construct a [Tezos Toolkit](arch_tezos_toolkit)
+- Configure a [Tezos Toolkit](arch_tezos_toolkit)
+  - Configure a [Signer](signing)
+    - Construct an [In-Memory Signer](inmemory_signer)
+    - Construct a Remote Signer
+    - Construct a [Ledger Signer](ledger_signer)
+    - Set a Signer
+  - Configure a [Wallet Provider](wallet_API)
+    - Construct a LegacyWalletProvider
+    - Link to a [Beacon Wallet](wallets)
+      - Construct a Beacon Wallet Provider
+      - Request Permissions
+    - Set a Wallet Provider
+  - Configure a [Forger](forger)
+    - Construct a RpcForger
+    - Construct a [LocalForger](forger)
+    - Construct a Composite Forger
+    - Set a Forger
+  - Configure a Packer
+    - Construct a RpcPacker
+    - Construct a [MichelCodecPacker](michel_codec)
+    - Set a Packer
+  - Configure a [Subscribe Provider](confirmation_event_stream)
+    - Construct a PollingSubscribeProvider
+    - Set a Stream Provider
+  - Configure StreamProvider
+  - Configure Confirmations
+  - Set Providers
+  - Extend Toolkit
+- Use a Tezos Toolkit
+  - Query Account
+    - [Get Balance](quick_start)
+    - Get Delegate
+  - Query Smart Contract
+    - [Create Smart Contract Abstraction](smartcontracts)
+    - [Get Contract Metadata](metadata-tzip16)
+    - [Execute Contract Off-Chain View](metadata-tzip16)
+    - [Execute Contract On-Chain View](on_chain_views)
+    - [Execute Contract Continuation-Passing-Style View](lambda_view)
+    - [Confirm Contract Tzip-12 Compliance](tzip12)
+    - [Get Contract Token Metadata](tzip12)
+    - [Get Smart Contract Storage](smartcontracts)
+    - [Get Storage Bigmap Value](maps_bigmaps)
+    - Generate a contractMethod
+  - Obtain [Operation Estimates](estimate)
+    - Estimate Operation
+    - Estimate Reveal
+    - Estimate Set/Unset Delegate
+    - Estimate Register Delegate
+    - Estimate Transfer
+    - Estimate Originate
+    - Estimate Batch Of Operations
+  - Execute Operations - Directly or via [Wallet](wallet_API)
+    - Get Wallet Account
+    - Execute Operation
+      - Activate Account
+      - Reveal Account
+      - [Set/Unset Delegate](set_delegate)
+      - Register Delegate
+      - [Transfer](making_transfers)
+      - [Originate a Smart Contract](originate)
+      - [Invoke a contractMethod](contract_call_parameters)
+    - [Execute Batch of Operations](batch-api)
+    - [Confirm Operation](confirmation_event_stream)
+    - View Operation Result
+  - Manage [Subscriptions](events)
+    - Subscribe to New Blocks
+    - Subscribe to New Operations
+    - Register a Subscription Callback
+    - Remove a Subscription Callback
+    - Close a Subscription
+- Extend Taquito
+  - Develop a Custom Http Backend
+    - Used in [RpcClient](rpc_package), http_handler, ipfs_handler
+  - Develop a Custom [RpcClient](rpc_package)
+  - Develop a Custom [Signer](signing)
+  - Develop a Remote Signer Backend
+  - Develop a Custom [Wallet Provider](wallet_API)
+  - Develop a Custom SubscribeProvider
+  - Develop a Custom [Metadata Handler](metadata-tzip16)
+    - HttpHandler
+    - IpfsHttpHandler
+    - TezosStorageHandler
+
+## Use Taquito to Inspect a Smart Contract
+
+- [View Micheline Script Storage Schema](michelson_encoder)
+- [View Smart Contract Storage Schema](michelson_encoder)
+- [View Smart Contract Parameter Schema](michelson_encoder)
+- View Off-Chain View Parameter Schema
+- [View On-Chain View Parameter Schema](on_chain_views)
+- View Continuation-Passing-Style View Parameter Schema
