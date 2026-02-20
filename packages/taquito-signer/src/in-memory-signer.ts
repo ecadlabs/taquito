@@ -137,9 +137,13 @@ export class InMemorySigner implements Signer {
         const encryptedSk = data.slice(8);
         const encryptionKey = pbkdf2.pbkdf2Sync(passphrase, salt, 32768, 32, 'sha512');
 
+        // Zero nonce is safe here: Tezos encrypted key format uses a fresh random salt per
+        // encryption, producing a unique PBKDF2-derived key each time. The (key, nonce) pair
+        // never repeats, satisfying NaCl secretbox requirements. This matches octez-client.
+        // See: https://gitlab.com/tezos/tezos/-/blob/master/src/lib_signer_backends/encrypted.ml
         const res = openSecretBox(
           new Uint8Array(encryptionKey),
-          new Uint8Array(24),
+          new Uint8Array(24), // zero nonce - uniqueness provided by per-encryption derived key
           new Uint8Array(encryptedSk)
         );
         if (!res) {
@@ -250,4 +254,3 @@ export function publicKeyFromString(src: string): PublicKey {
       return new BLSPublicKey(keyData);
   }
 }
-

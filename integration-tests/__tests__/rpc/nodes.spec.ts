@@ -22,10 +22,8 @@ CONFIGS().forEach(
   }) => {
     const Tezos = lib;
     const isUnrestricted = rpc.includes("teztnets.com") || rpc.includes("net-rolling-1.i.ecadinfra.com") ? true : false;
-    const isSeoulnet = protocol === Protocols.PtSeouLou ? true : false;
     const isTallinnnetAndAlpha = protocol === Protocols.PtTALLiNt || protocol === Protocols.ProtoALpha ? true : false;
     const unrestrictedNode = isUnrestricted ? test : test.skip;
-    const unrestrictedSeoulnet = isSeoulnet && isUnrestricted ? test : test.skip;
     const unrestrictedTallinnnetAndAlpha = isTallinnnetAndAlpha && isUnrestricted ? test : test.skip;
     const tallinnnetAndAlpha = isTallinnnetAndAlpha ? test : test.skip;
     let ticketContract: DefaultContractType;
@@ -262,18 +260,6 @@ CONFIGS().forEach(
           });
           expect(bakingRights).toBeDefined();
           expect(bakingRights[0].round).toBeDefined();
-        });
-
-        unrestrictedSeoulnet('Verify that rpcClient.getAttestationRights retrieves the list of delegates allowed to attest a block', async () => {
-          const attestationRights = await rpcClient.getAttestationRights();
-          expect(attestationRights).toBeDefined();
-          expect(attestationRights[0].delegates).toBeDefined();
-          expect(attestationRights[0].delegates![0].delegate).toBeDefined();
-          expect(typeof attestationRights[0].delegates![0].delegate).toEqual('string');
-          expect(attestationRights[0].delegates![0].attestation_power).toBeDefined();
-          expect(typeof attestationRights[0].delegates![0].attestation_power).toEqual('number');
-          expect(attestationRights[0].delegates![0].first_slot).toBeDefined();
-          expect(typeof attestationRights[0].delegates![0].first_slot).toEqual('number');
         });
 
         unrestrictedTallinnnetAndAlpha('Verify that rpcClient.getAttestationRights retrieves the list of delegates allowed to attest a block', async () => {
@@ -534,12 +520,13 @@ CONFIGS().forEach(
 
         it('Verify that rpcClient.getProtocolActivations will list all protocol activations info', async () => {
           const protocolActivations = await rpcClient.getProtocolActivations();
-          expect(protocolActivations).toBeInstanceOf(Array);
+          expect(Array.isArray(protocolActivations)).toBe(true);
         });
 
         it('Verify that rpcClient.getProtocolActivations will list a protocol activations info', async () => {
           const protocolActivations = await rpcClient.getProtocolActivations(protocol);
-          expect(protocolActivations).toBeInstanceOf(Object);
+          expect(typeof protocolActivations).toBe('object');
+          expect(protocolActivations).not.toBeNull();
         });
 
         it('Verify that rpcClient.getStorageUsedSpace will retrieve the used space of a contract storage', async () => {
@@ -559,7 +546,7 @@ CONFIGS().forEach(
 
         it('Verify that rpcClient.allTicketBalances will retrieve all tickets owned by the given contract', async () => {
           const ticketBalances = await rpcClient.getAllTicketBalances(ticketContract.address);
-          expect(ticketBalances).toBeInstanceOf(Array);
+          expect(Array.isArray(ticketBalances)).toBe(true);
           expect(ticketBalances[0].ticketer).toBe(ticketContract.address);
           expect(ticketBalances[0].content_type).toBeDefined();
           expect(ticketBalances[0].content).toBeDefined();
@@ -578,11 +565,11 @@ CONFIGS().forEach(
         it('Verify that rpcClient.getPendingOperations v2 will retrieve the pending operations in mempool with property validated', async () => {
           const pendingOperations = await rpcClient.getPendingOperations({ version: '2' }) as PendingOperationsV2;
           expect(pendingOperations).toBeDefined();
-          expect(pendingOperations.validated).toBeInstanceOf(Array);
-          expect(pendingOperations.refused).toBeInstanceOf(Array);
-          expect(pendingOperations.outdated).toBeInstanceOf(Array);
-          expect(pendingOperations.branch_delayed).toBeInstanceOf(Array);
-          expect(pendingOperations.branch_refused).toBeInstanceOf(Array);
+          expect(Array.isArray(pendingOperations.validated)).toBe(true);
+          expect(Array.isArray(pendingOperations.refused)).toBe(true);
+          expect(Array.isArray(pendingOperations.outdated)).toBe(true);
+          expect(Array.isArray(pendingOperations.branch_delayed)).toBe(true);
+          expect(Array.isArray(pendingOperations.branch_refused)).toBe(true);
         });
       });
     });

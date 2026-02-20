@@ -22,12 +22,9 @@ export enum NetworkType {
   GHOSTNET = 'ghostnet',
   SHADOWNET = 'shadownet',
   WEEKLYNET = 'weeklynet',
-  OXFORDNET = 'oxfordnet',
-  PARISNET = 'parisnet',
-  QUEBECNET = 'quebecnet',
-  RIONET = 'rionet',
-  SEOULNET = 'seoulnet',
+  TEZLINK_SHADOWNET = 'tezlink_shadownet',
   TALLINNNET = 'tallinnnet',
+  CUSTOM = 'custom',
 }
 
 export interface PermissionScopeParam {
