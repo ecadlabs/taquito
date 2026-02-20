@@ -254,3 +254,4 @@ export function publicKeyFromString(src: string): PublicKey {
       return new BLSPublicKey(keyData);
   }
 }
+
