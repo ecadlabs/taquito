@@ -6,7 +6,7 @@ export const sessionExample = {
   expiry: 1668023668,
   namespaces: {
     tezos: {
-      accounts: ['tezos:ghostnet:tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh'],
+      accounts: ['tezos:shadownet:tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh'],
       methods: ['tezos_send'],
       events: [],
     },
@@ -34,7 +34,7 @@ export const sessionExample = {
   requiredNamespaces: {
     tezos: {
       methods: ['tezos_send'],
-      chains: ['tezos:ghostnet'],
+      chains: ['tezos:shadownet'],
       events: [],
     },
   },
@@ -49,12 +49,12 @@ export const sessionMultipleChains = {
   namespaces: {
     tezos: {
       accounts: [
-        'tezos:ghostnet:tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh',
-        'tezos:ghostnet:tz2BxqkU3UvZrqA22vbEaSGyjR9bEQwc4k2G',
-        'tezos:ghostnet:tz2JobFgDoJ5HZ1jAoMgZCyNdbBEdAstkytV',
-        'tezos:parisnet:tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh',
-        'tezos:parisnet:tz2BxqkU3UvZrqA22vbEaSGyjR9bEQwc4k2G',
-        'tezos:parisnet:tz2JobFgDoJ5HZ1jAoMgZCyNdbBEdAstkytV',
+        'tezos:shadownet:tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh',
+        'tezos:shadownet:tz2BxqkU3UvZrqA22vbEaSGyjR9bEQwc4k2G',
+        'tezos:shadownet:tz2JobFgDoJ5HZ1jAoMgZCyNdbBEdAstkytV',
+        'tezos:tallinnnet:tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh',
+        'tezos:tallinnnet:tz2BxqkU3UvZrqA22vbEaSGyjR9bEQwc4k2G',
+        'tezos:tallinnnet:tz2JobFgDoJ5HZ1jAoMgZCyNdbBEdAstkytV',
       ],
       methods: ['tezos_sign'],
       events: [],
@@ -83,7 +83,7 @@ export const sessionMultipleChains = {
   requiredNamespaces: {
     tezos: {
       methods: ['tezos_sign'],
-      chains: ['tezos:ghostnet', 'tezos:parisnet'],
+      chains: ['tezos:shadownet', 'tezos:tallinnnet'],
       events: [],
     },
   },
