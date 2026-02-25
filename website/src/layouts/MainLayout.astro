@@ -6,9 +6,10 @@ import Footer from '../components/Footer.astro';
 interface Props {
   title?: string;
   description?: string;
+  noindex?: boolean;
 }
 
-const { title, description } = Astro.props;
+const { title, description, noindex } = Astro.props;
 
 const defaultDescription = 'Taquito is a TypeScript library suite for development on the Tezos blockchain. Build dApps, interact with smart contracts, and manage wallets with ease.';
 const pageTitle = title ? `${title} | Taquito` : 'Taquito - TypeScript Library for Tezos Blockchain Development';
@@ -32,10 +33,10 @@ const websiteJsonLd = {
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    {description && <meta name="description" content={description} />}
     <title>{pageTitle}</title>
     <meta name="description" content={pageDescription} />
     <link rel="canonical" href={canonicalURL} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />

@@ -1,8 +1,9 @@
 import { getCollection } from 'astro:content';
 import type { APIRoute, GetStaticPaths } from 'astro';
+import { VERSIONS, DEFAULT_VERSION } from '../../../config/versions.mjs';
 
-export const VERSIONS = ["next", "24.0.0", "23.1.0", "23.0.0", "22.0.0", "21.0.0"];
-export const DEFAULT_VERSION = "24.0.0";
+// Re-export for consumers that import from this file
+export { VERSIONS, DEFAULT_VERSION };
 
 export const getStaticPaths: GetStaticPaths = async () => {
   return VERSIONS.map((version) => ({
