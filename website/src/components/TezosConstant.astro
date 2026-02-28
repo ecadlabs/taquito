@@ -1,0 +1,8 @@
+---
+import { TEZOS_CONSTANTS } from '../config/tezos-constants.mjs';
+
+const { name, version = 'next' } = Astro.props;
+const constants = TEZOS_CONSTANTS[version] || TEZOS_CONSTANTS['next'];
+const value = constants[name];
+---
+<span>{value}</span>
