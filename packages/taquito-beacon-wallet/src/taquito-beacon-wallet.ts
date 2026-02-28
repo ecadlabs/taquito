@@ -10,6 +10,8 @@ import {
   PermissionScope,
   getDAppClientInstance,
   SigningType,
+  NodeDistributions,
+  Regions,
 } from '@airgap/beacon-dapp';
 import { BeaconWalletNotInitialized, MissingRequiredScopes } from './errors';
 import toBuffer from 'typedarray-to-buffer';
@@ -38,6 +40,48 @@ import { UnsupportedActionError } from '@taquito/core';
 export { VERSION } from './version';
 export { BeaconWalletNotInitialized, MissingRequiredScopes } from './errors';
 
+/**
+ * Default matrix relay nodes curated by Taquito.
+ *
+ * Includes only nodes operated by Papers and Trilitech running the latest
+ * Synapse version. These replace the Beacon SDK built-in defaults so that
+ * Taquito controls which relay infrastructure its users hit.
+ *
+ * The geographically distributed Papers nodes (NA-East, NA-West, Asia-East,
+ * Australia) have been decommissioned by Papers, so those regions are emptied
+ * to prevent connection attempts to dead servers.
+ *
+ * Users can still override specific regions (or the entire list) by passing
+ * their own `matrixNodes` in the BeaconWallet constructor options.
+ */
+const TAQUITO_CURATED_MATRIX_NODES: NodeDistributions = {
+  [Regions.EUROPE_WEST]: [
+    // Papers
+    'beacon-node-1.diamond.papers.tech',
+    'beacon-node-1.sky.papers.tech',
+    'beacon-node-2.sky.papers.tech',
+    'beacon-node-1.hope.papers.tech',
+    'beacon-node-1.hope-2.papers.tech',
+    'beacon-node-1.hope-3.papers.tech',
+    'beacon-node-1.hope-4.papers.tech',
+    'beacon-node-1.hope-5.papers.tech',
+    // Trilitech
+    'beacon-node-1.octez.io',
+    'beacon-node-2.octez.io',
+    'beacon-node-3.octez.io',
+    'beacon-node-4.octez.io',
+    'beacon-node-5.octez.io',
+    'beacon-node-6.octez.io',
+    'beacon-node-7.octez.io',
+    'beacon-node-8.octez.io',
+  ],
+  // Decommissioned by Papers; emptied to prevent connections to dead servers
+  [Regions.NORTH_AMERICA_EAST]: [],
+  [Regions.NORTH_AMERICA_WEST]: [],
+  [Regions.ASIA_EAST]: [],
+  [Regions.AUSTRALIA]: [],
+};
+
 type RPCOperationWithLimits = {
   fee?: number | string;
   gas_limit?: number | string;
@@ -48,7 +92,11 @@ export class BeaconWallet implements WalletProvider {
   public client: DAppClient;
 
   constructor(options: DAppClientOptions) {
-    this.client = getDAppClientInstance(options);
+    const matrixNodes: NodeDistributions = {
+      ...TAQUITO_CURATED_MATRIX_NODES,
+      ...(options.matrixNodes ?? {}),
+    };
+    this.client = getDAppClientInstance({ ...options, matrixNodes });
   }
 
   private validateRequiredScopesOrFail(

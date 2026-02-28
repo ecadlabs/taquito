@@ -1,11 +1,7 @@
 ---
-title: WalletConnect (BETA)
+title: WalletConnect
 author: Roxane Letourneau
 ---
-
-:::info
-This feature is a work in progress, and might be refined in the near future. We encourage Taquito users to try this feature and reach out to us if you have any issues or concerns.
-:::
 
 The `@taquito/wallet-connect` package provides a `WalletConnect` class which implements the `WalletProvider` interface. The package is intended to be used by dapp developers. Similarly to `BeaconWallet`, an instance of `WalletConnect` can be injected into the `TezosToolkit` to work with the wallet API.
 
@@ -70,7 +66,7 @@ Tezos.setRpcProvider('https://ghostnet.tezos.ecadinfra.com/');
 try {
   const walletConnect = await WalletConnect.init({
     logger: 'debug',
-    projectId: 'ba97fd7d1e89eae02f7c330e14ce1f36',  // can get YOUR_PROJECT_ID from [Reown Cloud](https://cloud.reown.com)
+    projectId: 'ba97fd7d1e89eae02f7c330e14ce1f36',  // demo project ID for this example; get your own from https://cloud.reown.com
     metadata: {
       name: 'Taquito website',
       description: 'Taquito website with WalletConnect',
@@ -105,7 +101,7 @@ The `sign` method of `WalletConnect` can be called to sign a payload. The respon
 
 ## Events handling
 
-Wallet connect allows listening to specific events. Taquito has listeners on the events `session_delete`, `session_expire`, and `session_update` and will update his internal session member accordingly if one of these events is emitted. The dapp should also handle those events as follow:
+Wallet connect allows listening to specific events. Taquito has listeners on the events `session_delete`, `session_expire`, and `session_update` and will update its internal session member accordingly if one of these events is emitted. The dapp should also handle those events as follow:
 
 ```ts
 walletConnect.signClient.on("session_delete", ({ topic }) => {
