@@ -18,8 +18,8 @@
   "dependencies": {
     "@ledgerhq/devices": "^8.8.0",
     "@ledgerhq/hw-transport": "^6.31.15",
-    "@ledgerhq/hw-transport-node-hid": "6.29.16",
-    "@ledgerhq/hw-transport-node-hid-noevents": "6.30.16",
+    "@ledgerhq/hw-transport-node-hid": "6.30.0",
+    "@ledgerhq/hw-transport-node-hid-noevents": "6.31.0",
     "@taquito/contracts-library": "^24.1.0-beta.0",
     "@taquito/core": "^24.1.0-beta.0",
     "@taquito/http-utils": "^24.1.0-beta.0",
