@@ -12,7 +12,7 @@ This practice is still new on Tezos and the use cases are rare. However, as the 
 
 ## Understanding what a signature is
 
-A signature is a string generally based58 encoded for better readability that starts with **edsig**. It requires a signer to hash the input bytes and thus can only be done if the signer has access to the private key of the account. Therefore, it is impossible to forge a signature for an account of which you don't have access to the private key. Michelson implements an instruction called `CHECK_SIGNATURE` that allows it to retrieve the public key of the account that created the signature.
+A signature is a base58-encoded string whose prefix depends on the key type: `edsig` for ed25519 (tz1), `spsig` for secp256k1 (tz2), `p2sig` for p256 (tz3), and `BLsig` for BLS (tz4). It requires a signer to hash the input bytes and thus can only be done if the signer has access to the private key of the account. Therefore, it is impossible to forge a signature for an account of which you don't have access to the private key. Michelson implements an instruction called `CHECK_SIGNATURE` that verifies a signature was produced by a given public key.
 
 ## Generating a signature with the InMemorySigner
 
@@ -287,4 +287,3 @@ A fraudulent dapp could convince less tech-savvy users to sign arbitrary data an
 
 A signature can also be used in a replay attack when a dapp uses the same signature multiple times to gain access to a contract functionality. A signature should be used one single time and destroyed and a smart contract should implement a verification process to ensure the signature hasn't been used already.
 
-_March 2022 - Taquito version 12.0.0_

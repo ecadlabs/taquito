@@ -47,6 +47,7 @@ export default defineConfig({
       './src/components/SimpleCodeRunner.astro',
       './src/components/Tabs.astro',
       './src/components/TabItem.astro',
+      './src/components/TezosConstant.astro',
     ],
   }), mdx({
     extendMarkdownConfig: true,
