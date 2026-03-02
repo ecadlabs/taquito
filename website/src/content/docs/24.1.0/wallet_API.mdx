@@ -143,6 +143,39 @@ await wallet.client.subscribeToEvent(BeaconEvent.ACTIVE_ACCOUNT_SET, (data) => {
 await wallet.requestPermissions();
 ```
 
+### Disconnecting
+
+Taquito provides two methods for ending a wallet session. Choosing the wrong one can leave stale Beacon state in localStorage that causes connection failures later.
+
+#### `wallet.disconnect()` — Full logout (recommended)
+
+Removes **all** Beacon data from localStorage, including the active account, cached relay node, and peer information. The BeaconWallet instance is no longer usable after calling this method; you must create a new one to reconnect.
+
+Use this whenever a user logs out of your dApp.
+
+```ts
+// Full logout — clears all beacon:* localStorage keys
+await wallet.disconnect();
+
+// The wallet instance is now unusable. To reconnect:
+const wallet = new BeaconWallet({ name: 'MyDapp' });
+await wallet.requestPermissions({ network: { type: NetworkType.MAINNET } });
+```
+
+#### `wallet.clearActiveAccount()` — Account switching only
+
+Removes only the active account reference. Other Beacon state (relay node, peer data) is preserved. Use this when switching between accounts within the same session.
+
+```ts
+// Switch accounts — keeps the Beacon session alive
+await wallet.clearActiveAccount();
+await wallet.requestPermissions({ network: { type: NetworkType.MAINNET } });
+```
+
+:::caution
+Do not use `clearActiveAccount()` as a logout. It leaves `beacon:matrix-selected-node` in localStorage. If that relay node later goes offline, users will be unable to connect until they manually clear their browser storage.
+:::
+
 ### - Development wallets
 
 During the development of your dapp, you may prefer a less "user-friendly" option that gives you more information and details than a more user-friendly wallet. You may also want to install and set up a wallet quickly that requires less boilerplate than the Beacon SDK. In these cases, use the Temple Wallet (for a quick setup using the Temple wallet extension).
