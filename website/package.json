@@ -2,7 +2,7 @@
   "name": "@taquito/website",
   "private": true,
   "type": "module",
-  "version": "24.0.2",
+  "version": "24.1.0",
   "scripts": {
     "dev": "astro dev",
     "build": "npm run generate:llms && astro build",
@@ -13,10 +13,10 @@
     "generate:rpc": "node src/scripts/generate-rpc-table.js"
   },
   "dependencies": {
-    "@airgap/beacon-sdk": "^4.7.0",
+    "@airgap/beacon-sdk": "^4.8.0",
     "@astrojs/mdx": "^4.3.13",
-    "@astrojs/sitemap": "^3.6.0",
-    "@cloudflare/workers-types": "^4.20251205.0",
+    "@astrojs/sitemap": "^3.6.1",
+    "@cloudflare/workers-types": "^4.20260109.0",
     "@ledgerhq/hw-transport-webhid": "^6.30.10",
     "@lucide/astro": "^0.562.0",
     "@taquito/beacon-wallet": "^23.1.0",
@@ -29,7 +29,7 @@
     "@taquito/utils": "^23.1.0",
     "@taquito/wallet-connect": "^23.1.0",
     "astro": "^5.16.10",
-    "astro-auto-import": "^0.4.5",
+    "astro-auto-import": "^0.5.1",
     "buffer": "^6.0.3",
     "fuse.js": "^7.1.0",
     "lottie-web": "^5.13.0",

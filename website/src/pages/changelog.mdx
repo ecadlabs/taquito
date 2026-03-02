@@ -4,6 +4,32 @@ description: Release notes and version history for Taquito, the TypeScript libra
 author: Jev Bjorsell
 layout: ../layouts/MarkdownLayout.astro
 ---
+# Taquito v24.1.0
+
+## Summary
+
+### Beacon SDK Update
+
+This release updates Taquito's Beacon SDK dependency to the latest [v4.8.0](https://github.com/airgap-it/beacon-sdk/releases/tag/v4.8.0) release from Papers AG. This update adds the new octez.io Matrix relay nodes operated by Trilitech to the server pool, alongside the existing Papers.ch relay nodes.
+We understand from the Papers.ch team that their relay servers will continue to operate for the near term, so there is no immediate urgency for the ecosystem to rotate away from the existing server pool.
+Regarding Octez.connect: we are currently evaluating it for a future Taquito release. Octez.connect is a fork of the Beacon SDK v5.0.0-beta.3 branch, which introduces changes to error handling, transport serialization, and protocol negotiation. We want to make sure we understand the impact of these changes on existing dApps and wallets before shipping them to Taquito users. We welcome any interoperability testing documentation or results from the Trilitech team and will factor them into our evaluation.
+
+---
+
+### Beacon Version Update
+- @taquito/beacon-wallet
+   - Updated Beacon version to v4.8.0 #3325 #3326
+   - overrode Beacon SDK default matrix relay nodes with a curated list of Papers and Trilitech operated nodes (Synapse 1.148.0)
+and emptied decommissioned regional nodes (Users can still pass their own matrixNodes to override Taquito's defaults)
+
+### Website Improvements
+- established dual licensing for website and source code #3322
+- published Taquito architecture documentation #3323
+- fixed factual errors across documentation #3327
+
+### Internal Changes
+- Updated dependencies #3324
+
 # Taquito v24.0.2
 
 ## Summary
@@ -37,7 +63,7 @@ layout: ../layouts/MarkdownLayout.astro
 
 # Taquito v24.0.0
 
-# Summary
+## Summary
 
 ## Tallinn Protocol Support
 > This is official release of v24.0.0.
