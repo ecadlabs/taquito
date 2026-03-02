@@ -45,6 +45,14 @@ type RPCOperationWithLimits = {
 };
 
 export class BeaconWallet implements WalletProvider {
+  /**
+   * The underlying Beacon `DAppClient` instance.
+   *
+   * Exposed for advanced use cases such as subscribing to Beacon events.
+   * Calling methods directly on the client (e.g., `client.clearActiveAccount()`)
+   * bypasses Taquito's wallet lifecycle. For disconnecting, prefer
+   * {@link BeaconWallet.disconnect} instead.
+   */
   public client: DAppClient;
 
   constructor(options: DAppClientOptions) {
@@ -282,17 +290,33 @@ export class BeaconWallet implements WalletProvider {
   }
 
   /**
+   * @description Disconnect the wallet and remove all Beacon data from localStorage.
    *
-   * @description Removes all beacon values from the storage. After using this method, this instance is no longer usable.
-   * You will have to instantiate a new BeaconWallet.
+   * This is the recommended way to end a user session (logout). It calls
+   * `client.destroy()` under the hood, which clears the active account,
+   * cached relay node (`beacon:matrix-selected-node`), peer data, and all
+   * other `beacon:*` localStorage keys.
+   *
+   * After calling this method, the BeaconWallet instance is no longer usable.
+   * You must instantiate a new BeaconWallet to reconnect.
+   *
+   * For switching accounts without a full logout, use {@link clearActiveAccount} instead.
    */
   async disconnect() {
     await this.client.destroy();
   }
 
   /**
+   * @description Clear the active account without destroying the Beacon session.
    *
-   * @description This method removes the active account from local storage by setting it to undefined.
+   * This removes the active account reference from local storage but does
+   * **not** clear other Beacon state such as the cached relay node
+   * (`beacon:matrix-selected-node`) or peer data.
+   *
+   * Use this for switching between accounts within an active session.
+   * For a full logout that clears all Beacon storage, use {@link disconnect} instead.
+   *
+   * @see {@link disconnect}
    */
   async clearActiveAccount() {
     await this.client.setActiveAccount();
