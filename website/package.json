@@ -13,7 +13,7 @@
     "generate:rpc": "node src/scripts/generate-rpc-table.js"
   },
   "dependencies": {
-    "@airgap/beacon-sdk": "^4.8.0",
+    "@ecadlabs/beacon-dapp": "^4.8.1-ecad",
     "@astrojs/mdx": "^4.3.13",
     "@astrojs/sitemap": "^3.6.1",
     "@cloudflare/workers-types": "^4.20260109.0",

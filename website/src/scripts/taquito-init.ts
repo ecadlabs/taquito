@@ -98,7 +98,7 @@ async function init() {
     const { Tzip16Module, tzip16, bytesToString, MichelsonStorageView } = await import('@taquito/tzip16');
     const { stringToBytes, num2PaddedHex } = await import('@taquito/utils');
     const { BigNumber } = await import('bignumber.js');
-    const { SigningType } = await import('@airgap/beacon-dapp')
+    const { SigningType } = await import('@ecadlabs/beacon-dapp')
     const { Parser, packDataBytes, emitMicheline } = await import('@taquito/michel-codec');
     const { b58Encode, PrefixV2 } = await import('@taquito/utils');
     const TransportWebHID = (await import('@ledgerhq/hw-transport-webhid')).default;

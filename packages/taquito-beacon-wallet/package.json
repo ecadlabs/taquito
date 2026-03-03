@@ -84,7 +84,7 @@
       "^(\\.{1,2}/.*)\\.js$": "$1"
     },
     "transformIgnorePatterns": [
-      "/node_modules/(?!(@airgap|@stablelib)/.*)"
+      "/node_modules/(?!(@ecadlabs|@stablelib)/.*)"
     ],
     "extensionsToTreatAsEsm": [
       ".ts",
@@ -100,13 +100,15 @@
     ]
   },
   "dependencies": {
-    "@airgap/beacon-dapp": "^4.8.0",
+    "@ecadlabs/beacon-dapp": "^4.8.1-ecad",
     "@taquito/core": "^24.1.0",
     "@taquito/taquito": "^24.1.0",
     "crypto-browserify": "^3.12.1",
     "util": "^0.12.5"
   },
   "devDependencies": {
+    "@ecadlabs/beacon-transport-postmessage": "^4.8.1-ecad",
+    "@ecadlabs/beacon-ui": "^4.8.1-ecad",
     "@types/bluebird": "^3.5.42",
     "@types/chrome": "0.0.269",
     "@types/jest": "^29.5.12",
