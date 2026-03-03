@@ -12,7 +12,7 @@ import {
   SigningType,
   NodeDistributions,
   Regions,
-} from '@airgap/beacon-dapp';
+} from '@ecadlabs/beacon-dapp';
 import { BeaconWalletNotInitialized, MissingRequiredScopes } from './errors';
 import toBuffer from 'typedarray-to-buffer';
 import {
