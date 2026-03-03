@@ -2,7 +2,7 @@
   "name": "@taquito/website",
   "private": true,
   "type": "module",
-  "version": "24.1.0",
+  "version": "24.2.0-beta.0",
   "scripts": {
     "dev": "astro dev",
     "build": "npm run generate:llms && astro build",
@@ -13,7 +13,7 @@
     "generate:rpc": "node src/scripts/generate-rpc-table.js"
   },
   "dependencies": {
-    "@airgap/beacon-sdk": "^4.8.0",
+    "@ecadlabs/beacon-dapp": "^4.8.1-ecad",
     "@astrojs/mdx": "^4.3.13",
     "@astrojs/sitemap": "^3.6.1",
     "@cloudflare/workers-types": "^4.20260109.0",

@@ -16,9 +16,9 @@ export default {
       format: 'umd',
       sourcemap: true,
       globals: {
-        '@airgap/beacon-sdk': 'beacon',
+        '@ecadlabs/beacon-sdk': 'beacon',
         '@taquito/core': 'taquitoCore',
-        '@airgap/beacon-dapp': 'beaconDapp',
+        '@ecadlabs/beacon-dapp': 'beaconDapp',
         'typedarray-to-buffer': 'typedarrayToBuffer',
         '@taquito/taquito': 'taquito',
         '@taquito/utils': 'taquitoUtils',
@@ -30,8 +30,8 @@ export default {
     include: 'src/**',
   },
   external: [
-    '@airgap/beacon-sdk',
-    '@airgap/beacon-dapp',
+    '@ecadlabs/beacon-sdk',
+    '@ecadlabs/beacon-dapp',
     '@taquito/core',
     'typedarray-to-buffer',
     '@taquito/taquito',
