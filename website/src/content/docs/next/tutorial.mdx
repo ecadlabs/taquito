@@ -374,9 +374,9 @@ Open a browser and visit the URL printed in the terminal. You should see a page 
 
 In the next step, we will add Taquito and the Beacon SDK to our app and create a minimal UI to connect to the wallet and transfer ꜩ.
 
-In a new terminal in your projects directory, install Taquito, Taquito's Beacon Wallet package, and Airgaps Beacon dApp package.
+In a new terminal in your projects directory, install Taquito and Taquito's Beacon Wallet package.
 ```bash
-npm i @taquito/taquito @taquito/beacon-wallet @airgap/beacon-dapp
+npm i @taquito/taquito @taquito/beacon-wallet
 ```
 
 Open the file `src/App.tsx` and replace the content with the code below. There will be errors, but you can ignore those for now, we will create the missing files in the next step.
@@ -423,7 +423,7 @@ Create a new file `src/components/ConnectWallet.tsx` and add the following code:
 import { type Dispatch, type JSX, type SetStateAction, useEffect } from "react";
 import { TezosToolkit } from "@taquito/taquito";
 import { BeaconWallet } from "@taquito/beacon-wallet";
-import { NetworkType } from "@airgap/beacon-dapp";
+import { NetworkType } from "@taquito/beacon-wallet/types";
 
 type ButtonProps = {
 	Tezos: TezosToolkit;

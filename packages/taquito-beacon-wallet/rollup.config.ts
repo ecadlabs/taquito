@@ -7,7 +7,7 @@ const pkg = require('./package.json');
 
 const libraryName = 'taquito-beacon-wallet';
 
-export default {
+const mainConfig = {
   input: `src/${libraryName}.ts`,
   output: [
     {
@@ -38,10 +38,32 @@ export default {
     '@taquito/utils',
   ],
   plugins: [
-    // Allow json resolution
     json(),
-    // Compile TypeScript files
     typescript({ tsconfig: './tsconfig.prod.json', useTsconfigDeclarationDir: true }),
     nodePolyfills(),
   ],
 };
+
+const beaconTypesConfig = {
+  input: 'src/beacon-types.ts',
+  output: [
+    {
+      file: 'dist/beacon-types.umd.js',
+      name: 'taquitoBeaconTypes',
+      format: 'umd',
+      sourcemap: true,
+      globals: {
+        '@ecadlabs/beacon-types': 'beaconTypes',
+      },
+    },
+    { file: 'dist/beacon-types.es6.js', format: 'es', sourcemap: true },
+  ],
+  external: ['@ecadlabs/beacon-types'],
+  plugins: [
+    json(),
+    typescript({ tsconfig: './tsconfig.prod.json', useTsconfigDeclarationDir: true }),
+    nodePolyfills(),
+  ],
+};
+
+export default [mainConfig, beaconTypesConfig];

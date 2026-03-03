@@ -10,6 +10,19 @@
   "main": "dist/taquito-beacon-wallet.umd.js",
   "module": "dist/taquito-beacon-wallet.es6.js",
   "typings": "dist/types/taquito-beacon-wallet.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/taquito-beacon-wallet.es6.js",
+      "require": "./dist/taquito-beacon-wallet.umd.js",
+      "types": "./dist/types/taquito-beacon-wallet.d.ts"
+    },
+    "./types": {
+      "import": "./dist/beacon-types.es6.js",
+      "require": "./dist/beacon-types.umd.js",
+      "types": "./dist/types/beacon-types.d.ts"
+    },
+    "./package.json": "./package.json"
+  },
   "files": [
     "signature.json",
     "dist"
@@ -101,6 +114,7 @@
   },
   "dependencies": {
     "@ecadlabs/beacon-dapp": "^4.8.1-ecad",
+    "@ecadlabs/beacon-types": "^4.8.1-ecad",
     "@taquito/core": "^24.2.0-beta.0",
     "@taquito/taquito": "^24.2.0-beta.0",
     "crypto-browserify": "^3.12.1",
