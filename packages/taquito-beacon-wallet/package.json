@@ -1,6 +1,6 @@
 {
   "name": "@taquito/beacon-wallet",
-  "version": "24.2.0-beta.0",
+  "version": "24.2.0-beta.1",
   "description": "Beacon wallet provider",
   "keywords": [
     "tezos",
@@ -115,8 +115,8 @@
   "dependencies": {
     "@ecadlabs/beacon-dapp": "^4.8.1-ecad",
     "@ecadlabs/beacon-types": "^4.8.1-ecad",
-    "@taquito/core": "^24.2.0-beta.0",
-    "@taquito/taquito": "^24.2.0-beta.0",
+    "@taquito/core": "^24.2.0-beta.1",
+    "@taquito/taquito": "^24.2.0-beta.1",
     "crypto-browserify": "^3.12.1",
     "util": "^0.12.5"
   },
