@@ -48,7 +48,7 @@ Tezos.setProvider({signer:key});
 
 **WalletProvider:**
 By default, the TezosToolkit ships with an instance of LegacyWalletProvider. This wallet requires a signer configured on the TezosToolkit. In order to use the Wallet API with a wallet other than the LegacyWallet, the user needs to set a wallet on the TezosToolkit. Taquito provides the following wallets:
-- [BeaconWallet](wallets) (Built on the DAppClient from the '@airgap/beacon-sdk' package which handles all the logic related to connecting to beacon-compatible wallets and sending requests. The BeaconWallet provides developers a way to connect a dapp built with Taquito to a wallet giving the freedom to the users of the dapp to choose the wallet they want.)
+- [BeaconWallet](wallets) (Built on the DAppClient from the Beacon SDK which handles all the logic related to connecting to beacon-compatible wallets and sending requests. The BeaconWallet provides developers a way to connect a dapp built with Taquito to a wallet giving the freedom to the users of the dapp to choose the wallet they want. Common Beacon types like `NetworkType` can be imported from `@taquito/beacon-wallet/types`, and `BeaconEvent` from `@taquito/beacon-wallet`.)
 
 A user can set any wallet on the TezosToolkit as long as it implements the WalletProvider interface.
 
