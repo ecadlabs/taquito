@@ -126,6 +126,14 @@
     ]
   },
   "overrides": {
+    "@airgap/beacon-dapp": "npm:@ecadlabs/beacon-dapp@^4.8.1-ecad",
+    "@airgap/beacon-core": "npm:@ecadlabs/beacon-core@^4.8.1-ecad",
+    "@airgap/beacon-types": "npm:@ecadlabs/beacon-types@^4.8.1-ecad",
+    "@airgap/beacon-utils": "npm:@ecadlabs/beacon-utils@^4.8.1-ecad",
+    "@airgap/beacon-ui": "npm:@ecadlabs/beacon-ui@^4.8.1-ecad",
+    "@airgap/beacon-transport-matrix": "npm:@ecadlabs/beacon-transport-matrix@^4.8.1-ecad",
+    "@airgap/beacon-transport-postmessage": "npm:@ecadlabs/beacon-transport-postmessage@^4.8.1-ecad",
+    "@airgap/beacon-transport-walletconnect": "npm:@ecadlabs/beacon-transport-walletconnect@^4.8.1-ecad",
     "test-exclude": {
       "minimatch": "^3.1.2"
     }
