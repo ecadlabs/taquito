@@ -1,6 +1,6 @@
 {
   "name": "@taquito/local-forging",
-  "version": "24.0.2",
+  "version": "24.2.0-beta.0",
   "description": "Provide local forging functionality to be with taquito",
   "keywords": [
     "tezos",
@@ -67,14 +67,14 @@
     ]
   },
   "dependencies": {
-    "@taquito/core": "^24.0.2",
-    "@taquito/utils": "^24.0.2",
+    "@taquito/core": "^24.2.0-beta.0",
+    "@taquito/utils": "^24.2.0-beta.0",
     "bignumber.js": "^9.1.2",
     "fast-text-encoding": "^1.0.6",
     "whatwg-url": "^15.1.0"
   },
   "devDependencies": {
-    "@taquito/rpc": "^24.0.2",
+    "@taquito/rpc": "^24.2.0-beta.0",
     "@types/bluebird": "^3.5.42",
     "@types/estree": "^1.0.5",
     "@types/fast-text-encoding": "^1.0.3",
@@ -94,7 +94,7 @@
     "prompt": "^1.3.0",
     "replace-in-file": "^8.1.0",
     "rimraf": "^6.0.1",
-    "rollup": "^4.22.4",
+    "rollup": "^4.59.0",
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-polyfill-node": "^0.13.0",
     "rollup-plugin-typescript2": "^0.36.0",

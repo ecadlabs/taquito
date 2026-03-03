@@ -10,7 +10,9 @@ import {
   PermissionScope,
   getDAppClientInstance,
   SigningType,
-} from '@airgap/beacon-dapp';
+  NodeDistributions,
+  Regions,
+} from '@ecadlabs/beacon-dapp';
 import { BeaconWalletNotInitialized, MissingRequiredScopes } from './errors';
 import toBuffer from 'typedarray-to-buffer';
 import {
@@ -38,6 +40,48 @@ import { UnsupportedActionError } from '@taquito/core';
 export { VERSION } from './version';
 export { BeaconWalletNotInitialized, MissingRequiredScopes } from './errors';
 
+/**
+ * Default matrix relay nodes curated by Taquito.
+ *
+ * Includes only nodes operated by Papers and Trilitech running the latest
+ * Synapse version. These replace the Beacon SDK built-in defaults so that
+ * Taquito controls which relay infrastructure its users hit.
+ *
+ * The geographically distributed Papers nodes (NA-East, NA-West, Asia-East,
+ * Australia) have been decommissioned by Papers, so those regions are emptied
+ * to prevent connection attempts to dead servers.
+ *
+ * Users can still override specific regions (or the entire list) by passing
+ * their own `matrixNodes` in the BeaconWallet constructor options.
+ */
+const TAQUITO_CURATED_MATRIX_NODES: NodeDistributions = {
+  [Regions.EUROPE_WEST]: [
+    // Papers
+    'beacon-node-1.diamond.papers.tech',
+    'beacon-node-1.sky.papers.tech',
+    'beacon-node-2.sky.papers.tech',
+    'beacon-node-1.hope.papers.tech',
+    'beacon-node-1.hope-2.papers.tech',
+    'beacon-node-1.hope-3.papers.tech',
+    'beacon-node-1.hope-4.papers.tech',
+    'beacon-node-1.hope-5.papers.tech',
+    // Trilitech
+    'beacon-node-1.octez.io',
+    'beacon-node-2.octez.io',
+    'beacon-node-3.octez.io',
+    'beacon-node-4.octez.io',
+    'beacon-node-5.octez.io',
+    'beacon-node-6.octez.io',
+    'beacon-node-7.octez.io',
+    'beacon-node-8.octez.io',
+  ],
+  // Decommissioned by Papers; emptied to prevent connections to dead servers
+  [Regions.NORTH_AMERICA_EAST]: [],
+  [Regions.NORTH_AMERICA_WEST]: [],
+  [Regions.ASIA_EAST]: [],
+  [Regions.AUSTRALIA]: [],
+};
+
 type RPCOperationWithLimits = {
   fee?: number | string;
   gas_limit?: number | string;
@@ -45,10 +89,22 @@ type RPCOperationWithLimits = {
 };
 
 export class BeaconWallet implements WalletProvider {
+  /**
+   * The underlying Beacon `DAppClient` instance.
+   *
+   * Exposed for advanced use cases such as subscribing to Beacon events.
+   * Calling methods directly on the client (e.g., `client.clearActiveAccount()`)
+   * bypasses Taquito's wallet lifecycle. For disconnecting, prefer
+   * {@link BeaconWallet.disconnect} instead.
+   */
   public client: DAppClient;
 
   constructor(options: DAppClientOptions) {
-    this.client = getDAppClientInstance(options);
+    const matrixNodes: NodeDistributions = {
+      ...TAQUITO_CURATED_MATRIX_NODES,
+      ...(options.matrixNodes ?? {}),
+    };
+    this.client = getDAppClientInstance({ ...options, matrixNodes });
   }
 
   private validateRequiredScopesOrFail(
@@ -282,17 +338,33 @@ export class BeaconWallet implements WalletProvider {
   }
 
   /**
+   * @description Disconnect the wallet and remove all Beacon data from localStorage.
    *
-   * @description Removes all beacon values from the storage. After using this method, this instance is no longer usable.
-   * You will have to instantiate a new BeaconWallet.
+   * This is the recommended way to end a user session (logout). It calls
+   * `client.destroy()` under the hood, which clears the active account,
+   * cached relay node (`beacon:matrix-selected-node`), peer data, and all
+   * other `beacon:*` localStorage keys.
+   *
+   * After calling this method, the BeaconWallet instance is no longer usable.
+   * You must instantiate a new BeaconWallet to reconnect.
+   *
+   * For switching accounts without a full logout, use {@link clearActiveAccount} instead.
    */
   async disconnect() {
     await this.client.destroy();
   }
 
   /**
+   * @description Clear the active account without destroying the Beacon session.
    *
-   * @description This method removes the active account from local storage by setting it to undefined.
+   * This removes the active account reference from local storage but does
+   * **not** clear other Beacon state such as the cached relay node
+   * (`beacon:matrix-selected-node`) or peer data.
+   *
+   * Use this for switching between accounts within an active session.
+   * For a full logout that clears all Beacon storage, use {@link disconnect} instead.
+   *
+   * @see {@link disconnect}
    */
   async clearActiveAccount() {
     await this.client.setActiveAccount();
