@@ -5,10 +5,15 @@ import { ParameterValidationError, UnsupportedActionError } from '@taquito/core'
  *  @description Error that indicates an invalid Mnemonic being passed or used
  */
 export class InvalidMnemonicError extends ParameterValidationError {
-  constructor(public readonly mnemonic: string) {
+  /**
+   * @deprecated Use `new InvalidMnemonicError()` instead. The mnemonic argument is ignored for security reasons.
+   */
+  constructor(_mnemonic: string);
+  constructor();
+  constructor(_mnemonic?: string) {
     super();
     this.name = 'InvalidMnemonicError';
-    this.message = `Invalid mnemonic "${mnemonic}"`;
+    this.message = 'Invalid mnemonic';
   }
 }
 

@@ -2,6 +2,26 @@ import { InvalidCurveError, InvalidMnemonicError, ToBeImplemented } from '../src
 import { InMemorySigner } from '../src/taquito-signer';
 import { InvalidDerivationPathError, InvalidKeyError } from '@taquito/core';
 
+const serialize = (value: unknown): string => {
+  try {
+    return JSON.stringify(value) ?? '';
+  } catch {
+    return String(value);
+  }
+};
+
+const expectNoSecretLeak = (error: Error, secret: string) => {
+  const errorRecord = error as unknown as Record<string, unknown>;
+  const ownPropertyValues = Object.getOwnPropertyNames(error)
+    .map((key) => serialize(errorRecord[key]))
+    .join(' ');
+  const surfaces = [error.message, String(error), serialize(error), ownPropertyValues];
+
+  for (const surface of surfaces) {
+    expect(surface).not.toContain(secret);
+  }
+};
+
 describe('inmemory-signer', () => {
   const mnemonic = 'prefer wait flock brown volume recycle scrub elder rate pair twenty giant';
   it('fromFundraiser', async () => {
@@ -53,6 +73,32 @@ describe('inmemory-signer', () => {
         ].join(' ')
       )
     ).toThrowError(InvalidMnemonicError);
+  });
+
+  it('fromFundraiser: InvalidMnemonicError must not leak mnemonic in message or properties', () => {
+    const invalidWord = 'veryveryverwrong';
+    const mnemonic = [
+      'economy', 'venture', 'sad', 'marriage', 'attitude', 'borrow',
+      'limit', 'country', 'agent', 'away', invalidWord, 'nerve',
+      'laptop', 'oven',
+    ].join(' ');
+
+    try {
+      InMemorySigner.fromFundraiser('test@test.com', 'password', mnemonic);
+      throw new Error('Expected InvalidMnemonicError to be thrown');
+    } catch (e) {
+      if (!(e instanceof InvalidMnemonicError)) throw e;
+      expectNoSecretLeak(e, mnemonic);
+      expectNoSecretLeak(e, invalidWord);
+      expect(e.message).toContain('Invalid mnemonic');
+    }
+  });
+
+  it('deprecated InvalidMnemonicError(mnemonic) constructor must not leak secret', () => {
+    const secret = 'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about';
+    const err = new InvalidMnemonicError(secret);
+    expectNoSecretLeak(err, secret);
+    expect(err.message).toContain('Invalid mnemonic');
   });
 
   it('Invalid key', () => {
@@ -264,6 +310,21 @@ describe('inmemory-signer', () => {
     expect(() =>
       InMemorySigner.fromMnemonic({ mnemonic, derivationPath: "44'/1729'/0'/0'" })
     ).toThrowError(InvalidMnemonicError);
+  });
+
+  it('fromMnemonic: InvalidMnemonicError must not leak mnemonic in message or properties', () => {
+    const invalidWord = 'scrubbyiswrong';
+    const mnemonic = `prefer wait flock brown volume recycle ${invalidWord} elder rate pair twenty giant`;
+
+    try {
+      InMemorySigner.fromMnemonic({ mnemonic, derivationPath: "44'/1729'/0'/0'" });
+      throw new Error('Expected InvalidMnemonicError to be thrown');
+    } catch (e) {
+      if (!(e instanceof InvalidMnemonicError)) throw e;
+      expectNoSecretLeak(e, mnemonic);
+      expectNoSecretLeak(e, invalidWord);
+      expect(e.message).toContain('Invalid mnemonic');
+    }
   });
 
   it('Should instantiate tz2 hardened from mnemonic from in memory signer', async () => {
