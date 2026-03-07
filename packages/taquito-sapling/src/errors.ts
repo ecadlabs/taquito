@@ -5,11 +5,20 @@ import { ParameterValidationError, TaquitoError } from '@taquito/core';
  *  @description Error indicates the spending key is invalid
  */
 export class InvalidSpendingKey extends ParameterValidationError {
-  constructor(public readonly sk: string, public readonly errorDetail: string) {
+  /**
+   * @deprecated Use `new InvalidSpendingKey(errorDetail)` instead. The spending key argument is ignored for security reasons.
+   */
+  constructor(_sk: string, errorDetail: string);
+  constructor(errorDetail: string);
+  constructor(a: string, b?: string) {
+    const errorDetail = arguments.length >= 2 ? b! : a;
     super();
     this.name = 'InvalidSpendingKey';
-    this.message = `Invalid spending key "${sk}" ${errorDetail}.`;
+    this.errorDetail = errorDetail;
+    this.message = `Invalid spending key: ${errorDetail}.`;
   }
+
+  public readonly errorDetail: string;
 }
 
 /**
