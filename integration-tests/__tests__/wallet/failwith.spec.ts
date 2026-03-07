@@ -6,7 +6,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   describe(`Test contract origination that throws FAILWITH api through wallet api using: ${rpc}`, () => {
 
     beforeEach(async () => {
-      await setup()
+      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 })
     })
     it('Verify calling the default method of a contract with FAILWITH code will fail and throw an error', async () => {
       const op = await Tezos.wallet.originate({

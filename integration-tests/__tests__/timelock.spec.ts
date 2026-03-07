@@ -16,7 +16,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     code { CAR ; PUSH nat 10000 ; DUP 2 ; CAR ; DIG 2 ; CDR ; OPEN_CHEST ; NIL operation ; PAIR }`;
 
     beforeEach(async () => {
-      await setup(true);
+      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 });
 
       const contract = await Tezos.contract.originate({
         code: contractCode,

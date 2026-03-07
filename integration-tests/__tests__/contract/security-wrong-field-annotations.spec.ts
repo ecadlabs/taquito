@@ -51,8 +51,8 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const weeklynet = protocol === Protocols.ProtoALpha ? test : test.skip;
 
   describe(`Test contracts to verify wrong field annotations are leading to failed transactions using: ${rpc}`, () => {
-    beforeEach(async () => {
-      await setup();
+    beforeAll(async () => {
+      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 });
     });
 
     weeklynet('Verify annotation combinations on weeklynet', async () => {

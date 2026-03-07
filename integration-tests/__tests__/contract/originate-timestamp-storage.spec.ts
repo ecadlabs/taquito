@@ -6,7 +6,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   describe(`Originate contract with timestamp storage/params: ${rpc}`, () => {
 
     beforeEach(async () => {
-      await setup()
+      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 })
     });
 
 

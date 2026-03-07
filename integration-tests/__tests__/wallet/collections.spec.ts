@@ -7,7 +7,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   describe(`Test contract origination with collection through wallet api using: ${rpc}`, () => {
 
     beforeEach(async () => {
-      await setup()
+      await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 })
     })
     it('Verify wallet.originate for a contract with set, list, map and then exercise all collections', async () => {
       const addr = await Tezos.signer.publicKeyHash();

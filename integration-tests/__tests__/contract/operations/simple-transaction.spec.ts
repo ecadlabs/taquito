@@ -1,4 +1,4 @@
-import { CONFIGS } from '../../../config';
+import { CONFIGS, TAQUITO_MUTEZ } from '../../../config';
 import { InvalidAmountError } from '@taquito/core';
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
@@ -6,12 +6,12 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
   describe(`Test simple transaction to tezos public key hashes: ${rpc}`, () => {
     beforeEach(async () => {
-      await setup(true);
+      await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
     });
 
     it('should be able to send to a tz4 address', async () => {
       const op = await Tezos.contract.transfer({
-        amount: 1,
+        amount: TAQUITO_MUTEZ, mutez: true,
         to: 'tz4HQ8VeXAyrZMhES1qLMJAc9uAVXjbMpS8u'
       });
 

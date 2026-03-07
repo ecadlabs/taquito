@@ -7,7 +7,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   describe(`Test contract origination with code properties in atypical order through wallet api: ${rpc}`, () => {
 
     beforeEach(async () => {
-      await setup()
+      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 })
     })
 
     test('Verify wallet.originate for a contract despite the code storage, parameter, code props being in wrong order', async () => {

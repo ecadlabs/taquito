@@ -9,7 +9,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   describe(`On chain views using the contract API: ${rpc}`, () => {
 
     beforeEach(async () => {
-      await setup(true)
+      await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 })
     })
     it(`as a user I want to originate a smart contract having top level views and simulate the views execution`, async () => {
       // Contract origination

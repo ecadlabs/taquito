@@ -7,7 +7,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   describe(`Test contract origination of a token contract through wallet api using: ${rpc}`, () => {
 
     beforeEach(async () => {
-      await setup()
+      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 })
     })
     test('Verify wallet.originate for a token contract and mints some tokens', async () => {
       // TODO: Fails when using ephemeral keys

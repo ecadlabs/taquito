@@ -6,9 +6,22 @@
 let fetch = globalThis?.fetch;
 let createAgent: ((url: string) => { keepAlive?: boolean; [key: string]: any }) | undefined;
 let useNodeFetchAgent = false;
+let nodeKeepAliveEnabled = false;
 
 const isNode = typeof process !== 'undefined' && !!process?.versions?.node;
 const isBrowserLike = typeof window !== 'undefined';
+const httpTraceEnabled =
+  /^(1|true)$/i.test(process?.env?.TAQUITO_HTTP_TRACE ?? '') || process?.env?.RUNNER_DEBUG === '1';
+const parsedHttpRetryCount = Number(process?.env?.TAQUITO_HTTP_RETRY_COUNT ?? '1');
+const httpRetryCount =
+  Number.isFinite(parsedHttpRetryCount) && parsedHttpRetryCount >= 0
+    ? Math.floor(parsedHttpRetryCount)
+    : 1;
+const parsedHttpRetryBaseMs = Number(process?.env?.TAQUITO_HTTP_RETRY_BASE_MS ?? '100');
+const httpRetryBaseMs =
+  Number.isFinite(parsedHttpRetryBaseMs) && parsedHttpRetryBaseMs >= 0
+    ? parsedHttpRetryBaseMs
+    : 100;
 
 // Use native fetch in browser-like environments (they have reliable native fetch)
 // Use node-fetch in pure Node.js CLI for better compatibility and keepAlive control
@@ -22,14 +35,24 @@ if (isNode && !isBrowserLike) {
   const http = require('http');
   fetch = nodeFetch.default || nodeFetch;
   useNodeFetchAgent = true;
-  if (Number(process.versions.node.split('.')[0]) >= 19) {
-    // we need agent with keepalive false for node 19 and above
-    createAgent = (url: string) => {
-      return url.startsWith('https')
-        ? new https.Agent({ keepAlive: false })
-        : new http.Agent({ keepAlive: false });
-    };
-  }
+  const keepAliveFlag = process?.env?.TAQUITO_HTTP_KEEPALIVE?.toLowerCase();
+  // Default remains false for reliability. Set TAQUITO_HTTP_KEEPALIVE=true to opt in.
+  nodeKeepAliveEnabled = keepAliveFlag === 'true' || keepAliveFlag === '1';
+  const httpsAgent = new https.Agent({
+    keepAlive: nodeKeepAliveEnabled,
+    maxFreeSockets: 10,
+    keepAliveMsecs: 1000,
+    family: 4,
+  });
+  const httpAgent = new http.Agent({
+    keepAlive: nodeKeepAliveEnabled,
+    maxFreeSockets: 10,
+    keepAliveMsecs: 1000,
+    family: 4,
+  });
+  createAgent = (url: string) => {
+    return url.startsWith('https') ? httpsAgent : httpAgent;
+  };
 } else if (typeof fetch !== 'function') {
   throw new Error('No fetch implementation available');
 }
@@ -42,6 +65,69 @@ export { VERSION } from './version';
 export { HttpRequestFailed, HttpResponseError, HttpTimeoutError } from './errors';
 
 type ObjectType = Record<string, any>;
+
+const normalizeTraceUrl = (url: string) => {
+  try {
+    const parsedUrl = new URL(url);
+    return `${parsedUrl.origin}${parsedUrl.pathname}`;
+  } catch {
+    return url.split('?')[0];
+  }
+};
+
+const traceHttp = (payload: Record<string, unknown>) => {
+  if (!httpTraceEnabled) {
+    return;
+  }
+  // JSON logs make CI-side grepping and aggregation much easier.
+  console.log(`[taquito:http-trace] ${JSON.stringify(payload)}`);
+};
+
+const toErrorMessage = (error: unknown) => {
+  if (error instanceof Error) {
+    return `${error.name}: ${error.message}`;
+  }
+  return String(error);
+};
+
+const isRetriableTransportError = (error: unknown) => {
+  if (!(error instanceof Error)) {
+    return false;
+  }
+
+  const message = `${error.name} ${error.message}`.toLowerCase();
+
+  return (
+    message.includes('socket hang up') ||
+    message.includes('econnreset') ||
+    message.includes('etimedout') ||
+    message.includes('eai_again') ||
+    message.includes('enotfound') ||
+    message.includes('econnrefused')
+  );
+};
+
+const isRetriableRequest = (method: string, url: string) => {
+  const normalizedMethod = method.toUpperCase();
+
+  if (normalizedMethod === 'GET') {
+    return true;
+  }
+
+  if (normalizedMethod !== 'POST') {
+    return false;
+  }
+
+  const normalizedUrl = normalizeTraceUrl(url);
+  return (
+    normalizedUrl.endsWith('/helpers/forge/operations') ||
+    normalizedUrl.endsWith('/helpers/preapply/operations') ||
+    normalizedUrl.endsWith('/helpers/scripts/simulate_operation') ||
+    normalizedUrl.endsWith('/helpers/scripts/run_operation')
+  );
+};
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export interface HttpRequestOptions {
   url: string;
@@ -65,9 +151,14 @@ export class HttpBackend {
     for (const p in obj) {
       // eslint-disable-next-line no-prototype-builtins
       if (obj.hasOwnProperty(p) && typeof obj[p] !== 'undefined') {
-        const prop = typeof obj[p].toJSON === 'function' ? obj[p].toJSON() : obj[p];
+        const val = obj[p];
         // query arguments can have no value so we need some way of handling that
         // example https://domain.com/query?all
+        if (val === null) {
+          str.push(encodeURIComponent(p));
+          continue;
+        }
+        const prop = typeof val.toJSON === 'function' ? val.toJSON() : val;
         if (prop === null) {
           str.push(encodeURIComponent(p));
           continue;
@@ -102,57 +193,125 @@ export class HttpBackend {
   ) {
     // Serializes query params
     const urlWithQuery = url + this.serialize(query);
+    const methodValue = String(method ?? 'GET');
 
     // Adds default header entry if there aren't any Content-Type header
     if (!headers['Content-Type']) {
       headers['Content-Type'] = 'application/json';
     }
 
-    // Creates a new AbortController instance to handle timeouts
-    const controller = new AbortController();
-    const t = setTimeout(() => controller.abort(), timeout);
+    for (let attempt = 0; attempt <= httpRetryCount; attempt++) {
+      // Creates a new AbortController instance to handle timeouts
+      const controller = new AbortController();
+      const t = setTimeout(() => controller.abort(), timeout);
+      const requestStartedAt = Date.now();
 
-    try {
-      const response = await fetch(urlWithQuery, {
-        keepalive: false, // Disable keepalive (keepalive defaults to true starting from Node 19 & 20)
-        method,
-        headers,
-        body: JSON.stringify(data),
-        signal: controller.signal,
-        ...(useNodeFetchAgent && createAgent ? { agent: createAgent(urlWithQuery) } : {}),
-      });
+      try {
+        const response = await fetch(urlWithQuery, {
+          method,
+          headers,
+          body: JSON.stringify(data),
+          signal: controller.signal,
+          ...(useNodeFetchAgent && createAgent ? { agent: createAgent(urlWithQuery) } : {}),
+        });
 
-      if (typeof response === 'undefined') {
-        throw new Error('Response is undefined');
-      }
+        if (typeof response === 'undefined') {
+          throw new Error('Response is undefined');
+        }
 
-      // Handle responses with status code >= 400
-      if (response.status >= 400) {
-        const errorData = await response.text();
-        throw new HttpResponseError(
-          `Http error response: (${response.status}) ${errorData}`,
-          response.status as STATUS_CODE,
-          response.statusText,
-          errorData,
-          urlWithQuery
-        );
-      }
+        // Handle responses with status code >= 400
+        if (response.status >= 400) {
+          const errorData = await response.text();
+          traceHttp({
+            stage: 'response-error',
+            method: methodValue,
+            url: normalizeTraceUrl(urlWithQuery),
+            status: response.status,
+            elapsedMs: Date.now() - requestStartedAt,
+            keepAlive: nodeKeepAliveEnabled,
+          });
+          throw new HttpResponseError(
+            `Http error response: (${response.status}) ${errorData}`,
+            response.status as STATUS_CODE,
+            response.statusText,
+            errorData,
+            urlWithQuery
+          );
+        }
 
-      if (json) {
-        return response.json() as T;
-      } else {
-        return response.text() as unknown as T;
+        traceHttp({
+          stage: 'response-ok',
+          method: methodValue,
+          url: normalizeTraceUrl(urlWithQuery),
+          status: response.status,
+          elapsedMs: Date.now() - requestStartedAt,
+          keepAlive: nodeKeepAliveEnabled,
+        });
+
+        if (json) {
+          return response.json() as T;
+        } else {
+          return response.text() as unknown as T;
+        }
+      } catch (e: unknown) {
+        const shouldRetry =
+          attempt < httpRetryCount &&
+          isRetriableRequest(methodValue, urlWithQuery) &&
+          isRetriableTransportError(e);
+
+        if (shouldRetry) {
+          const retryDelayMs = httpRetryBaseMs * (attempt + 1);
+          traceHttp({
+            stage: 'request-retry',
+            method: methodValue,
+            url: normalizeTraceUrl(urlWithQuery),
+            elapsedMs: Date.now() - requestStartedAt,
+            attempt: attempt + 1,
+            maxAttempts: httpRetryCount + 1,
+            retryDelayMs,
+            error: toErrorMessage(e),
+            keepAlive: nodeKeepAliveEnabled,
+          });
+          await sleep(retryDelayMs);
+          continue;
+        }
+
+        if (e instanceof Error && e.name === 'AbortError') {
+          traceHttp({
+            stage: 'timeout',
+            method: methodValue,
+            url: normalizeTraceUrl(urlWithQuery),
+            elapsedMs: Date.now() - requestStartedAt,
+            timeoutMs: timeout,
+            keepAlive: nodeKeepAliveEnabled,
+          });
+          throw new HttpTimeoutError(timeout, urlWithQuery);
+        } else if (e instanceof HttpResponseError) {
+          traceHttp({
+            stage: 'http-response-error',
+            method: methodValue,
+            url: normalizeTraceUrl(urlWithQuery),
+            elapsedMs: Date.now() - requestStartedAt,
+            status: e.status,
+            keepAlive: nodeKeepAliveEnabled,
+          });
+          throw e;
+        } else {
+          traceHttp({
+            stage: 'request-failed',
+            method: methodValue,
+            url: normalizeTraceUrl(urlWithQuery),
+            elapsedMs: Date.now() - requestStartedAt,
+            error: toErrorMessage(e),
+            keepAlive: nodeKeepAliveEnabled,
+          });
+          throw new HttpRequestFailed(methodValue, urlWithQuery, e as Error);
+        }
+      } finally {
+        clearTimeout(t);
       }
-    } catch (e: unknown) {
-      if (e instanceof Error && e.name === 'AbortError') {
-        throw new HttpTimeoutError(timeout, urlWithQuery);
-      } else if (e instanceof HttpResponseError) {
-        throw e;
-      } else {
-        throw new HttpRequestFailed(String(method), urlWithQuery, e as Error);
-      }
-    } finally {
-      clearTimeout(t);
     }
+
+    throw new Error('Unexpected request retry flow');
   }
 }

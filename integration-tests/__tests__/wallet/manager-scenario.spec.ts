@@ -1,4 +1,4 @@
-import { CONFIGS } from '../../config';
+import { CONFIGS, TAQUITO_MUTEZ } from '../../config';
 import { managerCode } from '../../data/manager_code';
 import { DefaultWalletType, MANAGER_LAMBDA, OriginationWalletOperation } from '@taquito/taquito';
 
@@ -10,7 +10,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract }) => {
 
   describe(`Test TZ Manager through wallet api: ${rpc}`, () => {
     beforeAll(async () => {
-      await setup();
+      await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
 
       op = await Tezos.wallet.originate({
         balance: "1",
@@ -24,7 +24,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract }) => {
     it('should be able to transfer to originated account', async () => {
       // Transfer from implicit account (tz1) to contract (kt1_alice)
       // A regular transfer operation is made. No smart contract calls required for this scenario.
-      const op = await Tezos.wallet.transfer({ to: contract.address, amount: 0.01 }).send();
+      const op = await Tezos.wallet.transfer({ to: contract.address, amount: TAQUITO_MUTEZ, mutez: true }).send();
       await op.confirmation();
 
       expect(op.opHash).toBeDefined();

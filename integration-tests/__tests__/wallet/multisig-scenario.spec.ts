@@ -7,7 +7,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
   describe(`Test multisig contract through wallet api for origination, contract interaction, and tranfer to an implicit account with: ${rpc}`, () => {
     beforeEach(async () => {
-      await setup()
+      await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 })
     })
     test('Verify contract.originate, contract interaction, and transfer to an implicit account for a contract with multiple signatures', async () => {
       const account1 = await createAddress();

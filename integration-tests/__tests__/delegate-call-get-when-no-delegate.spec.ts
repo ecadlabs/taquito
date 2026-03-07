@@ -6,7 +6,7 @@ CONFIGS().forEach(({ rpc, setup, createAddress }) => {
   describe(`Test obtaining the delegate when there is none: ${rpc}`, () => {
 
     beforeEach(async () => {
-      await setup(true)
+      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 })
     })
     test('Verify null is returned for getDelegate when the account has no delegate', 2, async () => {
       const LocalTez = await createAddress()

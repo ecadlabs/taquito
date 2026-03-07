@@ -5,7 +5,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
     const Tezos = lib;
     describe(`Test delegate registration through wallet api: ${rpc}`, () => {
         beforeEach(async () => {
-            await setup(true);
+            await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 });
         });
         it('Verify that the current address can be registered as a delegate using wallet.registerDelegate', async () => {
             try {

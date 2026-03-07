@@ -9,7 +9,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, signerConfig, createAddress })
 
   describe(`Test estimate.batch includes an estimation for a tz4 reveal operation when needed using: ${rpc}`, () => {
     beforeEach(async () => {
-      await setup();
+      await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
       try {
         Bls = await createAddress(PrefixV2.BLS12_381SecretKey)
         let transferOp = await Tezos.contract.transfer({ to: await Bls.signer.publicKeyHash(), amount: 2 })

@@ -5,7 +5,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
     describe(`Test contract origination for a contract having long numeral in storage and calling default entry point with long numeral through contract api using: ${rpc}`, () => {
         beforeEach(async () => {
-            await setup();
+            await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 });
         });
         test('Verify contract.originate for a contract and then call default method with long int param', async () => {
             const code = `parameter nat; storage nat; code { CAR ; NIL operation ; PAIR }`;
@@ -26,7 +26,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
     describe(`Test contract origination having long numeral in storage and calling default entry point with long numeral through wallet api using: ${rpc}`, () => {
         beforeEach(async () => {
-            await setup();
+            await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 });
         });
 
         test('Verify wallet.originate for a contract and then call default method with long int param', async () => {

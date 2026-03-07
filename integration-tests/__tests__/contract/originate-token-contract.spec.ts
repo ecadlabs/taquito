@@ -10,7 +10,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   describe(`Test contract origination of a token contract through contract api using: ${rpc}`, () => {
 
     beforeAll(async () => {
-      await setup()
+      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 })
     })
 
     test('Verify contract.originate for a token contract and mints some tokens', async () => {

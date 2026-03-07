@@ -11,7 +11,7 @@ CONFIGS().forEach(({ rpc, protocol, setup, lib }) => {
     let tallinnEntrypoint = { 0: 'default', 1: 'root', 2: 'do', 3: 'set_delegate', 4: 'remove_delegate', 5: 'deposit', 6: 'stake', 7: 'unstake', 8: 'finalize_unstake', 9: 'set_delegate_parameters' }
 
     beforeAll(async () => {
-      await setup();
+      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 });
       try {
         // for every new entrypoint will need to modify the contract code to have new entrypoint covered
         let op = await Tezos.contract.originate({

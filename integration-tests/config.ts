@@ -12,8 +12,29 @@ import { knownContractsWeeklynet } from './known-contracts-weeklynet';
 import { knownContractsTezlinkshadownet } from './known-contracts-tezlinkshadownet';
 
 const nodeCrypto = require('crypto');
+const integrationDiagnosticsEnabled = /^(1|true)$/i.test(
+  process.env['TAQUITO_ITEST_DIAGNOSTICS'] ?? ''
+);
+const parsedLowBalanceWarnMutez = Number(process.env['TAQUITO_DIAG_BALANCE_WARN_MUTEZ'] ?? '9000000');
+const parsedFreshKeyMaxAttempts = Number(process.env['TAQUITO_FRESH_KEY_MAX_ATTEMPTS'] ?? '');
+const parsedFreshKeyRetryMs = Number(process.env['TAQUITO_FRESH_KEY_RETRY_MS'] ?? '0');
+const lowBalanceWarnMutez =
+  Number.isFinite(parsedLowBalanceWarnMutez) && parsedLowBalanceWarnMutez > 0
+    ? parsedLowBalanceWarnMutez
+    : 9000000;
+const defaultFreshKeyMaxAttempts =
+  Number.isFinite(parsedFreshKeyMaxAttempts) && parsedFreshKeyMaxAttempts > 0
+    ? Math.floor(parsedFreshKeyMaxAttempts)
+    : 5;
+const defaultFreshKeyRetryMs =
+  Number.isFinite(parsedFreshKeyRetryMs) && parsedFreshKeyRetryMs >= 0
+    ? Math.floor(parsedFreshKeyRetryMs)
+    : 0;
 
 export const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+// "taq" in two-digit alphabet positions: t=20, a=01, q=17 → 200_117 mutez → 0.200117 tez
+export const TAQUITO_MUTEZ = 200_117;
 
 if (typeof jest !== 'undefined') {
   jest.setTimeout(60000 * 10);
@@ -63,16 +84,42 @@ export enum SignerType {
 
 interface ConfigWithSetup extends Config {
   lib: TezosToolkit;
-  setup: (preferFreshKey?: boolean) => Promise<void>;
+  setup: (options?: boolean | SetupOptions) => Promise<void>;
   createAddress: (prefix?: PrefixV2) => Promise<TezosToolkit>;
+}
+
+interface SetupOptions {
+  preferFreshKey?: boolean;
+  requireUnrevealed?: boolean;
+  minBalanceMutez?: number;
+  maxAttempts?: number;
+  retryDelayMs?: number;
 }
 /**
  * EphemeralConfig contains configuration for interacting with the [tezos-key-gen-api](https://github.com/ecadlabs/tezos-key-gen-api)
  */
 interface EphemeralConfig {
   type: SignerType.EPHEMERAL_KEY;
-  keyUrl: string;
+  keygenBaseUrl: string;
+  networkPath: string;
   requestHeaders: { [key: string]: string };
+}
+
+interface KeygenV2KeyRequest {
+  min_balance_mutez?: number;
+  require_unrevealed?: boolean;
+  key_prefixes?: string[];
+  max_selection_attempts?: number;
+}
+
+interface KeygenV2FreshKeyResponse {
+  secret_key: string;
+  pkh: string;
+}
+
+interface KeygenV2EphemeralResponse {
+  id: number | string;
+  pkh: string;
 }
 
 interface SecretKeyConfig {
@@ -81,6 +128,122 @@ interface SecretKeyConfig {
   password?: string
 }
 
+const diagnosticsLog = (payload: Record<string, unknown>) => {
+  if (!integrationDiagnosticsEnabled) {
+    return;
+  }
+  // Structured logs make post-run analysis significantly easier.
+  console.log(`[itest:diag] ${JSON.stringify(payload)}`);
+};
+
+const toErrorMessage = (error: unknown) => {
+  if (error instanceof Error) {
+    return `${error.name}: ${error.message}`;
+  }
+  return String(error);
+};
+
+interface SignerStateSnapshot {
+  pkh: string;
+  managerKey: unknown;
+  revealed: boolean;
+  balanceMutez: string | null;
+  balanceAsNumber: number | null;
+}
+
+const readSignerState = async (
+  Tezos: TezosToolkit,
+  pkhHint?: string
+): Promise<SignerStateSnapshot> => {
+  const pkh = pkhHint ?? (await Tezos.signer.publicKeyHash());
+  const [managerKeyResult, balanceResult] = await Promise.allSettled([
+    Tezos.rpc.getManagerKey(pkh),
+    Tezos.rpc.getBalance(pkh),
+  ]);
+
+  const managerKey = managerKeyResult.status === 'fulfilled' ? managerKeyResult.value : null;
+  const balanceMutez =
+    balanceResult.status === 'fulfilled' ? balanceResult.value.toString() : null;
+  const balanceAsNumber =
+    balanceMutez !== null && Number.isFinite(Number(balanceMutez))
+      ? Number(balanceMutez)
+      : null;
+
+  return {
+    pkh,
+    managerKey,
+    revealed: !!managerKey,
+    balanceMutez,
+    balanceAsNumber,
+  };
+};
+
+const normalizeSetupOptions = (options?: boolean | SetupOptions): Required<SetupOptions> => {
+  const normalized = typeof options === 'boolean' ? { preferFreshKey: options } : options ?? {};
+  return {
+    preferFreshKey: normalized.preferFreshKey ?? false,
+    requireUnrevealed: normalized.requireUnrevealed ?? false,
+    minBalanceMutez:
+      typeof normalized.minBalanceMutez === 'number' &&
+      Number.isFinite(normalized.minBalanceMutez) &&
+      normalized.minBalanceMutez >= 0
+        ? normalized.minBalanceMutez
+        : 0,
+    maxAttempts:
+      typeof normalized.maxAttempts === 'number' &&
+      Number.isFinite(normalized.maxAttempts) &&
+      normalized.maxAttempts > 0
+        ? Math.floor(normalized.maxAttempts)
+        : defaultFreshKeyMaxAttempts,
+    retryDelayMs:
+      typeof normalized.retryDelayMs === 'number' &&
+      Number.isFinite(normalized.retryDelayMs) &&
+      normalized.retryDelayMs >= 0
+        ? Math.floor(normalized.retryDelayMs)
+        : defaultFreshKeyRetryMs,
+  };
+};
+
+const logSignerState = async (
+  Tezos: TezosToolkit,
+  context: {
+    signerMode: 'fresh' | 'ephemeral' | 'secret' | 'generated';
+    keyUrl?: string;
+    pkhHint?: string;
+    networkName?: string;
+    rpc?: string;
+    preferFreshKey?: boolean;
+  },
+  signerState?: SignerStateSnapshot
+) => {
+  if (!integrationDiagnosticsEnabled) {
+    return;
+  }
+
+  try {
+    const state = signerState ?? (await readSignerState(Tezos, context.pkhHint));
+
+    diagnosticsLog({
+      stage: 'signer-state',
+      ...context,
+      pkh: state.pkh,
+      revealed: state.revealed,
+      managerKey: state.managerKey,
+      balanceMutez: state.balanceMutez,
+      lowBalanceWarning:
+        typeof state.balanceAsNumber === 'number' && Number.isFinite(state.balanceAsNumber)
+          ? state.balanceAsNumber < lowBalanceWarnMutez
+          : undefined,
+    });
+  } catch (error) {
+    diagnosticsLog({
+      stage: 'signer-state-error',
+      ...context,
+      error: toErrorMessage(error),
+    });
+  }
+};
+
 export const defaultSecretKey: SecretKeyConfig = {
   // pkh is tz2RqxsYQyFuP9amsmrr25x9bUcBMWXGvjuD
   type: SignerType.SECRET_KEY,
@@ -88,10 +251,19 @@ export const defaultSecretKey: SecretKeyConfig = {
   password: process.env['PASSWORD_SECRET_KEY'] || undefined,
 }
 
-const defaultEphemeralConfig = (keyUrl: string): EphemeralConfig => ({
+const keygenBaseUrl = (process.env['TAQUITO_KEYGEN_URL'] || 'https://keygen.ecadinfra.com').replace(/\/+$/, '');
+
+const defaultEphemeralConfig = (networkPath: string): EphemeralConfig => ({
   type: SignerType.EPHEMERAL_KEY as SignerType.EPHEMERAL_KEY,
-  keyUrl: keyUrl,
+  keygenBaseUrl,
+  networkPath,
   requestHeaders: { Authorization: 'Bearer taquito-example' },
+});
+
+const getKeygenEndpoints = ({ keygenBaseUrl, networkPath }: EphemeralConfig) => ({
+  v2FreshKeyUrl: `${keygenBaseUrl}/v2/${networkPath}`,
+  v2EphemeralLeaseUrl: `${keygenBaseUrl}/v2/${networkPath}/ephemeral`,
+  v1EphemeralSignerBaseUrl: `${keygenBaseUrl}/${networkPath}/ephemeral`,
 });
 
 // Named parameters for defaultConfig below
@@ -140,7 +312,7 @@ const ghostnetEphemeral: Config =
     protocol: Protocols.PtTALLiNt,
     defaultRpc: 'http://ecad-tezos-ghostnet-rolling-1.i.ecadinfra.com/',
     knownContracts: knownContractsGhostnet,
-    signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/ghostnet')
+    signerConfig: defaultEphemeralConfig('ghostnet')
   });
 
 const ghostnetSecretKey: Config =
@@ -152,7 +324,7 @@ const shadownetEphemeral: Config =
     protocol: Protocols.PtTALLiNt,
     defaultRpc: 'https://rpc.shadownet.teztnets.com/',
     knownContracts: knownContractsShadownet,
-    signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/shadownet')
+    signerConfig: defaultEphemeralConfig('shadownet')
   });
 
 const shadownetSecretKey: Config =
@@ -164,7 +336,7 @@ const tallinnnetEphemeral: Config =
     protocol: Protocols.PtTALLiNt,
     defaultRpc: 'http://ecad-tezos-tallinnnet-rolling-1.i.ecadinfra.com/',
     knownContracts: knownContractsTallinnnet,
-    signerConfig: defaultEphemeralConfig('https://keygen.ecadinfra.com/tallinnnet')
+    signerConfig: defaultEphemeralConfig('tallinnnet')
   })
 
 const tallinnnetSecretKey: Config =
@@ -227,48 +399,108 @@ const setupForger = (Tezos: TezosToolkit, forger: ForgerType): void => {
 
 const setupSignerWithFreshKey = async (
   Tezos: TezosToolkit,
-  { keyUrl, requestHeaders }: EphemeralConfig
+  signerConfig: EphemeralConfig,
+  options: Required<Pick<SetupOptions, 'requireUnrevealed' | 'minBalanceMutez' | 'maxAttempts' | 'retryDelayMs'>>
 ) => {
   const httpClient = new HttpBackend();
+  const { v2FreshKeyUrl } = getKeygenEndpoints(signerConfig);
+  const requestBody: KeygenV2KeyRequest = {
+    require_unrevealed: options.requireUnrevealed,
+    key_prefixes: ['tz1'],
+    max_selection_attempts: options.maxAttempts,
+  };
+  if (options.minBalanceMutez > 0) {
+    requestBody.min_balance_mutez = options.minBalanceMutez;
+  }
 
-  try {
-    const key = await httpClient.createRequest<string>({
-      url: keyUrl,
+  const reasons: string[] = [];
+  for (let attempt = 1; attempt <= options.maxAttempts; attempt++) {
+    const keyResponse = await httpClient.createRequest<KeygenV2FreshKeyResponse>({
+      url: v2FreshKeyUrl,
       method: 'POST',
-      headers: requestHeaders,
-      json: false,
+      headers: signerConfig.requestHeaders,
+    }, requestBody);
+
+    if (!keyResponse.secret_key) {
+      throw new Error(`Keygen V2 did not return secret_key from ${v2FreshKeyUrl}`);
+    }
+
+    const signer = new InMemorySigner(keyResponse.secret_key);
+    Tezos.setSignerProvider(signer);
+    const state = await readSignerState(Tezos, keyResponse.pkh);
+
+    const lowBalance =
+      options.minBalanceMutez > 0 &&
+      (state.balanceAsNumber === null || state.balanceAsNumber < options.minBalanceMutez);
+    const alreadyRevealed = options.requireUnrevealed && state.revealed;
+
+    if (!lowBalance && !alreadyRevealed) {
+      await logSignerState(
+        Tezos,
+        { signerMode: 'fresh', keyUrl: v2FreshKeyUrl, pkhHint: state.pkh },
+        state
+      );
+      return;
+    }
+
+    const reason = [
+      lowBalance ? `balance_below_${options.minBalanceMutez}` : null,
+      alreadyRevealed ? 'already_revealed' : null,
+    ]
+      .filter(Boolean)
+      .join(',');
+    reasons.push(`attempt_${attempt}:${reason}`);
+
+    diagnosticsLog({
+      stage: 'fresh-key-retry',
+      keyUrl: v2FreshKeyUrl,
+      attempt,
+      maxAttempts: options.maxAttempts,
+      pkh: state.pkh,
+      revealed: state.revealed,
+      balanceMutez: state.balanceMutez,
+      minBalanceMutez: options.minBalanceMutez || null,
+      requireUnrevealed: options.requireUnrevealed,
+      reason,
     });
 
-    const signer = new InMemorySigner(key!);
-    Tezos.setSignerProvider(signer);
-  } catch (e) {
-    console.log('An error occurs when trying to fetch a fresh key:', e);
+    if (attempt < options.maxAttempts && options.retryDelayMs > 0) {
+      await sleep(options.retryDelayMs);
+    }
   }
+
+  throw new Error(
+    `Unable to acquire a fresh key meeting constraints after ${options.maxAttempts} attempts (${reasons.join('; ')})`
+  );
 };
 
 const setupSignerWithEphemeralKey = async (
   Tezos: TezosToolkit,
-  { keyUrl, requestHeaders }: EphemeralConfig
+  signerConfig: EphemeralConfig
 ) => {
-  const ephemeralUrl = `${keyUrl}/ephemeral`;
+  const { v2EphemeralLeaseUrl, v1EphemeralSignerBaseUrl } = getKeygenEndpoints(signerConfig);
   const httpClient = new HttpBackend();
 
-  try {
-    const { id, pkh } = await httpClient.createRequest<{ id: string; pkh: string }>({
-      url: ephemeralUrl,
-      method: 'POST',
-      headers: requestHeaders,
-    });
+  const { id, pkh } = await httpClient.createRequest<KeygenV2EphemeralResponse>({
+    url: v2EphemeralLeaseUrl,
+    method: 'POST',
+    headers: signerConfig.requestHeaders,
+  }, { key_prefixes: ['tz1'] });
 
-    const signer = new RemoteSigner(pkh, `${ephemeralUrl}/${id}/`, { headers: requestHeaders });
-    Tezos.setSignerProvider(signer);
-  } catch (e) {
-    console.log('An error occurs when trying to fetch an ephemeral key:', e);
-  }
+  const signer = new RemoteSigner(pkh, `${v1EphemeralSignerBaseUrl}/${id}/`, {
+    headers: signerConfig.requestHeaders,
+  });
+  Tezos.setSignerProvider(signer);
+  await logSignerState(Tezos, {
+    signerMode: 'ephemeral',
+    keyUrl: v2EphemeralLeaseUrl,
+    pkhHint: pkh,
+  });
 };
 
 const setupWithSecretKey = async (Tezos: TezosToolkit, signerConfig: SecretKeyConfig) => {
   Tezos.setSignerProvider(new InMemorySigner(signerConfig.secret_key, signerConfig.password));
+  await logSignerState(Tezos, { signerMode: 'secret' });
 };
 
 const configurePollingInterval = (Tezos: TezosToolkit, pollingIntervalMilliseconds: string | undefined) => {
@@ -327,16 +559,41 @@ export const CONFIGS = () => {
           knownTicketContract,
           signerConfig,
           networkType,
-          setup: async (preferFreshKey: boolean = false) => {
+          setup: async (options?: boolean | SetupOptions) => {
+            const setupOptions = normalizeSetupOptions(options);
+            diagnosticsLog({
+              stage: 'setup-start',
+              networkName,
+              rpc,
+              preferFreshKey: setupOptions.preferFreshKey,
+              requireUnrevealed: setupOptions.requireUnrevealed,
+              minBalanceMutez:
+                setupOptions.minBalanceMutez > 0 ? setupOptions.minBalanceMutez : null,
+              maxAttempts: setupOptions.maxAttempts,
+              retryDelayMs: setupOptions.retryDelayMs,
+              signerType:
+                signerConfig.type === SignerType.SECRET_KEY ? 'SECRET_KEY' : 'EPHEMERAL_KEY',
+            });
             if (signerConfig.type === SignerType.SECRET_KEY) {
-              setupWithSecretKey(Tezos, signerConfig);
+              await setupWithSecretKey(Tezos, signerConfig);
             } else if (signerConfig.type === SignerType.EPHEMERAL_KEY) {
-              if (preferFreshKey) {
-                await setupSignerWithFreshKey(Tezos, signerConfig);
+              if (setupOptions.preferFreshKey) {
+                await setupSignerWithFreshKey(Tezos, signerConfig, {
+                  requireUnrevealed: setupOptions.requireUnrevealed,
+                  minBalanceMutez: setupOptions.minBalanceMutez,
+                  maxAttempts: setupOptions.maxAttempts,
+                  retryDelayMs: setupOptions.retryDelayMs,
+                });
               } else {
                 await setupSignerWithEphemeralKey(Tezos, signerConfig);
               }
             }
+            diagnosticsLog({
+              stage: 'setup-complete',
+              networkName,
+              rpc,
+              preferFreshKey: setupOptions.preferFreshKey,
+            });
           },
           createAddress: async (prefix: PrefixV2 = PrefixV2.P256SecretKey) => {
             const tezos = configureRpcCache(rpc, rpcCacheMilliseconds);
@@ -348,6 +605,11 @@ export const CONFIGS = () => {
 
             const key = b58Encode(new Uint8Array(keyBytes), prefix);
             await importKey(tezos, key);
+            await logSignerState(tezos, {
+              signerMode: 'generated',
+              networkName,
+              rpc,
+            });
 
             return tezos;
           },

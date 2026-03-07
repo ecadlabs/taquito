@@ -10,7 +10,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
 	describe(`Test contract origination with metadata having views that return bytes and calls the views from TZComet through contract api using: ${rpc}`, () => {
 		beforeEach(async () => {
-			await setup();
+			await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
 		});
 
 		test('Verify contract.originate for a contract with metadata having views that return bytes (example taken from TZComet) and then call the views', async () => {

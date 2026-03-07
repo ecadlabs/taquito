@@ -7,7 +7,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownContract }) => {
 
   describe(`Generic Multisig transfer to contract: ${rpc}`, () => {
     beforeEach(async () => {
-      await setup()
+      await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 })
     })
     test('test manager transfers scenarios', async () => {
       const account1 = await createAddress();

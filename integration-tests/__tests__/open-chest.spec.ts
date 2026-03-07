@@ -16,7 +16,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   describe(`Timelock test coin flip contract ${rpc}`, () => {
     let contract: DefaultContractType
     beforeAll(async () => {
-      await setup();
+      await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
       const originate = await Tezos.contract.originate({ code: timelockCode, init: timelockStorage });
       await originate.confirmation()
       contract = await originate.contract();

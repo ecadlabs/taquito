@@ -1,4 +1,4 @@
-import { CONFIGS, sleep } from '../config';
+import { CONFIGS, TAQUITO_MUTEZ, sleep } from '../config';
 import { PollingSubscribeProvider, TezosToolkit } from '@taquito/taquito';
 
 /* mainContract.jsligo: This is the source code for the main contract.
@@ -106,11 +106,11 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
   describe(`Polling Subscribe Provider using ${rpc}`, () => {
     beforeAll(async () => {
-      await setup();
+      await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
 
       secondUser = await createAddress();
       const secondUserAddress = await secondUser.signer.publicKeyHash();
-      const transfer = await Tezos.contract.transfer({ to: secondUserAddress, amount: 1 });
+      const transfer = await Tezos.contract.transfer({ to: secondUserAddress, amount: TAQUITO_MUTEZ, mutez: true });
       await transfer.confirmation();
 
       Tezos.setStreamProvider(

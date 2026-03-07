@@ -6,7 +6,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   describe(`Test contract origination with invalid data through contract api using: ${rpc}`, () => {
 
     beforeEach(async () => {
-      await setup()
+      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 })
     })
     test('Verify that contract.originate for a contract with non-ascii (invalid string) in the init data will fail', async () => {
       expect.assertions(1);

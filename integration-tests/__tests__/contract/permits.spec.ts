@@ -80,7 +80,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
   describe(`Verify contract origination, transfer, and minting with a permit for tzip-17 through contract api: ${rpc}`, () => {
     beforeEach(async () => {
-      await setup(true);
+      await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
     });
 
     test('Verify a Permit can be submitted and set', async () => {
@@ -240,7 +240,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
     describe(`Verify contract having a permit for tzip-17: ${rpc}`, () => {
       beforeEach(async () => {
-        await setup(true);
+        await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
       });
 
       test('Verify that the permit hash can be submitted to an entrypoint', async () => {

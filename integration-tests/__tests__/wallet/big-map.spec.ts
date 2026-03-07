@@ -8,7 +8,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   describe(`Test contract origination with initialized Map with variants of data through wallet api using: ${rpc}`, () => {
 
     beforeEach(async () => {
-      await setup()
+      await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 })
     })
 
     it('Verify wallet.originate with initialized Map with variants of data', async () => {
