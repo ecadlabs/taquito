@@ -6,7 +6,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   let simpleContractAddress: string;
   describe(`Test Increase Paid Storage using: ${rpc}`, () => {
     beforeAll(async () => {
-      await setup(true);
+      await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
 
       try {
         const op = await Tezos.wallet.originate({

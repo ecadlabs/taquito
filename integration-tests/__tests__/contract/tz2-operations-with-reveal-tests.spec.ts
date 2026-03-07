@@ -11,7 +11,11 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress, knownTicketCont
 
   describe(`Test tz2 account operations through contract API using: ${rpc}`, () => {
     beforeEach(async () => {
-      await setup(true)
+      await setup({
+        preferFreshKey: true,
+        minBalanceMutez: 9000000,
+        maxAttempts: 8,
+      })
       try {
         Tz2 = await createAddress(PrefixV2.Secp256k1SecretKey)
         const fundOp = await Tezos.contract.transfer({ to: await Tz2.signer.publicKeyHash(), amount: 8.5 })

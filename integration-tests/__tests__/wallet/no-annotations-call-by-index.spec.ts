@@ -5,8 +5,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
   describe(`Test calling methods by index through wallet api using: ${rpc}`, () => {
 
-    beforeEach(async () => {
-      await setup();
+    beforeAll(async () => {
+      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 });
     });
     test('Verify calls to the methods of the contract that have no annotations and must be referred to using indexes.', async () => {
       // Constants to replace annotations

@@ -7,7 +7,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
   describe(`Test obtain operation hash before sending the operation to the node ${rpc}`, () => {
     beforeEach(async () => {
-      await setup(true);
+      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 });
     });
 
     test('Estimates, forges, signs, obtains the operation hash and injects the operation', async () => {

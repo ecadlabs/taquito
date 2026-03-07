@@ -15,7 +15,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     describe(`Test contract origination having a sha256 hash in URI through contract api using: ${rpc}`, () => {
 
         beforeEach(async () => {
-            await setup()
+            await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 })
         })
 
         test('Verify contract.originate for a contract having a sha256 hash in URI', 2, async () => {

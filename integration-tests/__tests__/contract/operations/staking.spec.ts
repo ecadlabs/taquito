@@ -8,7 +8,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   let thirdParty: TezosToolkit
   describe(`Staking pseudo operations: ${rpc}`, () => {
     beforeAll(async () => {
-      await setup(true);
+      await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
       try {
         const address = await Tezos.signer.publicKeyHash()
         if (!await Tezos.rpc.getDelegate(address)) {

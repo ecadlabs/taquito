@@ -12,7 +12,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
    describe(`Test contract origination of a fa2 contract having Tzip16 metadata and view through wallet api using: ${rpc}`, () => {
 
       beforeEach(async () => {
-         await setup()
+         await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 })
       })
 
       test('Verify contract.originate for a Fa2 contract having metadata on HTTPS', 2, async () => {

@@ -9,7 +9,7 @@ CONFIGS().forEach(({ lib, setup, protocol, createAddress }) => {
 
   describe(`Test Preparation of operations using the PrepareProvider`, () => {
     beforeAll(async () => {
-      await setup();
+      await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
 
       try {
         const op = await Tezos.contract.originate({

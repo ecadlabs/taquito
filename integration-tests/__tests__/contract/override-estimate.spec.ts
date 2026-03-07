@@ -8,7 +8,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
     let pkh: string;
 
     beforeAll(async () => {
-      await setup();
+      await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
 
       try {
         const account = await createAddress();

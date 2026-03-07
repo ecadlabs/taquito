@@ -7,7 +7,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker }) => {
   describe(`Test emptying a delegated implicit account through wallet api using: ${rpc}`, () => {
 
     beforeEach(async () => {
-      await setup()
+      await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 })
     })
     test('Verify that new Account can be created, delegated and attempt to empty, it should fail despite delegation', async () => {
       const LocalTez = await createAddress();

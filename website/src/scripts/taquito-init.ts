@@ -179,20 +179,22 @@ window.configureSigner = async function () {
 
   try {
     // Generate a key for demo purposes
-    const response = await fetch("https://keygen.ecadinfra.com/ghostnet", {
+    const response = await fetch("https://keygen.ecadinfra.com/v2/ghostnet", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "Authorization": "Bearer taquito-example",
         "Accept": "application/json"
       },
+      body: JSON.stringify({ key_prefixes: ['tz1'] }),
     });
 
     if (!response.ok) {
       throw new Error(`Failed to generate key: ${response.status}`);
     }
 
-    const privateKey = await response.text();
+    const payload = await response.json() as { secret_key?: string };
+    const privateKey = payload.secret_key;
 
     if (!privateKey) {
       throw new Error("No private key in response");

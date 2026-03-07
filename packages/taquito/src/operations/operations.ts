@@ -24,6 +24,74 @@ import { createObservableFromSubscription } from '../subscribe/create-observable
 import { ConfirmationTimeoutError, InvalidConfirmationCountError } from '../errors';
 import { InvalidOperationHashError } from '@taquito/core';
 
+const opTraceEnabled = /^(1|true)$/i.test(process?.env?.TAQUITO_OP_TRACE ?? '');
+const opTraceVerbose = /^(1|true)$/i.test(process?.env?.TAQUITO_OP_TRACE_VERBOSE ?? '');
+const parsedOpTraceSlowMs = Number(process?.env?.TAQUITO_OP_TRACE_SLOW_MS ?? '60000');
+const opTraceSlowMs =
+  Number.isFinite(parsedOpTraceSlowMs) && parsedOpTraceSlowMs >= 0 ? parsedOpTraceSlowMs : 60000;
+
+const asRecord = (value: unknown): Record<string, unknown> | undefined =>
+  typeof value === 'object' && value !== null ? (value as Record<string, unknown>) : undefined;
+
+const getErrors = (value: unknown) => (Array.isArray(value) ? value : []);
+
+const summarizeOperationResults = (results: OperationContentsAndResult[]) =>
+  results.map((result) => {
+    const resultRecord = asRecord(result) ?? {};
+    const metadata = asRecord(resultRecord.metadata);
+    const operationResult = asRecord(metadata?.operation_result);
+    const internalOperationResults = metadata?.internal_operation_results;
+    const internalFailures = Array.isArray(internalOperationResults)
+      ? internalOperationResults.reduce<Array<{ kind: string; status: string; errors: unknown[] }>>(
+          (acc, internalResult) => {
+            const internalResultRecord = asRecord(internalResult);
+            const internalResultPayload = asRecord(internalResultRecord?.result);
+            const status = internalResultPayload?.status;
+            if (typeof status !== 'string' || status === 'applied') {
+              return acc;
+            }
+
+            acc.push({
+              kind:
+                typeof internalResultRecord?.kind === 'string'
+                  ? internalResultRecord.kind
+                  : 'unknown',
+              status,
+              errors: getErrors(internalResultPayload?.errors),
+            });
+            return acc;
+          },
+          []
+        )
+      : [];
+
+    return {
+      kind: typeof resultRecord.kind === 'string' ? resultRecord.kind : 'unknown',
+      status: typeof operationResult?.status === 'string' ? operationResult.status : 'unknown',
+      errors: getErrors(operationResult?.errors),
+      consumed_milligas:
+        typeof operationResult?.consumed_milligas === 'string'
+          ? operationResult.consumed_milligas
+          : undefined,
+      internalFailures,
+    };
+  });
+
+const toErrorMessage = (error: unknown) => {
+  if (error instanceof Error) {
+    return `${error.name}: ${error.message}`;
+  }
+  return String(error);
+};
+
+const traceOperation = (payload: Record<string, unknown>) => {
+  if (!opTraceEnabled) {
+    return;
+  }
+  // JSON logs make post-run parsing for flaky tests straightforward.
+  console.log(`[taquito:op-trace] ${JSON.stringify(payload)}`);
+};
+
 interface PollingConfig {
   timeout: number;
   interval: number;
@@ -154,8 +222,10 @@ export class Operation {
     }
 
     const { defaultConfirmationCount, confirmationPollingTimeoutSecond } = this.context.config;
+    const timeoutSeconds = timeout || confirmationPollingTimeoutSecond;
+    const startedAt = Date.now();
     this._pollingConfig$.next({
-      timeout: timeout || confirmationPollingTimeoutSecond,
+      timeout: timeoutSeconds,
     } as Required<PollingConfig>);
 
     const conf = confirmations !== undefined ? confirmations : defaultConfirmationCount;
@@ -168,8 +238,36 @@ export class Operation {
           first()
         )
         .subscribe({
-          error: (e) => reject(e),
-          complete: () => resolve(this._foundAt + (conf - 1)),
+          error: (e) => {
+            traceOperation({
+              stage: 'confirmation-error',
+              hash: this.hash,
+              elapsedMs: Date.now() - startedAt,
+              expectedConfirmations: conf,
+              timeoutSec: timeoutSeconds,
+              includedInBlock: Number.isFinite(this._foundAt) ? this._foundAt : null,
+              status: this.status,
+              error: toErrorMessage(e),
+              results: summarizeOperationResults(this.results),
+            });
+            reject(e);
+          },
+          complete: () => {
+            const elapsedMs = Date.now() - startedAt;
+            if (opTraceVerbose || elapsedMs >= opTraceSlowMs || this.status !== 'applied') {
+              traceOperation({
+                stage: 'confirmation-complete',
+                hash: this.hash,
+                elapsedMs,
+                expectedConfirmations: conf,
+                timeoutSec: timeoutSeconds,
+                includedInBlock: Number.isFinite(this._foundAt) ? this._foundAt : null,
+                status: this.status,
+                results: summarizeOperationResults(this.results),
+              });
+            }
+            resolve(this._foundAt + (conf - 1));
+          },
         });
     });
   }

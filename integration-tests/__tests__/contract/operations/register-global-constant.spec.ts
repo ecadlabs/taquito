@@ -9,7 +9,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     let annots = randomAnnots();
 
     beforeEach(async () => {
-      await setup(true);
+      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 });
     });
 
     test('Verify contract.registerGlobalConstant to register a Micheline expression to the global table of constants', async () => {

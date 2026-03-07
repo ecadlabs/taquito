@@ -9,7 +9,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   describe(`Test token contract origination with big map and with initial data through contract api using: ${rpc}`, () => {
 
     beforeEach(async () => {
-      await setup()
+      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 })
     })
     test('Verify contract.originate for a token contract with BigMap and with initialized Storage/BigMap', 2, async () => {
       const addr = await Tezos.signer.publicKeyHash();

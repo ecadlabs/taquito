@@ -9,7 +9,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract }) => {
     // In this scenario the code of the contract doesn't have annotation in its storage, so Taquito references element by indexes.
 
     beforeEach(async () => {
-      await setup()
+      await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 })
     })
 
     it('Verify origination of a contract having a bigMap in its storage using contract.originate and the Storage/BigMap can be fetched', async () => {

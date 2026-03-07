@@ -15,9 +15,10 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   const memoSize = 8;
 
   describe(`Test interaction with sapling contract having a single sapling state using: ${rpc}`, () => {
+    jest.setTimeout(60000 * 20);
 
     beforeAll(async () => {
-      await setup();
+      await setup({ minBalanceMutez: 10_000_000, preferFreshKey: true });
 
       // Deploy the sapling contract
       const saplingContractOrigination = await Tezos.contract.originate({

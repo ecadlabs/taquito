@@ -17,7 +17,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownTicketContract }) => {
   describe(`Transfer tickets between implicit accounts using: ${rpc}`, () => {
 
     beforeAll(async () => {
-      await setup(true);
+      await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
       try {
         recipient = await createAddress();
         sender = await createAddress();

@@ -4,7 +4,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
 
   beforeEach(async () => {
-    await setup();
+    await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
   })
 
   describe(`Test wallet api using: ${rpc}`, () => {

@@ -6,7 +6,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   describe(`Test register delegate through contract api: ${rpc}`, () => {
 
     beforeEach(async () => {
-      await setup(true)
+      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 })
     })
     it('As a User I want to verify that I can register the current address as delegate using contract.registerDelegate', async () => {
       try {

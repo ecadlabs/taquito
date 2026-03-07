@@ -12,7 +12,11 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker, knownTicketCont
     let Tz2: TezosToolkit;
 
     beforeAll(async () => {
-      await setup(true)
+      await setup({
+        preferFreshKey: true,
+        minBalanceMutez: 9000000,
+        maxAttempts: 8,
+      })
       Tz2 = await createAddress(PrefixV2.Secp256k1SecretKey)
       try {
         const fundOp = await Tezos.contract.transfer({ to: await Tz2.signer.publicKeyHash(), amount: 9 })

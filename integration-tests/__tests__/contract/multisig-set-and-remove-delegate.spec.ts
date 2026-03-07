@@ -7,7 +7,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   let Tezos: TezosToolkit;
   describe(`Generic Multisig set delegate: ${rpc}`, () => {
     beforeAll(async () => {
-      await setup(true);
+      await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
       // Checks if test is being run in Flextesa or not
       // If it is, fund the signer account using using 'Funder', which is the flextesa_bootstrap account
       if (isSandbox({ rpc })) {

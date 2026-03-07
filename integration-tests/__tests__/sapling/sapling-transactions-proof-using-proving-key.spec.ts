@@ -17,9 +17,10 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   const memoSize = 8;
 
   describe(`Test producing proofs with a proving key rather than a spending key: ${rpc}`, () => {
+    jest.setTimeout(60000 * 20);
 
     beforeAll(async () => {
-      await setup();
+      await setup({ minBalanceMutez: 8_000_000, preferFreshKey: true });
 
       // Deploy the sapling contract
       const saplingContractOrigination = await Tezos.contract.originate({

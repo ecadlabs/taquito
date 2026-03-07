@@ -15,7 +15,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   describe(`Test contract origination having metadata stored at HTTPS URL through contract api using: ${rpc}`, () => {
 
     beforeEach(async () => {
-      await setup()
+      await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 })
     })
     test('Verify contract.originate for a contract having empty metadata stored at an HTTPS URL', async () => {
 

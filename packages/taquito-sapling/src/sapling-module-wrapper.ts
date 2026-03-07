@@ -6,6 +6,8 @@ const saplingOutputParams = require('../saplingOutputParams');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const saplingSpendParams = require('../saplingSpendParams');
 
+let cachedParams: { spend: Buffer; output: Buffer } | undefined;
+
 export class SaplingWrapper {
   async withProvingContext<T>(action: (context: number) => Promise<T>) {
     await this.initSaplingParameters();
@@ -64,9 +66,12 @@ export class SaplingWrapper {
   }
 
   async initSaplingParameters() {
-    const spendParams = Buffer.from(saplingSpendParams.saplingSpendParams, 'base64');
-    const outputParams = Buffer.from(saplingOutputParams.saplingOutputParams, 'base64');
-
-    return sapling.initParameters(spendParams, outputParams);
+    if (!cachedParams) {
+      cachedParams = {
+        spend: Buffer.from(saplingSpendParams.saplingSpendParams, 'base64'),
+        output: Buffer.from(saplingOutputParams.saplingOutputParams, 'base64'),
+      };
+    }
+    return sapling.initParameters(cachedParams.spend, cachedParams.output);
   }
 }

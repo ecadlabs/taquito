@@ -5,7 +5,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     describe(`Storage contract with pair as key using: ${rpc}`, () => {
 
         beforeEach(async () => {
-            await setup()
+            await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 })
         })
 
         it('originates a contract and call its method using bytes as Uint8Array', async () => {

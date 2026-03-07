@@ -17,7 +17,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
 
     beforeAll(async () => {
       try {
-        await setup();
+        await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
         LowAmountTez = await createAddress(PrefixV2.Secp256k1SecretKey);
         pkh = await LowAmountTez.signer.publicKeyHash();
         amt += getRevealFee(pkh);
@@ -164,7 +164,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
     let amt = 2000
 
     beforeAll(async () => {
-      await setup();
+      await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
       LowAmountTez = await createAddress(PrefixV2.Secp256k1SecretKey);
       const pkh = await LowAmountTez.signer.publicKeyHash();
       amt += getRevealFee(pkh);

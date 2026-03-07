@@ -40,6 +40,22 @@ const response = httpBackend.createRequest<string>({
 ```
 
 ## Additional Info
+In Node.js (non-browser environments), Taquito uses `node-fetch` with an HTTP/HTTPS agent.
+By default, keep-alive is disabled for reliability.
+You can opt in to persistent connections by setting:
+
+`TAQUITO_HTTP_KEEPALIVE=true`
+
+This can reduce per-request overhead in high-throughput CI runs.
+
+For diagnostics, you can emit request timing logs with:
+
+`TAQUITO_HTTP_TRACE=true`
+
+Optionally adjust the slow-request threshold (milliseconds):
+
+`TAQUITO_HTTP_TRACE_SLOW_MS=1500`
+
 See the top-level https://github.com/ecadlabs/taquito file for details on reporting issues, contributing, and versioning.
 
 
