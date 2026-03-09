@@ -91,14 +91,14 @@ async function init() {
     console.log("Initializing Taquito dynamically...");
 
     // Dynamic imports
-    const { TezosToolkit, compose, MichelsonMap, UnitValue, RpcReadAdapter, getRevealFee } = await import('@taquito/taquito');
-    const { InMemorySigner, importKey } = await import('@taquito/signer');
+    const { TezosToolkit, compose, MichelsonMap, UnitValue, RpcReadAdapter, getRevealFee, importKey } = await import('@taquito/taquito');
+    const { InMemorySigner } = await import('@taquito/signer');
     const { BeaconWallet } = await import('@taquito/beacon-wallet');
     const { Tzip12Module, tzip12 } = await import('@taquito/tzip12');
-    const { Tzip16Module, tzip16, bytesToString, MichelsonStorageView } = await import('@taquito/tzip16');
-    const { stringToBytes, num2PaddedHex } = await import('@taquito/utils');
+    const { Tzip16Module, tzip16, MichelsonStorageView } = await import('@taquito/tzip16');
+    const { stringToBytes, num2PaddedHex, bytesToString } = await import('@taquito/utils');
     const { BigNumber } = await import('bignumber.js');
-    const { SigningType } = await import('@ecadlabs/beacon-dapp')
+    const { SigningType } = await import('@taquito/beacon-wallet/types')
     const { Parser, packDataBytes, emitMicheline } = await import('@taquito/michel-codec');
     const { b58Encode, PrefixV2 } = await import('@taquito/utils');
     const TransportWebHID = (await import('@ledgerhq/hw-transport-webhid')).default;
