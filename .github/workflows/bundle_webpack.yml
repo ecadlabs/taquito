@@ -2,6 +2,8 @@ name: Bundle Webpack
 
 on:
   pull_request:
+    paths-ignore:
+      - 'website/**'
   push:
     branches:
       - master
