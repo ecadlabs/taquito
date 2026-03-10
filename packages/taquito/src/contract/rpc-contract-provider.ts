@@ -100,7 +100,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
   private prepare = new PrepareProvider(this.context);
   /**
    *
-   * @description Return a well formatted json object of the contract storage
+   * Return a well formatted json object of the contract storage
    *
    * @param contract contract address you want to get the storage from
    * @param schema optional schema can either be the contract script rpc response or a michelson-encoder schema
@@ -129,7 +129,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
 
   /**
    *
-   * @description Return a well formatted json object of a big map value
+   * Return a well formatted json object of a big map value
    *
    * @param id Big Map ID
    * @param keyToEncode key to query (will be encoded properly according to the schema)
@@ -164,7 +164,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
 
   /**
    *
-   * @description Fetch multiple values in a big map
+   * Fetch multiple values in a big map
    * All values will be fetched on the same block level. If a block is specified in the request, the values will be fetched at it.
    * Otherwise, a first request will be done to the node to fetch the level of the head and all values will be fetched at this level.
    * If one of the keys does not exist in the big map, its value will be set to undefined.
@@ -232,7 +232,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
 
   /**
    *
-   * @description Return a well formatted json object of a sapling state
+   * Return a well formatted json object of a sapling state
    *
    * @param id Sapling state ID
    * @param block optional block level to fetch the value from
@@ -247,13 +247,13 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
 
   /**
    *
-   * @description Originate a new contract according to the script in parameters. Will sign and inject an operation using the current context
+   * Originate a new contract according to the script in parameters. Will sign and inject an operation using the current context
    *
    * @returns An operation handle with the result from the rpc node
    *
    * @warn You cannot specify storage and init at the same time (use init to pass the raw michelson representation of storage)
    *
-   * @param OriginationOperation Originate operation parameter
+   * @param params Originate operation parameter
    */
   async originate<TContract extends DefaultContractType = DefaultContractType>(
     params: OriginateParams<ContractStorageType<TContract>>
@@ -279,11 +279,11 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
 
   /**
    *
-   * @description Set the delegate for a contract. Will sign and inject an operation using the current context
+   * Set the delegate for a contract. Will sign and inject an operation using the current context
    *
    * @returns An operation handle with the result from the rpc node
    *
-   * @param SetDelegate operation parameter
+   * @param params SetDelegate operation parameter
    */
   async setDelegate(params: DelegateParams) {
     const sourceValidation = validateAddress(params.source ?? '');
@@ -317,11 +317,11 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
 
   /**
    *
-   * @description Register the current address as delegate. Will sign and inject an operation using the current context
+   * Register the current address as delegate. Will sign and inject an operation using the current context
    *
    * @returns An operation handle with the result from the rpc node
    *
-   * @param RegisterDelegate operation parameter
+   * @param params RegisterDelegate operation parameter
    */
   async registerDelegate(params: RegisterDelegateParams) {
     const estimate = await this.estimate(
@@ -342,11 +342,11 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
 
   /**
    *
-   * @description Transfer tz from current address to a specific address. Will sign and inject an operation using the current context
+   * Transfer tz from current address to a specific address. Will sign and inject an operation using the current context
    *
    * @returns An operation handle with the result from the rpc node
    *
-   * @param Transfer operation parameter
+   * @param params Transfer operation parameter
    */
   async transfer(params: TransferParams) {
     const toValidation = validateAddress(params.to);
@@ -375,11 +375,11 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
 
   /**
    *
-   * @description Stake a given amount for the source address
+   * Stake a given amount for the source address
    *
    * @returns An operation handle with the result from the rpc node
    *
-   * @param Stake pseudo-operation parameter
+   * @param params Stake pseudo-operation parameter
    */
   async stake(params: StakeParams) {
     const sourceValidation = validateAddress(params.source ?? '');
@@ -413,13 +413,13 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
 
   /**
    *
-   * @description Unstake the given amount. If "everything" is given as amount, unstakes everything from the staking balance.
+   * Unstake the given amount. If "everything" is given as amount, unstakes everything from the staking balance.
    * Unstaked tez remains frozen for a set amount of cycles (the slashing period) after the operation. Once this period is over,
    * the operation "finalize unstake" must be called for the funds to appear in the liquid balance.
    *
    * @returns An operation handle with the result from the rpc node
    *
-   * @param Unstake pseudo-operation parameter
+   * @param params Unstake pseudo-operation parameter
    */
   async unstake(params: UnstakeParams) {
     const sourceValidation = validateAddress(params.source ?? '');
@@ -454,10 +454,10 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
 
   /**
    *
-   * @description Transfer all the finalizable unstaked funds of the source to their liquid balance
+   * Transfer all the finalizable unstaked funds of the source to their liquid balance
    * @returns An operation handle with the result from the rpc node
    *
-   * @param Finalize_unstake pseudo-operation parameter
+   * @param params Finalize_unstake pseudo-operation parameter
    */
   async finalizeUnstake(params: FinalizeUnstakeParams) {
     const sourceValidation = validateAddress(params.source ?? '');
@@ -495,11 +495,11 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
 
   /**
    *
-   * @description Transfer Tickets to a smart contract address
+   * Transfer Tickets to a smart contract address
    *
    * @returns An operation handle with the result from the rpc node
    *
-   * @param TransferTicketParams operation parameter
+   * @param params TransferTicket operation parameter
    */
   async transferTicket(params: TransferTicketParams) {
     const destinationValidation = validateAddress(params.destination);
@@ -531,10 +531,10 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
 
   /**
    *
-   * @description Reveal the public key of the current address. Will throw an error if the address is already revealed.
+   * Reveal the public key of the current address. Will throw an error if the address is already revealed.
    * @returns An operation handle with the result from the rpc node
    *
-   * @param RevealParams operation parameter
+   * @param params Reveal operation parameter
    */
   async reveal(params: RevealParams) {
     const publicKeyHash = await this.signer.publicKeyHash();
@@ -570,7 +570,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
 
   /**
    *
-   * @description Register a Micheline expression in a global table of constants. Will sign and inject an operation using the current context
+   * Register a Micheline expression in a global table of constants. Will sign and inject an operation using the current context
    *
    * @returns An operation handle with the result from the rpc node
    *
@@ -601,7 +601,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
 
   /**
    *
-   * @description Increase the paid storage of a smart contract
+   * Increase the paid storage of a smart contract
    *
    * @returns An operation handle with the result from the rpc node
    *
@@ -635,7 +635,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
 
   /**
    *
-   * @description Transfers the spendable balance of the delegate to destination when consensus_key is the active consensus key of delegate
+   * Transfers the spendable balance of the delegate to destination when consensus_key is the active consensus key of delegate
    *
    * @returns An operation handle with the result from the rpc node
    *
@@ -653,11 +653,11 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
 
   /**
    *
-   * @description Submit a ballot vote to a specified proposal
+   * Submit a ballot vote to a specified proposal
    *
    * @returns An operation handle with the result from the rpc node
    *
-   * @param BallotParams Ballot operation parameter
+   * @param params Ballot operation parameter
    */
   async ballot(params: BallotParams) {
     const publicKeyHash = await this.signer.publicKeyHash();
@@ -679,11 +679,11 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
 
   /**
    *
-   * @description Submit or upvote a proposal during the Proposal period
+   * Submit or upvote a proposal during the Proposal period
    *
    * @returns An operation handle with the result from the rpc node
    *
-   * @param ProposalsParams Proposals operation parameter
+   * @param params Proposals operation parameter
    */
   async proposals(params: ProposalsParams) {
     const publicKeyHash = await this.signer.publicKeyHash();
@@ -704,10 +704,10 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
 
   /**
    *
-   * @description Update the consensus key of a delegate starting from the current cycle plus CONSENSUS_RIGHTS_DELAY + 1
+   * Update the consensus key of a delegate starting from the current cycle plus CONSENSUS_RIGHTS_DELAY + 1
    * @returns An operation handle with the result from the rpc node
    *
-   * @param UpdateConsensusKeyParams
+   * @param params UpdateConsensusKey operation parameter
    */
   async updateConsensusKey(params: UpdateConsensusKeyParams) {
     const publicKeyHash = await this.signer.publicKeyHash();
@@ -746,10 +746,10 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
 
   /**
    *
-   * @description Updates the companion key of the delegate starting from the current cycle plus CONSENSUS_KEY_ACTIVATION_DELAY + 1
+   * Updates the companion key of the delegate starting from the current cycle plus CONSENSUS_KEY_ACTIVATION_DELAY + 1
    * @returns An operation handle with the result from the rpc node
    *
-   * @param UpdateCompanionKeyParams
+   * @param params UpdateCompanionKey operation parameter
    */
   async updateCompanionKey(params: UpdateCompanionKeyParams) {
     const publicKeyHash = await this.signer.publicKeyHash();
@@ -784,8 +784,8 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
   }
 
   /**
-   * @description Adds messages to the rollup inbox that can be executed/claimed after it gets cemented
-   * @param SmartRollupAddMessagesParams
+   * Adds messages to the rollup inbox that can be executed/claimed after it gets cemented
+   * @param params SmartRollupAddMessages operation parameter
    * @returns An operation handle with results from the RPC node
    */
   async smartRollupAddMessages(params: SmartRollupAddMessagesParams) {
@@ -813,8 +813,8 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
   }
 
   /**
-   * @description Creates a smart rollup originate operation
-   * @param SmartRollupOriginateParams
+   * Creates a smart rollup originate operation
+   * @param params SmartRollupOriginate operation parameter
    * @returns An operation handle with results from the RPC node
    */
   async smartRollupOriginate(params: SmartRollupOriginateParams) {
@@ -843,8 +843,8 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
   }
 
   /**
-   * @description Execute a message from a smart rollup's outbox of a cemented commitment
-   * @param SmartRollupExecuteOutboxMessageParams
+   * Execute a message from a smart rollup's outbox of a cemented commitment
+   * @param params SmartRollupExecuteOutboxMessage operation parameter
    * @returns An operation handle with results from the RPC node
    */
   async smartRollupExecuteOutboxMessage(params: SmartRollupExecuteOutboxMessageParams) {
@@ -873,7 +873,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
 
   /**
    *
-   * @description A failing_noop operation that is guaranteed to fail.
+   * A failing_noop operation that is guaranteed to fail.
    *
    * @returns A FailingNoopOperation object representing the signed failing_noop operation
    *
@@ -908,7 +908,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
 
   /**
    *
-   * @description Create an smart contract abstraction for the address specified.
+   * Create an smart contract abstraction for the address specified.
    *
    * @param address Smart contract address
    * @throws {@link InvalidContractAddressError}
@@ -939,7 +939,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
 
   /**
    *
-   * @description Batch a group of operation together. Operations will be applied in the order in which they are added to the batch
+   * Batch a group of operation together. Operations will be applied in the order in which they are added to the batch
    *
    * @returns A batch object from which we can add more operation or send a command to execute the batch
    *

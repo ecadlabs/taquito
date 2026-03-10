@@ -2,7 +2,7 @@ import { PermissionDeniedError, TaquitoError } from '@taquito/core';
 
 /**
  *  @category Error
- *  @description Error that indicates an unauthorized operation being attempted
+ *  Error that indicates an unauthorized operation being attempted
  */
 export class OperationNotAuthorizedError extends PermissionDeniedError {
   constructor(public readonly message: string, public readonly cause: any) {
@@ -13,7 +13,7 @@ export class OperationNotAuthorizedError extends PermissionDeniedError {
 
 /**
  *  @category Error
- *  @description Error that indicates bad signing data
+ *  Error that indicates bad signing data
  */
 export class BadSigningDataError extends TaquitoError {
   constructor(
@@ -31,7 +31,7 @@ export class BadSigningDataError extends TaquitoError {
 
 /**
  *  @category Error
- *  @description Error that indicates a mismatch between the initialized and the requested public key
+ *  Error that indicates a mismatch between the initialized and the requested public key
  */
 export class PublicKeyVerificationError extends TaquitoError {
   constructor(
@@ -47,7 +47,7 @@ export class PublicKeyVerificationError extends TaquitoError {
 
 /**
  *  @category Error
- *  @description Error
+ *  Error
  */
 export class SignatureVerificationError extends TaquitoError {
   public name = 'SignatureVerificationFailedError';

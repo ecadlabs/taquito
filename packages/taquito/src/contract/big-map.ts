@@ -8,9 +8,9 @@ export class BigMapAbstraction {
 
   /**
    *
-   * @description Fetch one value in a big map
+   * Fetch one value in a big map
    *
-   * @param keysToEncode Key to query (will be encoded properly according to the schema)
+   * @param keyToEncode Key to query (will be encoded properly according to the schema)
    * @param block optional block level to fetch the values from (head will be use by default)
    * @returns Return a well formatted json object of a big map value or undefined if the key is not found in the big map
    *
@@ -35,7 +35,7 @@ export class BigMapAbstraction {
 
   /**
    *
-   * @description Fetch multiple values in a big map
+   * Fetch multiple values in a big map
    * All values will be fetched on the same block level. If a block is specified in the request, the values will be fetched at it.
    * Otherwise, a first request will be done to the node to fetch the level of the head and all values will be fetched at this level.
    * If one of the keys does not exist in the big map, its value will be set to undefined.

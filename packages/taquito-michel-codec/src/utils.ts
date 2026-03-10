@@ -38,12 +38,11 @@ export type Nullable<T> = { [P in keyof T]: T[P] | null };
 
 /**
  *  @category Error
- *  @description Error that indicates a Michelson failure occurring
+ *  Error that indicates a Michelson failure occurring
  */
 export class MichelsonError<T extends Expr = Expr> extends TaquitoError {
   /**
    * @param val Value of a AST node caused the error
-   * @param path Path to a node caused the error
    * @param message An error message
    */
   constructor(

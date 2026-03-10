@@ -5,7 +5,7 @@ import { TaquitoError } from '@taquito/core';
 
 /**
  *  @category Error
- *  @description Error that indicates an invalid map type being passed or used
+ *  Error that indicates an invalid map type being passed or used
  */
 export class InvalidMapTypeError extends TaquitoError {
   constructor(public readonly mapType: any, public readonly reason: string) {
@@ -48,7 +48,7 @@ function validateMapType(value: MichelsonV1Expression): asserts value is {
 
 /**
  *  @category Error
- *  @description Error that indicates a map type mismatch, where an attempt to set a key or value in a Map doesn't match the defined type of the Map
+ *  Error that indicates a map type mismatch, where an attempt to set a key or value in a Map doesn't match the defined type of the Map
  */
 export class MapTypecheckError extends TaquitoError {
   name = 'MapTypecheckError';
@@ -70,7 +70,7 @@ export class MapTypecheckError extends TaquitoError {
 }
 
 /**
- * @description Michelson Map is an abstraction over the michelson native map. It supports complex Pair as key
+ * Michelson Map is an abstraction over the michelson native map. It supports complex Pair as key
  */
 export class MichelsonMap<K extends MichelsonMapKey, T> {
   private valueMap = new Map<string, T>();
@@ -183,13 +183,13 @@ export class MichelsonMap<K extends MichelsonMapKey, T> {
 
   /**
    *
-   * @description Set a key and a value in the MichelsonMap. If the key already exists, override the current value.
+   * Set a key and a value in the MichelsonMap. If the key already exists, override the current value.
    *
    * @example map.set("myKey", "myValue") // Using a string as key
    *
    * @example map.set({0: "test", 1: "test1"}, "myValue") // Using a pair as key
    *
-   * @warn The same key can be represented in multiple ways, depending on the type of the key. This duplicate key situation will cause a runtime error (duplicate key) when sending the map data to the Tezos RPC node.
+   * @remarks The same key can be represented in multiple ways, depending on the type of the key. This duplicate key situation will cause a runtime error (duplicate key) when sending the map data to the Tezos RPC node.
    *
    * For example, consider a contract with a map whose key is of type boolean.  If you set the following values in MichelsonMap: map.set(false, "myValue") and map.set(null, "myValue").
    *

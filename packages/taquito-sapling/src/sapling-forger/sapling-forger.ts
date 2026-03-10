@@ -9,7 +9,7 @@ import BigNumber from 'bignumber.js';
 
 export class SaplingForger {
   /**
-   * @description Forge sapling transactions
+   * Forge sapling transactions
    * @param spendDescriptions the list of spend descriptions
    * @param outputDescriptions the list of output descriptions
    * @param signature signature hash
@@ -38,7 +38,7 @@ export class SaplingForger {
   }
 
   /**
-   * @description Forge list of spend descriptions
+   * Forge list of spend descriptions
    * @param spendDescriptions list of spend descriptions
    * @returns concatenated forged bytes of type Buffer
    */
@@ -64,7 +64,7 @@ export class SaplingForger {
   }
 
   /**
-   * @description Forge list of output descriptions
+   * Forge list of output descriptions
    * @param outputDescriptions list of output descriptions
    * @returns concatenated forged bytes of type Buffer
    */

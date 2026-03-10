@@ -3,7 +3,7 @@ import { Semantic, SemanticEncoding, Token, TokenFactory, TokenValidationError }
 
 /**
  *  @category Error
- *  @description Error that indicates a failure happening when parsing encoding/executing a Sapling State
+ *  Error that indicates a failure happening when parsing encoding/executing a Sapling State
  */
 export class SaplingStateValidationError extends TokenValidationError {
   name = 'SaplingStateValidationError';

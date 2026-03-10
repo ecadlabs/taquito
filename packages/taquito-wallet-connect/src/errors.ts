@@ -2,7 +2,7 @@ import { PermissionScopeMethods } from './types';
 
 /**
  *  @category Error
- *  @description Error that indicates missing required permission scopes
+ *  Error that indicates missing required permission scopes
  */
 export class MissingRequiredScope extends Error {
   name = 'MissingRequiredScope';
@@ -14,7 +14,7 @@ export class MissingRequiredScope extends Error {
 
 /**
  *  @category Error
- *  @description Error that indicates the wallet returned an invalid namespace
+ *  Error that indicates the wallet returned an invalid namespace
  */
 export class InvalidReceivedSessionNamespace extends Error {
   name = 'InvalidReceivedSessionNamespace';
@@ -37,7 +37,7 @@ export class InvalidReceivedSessionNamespace extends Error {
 
 /**
  *  @category Error
- *  @description Error that indicates an invalid session key being passed
+ *  Error that indicates an invalid session key being passed
  */
 export class InvalidSessionKey extends Error {
   name = 'InvalidSessionKey';
@@ -49,7 +49,7 @@ export class InvalidSessionKey extends Error {
 
 /**
  *  @category Error
- *  @description Error that indicates the pkh is not part of the active accounts in the session
+ *  Error that indicates the pkh is not part of the active accounts in the session
  */
 export class InvalidAccount extends Error {
   name = 'InvalidAccount';
@@ -61,7 +61,7 @@ export class InvalidAccount extends Error {
 
 /**
  *  @category Error
- *  @description Error that indicates the network is not part of the active networks in the session
+ *  Error that indicates the network is not part of the active networks in the session
  */
 export class InvalidNetwork extends Error {
   name = 'InvalidNetwork';
@@ -73,7 +73,7 @@ export class InvalidNetwork extends Error {
 
 /**
  *  @category Error
- *  @description Error that indicates the combinaison pkh-network is not part of the active session
+ *  Error that indicates the combinaison pkh-network is not part of the active session
  */
 export class InvalidNetworkOrAccount extends Error {
   name = 'InvalidNetworkOrAccount';
@@ -90,7 +90,7 @@ export class InvalidNetworkOrAccount extends Error {
 
 /**
  *  @category Error
- *  @description Error that indicates the connection could not be established
+ *  Error that indicates the connection could not be established
  */
 export class ConnectionFailed extends Error {
   name = 'ConnectionFailed';
@@ -102,7 +102,7 @@ export class ConnectionFailed extends Error {
 
 /**
  *  @category Error
- *  @description Error that indicates there is no active session
+ *  Error that indicates there is no active session
  */
 export class NotConnected extends Error {
   name = 'NotConnected';
@@ -114,7 +114,7 @@ export class NotConnected extends Error {
 
 /**
  *  @category Error
- *  @description Error that indicates the active account is not specified
+ *  Error that indicates the active account is not specified
  */
 export class ActiveAccountUnspecified extends Error {
   name = 'ActiveAccountUnspecified';
@@ -126,7 +126,7 @@ export class ActiveAccountUnspecified extends Error {
 
 /**
  *  @category Error
- *  @description Error that indicates the active network is not specified
+ *  Error that indicates the active network is not specified
  */
 export class ActiveNetworkUnspecified extends Error {
   name = 'ActiveNetworkUnspecified';
@@ -138,7 +138,7 @@ export class ActiveNetworkUnspecified extends Error {
 
 /**
  *  @category Error
- *  @description Error that indicates the session is invalid
+ *  Error that indicates the session is invalid
  */
 export class InvalidSession extends Error {
   name = 'InvalidSession';

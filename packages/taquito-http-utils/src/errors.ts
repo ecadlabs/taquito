@@ -3,7 +3,7 @@ import { STATUS_CODE } from './status_code';
 
 /**
  *  @category Error
- *  @description Error that indicates a general failure in making the HTTP request
+ *  Error that indicates a general failure in making the HTTP request
  */
 export class HttpRequestFailed extends NetworkError {
   constructor(
@@ -19,7 +19,7 @@ export class HttpRequestFailed extends NetworkError {
 
 /**
  *  @category Error
- *  @description Error thrown when the endpoint returns an HTTP error to the client
+ *  Error thrown when the endpoint returns an HTTP error to the client
  */
 export class HttpResponseError extends NetworkError {
   constructor(
@@ -36,7 +36,7 @@ export class HttpResponseError extends NetworkError {
 
 /**
  *  @category Error
- *  @description Error
+ *  Error
  */
 export class HttpTimeoutError extends NetworkError {
   constructor(

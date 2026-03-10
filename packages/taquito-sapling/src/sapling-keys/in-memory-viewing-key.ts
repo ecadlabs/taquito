@@ -3,7 +3,7 @@ import * as sapling from '@airgap/sapling-wasm';
 import { decryptKey } from './helpers';
 
 /**
- * @description Holds the viewing key
+ * Holds the viewing key
  */
 export class InMemoryViewingKey {
   #fullViewingKey: Buffer;
@@ -12,7 +12,7 @@ export class InMemoryViewingKey {
   }
 
   /**
-   * @description Allows to instantiate the InMemoryViewingKey from an encrypted/unencrypted spending key
+   * Allows to instantiate the InMemoryViewingKey from an encrypted/unencrypted spending key
    *
    * @param spendingKey Base58Check-encoded spending key
    * @param password Optional password to decrypt the spending key
@@ -29,7 +29,7 @@ export class InMemoryViewingKey {
   }
 
   /**
-   * @description Retrieve the full viewing key
+   * Retrieve the full viewing key
    * @returns Buffer representing the full viewing key
    *
    */
@@ -38,7 +38,7 @@ export class InMemoryViewingKey {
   }
 
   /**
-   * @description Retrieve the outgoing viewing key
+   * Retrieve the outgoing viewing key
    * @returns Buffer representing the outgoing viewing key
    *
    */
@@ -47,7 +47,7 @@ export class InMemoryViewingKey {
   }
 
   /**
-   * @description Retrieve the incoming viewing key
+   * Retrieve the incoming viewing key
    * @returns Buffer representing the incoming viewing key
    *
    */
@@ -56,7 +56,7 @@ export class InMemoryViewingKey {
   }
 
   /**
-   * @description Retrieve a payment address
+   * Retrieve a payment address
    * @param addressIndex used to determine which diversifier should be used to derive the address, default is 0
    * @returns Base58Check-encoded address and its index
    *

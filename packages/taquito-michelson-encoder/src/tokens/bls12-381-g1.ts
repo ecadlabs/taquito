@@ -3,7 +3,7 @@ import { SemanticEncoding, Token, TokenFactory, TokenValidationError } from './t
 
 /**
  *  @category Error
- *  @description Error that indicates a failure happening when parsing encoding/executing a BLS12-381 curve G1
+ *  Error that indicates a failure happening when parsing encoding/executing a BLS12-381 curve G1
  */
 export class Bls12381g1ValidationError extends TokenValidationError {
   name = 'Bls12381g1ValidationError';

@@ -2,7 +2,7 @@ import { ParameterValidationError, UnsupportedActionError } from '@taquito/core'
 
 /**
  *  @category Error
- *  @description Error that indicates an invalid Mnemonic being passed or used
+ *  Error that indicates an invalid Mnemonic being passed or used
  */
 export class InvalidMnemonicError extends ParameterValidationError {
   /**
@@ -19,7 +19,7 @@ export class InvalidMnemonicError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error that indicates a curve with incorrect bit size being passed or used
+ *  Error that indicates a curve with incorrect bit size being passed or used
  */
 export class InvalidBitSize extends ParameterValidationError {
   constructor(public readonly message: string) {
@@ -30,7 +30,7 @@ export class InvalidBitSize extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error that indicates an unsupported cureve being passed or used
+ *  Error that indicates an unsupported cureve being passed or used
  */
 export class InvalidCurveError extends ParameterValidationError {
   constructor(public readonly message: string) {
@@ -41,7 +41,7 @@ export class InvalidCurveError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error that indicates a seed with invalid length being passed or used
+ *  Error that indicates a seed with invalid length being passed or used
  */
 export class InvalidSeedLengthError extends ParameterValidationError {
   constructor(public readonly seedLength: number) {
@@ -53,7 +53,7 @@ export class InvalidSeedLengthError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error that indicates a feature still under developement
+ *  Error that indicates a feature still under developement
  */
 export class ToBeImplemented extends UnsupportedActionError {
   constructor() {
@@ -65,7 +65,7 @@ export class ToBeImplemented extends UnsupportedActionError {
 
 /**
  *  @category Error
- *  @description Error that indicates an invalid passphrase being passed or used
+ *  Error that indicates an invalid passphrase being passed or used
  */
 export class InvalidPassphraseError extends ParameterValidationError {
   constructor(public readonly message: string) {

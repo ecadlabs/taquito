@@ -24,7 +24,7 @@ import { DEFAULT_SMART_CONTRACT_METHOD_NAME } from './constants';
 export { DEFAULT_SMART_CONTRACT_METHOD_NAME };
 
 /**
- * @description Utility class to retrieve data from a smart contract's storage without incurring fees via a contract's view method
+ * Utility class to retrieve data from a smart contract's storage without incurring fees via a contract's view method
  */
 export class ContractView {
   constructor(
@@ -99,7 +99,7 @@ export type DefaultContractType = ContractAbstraction<ContractProvider>;
 export type DefaultWalletType = ContractAbstraction<Wallet>;
 
 /**
- * @description Smart contract abstraction
+ * Smart contract abstraction
  */
 export class ContractAbstraction<
   T extends ContractProvider | Wallet,
@@ -110,19 +110,19 @@ export class ContractAbstraction<
 > {
   private contractMethodFactory: ContractMethodFactory<T>;
   /**
-   * @description Contains methods that are implemented by the target Tezos Smart Contract, and offers the user to call the Smart Contract methods as if they were native TS/JS methods.
+   * Contains methods that are implemented by the target Tezos Smart Contract, and offers the user to call the Smart Contract methods as if they were native TS/JS methods.
    * `methodsObject` serves the exact same purpose as the `methods` member. The difference is that it allows passing the parameter in an object format when calling the smart contract method (instead of the flattened representation)
    * NB: if the contract contains annotation it will include named properties; if not it will be indexed by a number.
    *
    */
   public methodsObject: TMethodsObject = {} as TMethodsObject;
   /**
-   * @description Contains lamda views (tzip4) that are implemented by the target Tezos Smart Contract, and offers the user to call the lambda views as if they were native TS/JS methods.
+   * Contains lamda views (tzip4) that are implemented by the target Tezos Smart Contract, and offers the user to call the lambda views as if they were native TS/JS methods.
    * NB: These are the view defined in the tzip4 standard, not the views introduced by the Hangzhou protocol.
    */
   public views: TViews = {} as TViews;
   /**
-   * @description Contains on-chain views that are defined by the target Tezos Smart Contract, and offers the user to simulate the views execution as if they were native TS/JS methods.
+   * Contains on-chain views that are defined by the target Tezos Smart Contract, and offers the user to simulate the views execution as if they were native TS/JS methods.
    * NB: the expected format for the parameter when calling a smart contract view is the object format (same format as for the storage) and not the flattened representation.
    *
    */
@@ -265,7 +265,7 @@ export class ContractAbstraction<
   }
 
   /**
-   * @description Return a friendly representation of the smart contract storage
+   * Return a friendly representation of the smart contract storage
    */
   public storage<T extends TStorage = TStorage>() {
     return this.storageProvider.getStorage<T>(this.address, this.schema);

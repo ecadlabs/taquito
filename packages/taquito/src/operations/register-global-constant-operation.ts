@@ -14,14 +14,14 @@ import {
 } from './types';
 
 /**
- * @description RegisterGlobalConstantOperation provides utility functions to fetch a newly issued operation of kind register_global_constant
+ * RegisterGlobalConstantOperation provides utility functions to fetch a newly issued operation of kind register_global_constant
  */
 export class RegisterGlobalConstantOperation
   extends Operation
   implements GasConsumingOperation, StorageConsumingOperation, FeeConsumingOperation
 {
   /**
-   * @description Hash (index) of the newly registered constant
+   * Hash (index) of the newly registered constant
    */
   public readonly globalConstantHash?: string;
   constructor(

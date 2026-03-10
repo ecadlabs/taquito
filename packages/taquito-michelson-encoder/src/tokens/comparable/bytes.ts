@@ -10,7 +10,7 @@ import { stripHexPrefix } from '@taquito/utils';
 
 /**
  *  @category Error
- *  @description Error that indicates a failure happening when parsing encoding/executing Bytes
+ *  Error that indicates a failure happening when parsing encoding/executing Bytes
  */
 export class BytesValidationError extends TokenValidationError {
   name = 'BytesValidationError';

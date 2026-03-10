@@ -3,9 +3,9 @@ import { TezosToolkit } from './taquito';
 
 /**
  *
- * @description Import a key to sign operation with the side-effect of setting the Tezos instance to use the InMemorySigner provider
+ * Import a key to sign operation with the side-effect of setting the Tezos instance to use the InMemorySigner provider
  *
- * @warn The JSON faucets are no longer available on https://teztnets.com/
+ * @remarks The JSON faucets are no longer available on https://teztnets.com/
  * @param toolkit The toolkit instance to attach a signer
  * @param privateKeyOrEmail Key to load in memory
  * @param passphrase If the key is encrypted passphrase to decrypt it

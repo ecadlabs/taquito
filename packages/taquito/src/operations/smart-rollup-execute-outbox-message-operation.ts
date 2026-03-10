@@ -15,7 +15,7 @@ import {
 
 /**
  *
- * @description SmartRollupExecuteOutboxMessage Operation provides utility to fetch properties for Operation of kind SmartRollupExecuteOutboxMessage
+ * SmartRollupExecuteOutboxMessage Operation provides utility to fetch properties for Operation of kind SmartRollupExecuteOutboxMessage
  *
  */
 

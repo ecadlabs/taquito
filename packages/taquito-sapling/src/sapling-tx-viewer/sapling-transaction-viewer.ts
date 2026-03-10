@@ -12,7 +12,7 @@ import { SaplingTransactionViewerError } from '../errors';
 import { TzReadProvider } from '@taquito/taquito';
 
 /**
- * @description Allows to retrieve and decrypt sapling transactions using on a viewing key
+ * Allows to retrieve and decrypt sapling transactions using on a viewing key
  *
  * @param inMemoryViewingKey Holds the sapling viewing key
  * @param saplingContractId Address of the sapling contract or sapling id if the smart contract contains multiple sapling states
@@ -34,7 +34,7 @@ export class SaplingTransactionViewer {
   }
 
   /**
-   * @description Retrieve the unspent balance associated with the configured viewing key and sapling state
+   * Retrieve the unspent balance associated with the configured viewing key and sapling state
    *
    * @returns the balance in mutez represented as a BigNumber
    *
@@ -62,7 +62,7 @@ export class SaplingTransactionViewer {
   }
 
   /**
-   * @description Retrieve all the incoming and outgoing transactions associated with the configured viewing key.
+   * Retrieve all the incoming and outgoing transactions associated with the configured viewing key.
    * The response properties are in Uint8Array format; use the getIncomingAndOutgoingTransactions method for readable properties
    *
    */
@@ -101,7 +101,7 @@ export class SaplingTransactionViewer {
   }
 
   /**
-   * @description Retrieve all the incoming and outgoing decoded transactions associated with the configured viewing key
+   * Retrieve all the incoming and outgoing decoded transactions associated with the configured viewing key
    *
    */
   async getIncomingAndOutgoingTransactions(): Promise<SaplingIncomingAndOutgoingTransaction> {

@@ -14,7 +14,7 @@ import {
 } from './types';
 
 /**
- * @description SmartRollupAddMessagesOperation provides utility to fetch properties of SmartRollupAddMessages
+ * SmartRollupAddMessagesOperation provides utility to fetch properties of SmartRollupAddMessages
  */
 
 export class SmartRollupAddMessagesOperation

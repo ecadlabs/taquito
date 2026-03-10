@@ -16,7 +16,7 @@ import {
 } from './types';
 
 /**
- * @description Reveal operation provides utility functions to fetch a newly issued revelation
+ * Reveal operation provides utility functions to fetch a newly issued revelation
  */
 export class RevealOperation
   extends Operation
