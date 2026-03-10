@@ -192,7 +192,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress, knownTicketCont
       const ticketContract = await Tezos.contract.at(knownTicketContract)
       const ticket = { ticketer: knownTicketContract, content_type: { prim: 'string' }, content: { string: 'Ticket' } };
       const issueOp = await ticketContract.methodsObject.default([await Tz2.signer.publicKeyHash(), '3']).send()
-      await issueOp.confirmation()
+      await issueOp.confirmation(2)
 
       const estimated = await Tz2.estimate.transferTicket({
         ticketContents: ticket.content,
