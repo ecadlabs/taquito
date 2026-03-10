@@ -41,7 +41,7 @@ export const defaultConfigConfirmation: ConfigConfirmation = {
 };
 
 /**
- * @description Encapsulate common service used throughout different part of the library
+ * Encapsulate common service used throughout different part of the library
  */
 export class Context {
   private _rpcClient: RpcClientInterface;
@@ -215,7 +215,7 @@ export class Context {
   }
 
   /**
-   * @description Create a copy of the current context. Useful when you have long running operation and you do not want a context change to affect the operation
+   * Create a copy of the current context. Useful when you have long running operation and you do not want a context change to affect the operation
    */
   clone(): Context {
     return new Context(
@@ -235,14 +235,14 @@ export class Context {
   }
 
   /**
-   * @description Allows extensions set on the TezosToolkit to inject logic into the context
+   * Allows extensions set on the TezosToolkit to inject logic into the context
    */
   registerProviderDecorator(fx: (context: Context) => Context) {
     this.providerDecorator.push(fx);
   }
 
   /**
-   * @description Applies the decorators on a cloned instance of the context and returned this cloned instance.
+   * Applies the decorators on a cloned instance of the context and returned this cloned instance.
    * The decorators are functions that inject logic into the context.
    * They are provided by the extensions set on the TezosToolkit by calling the registerProviderDecorator method.
    */

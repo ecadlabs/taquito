@@ -16,7 +16,7 @@ import { TaquitoError } from '@taquito/core';
 
 /**
  *  @category Error
- *  @description Error that indicates a failure when parsing Micheline expressions
+ *  Error that indicates a failure when parsing Micheline expressions
  */
 export class MichelineParseError extends TaquitoError {
   /**
@@ -34,7 +34,7 @@ export class MichelineParseError extends TaquitoError {
 
 /**
  *  @category Error
- *  @description Error indicates a failure when parsing Micheline JSON
+ *  Error indicates a failure when parsing Micheline JSON
  */
 export class JSONParseError extends TaquitoError {
   /**

@@ -2,7 +2,7 @@ import { ParameterValidationError, TaquitoError } from '@taquito/core';
 
 /**
  *  @category Error
- *  @description Error indicates the spending key is invalid
+ *  Error indicates the spending key is invalid
  */
 export class InvalidSpendingKey extends ParameterValidationError {
   constructor(public readonly sk: string, public readonly errorDetail: string) {
@@ -14,7 +14,7 @@ export class InvalidSpendingKey extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error indicates an invalid Merkle tree being passed
+ *  Error indicates an invalid Merkle tree being passed
  */
 export class InvalidMerkleTreeError extends ParameterValidationError {
   constructor(public readonly root: string) {
@@ -28,7 +28,7 @@ export class InvalidMerkleTreeError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error indicates a failure when trying to construct the Merkle tree
+ *  Error indicates a failure when trying to construct the Merkle tree
  */
 export class TreeConstructionFailure extends TaquitoError {
   constructor(public readonly message: string) {
@@ -39,7 +39,7 @@ export class TreeConstructionFailure extends TaquitoError {
 
 /**
  *  @category Error
- *  @description Error indicates the memo is invalid
+ *  Error indicates the memo is invalid
  */
 export class InvalidMemo extends ParameterValidationError {
   constructor(public readonly memo: string, public readonly errorDetails: string) {
@@ -51,7 +51,7 @@ export class InvalidMemo extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error indicates not enough balance to prepare the sapling transaction
+ *  Error indicates not enough balance to prepare the sapling transaction
  */
 export class InsufficientBalance extends TaquitoError {
   constructor(public readonly realBalance: string, public readonly amountToSpend: string) {
@@ -63,7 +63,7 @@ export class InsufficientBalance extends TaquitoError {
 
 /**
  *  @category Error
- *  @description Error indicates SaplingTransactionViewer failure
+ *  Error indicates SaplingTransactionViewer failure
  */
 export class SaplingTransactionViewerError extends TaquitoError {
   constructor(public readonly message: string) {

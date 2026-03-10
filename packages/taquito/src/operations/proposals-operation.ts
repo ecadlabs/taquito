@@ -9,7 +9,7 @@ import { ForgedBytes } from './types';
 
 /**
  *
- * @description ProposalsOperation provides utility functions to fetch a new operation of kind proposals
+ * ProposalsOperation provides utility functions to fetch a new operation of kind proposals
  *
  */
 export class ProposalsOperation extends Operation {

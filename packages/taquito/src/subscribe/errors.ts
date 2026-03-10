@@ -3,7 +3,7 @@ import { FilterExpression } from '../taquito';
 
 /**
  *  @category Error
- *  @description Error that indicates an unsupported event being passed or used
+ *  Error that indicates an unsupported event being passed or used
  */
 export class UnsupportedEventError extends ParameterValidationError {
   constructor(public readonly type: string) {
@@ -15,7 +15,7 @@ export class UnsupportedEventError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error that indicates an invalid filter expression being passed or used
+ *  Error that indicates an invalid filter expression being passed or used
  */
 export class InvalidFilterExpressionError extends ParameterValidationError {
   constructor(public readonly invalidExpression: FilterExpression) {

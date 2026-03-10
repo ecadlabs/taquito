@@ -25,51 +25,47 @@ import { ContractMethodObject, ContractProvider } from '../contract';
 export interface EstimationProvider {
   /**
    *
-   * @description Estimate gasLimit, storageLimit and fees for an origination operation
+   * Estimate gasLimit, storageLimit and fees for an origination operation
    *
    * @returns An estimation of gasLimit, storageLimit and fees for the operation
    *
-   * @param Estimate
+   * @param params originate operation parameter
    */
   originate(params: OriginateParams): Promise<Estimate>;
 
   /**
    *
-   * @description Estimate gasLimit, storageLimit and fees for an transfer operation
+   * Estimate gasLimit, storageLimit and fees for an transfer operation
    *
    * @returns An estimation of gasLimit, storageLimit and fees for the operation
    *
-   * @param Estimate
    */
   transfer({ fee, storageLimit, gasLimit, ...rest }: TransferParams): Promise<Estimate>;
 
   /**
    *
-   * @description Estimate gasLimit, storageLimit and fees for an stake pseudo-operation
+   * Estimate gasLimit, storageLimit and fees for an stake pseudo-operation
    *
    * @returns An estimation of gasLimit, storageLimit and fees for the operation
    *
-   * @param Estimate
    */
   stake({ fee, storageLimit, gasLimit, ...rest }: StakeParams): Promise<Estimate>;
 
   /**
    *
-   * @description Estimate gasLimit, storageLimit and fees for an unstake pseudo-operation
+   * Estimate gasLimit, storageLimit and fees for an unstake pseudo-operation
    *
    * @returns An estimation of gasLimit, storageLimit and fees for the operation
    *
-   * @param Estimate
    */
   unstake({ fee, storageLimit, gasLimit, ...rest }: UnstakeParams): Promise<Estimate>;
 
   /**
    *
-   * @description Estimate gasLimit, storageLimit and fees for an finalize_unstake pseudo-operation
+   * Estimate gasLimit, storageLimit and fees for an finalize_unstake pseudo-operation
    *
    * @returns An estimation of gasLimit, storageLimit and fees for the operation
    *
-   * @param Estimate
    */
   finalizeUnstake({
     fee,
@@ -80,40 +76,39 @@ export interface EstimationProvider {
 
   /**
    *
-   * @description Estimate gasLimit, storageLimit and fees for an transferTicket operation
+   * Estimate gasLimit, storageLimit and fees for an transferTicket operation
    *
    * @returns An estimation of gasLimit, storageLimit and fees for the operation
    *
-   * @param Estimate
    */
   transferTicket({ fee, storageLimit, gasLimit, ...rest }: TransferTicketParams): Promise<Estimate>;
 
   /**
    *
-   * @description Estimate gasLimit, storageLimit and fees for a delegate operation
+   * Estimate gasLimit, storageLimit and fees for a delegate operation
    *
    * @returns An estimation of gasLimit, storageLimit and fees for the operation
    *
-   * @param Estimate
+   * @param params delegate operation parameter
    */
   setDelegate(params: DelegateParams): Promise<Estimate>;
 
   /**
    *
-   * @description Estimate gasLimit, storageLimit and fees for a delegate operation
+   * Estimate gasLimit, storageLimit and fees for a delegate operation
    *
    * @returns An estimation of gasLimit, storageLimit and fees for the operation
    *
-   * @param Estimate
+   * @param params registerDelegate operation parameter
    */
   registerDelegate(params?: RegisterDelegateParams): Promise<Estimate>;
 
   /**
    *
-   * @description Estimate gasLimit, storageLimit and fees for a reveal operation
+   * Estimate gasLimit, storageLimit and fees for a reveal operation
    * @returns An estimation of gasLimit, storageLimit and fees for the operation or undefined if the account is already revealed
    *
-   * @param Estimate
+   * @param params reveal operation parameter
    */
   reveal(params?: RevealParams): Promise<Estimate | undefined>;
 
@@ -121,7 +116,7 @@ export interface EstimationProvider {
 
   /**
    *
-   * @description Estimate gasLimit, storageLimit and fees for registering an expression (registerGlobalConstant operation)
+   * Estimate gasLimit, storageLimit and fees for registering an expression (registerGlobalConstant operation)
    *
    * @returns An estimation of gasLimit, storageLimit and fees for the operation
    *
@@ -131,70 +126,70 @@ export interface EstimationProvider {
 
   /**
    *
-   * @description Estimate gasLimit, storageLimit and fees for an increase paid storage operation
+   * Estimate gasLimit, storageLimit and fees for an increase paid storage operation
    *
    * @returns An estimation of gasLimit, storageLimit, and fees for the operation
    *
-   * @param Estimate
+   * @param params increasePaidStorage operation parameter
    */
   increasePaidStorage(params: IncreasePaidStorageParams): Promise<Estimate>;
 
   /**
    *
-   * @description Estimate gasLimit, storageLimit and fees for an Update Consensus Key operation
+   * Estimate gasLimit, storageLimit and fees for an Update Consensus Key operation
    * @returns An estimation of gasLimit, storageLimit and fees for the operation
    *
-   * @param Estimate
+   * @param params updateConsensusKey operation parameter
    */
   updateConsensusKey(params: UpdateConsensusKeyParams): Promise<Estimate>;
 
   /**
    *
-   * @description Estimate gasLimit, storageLimit and fees for an Update Companion Key operation
+   * Estimate gasLimit, storageLimit and fees for an Update Companion Key operation
    * @returns An estimation of gasLimit, storageLimit and fees for the operation
    *
-   * @param Estimate
+   * @param params updateCompanionKey operation parameter
    */
   updateCompanionKey(params: UpdateCompanionKeyParams): Promise<Estimate>;
 
   /**
    *
-   * @description Estimate gasLimit, storageLimit and fees for an Smart Rollup Add Messages operation
+   * Estimate gasLimit, storageLimit and fees for an Smart Rollup Add Messages operation
    *
    * @returns An estimation of gasLimit, storageLimit and fees for the operation
    *
-   * @param Estimate
+   * @param params smartRollupAddMessages operation parameter
    */
   smartRollupAddMessages(params: SmartRollupAddMessagesParams): Promise<Estimate>;
 
   /**
    *
-   * @description Estimate gasLimit, storageLimit and fees for an Smart Rollup Execute Outbox Message operation
+   * Estimate gasLimit, storageLimit and fees for an Smart Rollup Execute Outbox Message operation
    *
    * @returns An estimation of gasLimit, storageLimit and fees for the operation
    *
-   * @param Estimate
+   * @param params smartRollupExecuteOutboxMessage operation parameter
    */
   smartRollupExecuteOutboxMessage(params: SmartRollupExecuteOutboxMessageParams): Promise<Estimate>;
 
   /**
    *
-   * @description Estimate gasLimit, storageLimit and fees for contract call
+   * Estimate gasLimit, storageLimit and fees for contract call
    *
    * @returns An estimation of gasLimit, storageLimit and fees for the contract call
    *
-   * @param Estimate
+   * @param contractMethod the contract method to estimate
    */
   contractCall(
     contractMethod: ContractMethodObject<ContractProvider>
   ): Promise<Estimate>;
 
   /**
-   * @description Estimate gasLimit, storageLimit and fees for an Smart Rollup Originate operation
+   * Estimate gasLimit, storageLimit and fees for an Smart Rollup Originate operation
    *
    * @returns An estimation of gasLimit, storageLimit and fees for the operation
    *
-   * @param SmartRollupOrigianteParams
+   * @param params smartRollupOriginate operation parameter
    */
   smartRollupOriginate(params: SmartRollupOriginateParams): Promise<Estimate>;
 }

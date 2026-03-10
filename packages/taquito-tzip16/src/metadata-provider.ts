@@ -33,7 +33,7 @@ export interface Tzip16Uri {
 }
 
 /**
- * @description: Metadata Provider
+ \* Metadata Provider
  */
 export class MetadataProvider implements MetadataProviderInterface {
   private readonly PROTOCOL_REGEX = /(?:sha256:\/\/0x(.*)\/)?(https?|ipfs|tezos-storage):(.*)/;
@@ -41,10 +41,10 @@ export class MetadataProvider implements MetadataProviderInterface {
   constructor(private handlers: Map<string, Handler>) {}
 
   /**
-   * @description Fetch the metadata by using the appropriate handler based on the protcol found in the URI
+   * Fetch the metadata by using the appropriate handler based on the protcol found in the URI
    * @returns an object which contains the uri, the metadata, an optional integrity check result and an optional SHA256 hash
-   * @param _contractAbstraction the contract abstraction which contains the URI in its storage
-   * @param _uri the decoded uri found in the storage
+   * @param contractAbstraction the contract abstraction which contains the URI in its storage
+   * @param uri the decoded uri found in the storage
    * @param context the TezosToolkit Context
    */
   async provideMetadata(

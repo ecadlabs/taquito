@@ -62,7 +62,7 @@ export class TezosStorageHandler implements Handler {
   }
 
   /**
-   * @description Extract the smart contract address, the network and the path pointing to the metadata from the uri
+   * Extract the smart contract address, the network and the path pointing to the metadata from the uri
    * @returns an object which contains the properties allowing to find where the metadata are located or it returns undefined if the uri is not valid
    * @param tezosStorageURI URI (without the tezos-storage prefix)
    */

@@ -71,7 +71,7 @@ const traceWalletOperation = (payload: Record<string, unknown>) => {
 };
 
 /**
- * @description WalletOperation allows to monitor operation inclusion on chains and surface information related to the operation
+ * WalletOperation allows to monitor operation inclusion on chains and surface information related to the operation
  */
 export class WalletOperation {
   protected _operationResult = new ReplaySubject<OperationContentsAndResult[]>(1);
@@ -129,7 +129,7 @@ export class WalletOperation {
   }
 
   /**
-   * @description Receipt expose the total amount of tezos token burn and spent on fees
+   * Receipt expose the total amount of tezos token burn and spent on fees
    * The promise returned by receipt will resolve only once the transaction is included
    */
   async receipt(): Promise<Receipt> {
@@ -143,7 +143,6 @@ export class WalletOperation {
   /**
    *
    * @param opHash Operation hash
-   * @param raw Raw operation that was injected
    * @param context Taquito context allowing access to rpc and signer
    * @throws {InvalidOperationHashError}
    */

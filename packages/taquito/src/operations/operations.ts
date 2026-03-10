@@ -98,7 +98,7 @@ interface PollingConfig {
 }
 
 /**
- * @description Utility class to interact with Tezos operations
+ * Utility class to interact with Tezos operations
  */
 export class Operation {
   private _pollingConfig$ = new ReplaySubject<PollingConfig>(1);
@@ -160,7 +160,7 @@ export class Operation {
    * @param hash Operation hash
    * @param raw Raw operation that was injected
    * @param context Taquito context allowing access to rpc and signer
-   * @throws {@link InvalidOperationHashError}
+   * @throws InvalidOperationHashError
    */
   constructor(
     public readonly hash: string,

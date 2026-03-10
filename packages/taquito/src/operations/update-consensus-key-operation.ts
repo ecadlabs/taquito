@@ -15,7 +15,7 @@ import {
 
 /**
  *
- * @description UpdateConsensusKeyOperation provides utility to fetch properties for Operation of kind UpdateConsensusKey
+ * UpdateConsensusKeyOperation provides utility to fetch properties for Operation of kind UpdateConsensusKey
  *
  */
 export class UpdateConsensusKeyOperation

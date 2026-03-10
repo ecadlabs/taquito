@@ -15,7 +15,7 @@ import {
 
 /**
  *
- * @description UpdateCompanionKeyOperation provides utility to fetch properties for Operation of kind UpdateCompanionKey
+ * UpdateCompanionKeyOperation provides utility to fetch properties for Operation of kind UpdateCompanionKey
  *
  */
 export class UpdateCompanionKeyOperation

@@ -345,7 +345,7 @@ export class BeaconWallet implements WalletProvider {
   }
 
   /**
-   * @description Disconnect the wallet and remove all Beacon data from localStorage.
+   * Disconnect the wallet and remove all Beacon data from localStorage.
    *
    * This is the recommended way to end a user session (logout). It calls
    * `client.destroy()` under the hood, which clears the active account,
@@ -362,7 +362,7 @@ export class BeaconWallet implements WalletProvider {
   }
 
   /**
-   * @description Clear the active account without destroying the Beacon session.
+   * Clear the active account without destroying the Beacon session.
    *
    * This removes the active account reference from local storage but does
    * **not** clear other Beacon state such as the cached relay node

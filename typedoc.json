@@ -35,6 +35,17 @@
     "taquito.io": "https://taquito.io"
   },
   "excludePrivate": true,
+  "externalSymbolLinkMappings": {
+    "@taquito/signer": {
+      "ToBeImplemented": "https://taquito.io",
+      "InvalidCurveError": "https://taquito.io",
+      "InvalidSeedLengthError": "https://taquito.io"
+    },
+    "@taquito/core": {
+      "InvalidSignatureError": "https://taquito.io",
+      "InvalidMessageError": "https://taquito.io"
+    }
+  },
   "customCss": "./typedoc-custom.css",
   "favicon": "./website/public/favicon.svg"
 }

@@ -97,7 +97,7 @@ const mergeLimits = (
 };
 
 /**
- * @description PrepareProvider is a utility class to output the prepared format of an operation
+ * PrepareProvider is a utility class to output the prepared format of an operation
  */
 export class PrepareProvider extends Provider implements PreparationProvider {
   #counters: { [key: string]: number };
@@ -315,9 +315,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
   /**
    *
-   * @description Method to prepare an activation operation
-   * @param operation RPCOperation object or RPCOperation array
-   * @param source string or undefined source pkh
+   * Method to prepare an activation operation
    * @returns a PreparedOperation object
    */
   async activate({ pkh, secret }: ActivationParams): Promise<PreparedOperation> {
@@ -346,9 +344,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
   /**
    *
-   * @description Method to prepare a reveal operation
-   * @param operation RPCOperation object or RPCOperation array
-   * @param source string or undefined source pkh
+   * Method to prepare a reveal operation
    * @returns a PreparedOperation object
    */
   async reveal({ fee, gasLimit, storageLimit, proof }: RevealParams): Promise<PreparedOperation> {
@@ -408,8 +404,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
   /**
    *
-   * @description Method to prepare an origination operation
-   * @param operation RPCOperation object or RPCOperation array
+   * Method to prepare an origination operation
    * @param source string or undefined source pkh
    * @returns a PreparedOperation object
    */
@@ -452,9 +447,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
   /**
    *
-   * @description Method to prepare a transaction operation
-   * @param operation RPCOperation object or RPCOperation array
-   * @param source string or undefined source pkh
+   * Method to prepare a transaction operation
    * @returns a PreparedOperation object
    */
   async transaction({
@@ -495,9 +488,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
   /**
    *
-   * @description Method to prepare a stake pseudo-operation
-   * @param operation RPCOperation object or RPCOperation array
-   * @param source string or undefined source pkh
+   * Method to prepare a stake pseudo-operation
    * @returns a PreparedOperation object
    */
   async stake({ fee, storageLimit, gasLimit, ...rest }: StakeParams): Promise<PreparedOperation> {
@@ -539,9 +530,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
   /**
    *
-   * @description Method to prepare a unstake pseudo-operation
-   * @param operation RPCOperation object or RPCOperation array
-   * @param source string or undefined source pkh
+   * Method to prepare a unstake pseudo-operation
    * @returns a PreparedOperation object
    */
   async unstake({
@@ -586,9 +575,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
   /**
    *
-   * @description Method to prepare a finalize_unstake pseudo-operation
-   * @param operation RPCOperation object or RPCOperation array
-   * @param source string or undefined source pkh
+   * Method to prepare a finalize_unstake pseudo-operation
    * @returns a PreparedOperation object
    */
   async finalizeUnstake({
@@ -635,9 +622,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
   /**
    *
-   * @description Method to prepare a delegation operation
-   * @param operation RPCOperation object or RPCOperation array
-   * @param source string or undefined source pkh
+   * Method to prepare a delegation operation
    * @returns a PreparedOperation object
    */
   async delegation({
@@ -679,8 +664,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
   /**
    *
-   * @description Method to prepare a register delegate operation
-   * @param operation RPCOperation object or RPCOperation array
+   * Method to prepare a register delegate operation
    * @param source string or undefined source pkh
    * @returns a PreparedOperation object
    */
@@ -726,9 +710,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
   /**
    *
-   * @description Method to prepare a register_global_constant operation
-   * @param operation RPCOperation object or RPCOperation array
-   * @param source string or undefined source pkh
+   * Method to prepare a register_global_constant operation
    * @returns a PreparedOperation object
    */
   async registerGlobalConstant({
@@ -770,8 +752,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
   /**
    *
-   * @description Method to prepare an update_consensus_key operation
-   * @param operation RPCOperation object or RPCOperation array
+   * Method to prepare an update_consensus_key operation
    * @param source string or undefined source pkh
    * @returns a PreparedOperation object
    */
@@ -824,8 +805,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
   /**
    *
-   * @description Method to prepare an update_companion_key operation
-   * @param operation RPCOperation object or RPCOperation array
+   * Method to prepare an update_companion_key operation
    * @param source string or undefined source pkh
    * @returns a PreparedOperation object
    */
@@ -873,9 +853,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
   /**
    *
-   * @description Method to prepare an increase_paid_storage operation
-   * @param operation RPCOperation object or RPCOperation array
-   * @param source string or undefined source pkh
+   * Method to prepare an increase_paid_storage operation
    * @returns a PreparedOperation object
    */
   async increasePaidStorage({
@@ -917,8 +895,8 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
   /**
    *
-   * @description Method to prepare a ballot operation
-   * @param operation RPCOperation object or RPCOperation array
+   * Method to prepare a ballot operation
+   * @param params ballot operation parameters
    * @returns a PreparedOperation object
    */
   async ballot(params: BallotParams): Promise<PreparedOperation> {
@@ -963,8 +941,8 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
   /**
    *
-   * @description Method to prepare a proposals operation
-   * @param operation RPCOperation object or RPCOperation array
+   * Method to prepare a proposals operation
+   * @param params proposals operation parameters
    * @returns a PreparedOperation object
    */
   async proposals(params: ProposalsParams): Promise<PreparedOperation> {
@@ -1010,8 +988,8 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
   /**
    *
-   * @description Method to prepare a drain_delegate operation
-   * @param operation RPCOperation object or RPCOperation array
+   * Method to prepare a drain_delegate operation
+   * @param params drainDelegate operation parameters
    * @returns a PreparedOperation object
    */
   async drainDelegate(params: DrainDelegateParams, source?: string): Promise<PreparedOperation> {
@@ -1043,9 +1021,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
   /**
    *
-   * @description Method to prepare a transfer_ticket operation
-   * @param operation RPCOperation object or RPCOperation array
-   * @param source string or undefined source pkh
+   * Method to prepare a transfer_ticket operation
    * @returns a PreparedOperation object
    */
   async transferTicket({
@@ -1087,9 +1063,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
   /**
    *
-   * @description Method to prepare a smart_rollup_add_messages operation
-   * @param operation RPCOperation object or RPCOperation array
-   * @param source string or undefined source pkh
+   * Method to prepare a smart_rollup_add_messages operation
    * @returns a PreparedOperation object
    */
   async smartRollupAddMessages({
@@ -1130,8 +1104,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
   /**
    *
-   * @description Method to prepare a smart_rollup_originate operation
-   * @param operation RPCOperation object or RPCOperation array
+   * Method to prepare a smart_rollup_originate operation
    * @returns a PreparedOperation object
    */
   async smartRollupOriginate({
@@ -1172,9 +1145,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
   /**
    *
-   * @description Method to prepare a smart_rollup_execute_outbox_message operation
-   * @param operation RPCOperation object or RPCOperation array
-   * @param source string or undefined source pkh
+   * Method to prepare a smart_rollup_execute_outbox_message operation
    * @returns a PreparedOperation object
    */
   async smartRollupExecuteOutboxMessage({
@@ -1215,8 +1186,8 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
   /**
    *
-   * @description Method to prepare a batch operation
-   * @param operation RPCOperation object or RPCOperation array
+   * Method to prepare a batch operation
+   * @param batchParams batch operation parameters
    * @returns a PreparedOperation object
    */
   async batch(batchParams: ParamsWithKind[], estimates?: Estimate[]): Promise<PreparedOperation> {
@@ -1294,8 +1265,8 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
   /**
    *
-   * @description Method to prepare a batch operation
-   * @param operation RPCOperation object or RPCOperation array
+   * Method to prepare a contract call operation
+   * @param contractMethod ContractMethodObject retrieved from smart contract
    * @returns a PreparedOperation object
    */
   async contractCall(
@@ -1350,7 +1321,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
   /**
    *
-   * @description Method to convert a PreparedOperation to the params needed for the preapplyOperation method
+   * Method to convert a PreparedOperation to the params needed for the preapplyOperation method
    * @param prepared a Prepared Operation
    * @returns a PreapplyParams object
    */
@@ -1367,7 +1338,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
   /**
    *
-   * @description Method to convert a PreparedOperation to the params needed for forging
+   * Method to convert a PreparedOperation to the params needed for forging
    * @param param a Prepared Operation
    * @returns a ForgeParams object
    */
