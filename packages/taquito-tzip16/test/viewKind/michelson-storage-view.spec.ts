@@ -95,11 +95,13 @@ describe('MichelsonStorageView test', () => {
 
     try {
       await michelsonStorageView.executeView();
-    } catch (e) {
+    } catch (e: unknown) {
       expect(e).toBeInstanceOf(ForbiddenInstructionInViewCodeError);
-      expect(e.message).toEqual(
-        'Error found in the code of the view. It contains a forbidden instruction: AMOUNT.'
-      );
+      if (e instanceof ForbiddenInstructionInViewCodeError) {
+        expect(e.message).toEqual(
+          'Error found in the code of the view. It contains a forbidden instruction: AMOUNT.'
+        );
+      }
     }
   });
 
@@ -121,11 +123,13 @@ describe('MichelsonStorageView test', () => {
 
     try {
       await michelsonStorageView.executeView();
-    } catch (e) {
+    } catch (e: unknown) {
       expect(e).toBeInstanceOf(ForbiddenInstructionInViewCodeError);
-      expect(e.message).toEqual(
-        'Error found in the code of the view. It contains a forbidden instruction: CREATE_CONTRACT.'
-      );
+      if (e instanceof ForbiddenInstructionInViewCodeError) {
+        expect(e.message).toEqual(
+          'Error found in the code of the view. It contains a forbidden instruction: CREATE_CONTRACT.'
+        );
+      }
     }
   });
 
@@ -146,11 +150,13 @@ describe('MichelsonStorageView test', () => {
 
     try {
       await michelsonStorageView.executeView();
-    } catch (e) {
+    } catch (e: unknown) {
       expect(e).toBeInstanceOf(ForbiddenInstructionInViewCodeError);
-      expect(e.message).toEqual(
-        'Error found in the code of the view. It contains a forbidden instruction: SENDER.'
-      );
+      if (e instanceof ForbiddenInstructionInViewCodeError) {
+        expect(e.message).toEqual(
+          'Error found in the code of the view. It contains a forbidden instruction: SENDER.'
+        );
+      }
     }
   });
 
@@ -167,11 +173,13 @@ describe('MichelsonStorageView test', () => {
 
     try {
       await michelsonStorageView.executeView();
-    } catch (e) {
+    } catch (e: unknown) {
       expect(e).toBeInstanceOf(ForbiddenInstructionInViewCodeError);
-      expect(e.message).toEqual(
-        'Error found in the code of the view. It contains a forbidden instruction: SET_DELEGATE.'
-      );
+      if (e instanceof ForbiddenInstructionInViewCodeError) {
+        expect(e.message).toEqual(
+          'Error found in the code of the view. It contains a forbidden instruction: SET_DELEGATE.'
+        );
+      }
     }
   });
 
@@ -188,11 +196,13 @@ describe('MichelsonStorageView test', () => {
 
     try {
       await michelsonStorageView.executeView();
-    } catch (e) {
+    } catch (e: unknown) {
       expect(e).toBeInstanceOf(ForbiddenInstructionInViewCodeError);
-      expect(e.message).toEqual(
-        'Error found in the code of the view. It contains a forbidden instruction: SOURCE.'
-      );
+      if (e instanceof ForbiddenInstructionInViewCodeError) {
+        expect(e.message).toEqual(
+          'Error found in the code of the view. It contains a forbidden instruction: SOURCE.'
+        );
+      }
     }
   });
 
@@ -209,11 +219,13 @@ describe('MichelsonStorageView test', () => {
 
     try {
       await michelsonStorageView.executeView();
-    } catch (e) {
+    } catch (e: unknown) {
       expect(e).toBeInstanceOf(ForbiddenInstructionInViewCodeError);
-      expect(e.message).toEqual(
-        'Error found in the code of the view. It contains a forbidden instruction: TRANSFER_TOKENS.'
-      );
+      if (e instanceof ForbiddenInstructionInViewCodeError) {
+        expect(e.message).toEqual(
+          'Error found in the code of the view. It contains a forbidden instruction: TRANSFER_TOKENS.'
+        );
+      }
     }
   });
 
@@ -232,11 +244,13 @@ describe('MichelsonStorageView test', () => {
 
     try {
       await michelsonStorageView.executeView();
-    } catch (e) {
+    } catch (e: unknown) {
       expect(e).toBeInstanceOf(ForbiddenInstructionInViewCodeError);
-      expect(e.message).toEqual(
-        'Error found in the code of the view. It contains a forbidden instruction: TRANSFER_TOKENS.'
-      );
+      if (e instanceof ForbiddenInstructionInViewCodeError) {
+        expect(e.message).toEqual(
+          'Error found in the code of the view. It contains a forbidden instruction: TRANSFER_TOKENS.'
+        );
+      }
     }
   });
 
@@ -257,11 +271,13 @@ describe('MichelsonStorageView test', () => {
 
     try {
       await michelsonStorageView.executeView();
-    } catch (e) {
+    } catch (e: unknown) {
       expect(e).toBeInstanceOf(ForbiddenInstructionInViewCodeError);
-      expect(e.message).toEqual(
-        'Error found in the code of the view. It contains a forbidden instruction: the instruction SELF should only be used before ADDRESS.'
-      );
+      if (e instanceof ForbiddenInstructionInViewCodeError) {
+        expect(e.message).toEqual(
+          'Error found in the code of the view. It contains a forbidden instruction: the instruction SELF should only be used before ADDRESS.'
+        );
+      }
     }
   });
 
@@ -279,11 +295,13 @@ describe('MichelsonStorageView test', () => {
 
     try {
       await michelsonStorageView.executeView();
-    } catch (e) {
+    } catch (e: unknown) {
       expect(e).toBeInstanceOf(ForbiddenInstructionInViewCodeError);
-      expect(e.message).toEqual(
-        'Error found in the code of the view. It contains a forbidden instruction: the instruction SELF should only be used before ADDRESS.'
-      );
+      if (e instanceof ForbiddenInstructionInViewCodeError) {
+        expect(e.message).toEqual(
+          'Error found in the code of the view. It contains a forbidden instruction: the instruction SELF should only be used before ADDRESS.'
+        );
+      }
     }
   });
 

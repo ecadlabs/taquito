@@ -32,8 +32,11 @@ describe('Address token', () => {
 
       try {
         token.Encode(['test']);
-      } catch (ex) {
-        expect(ex.name).toEqual('AddressValidationError');
+      } catch (ex: unknown) {
+        expect(ex).toBeInstanceOf(AddressValidationError);
+        if (ex instanceof AddressValidationError) {
+          expect(ex.name).toEqual('AddressValidationError');
+        }
       }
     });
   });
