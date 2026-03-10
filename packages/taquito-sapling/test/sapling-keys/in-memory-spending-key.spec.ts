@@ -1,6 +1,37 @@
 import { InvalidSpendingKey } from '../../src/errors';
 import { InMemorySpendingKey } from '../../src/sapling-keys/in-memory-spending-key';
 
+const serialize = (value: unknown): string => {
+  try {
+    return JSON.stringify(value) ?? '';
+  } catch {
+    return String(value);
+  }
+};
+
+const expectNoSecretLeak = (error: Error, secret: string) => {
+  const errorRecord = error as unknown as Record<string, unknown>;
+  const ownPropertyValues = Object.getOwnPropertyNames(error)
+    .map((key) => serialize(errorRecord[key]))
+    .join(' ');
+  const surfaces = [error.message, String(error), serialize(error), ownPropertyValues];
+
+  for (const surface of surfaces) {
+    expect(surface).not.toContain(secret);
+  }
+};
+
+const expectInvalidSpendingKeyToBeRedacted = (throwingFn: () => void, secret: string) => {
+  try {
+    throwingFn();
+    throw new Error('Expected InvalidSpendingKey to be thrown');
+  } catch (e) {
+    if (!(e instanceof InvalidSpendingKey)) throw e;
+    expectNoSecretLeak(e, secret);
+    expect(e.message).toContain('Invalid spending key');
+  }
+};
+
 describe('InMemorySpendingKey', () => {
   it('Should be instantiable with encrypted spending key', async () => {
     const SaplingKeyProvider = new InMemorySpendingKey(
@@ -66,6 +97,34 @@ describe('InMemorySpendingKey', () => {
           'MMXjN99mhomTm1Y5nQt8NfwEKTHWugsLtucX7oWrpsJd99qxGYJWP5aMb3t8zZaoKHQ898bLu9dwpog71bnjiDZfS9J9hWnTLCGm4fAjKKYeRuwTgCRjSdsP9znCPBUpCvyxeEFvUfamA5URrp8c7AaooAkobLW1PjNh2vjHobtiyNVTEtyTUWTLcjdxaiPbQWs3NaWvcb5Qr6z9MHhKrYNBHmsd9HBeRB2rVnvvL7pMc8f8zqyuXtmAuzMhiqPz3B4BRzuc8a2jkkoL14'
         )
     ).toThrowError(InvalidSpendingKey);
+  });
+
+  it('InvalidSpendingKey must not leak spending key in message or properties (wrong password)', () => {
+    const spendingKey =
+      'MMXjN99mhomTm1Y5nQt8NfwEKTHWugsLtucX7oWrpsJd99qxGYJWP5aMb3t8zZaoKHQ898bLu9dwpog71bnjiDZfS9J9hWnTLCGm4fAjKKYeRuwTgCRjSdsP9znCPBUpCvyxeEFvUfamA5URrp8c7AaooAkobLW1PjNh2vjHobtiyNVTEtyTUWTLcjdxaiPbQWs3NaWvcb5Qr6z9MHhKrYNBHmsd9HBeRB2rVnvvL7pMc8f8zqyuXtmAuzMhiqPz3B4BRzuc8a2jkkoL14';
+    expectInvalidSpendingKeyToBeRedacted(
+      () => new InMemorySpendingKey(spendingKey, 'tes'),
+      spendingKey
+    );
+  });
+
+  it('InvalidSpendingKey must not leak spending key in message or properties (no password)', () => {
+    const spendingKey =
+      'MMXjN99mhomTm1Y5nQt8NfwEKTHWugsLtucX7oWrpsJd99qxGYJWP5aMb3t8zZaoKHQ898bLu9dwpog71bnjiDZfS9J9hWnTLCGm4fAjKKYeRuwTgCRjSdsP9znCPBUpCvyxeEFvUfamA5URrp8c7AaooAkobLW1PjNh2vjHobtiyNVTEtyTUWTLcjdxaiPbQWs3NaWvcb5Qr6z9MHhKrYNBHmsd9HBeRB2rVnvvL7pMc8f8zqyuXtmAuzMhiqPz3B4BRzuc8a2jkkoL14';
+    expectInvalidSpendingKeyToBeRedacted(() => new InMemorySpendingKey(spendingKey), spendingKey);
+  });
+
+  it('InvalidSpendingKey must not leak spending key in message or properties (invalid key)', () => {
+    const spendingKey = 'notavalidspendingkeyatall';
+    expectInvalidSpendingKeyToBeRedacted(() => new InMemorySpendingKey(spendingKey), spendingKey);
+  });
+
+  it('deprecated InvalidSpendingKey(sk, detail) constructor must not leak secret', () => {
+    const secret = 'sask_this_is_a_fake_spending_key_for_testing';
+    const err = new InvalidSpendingKey(secret, 'test detail');
+    expectNoSecretLeak(err, secret);
+    expect(err.message).toContain('Invalid spending key');
+    expect(err.message).toContain('test detail');
   });
 
   it('Should return the proving key', async () => {

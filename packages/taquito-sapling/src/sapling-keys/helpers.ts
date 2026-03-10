@@ -14,7 +14,7 @@ export function decryptKey(spendingKey: string, password?: string) {
       ]);
     } catch (err: unknown) {
       if (err instanceof ParameterValidationError) {
-        throw new InvalidSpendingKey(spendingKey, 'invalid spending key');
+        throw new InvalidSpendingKey('invalid spending key');
       } else {
         throw err;
       }
@@ -23,7 +23,7 @@ export function decryptKey(spendingKey: string, password?: string) {
 
   if (pre === PrefixV2.EncryptedSaplingSpendingKey) {
     if (!password) {
-      throw new InvalidSpendingKey(spendingKey, 'no password provided to decrypt');
+      throw new InvalidSpendingKey('no password provided to decrypt');
     }
 
     const salt = toBuffer(keyArr.slice(0, 8));
@@ -38,7 +38,7 @@ export function decryptKey(spendingKey: string, password?: string) {
       new Uint8Array(encryptedSk)
     );
     if (!decrypted) {
-      throw new InvalidSpendingKey(spendingKey, 'incorrect password or unable to decrypt');
+      throw new InvalidSpendingKey('incorrect password or unable to decrypt');
     }
     return toBuffer(decrypted);
   } else {
