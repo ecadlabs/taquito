@@ -46,6 +46,7 @@ CONFIGS().forEach(
         freshAddress = await (await createAddress()).signer.publicKeyHash();
       } catch (e) {
         console.log('Failed to originate ticket contract', JSON.stringify(e));
+        throw e;
       }
 
     });

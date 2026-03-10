@@ -40,6 +40,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownTicketContract }) => {
         ticketToken = { ticketer: ticketSendContract.address, content_type: { prim: 'string' }, content: { string: 'Ticket' } };
       } catch (error) {
         console.error(error);
+        throw error;
       }
     });
 

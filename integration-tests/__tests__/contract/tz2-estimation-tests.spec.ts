@@ -34,6 +34,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
       }
       catch (ex: any) {
         console.log(ex.message);
+        throw ex;
       }
     });
 

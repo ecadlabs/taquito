@@ -37,6 +37,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownTicketContract }) => {
 
       } catch (error) {
         console.log(error);
+        throw error;
       }
     });
 

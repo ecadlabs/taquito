@@ -30,6 +30,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         await opManager.confirmation();
       } catch(e) {
         console.log(`Error when preparing the test: ${e}`);
+        throw e;
       }
     });
 

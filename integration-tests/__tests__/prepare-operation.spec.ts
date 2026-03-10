@@ -27,6 +27,7 @@ CONFIGS().forEach(({ lib, setup, protocol, createAddress }) => {
 
       } catch (e: any) {
         console.log('Unable to originate contract: ', JSON.stringify(e));
+        throw e;
       }
 
     })

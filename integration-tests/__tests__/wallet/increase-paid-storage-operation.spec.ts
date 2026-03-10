@@ -26,6 +26,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         simpleContractAddress = (await op.contract()).address
       } catch (e) {
         console.log(JSON.stringify(e));
+        throw e;
       }
     });
 

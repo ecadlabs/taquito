@@ -18,7 +18,10 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         thirdParty = await createAddress();
         const op = await Tezos.contract.transfer({ amount: 1, to: await thirdParty.signer.publicKeyHash() });
         await op.confirmation();
-      } catch (e) { console.log }
+      } catch (e) {
+        console.log('beforeAll setup error', e);
+        throw e;
+      }
     });
 
     it('should be able to stake funds to a designated delegate', async () => {

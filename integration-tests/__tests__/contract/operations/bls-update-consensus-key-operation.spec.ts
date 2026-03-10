@@ -18,6 +18,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         await register.confirmation();
       } catch (e) {
         console.log(JSON.stringify(e));
+        throw e;
       }
     });
 

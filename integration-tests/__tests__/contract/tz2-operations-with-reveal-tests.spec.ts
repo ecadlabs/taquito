@@ -23,6 +23,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress, knownTicketCont
         expect(fundOp.status).toBe('applied')
       } catch (e) {
         console.log('beforeEach fundOp error', e)
+        throw e;
       }
     })
 

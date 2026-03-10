@@ -20,7 +20,10 @@ CONFIGS().forEach(({ rpc, protocol, setup, lib }) => {
         })
         await op.confirmation();
         contract = await op.contract();
-      } catch (e) { console.log(e) }
+      } catch (e) {
+        console.log(e);
+        throw e;
+      }
     })
 
     Object.values(tallinnEntrypoint).forEach(name => {
