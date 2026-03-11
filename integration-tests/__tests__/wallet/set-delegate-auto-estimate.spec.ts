@@ -15,6 +15,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
           delegate,
         }).send()
         await op.confirmation()
+        expect(await op.status()).toBe('applied');
         expect(op.opHash).toBeDefined();
 
         const account = await Tezos.rpc.getDelegate(pkh)

@@ -22,6 +22,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
                         completed: true
                     })
                 );
+                expect(await op.status()).toBe('applied');
                 expect(op.opHash).toBeDefined();
 
                 const account = await Tezos.rpc.getDelegate(pkh);

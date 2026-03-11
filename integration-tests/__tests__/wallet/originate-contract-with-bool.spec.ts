@@ -15,8 +15,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         storage: true,
       }).send();
       await op.confirmation()
+      expect(await op.status()).toBe('applied');
       expect(op.opHash).toBeDefined();
-      expect(op.status).toBeTruthy
       const contract = await op.contract();
 
       expect(await contract.storage()).toBeTruthy();
@@ -24,7 +24,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       const opMethod = await contract.methodsObject.setBool(false).send();
 
       await opMethod.confirmation();
-      expect(op.opHash).toBeDefined();
+      expect(await opMethod.status()).toBe('applied');
 
       expect(await contract.storage()).toBeFalsy();
     });

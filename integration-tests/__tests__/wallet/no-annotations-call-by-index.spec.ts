@@ -32,7 +32,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       // Make a transfer
       const operation = await contract.methodsObject[TRANSFER]({ 0: ACCOUNT1_ADDRESS, 1: ACCOUNT2_ADDRESS, 2: "1" }).send();
       await operation.confirmation();
-      expect(operation.status).toBeTruthy;
+      expect(await operation.status()).toBe('applied');
 
       // Verify that the transfer was done as expected
       // file deepcode ignore no-any: any is good enough
@@ -46,7 +46,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       // Approve
       const operation2 = await contract.methodsObject[APPROVE]({ 0: ACCOUNT2_ADDRESS, 1: "1" }).send();
       await operation2.confirmation();
-      expect(operation2.status).toBeTruthy;
+      expect(await operation2.status()).toBe('applied');
 
       // Verify that the allowance was done as expected
       account1 = await storage[ACCOUNTS].get(ACCOUNT1_ADDRESS);

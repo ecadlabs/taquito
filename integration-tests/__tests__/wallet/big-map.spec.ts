@@ -64,6 +64,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       }).send();
 
       await op.confirmation();
+      expect(await op.status()).toBe('applied');
       expect(op.opHash).toBeDefined();
 
       const contract = await op.contract();

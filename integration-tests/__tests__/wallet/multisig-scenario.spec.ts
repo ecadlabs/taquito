@@ -25,7 +25,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         }
       }).send();
       const contract = await op.contract();
-      expect(op.status).toBeTruthy
+      expect(await op.status()).toBe('applied');
 
       // Utility function that mimics the PAIR operation of michelson
       // deepcode ignore no-any: any is good enough
@@ -122,6 +122,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       ).send()
 
       await op2.confirmation();
+      expect(await op2.status()).toBe('applied');
     })
   })
 });

@@ -17,13 +17,14 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         init: tokenInit(await Tezos.signer.publicKeyHash()),
       }).send()
       await op.confirmation()
+      expect(await op.status()).toBe('applied');
       expect(op.opHash).toBeDefined();
 
       const contract = await op.contract();
       const opMethod = await contract.methodsObject.mint({ to: await Tezos.signer.publicKeyHash(), value: 100 }).send();
 
       await opMethod.confirmation();
-      expect(op.opHash).toBeDefined();
+      expect(await opMethod.status()).toBe('applied');
     });
   });
 })

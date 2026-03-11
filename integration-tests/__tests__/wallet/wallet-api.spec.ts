@@ -22,6 +22,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       }).send();
 
       let conf1 = await walletOp.confirmation();
+      expect(await walletOp.status()).toBe('applied');
       let currentConf1 = await walletOp.getCurrentConfirmation();
       expect(currentConf1).toEqual(1)
       expect(conf1).toEqual(expect.objectContaining({
@@ -85,6 +86,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
           completed: true
         })
       ]));
+      expect(await walletOp.status()).toBe('applied');
 
     });
   });

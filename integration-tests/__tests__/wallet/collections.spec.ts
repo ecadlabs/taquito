@@ -24,6 +24,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         storage: initialStorage
       }).send();
       await op.confirmation()
+      expect(await op.status()).toBe('applied');
       expect(op.opHash).toBeDefined();
 
       const contract = await op.contract()
@@ -35,12 +36,15 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
       const setOp = await contract.methodsObject['setSet'](['2']).send()
       await setOp.confirmation();
+      expect(await setOp.status()).toBe('applied');
 
       const listOp = await contract.methodsObject['setList'](['2']).send()
       await listOp.confirmation();
+      expect(await listOp.status()).toBe('applied');
 
       const mapOp = await contract.methodsObject['setMap'](MichelsonMap.fromLiteral({ "2": "2" })).send()
       await mapOp.confirmation();
+      expect(await mapOp.status()).toBe('applied');
 
     });
   });

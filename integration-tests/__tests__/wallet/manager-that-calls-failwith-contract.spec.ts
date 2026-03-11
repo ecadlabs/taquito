@@ -20,6 +20,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       const contract = await op.contract()
       expect(op.opHash).toBeDefined();
       await op.confirmation();
+      expect(await op.status()).toBe('applied');
 
       const opManager = await Tezos.wallet.originate({
         balance: "1",
@@ -30,6 +31,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       const managerContract = await opManager.contract()
       expect(opManager.opHash).toBeDefined();
       await opManager.confirmation();
+      expect(await opManager.status()).toBe('applied');
       try {
         await managerContract.methodsObject.do(MANAGER_LAMBDA.transferToContract(contract.address, 1)).send({ amount: 0 })
         fail('Expected transfer operation to throw error')

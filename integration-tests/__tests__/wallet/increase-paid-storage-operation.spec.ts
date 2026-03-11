@@ -22,6 +22,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         }).send();
 
         await op.confirmation();
+        expect(await op.status()).toBe('applied');
 
         simpleContractAddress = (await op.contract()).address
       } catch (e) {
@@ -39,8 +40,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       }).send();
 
       await op.confirmation();
+      expect(await op.status()).toBe('applied');
       expect(op.opHash).toBeDefined();
-      expect(op.status).toBeTruthy();
 
       const paidSpaceAfter = await Tezos.rpc.getStoragePaidSpace(simpleContractAddress);
 
@@ -77,7 +78,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         currentConfirmation: 1,
         completed: true
       }))
-      expect(op.status).toBeTruthy();
+      expect(await op.status()).toBe('applied');
 
       const paidSpaceAfter = await Tezos.rpc.getStoragePaidSpace(simpleContractAddress);
 
