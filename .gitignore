@@ -21,3 +21,4 @@ integration-tests/jest-stare
 apps/**/node_modules
 .nx
 .ansible
+.claude

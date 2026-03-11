@@ -17,6 +17,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         storage: 0,
       }).send();
       await op.confirmation()
+      expect(await op.status()).toBe('applied');
       expect(op.opHash).toBeDefined();
     });
   });

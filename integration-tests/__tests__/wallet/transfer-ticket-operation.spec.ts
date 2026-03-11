@@ -27,6 +27,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownTicketContract }) => {
 
         const fundSender = await Tezos.contract.transfer({ to: senderPkh, amount: 5 });
         await fundSender.confirmation();
+        expect(fundSender.status).toEqual('applied');
 
         ticketSendContract = await Tezos.contract.at(knownTicketContract);
         ticketToken = { ticketer: ticketSendContract.address, content_type: { prim: 'string' }, content: { string: 'Ticket' } };
@@ -34,9 +35,11 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownTicketContract }) => {
         // Send 3 tickets from the originated contract to sender
         const sendTickets = await ticketSendContract.methodsObject.default([senderPkh, '3']).send()
         await sendTickets.confirmation();
+        expect(sendTickets.status).toEqual('applied');
 
       } catch (error) {
         console.log(error);
+        throw error;
       }
     });
 

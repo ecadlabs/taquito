@@ -19,6 +19,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         await transferOp2.confirmation()
       } catch (e) {
         console.log('beforeAll transferOp error', e)
+        throw e;
       }
     })
 

@@ -1,4 +1,4 @@
-import { TezosToolkit, TezosOperationError } from "@taquito/taquito";
+import { TezosToolkit } from "@taquito/taquito";
 import { CONFIGS } from '../../config';
 import { InvalidStakingAddressError, InvalidFinalizeUnstakeAmountError } from '@taquito/core';
 
@@ -9,16 +9,25 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   describe(`Test staking pseudo operations using: ${rpc}`, () => {
     beforeAll(async () => {
       await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
-      try{
-        const address = await Tezos.signer.publicKeyHash()
-        if(!await Tezos.rpc.getDelegate(address)){
+      const address = await Tezos.signer.publicKeyHash();
+      try {
+        const balance = await Tezos.tz.getBalance(address);
+        const delegate = await Tezos.rpc.getDelegate(address);
+        console.log(`[staking-setup] address=${address} balance=${balance.toNumber()} delegate=${delegate}`);
+
+        if (delegate !== address) {
           const delegateOp = await Tezos.contract.registerDelegate({});
           await delegateOp.confirmation();
+          expect(delegateOp.status).toEqual('applied');
         }
         thirdParty = await createAddress();
-        const op = await Tezos.contract.transfer({amount: 1, to: await thirdParty.signer.publicKeyHash() });
+        const op = await Tezos.contract.transfer({ amount: 1, to: await thirdParty.signer.publicKeyHash() });
         await op.confirmation();
-      }catch(e){console.log}
+        expect(op.status).toEqual('applied');
+      } catch (e) {
+        console.log('[staking-setup] beforeAll error', e);
+        throw e;
+      }
     });
 
     it(`should be able to stake successfully: ${rpc}`, async () => {

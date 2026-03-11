@@ -17,6 +17,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       }).send();
 
       await op.confirmation();
+      expect(await op.status()).toBe('applied');
       expect(op.opHash).toBeDefined();
 
     });
@@ -28,6 +29,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       }).send();
 
       await op.confirmation();
+      expect(await op.status()).toBe('applied');
       expect(op.opHash).toBeDefined();
     });
 
@@ -41,6 +43,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       }).send();
 
       await op.confirmation();
+      expect(await op.status()).toBe('applied');
       expect(op.opHash).toBeDefined();
 
     });

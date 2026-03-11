@@ -15,6 +15,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         pkh = await account.signer.publicKeyHash();
       } catch (e) {
         console.log(JSON.stringify(e));
+        throw e;
       }
 
     });

@@ -28,6 +28,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         simpleContractAddress = op.contractAddress!;
       } catch (e) {
         console.log(`Error when trying to originate the contract for the test: \n`, JSON.stringify(e));
+        throw e;
       }
     });
 

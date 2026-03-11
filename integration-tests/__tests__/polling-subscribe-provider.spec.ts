@@ -136,6 +136,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         mainContractAddress = mainContract.contractAddress!;
       } catch (e) {
         console.log(e);
+        throw e;
       }
     });
 

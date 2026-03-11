@@ -17,8 +17,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         init: idInitData
       }).send()
       await op.confirmation()
+      expect(await op.status()).toBe('applied');
       expect(op.opHash).toBeDefined();
-      expect(op.status).toBeDefined();
     });
   });
 
@@ -54,8 +54,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         init: idInitData
       }).send();
       await op.confirmation()
+      expect(await op.status()).toBe('applied');
       expect(op.opHash).toBeDefined();
-      expect(op.status).toBeDefined();
     });
 
     it('no parser configured will use MichelCodecParser by default to originate Michelson code and succeeds', async () => {
@@ -66,8 +66,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         init: idInitData
       }).send();
       await op.confirmation()
+      expect(await op.status()).toBe('applied');
       expect(op.opHash).toBeDefined();
-      expect(op.status).toBeDefined();
     });
   });
 

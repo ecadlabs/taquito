@@ -26,6 +26,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract }) => {
       // A regular transfer operation is made. No smart contract calls required for this scenario.
       const op = await Tezos.wallet.transfer({ to: contract.address, amount: TAQUITO_MUTEZ, mutez: true }).send();
       await op.confirmation();
+      expect(await op.status()).toBe('applied');
 
       expect(op.opHash).toBeDefined();
     });
@@ -36,6 +37,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract }) => {
       // the specified number (50) of mutez to the target address.
       const op = await contract.methodsObject.do(MANAGER_LAMBDA.transferImplicit('tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh', 5)).send({ amount: 0 })
       await op.confirmation();
+      expect(await op.status()).toBe('applied');
 
       expect(op.opHash).toBeDefined();
     });
@@ -44,6 +46,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract }) => {
       // Set delegate on contract kt1_alice by passing a lambda function to kt1_alice's `do` entrypoint
       const op = await contract.methodsObject.do(MANAGER_LAMBDA.setDelegate(knownBaker)).send({ amount: 0 })
       await op.confirmation();
+      expect(await op.status()).toBe('applied');
 
       expect(op.opHash).toBeDefined();
     });
@@ -52,6 +55,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract }) => {
       // Remove delegate on contract kt1_alice by passing a lambda function to kt1_alice's `do` entrypoint
       const op = await contract.methodsObject.do(MANAGER_LAMBDA.removeDelegate()).send({ amount: 0 })
       await op.confirmation();
+      expect(await op.status()).toBe('applied');
 
       const account = await Tezos.rpc.getDelegate(knownBaker)
       expect(account).toEqual(knownBaker)
@@ -65,6 +69,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract }) => {
       // contract.
       const op = await contract.methodsObject.do(MANAGER_LAMBDA.transferToContract(knownContract, 1)).send({ amount: 0 })
       await op.confirmation();
+      expect(await op.status()).toBe('applied');
 
       expect(op.opHash).toBeDefined();
     });

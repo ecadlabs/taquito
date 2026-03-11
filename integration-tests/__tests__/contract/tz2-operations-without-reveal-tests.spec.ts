@@ -27,6 +27,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker, knownTicketCont
         expect(revealOp.status).toBe('applied')
       } catch (e) {
         console.log('beforeAll error', e)
+        throw e;
       }
     })
 

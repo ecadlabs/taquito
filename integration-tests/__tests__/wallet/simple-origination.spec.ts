@@ -20,6 +20,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         init: `"test"`
       }).send();
       await op.confirmation()
+      expect(await op.status()).toBe('applied');
       expect(op.opHash).toBeDefined();
     });
   });
