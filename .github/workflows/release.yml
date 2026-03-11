@@ -1,0 +1,108 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., 24.3.0-beta.0, 24.3.0-RC.0, 24.3.0)'
+        required: true
+        type: string
+      prerelease:
+        description: 'Prerelease (beta/RC). Uses "next" dist-tag instead of "latest".'
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      contents: write
+      id-token: write
+    env:
+      VERSION: ${{ inputs.version }}
+      GIT_COMMIT: ${{ github.sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.RELEASE_PAT }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+
+      - run: npm ci
+
+      # Bump version in all package.json files and sync cross-workspace deps
+      - name: Set version
+        run: node scripts/sync-workspace-deps.js "${VERSION}"
+
+      - name: Version stamp
+        run: npm run version-stamp
+
+      - name: Build
+        run: npm run build
+
+      - name: Build release artifacts
+        run: npm run -w @taquito/taquito build:release
+
+      - name: Test
+        run: npm test
+
+      # Commit the version bump (not pushed yet)
+      - name: Commit version bump
+        run: |
+          git config user.email "actions@github.com"
+          git config user.name "GitHub Actions"
+          git add -A
+          git commit -m "chore: release v${VERSION}"
+          git tag "v${VERSION}"
+
+      # Publish to npm with provenance
+      - name: Publish (prerelease)
+        if: ${{ inputs.prerelease }}
+        run: npm publish --workspaces --tag next --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish (stable)
+        if: ${{ !inputs.prerelease }}
+        run: npm publish --workspaces --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      # For stable releases, point "next" dist-tag to the new version too
+      - name: Update next dist-tag
+        if: ${{ !inputs.prerelease }}
+        run: |
+          for pkg in packages/*/package.json; do
+            name=$(node -p "require('./${pkg}').name")
+            private=$(node -p "require('./${pkg}').private || false")
+            if [ "${private}" = "false" ]; then
+              npm dist-tag add "${name}@${VERSION}" next
+            fi
+          done
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      # Push commit + tag only after successful publish
+      - name: Push release commit and tag
+        run: |
+          git push origin HEAD
+          git push origin "v${VERSION}"
+
+      - name: Create GitHub Release
+        run: |
+          prerelease_flag=""
+          if [ "$PRERELEASE" = "true" ]; then
+            prerelease_flag="--prerelease"
+          fi
+          gh release create "v${VERSION}" \
+            --title "v${VERSION}" \
+            --generate-notes \
+            ${prerelease_flag}
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_PAT }}
+          PRERELEASE: ${{ inputs.prerelease }}

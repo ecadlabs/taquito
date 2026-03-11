@@ -12,9 +12,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: lts/Jod
+          node-version: 24
       - run: npm ci
       - run: npm run build
       - if: always()
         id: integration-tests-tezlinkshadownet
-        run: npm -w integration-tests run test:tezlinkshadownet-secret-key -- --exclude='**/sapling/**' --exclude='**/ledger/**'
+        run: npm -w integration-tests run test:tezlinkshadownet-secret-key
