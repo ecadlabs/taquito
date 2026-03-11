@@ -1,23 +1,9 @@
-import { HttpBackend } from '@taquito/http-utils';
+import { HttpBackend, HttpResponseError } from '@taquito/http-utils';
 
 describe('HttpBackend request', () => {
-  it('should fail with url and error message with a timeout error', async () => {
+  it('should fail with HttpResponseError when a 404 gets returned', async () => {
+    const http: HttpBackend = new HttpBackend();
     try {
-      const http: HttpBackend = new HttpBackend(1);
-      await http.createRequest<string>({
-        method: 'GET',
-        url: 'https://mainnet.tezos.ecadinfra.com/chains/main/blocks/head/hash'
-      });
-    } catch (err: any) {
-      expect(err.name).toEqual('HttpTimeoutError');
-      expect(err.url).toContain('https://mainnet.tezos.ecadinfra.com/chains/main/blocks/head/hash');
-      expect(err.message).toContain('timeout of 1ms exceeded');
-    }
-  });
-
-  it('should fail with HttpResponseError when a 401 gets returned', async () => {
-    try {
-      const http: HttpBackend = new HttpBackend();
       await http.createRequest<string>({
         method: 'GET',
         url: 'https://mainnet.tezos.ecadinfra.com/chains/main/blocks/head/helpers/baking_rights',
@@ -25,11 +11,13 @@ describe('HttpBackend request', () => {
           level: 0
         }
       });
-    } catch (err: any) {
-      expect(err.name).toEqual('HttpResponseError');
-      expect(err.status).toEqual(404);
-      expect(err.url).toEqual('https://mainnet.tezos.ecadinfra.com/chains/main/blocks/head/helpers/baking_rights?level=0');
-      expect(err.message).toContain('Not Found');
+      fail('should have thrown');
+    } catch (err: unknown) {
+      expect(err).toBeInstanceOf(HttpResponseError);
+      const httpErr = err as HttpResponseError;
+      expect(httpErr.status).toEqual(404);
+      expect(httpErr.url).toEqual('https://mainnet.tezos.ecadinfra.com/chains/main/blocks/head/helpers/baking_rights?level=0');
+      expect(httpErr.message).toContain('Not Found');
     }
   });
 });

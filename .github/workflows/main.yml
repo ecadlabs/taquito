@@ -64,7 +64,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3]
+        shard: [1, 2, 3, 4, 5]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -83,7 +83,7 @@ jobs:
         run: >
           npm -w integration-tests run test:tallinnnet
           -- --maxWorkers=2
-          --shard=${{ matrix.shard }}/3
+          --shard=${{ matrix.shard }}/5
           --testPathIgnorePatterns=sapling
           --testPathIgnorePatterns=ledger
         env:
