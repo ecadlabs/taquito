@@ -347,8 +347,23 @@ describe('HttpBackend', () => {
         expect(result).toEqual({ block: 'head' });
       });
 
+      it('does not retry HttpResponseError even if body contains transport-like text', async () => {
+        // RPC returns 500 with body text that matches transport error patterns
+        mockFetch.mockResolvedValue(
+          mockResponse({
+            status: 500,
+            statusText: 'Internal Server Error',
+            body: 'connection reset by peer',
+          })
+        );
+        await expect(backend.createRequest({ url: 'https://rpc.example.com/' })).rejects.toThrow(
+          HttpResponseError
+        );
+        expect(mockFetch).toHaveBeenCalledTimes(1);
+      });
+
       it('does not retry non-transport errors', async () => {
-        mockFetch.mockRejectedValueOnce(new TypeError('Failed to fetch'));
+        mockFetch.mockRejectedValueOnce(new TypeError('Cannot read properties of undefined'));
         // No retry, no sleep, no need to drain timers
         await expect(backend.createRequest({ url: 'https://rpc.example.com/' })).rejects.toThrow(
           HttpRequestFailed

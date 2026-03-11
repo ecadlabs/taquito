@@ -59,10 +59,13 @@ if (isNode && !isBrowserLike) {
 
 import { STATUS_CODE } from './status_code';
 import { HttpRequestFailed, HttpResponseError, HttpTimeoutError } from './errors';
+import { classifyTransportError } from './transport-errors';
 
 export * from './status_code';
 export { VERSION } from './version';
 export { HttpRequestFailed, HttpResponseError, HttpTimeoutError } from './errors';
+export { classifyTransportError } from './transport-errors';
+export type { ClassifiedTransportError, TransportErrorKind } from './transport-errors';
 
 type ObjectType = Record<string, any>;
 
@@ -88,23 +91,6 @@ const toErrorMessage = (error: unknown) => {
     return `${error.name}: ${error.message}`;
   }
   return String(error);
-};
-
-const isRetriableTransportError = (error: unknown) => {
-  if (!(error instanceof Error)) {
-    return false;
-  }
-
-  const message = `${error.name} ${error.message}`.toLowerCase();
-
-  return (
-    message.includes('socket hang up') ||
-    message.includes('econnreset') ||
-    message.includes('etimedout') ||
-    message.includes('eai_again') ||
-    message.includes('enotfound') ||
-    message.includes('econnrefused')
-  );
 };
 
 const isRetriableRequest = (method: string, url: string) => {
@@ -254,10 +240,27 @@ export class HttpBackend {
           return response.text() as unknown as T;
         }
       } catch (e: unknown) {
+        // HttpResponseError is an application-level error (status >= 400), not a transport error.
+        // Short-circuit before classification to prevent RPC body text (which may contain
+        // strings like "connection reset") from being misclassified as a transport error.
+        if (e instanceof HttpResponseError) {
+          traceHttp({
+            stage: 'http-response-error',
+            method: methodValue,
+            url: normalizeTraceUrl(urlWithQuery),
+            elapsedMs: Date.now() - requestStartedAt,
+            status: e.status,
+          });
+          throw e;
+        }
+
+        const classified = e instanceof Error ? classifyTransportError(e) : undefined;
+        const isRetriableTransport =
+          classified !== undefined && classified.kind !== 'abort' && classified.kind !== 'tls';
         const shouldRetry =
           attempt < httpRetryCount &&
           isRetriableRequest(methodValue, urlWithQuery) &&
-          isRetriableTransportError(e);
+          isRetriableTransport;
 
         if (shouldRetry) {
           const retryDelayMs = httpRetryBaseMs * (attempt + 1);
@@ -270,13 +273,14 @@ export class HttpBackend {
             maxAttempts: httpRetryCount + 1,
             retryDelayMs,
             error: toErrorMessage(e),
+            transportKind: classified?.kind,
             keepAlive: nodeKeepAliveEnabled,
           });
           await sleep(retryDelayMs);
           continue;
         }
 
-        if (e instanceof Error && e.name === 'AbortError') {
+        if (classified?.kind === 'abort') {
           traceHttp({
             stage: 'timeout',
             method: methodValue,
@@ -286,16 +290,6 @@ export class HttpBackend {
             keepAlive: nodeKeepAliveEnabled,
           });
           throw new HttpTimeoutError(timeout, urlWithQuery);
-        } else if (e instanceof HttpResponseError) {
-          traceHttp({
-            stage: 'http-response-error',
-            method: methodValue,
-            url: normalizeTraceUrl(urlWithQuery),
-            elapsedMs: Date.now() - requestStartedAt,
-            status: e.status,
-            keepAlive: nodeKeepAliveEnabled,
-          });
-          throw e;
         } else {
           traceHttp({
             stage: 'request-failed',
@@ -303,9 +297,10 @@ export class HttpBackend {
             url: normalizeTraceUrl(urlWithQuery),
             elapsedMs: Date.now() - requestStartedAt,
             error: toErrorMessage(e),
+            transportKind: classified?.kind,
             keepAlive: nodeKeepAliveEnabled,
           });
-          throw new HttpRequestFailed(methodValue, urlWithQuery, e as Error);
+          throw new HttpRequestFailed(methodValue, urlWithQuery, e as Error, classified);
         }
       } finally {
         clearTimeout(t);
