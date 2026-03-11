@@ -1,9 +1,14 @@
 {
   "name": "@taquito/http-utils",
   "version": "24.2.0",
-  "description": "",
+  "description": "HTTP client for Taquito with retry, timeout, and transport error classification",
   "keywords": [
-    "tezos"
+    "tezos",
+    "taquito",
+    "http",
+    "rpc",
+    "fetch",
+    "retry"
   ],
   "main": "dist/taquito-http-utils.umd.js",
   "module": "dist/taquito-http-utils.es6.js",
@@ -12,10 +17,13 @@
     "signature.json",
     "dist"
   ],
-  "author": "Simon Boissonneault-Robert <simon@ecadlabs.com>",
+  "author": "ECAD Labs <info@ecadlabs.com>",
+  "contributors": [
+    "Simon Boissonneault-Robert <simon@ecadlabs.com>"
+  ],
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/ecadlabs/taquito"
   },
   "publishConfig": {
     "access": "public"

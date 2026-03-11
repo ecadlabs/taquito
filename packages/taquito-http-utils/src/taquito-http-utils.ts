@@ -86,18 +86,40 @@ const isRetriableRequest = (method: string, url: string) => {
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
+/** Options for {@link HttpBackend.createRequest}. */
 export interface HttpRequestOptions {
+  /** RPC endpoint URL. */
   url: string;
+  /** HTTP method. Defaults to `'GET'`. */
   method?: 'GET' | 'POST';
+  /** Per-request timeout in milliseconds. Defaults to the backend's constructor value (30 000 ms). */
   timeout?: number;
+  /** Parse the response as JSON. When `false`, returns raw text. Defaults to `true`. */
   json?: boolean;
+  /** Query parameters appended to the URL as a query string. */
   query?: ObjectType;
+  /** HTTP headers. `Content-Type: application/json` is set by default if not provided. */
   headers?: { [key: string]: string };
 }
 
+/**
+ * HTTP client used by Taquito to communicate with Tezos RPC nodes.
+ *
+ * Uses `globalThis.fetch` (Node.js >= 22 built-in or browser native).
+ * Retries retriable transport errors (socket resets, DNS, timeouts) with
+ * exponential backoff and jitter. Configure via environment variables:
+ *
+ * - `TAQUITO_HTTP_RETRY_COUNT` - max retries (default `1`)
+ * - `TAQUITO_HTTP_RETRY_BASE_MS` - base delay in ms (default `100`)
+ * - `TAQUITO_HTTP_TRACE` - emit JSON request logs when `true` or `1`
+ */
 export class HttpBackend {
+  /**
+   * @param timeout - Default request timeout in milliseconds (default `30000`).
+   */
   constructor(private timeout: number = 30000) {}
 
+  /** Serialize an object into a URL query string (including the leading `?`). */
   protected serialize(obj?: ObjectType) {
     if (!obj) {
       return '';
@@ -139,9 +161,14 @@ export class HttpBackend {
   }
 
   /**
+   * Send an HTTP request to the given URL, with automatic retries on transport errors.
    *
-   * @param options contains options to be passed for the HTTP request (url, method and timeout)
-   * @throws {@link HttpRequestFailed} | {@link HttpResponseError} | {@link HttpTimeoutError}
+   * @param options - Request configuration (URL, method, timeout, headers, etc.).
+   * @param data - Request body, serialized to JSON via `JSON.stringify`.
+   * @returns The parsed JSON response (or raw text when `json: false`).
+   * @throws {@link HttpResponseError} when the server returns HTTP status >= 400.
+   * @throws {@link HttpTimeoutError} when the request exceeds the configured timeout.
+   * @throws {@link HttpRequestFailed} for transport-level failures (network, DNS, socket, etc.).
    */
   async createRequest<T>(
     { url, method, timeout = this.timeout, query, headers = {}, json = true }: HttpRequestOptions,

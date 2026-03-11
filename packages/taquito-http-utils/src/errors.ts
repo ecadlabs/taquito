@@ -11,8 +11,11 @@ export class HttpRequestFailed extends NetworkError {
   public readonly transportError?: ClassifiedTransportError;
 
   constructor(
+    /** The HTTP method that was attempted. */
     public readonly method: string,
+    /** The URL that was requested. */
     public readonly url: string,
+    /** The underlying error that caused the request to fail. */
     public readonly cause: Error,
     transportError?: ClassifiedTransportError
   ) {
@@ -30,9 +33,13 @@ export class HttpRequestFailed extends NetworkError {
 export class HttpResponseError extends NetworkError {
   constructor(
     public readonly message: string,
+    /** The HTTP status code (e.g. 404, 500). */
     public readonly status: STATUS_CODE,
+    /** The HTTP status text (e.g. "Not Found"). */
     public readonly statusText: string,
+    /** The raw response body text. */
     public readonly body: string,
+    /** The URL that was requested. */
     public readonly url: string
   ) {
     super();
@@ -46,7 +53,9 @@ export class HttpResponseError extends NetworkError {
  */
 export class HttpTimeoutError extends NetworkError {
   constructor(
+    /** The timeout duration in milliseconds that was exceeded. */
     public readonly timeout: number,
+    /** The URL that was requested. */
     public readonly url: string
   ) {
     super();
