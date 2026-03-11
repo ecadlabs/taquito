@@ -2,6 +2,38 @@ import { NetworkError } from '@taquito/core';
 import { STATUS_CODE } from './status_code';
 import { ClassifiedTransportError } from './transport-errors';
 
+const MAX_CAUSE_DEPTH = 10;
+
+/** Walk the `.cause` chain and return the deepest Error (or object-shaped cause). */
+function deepestCause(err: Error): { message: string; code?: string } {
+  let current: { message: string; code?: string } = err;
+  let depth = 0;
+  for (;;) {
+    if (depth >= MAX_CAUSE_DEPTH) break;
+    const next: unknown = (current as unknown as Record<string, unknown>)['cause'];
+    if (next instanceof Error) {
+      current = next;
+      depth++;
+      continue;
+    }
+    // Handle object-shaped causes (e.g. undici sometimes throws { message, code } objects)
+    if (
+      typeof next === 'object' &&
+      next !== null &&
+      typeof (next as Record<string, unknown>)['message'] === 'string'
+    ) {
+      const obj = next as Record<string, unknown>;
+      current = {
+        message: obj['message'] as string,
+        code: typeof obj['code'] === 'string' ? obj['code'] : undefined,
+      };
+      break;
+    }
+    break;
+  }
+  return current;
+}
+
 /**
  *  @category Error
  *  Error that indicates a general failure in making the HTTP request
@@ -21,7 +53,14 @@ export class HttpRequestFailed extends NetworkError {
   ) {
     super();
     this.name = 'HttpRequestFailed';
-    this.message = `${method} ${url} ${String(cause)}`;
+    const rootCause = deepestCause(cause);
+    const rootCode = rootCause.code;
+    const detail =
+      rootCause !== (cause as { message: string; code?: string })
+        ? `${rootCause.message}${rootCode ? ` [${rootCode}]` : ''}`
+        : cause.message;
+    const kindLabel = transportError ? ` (${transportError.kind})` : '';
+    this.message = `${method} ${url}${kindLabel}: ${detail}`;
     this.transportError = transportError;
   }
 }
