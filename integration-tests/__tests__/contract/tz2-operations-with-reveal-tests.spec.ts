@@ -2,7 +2,7 @@ import { CONFIGS } from "../../config";
 import { PrefixV2 } from "@taquito/utils";
 import { UnitValue, OpKind, TezosToolkit } from "@taquito/taquito";
 import crypto from 'crypto';
-import { PvmKind } from "@taquito/rpc";
+import { PvmKind, RpcClient } from "@taquito/rpc";
 
 CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress, knownTicketContract }) => {
   const Tezos = lib;
@@ -189,11 +189,30 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress, knownTicketCont
     })
 
     it('verify that transferTicket fee and gas is sufficient', async () => {
+      const client = new RpcClient(rpc);
+      const tz2Pkh = await Tz2.signer.publicKeyHash();
+
       // prerequisite: issuing tickets
       const ticketContract = await Tezos.contract.at(knownTicketContract)
       const ticket = { ticketer: knownTicketContract, content_type: { prim: 'string' }, content: { string: 'Ticket' } };
-      const issueOp = await ticketContract.methodsObject.default([await Tz2.signer.publicKeyHash(), '3']).send()
-      await issueOp.confirmation(2)
+      const issueOp = await ticketContract.methodsObject.default([tz2Pkh, '3']).send()
+      await issueOp.confirmation()
+
+      // Assert issuance succeeded and collect diagnostics
+      expect(issueOp.status).toBe('applied')
+      const ticketBalance = await client.getTicketBalance(tz2Pkh, ticket);
+      const head = await client.getBlockHeader();
+      console.log('[ticket-diag]', JSON.stringify({
+        tz2Pkh,
+        issueHash: issueOp.hash,
+        issueStatus: issueOp.status,
+        issuedInBlock: issueOp.includedInBlock,
+        ticketBalance,
+        headLevel: head.level,
+        headTimestamp: head.timestamp,
+        gap: head.level - issueOp.includedInBlock,
+      }));
+      expect(ticketBalance).toBe('3')
 
       const estimated = await Tz2.estimate.transferTicket({
         ticketContents: ticket.content,
