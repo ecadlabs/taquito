@@ -28,6 +28,10 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
         const account = await Tezos.rpc.getDelegate(pkh)
         expect(account).toEqual(delegate)
       } catch (ex: any) {
+        // Only handle known delegation protocol errors; rethrow network failures
+        if (!ex.message?.includes('delegate.')) {
+          throw ex;
+        }
         if (await Tezos.rpc.getDelegate(pkh) === pkh) {
           // Forbidden delegate deletion
           expect(ex.message).toMatch('delegate.no_deletion')

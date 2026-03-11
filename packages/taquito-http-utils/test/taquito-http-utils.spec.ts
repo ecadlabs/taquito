@@ -478,6 +478,50 @@ describe('HttpBackend', () => {
       expect(err.message).toContain('GET');
     });
 
+    it('HttpRequestFailed walks nested Error cause chain', () => {
+      const root = new Error('read ECONNRESET');
+      (root as unknown as Record<string, unknown>)['code'] = 'ECONNRESET';
+      const mid = new TypeError('fetch failed');
+      (mid as unknown as Record<string, unknown>).cause = root;
+      const err = new HttpRequestFailed('GET', 'https://rpc.example.com/', mid);
+      expect(err.message).toContain('ECONNRESET');
+      expect(err.message).toContain('read ECONNRESET');
+      expect(err.message).toContain('GET');
+    });
+
+    it('HttpRequestFailed includes transport kind in message', () => {
+      const cause = new Error('connect refused');
+      const transport = { kind: 'connect' as const, mayHaveReachedServer: false, original: cause };
+      const err = new HttpRequestFailed('POST', 'https://rpc.example.com/', cause, transport);
+      expect(err.message).toContain('(connect)');
+    });
+
+    it('HttpRequestFailed handles object-shaped cause (non-Error)', () => {
+      const inner = { message: 'socket hang up', code: 'UND_ERR_SOCKET' };
+      const cause = new TypeError('fetch failed');
+      (cause as unknown as Record<string, unknown>).cause = inner;
+      const err = new HttpRequestFailed('GET', 'https://rpc.example.com/', cause);
+      expect(err.message).toContain('socket hang up');
+      expect(err.message).toContain('UND_ERR_SOCKET');
+    });
+
+    it('HttpRequestFailed survives circular cause chain without hanging', () => {
+      const a = new Error('loop A');
+      const b = new Error('loop B');
+      (a as unknown as Record<string, unknown>).cause = b;
+      (b as unknown as Record<string, unknown>).cause = a;
+      const err = new HttpRequestFailed('GET', 'https://rpc.example.com/', a);
+      // Should not hang; should produce a message containing one of the loop errors
+      expect(err.message).toContain('GET');
+      expect(err.message).toBeDefined();
+    });
+
+    it('HttpRequestFailed with no cause chain uses top-level message', () => {
+      const cause = new Error('something broke');
+      const err = new HttpRequestFailed('GET', 'https://rpc.example.com/', cause);
+      expect(err.message).toContain('something broke');
+    });
+
     it('HttpResponseError properties', () => {
       const err = new HttpResponseError(
         'Http error response: (404) not found',

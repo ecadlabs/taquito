@@ -51,11 +51,45 @@ const traceHttp = (payload: Record<string, unknown>) => {
   console.log(`[taquito:http-trace] ${JSON.stringify(payload)}`);
 };
 
-const toErrorMessage = (error: unknown) => {
-  if (error instanceof Error) {
-    return `${error.name}: ${error.message}`;
+const getCause = (err: Error): unknown => (err as unknown as Record<string, unknown>)['cause'];
+
+const getCode = (err: Error): string | undefined => {
+  const code = (err as unknown as Record<string, unknown>)['code'];
+  return typeof code === 'string' ? code : undefined;
+};
+
+const MAX_CAUSE_DEPTH = 10;
+
+const toErrorMessage = (error: unknown): string => {
+  if (!(error instanceof Error)) {
+    return String(error);
   }
-  return String(error);
+  const parts: string[] = [`${error.name}: ${error.message}`];
+  let current: unknown = getCause(error);
+  let depth = 0;
+  while (depth < MAX_CAUSE_DEPTH) {
+    if (current instanceof Error) {
+      const code = getCode(current);
+      const codeSuffix = code ? ` [${code}]` : '';
+      parts.push(`${current.name}: ${current.message}${codeSuffix}`);
+      current = getCause(current);
+      depth++;
+      continue;
+    }
+    // Handle object-shaped causes (e.g. undici { message, code } objects)
+    if (
+      typeof current === 'object' &&
+      current !== null &&
+      typeof (current as Record<string, unknown>)['message'] === 'string'
+    ) {
+      const obj = current as Record<string, unknown>;
+      const code = typeof obj['code'] === 'string' ? obj['code'] : undefined;
+      const codeSuffix = code ? ` [${code}]` : '';
+      parts.push(`${obj['message']}${codeSuffix}`);
+    }
+    break;
+  }
+  return parts.join(' → ');
 };
 
 const isRetriableRequest = (method: string, url: string) => {
