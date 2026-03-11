@@ -371,16 +371,44 @@ describe('HttpBackend', () => {
         expect(mockFetch).toHaveBeenCalledTimes(1);
       });
 
-      it('does not retry POST to non-helpers path', async () => {
+      it('does not retry POST to non-allowlisted path', async () => {
         mockFetch.mockRejectedValueOnce(econnreset());
         // Non-retriable request, no sleep
         await expect(
           backend.createRequest({
-            url: 'https://rpc.example.com/injection/operation',
+            url: 'https://rpc.example.com/some/random/endpoint',
             method: 'POST',
           })
         ).rejects.toThrow(HttpRequestFailed);
         expect(mockFetch).toHaveBeenCalledTimes(1);
+      });
+
+      it('retries POST to /injection/operation on ECONNRESET', async () => {
+        mockFetch
+          .mockRejectedValueOnce(econnreset())
+          .mockResolvedValueOnce(mockResponse({ jsonBody: '"oph4Rkj..."' }));
+        const result = await drainRetries(
+          backend.createRequest({
+            url: 'https://rpc.example.com/injection/operation',
+            method: 'POST',
+          })
+        );
+        expect(mockFetch).toHaveBeenCalledTimes(2);
+        expect(result).toEqual('"oph4Rkj..."');
+      });
+
+      it('retries POST to /injection/operation on socket hang up', async () => {
+        mockFetch
+          .mockRejectedValueOnce(socketHangUp())
+          .mockResolvedValueOnce(mockResponse({ jsonBody: '"oph4Rkj..."' }));
+        const result = await drainRetries(
+          backend.createRequest({
+            url: 'https://rpc.example.com/injection/operation',
+            method: 'POST',
+          })
+        );
+        expect(mockFetch).toHaveBeenCalledTimes(2);
+        expect(result).toEqual('"oph4Rkj..."');
       });
 
       it('retries POST to /helpers/forge/operations', async () => {
@@ -395,6 +423,28 @@ describe('HttpBackend', () => {
         );
         expect(mockFetch).toHaveBeenCalledTimes(2);
         expect(result).toEqual({ forged: '00' });
+      });
+
+      it('sends identical body bytes on retry (body serialized once before loop)', async () => {
+        let callCount = 0;
+        const data = {
+          branch: 'head',
+          get contents() {
+            callCount++;
+            return [callCount];
+          },
+        };
+        mockFetch
+          .mockRejectedValueOnce(econnreset())
+          .mockResolvedValueOnce(mockResponse({ jsonBody: { ok: true } }));
+        await drainRetries(
+          backend.createRequest({ url: 'https://rpc.example.com/', method: 'GET' }, data)
+        );
+        expect(mockFetch).toHaveBeenCalledTimes(2);
+        // Body should be identical on both calls (serialized once)
+        const body1 = mockFetch.mock.calls[0][1].body;
+        const body2 = mockFetch.mock.calls[1][1].body;
+        expect(body1).toBe(body2);
       });
 
       it('throws after exhausting retries (fetch called 2x)', async () => {

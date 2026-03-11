@@ -109,7 +109,13 @@ const isRetriableRequest = (method: string, url: string) => {
     normalizedUrl.endsWith('/helpers/forge/operations') ||
     normalizedUrl.endsWith('/helpers/preapply/operations') ||
     normalizedUrl.endsWith('/helpers/scripts/simulate_operation') ||
-    normalizedUrl.endsWith('/helpers/scripts/run_operation')
+    normalizedUrl.endsWith('/helpers/scripts/run_operation') ||
+    // Safe to retry: ops are content-addressed, mempool deduplicates identical bytes,
+    // and counter prevents replay. If the first request secretly succeeded but the
+    // connection dropped, the retry may get a 500 (async_injection_failed) which
+    // propagates to the caller via HttpResponseError (not retried). No silent corruption,
+    // but the caller may see an error despite the op being on-chain.
+    normalizedUrl.endsWith('/injection/operation')
   );
 };
 
@@ -186,6 +192,10 @@ export class HttpBackend {
       headers['Content-Type'] = 'application/json';
     }
 
+    // Serialized once on first attempt, reused on retries for byte-stable requests.
+    let body: string | undefined;
+    let bodySerialized = false;
+
     for (let attempt = 0; attempt <= httpRetryCount; attempt++) {
       // Creates a new AbortController instance to handle timeouts
       const controller = new AbortController();
@@ -193,10 +203,15 @@ export class HttpBackend {
       const requestStartedAt = Date.now();
 
       try {
+        if (!bodySerialized) {
+          body = JSON.stringify(data);
+          bodySerialized = true;
+        }
+
         const response = await fetch(urlWithQuery, {
           method,
           headers,
-          body: JSON.stringify(data),
+          body,
           signal: controller.signal,
           ...(useNodeFetchAgent && createAgent ? { agent: createAgent(urlWithQuery) } : {}),
         });
@@ -263,7 +278,9 @@ export class HttpBackend {
           isRetriableTransport;
 
         if (shouldRetry) {
-          const retryDelayMs = httpRetryBaseMs * (attempt + 1);
+          const exponential = httpRetryBaseMs * Math.pow(2, attempt);
+          const jitter = Math.floor(Math.random() * httpRetryBaseMs);
+          const retryDelayMs = exponential + jitter;
           traceHttp({
             stage: 'request-retry',
             method: methodValue,
