@@ -64,7 +64,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4, 5]
+        shard: [1, 2, 3]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -75,15 +75,19 @@ jobs:
       - run: npm run build
       - if: ${{ !github.event.pull_request.head.repo.fork }}
         name: Tailscale
-        uses: tailscale/github-action@v1
+        # Pinned to SHA to prevent supply-chain attacks via mutable tags.
+        # Verify before bumping: https://github.com/tailscale/github-action/releases
+        uses: tailscale/github-action@306e68a486fd2350f2bfc3b19fcd143891a4a2d8 # v4.1.2
         with:
-          authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
-          version: 1.32.2
+          oauth-client-id: ${{ secrets.TAILSCALE_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TAILSCALE_OAUTH_SECRET }}
+          tags: tag:github-runner
+          ping: ecad-tezos-tallinnnet-rolling-1.i.ecadinfra.com
       - id: run-tests
         run: >
           npm -w integration-tests run test:tallinnnet
           -- --maxWorkers=2
-          --shard=${{ matrix.shard }}/5
+          --shard=${{ matrix.shard }}/3
           --testPathIgnorePatterns=sapling
           --testPathIgnorePatterns=ledger
         env:
@@ -106,10 +110,14 @@ jobs:
       - run: npm run build
       - if: ${{ !github.event.pull_request.head.repo.fork }}
         name: Tailscale
-        uses: tailscale/github-action@v1
+        # Pinned to SHA to prevent supply-chain attacks via mutable tags.
+        # Verify before bumping: https://github.com/tailscale/github-action/releases
+        uses: tailscale/github-action@306e68a486fd2350f2bfc3b19fcd143891a4a2d8 # v4.1.2
         with:
-          authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
-          version: 1.32.2
+          oauth-client-id: ${{ secrets.TAILSCALE_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TAILSCALE_OAUTH_SECRET }}
+          tags: tag:github-runner
+          ping: ecad-tezos-tallinnnet-rolling-1.i.ecadinfra.com
       - id: run-tests
         run: >
           npm -w integration-tests run test:tallinnnet
