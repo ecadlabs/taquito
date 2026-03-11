@@ -1,5 +1,5 @@
 import { CONFIGS } from "../config";
-import { Chest, Timelock, ChestKey } from '../../packages/taquito-timelock/src/taquito-timelock';
+import { Chest, Timelock, ChestKey } from '@taquito/timelock';
 import { buf2hex } from '@taquito/utils';
 import * as crypto from 'crypto';
 import { sequentialTestSuite } from '../sequential-test';
