@@ -87,7 +87,6 @@ jobs:
           --testPathIgnorePatterns=sapling
           --testPathIgnorePatterns=ledger
         env:
-          TAQUITO_HTTP_KEEPALIVE: 'true'
           TAQUITO_ITEST_DIAGNOSTICS: 'true'
           TAQUITO_DIAG_BALANCE_WARN_MUTEZ: '9000000'
           TEZOS_RPC_TALLINNNET: ${{ github.event.pull_request.head.repo.fork && 'http://ecad-tezos-tallinnnet-rolling-1.i.ecadinfra.com/' || null }}
@@ -115,7 +114,6 @@ jobs:
           -- --maxWorkers=1
           --testPathPattern='sapling'
         env:
-          TAQUITO_HTTP_KEEPALIVE: 'true'
           TAQUITO_ITEST_DIAGNOSTICS: 'true'
           TAQUITO_DIAG_BALANCE_WARN_MUTEZ: '9000000'
           TEZOS_RPC_TALLINNNET: ${{ github.event.pull_request.head.repo.fork && 'http://ecad-tezos-tallinnnet-rolling-1.i.ecadinfra.com/' || null }}

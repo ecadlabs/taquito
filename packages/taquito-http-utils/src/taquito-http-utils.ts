@@ -3,13 +3,12 @@
  * @module @taquito/http-utils
  */
 
-let fetch = globalThis?.fetch;
-let createAgent: ((url: string) => { keepAlive?: boolean; [key: string]: any }) | undefined;
-let useNodeFetchAgent = false;
-let nodeKeepAliveEnabled = false;
+if (typeof globalThis.fetch !== 'function') {
+  throw new Error(
+    'No fetch implementation available. Requires Node.js >= 22 or a browser environment.'
+  );
+}
 
-const isNode = typeof process !== 'undefined' && !!process?.versions?.node;
-const isBrowserLike = typeof window !== 'undefined';
 const httpTraceEnabled =
   /^(1|true)$/i.test(process?.env?.TAQUITO_HTTP_TRACE ?? '') || process?.env?.RUNNER_DEBUG === '1';
 const parsedHttpRetryCount = Number(process?.env?.TAQUITO_HTTP_RETRY_COUNT ?? '1');
@@ -22,40 +21,6 @@ const httpRetryBaseMs =
   Number.isFinite(parsedHttpRetryBaseMs) && parsedHttpRetryBaseMs >= 0
     ? parsedHttpRetryBaseMs
     : 100;
-
-// Use native fetch in browser-like environments (they have reliable native fetch)
-// Use node-fetch in pure Node.js CLI for better compatibility and keepAlive control
-if (isNode && !isBrowserLike) {
-  // Handle both ESM and CJS default export patterns for webpack compatibility
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const nodeFetch = require('node-fetch');
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const https = require('https');
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const http = require('http');
-  fetch = nodeFetch.default || nodeFetch;
-  useNodeFetchAgent = true;
-  const keepAliveFlag = process?.env?.TAQUITO_HTTP_KEEPALIVE?.toLowerCase();
-  // Default remains false for reliability. Set TAQUITO_HTTP_KEEPALIVE=true to opt in.
-  nodeKeepAliveEnabled = keepAliveFlag === 'true' || keepAliveFlag === '1';
-  const httpsAgent = new https.Agent({
-    keepAlive: nodeKeepAliveEnabled,
-    maxFreeSockets: 10,
-    keepAliveMsecs: 1000,
-    family: 4,
-  });
-  const httpAgent = new http.Agent({
-    keepAlive: nodeKeepAliveEnabled,
-    maxFreeSockets: 10,
-    keepAliveMsecs: 1000,
-    family: 4,
-  });
-  createAgent = (url: string) => {
-    return url.startsWith('https') ? httpsAgent : httpAgent;
-  };
-} else if (typeof fetch !== 'function') {
-  throw new Error('No fetch implementation available');
-}
 
 import { STATUS_CODE } from './status_code';
 import { HttpRequestFailed, HttpResponseError, HttpTimeoutError } from './errors';
@@ -128,7 +93,6 @@ export interface HttpRequestOptions {
   json?: boolean;
   query?: ObjectType;
   headers?: { [key: string]: string };
-  mimeType?: string;
 }
 
 export class HttpBackend {
@@ -208,12 +172,11 @@ export class HttpBackend {
           bodySerialized = true;
         }
 
-        const response = await fetch(urlWithQuery, {
+        const response = await globalThis.fetch(urlWithQuery, {
           method,
           headers,
           body,
           signal: controller.signal,
-          ...(useNodeFetchAgent && createAgent ? { agent: createAgent(urlWithQuery) } : {}),
         });
 
         if (typeof response === 'undefined') {
@@ -229,7 +192,6 @@ export class HttpBackend {
             url: normalizeTraceUrl(urlWithQuery),
             status: response.status,
             elapsedMs: Date.now() - requestStartedAt,
-            keepAlive: nodeKeepAliveEnabled,
           });
           throw new HttpResponseError(
             `Http error response: (${response.status}) ${errorData}`,
@@ -246,7 +208,6 @@ export class HttpBackend {
           url: normalizeTraceUrl(urlWithQuery),
           status: response.status,
           elapsedMs: Date.now() - requestStartedAt,
-          keepAlive: nodeKeepAliveEnabled,
         });
 
         if (json) {
@@ -291,7 +252,6 @@ export class HttpBackend {
             retryDelayMs,
             error: toErrorMessage(e),
             transportKind: classified?.kind,
-            keepAlive: nodeKeepAliveEnabled,
           });
           await sleep(retryDelayMs);
           continue;
@@ -304,7 +264,6 @@ export class HttpBackend {
             url: normalizeTraceUrl(urlWithQuery),
             elapsedMs: Date.now() - requestStartedAt,
             timeoutMs: timeout,
-            keepAlive: nodeKeepAliveEnabled,
           });
           throw new HttpTimeoutError(timeout, urlWithQuery);
         } else {
@@ -315,9 +274,9 @@ export class HttpBackend {
             elapsedMs: Date.now() - requestStartedAt,
             error: toErrorMessage(e),
             transportKind: classified?.kind,
-            keepAlive: nodeKeepAliveEnabled,
           });
-          throw new HttpRequestFailed(methodValue, urlWithQuery, e as Error, classified);
+          const cause = e instanceof Error ? e : new Error(String(e));
+          throw new HttpRequestFailed(methodValue, urlWithQuery, cause, classified);
         }
       } finally {
         clearTimeout(t);

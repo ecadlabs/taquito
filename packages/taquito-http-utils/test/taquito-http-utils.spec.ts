@@ -1,15 +1,24 @@
-const mockFetch = jest.fn();
-jest.mock('node-fetch', () => ({
-  __esModule: true,
-  default: mockFetch,
-}));
-
 import {
   HttpBackend,
   HttpRequestFailed,
   HttpResponseError,
   HttpTimeoutError,
 } from '../src/taquito-http-utils';
+
+const mockFetch = jest.fn();
+const originalFetch = globalThis.fetch;
+
+beforeAll(() => {
+  globalThis.fetch = mockFetch as unknown as typeof globalThis.fetch;
+});
+
+afterAll(() => {
+  globalThis.fetch = originalFetch;
+});
+
+beforeEach(() => {
+  mockFetch.mockReset();
+});
 
 function mockResponse(opts: {
   status?: number;
@@ -24,10 +33,6 @@ function mockResponse(opts: {
     text: jest.fn().mockResolvedValue(opts.body ?? ''),
   };
 }
-
-beforeEach(() => {
-  mockFetch.mockReset();
-});
 
 describe('HttpBackend', () => {
   describe('constructor', () => {
