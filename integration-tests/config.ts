@@ -322,7 +322,7 @@ const shadownetEphemeral: Config =
   defaultConfig({
     networkName: 'SHADOWNET',
     protocol: Protocols.PtTALLiNt,
-    defaultRpc: 'https://rpc.shadownet.teztnets.com/',
+    defaultRpc: 'http://ecad-tezos-shadownet-rolling-1.i.ecadinfra.com/',
     knownContracts: knownContractsShadownet,
     signerConfig: defaultEphemeralConfig('shadownet')
   });
@@ -414,6 +414,7 @@ const setupSignerWithFreshKey = async (
   }
 
   const reasons: string[] = [];
+  let state: SignerStateSnapshot | undefined;
   for (let attempt = 1; attempt <= options.maxAttempts; attempt++) {
     const keyResponse = await httpClient.createRequest<KeygenV2FreshKeyResponse>({
       url: v2FreshKeyUrl,
@@ -427,7 +428,7 @@ const setupSignerWithFreshKey = async (
 
     const signer = new InMemorySigner(keyResponse.secret_key);
     Tezos.setSignerProvider(signer);
-    const state = await readSignerState(Tezos, keyResponse.pkh);
+    state = await readSignerState(Tezos, keyResponse.pkh);
 
     const lowBalance =
       options.minBalanceMutez > 0 &&
@@ -435,6 +436,15 @@ const setupSignerWithFreshKey = async (
     const alreadyRevealed = options.requireUnrevealed && state.revealed;
 
     if (!lowBalance && !alreadyRevealed) {
+      if (
+        state.balanceAsNumber !== null &&
+        state.balanceAsNumber < lowBalanceWarnMutez
+      ) {
+        console.warn(
+          `[keygen] key ${state.pkh} accepted with ${state.balanceMutez} mutez ` +
+          `(requested min: ${options.minBalanceMutez}, warn threshold: ${lowBalanceWarnMutez})`
+        );
+      }
       await logSignerState(
         Tezos,
         { signerMode: 'fresh', keyUrl: v2FreshKeyUrl, pkhHint: state.pkh },
@@ -450,6 +460,11 @@ const setupSignerWithFreshKey = async (
       .filter(Boolean)
       .join(',');
     reasons.push(`attempt_${attempt}:${reason}`);
+
+    console.warn(
+      `[keygen] rejected key ${state.pkh} (attempt ${attempt}/${options.maxAttempts}): ${reason}, ` +
+      `balance: ${state.balanceMutez ?? 'unknown'} mutez`
+    );
 
     diagnosticsLog({
       stage: 'fresh-key-retry',
@@ -470,7 +485,10 @@ const setupSignerWithFreshKey = async (
   }
 
   throw new Error(
-    `Unable to acquire a fresh key meeting constraints after ${options.maxAttempts} attempts (${reasons.join('; ')})`
+    `Unable to acquire a fresh key meeting constraints after ${options.maxAttempts} attempts ` +
+    `(min_balance: ${options.minBalanceMutez} mutez, ` +
+    `last_balance: ${state?.balanceMutez ?? 'unknown'} mutez, ` +
+    `retries: ${reasons.join('; ')})`
   );
 };
 
