@@ -89,6 +89,8 @@ jobs:
         env:
           TAQUITO_ITEST_DIAGNOSTICS: 'true'
           TAQUITO_DIAG_BALANCE_WARN_MUTEZ: '9000000'
+          TAQUITO_HTTP_RETRY_COUNT: '3'
+          TAQUITO_HTTP_RETRY_BASE_MS: '200'
           TEZOS_RPC_TALLINNNET: ${{ github.event.pull_request.head.repo.fork && 'http://ecad-tezos-tallinnnet-rolling-1.i.ecadinfra.com/' || null }}
 
   integration-tests-sapling:
@@ -116,4 +118,6 @@ jobs:
         env:
           TAQUITO_ITEST_DIAGNOSTICS: 'true'
           TAQUITO_DIAG_BALANCE_WARN_MUTEZ: '9000000'
+          TAQUITO_HTTP_RETRY_COUNT: '3'
+          TAQUITO_HTTP_RETRY_BASE_MS: '200'
           TEZOS_RPC_TALLINNNET: ${{ github.event.pull_request.head.repo.fork && 'http://ecad-tezos-tallinnnet-rolling-1.i.ecadinfra.com/' || null }}

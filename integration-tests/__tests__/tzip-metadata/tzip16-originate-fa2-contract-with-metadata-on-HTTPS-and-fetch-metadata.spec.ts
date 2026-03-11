@@ -10,11 +10,8 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
    let contractAddress: string;
    describe(`Test contract origination of a fa2 contract having Tzip16 metadata and view through contract api using: ${rpc}`, () => {
 
-      beforeEach(async () => {
+      beforeAll(async () => {
          await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 })
-      })
-
-      it('Verify contract.originate for a Fa2 contract having metadata on HTTPS', async () => {
 
          const LocalTez1 = await createAddress();
          const localTez1Pkh = await LocalTez1.signer.publicKeyHash();
@@ -65,7 +62,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
          contractAddress = (await op.contract()).address;
          expect(op.hash).toBeDefined();
          expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-      });
+      })
 
       it('Verify that metadata for a Fa2 contract can be fetched', async () => {
 
