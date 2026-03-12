@@ -91,15 +91,47 @@ jobs:
           tags: tag:github-runner
           ping: ecad-tezos-tallinnnet-rolling-1.i.ecadinfra.com
       - id: run-tests
-        run: >
-          npm -w integration-tests run test:tallinnnet
-          -- --shard=${{ matrix.shard }}/3
-          --exclude='**/sapling/**'
-          --exclude='**/ledger/**'
+        shell: bash
+        run: |
+          set -euo pipefail
+          start_epoch="$(date +%s)"
+          start_iso="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+
+          set +e
+          npm -w integration-tests run test:tallinnnet \
+            -- --shard=${{ matrix.shard }}/3 \
+            --exclude='**/sapling/**' \
+            --exclude='**/ledger/**'
+          test_exit_code="$?"
+          set -e
+
+          end_epoch="$(date +%s)"
+          end_iso="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          elapsed_seconds="$((end_epoch - start_epoch))"
+
+          mkdir -p ci-metrics
+          cat > "ci-metrics/itest-testnet-${{ matrix.shard }}.json" <<EOF
+          {"suite":"testnet","shard":"${{ matrix.shard }}/3","status":"$([ "$test_exit_code" -eq 0 ] && echo pass || echo fail)","exit_code":$test_exit_code,"elapsed_seconds":$elapsed_seconds,"started_at":"$start_iso","completed_at":"$end_iso","run_id":"${{ github.run_id }}","run_attempt":"${{ github.run_attempt }}","sha":"${{ github.sha }}"}
+          EOF
+
+          echo "### Integration timing: testnet shard ${{ matrix.shard }}/3" >> "$GITHUB_STEP_SUMMARY"
+          echo "- status: $([ "$test_exit_code" -eq 0 ] && echo pass || echo fail)" >> "$GITHUB_STEP_SUMMARY"
+          echo "- exit_code: $test_exit_code" >> "$GITHUB_STEP_SUMMARY"
+          echo "- elapsed_seconds: $elapsed_seconds" >> "$GITHUB_STEP_SUMMARY"
+
+          exit "$test_exit_code"
         env:
           TAQUITO_ITEST_DIAGNOSTICS: 'true'
           TAQUITO_DIAG_BALANCE_WARN_MUTEZ: '9000000'
           TEZOS_RPC_TALLINNNET: ${{ github.event.pull_request.head.repo.fork && 'http://ecad-tezos-tallinnnet-rolling-1.i.ecadinfra.com/' || null }}
+      - name: Upload timing artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: itest-timing-testnet-${{ matrix.shard }}
+          path: ci-metrics/itest-testnet-${{ matrix.shard }}.json
+          if-no-files-found: warn
+          retention-days: 30
 
   integration-tests-sapling:
     needs: integration-tests-keygen-preflight
@@ -123,10 +155,79 @@ jobs:
           tags: tag:github-runner
           ping: ecad-tezos-tallinnnet-rolling-1.i.ecadinfra.com
       - id: run-tests
-        run: >
-          npm -w integration-tests run test:tallinnnet
-          -- sapling
+        shell: bash
+        run: |
+          set -euo pipefail
+          start_epoch="$(date +%s)"
+          start_iso="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+
+          set +e
+          npm -w integration-tests run test:tallinnnet -- sapling
+          test_exit_code="$?"
+          set -e
+
+          end_epoch="$(date +%s)"
+          end_iso="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          elapsed_seconds="$((end_epoch - start_epoch))"
+
+          mkdir -p ci-metrics
+          cat > "ci-metrics/itest-sapling.json" <<EOF
+          {"suite":"sapling","shard":"1/1","status":"$([ "$test_exit_code" -eq 0 ] && echo pass || echo fail)","exit_code":$test_exit_code,"elapsed_seconds":$elapsed_seconds,"started_at":"$start_iso","completed_at":"$end_iso","run_id":"${{ github.run_id }}","run_attempt":"${{ github.run_attempt }}","sha":"${{ github.sha }}"}
+          EOF
+
+          echo "### Integration timing: sapling" >> "$GITHUB_STEP_SUMMARY"
+          echo "- status: $([ "$test_exit_code" -eq 0 ] && echo pass || echo fail)" >> "$GITHUB_STEP_SUMMARY"
+          echo "- exit_code: $test_exit_code" >> "$GITHUB_STEP_SUMMARY"
+          echo "- elapsed_seconds: $elapsed_seconds" >> "$GITHUB_STEP_SUMMARY"
+
+          exit "$test_exit_code"
         env:
           TAQUITO_ITEST_DIAGNOSTICS: 'true'
           TAQUITO_DIAG_BALANCE_WARN_MUTEZ: '9000000'
           TEZOS_RPC_TALLINNNET: ${{ github.event.pull_request.head.repo.fork && 'http://ecad-tezos-tallinnnet-rolling-1.i.ecadinfra.com/' || null }}
+      - name: Upload timing artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: itest-timing-sapling
+          path: ci-metrics/itest-sapling.json
+          if-no-files-found: warn
+          retention-days: 30
+
+  integration-tests-timing-summary:
+    needs:
+      - integration-tests-testnet
+      - integration-tests-sapling
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download timing artifacts
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          pattern: itest-timing-*
+          path: ci-metrics
+          merge-multiple: true
+      - name: Render timing summary
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          echo "## Integration timing summary" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+
+          if ! ls ci-metrics/*.json >/dev/null 2>&1; then
+            echo "No timing artifacts found for this run." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          echo "| suite | shard | status | elapsed_seconds | exit_code | started_at | completed_at |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|---|---:|---|---:|---:|---|---|" >> "$GITHUB_STEP_SUMMARY"
+          jq -s -r '
+            sort_by(.suite, .shard)
+            | .[]
+            | "| \(.suite) | \(.shard) | \(.status) | \(.elapsed_seconds) | \(.exit_code) | \(.started_at) | \(.completed_at) |"
+          ' ci-metrics/*.json >> "$GITHUB_STEP_SUMMARY"
+
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "Raw timing JSON artifacts are attached to this run under names matching \`itest-timing-*\`." >> "$GITHUB_STEP_SUMMARY"
