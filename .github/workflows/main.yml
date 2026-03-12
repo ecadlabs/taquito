@@ -68,6 +68,11 @@ jobs:
   integration-tests-testnet:
     needs: integration-tests-keygen-preflight
     runs-on: ubuntu-latest
+    concurrency:
+      # Preserve 3-way shard parallelism inside one run, but prevent
+      # overlapping PR runs from doubling load on the shared Tallinnnet RPC.
+      group: tallinnnet-itest-testnet-shard-${{ matrix.shard }}
+      cancel-in-progress: false
     strategy:
       fail-fast: false
       matrix:
@@ -136,6 +141,10 @@ jobs:
   integration-tests-sapling:
     needs: integration-tests-keygen-preflight
     runs-on: ubuntu-latest
+    concurrency:
+      # Keep sapling at one concurrent slot across PR runs on shared infra.
+      group: tallinnnet-itest-sapling
+      cancel-in-progress: false
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
