@@ -7,7 +7,8 @@ export default mergeConfig(shared, {
     setupFiles: ['./vitest.setup.ts'],
     testTimeout: 1_200_000,
     hookTimeout: 1_200_000,
-    retry: process.env.CI ? 2 : 0,
+    // Fail fast to surface first-order instability instead of masking it with retries.
+    retry: 0,
     fileParallelism: false,
     include: ['__tests__/**/*.spec.ts'],
     exclude: [

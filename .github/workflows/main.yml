@@ -31,6 +31,13 @@ jobs:
       - run: npx nx build @taquito/http-utils
       - run: npx nx test @taquito/http-utils -- --coverage
 
+  integration-tests-keygen-preflight:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Keygen preflight
+        run: bash .github/scripts/check-keygen-health.sh
+
   lint-and-test:
     runs-on: ubuntu-latest
     strategy:
@@ -59,6 +66,7 @@ jobs:
           RUN_INTEGRATION: true
 
   integration-tests-testnet:
+    needs: integration-tests-keygen-preflight
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -91,11 +99,10 @@ jobs:
         env:
           TAQUITO_ITEST_DIAGNOSTICS: 'true'
           TAQUITO_DIAG_BALANCE_WARN_MUTEZ: '9000000'
-          TAQUITO_HTTP_RETRY_COUNT: '3'
-          TAQUITO_HTTP_RETRY_BASE_MS: '200'
           TEZOS_RPC_TALLINNNET: ${{ github.event.pull_request.head.repo.fork && 'http://ecad-tezos-tallinnnet-rolling-1.i.ecadinfra.com/' || null }}
 
   integration-tests-sapling:
+    needs: integration-tests-keygen-preflight
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -122,6 +129,4 @@ jobs:
         env:
           TAQUITO_ITEST_DIAGNOSTICS: 'true'
           TAQUITO_DIAG_BALANCE_WARN_MUTEZ: '9000000'
-          TAQUITO_HTTP_RETRY_COUNT: '3'
-          TAQUITO_HTTP_RETRY_BASE_MS: '200'
           TEZOS_RPC_TALLINNNET: ${{ github.event.pull_request.head.repo.fork && 'http://ecad-tezos-tallinnnet-rolling-1.i.ecadinfra.com/' || null }}

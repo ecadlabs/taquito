@@ -155,14 +155,27 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
     it('should be able to subscribe to events with tag and address params given', async () => {
       const data: any = [];
-
       const eventSub = Tezos.stream.subscribeEvent({
         tag: 'intFromMainContract',
         address: mainContractAddress,
       });
+      const eventReceived = new Promise<void>((resolve, reject) => {
+        const timeoutHandle = setTimeout(() => {
+          reject(new Error('Timed out waiting for subscribed event'));
+        }, 15_000);
 
-      eventSub.on('data', (x) => {
-        data.push(x);
+        eventSub.on('error', (error) => {
+          clearTimeout(timeoutHandle);
+          reject(error);
+        });
+
+        eventSub.on('data', (x) => {
+          data.push(x);
+          if (data.length >= 1) {
+            clearTimeout(timeoutHandle);
+            resolve();
+          }
+        });
       });
 
       const contract1 = await Tezos.contract.at(mainContractAddress!);
@@ -177,8 +190,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       const sent1 = await operation1.send();
 
       await sent1.confirmation();
-
-      await sleep(5000);
+      await eventReceived;
       eventSub.close();
 
       expect(data.length).toEqual(1);

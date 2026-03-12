@@ -18,6 +18,9 @@ const integrationDiagnosticsEnabled = /^(1|true)$/i.test(
 const parsedLowBalanceWarnMutez = Number(process.env['TAQUITO_DIAG_BALANCE_WARN_MUTEZ'] ?? '9000000');
 const parsedFreshKeyMaxAttempts = Number(process.env['TAQUITO_FRESH_KEY_MAX_ATTEMPTS'] ?? '');
 const parsedFreshKeyRetryMs = Number(process.env['TAQUITO_FRESH_KEY_RETRY_MS'] ?? '0');
+const parsedKeygenRequestTimeoutMs = Number(
+  process.env['TAQUITO_KEYGEN_REQUEST_TIMEOUT_MS'] ?? '30000'
+);
 const lowBalanceWarnMutez =
   Number.isFinite(parsedLowBalanceWarnMutez) && parsedLowBalanceWarnMutez > 0
     ? parsedLowBalanceWarnMutez
@@ -30,6 +33,10 @@ const defaultFreshKeyRetryMs =
   Number.isFinite(parsedFreshKeyRetryMs) && parsedFreshKeyRetryMs >= 0
     ? Math.floor(parsedFreshKeyRetryMs)
     : 0;
+const keygenRequestTimeoutMs =
+  Number.isFinite(parsedKeygenRequestTimeoutMs) && parsedKeygenRequestTimeoutMs > 0
+    ? Math.floor(parsedKeygenRequestTimeoutMs)
+    : 30_000;
 
 export const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -412,11 +419,14 @@ const setupSignerWithFreshKey = async (
   const reasons: string[] = [];
   let state: SignerStateSnapshot | undefined;
   for (let attempt = 1; attempt <= options.maxAttempts; attempt++) {
+    const keyRequestStartedAt = Date.now();
     const keyResponse = await httpClient.createRequest<KeygenV2FreshKeyResponse>({
       url: v2FreshKeyUrl,
       method: 'POST',
       headers: signerConfig.requestHeaders,
+      timeout: keygenRequestTimeoutMs,
     }, requestBody);
+    const keyRequestDurationMs = Date.now() - keyRequestStartedAt;
 
     if (!keyResponse.secret_key) {
       throw new Error(`Keygen V2 did not return secret_key from ${v2FreshKeyUrl}`);
@@ -424,7 +434,9 @@ const setupSignerWithFreshKey = async (
 
     const signer = new InMemorySigner(keyResponse.secret_key);
     Tezos.setSignerProvider(signer);
+    const signerStateStartedAt = Date.now();
     state = await readSignerState(Tezos, keyResponse.pkh);
+    const signerStateDurationMs = Date.now() - signerStateStartedAt;
 
     const lowBalance =
       options.minBalanceMutez > 0 &&
@@ -432,6 +444,19 @@ const setupSignerWithFreshKey = async (
     const alreadyRevealed = options.requireUnrevealed && state.revealed;
 
     if (!lowBalance && !alreadyRevealed) {
+      diagnosticsLog({
+        stage: 'fresh-key-selected',
+        keyUrl: v2FreshKeyUrl,
+        attempt,
+        maxAttempts: options.maxAttempts,
+        pkh: state.pkh,
+        revealed: state.revealed,
+        balanceMutez: state.balanceMutez,
+        minBalanceMutez: options.minBalanceMutez || null,
+        requireUnrevealed: options.requireUnrevealed,
+        keygenRequestDurationMs: keyRequestDurationMs,
+        signerStateDurationMs: signerStateDurationMs,
+      });
       if (
         state.balanceAsNumber !== null &&
         state.balanceAsNumber < lowBalanceWarnMutez
@@ -473,6 +498,8 @@ const setupSignerWithFreshKey = async (
       minBalanceMutez: options.minBalanceMutez || null,
       requireUnrevealed: options.requireUnrevealed,
       reason,
+      keygenRequestDurationMs: keyRequestDurationMs,
+      signerStateDurationMs: signerStateDurationMs,
     });
 
     if (attempt < options.maxAttempts && options.retryDelayMs > 0) {
@@ -499,6 +526,7 @@ const setupSignerWithEphemeralKey = async (
     url: v2EphemeralLeaseUrl,
     method: 'POST',
     headers: signerConfig.requestHeaders,
+    timeout: keygenRequestTimeoutMs,
   }, { key_prefixes: ['tz1'] });
 
   const signer = new RemoteSigner(pkh, `${v1EphemeralSignerBaseUrl}/${id}/`, {
@@ -518,9 +546,10 @@ const setupWithSecretKey = async (Tezos: TezosToolkit, signerConfig: SecretKeyCo
 };
 
 const configurePollingInterval = (Tezos: TezosToolkit, pollingIntervalMilliseconds: string | undefined) => {
-  if (pollingIntervalMilliseconds) {
-    Tezos.setStreamProvider(Tezos.getFactory(PollingSubscribeProvider)({ pollingIntervalMilliseconds: Number(pollingIntervalMilliseconds) }));
-  }
+  const streamConfig = pollingIntervalMilliseconds
+    ? { pollingIntervalMilliseconds: Number(pollingIntervalMilliseconds) }
+    : {};
+  Tezos.setStreamProvider(Tezos.getFactory(PollingSubscribeProvider)(streamConfig));
 }
 
 const configureRpcCache = (rpc: string, rpcCacheMilliseconds: string) => {
@@ -575,6 +604,13 @@ export const CONFIGS = () => {
           networkType,
           setup: async (options?: boolean | SetupOptions) => {
             const setupOptions = normalizeSetupOptions(options);
+            const setupStartedAt = Date.now();
+
+            // Reset mutable runtime settings to a deterministic baseline so per-test overrides
+            // (e.g. custom stream polling intervals) do not leak across tests.
+            Tezos.setProvider({ config: { confirmationPollingTimeoutSecond: 320 } });
+            configurePollingInterval(Tezos, pollingIntervalMilliseconds);
+
             diagnosticsLog({
               stage: 'setup-start',
               networkName,
@@ -587,26 +623,40 @@ export const CONFIGS = () => {
               retryDelayMs: setupOptions.retryDelayMs,
               signerType:
                 signerConfig.type === SignerType.SECRET_KEY ? 'SECRET_KEY' : 'EPHEMERAL_KEY',
+              keygenRequestTimeoutMs,
             });
-            if (signerConfig.type === SignerType.SECRET_KEY) {
-              await setupWithSecretKey(Tezos, signerConfig);
-            } else if (signerConfig.type === SignerType.EPHEMERAL_KEY) {
-              if (setupOptions.preferFreshKey) {
-                await setupSignerWithFreshKey(Tezos, signerConfig, {
-                  requireUnrevealed: setupOptions.requireUnrevealed,
-                  minBalanceMutez: setupOptions.minBalanceMutez,
-                  maxAttempts: setupOptions.maxAttempts,
-                  retryDelayMs: setupOptions.retryDelayMs,
-                });
-              } else {
-                await setupSignerWithEphemeralKey(Tezos, signerConfig);
+            try {
+              if (signerConfig.type === SignerType.SECRET_KEY) {
+                await setupWithSecretKey(Tezos, signerConfig);
+              } else if (signerConfig.type === SignerType.EPHEMERAL_KEY) {
+                if (setupOptions.preferFreshKey) {
+                  await setupSignerWithFreshKey(Tezos, signerConfig, {
+                    requireUnrevealed: setupOptions.requireUnrevealed,
+                    minBalanceMutez: setupOptions.minBalanceMutez,
+                    maxAttempts: setupOptions.maxAttempts,
+                    retryDelayMs: setupOptions.retryDelayMs,
+                  });
+                } else {
+                  await setupSignerWithEphemeralKey(Tezos, signerConfig);
+                }
               }
+            } catch (error) {
+              diagnosticsLog({
+                stage: 'setup-failed',
+                networkName,
+                rpc,
+                preferFreshKey: setupOptions.preferFreshKey,
+                elapsedMs: Date.now() - setupStartedAt,
+                error: toErrorMessage(error),
+              });
+              throw error;
             }
             diagnosticsLog({
               stage: 'setup-complete',
               networkName,
               rpc,
               preferFreshKey: setupOptions.preferFreshKey,
+              elapsedMs: Date.now() - setupStartedAt,
             });
           },
           createAddress: async (prefix: PrefixV2 = PrefixV2.P256SecretKey) => {

@@ -1,36 +1,26 @@
-import BigNumber from "bignumber.js";
-import { CONFIGS, sleep } from "../../config";
+import { Context, Operation } from "@taquito/taquito";
+import { encodeOpHash } from "@taquito/utils";
+import { CONFIGS } from "../../config";
+import { NeverStreamProvider } from "../../test-helpers/never-stream-provider";
 
-CONFIGS().forEach(({ lib, rpc, setup }) => {
-  const Tezos = lib;
-  let timeBetweenBlocks: BigNumber;
+const CONFIRMATION_TIMEOUT_SECONDS = 8;
+const MAX_TEST_TIMEOUT_MS = 30_000;
+const NEVER_INCLUDED_OPERATION_HASH = encodeOpHash("11".repeat(64));
+const DUMMY_FORGED_BYTES = {
+  opbytes: "00",
+  opOb: {},
+  counter: 0,
+};
+
+CONFIGS().forEach(({ rpc }) => {
   describe(`Test confirmationPollingTimeoutSecond with contract API using: ${rpc}`, () => {
-
-    beforeEach(async () => {
-      await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
-      timeBetweenBlocks = (await Tezos.rpc.getConstants()).delay_increment_per_round ?? new BigNumber(15);
-    });
-
     it('Verify a timeout error is thrown when an operation is never confirmed', async () => {
-      const timeout = Number(timeBetweenBlocks.multipliedBy(2));
-      Tezos.setProvider({ config: { confirmationPollingTimeoutSecond: timeout } })
-      await expect(async () => {
-        const op = await Tezos.contract.originate({
-          code: `parameter string;
-          storage string;
-          code {CAR;
-                PUSH string "Hello ";
-                CONCAT;
-                NIL operation; PAIR};
-          `,
-          init: `"test"`,
-          gasLimit: 600000 // gas limit too high, the operation won't be included in a block
-        })
-        await op.confirmation()
-      }).rejects.toThrow('Confirmation polling timed out');
+      const context = new Context(rpc);
+      context.stream = new NeverStreamProvider();
+      context.setPartialConfig({ confirmationPollingTimeoutSecond: CONFIRMATION_TIMEOUT_SECONDS });
 
-      await sleep(timeout * 2000);
-
-    })
+      const op = new Operation(NEVER_INCLUDED_OPERATION_HASH, DUMMY_FORGED_BYTES, [], context);
+      await expect(op.confirmation()).rejects.toThrow('Confirmation polling timed out');
+    }, MAX_TEST_TIMEOUT_MS)
   });
 })

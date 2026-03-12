@@ -13,7 +13,8 @@
     "test:weeklynet-secret-key": "RUN_WEEKLYNET_WITH_SECRET_KEY=true vitest run",
     "test:tezlinkshadownet-secret-key": "RUN_TEZLINKSHADOWNET_WITH_SECRET_KEY=true vitest run",
     "originate-known-contracts": "node -r ts-node/register originate-known-contracts.ts",
-    "originate-known-contracts-and-run-test": "node -r ts-node/register originate-known-contracts.ts && vitest run"
+    "originate-known-contracts-and-run-test": "node -r ts-node/register originate-known-contracts.ts && vitest run",
+    "rpc-hammer:inject": "node -r ts-node/register rpc-injection-hammer.ts"
   },
   "version": "24.2.0",
   "optionalDependencies": {
