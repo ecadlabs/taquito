@@ -103,6 +103,6 @@
     "shelljs": "^0.8.5",
     "ts-jest": "^29.2.3",
     "ts-node": "^10.9.2",
-    "typescript": "~5.5.4"
+    "typescript": "^5.9.3"
   }
 }
