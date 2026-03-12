@@ -18,7 +18,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       const targetOp = await Tezos.contract.originate({
         code: "parameter unit; storage unit; code {CDR; NIL operation; PAIR};",
         storage: "unit",
-        balance: "500",
+        balance: "5",
       });
       await targetOp.confirmation();
       const knownContract = targetOp.contractAddress!;

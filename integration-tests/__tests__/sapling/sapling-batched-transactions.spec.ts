@@ -35,7 +35,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   const memoSize = 4;
 
   describe(`Sapling transactions: ${rpc}`, () => {
-    jest.setTimeout(60000 * 20);
     const step = sequentialTestSuite();
 
     beforeAll(async () => {

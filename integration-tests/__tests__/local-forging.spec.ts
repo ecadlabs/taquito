@@ -15,8 +15,8 @@ CONFIGS().forEach(({ rpc, protocol }) => {
       it(`Verify that .forge for local forge will return same result as for network forge for rpc: ${name} (${rpc})`, async () => {
         const localForger = new LocalForger(protocol as unknown as ProtocolsHash);
         if (name.includes('with proof edsig(tz1)') || name.includes('with proof spsig(tz2)') || name.includes('with proof p2sig(tz3)')) {
-          expect(async () => { await localForger.forge(operation) }).rejects.toThrow(ProhibitedActionError)
-          expect(async () => { await Tezos.rpc.forgeOperations(operation) }).rejects.toThrow(HttpResponseError)
+          await expect(async () => { await localForger.forge(operation) }).rejects.toThrow(ProhibitedActionError)
+          await expect(async () => { await Tezos.rpc.forgeOperations(operation) }).rejects.toThrow(HttpResponseError)
         } else {
           const result = await localForger.forge(operation);
           const rpcResult = await Tezos.rpc.forgeOperations(operation);

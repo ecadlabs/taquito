@@ -18,7 +18,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   const memoSize = 8;
 
   describe(`Test producing proofs with a proving key rather than a spending key: ${rpc}`, () => {
-    jest.setTimeout(60000 * 20);
     const step = sequentialTestSuite();
 
     beforeAll(async () => {

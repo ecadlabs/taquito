@@ -76,7 +76,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     });
 
     it('should return error when destination contract address is invalid', async () => {
-      expect(async () => {
+      await expect(async () => {
         const op = await Tezos.contract.increasePaidStorage({
           amount: 1,
           destination: 'invalid_address'

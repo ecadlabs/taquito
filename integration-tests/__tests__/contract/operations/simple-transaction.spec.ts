@@ -21,7 +21,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     });
 
     it('should throw an error when trying to send negative amount', async () => {
-      expect(async () => {
+      await expect(async () => {
         const op = await Tezos.contract.transfer({
           amount: -1,
           to: 'tz4HQ8VeXAyrZMhES1qLMJAc9uAVXjbMpS8u'

@@ -36,10 +36,6 @@ export const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 // "taq" in two-digit alphabet positions: t=20, a=01, q=17 → 200_117 mutez → 0.200117 tez
 export const TAQUITO_MUTEZ = 200_117;
 
-if (typeof jest !== 'undefined') {
-  jest.setTimeout(60000 * 10);
-}
-
 enum ForgerType {
   LOCAL = 'local',
   RPC = 'rpc',

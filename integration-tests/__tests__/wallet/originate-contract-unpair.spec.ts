@@ -3,14 +3,12 @@ import { miStr, miObject } from '../../data/contractWithUnpair';
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
     const Tezos = lib;
-    const test = require('jest-retries');
-
     describe(`Test contract origination with UNPAIR through wallet api using: ${rpc}`, () => {
         beforeEach(async () => {
             await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 });
         });
 
-        test('Verify wallet.originate for a contract having UNPAIR with code and init in Michelson', 2, async () => {
+        it('Verify wallet.originate for a contract having UNPAIR with code and init in Michelson', async () => {
             const op = await Tezos.wallet.originate({
                 code: miStr,
                 init: '(Pair 0 "tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn")'
@@ -28,7 +26,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             expect(instUnpair).toBeDefined();
         });
 
-        test('Verify wallet.originate for a contract having UNPAIR with code in Michelson and init in JSON Michelson', 2, async () => {
+        it('Verify wallet.originate for a contract having UNPAIR with code in Michelson and init in JSON Michelson', async () => {
             const op = await Tezos.wallet.originate({
                 code: miStr,
                 init: { prim: 'Pair', args: [{ int: '0' }, { string: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn' }] }
@@ -46,7 +44,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             expect(instUnpair).toBeDefined();
         });
 
-        test('Verify wallet.originate for a contract having UNPAIR with code in Michelson and storage', 2, async () => {
+        it('Verify wallet.originate for a contract having UNPAIR with code in Michelson and storage', async () => {
             const op = await Tezos.wallet.originate({
                 code: miStr,
                 storage: {
@@ -67,7 +65,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             expect(instUnpair).toBeDefined();
         });
 
-        test('Verify wallet.originate for a contract having UNPAIR with code in JSON Michelson and init in Michelson', 2, async () => {
+        it('Verify wallet.originate for a contract having UNPAIR with code in JSON Michelson and init in Michelson', async () => {
             const op = await Tezos.wallet.originate({
                 code: miObject,
                 init: '(Pair 0 "tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn")'
@@ -85,7 +83,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             expect(instUnpair).toBeDefined();
         });
 
-        test('Verify wallet.originate for a contract having UNPAIR with code and init in JSON Michelson', 2, async () => {
+        it('Verify wallet.originate for a contract having UNPAIR with code and init in JSON Michelson', async () => {
             const op = await Tezos.wallet.originate({
                 code: miObject,
                 init: { prim: 'Pair', args: [{ int: '0' }, { string: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn' }] }
@@ -103,7 +101,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             expect(instUnpair).toBeDefined();
         });
 
-        test('Verify wallet.originate for a contract having UNPAIR with code in JSON Michelson and storage', 2, async () => {
+        it('Verify wallet.originate for a contract having UNPAIR with code in JSON Michelson and storage', async () => {
             const op = await Tezos.wallet.originate({
                 code: miObject,
                 storage: {

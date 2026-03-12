@@ -1,5 +1,8 @@
 import BigNumber from "bignumber.js";
-import { CONFIGS, sleep } from "../../config";
+import { CONFIGS } from "../../config";
+
+const MAX_CONFIRMATION_TIMEOUT_SECONDS = 45;
+const MAX_TEST_TIMEOUT_MS = 180_000;
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
@@ -12,9 +15,12 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     });
 
     it('Verify a timeout error is thrown when an operation is never confirmed', async () => {
-      const timeout = Number(timeBetweenBlocks.multipliedBy(2));
+      const timeout = Math.min(
+        Number(timeBetweenBlocks.multipliedBy(2)),
+        MAX_CONFIRMATION_TIMEOUT_SECONDS
+      );
       Tezos.setProvider({ config: { confirmationPollingTimeoutSecond: timeout } })
-      expect(async () => {
+      await expect(async () => {
 
         const op = await Tezos.wallet.originate({
           code: `parameter string;
@@ -30,9 +36,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         await op.confirmation()
 
       }).rejects.toThrow('Confirmation polling timed out');
-
-      await sleep(timeout * 2000);
-
-    })
+    }, MAX_TEST_TIMEOUT_MS)
   });
 })

@@ -14,7 +14,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     it('Verify a timeout error is thrown when an operation is never confirmed', async () => {
       const timeout = Number(timeBetweenBlocks.multipliedBy(2));
       Tezos.setProvider({ config: { confirmationPollingTimeoutSecond: timeout } })
-      expect(async () => {
+      await expect(async () => {
         const op = await Tezos.contract.originate({
           code: `parameter string;
           storage string;

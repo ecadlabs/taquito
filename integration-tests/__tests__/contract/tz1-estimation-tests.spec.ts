@@ -155,7 +155,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
     });
 
     it('should throw error when trying to estimate transfer with negative amount in param', async () => {
-      expect(async () => {
+      await expect(async () => {
         const est = await Tz1.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), amount: -1 });
       }).rejects.toThrow(InvalidAmountError);
     });

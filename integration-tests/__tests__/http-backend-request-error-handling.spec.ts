@@ -11,7 +11,7 @@ describe('HttpBackend request', () => {
           level: 0
         }
       });
-      fail('should have thrown');
+      expect.fail('should have thrown');
     } catch (err: unknown) {
       expect(err).toBeInstanceOf(HttpResponseError);
       const httpErr = err as HttpResponseError;

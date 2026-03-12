@@ -17,7 +17,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   const memoSize = 8;
 
   describe(`Test interaction with sapling contract having multiple sapling states using: ${rpc}`, () => {
-    jest.setTimeout(60000 * 20);
     const step = sequentialTestSuite();
 
     beforeAll(async () => {

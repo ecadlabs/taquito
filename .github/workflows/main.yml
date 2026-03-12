@@ -60,7 +60,6 @@ jobs:
 
   integration-tests-testnet:
     runs-on: ubuntu-latest
-    continue-on-error: true
     strategy:
       fail-fast: false
       matrix:
@@ -86,10 +85,9 @@ jobs:
       - id: run-tests
         run: >
           npm -w integration-tests run test:tallinnnet
-          -- --maxWorkers=2
-          --shard=${{ matrix.shard }}/3
-          --testPathIgnorePatterns=sapling
-          --testPathIgnorePatterns=ledger
+          -- --shard=${{ matrix.shard }}/3
+          --exclude='**/sapling/**'
+          --exclude='**/ledger/**'
         env:
           TAQUITO_ITEST_DIAGNOSTICS: 'true'
           TAQUITO_DIAG_BALANCE_WARN_MUTEZ: '9000000'
@@ -99,7 +97,6 @@ jobs:
 
   integration-tests-sapling:
     runs-on: ubuntu-latest
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -121,8 +118,7 @@ jobs:
       - id: run-tests
         run: >
           npm -w integration-tests run test:tallinnnet
-          -- --maxWorkers=1
-          --testPathPattern='sapling'
+          -- sapling
         env:
           TAQUITO_ITEST_DIAGNOSTICS: 'true'
           TAQUITO_DIAG_BALANCE_WARN_MUTEZ: '9000000'
