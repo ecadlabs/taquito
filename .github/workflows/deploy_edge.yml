@@ -20,21 +20,19 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: lts/Jod
+          node-version: 24
       - run: echo "SHORT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
       - run: echo "PACKAGE_VERSION=`node -p "require('./packages/taquito/package.json').version"`" >> $GITHUB_ENV
-      - run: echo "BRANCH_NAME=$(git branch --show-current)" >> $GITHUB_ENV
+      - run: echo "BRANCH_NAME=$(echo "${GITHUB_HEAD_REF:-${GITHUB_REF_NAME}}" | sed 's/[^a-zA-Z0-9-]/-/g')" >> $GITHUB_ENV
       - run: echo "TARGET_VERSION=${PACKAGE_VERSION}-${SHORT_SHA}--${BRANCH_NAME}" >> $GITHUB_ENV
       - run: npm ci
       - run: find packages/ -mindepth 1 -maxdepth 2 -name README.md | xargs sed -i '1s/^/# WARNING This build is produced from a feature branch and could contain unreviewed changes from the public. Use with caution, do not use in production\n\n/'
-      - run: npx lerna version "${TARGET_VERSION}" --no-push --no-git-tag-version --yes
+      - run: node scripts/sync-workspace-deps.js "${TARGET_VERSION}"
       - run: npm run version-stamp
       - run: npm run build
       - run: npm run -w @taquito/taquito build:release
-      - run: git config user.email "actions@github.com" && git config user.name "Github Actions"
-      - run: git add . && git commit -m "committing changes to files to make lerna happy in next step, this is expected to never be pushed to remote"
       - run: echo ${VERDACCIO_TOKEN} >> ~/.npmrc
-      - run: npx lerna publish --dist-tag edge from-package --yes --registry https://npm.preview.tezostaquito.io/
+      - run: npm publish --workspaces --tag edge --registry https://npm.preview.tezostaquito.io/
       - if: ${{ github.event_name == 'pull_request' }}
         run: |
           echo "COMMENT_BODY<<EOF"  >> $GITHUB_ENV

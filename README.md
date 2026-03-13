@@ -125,11 +125,6 @@ Interested in contributing to Taquito? Wonderful! Read on to set up your environ
     nvm use lts/iron
     ```
 
-3. **Install Lerna globally** (used by our Nx-based build system):
-    ```bash
-    npm install --global lerna
-    ```
-
 ### Building Taquito
 
 Once prerequisites are installed, run:
