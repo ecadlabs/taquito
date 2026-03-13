@@ -99,7 +99,7 @@ jobs:
           start_iso="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
 
           set +e
-          npm -w integration-tests run test:tallinnnet \
+          npm -w integration-tests run test:tallinnnet -- \
             --exclude='**/sapling/**' \
             --exclude='**/ledger/**'
           test_exit_code="$?"
