@@ -78,7 +78,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
     });
     it('Origination should thow error if given NaN for balance', async () => {
-      expect(() => Tezos.contract.originate({
+      await expect(() => Tezos.contract.originate({
         balance: "asdf",
         code: idMichelsonCode,
         init: idInitData

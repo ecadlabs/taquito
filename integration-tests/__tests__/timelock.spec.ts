@@ -1,15 +1,17 @@
 import { CONFIGS } from "../config";
-import { Chest, Timelock, ChestKey } from '../../packages/taquito-timelock/src/taquito-timelock';
+import { Chest, Timelock, ChestKey } from '@taquito/timelock';
 import { buf2hex } from '@taquito/utils';
 import * as crypto from 'crypto';
+import { sequentialTestSuite } from '../sequential-test';
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
   let contractAddress: string;
   let chestBytes: Uint8Array;
   let keyBytes: Uint8Array;
-  
+
   describe(`Timelock test ${rpc}`, () => {
+    const step = sequentialTestSuite();
 
     const contractCode = `parameter (pair (chest %chest) (chest_key %key));
     storage (option bytes);
@@ -27,7 +29,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       contractAddress = contract.contractAddress!;
     });
 
-    it('should be able to create a new chest and key', async () => {
+    step('should be able to create a new chest and key', async () => {
       const time = 5000;
 
       const payload = new Uint8Array(64);
@@ -53,7 +55,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(op.status).toEqual('applied');
     });
 
-    it('should be able to create chest and key from existing timelock, and open it', async () => {
+    step('should be able to create chest and key from existing timelock, and open it', async () => {
       const time = 10000;
       const payload = new TextEncoder().encode('I choose rock');
 
@@ -68,7 +70,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(keyBytes).toBeDefined();
     });
 
-    it('should be able to open chest with a key', async () => {
+    step('should be able to open chest with a key', async () => {
       const time = 10000;
       const [chest] = Chest.fromArray(chestBytes);
       const [chestKey] = ChestKey.fromArray(keyBytes);

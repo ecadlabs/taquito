@@ -54,9 +54,6 @@ CONFIGS().forEach(({ lib, setup }) => {
             });
 
             describe('Test that Ledger can be used with wallet API', () => {
-
-                jest.setTimeout(60000)
-
                 it('Verify that Ledger will throw an error when a transaction is declined', async () => {
                     const signer = new LedgerSigner(
                         transport,
@@ -76,7 +73,6 @@ CONFIGS().forEach(({ lib, setup }) => {
             });
 
             describe('Should be able to use Ledger with contract API', () => {
-                jest.setTimeout(60000)
                 it('Should throw error when user declines to originate contract with Ledger', async () => {
                     const signer = new LedgerSigner(
                         transport,

@@ -42,7 +42,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
       try {
         await managerContract.methodsObject.do(MANAGER_LAMBDA.transferToContract(contract.address, 1)).send({ amount: 0 })
-        fail('Expected transfer operation to throw error')
+        expect.fail('Expected transfer operation to throw error')
       } catch (ex: any) {
         expect(ex.message).toMatch('test')
       }

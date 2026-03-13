@@ -2,7 +2,7 @@ import { CONFIGS } from "../../config";
 import { MANAGER_LAMBDA } from "@taquito/taquito";
 import { genericMultisig } from "../../data/multisig";
 
-CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownContract }) => {
+CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   const Tezos = lib;
 
   describe(`Generic Multisig transfer to contract: ${rpc}`, () => {
@@ -13,6 +13,15 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownContract }) => {
       const account1 = await createAddress();
       const account2 = await createAddress();
       const account3 = await createAddress();
+
+      // Originate a fresh target contract so parallel shards can't interfere with balance checks
+      const targetOp = await Tezos.contract.originate({
+        code: "parameter unit; storage unit; code {CDR; NIL operation; PAIR};",
+        storage: "unit",
+        balance: "5",
+      });
+      await targetOp.confirmation();
+      const knownContract = targetOp.contractAddress!;
 
       // Originate the multisig contract
       const op = await Tezos.contract.originate({

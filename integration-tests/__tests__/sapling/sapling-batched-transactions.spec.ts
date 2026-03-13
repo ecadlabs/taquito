@@ -4,6 +4,7 @@ import { InMemorySpendingKey, InMemoryViewingKey, SaplingToolkit, SaplingTransac
 import BigNumber from 'bignumber.js';
 import { singleSaplingStateContractJProtocol } from '../../data/single_sapling_state_contract_jakarta_michelson';
 import * as bip39 from 'bip39';
+import { sequentialTestSuite } from '../../sequential-test';
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
@@ -34,7 +35,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   const memoSize = 4;
 
   describe(`Sapling transactions: ${rpc}`, () => {
-    jest.setTimeout(60000 * 20);
+    const step = sequentialTestSuite();
 
     beforeAll(async () => {
       await setup({ minBalanceMutez: 10_000_000, preferFreshKey: true });
@@ -72,7 +73,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
     });
 
-    it('Prepare and inject 3 batched shielded transactions', async () => {
+    step('Prepare and inject 3 batched shielded transactions', async () => {
 
       const shieldedTx = await saplingToolkit1.prepareShieldedTransaction([{
         to: paymentAddress1Index0,
@@ -99,7 +100,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
     });
 
-    it('Verify balances after the shielded tx', async () => {
+    step('Verify balances after the shielded tx', async () => {
       const balance1 = await txViewer1.getBalance();
       const inputs1 = await txViewer1.getIncomingAndOutgoingTransactions();
 
@@ -149,7 +150,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       })
     });
 
-    it('Prepare and inject batched sapling transactions', async () => {
+    step('Prepare and inject batched sapling transactions', async () => {
 
       const tx = await saplingToolkit1.prepareSaplingTransaction([{
         to: paymentAddress2Index0,
@@ -197,7 +198,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
     });
 
-    it('Verify balances after the sapling transactions', async () => {
+    step('Verify balances after the sapling transactions', async () => {
       const balance1 = await txViewer1.getBalance();
       const inputs1 = await txViewer1.getIncomingAndOutgoingTransactions();
 

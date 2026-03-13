@@ -12,11 +12,10 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
   describe(`Test contract origination having metadata stored on chain through contract api using: ${rpc}`, () => {
 
-    beforeEach(async () => {
+    beforeAll(async () => {
       await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 })
-    })
-    it('Verify contract.originate for a contract having metadata inside its own storage', async () => {
 
+      // Originate contract with metadata inside its own storage
       const metadataJSON = {
         "name": "test",
         "description": "A metadata test",
@@ -32,9 +31,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       metadataBigMap.set("", stringToBytes('tezos-storage:here'));
       metadataBigMap.set("here", stringToBytes(JSON.stringify(metadataJSON)))
 
-      // Ligo Taco shop contract modified to include metadata in storage
-      // https://ide.ligolang.org/p/-uS469slzUlSm1zwNqHl1A
-
       const tacoShopStorageMap = new MichelsonMap();
 
       const op = await Tezos.contract.originate({
@@ -48,7 +44,25 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       contractAddress = (await op.contract()).address;
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
-    });
+
+      // Originate contract with metadata pointing to the first contract
+      const metadataBigMap2 = new MichelsonMap();
+      metadataBigMap2.set("", stringToBytes(`tezos-storage://${contractAddress}/here`));
+
+      const tacoShopStorageMap2 = new MichelsonMap();
+
+      const op2 = await Tezos.contract.originate({
+        code: tacoContractTzip16,
+        storage: {
+          metadata: metadataBigMap2,
+          taco_shop_storage: tacoShopStorageMap2
+        },
+      });
+      await op2.confirmation();
+      contractMetadataInAnotherContract = (await op2.contract()).address;
+      expect(op2.hash).toBeDefined();
+      expect(op2.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
+    })
 
     it('Verify the metadata for a contract having metadata inside its own storage can be fetched', async () => {
 
@@ -80,26 +94,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(await (await contract.tzip16()).metadataErrors()).toBeUndefined()
       expect(await (await contract.tzip16()).metadataViews()).toEqual({});
 
-    });
-
-    it('Verify contract.originate for a contract having metadata inside another contract same network', async () => {
-
-      const metadataBigMap = new MichelsonMap();
-      metadataBigMap.set("", stringToBytes(`tezos-storage://${contractAddress}/here`));
-
-      const tacoShopStorageMap = new MichelsonMap();
-
-      const op = await Tezos.contract.originate({
-        code: tacoContractTzip16,
-        storage: {
-          metadata: metadataBigMap,
-          taco_shop_storage: tacoShopStorageMap
-        },
-      });
-      await op.confirmation();
-      contractMetadataInAnotherContract = (await op.contract()).address;
-      expect(op.hash).toBeDefined();
-      expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
     });
 
     it('Verify that metadata for contract having metadata inside another contract on the same network can be fetched', async () => {

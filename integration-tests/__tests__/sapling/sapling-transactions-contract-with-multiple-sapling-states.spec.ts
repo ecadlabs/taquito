@@ -4,6 +4,7 @@ import { InMemorySpendingKey, SaplingToolkit } from '@taquito/sapling';
 import BigNumber from 'bignumber.js';
 import { saplingContractDoubleJProto } from '../../data/sapling_test_contracts';
 import { SaplingStateValue } from '@taquito/michelson-encoder';
+import { sequentialTestSuite } from '../../sequential-test';
 
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
@@ -16,7 +17,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   const memoSize = 8;
 
   describe(`Test interaction with sapling contract having multiple sapling states using: ${rpc}`, () => {
-    jest.setTimeout(60000 * 20);
+    const step = sequentialTestSuite();
 
     beforeAll(async () => {
       await setup({ minBalanceMutez: 10_000_000, preferFreshKey: true });
@@ -39,7 +40,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
     });
 
-    it('Verify that Alice can shield tokens to the pool named "left"', async () => {
+    step('Verify that Alice can shield tokens to the pool named "left"', async () => {
       // We retrieve the id of the sapling states as follows:
       const storage: { left: SaplingStateAbstraction, right: SaplingStateAbstraction } = await saplingContract.storage();
       saplingStateIdLeft = storage.left.getId();
@@ -85,7 +86,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
     });
 
-    it("Verify that Alice's balance in the 'left' pool updated after the shielded tx", async () => {
+    step("Verify that Alice's balance in the 'left' pool updated after the shielded tx", async () => {
       const aliceSaplingToolkitLeft = new SaplingToolkit({ saplingSigner: aliceInmemorySpendingKey }, { contractAddress: saplingContract.address, memoSize, saplingId: saplingStateIdLeft }, new RpcReadAdapter(Tezos.rpc));
       const aliceSaplingToolkitRight = new SaplingToolkit({ saplingSigner: aliceInmemorySpendingKey }, { contractAddress: saplingContract.address, memoSize, saplingId: saplingStateIdRight }, new RpcReadAdapter(Tezos.rpc));
 

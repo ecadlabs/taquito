@@ -12,10 +12,6 @@ import tailwindcss from "@tailwindcss/vite";
 import sitemap from '@astrojs/sitemap';
 import { DEFAULT_VERSION } from './src/config/versions.mjs';
 
-const fetchPolyfillPath = fileURLToPath(
-  new URL('./src/scripts/fetch-polyfill.ts', import.meta.url)
-);
-
 // Resolve shim paths to absolute ESM paths for monorepo compatibility
 const nodePolyfillsDir = fileURLToPath(new URL('./node_modules/vite-plugin-node-polyfills', import.meta.url));
 const shimPaths = {
@@ -77,9 +73,6 @@ export default defineConfig({
   vite: {
     resolve: {
       alias: {
-        // Replace node-fetch with browser native fetch
-        'node-fetch': fetchPolyfillPath,
-
         // Component alias
         '@components': fileURLToPath(new URL('./src/components', import.meta.url)),
 

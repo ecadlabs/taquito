@@ -1,15 +1,24 @@
-const mockFetch = jest.fn();
-jest.mock('node-fetch', () => ({
-  __esModule: true,
-  default: mockFetch,
-}));
-
 import {
   HttpBackend,
   HttpRequestFailed,
   HttpResponseError,
   HttpTimeoutError,
 } from '../src/taquito-http-utils';
+
+const mockFetch = jest.fn();
+const originalFetch = globalThis.fetch;
+
+beforeAll(() => {
+  globalThis.fetch = mockFetch as unknown as typeof globalThis.fetch;
+});
+
+afterAll(() => {
+  globalThis.fetch = originalFetch;
+});
+
+beforeEach(() => {
+  mockFetch.mockReset();
+});
 
 function mockResponse(opts: {
   status?: number;
@@ -24,10 +33,6 @@ function mockResponse(opts: {
     text: jest.fn().mockResolvedValue(opts.body ?? ''),
   };
 }
-
-beforeEach(() => {
-  mockFetch.mockReset();
-});
 
 describe('HttpBackend', () => {
   describe('constructor', () => {
@@ -347,8 +352,23 @@ describe('HttpBackend', () => {
         expect(result).toEqual({ block: 'head' });
       });
 
+      it('does not retry HttpResponseError even if body contains transport-like text', async () => {
+        // RPC returns 500 with body text that matches transport error patterns
+        mockFetch.mockResolvedValue(
+          mockResponse({
+            status: 500,
+            statusText: 'Internal Server Error',
+            body: 'connection reset by peer',
+          })
+        );
+        await expect(backend.createRequest({ url: 'https://rpc.example.com/' })).rejects.toThrow(
+          HttpResponseError
+        );
+        expect(mockFetch).toHaveBeenCalledTimes(1);
+      });
+
       it('does not retry non-transport errors', async () => {
-        mockFetch.mockRejectedValueOnce(new TypeError('Failed to fetch'));
+        mockFetch.mockRejectedValueOnce(new TypeError('Cannot read properties of undefined'));
         // No retry, no sleep, no need to drain timers
         await expect(backend.createRequest({ url: 'https://rpc.example.com/' })).rejects.toThrow(
           HttpRequestFailed
@@ -356,16 +376,44 @@ describe('HttpBackend', () => {
         expect(mockFetch).toHaveBeenCalledTimes(1);
       });
 
-      it('does not retry POST to non-helpers path', async () => {
+      it('does not retry POST to non-allowlisted path', async () => {
         mockFetch.mockRejectedValueOnce(econnreset());
         // Non-retriable request, no sleep
         await expect(
           backend.createRequest({
-            url: 'https://rpc.example.com/injection/operation',
+            url: 'https://rpc.example.com/some/random/endpoint',
             method: 'POST',
           })
         ).rejects.toThrow(HttpRequestFailed);
         expect(mockFetch).toHaveBeenCalledTimes(1);
+      });
+
+      it('retries POST to /injection/operation on ECONNRESET', async () => {
+        mockFetch
+          .mockRejectedValueOnce(econnreset())
+          .mockResolvedValueOnce(mockResponse({ jsonBody: '"oph4Rkj..."' }));
+        const result = await drainRetries(
+          backend.createRequest({
+            url: 'https://rpc.example.com/injection/operation',
+            method: 'POST',
+          })
+        );
+        expect(mockFetch).toHaveBeenCalledTimes(2);
+        expect(result).toEqual('"oph4Rkj..."');
+      });
+
+      it('retries POST to /injection/operation on socket hang up', async () => {
+        mockFetch
+          .mockRejectedValueOnce(socketHangUp())
+          .mockResolvedValueOnce(mockResponse({ jsonBody: '"oph4Rkj..."' }));
+        const result = await drainRetries(
+          backend.createRequest({
+            url: 'https://rpc.example.com/injection/operation',
+            method: 'POST',
+          })
+        );
+        expect(mockFetch).toHaveBeenCalledTimes(2);
+        expect(result).toEqual('"oph4Rkj..."');
       });
 
       it('retries POST to /helpers/forge/operations', async () => {
@@ -380,6 +428,28 @@ describe('HttpBackend', () => {
         );
         expect(mockFetch).toHaveBeenCalledTimes(2);
         expect(result).toEqual({ forged: '00' });
+      });
+
+      it('sends identical body bytes on retry (body serialized once before loop)', async () => {
+        let callCount = 0;
+        const data = {
+          branch: 'head',
+          get contents() {
+            callCount++;
+            return [callCount];
+          },
+        };
+        mockFetch
+          .mockRejectedValueOnce(econnreset())
+          .mockResolvedValueOnce(mockResponse({ jsonBody: { ok: true } }));
+        await drainRetries(
+          backend.createRequest({ url: 'https://rpc.example.com/', method: 'GET' }, data)
+        );
+        expect(mockFetch).toHaveBeenCalledTimes(2);
+        // Body should be identical on both calls (serialized once)
+        const body1 = mockFetch.mock.calls[0][1].body;
+        const body2 = mockFetch.mock.calls[1][1].body;
+        expect(body1).toBe(body2);
       });
 
       it('throws after exhausting retries (fetch called 2x)', async () => {
@@ -406,6 +476,50 @@ describe('HttpBackend', () => {
       expect(err.cause).toBe(cause);
       expect(err.message).toContain('ECONNREFUSED');
       expect(err.message).toContain('GET');
+    });
+
+    it('HttpRequestFailed walks nested Error cause chain', () => {
+      const root = new Error('read ECONNRESET');
+      (root as unknown as Record<string, unknown>)['code'] = 'ECONNRESET';
+      const mid = new TypeError('fetch failed');
+      (mid as unknown as Record<string, unknown>).cause = root;
+      const err = new HttpRequestFailed('GET', 'https://rpc.example.com/', mid);
+      expect(err.message).toContain('ECONNRESET');
+      expect(err.message).toContain('read ECONNRESET');
+      expect(err.message).toContain('GET');
+    });
+
+    it('HttpRequestFailed includes transport kind in message', () => {
+      const cause = new Error('connect refused');
+      const transport = { kind: 'connect' as const, mayHaveReachedServer: false, original: cause };
+      const err = new HttpRequestFailed('POST', 'https://rpc.example.com/', cause, transport);
+      expect(err.message).toContain('(connect)');
+    });
+
+    it('HttpRequestFailed handles object-shaped cause (non-Error)', () => {
+      const inner = { message: 'socket hang up', code: 'UND_ERR_SOCKET' };
+      const cause = new TypeError('fetch failed');
+      (cause as unknown as Record<string, unknown>).cause = inner;
+      const err = new HttpRequestFailed('GET', 'https://rpc.example.com/', cause);
+      expect(err.message).toContain('socket hang up');
+      expect(err.message).toContain('UND_ERR_SOCKET');
+    });
+
+    it('HttpRequestFailed survives circular cause chain without hanging', () => {
+      const a = new Error('loop A');
+      const b = new Error('loop B');
+      (a as unknown as Record<string, unknown>).cause = b;
+      (b as unknown as Record<string, unknown>).cause = a;
+      const err = new HttpRequestFailed('GET', 'https://rpc.example.com/', a);
+      // Should not hang; should produce a message containing one of the loop errors
+      expect(err.message).toContain('GET');
+      expect(err.message).toBeDefined();
+    });
+
+    it('HttpRequestFailed with no cause chain uses top-level message', () => {
+      const cause = new Error('something broke');
+      const err = new HttpRequestFailed('GET', 'https://rpc.example.com/', cause);
+      expect(err.message).toContain('something broke');
     });
 
     it('HttpResponseError properties', () => {

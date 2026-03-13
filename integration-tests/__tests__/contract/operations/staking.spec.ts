@@ -67,15 +67,15 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
     });
 
     it('should throw error when param is against pseudo operation', async () => {
-      expect(async () => {
+      await expect(async () => {
         const op = await Tezos.contract.stake({ amount: 1, to: 'tz1PZY3tEWmXGasYeehXYqwXuw2Z3iZ6QDnA' });
         await op.confirmation()
       }).rejects.toThrow(InvalidStakingAddressError);
-      expect(async () => {
+      await expect(async () => {
         const op = await Tezos.contract.unstake({ amount: 1, to: 'tz1PZY3tEWmXGasYeehXYqwXuw2Z3iZ6QDnA' });
         await op.confirmation()
       }).rejects.toThrow(InvalidStakingAddressError);
-      expect(async () => {
+      await expect(async () => {
         const op = await Tezos.contract.finalizeUnstake({ amount: 1 });
         await op.confirmation()
       }).rejects.toThrow(InvalidFinalizeUnstakeAmountError);
