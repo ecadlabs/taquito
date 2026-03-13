@@ -1,6 +1,7 @@
 import { CONFIGS } from "../../config";
 import { RpcClient } from '@taquito/rpc';
 import { HttpResponseError } from "@taquito/http-utils";
+import { rethrowInfrastructureRpcError } from '../../test-helpers/rpc-error-assertions';
 
 
 CONFIGS().forEach(({ rpc, knownContract }) => {
@@ -39,10 +40,24 @@ CONFIGS().forEach(({ rpc, knownContract }) => {
         expect(response.code).toBeDefined();
       });
       it('Should fail unparsing_mode not acceptable', async () => {
-        await expect(() => client.getNormalizedScript(knownContract, { unparsing_mode: 'else' as any })).rejects.toThrowError(HttpResponseError);
+        try {
+          await client.getNormalizedScript(knownContract, { unparsing_mode: 'else' as any });
+          expect.fail('Expected getNormalizedScript to reject an invalid unparsing_mode');
+        } catch (error) {
+          rethrowInfrastructureRpcError(error);
+          expect(error).toBeInstanceOf(HttpResponseError);
+          expect((error as HttpResponseError).status).toBe(400);
+        }
       });
       it('Should fail unparsing_mode not acceptable', async () => {
-        await expect(() => client.getNormalizedScript(knownContract, {} as any)).rejects.toThrowError(HttpResponseError);
+        try {
+          await client.getNormalizedScript(knownContract, {} as any);
+          expect.fail('Expected getNormalizedScript to reject missing unparsing_mode details');
+        } catch (error) {
+          rethrowInfrastructureRpcError(error);
+          expect(error).toBeInstanceOf(HttpResponseError);
+          expect((error as HttpResponseError).status).toBe(400);
+        }
       });
     });
   });

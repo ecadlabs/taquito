@@ -1,4 +1,5 @@
 import { CONFIGS } from '../../../config';
+import { InvalidAddressError } from '@taquito/core';
 import { OpKind } from '@taquito/taquito';
 import { ligoSample } from '../../../data/ligo-simple-contract';
 
@@ -76,12 +77,12 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     });
 
     it('should return error when destination contract address is invalid', async () => {
-      await expect(async () => {
-        const op = await Tezos.contract.increasePaidStorage({
+      await expect(
+        Tezos.contract.increasePaidStorage({
           amount: 1,
           destination: 'invalid_address'
-        });
-      }).rejects.toThrow();
+        })
+      ).rejects.toThrow(InvalidAddressError);
     });
   });
 });

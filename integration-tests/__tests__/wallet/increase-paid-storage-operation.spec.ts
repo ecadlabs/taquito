@@ -1,4 +1,5 @@
 import { CONFIGS } from '../../config';
+import { InvalidAddressError } from '@taquito/core';
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
 
@@ -86,12 +87,12 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     });
 
     it('should return error when destination contract address is invalid', async () => {
-      await expect(async () => {
-        const op = await Tezos.wallet.increasePaidStorage({
+      await expect(
+        Tezos.wallet.increasePaidStorage({
           amount: 1,
           destination: 'invalid_address'
-        });
-      }).rejects.toThrow();
+        })
+      ).rejects.toThrow(InvalidAddressError);
     });
   });
 });
