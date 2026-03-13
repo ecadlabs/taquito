@@ -1,5 +1,5 @@
 import { CONFIGS } from '../../../config';
-import { InvalidAddressError } from '@taquito/core';
+import { ParameterValidationError } from '@taquito/core';
 import { OpKind } from '@taquito/taquito';
 import { ligoSample } from '../../../data/ligo-simple-contract';
 
@@ -82,7 +82,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
           amount: 1,
           destination: 'invalid_address'
         })
-      ).rejects.toThrow(InvalidAddressError);
+      ).rejects.toThrow(ParameterValidationError);
     });
   });
 });

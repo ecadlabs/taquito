@@ -86,13 +86,13 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(parseInt(paidSpaceAfter)).toEqual(parseInt(paidSpaceBefore) + 1);
     });
 
-    it('should return error when destination contract address is invalid', async () => {
-      await expect(
+    it('should return error when destination contract address is invalid', () => {
+      expect(() =>
         Tezos.wallet.increasePaidStorage({
           amount: 1,
           destination: 'invalid_address'
         })
-      ).rejects.toThrow(InvalidAddressError);
+      ).toThrow(InvalidAddressError);
     });
   });
 });
