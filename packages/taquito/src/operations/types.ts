@@ -84,6 +84,23 @@ export type RPCOpWithSource =
   | RPCBallotOperation
   | RPCProposalsOperation;
 
+const feeConsumingOpKinds = [
+  OpKind.TRANSACTION,
+  OpKind.DELEGATION,
+  OpKind.ORIGINATION,
+  OpKind.REVEAL,
+  OpKind.REGISTER_GLOBAL_CONSTANT,
+  OpKind.INCREASE_PAID_STORAGE,
+  OpKind.TRANSFER_TICKET,
+  OpKind.UPDATE_CONSENSUS_KEY,
+  OpKind.UPDATE_COMPANION_KEY,
+  OpKind.SMART_ROLLUP_ADD_MESSAGES,
+  OpKind.SMART_ROLLUP_ORIGINATE,
+  OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE,
+] as const;
+
+type FeeConsumingOpKind = (typeof feeConsumingOpKinds)[number];
+
 export const isOpWithGasBuffer = <T extends { kind: OpKind; destination?: string }>(
   op: T
 ): boolean => {
@@ -106,24 +123,8 @@ export const isOpWithGasBuffer = <T extends { kind: OpKind; destination?: string
 
 export const isOpWithFee = <T extends { kind: OpKind }>(
   op: T
-): op is withKind<T, Exclude<Exclude<OpKind, OpKind.ACTIVATION>, OpKind.FAILING_NOOP>> => {
-  return (
-    [
-      'transaction',
-      'delegation',
-      'origination',
-      'reveal',
-      'register_global_constant',
-      'increase_paid_storage',
-      'transfer_ticket',
-      'update_consensus_key',
-      'update_companion_key',
-      'smart_rollup_add_messages',
-      'smart_rollup_originate',
-      'smart_rollup_execute_outbox_message',
-    ].indexOf(op.kind) !== -1
-  );
-};
+): op is Extract<T, { kind: FeeConsumingOpKind }> =>
+  feeConsumingOpKinds.includes(op.kind as FeeConsumingOpKind);
 
 export const isOpRequireReveal = <T extends { kind: OpKind }>(
   op: T
@@ -195,12 +196,41 @@ export interface FeeConsumingOperation {
 }
 
 export type OriginateParamsBase = {
+  /**
+   * Initial contract balance.
+   *
+   * Interpreted as tez by default. Set `mutez: true` to pass this value in mutez.
+   */
   balance?: string | number;
+  /**
+   * Contract code in Micheline JSON (`object[]`) or Michelson string.
+   */
   code: string | object[];
+  /**
+   * Optional delegate for the originated contract.
+   */
   delegate?: string;
+  /**
+   * Fee in mutez.
+   *
+   * If omitted, Taquito estimates and fills a fee.
+   */
   fee?: number;
+  /**
+   * Gas limit.
+   *
+   * If omitted, Taquito derives it from protocol constants and simulation.
+   */
   gasLimit?: number;
+  /**
+   * Storage limit.
+   *
+   * If omitted, Taquito derives it from protocol constants and simulation.
+   */
   storageLimit?: number;
+  /**
+   * When `true`, `balance` is interpreted as mutez.
+   */
   mutez?: boolean;
 };
 
@@ -257,9 +287,23 @@ export interface RPCRevealOperation {
 }
 
 export interface RevealParams {
+  /**
+   * Reveal fee in mutez.
+   */
   fee?: number;
+  /**
+   * Reveal gas limit.
+   */
   gasLimit?: number;
+  /**
+   * Reveal storage limit.
+   */
   storageLimit?: number;
+  /**
+   * Proof of possession for BLS (`tz4`) reveal.
+   *
+   * Required for BLS reveal and ignored for non-BLS sources.
+   */
   proof?: string;
 }
 
@@ -276,10 +320,27 @@ export interface ForgedBytes {
  * Parameters for setDelegate method
  */
 export interface DelegateParams {
+  /**
+   * Operation source. Defaults to the active signer pkh.
+   */
   source?: string;
+  /**
+   * Delegate address.
+   *
+   * Omit to clear delegation.
+   */
   delegate?: string;
+  /**
+   * Fee in mutez.
+   */
   fee?: number;
+  /**
+   * Gas limit.
+   */
   gasLimit?: number;
+  /**
+   * Storage limit.
+   */
   storageLimit?: number;
 }
 
@@ -287,8 +348,17 @@ export interface DelegateParams {
  * Parameters for registerDelegate method
  */
 export interface RegisterDelegateParams {
+  /**
+   * Fee in mutez.
+   */
   fee?: number;
+  /**
+   * Gas limit.
+   */
   gasLimit?: number;
+  /**
+   * Storage limit.
+   */
   storageLimit?: number;
 }
 
@@ -308,13 +378,39 @@ export interface RPCDelegateOperation {
  * Parameters for transfer method
  */
 export interface TransferParams {
+  /**
+   * Destination account or contract address.
+   */
   to: string;
+  /**
+   * Operation source. Defaults to the active signer pkh.
+   */
   source?: string;
+  /**
+   * Transfer amount.
+   *
+   * Interpreted as tez by default. Set `mutez: true` to pass mutez.
+   */
   amount: number;
+  /**
+   * Fee in mutez.
+   */
   fee?: number;
+  /**
+   * Optional transaction parameter for contract calls.
+   */
   parameter?: TransactionOperationParameter;
+  /**
+   * Gas limit.
+   */
   gasLimit?: number;
+  /**
+   * Storage limit.
+   */
   storageLimit?: number;
+  /**
+   * When `true`, `amount` is interpreted as mutez.
+   */
   mutez?: boolean;
 }
 
@@ -322,13 +418,41 @@ export interface TransferParams {
  * RPC Stake pseudo operation params
  */
 export interface StakeParams {
+  /**
+   * Destination staking contract/account.
+   *
+   * Defaults to source when omitted.
+   */
   to?: string;
+  /**
+   * Operation source. Defaults to the active signer pkh.
+   */
   source?: string;
+  /**
+   * Amount to stake.
+   *
+   * Interpreted as tez by default. Set `mutez: true` to pass mutez.
+   */
   amount: number;
+  /**
+   * Fee in mutez.
+   */
   fee?: number;
+  /**
+   * Optional RPC-level parameter override.
+   */
   parameter?: TransactionOperationParameter;
+  /**
+   * Gas limit.
+   */
   gasLimit?: number;
+  /**
+   * Storage limit.
+   */
   storageLimit?: number;
+  /**
+   * When `true`, `amount` is interpreted as mutez.
+   */
   mutez?: boolean;
 }
 
@@ -336,13 +460,41 @@ export interface StakeParams {
  * RPC unstake pseudo operation params
  */
 export interface UnstakeParams {
+  /**
+   * Destination staking contract/account.
+   *
+   * Defaults to source when omitted.
+   */
   to?: string;
+  /**
+   * Operation source. Defaults to the active signer pkh.
+   */
   source?: string;
+  /**
+   * Amount to unstake.
+   *
+   * Interpreted as tez by default. Set `mutez: true` to pass mutez.
+   */
   amount: number;
+  /**
+   * Fee in mutez.
+   */
   fee?: number;
+  /**
+   * Optional RPC-level parameter override.
+   */
   parameter?: TransactionOperationParameter;
+  /**
+   * Gas limit.
+   */
   gasLimit?: number;
+  /**
+   * Storage limit.
+   */
   storageLimit?: number;
+  /**
+   * When `true`, `amount` is interpreted as mutez.
+   */
   mutez?: boolean;
 }
 
@@ -350,13 +502,42 @@ export interface UnstakeParams {
  * RPC finalize_unstake pseudo operation params
  */
 export interface FinalizeUnstakeParams {
+  /**
+   * Destination account for finalized funds.
+   *
+   * Defaults to source when omitted.
+   */
   to?: string;
+  /**
+   * Operation source. Defaults to the active signer pkh.
+   */
   source?: string;
+  /**
+   * Transaction amount in mutez for the underlying `finalize_unstake` transaction.
+   *
+   * Protocol requires this to be `0` when present. Non-zero values are rejected with
+   * `operations.invalid_nonzero_transaction_amount`.
+   */
   amount?: number;
+  /**
+   * Fee in mutez.
+   */
   fee?: number;
+  /**
+   * Optional RPC-level parameter override.
+   */
   parameter?: TransactionOperationParameter;
+  /**
+   * Gas limit.
+   */
   gasLimit?: number;
+  /**
+   * Storage limit.
+   */
   storageLimit?: number;
+  /**
+   * When `true`, numeric amounts are interpreted as mutez.
+   */
   mutez?: boolean;
 }
 
@@ -376,10 +557,25 @@ export interface RPCRegisterGlobalConstantOperation {
  * Parameters for the `registerGlobalConstant` method
  */
 export interface RegisterGlobalConstantParams {
+  /**
+   * Micheline expression to register.
+   */
   value: MichelsonV1Expression;
+  /**
+   * Operation source. Defaults to the active signer pkh.
+   */
   source?: string;
+  /**
+   * Fee in mutez.
+   */
   fee?: number;
+  /**
+   * Gas limit.
+   */
   gasLimit?: number;
+  /**
+   * Storage limit.
+   */
   storageLimit?: number;
 }
 
@@ -410,15 +606,48 @@ export interface RPCActivateOperation {
  * Parameters for the transferTicket contract provider
  */
 export interface TransferTicketParams {
+  /**
+   * Operation source. Defaults to the active signer pkh.
+   */
   source?: string;
+  /**
+   * Fee in mutez.
+   */
   fee?: number;
+  /**
+   * Gas limit.
+   */
   gasLimit?: number;
+  /**
+   * Storage limit.
+   */
   storageLimit?: number;
+  /**
+   * Ticket payload.
+   */
   ticketContents: MichelsonV1Expression;
+  /**
+   * Ticket Micheline type.
+   */
   ticketTy: MichelsonV1Expression;
+  /**
+   * Ticket ticketer contract address.
+   */
   ticketTicketer: string;
+  /**
+   * Quantity of tickets to transfer.
+   */
   ticketAmount: number;
+  /**
+   * Destination contract or implicit account.
+   */
   destination: string;
+  /**
+   * Destination entrypoint name (1-31 bytes).
+   *
+   * For implicit destinations (`tz...`), this must be `default`; otherwise protocol
+   * rejects with `michelson_v1.no_such_entrypoint`.
+   */
   entrypoint: string;
 }
 
@@ -443,11 +672,31 @@ export interface RPCTransferTicketOperation {
  * Parameters for the increasePaidStorage method
  */
 export interface IncreasePaidStorageParams {
+  /**
+   * Operation source. Defaults to the active signer pkh.
+   */
   source?: string;
+  /**
+   * Fee in mutez.
+   */
   fee?: number;
+  /**
+   * Gas limit.
+   */
   gasLimit?: number;
+  /**
+   * Storage limit.
+   */
   storageLimit?: number;
+  /**
+   * Additional storage bytes to pre-pay for the target contract.
+   *
+   * Must be a positive integer. Burn cost is `amount * cost_per_byte`.
+   */
   amount: number;
+  /**
+   * Destination contract address.
+   */
   destination: string;
 }
 
@@ -513,11 +762,33 @@ export interface RPCProposalsOperation {
 }
 
 export interface UpdateConsensusKeyParams {
+  /**
+   * Operation source. Defaults to the active signer pkh.
+   */
   source?: string;
+  /**
+   * Fee in mutez.
+   */
   fee?: number;
+  /**
+   * Gas limit.
+   */
   gasLimit?: number;
+  /**
+   * Storage limit.
+   */
   storageLimit?: number;
+  /**
+   * New consensus public key.
+   */
   pk: string;
+  /**
+   * BLS proof-of-possession for `pk`.
+   *
+   * Required when `pk` is a BLS (`tz4`) key, otherwise validation fails with
+   * `validate.operation.missing_bls_proof`. Invalid proofs fail with
+   * `validate.operation.incorrect_bls_proof`. Must be omitted for non-BLS keys.
+   */
   proof?: string;
 }
 
@@ -532,11 +803,34 @@ export interface RPCUpdateConsensusKeyOperation {
 }
 
 export interface UpdateCompanionKeyParams {
+  /**
+   * Operation source. Defaults to the active signer pkh.
+   */
   source?: string;
+  /**
+   * Fee in mutez.
+   */
   fee?: number;
+  /**
+   * Gas limit.
+   */
   gasLimit?: number;
+  /**
+   * Storage limit.
+   */
   storageLimit?: number;
+  /**
+   * New companion public key (BLS).
+   */
   pk: string;
+  /**
+   * BLS proof-of-possession for the companion key.
+   *
+   * Companion keys must be `tz4`; non-BLS keys fail with
+   * `validate.operation.update_companion_key_not_tz4`.
+   * Missing proof fails with `validate.operation.missing_bls_proof` and invalid proof
+   * fails with `validate.operation.incorrect_bls_proof`.
+   */
   proof?: string;
 }
 
@@ -551,10 +845,27 @@ export interface RPCUpdateCompanionKeyOperation {
 }
 
 export interface SmartRollupAddMessagesParams {
+  /**
+   * Operation source. Defaults to the active signer pkh.
+   */
   source?: string;
+  /**
+   * Fee in mutez.
+   */
   fee?: number;
+  /**
+   * Gas limit.
+   */
   gasLimit?: number;
+  /**
+   * Storage limit.
+   */
   storageLimit?: number;
+  /**
+   * Hex-encoded message bytes posted to the global smart-rollup inbox.
+   *
+   * At least one message is required. Each message is limited to 4096 bytes after decoding.
+   */
   message: string[];
 }
 
@@ -568,12 +879,37 @@ export interface RPCSmartRollupAddMessagesOperation {
 }
 
 export interface SmartRollupOriginateParams {
+  /**
+   * Operation source. Defaults to the active signer pkh.
+   */
   source?: string;
+  /**
+   * Fee in mutez.
+   */
   fee?: number;
+  /**
+   * Gas limit.
+   */
   gasLimit?: number;
+  /**
+   * Storage limit.
+   */
   storageLimit?: number;
+  /**
+   * PVM kind for the rollup.
+   */
   pvmKind: PvmKind;
+  /**
+   * Hex-encoded boot sector binary for the selected PVM.
+   *
+   * Effective size is constrained by the operation data size limit.
+   */
   kernel: string;
+  /**
+   * Micheline type for L1-to-rollup deposited values.
+   *
+   * Must be a valid Michelson type accepted by protocol rollup parameter typing rules.
+   */
   parametersType: MichelsonV1Expression;
 }
 
@@ -589,12 +925,35 @@ export interface RPCSmartRollupOriginateOperation {
 }
 
 export interface SmartRollupExecuteOutboxMessageParams {
+  /**
+   * Operation source. Defaults to the active signer pkh.
+   */
   source?: string;
+  /**
+   * Fee in mutez.
+   */
   fee?: number;
+  /**
+   * Gas limit.
+   */
   gasLimit?: number;
+  /**
+   * Storage limit.
+   */
   storageLimit?: number;
+  /**
+   * Target smart-rollup address (`sr1...`).
+   */
   rollup: string;
+  /**
+   * Cemented commitment hash (`src1...`) referenced by the outbox proof.
+   *
+   * Must still be present in the chain of stored cemented commitments.
+   */
   cementedCommitment: string;
+  /**
+   * Hex-encoded PVM outbox proof bytes produced by a rollup node.
+   */
   outputProof: string;
 }
 
