@@ -31,11 +31,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
       const contract = await op.contract();
-
-      Tezos.contract.at(contract.address).then((contract) => {
-        const objects = Object.keys(contract.methodsObject);
-        expect(objects).toContain('default');
-      });
+      const objects = Object.keys(contract.methodsObject);
+      expect(objects).toContain('default');
 
       const storage: StorageType = await contract.storage();
       const saplingStateLedger1 = await storage.left.getSaplingDiff();
@@ -55,11 +52,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
       const contract = await op.contract();
-
-      Tezos.contract.at(contract.address).then((contract) => {
-        const objects = Object.keys(contract.methodsObject);
-        expect(objects).toContain('default');
-      });
+      const objects = Object.keys(contract.methodsObject);
+      expect(objects).toContain('default');
     });
 
     test('Originates a Sapling Send contract', async () => {
@@ -71,11 +65,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
       const contract = await op.contract();
-
-      Tezos.contract.at(contract.address).then((contract) => {
-        const objects = Object.keys(contract.methodsObject);
-        expect(objects).toContain('default');
-      });
+      const objects = Object.keys(contract.methodsObject);
+      expect(objects).toContain('default');
     });
 
     test('Originates a Sapling Contract State as Arg contract', async () => {
@@ -112,11 +103,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
       const contract = await op.contract();
-
-      Tezos.contract.at(contract.address).then((contract) => {
-        const objects = Object.keys(contract.methodsObject);
-        expect(objects).toContain('default');
-      });
+      const objects = Object.keys(contract.methodsObject);
+      expect(objects).toContain('default');
 
       const storage: any = await contract.storage();
       const saplingDiff = await storage.getSaplingDiff();
