@@ -3,7 +3,8 @@ name: Shadownet Integration Tests
 on:
   push:
     branches:
-      - '**shadow**'
+      - shadownet
+      - shadownet/**
 
 jobs:
   integration-tests-shadownet:

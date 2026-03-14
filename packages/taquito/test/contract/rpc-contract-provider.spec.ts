@@ -218,7 +218,7 @@ describe('RpcContractProvider test', () => {
       time_between_blocks: [new BigNumber('60'), new BigNumber('40')],
     });
     mockReadProvider.getScript.mockResolvedValue({
-      code: [sample],
+      code: miSample,
       storage: sampleStorage,
     });
     mockReadProvider.getEntrypoints.mockResolvedValue({ entrypoints: {} });
