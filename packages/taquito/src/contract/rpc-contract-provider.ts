@@ -87,6 +87,7 @@ import { SmartRollupExecuteOutboxMessageOperation } from '../operations/smart-ro
 import { Provider } from '../provider';
 import { PrepareProvider } from '../prepare';
 import { FailingNoopOperation } from '../operations/failing-noop-operation';
+import { BlockIdentifier } from '../read-provider/interface';
 
 export class RpcContractProvider extends Provider implements ContractProvider, StorageProvider {
   constructor(
@@ -915,7 +916,8 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
    */
   async at<T extends DefaultContractType = DefaultContractType>(
     address: string,
-    contractAbstractionComposer: ContractAbstractionComposer<T> = (x) => x as any
+    contractAbstractionComposer: ContractAbstractionComposer<T> = (x) => x as any,
+    block: BlockIdentifier = 'head'
   ): Promise<T> {
     const addressValidation = validateContractAddress(address);
     if (addressValidation !== ValidationResult.VALID) {
@@ -923,8 +925,11 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
     }
     const rpc = this.context.withExtensions().rpc;
     const readProvider = this.context.withExtensions().readProvider;
-    const script = await readProvider.getScript(address, 'head');
-    const entrypoints = await readProvider.getEntrypoints(address);
+    const script = await readProvider.getScript(address, block);
+    const entrypoints =
+      block === 'head'
+        ? await readProvider.getEntrypoints(address)
+        : await rpc.getEntrypoints(address, { block: String(block) });
     const abs = new ContractAbstraction(
       address,
       script,
