@@ -403,6 +403,60 @@ describe('RPCEstimateProvider test signer', () => {
       );
     });
 
+    it('should reserve reveal gas from the block budget when operation and block gas limits are equal', async () => {
+      mockRpcClient.getManagerKey.mockResolvedValue(null);
+      mockRpcClient.getConstants.mockResolvedValue({
+        hard_gas_limit_per_operation: new BigNumber(1040000),
+        hard_storage_limit_per_operation: new BigNumber(60000),
+        hard_gas_limit_per_block: new BigNumber(1040000),
+        cost_per_byte: new BigNumber(1000),
+      });
+      mockRpcClient.simulateOperation.mockResolvedValue({
+        contents: [
+          {
+            kind: 'reveal',
+            fee: 10000,
+            metadata: {
+              operation_result: {
+                consumed_milligas: 1000000,
+              },
+            },
+          },
+          {
+            kind: 'transaction',
+            fee: 10000,
+            metadata: {
+              operation_result: {
+                consumed_milligas: 1000000,
+              },
+            },
+          },
+        ],
+      });
+
+      await estimateProvider.transfer({
+        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+        amount: 2,
+      });
+
+      expect(mockRpcClient.simulateOperation).toHaveBeenCalledWith(
+        expect.objectContaining({
+          operation: expect.objectContaining({
+            contents: [
+              expect.objectContaining({
+                kind: 'reveal',
+                gas_limit: '633',
+              }),
+              expect.objectContaining({
+                kind: 'transaction',
+                gas_limit: '1039367',
+              }),
+            ],
+          }),
+        })
+      );
+    });
+
     it('should use the storage limit the user specified', async () => {
       mockRpcClientSimulateOperation();
       mockRpcClient.getBalance.mockResolvedValue(new BigNumber('1100'));
@@ -866,24 +920,151 @@ describe('RPCEstimateProvider test signer', () => {
           operation: expect.objectContaining({
             contents: expect.arrayContaining([
               expect.objectContaining({
-                gas_limit: '742857',
+                gas_limit: '866666',
               }),
               expect.objectContaining({
-                gas_limit: '742857',
+                gas_limit: '866666',
               }),
               expect.objectContaining({
-                gas_limit: '742857',
+                gas_limit: '866666',
               }),
               expect.objectContaining({
-                gas_limit: '742857',
+                gas_limit: '866666',
               }),
               expect.objectContaining({
-                gas_limit: '742857',
+                gas_limit: '866666',
               }),
               expect.objectContaining({
-                gas_limit: '742857',
+                gas_limit: '866666',
               }),
             ]),
+          }),
+        })
+      );
+    });
+
+    it('simulateOperation should subtract explicit gas limits before patching the remaining batch operations', async () => {
+      const transactionResult = {
+        kind: 'transaction',
+        fee: 10000,
+        metadata: {
+          operation_result: {
+            consumed_milligas: 1000000,
+          },
+        },
+      };
+      mockRpcClient.getConstants.mockResolvedValue({
+        hard_gas_limit_per_operation: new BigNumber(1040000),
+        hard_storage_limit_per_operation: new BigNumber(60000),
+        hard_gas_limit_per_block: new BigNumber(1040000),
+        cost_per_byte: new BigNumber(1000),
+      });
+      mockForger.forge.mockResolvedValue(new Array(149).fill('aa').join(''));
+      mockRpcClient.simulateOperation.mockResolvedValue({
+        contents: [transactionResult, transactionResult, transactionResult],
+      });
+
+      await estimateProvider.batch([
+        { kind: OpKind.TRANSACTION, to: 'test', amount: 2, gasLimit: 1000 },
+        { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
+        { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
+      ]);
+
+      expect(mockRpcClient.simulateOperation).toHaveBeenCalledWith(
+        expect.objectContaining({
+          operation: expect.objectContaining({
+            contents: [
+              expect.objectContaining({
+                gas_limit: '1000',
+              }),
+              expect.objectContaining({
+                gas_limit: '519500',
+              }),
+              expect.objectContaining({
+                gas_limit: '519500',
+              }),
+            ],
+          }),
+        })
+      );
+    });
+
+    it('simulateOperation should patch remaining batch operations with 0 gas when reveal and explicit gas exhaust the block budget', async () => {
+      mockRpcClient.getManagerKey.mockResolvedValue(null);
+      mockRpcClient.getConstants.mockResolvedValue({
+        hard_gas_limit_per_operation: new BigNumber(1040000),
+        hard_storage_limit_per_operation: new BigNumber(60000),
+        hard_gas_limit_per_block: new BigNumber(1040000),
+        cost_per_byte: new BigNumber(1000),
+      });
+      mockForger.forge.mockResolvedValue(new Array(149).fill('aa').join(''));
+      mockRpcClient.simulateOperation.mockResolvedValue({
+        contents: [
+          {
+            kind: 'reveal',
+            fee: 10000,
+            metadata: {
+              operation_result: {
+                status: 'applied',
+                consumed_milligas: 1000000,
+              },
+            },
+          },
+          {
+            kind: 'transaction',
+            fee: 10000,
+            metadata: {
+              operation_result: {
+                status: 'applied',
+                consumed_milligas: 1000000,
+              },
+            },
+          },
+          {
+            kind: 'transaction',
+            fee: 10000,
+            metadata: {
+              operation_result: {
+                status: 'failed',
+                errors: [
+                  {
+                    kind: 'temporary',
+                    id: 'proto.024-PtTALLiN.gas_exhausted.operation',
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      });
+
+      await expect(
+        estimateProvider.batch([
+          { kind: OpKind.TRANSACTION, to: 'test', amount: 2, gasLimit: 1039367 },
+          { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
+        ])
+      ).rejects.toMatchObject({
+        name: 'TezosOperationError',
+        id: 'proto.024-PtTALLiN.gas_exhausted.operation',
+      });
+
+      expect(mockRpcClient.simulateOperation).toHaveBeenCalledWith(
+        expect.objectContaining({
+          operation: expect.objectContaining({
+            contents: [
+              expect.objectContaining({
+                kind: 'reveal',
+                gas_limit: '633',
+              }),
+              expect.objectContaining({
+                kind: 'transaction',
+                gas_limit: '1039367',
+              }),
+              expect.objectContaining({
+                kind: 'transaction',
+                gas_limit: '0',
+              }),
+            ],
           }),
         })
       );
@@ -1127,7 +1308,9 @@ describe('RPCEstimateProvider test signer', () => {
             },
           },
         },
-        sigs: ['sigb1FKPeiRgPApxqBMpyBSMpwgnbzhaMcqQcTVwMz82MSzNLBrmRUuVZVgWTBFGcoWQcjTyhfJaxjFtfvB6GGHkfwpxBkFd'],
+        sigs: [
+          'sigb1FKPeiRgPApxqBMpyBSMpwgnbzhaMcqQcTVwMz82MSzNLBrmRUuVZVgWTBFGcoWQcjTyhfJaxjFtfvB6GGHkfwpxBkFd',
+        ],
       });
 
       const estimate = await estimateProvider.contractCall(contractMethod);
