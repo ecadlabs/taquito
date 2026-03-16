@@ -3,7 +3,7 @@ title: Consensus Keys
 author: Davis Sawali & Hui-An Yang
 ---
 
-The "consensus key" feature allows bakers to use a different key, called the consensus key. It will allow for baking and signing consensus operations (i.e. preattestation and attestation). For more detailed information on consensus keys, refer to [this documentation](https://octez.tezos.com/docs/protocols/015_lima.html#consensus-key).
+The "consensus key" feature allows bakers to use a different key, called the consensus key. It will allow for baking and signing consensus operations (i.e. preattestation and attestation). For more detailed information on consensus keys, refer to the [Octez documentation](https://octez.tezos.com/docs/active/consensus_key.html).
 
 ## Update consensus key
 This is a manager operation that must be signed by the manager key of the baker. This operation updates the consensus key of the baker to `PUBLIC_KEY` starting from the current cycle plus `PRESERVED_CYCLES + 1`. A consensus key can only be used by a single baker, and the operation will fail if it is already in use..

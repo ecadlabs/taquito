@@ -105,7 +105,7 @@ try {
   const op = await Tezos.contract.transfer({ to: address, amount: amount });
   console.log(`Waiting for ${op.hash} to be confirmed...`);
   await op.confirmation(1);
-  console.log(`Operation injected: https://ghost.tzstats.com/${op.hash}`);
+  console.log(`Operation injected: https://ghostnet.tzkt.io/${op.hash}`);
 } catch (error) {
   console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`);
 }
@@ -123,7 +123,7 @@ try {
   const op = await Tezos.wallet.transfer({ to: address, amount: amount }).send();
   console.log(`Waiting for ${op.opHash} to be confirmed...`);
   await op.confirmation(1);
-  console.log(`Operation injected: https://ghost.tzstats.com/${op.opHash}`);
+  console.log(`Operation injected: https://ghostnet.tzkt.io/${op.hash}`);
 } catch (error) {
   console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`);
 }

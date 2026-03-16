@@ -96,7 +96,7 @@ export interface VersionInfo {
 }
 
 /**
- * @description Facade class that surfaces all of the libraries capability and allow it's configuration
+ * Facade class that surfaces all of the libraries capability and allow it's configuration
  *
  * @param _rpc The RPC server to use
  */
@@ -120,7 +120,7 @@ export class TezosToolkit {
   }
 
   /**
-   * @description Sets configuration on the Tezos Taquito instance. Allows user to choose which signer, rpc client, rpc url, forger and so forth
+   * Sets configuration on the Tezos Taquito instance. Allows user to choose which signer, rpc client, rpc url, forger and so forth
    *
    * @param options rpc url or rpcClient to use to interact with the Tezos network
    *
@@ -161,9 +161,9 @@ export class TezosToolkit {
   }
 
   /**
-   * @description Sets signer provider on the Tezos Taquito instance.
+   * Sets signer provider on the Tezos Taquito instance.
    *
-   * @param options signer to use to interact with the Tezos network
+   * @param signer signer to use to interact with the Tezos network
    *
    * @example Tezos.setSignerProvider(new InMemorySigner.fromSecretKey('edsk...'))
    *
@@ -179,9 +179,9 @@ export class TezosToolkit {
   }
 
   /**
-   * @description Sets rpc provider on the Tezos Taquito instance
+   * Sets rpc provider on the Tezos Taquito instance
    *
-   * @param options rpc url or rpcClient to use to interact with the Tezos network
+   * @param rpc rpc url or rpcClient to use to interact with the Tezos network
    *
    * @example Tezos.setRpcProvider('https://mainnet.tezos.ecadinfra.com/')
    *
@@ -199,10 +199,10 @@ export class TezosToolkit {
   }
 
   /**
-   * @description Sets forger provider on the Tezos Taquito instance
+   * Sets forger provider on the Tezos Taquito instance
    * The `LocalForger` from `@taquito/local-forging` is set by default.
    *
-   * @param options forger to use to interact with the Tezos network
+   * @param forger forger to use to interact with the Tezos network
    *
    * @example Tezos.setForgerProvider(this.getFactory(RpcForger)())
    *
@@ -219,9 +219,9 @@ export class TezosToolkit {
   }
 
   /**
-   * @description Sets stream provider on the Tezos Taquito instance
+   * Sets stream provider on the Tezos Taquito instance
    *
-   * @param options stream to use to interact with the Tezos network
+   * @param stream stream to use to interact with the Tezos network
    *
    * @example Tezos.setStreamProvider(...)
    *
@@ -242,9 +242,9 @@ export class TezosToolkit {
   }
 
   /**
-   * @description Sets wallet provider on the Tezos Taquito instance
+   * Sets wallet provider on the Tezos Taquito instance
    *
-   * @param options wallet to use to interact with the Tezos network
+   * @param wallet wallet to use to interact with the Tezos network
    *
    * @example Tezos.setWalletProvider(...)
    *
@@ -261,9 +261,9 @@ export class TezosToolkit {
   }
 
   /**
-   * @description Sets Packer provider on the Tezos Taquito instance
+   * Sets Packer provider on the Tezos Taquito instance
    *
-   * @param options packer to use to interact with the Tezos network
+   * @param packer packer to use to interact with the Tezos network
    *
    * @example Tezos.setPackerProvider(new MichelCodecPacker())
    *
@@ -280,9 +280,9 @@ export class TezosToolkit {
   }
 
   /**
-   * @description Sets global constants provider on the Tezos Taquito instance
+   * Sets global constants provider on the Tezos Taquito instance
    *
-   * @param options globalConstantsProvider to use to interact with the Tezos network
+   * @param globalConstantsProvider globalConstantsProvider to use to interact with the Tezos network
    *
    * @example
    * ```
@@ -309,10 +309,10 @@ export class TezosToolkit {
   }
 
   /**
-   * @description Sets read provider on the Tezos Taquito instance
+   * Sets read provider on the Tezos Taquito instance
    * By default reads are done from the RPC usign the RpcReadAdapter class, this can be overridden to read from an indexer that implements the TzReadProvider interface
    *
-   * @param options TzReadProvider to use to interact with the Tezos network
+   * @param readProvider TzReadProvider to use to interact with the Tezos network
    *
    */
   setReadProvider(readProvider?: SetProviderOptions['readProvider']) {
@@ -322,9 +322,9 @@ export class TezosToolkit {
   }
 
   /**
-   * @description Sets parser provider on the Tezos Taquito instance
+   * Sets parser provider on the Tezos Taquito instance
    *
-   * @param options parserProvider to use to interact with the Tezos network
+   * @param parserProvider parserProvider to use to interact with the Tezos network
    *
    */
   setParserProvider(parserProvider?: SetProviderOptions['parserProvider']) {
@@ -339,9 +339,9 @@ export class TezosToolkit {
   }
 
   /**
-   * @description Sets injector provider on the Tezos Taquito instance
+   * Sets injector provider on the Tezos Taquito instance
    *
-   * @param options Injector to use to interact with the Tezos network by default RpcInjector
+   * @param injectorProvider Injector to use to interact with the Tezos network by default RpcInjector
    *
    */
   setInjectorProvider(injectorProvider?: SetProviderOptions['injectorProvider']) {
@@ -356,7 +356,7 @@ export class TezosToolkit {
   }
 
   /**
-   * @description Sets the strategy used for field numbering in Token execute/encode/decode to convert Michelson values to/from javascript objects
+   * Sets the strategy used for field numbering in Token execute/encode/decode to convert Michelson values to/from javascript objects
    * @param strategy a value of type FieldNumberingStrategy that controls how field numbers are calculated
    */
   setFieldNumberingStrategy(strategy: FieldNumberingStrategy) {
@@ -364,21 +364,21 @@ export class TezosToolkit {
   }
 
   /**
-   * @description Provide access to tezos account management
+   * Provide access to tezos account management
    */
   get tz(): TzProvider {
     return this._context.tz;
   }
 
   /**
-   * @description Provide access to smart contract utilities
+   * Provide access to smart contract utilities
    */
   get contract(): ContractProvider {
     return this._context.contract;
   }
 
   /**
-   * @description Provide access to tezos operation preparation utilities
+   * Provide access to tezos operation preparation utilities
    */
   get prepare(): PreparationProvider {
     return this._context.prepare;
@@ -393,42 +393,42 @@ export class TezosToolkit {
   }
 
   /**
-   * @description Provide access to operation estimation utilities
+   * Provide access to operation estimation utilities
    */
   get estimate(): EstimationProvider {
     return this._context.estimate;
   }
 
   /**
-   * @description Provide access to streaming utilities backed by an streamer implementation
+   * Provide access to streaming utilities backed by an streamer implementation
    */
   get stream(): SubscribeProvider {
     return this._context.stream;
   }
 
   /**
-   * @description Provide access to the currently used rpc client
+   * Provide access to the currently used rpc client
    */
   get rpc(): RpcClientInterface {
     return this._context.rpc;
   }
 
   /**
-   * @description Provide access to the currently used signer
+   * Provide access to the currently used signer
    */
   get signer() {
     return this._context.signer;
   }
 
   /**
-   * @description Provide access to the currently used globalConstantsProvider
+   * Provide access to the currently used globalConstantsProvider
    */
   get globalConstants() {
     return this._context.globalConstantsProvider;
   }
 
   /**
-   * @description Allow to add a module to the TezosToolkit instance. This method adds the appropriate Providers(s) required by the module to the internal context.
+   * Allow to add a module to the TezosToolkit instance. This method adds the appropriate Providers(s) required by the module to the internal context.
    *
    * @param module extension to add to the TezosToolkit instance
    *
@@ -449,7 +449,7 @@ export class TezosToolkit {
   }
 
   /**
-   * @description Gets an object containing the version of Taquito library and git sha of the commit this library is compiled from
+   * Gets an object containing the version of Taquito library and git sha of the commit this library is compiled from
    */
   getVersionInfo(): VersionInfo {
     return VERSION;

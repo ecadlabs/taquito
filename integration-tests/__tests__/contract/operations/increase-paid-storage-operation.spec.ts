@@ -1,4 +1,5 @@
 import { CONFIGS } from '../../../config';
+import { ParameterValidationError } from '@taquito/core';
 import { OpKind } from '@taquito/taquito';
 import { ligoSample } from '../../../data/ligo-simple-contract';
 
@@ -8,7 +9,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   let simpleContractAddress: string;
   describe(`Test Increase Paid Storage using: ${rpc}`, () => {
     beforeAll(async () => {
-      await setup(true);
+      await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
 
       try {
         const op = await Tezos.contract.originate({
@@ -28,6 +29,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         simpleContractAddress = op.contractAddress!;
       } catch (e) {
         console.log(`Error when trying to originate the contract for the test: \n`, JSON.stringify(e));
+        throw e;
       }
     });
 
@@ -75,12 +77,12 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     });
 
     it('should return error when destination contract address is invalid', async () => {
-      expect(async () => {
-        const op = await Tezos.contract.increasePaidStorage({
+      await expect(
+        Tezos.contract.increasePaidStorage({
           amount: 1,
           destination: 'invalid_address'
-        });
-      }).rejects.toThrow();
+        })
+      ).rejects.toThrow(ParameterValidationError);
     });
   });
 });

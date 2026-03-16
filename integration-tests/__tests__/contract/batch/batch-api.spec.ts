@@ -8,7 +8,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
   describe(`Test the Taquito batch api using: ${rpc}`, () => {
 
     beforeEach(async () => {
-      await setup()
+      await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 })
     })
     it('Verify simple batch transfers with origination', async () => {
       const batch = await Tezos.contract.batch()

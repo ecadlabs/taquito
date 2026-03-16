@@ -1,38 +1,122 @@
 ---
-import hero1 from '../../images/carousel/hero-1.png';
-import hero2 from '../../images/carousel/hero-2.png';
+import Prism from 'prismjs';
+import 'prismjs/components/prism-typescript';
 
-const images = [
-  { src: hero1, alt: 'Hero 1' },
-  { src: hero2, alt: 'Hero 2' }
+const slides = [
+  {
+    filename: 'wallet-setup.ts',
+    code: `// Connect a user's wallet to your dApp in under 10 lines
+import { TezosToolkit } from "@taquito/taquito";
+import { BeaconWallet, BeaconEvent } from "@taquito/beacon-wallet";
+import { NetworkType } from "@taquito/beacon-wallet/types";
+
+const Tezos = new TezosToolkit("https://mainnet.tezos.ecadinfra.com");
+
+const wallet = new BeaconWallet({
+  name: "My Taquito Dapp",
+  network: { type: NetworkType.MAINNET },
+});
+
+wallet.client.subscribeToEvent(
+  BeaconEvent.ACTIVE_ACCOUNT_SET,
+  (account) => {
+    if (account) console.log("Active account set:", account);
+  },
+);
+
+await wallet.requestPermissions();
+const userAddress = await wallet.getPKH();
+Tezos.setWalletProvider(wallet);`
+  },
+  {
+    filename: 'nft-transfer.ts',
+    code: `// Transfer NFTs with a single contract call
+import { TezosToolkit } from "@taquito/taquito";
+
+const Tezos = new TezosToolkit("https://mainnet.tezos.ecadinfra.com");
+const contract = await Tezos.wallet.at(CONTRACT_ADDRESS);
+const op = await contract.methodsObject.transfer([
+  {
+    from_: SENDER_ADDRESS,
+    txs: [
+      {
+        to_: RECIPIENT_ADDRESS,
+        token_id: 0,
+        amount: 2,
+      },
+    ],
+  },
+  {
+    from_: SENDER_ADDRESS,
+    txs: [
+      {
+        to_: RECIPIENT_ADDRESS,
+        token_id: 3,
+        amount: 1,
+      },
+    ],
+  },
+]).send();
+
+await op.confirmation();`
+  },
 ];
+
+const highlighted = slides.map(s => ({
+  ...s,
+  html: Prism.highlight(s.code, Prism.languages.typescript, 'typescript'),
+}));
 ---
 
-<section class="carousel-container px-8 pb-4">
+<section
+  class="carousel-container px-8 pb-4"
+  role="region"
+  aria-roledescription="carousel"
+  aria-label="Code examples"
+>
   <div class="md:w-1/2 mx-auto max-w-4xl">
     <div class="carousel-wrapper relative">
       <div class="carousel-track-container relative overflow-hidden rounded-3xl border-24 border-primary bg-primary">
-        <div class="carousel-track flex transition-transform duration-700 ease-in-out">
-          {images.map((image, index) => (
-            <img
-              src={image.src.src}
-              alt={image.alt}
-              class="carousel-image w-full h-auto shrink-0"
-              data-index={index}
-            />
+        <div class="carousel-track flex transition-transform duration-700 ease-in-out" aria-live="polite">
+          {highlighted.map((slide, index) => (
+            <div class="carousel-slide w-full shrink-0" data-index={index} aria-hidden={index !== 0}>
+              <div class="code-window">
+                <div class="code-chrome">
+                  <div class="chrome-dots">
+                    <span class="dot-red" /><span class="dot-yellow" /><span class="dot-green" />
+                  </div>
+                  <span class="chrome-filename"><svg class="ts-logo" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"><rect width="256" height="256" rx="20" fill="#3178c6"/><path d="M150.5 200.5v27.3c4.4 2.3 9.7 4 15.8 5.1 6.1 1.1 12.5 1.7 19.3 1.7 6.6 0 12.9-.6 18.8-1.9 5.9-1.3 11.1-3.4 15.6-6.3 4.5-2.9 8-6.7 10.6-11.3 2.6-4.6 3.9-10.3 3.9-17 0-4.8-.7-9-2.2-12.7-1.5-3.7-3.6-7-6.3-9.8-2.7-2.9-5.9-5.4-9.6-7.7-3.7-2.3-7.8-4.4-12.2-6.3-3.2-1.4-6.1-2.7-8.7-4-2.6-1.3-4.8-2.6-6.6-4-1.8-1.3-3.2-2.8-4.2-4.3-1-1.6-1.5-3.4-1.5-5.5 0-1.9.5-3.6 1.4-5.1.9-1.5 2.2-2.7 3.8-3.8 1.6-1 3.5-1.8 5.8-2.4 2.2-.5 4.6-.8 7.2-.8 1.7 0 3.6.1 5.6.4 2 .3 4 .7 6.1 1.3 2 .6 4 1.3 5.8 2.2 1.9.9 3.5 1.9 5 3.1v-25.2c-3.6-1.5-7.6-2.5-12-3.2-4.4-.7-9.4-1-15.1-1-6.6 0-12.8.7-18.6 2-5.8 1.4-10.9 3.5-15.3 6.5-4.4 3-7.8 6.8-10.4 11.4-2.5 4.6-3.8 10.1-3.8 16.5 0 8.8 2.6 16.2 7.9 22 5.2 5.9 13 10.7 23.2 14.6 3.2 1.2 6.2 2.5 9 3.8 2.8 1.3 5.2 2.7 7.2 4.2 2 1.4 3.6 3 4.7 4.8 1.2 1.7 1.7 3.7 1.7 5.9 0 1.8-.4 3.4-1.3 4.8-.9 1.4-2.1 2.6-3.7 3.5-1.6 1-3.5 1.7-5.7 2.2-2.3.5-4.8.7-7.5.7-5 0-10.1-1-15.1-2.9-5-2-9.7-4.9-13.9-8.8zM107.3 145.5h26.8v-22.9H56.9v22.9h26.7V234h23.7z" fill="#fff"/></svg>{slide.filename}</span>
+                </div>
+                <pre class="carousel-code language-typescript"><code set:html={slide.html} /></pre>
+              </div>
+            </div>
           ))}
-          <img
-            src={images[0].src.src}
-            alt={images[0].alt}
-            class="carousel-image w-full h-auto shrink-0"
-            data-index="clone"
-          />
+          {/* Clone of first slide for infinite loop */}
+          <div class="carousel-slide w-full shrink-0" data-index="clone" aria-hidden="true">
+            <div class="code-window">
+              <div class="code-chrome">
+                <div class="chrome-dots">
+                  <span class="dot-red" /><span class="dot-yellow" /><span class="dot-green" />
+                </div>
+                <span class="chrome-filename"><svg class="ts-logo" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"><rect width="256" height="256" rx="20" fill="#3178c6"/><path d="M150.5 200.5v27.3c4.4 2.3 9.7 4 15.8 5.1 6.1 1.1 12.5 1.7 19.3 1.7 6.6 0 12.9-.6 18.8-1.9 5.9-1.3 11.1-3.4 15.6-6.3 4.5-2.9 8-6.7 10.6-11.3 2.6-4.6 3.9-10.3 3.9-17 0-4.8-.7-9-2.2-12.7-1.5-3.7-3.6-7-6.3-9.8-2.7-2.9-5.9-5.4-9.6-7.7-3.7-2.3-7.8-4.4-12.2-6.3-3.2-1.4-6.1-2.7-8.7-4-2.6-1.3-4.8-2.6-6.6-4-1.8-1.3-3.2-2.8-4.2-4.3-1-1.6-1.5-3.4-1.5-5.5 0-1.9.5-3.6 1.4-5.1.9-1.5 2.2-2.7 3.8-3.8 1.6-1 3.5-1.8 5.8-2.4 2.2-.5 4.6-.8 7.2-.8 1.7 0 3.6.1 5.6.4 2 .3 4 .7 6.1 1.3 2 .6 4 1.3 5.8 2.2 1.9.9 3.5 1.9 5 3.1v-25.2c-3.6-1.5-7.6-2.5-12-3.2-4.4-.7-9.4-1-15.1-1-6.6 0-12.8.7-18.6 2-5.8 1.4-10.9 3.5-15.3 6.5-4.4 3-7.8 6.8-10.4 11.4-2.5 4.6-3.8 10.1-3.8 16.5 0 8.8 2.6 16.2 7.9 22 5.2 5.9 13 10.7 23.2 14.6 3.2 1.2 6.2 2.5 9 3.8 2.8 1.3 5.2 2.7 7.2 4.2 2 1.4 3.6 3 4.7 4.8 1.2 1.7 1.7 3.7 1.7 5.9 0 1.8-.4 3.4-1.3 4.8-.9 1.4-2.1 2.6-3.7 3.5-1.6 1-3.5 1.7-5.7 2.2-2.3.5-4.8.7-7.5.7-5 0-10.1-1-15.1-2.9-5-2-9.7-4.9-13.9-8.8zM107.3 145.5h26.8v-22.9H56.9v22.9h26.7V234h23.7z" fill="#fff"/></svg>{highlighted[0].filename}</span>
+              </div>
+              <pre class="carousel-code language-typescript"><code set:html={highlighted[0].html} /></pre>
+            </div>
+          </div>
         </div>
       </div>
-      
-      <div class="carousel-dots flex justify-center gap-3 mt-6">
-        {images.map((_, index) => (
-          <div
+
+      <div class="sr-only" aria-live="polite" id="carousel-status">
+        Slide 1 of {slides.length}
+      </div>
+
+      <div class="carousel-dots flex justify-center gap-3 mt-6" role="tablist" aria-label="Slide indicators">
+        {slides.map((_, index) => (
+          <button
+            type="button"
+            role="tab"
+            aria-selected={index === 0}
+            aria-label={`Go to slide ${index + 1} of ${slides.length}`}
             class={`carousel-dot w-3 h-3 rounded-full transition-all duration-300 ${index === 0 ? 'bg-primary w-6' : 'bg-primary/40'}`}
             data-index={index}
           />
@@ -45,56 +129,77 @@ const images = [
 <script>
   let currentIndex = 0;
   const track = document.querySelector('.carousel-track') as HTMLElement;
-  const dots = document.querySelectorAll('.carousel-dot') as NodeListOf<HTMLElement>;
+  const dots = document.querySelectorAll('.carousel-dot') as NodeListOf<HTMLButtonElement>;
+  const slides = document.querySelectorAll('.carousel-slide') as NodeListOf<HTMLElement>;
+  const status = document.getElementById('carousel-status');
   const totalRealSlides = dots.length;
   let autoPlayInterval: number;
   let isAnimating = false;
+
+  function updateAccessibility(index: number) {
+    slides.forEach((slide) => {
+      const slideIndex = slide.dataset.index;
+      if (slideIndex === 'clone') {
+        slide.setAttribute('aria-hidden', 'true');
+      } else {
+        slide.setAttribute('aria-hidden', String(Number(slideIndex) !== index));
+      }
+    });
+
+    if (status) {
+      status.textContent = `Slide ${index + 1} of ${totalRealSlides}`;
+    }
+  }
 
   function updateDots(index: number) {
     dots.forEach((dot, i) => {
       if (i === index) {
         dot.classList.remove('bg-primary/40', 'w-3');
         dot.classList.add('bg-primary', 'w-6');
+        dot.setAttribute('aria-selected', 'true');
       } else {
         dot.classList.add('bg-primary/40', 'w-3');
         dot.classList.remove('bg-primary', 'w-6');
+        dot.setAttribute('aria-selected', 'false');
       }
     });
   }
 
   function slideToPosition(position: number, animate: boolean = true) {
     if (!track) return;
-    
+
     const slideWidth = 100;
     if (!animate) {
       track.style.transition = 'none';
     }
     track.style.transform = `translateX(-${position * slideWidth}%)`;
-    
+
     if (!animate) {
       void track.offsetHeight;
       track.style.transition = '';
     }
   }
 
-  function showImage(index: number, animate: boolean = true) {
+  function showSlide(index: number, animate: boolean = true) {
     if (!track) return;
-    
+
     slideToPosition(index, animate);
-    updateDots(index % totalRealSlides);
+    const displayIndex = index % totalRealSlides;
+    updateDots(displayIndex);
+    updateAccessibility(displayIndex);
     currentIndex = index;
   }
 
-  function nextImage() {
+  function nextSlide() {
     if (isAnimating) return;
     isAnimating = true;
-    
+
     const nextIndex = currentIndex + 1;
-    showImage(nextIndex, true);
-    
+    showSlide(nextIndex, true);
+
     if (nextIndex === totalRealSlides) {
       setTimeout(() => {
-        showImage(0, false);
+        showSlide(0, false);
         isAnimating = false;
       }, 700);
     } else {
@@ -104,19 +209,142 @@ const images = [
     }
   }
 
-  function startAutoPlay() {
-    autoPlayInterval = window.setInterval(nextImage, 8000);
+  function goToSlide(index: number) {
+    if (isAnimating || index === currentIndex) return;
+    isAnimating = true;
+    showSlide(index, true);
+    setTimeout(() => {
+      isAnimating = false;
+    }, 700);
   }
+
+  function startAutoPlay() {
+    autoPlayInterval = window.setInterval(nextSlide, 8000);
+  }
+
+  function resetAutoPlay() {
+    clearInterval(autoPlayInterval);
+    startAutoPlay();
+  }
+
+  dots.forEach((dot, index) => {
+    dot.addEventListener('click', () => {
+      goToSlide(index);
+      resetAutoPlay();
+    });
+  });
 
   startAutoPlay();
 </script>
 
+<style is:global>
+  /* Prism Tomorrow Night theme, scoped to carousel */
+  .carousel-track-container .token.comment,
+  .carousel-track-container .token.prolog { color: #999; }
+  .carousel-track-container .token.punctuation { color: #ccc; }
+  .carousel-track-container .token.tag,
+  .carousel-track-container .token.attr-name,
+  .carousel-track-container .token.deleted { color: #e2777a; }
+  .carousel-track-container .token.function-name { color: #6196cc; }
+  .carousel-track-container .token.boolean,
+  .carousel-track-container .token.number,
+  .carousel-track-container .token.function { color: #f08d49; }
+  .carousel-track-container .token.property,
+  .carousel-track-container .token.class-name,
+  .carousel-track-container .token.constant,
+  .carousel-track-container .token.symbol { color: #f8c555; }
+  .carousel-track-container .token.keyword,
+  .carousel-track-container .token.builtin { color: #cc99cd; }
+  .carousel-track-container .token.string,
+  .carousel-track-container .token.char,
+  .carousel-track-container .token.attr-value,
+  .carousel-track-container .token.regex,
+  .carousel-track-container .token.variable { color: #7ec699; }
+  .carousel-track-container .token.operator,
+  .carousel-track-container .token.entity,
+  .carousel-track-container .token.url { color: #67cdcc; }
+</style>
+
 <style>
-  .carousel-image {
-    display: block;
+  .code-window {
+    overflow: hidden;
+    border-radius: 0.75rem;
+  }
+
+  .code-chrome {
+    background: #1e1e1e;
+    padding: 0.75rem 1rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .chrome-dots {
+    display: flex;
+    gap: 6px;
+  }
+
+  .chrome-dots span {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+  }
+
+  .dot-red { background: #ff5f57; }
+  .dot-yellow { background: #febc2e; }
+  .dot-green { background: #28c840; }
+
+  .chrome-filename {
+    color: #999;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #2d2d2d;
+    padding: 0.4rem 1rem;
+    border-radius: 0.5rem 0.5rem 0 0;
+    align-self: stretch;
+  }
+
+  .ts-logo {
+    width: 1.1rem;
+    height: 1.1rem;
+    flex-shrink: 0;
+  }
+
+  .carousel-code {
+    background: #2d2d2d;
+    color: #ccc;
+    margin: 0;
+    padding: 1.25rem 1.5rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(0.65rem, 1.1vw, 0.9rem);
+    line-height: 1.6;
+    overflow: hidden;
+    white-space: pre;
   }
 
   .carousel-dot {
-    pointer-events: none;
+    cursor: pointer;
+    border: none;
+    padding: 0;
+  }
+
+  .carousel-dot:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
   }
 </style>

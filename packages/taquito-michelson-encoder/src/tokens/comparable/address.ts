@@ -17,7 +17,7 @@ import { BaseTokenSchema } from '../../schema/types';
 
 /**
  *  @category Error
- *  @description Error that indicates a failure happening when parsing encoding/executing an Address
+ *  Error that indicates a failure happening when parsing encoding/executing an Address
  */
 export class AddressValidationError extends TokenValidationError {
   name = 'AddressValidationError';

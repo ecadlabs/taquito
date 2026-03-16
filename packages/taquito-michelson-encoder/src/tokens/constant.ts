@@ -3,7 +3,7 @@ import { Semantic, SemanticEncoding, Token, TokenFactory, TokenValidationError }
 
 /**
  *  @category Error
- *  @description Error that indicates a failure happening when parsing encoding a Global Constant
+ *  Error that indicates a failure happening when parsing encoding a Global Constant
  */
 export class GlobalConstantEncodingError extends TokenValidationError {
   name = 'GlobalConstantEncodingError';
@@ -14,7 +14,7 @@ export class GlobalConstantEncodingError extends TokenValidationError {
 
 /**
  *  @category Error
- *  @description Error that indicates a failure happening when parsing executing a Global Constant
+ *  Error that indicates a failure happening when parsing executing a Global Constant
  */
 export class GlobalConstantDecodingError extends TokenValidationError {
   name = 'GlobalConstantDecodingError';

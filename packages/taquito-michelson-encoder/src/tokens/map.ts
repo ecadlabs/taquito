@@ -11,7 +11,7 @@ import {
 
 /**
  *  @category Error
- *  @description Error that indicates a failure happening when parsing encoding/executing a Map
+ *  Error that indicates a failure happening when parsing encoding/executing a Map
  */
 export class MapValidationError extends TokenValidationError {
   name = 'MapValidationError';

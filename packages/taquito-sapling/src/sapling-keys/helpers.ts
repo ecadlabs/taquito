@@ -14,7 +14,7 @@ export function decryptKey(spendingKey: string, password?: string) {
       ]);
     } catch (err: unknown) {
       if (err instanceof ParameterValidationError) {
-        throw new InvalidSpendingKey(spendingKey, 'invalid spending key');
+        throw new InvalidSpendingKey('invalid spending key');
       } else {
         throw err;
       }
@@ -23,20 +23,22 @@ export function decryptKey(spendingKey: string, password?: string) {
 
   if (pre === PrefixV2.EncryptedSaplingSpendingKey) {
     if (!password) {
-      throw new InvalidSpendingKey(spendingKey, 'no password provided to decrypt');
+      throw new InvalidSpendingKey('no password provided to decrypt');
     }
 
     const salt = toBuffer(keyArr.slice(0, 8));
     const encryptedSk = toBuffer(keyArr.slice(8));
 
     const encryptionKey = pbkdf2.pbkdf2Sync(password, salt, 32768, 32, 'sha512');
+    // Zero nonce is safe: fresh random salt per encryption produces unique PBKDF2-derived key.
+    // See: https://gitlab.com/tezos/tezos/-/blob/master/src/lib_signer_backends/encrypted.ml
     const decrypted = openSecretBox(
       new Uint8Array(encryptionKey),
-      new Uint8Array(24),
+      new Uint8Array(24), // zero nonce - uniqueness provided by per-encryption derived key
       new Uint8Array(encryptedSk)
     );
     if (!decrypted) {
-      throw new InvalidSpendingKey(spendingKey, 'incorrect password or unable to decrypt');
+      throw new InvalidSpendingKey('incorrect password or unable to decrypt');
     }
     return toBuffer(decrypted);
   } else {

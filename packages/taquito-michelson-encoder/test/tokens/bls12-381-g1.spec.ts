@@ -56,8 +56,11 @@ describe('Bls12-381-g1 token', () => {
 
       try {
         token.Encode(['test']);
-      } catch (ex) {
-        expect(ex.name).toEqual('Bls12381g1ValidationError');
+      } catch (ex: unknown) {
+        expect(ex).toBeInstanceOf(Bls12381g1ValidationError);
+        if (ex instanceof Bls12381g1ValidationError) {
+          expect(ex.name).toEqual('Bls12381g1ValidationError');
+        }
       }
     });
   });

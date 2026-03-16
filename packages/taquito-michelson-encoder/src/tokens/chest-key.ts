@@ -3,7 +3,7 @@ import { SemanticEncoding, Token, TokenFactory, TokenValidationError } from './t
 
 /**
  *  @category Error
- *  @description Error that indicates a failure happening when parsing encoding/executing a Chest Key
+ *  Error that indicates a failure happening when parsing encoding/executing a Chest Key
  */
 export class ChestKeyValidationError extends TokenValidationError {
   name = 'ChestKeyValidationError';

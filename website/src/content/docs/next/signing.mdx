@@ -7,9 +7,7 @@ Signing arbitrary chunks of data is a common practice in a blockchain environmen
 
 ## Understanding what a signature is
 
-A signature is a string that starts with `edsig`, that is generally `based58` encoded for better readability. It requires a signer to hash the input bytes and thus can only be done if the signer has access to the private key of the account. Therefore, it is impossible to forge a signature for an account of which you don't have access to the private key. 
-
-Michelson implements an instruction called `CHECK_SIGNATURE` that allows it to retrieve the public key of the account that created the signature.
+A signature is a base58-encoded string whose prefix depends on the key type: `edsig` for ed25519 (tz1), `spsig` for secp256k1 (tz2), `p2sig` for p256 (tz3), and `BLsig` for BLS (tz4). It requires a signer to hash the input bytes and thus can only be done if the signer has access to the private key of the account. Therefore, it is impossible to forge a signature for an account of which you don't have access to the private key. Michelson implements an instruction called `CHECK_SIGNATURE` that verifies a signature was produced by a given public key.
 
 ## Generating a signature with the InMemorySigner
 
@@ -69,7 +67,7 @@ The hexadecimal/Micheline representation of the string must contain 4 pieces of 
 Once you have your bytes, you can send them to the wallet to have them signed:
 
 ```typescript
-import { RequestSignPayloadInput, SigningType } from '@airgap/beacon-sdk';
+import { RequestSignPayloadInput, SigningType } from '@taquito/beacon-wallet/types';
 
 const payload: RequestSignPayloadInput = {
   signingType: SigningType.MICHELINE,
@@ -90,7 +88,7 @@ Here is the full code to sign data with a wallet:
 
 ```ts
 import { stringToBytes } from '@taquito/utils';
-import { RequestSignPayloadInput, SigningType } from '@airgap/beacon-sdk';
+import { RequestSignPayloadInput, SigningType } from '@taquito/beacon-wallet/types';
 
 // The data to format
 const dappUrl = 'tezos-test-d.app';
@@ -284,5 +282,3 @@ In the contract, we can use the `CHECK_SIGNATURE` instruction to compare the sig
 The signing functionality has been implemented recently by the web wallets on Tezos and it's still very little used because it presents a major security concern.
 
 A fraudulent dApp could convince less tech-savvy users to sign arbitrary data and hide it as another type of operation before sending the signature to a smart contract. If the signature is used by the contract to allow the signer to perform certain actions, this would allow the fraudulent dApp to pose as the signer, which could be disastrous for the user.
-
-A signature can also be used in a replay attack when a dApp uses the same signature multiple times to gain access to a contract functionality. A signature should be used one single time and destroyed and a smart contract should implement a verification process to ensure the signature hasn't been used already.

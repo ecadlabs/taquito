@@ -24,9 +24,54 @@ import { InvalidOperationHashError } from '@taquito/core';
 export type OperationStatus = 'pending' | 'unknown' | OperationResultStatusEnum;
 
 const MAX_BRANCH_ANCESTORS = 60;
+const walletOpTraceEnabled = /^(1|true)$/i.test(process?.env?.TAQUITO_OP_TRACE ?? '');
+const walletOpTraceVerbose = /^(1|true)$/i.test(process?.env?.TAQUITO_OP_TRACE_VERBOSE ?? '');
+const parsedWalletOpTraceSlowMs = Number(process?.env?.TAQUITO_OP_TRACE_SLOW_MS ?? '60000');
+const walletOpTraceSlowMs =
+  Number.isFinite(parsedWalletOpTraceSlowMs) && parsedWalletOpTraceSlowMs >= 0
+    ? parsedWalletOpTraceSlowMs
+    : 60000;
+
+const asRecord = (value: unknown): Record<string, unknown> | undefined =>
+  typeof value === 'object' && value !== null ? (value as Record<string, unknown>) : undefined;
+
+const getErrors = (value: unknown) => (Array.isArray(value) ? value : []);
+
+const summarizeWalletOperationResults = (results?: OperationContentsAndResult[]) =>
+  Array.isArray(results)
+    ? results.map((result) => {
+        const resultRecord = asRecord(result) ?? {};
+        const metadata = asRecord(resultRecord.metadata);
+        const operationResult = asRecord(metadata?.operation_result);
+        return {
+          kind: typeof resultRecord.kind === 'string' ? resultRecord.kind : 'unknown',
+          status: typeof operationResult?.status === 'string' ? operationResult.status : 'unknown',
+          errors: getErrors(operationResult?.errors),
+          consumed_milligas:
+            typeof operationResult?.consumed_milligas === 'string'
+              ? operationResult.consumed_milligas
+              : undefined,
+        };
+      })
+    : [];
+
+const toErrorMessage = (error: unknown) => {
+  if (error instanceof Error) {
+    return `${error.name}: ${error.message}`;
+  }
+  return String(error);
+};
+
+const traceWalletOperation = (payload: Record<string, unknown>) => {
+  if (!walletOpTraceEnabled) {
+    return;
+  }
+  // JSON logs are easier to aggregate when diagnosing flaky CI behavior.
+  console.log(`[taquito:wallet-op-trace] ${JSON.stringify(payload)}`);
+};
 
 /**
- * @description WalletOperation allows to monitor operation inclusion on chains and surface information related to the operation
+ * WalletOperation allows to monitor operation inclusion on chains and surface information related to the operation
  */
 export class WalletOperation {
   protected _operationResult = new ReplaySubject<OperationContentsAndResult[]>(1);
@@ -84,7 +129,7 @@ export class WalletOperation {
   }
 
   /**
-   * @description Receipt expose the total amount of tezos token burn and spent on fees
+   * Receipt expose the total amount of tezos token burn and spent on fees
    * The promise returned by receipt will resolve only once the transaction is included
    */
   async receipt(): Promise<Receipt> {
@@ -98,7 +143,6 @@ export class WalletOperation {
   /**
    *
    * @param opHash Operation hash
-   * @param raw Raw operation that was injected
    * @param context Taquito context allowing access to rpc and signer
    * @throws {InvalidOperationHashError}
    */
@@ -194,7 +238,47 @@ export class WalletOperation {
    *
    * @param confirmations [0] Number of confirmation to wait for
    */
-  confirmation(confirmations?: number) {
-    return this.confirmationObservable(confirmations).toPromise();
+  async confirmation(confirmations?: number) {
+    const startedAt = Date.now();
+    const expectedConfirmation = confirmations ?? this.context.config.defaultConfirmationCount;
+
+    try {
+      const confirmationResult = await this.confirmationObservable(confirmations).toPromise();
+      const operationResults = await this.operationResults().catch(() => undefined);
+      const summary = summarizeWalletOperationResults(operationResults);
+      const nonAppliedStatuses = summary
+        .filter((result) => result.status !== 'applied')
+        .map((result) => result.status);
+      const elapsedMs = Date.now() - startedAt;
+
+      if (
+        walletOpTraceVerbose ||
+        elapsedMs >= walletOpTraceSlowMs ||
+        nonAppliedStatuses.length > 0
+      ) {
+        traceWalletOperation({
+          stage: 'confirmation-complete',
+          opHash: this.opHash,
+          elapsedMs,
+          expectedConfirmation,
+          currentConfirmation: confirmationResult?.currentConfirmation,
+          completed: confirmationResult?.completed,
+          statuses: summary.map((result) => result.status),
+          results: summary,
+        });
+      }
+      return confirmationResult;
+    } catch (error: unknown) {
+      const operationResults = await this.operationResults().catch(() => undefined);
+      traceWalletOperation({
+        stage: 'confirmation-error',
+        opHash: this.opHash,
+        elapsedMs: Date.now() - startedAt,
+        expectedConfirmation,
+        error: toErrorMessage(error),
+        results: summarizeWalletOperationResults(operationResults),
+      });
+      throw error;
+    }
   }
 }

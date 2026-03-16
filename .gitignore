@@ -9,6 +9,7 @@ dist
 compiled
 .awcache
 .env
+.env.*
 .rpt2_cache
 website/build/
 website/yarn.lock
@@ -16,8 +17,11 @@ manifest.json
 !.vscode/extensions.json
 website/*.bak
 integration-tests/jest-stare
+integration-tests/.rpc-hammer.local.env
+integration-tests/run-rpc-hammer.local.sh
 **/saplingOutputParams*
 **/saplingSpendParams*
 apps/**/node_modules
 .nx
 .ansible
+.claude

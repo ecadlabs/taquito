@@ -1,9 +1,14 @@
 {
   "name": "@taquito/http-utils",
-  "version": "24.0.1",
-  "description": "",
+  "version": "24.2.0",
+  "description": "HTTP client for Taquito with retry, timeout, and transport error classification",
   "keywords": [
-    "tezos"
+    "tezos",
+    "taquito",
+    "http",
+    "rpc",
+    "fetch",
+    "retry"
   ],
   "main": "dist/taquito-http-utils.umd.js",
   "module": "dist/taquito-http-utils.es6.js",
@@ -12,22 +17,20 @@
     "signature.json",
     "dist"
   ],
-  "browser": {
-    "http": false,
-    "https": false,
-    "node-fetch": false
-  },
-  "author": "Simon Boissonneault-Robert <simon@ecadlabs.com>",
+  "author": "ECAD Labs <info@ecadlabs.com>",
+  "contributors": [
+    "Simon Boissonneault-Robert <simon@ecadlabs.com>"
+  ],
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/ecadlabs/taquito"
   },
   "publishConfig": {
     "access": "public"
   },
   "license": "Apache-2.0",
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "scripts": {
     "lint": "eslint --ext .js,.ts .",
@@ -35,7 +38,8 @@
     "prebuild": "rimraf dist",
     "version-stamp": "node ../taquito/version-stamping.js",
     "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts --bundleConfigAsCjs",
-    "start": "rollup -c rollup.config.ts --bundleConfigAsCjs -w"
+    "start": "rollup -c rollup.config.ts --bundleConfigAsCjs -w",
+    "test": "jest --coverage"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [
@@ -63,15 +67,11 @@
     ]
   },
   "dependencies": {
-    "@taquito/core": "^24.0.1",
-    "node-fetch": "^2.7.0"
+    "@taquito/core": "^24.2.0"
   },
   "devDependencies": {
-    "@types/bluebird": "^3.5.42",
     "@types/jest": "^29.5.12",
     "@types/node": "^20",
-    "@types/node-fetch": "^2.6.11",
-    "@types/superagent": "^8.1.8",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "colors": "^1.4.0",
@@ -86,15 +86,14 @@
     "prompt": "^1.3.0",
     "replace-in-file": "^8.1.0",
     "rimraf": "^6.0.1",
-    "rollup": "^4.22.4",
+    "rollup": "^4.59.0",
     "rollup-plugin-json": "^4.0.0",
-    "rollup-plugin-polyfill-node": "^0.13.0",
     "rollup-plugin-typescript2": "^0.36.0",
     "shelljs": "^0.8.5",
     "ts-jest": "^29.2.3",
     "ts-node": "^10.9.2",
     "ts-toolbelt": "^9.6.0",
-    "typescript": "~5.5.4"
+    "typescript": "^5.9.3"
   },
   "gitHead": "551e35aeff7d6dcde1c72284238c0ed3c3aae77e"
 }

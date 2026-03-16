@@ -5,7 +5,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
   describe(`Test account delegation with estimation through contract api using: ${rpc}`, () => {
 
     beforeAll(async () => {
-      await setup(true)
+      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 })
     })
     it('Verify that an account can be delegated to known baker with automatic estimate', async () => {
       const delegate = knownBaker

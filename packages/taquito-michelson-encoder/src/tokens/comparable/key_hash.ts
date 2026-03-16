@@ -10,7 +10,7 @@ import { BaseTokenSchema } from '../../schema/types';
 
 /**
  *  @category Error
- *  @description Error that indicates a failure happening when parsing encoding/executing Key Hash
+ *  Error that indicates a failure happening when parsing encoding/executing Key Hash
  */
 export class KeyHashValidationError extends TokenValidationError {
   name = 'KeyHashValidationError';

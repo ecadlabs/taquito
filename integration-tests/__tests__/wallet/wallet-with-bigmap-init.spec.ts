@@ -7,7 +7,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   describe(`Test token contract origination with big map and with initial data through wallet api using: ${rpc}`, () => {
 
     beforeEach(async () => {
-      await setup()
+      await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 })
     })
     it('Verify wallet.originate for a token contract with BigMap and with initialized Storage/BigMap', async () => {
       const addr = await Tezos.signer.publicKeyHash();
@@ -55,8 +55,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         storage: initialStorage
       }).send();
       await op.confirmation()
+      expect(await op.status()).toBe('applied');
       expect(op.opHash).toBeDefined();
-      expect(op.status).toBeTruthy
       const contract = await op.contract()
       // file deepcode ignore no-any: any is good enough
       const storage: any = await contract.storage()

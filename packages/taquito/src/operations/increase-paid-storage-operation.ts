@@ -14,7 +14,7 @@ import {
 
 /**
  *
- * @description IncreasePaidStorageOperation provides utility functions to fetch a new operation of kind increase_paid_storage
+ * IncreasePaidStorageOperation provides utility functions to fetch a new operation of kind increase_paid_storage
  *
  */
 

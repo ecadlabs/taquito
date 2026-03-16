@@ -15,9 +15,9 @@ import {
 } from './types';
 
 /**
- * @description Transaction operation provides utility functions to fetch a newly issued transaction
+ * Transaction operation provides utility functions to fetch a newly issued transaction
  *
- * @warn Currently supports one transaction per operation
+ * @remarks Currently supports one transaction per operation
  */
 export class TransactionOperation
   extends Operation

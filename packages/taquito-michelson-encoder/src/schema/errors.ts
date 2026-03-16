@@ -4,7 +4,7 @@ import { InvalidViewParameterError, TaquitoError } from '@taquito/core';
 
 /**
  *  @category Error
- *  @description Error that indicates a failure when encoding (transforming JS parameter into JSON Michelson) the parameter of the view
+ *  Error that indicates a failure when encoding (transforming JS parameter into JSON Michelson) the parameter of the view
  */
 export class ParameterEncodingError extends InvalidViewParameterError {
   constructor(
@@ -25,7 +25,7 @@ export class ParameterEncodingError extends InvalidViewParameterError {
 
 /**
  *  @category Error
- *  @description Error that indicates an invalid on-chain view found on the script
+ *  Error that indicates an invalid on-chain view found on the script
  */
 export class InvalidScriptError extends TaquitoError {
   name = 'InvalidScriptError';
@@ -45,7 +45,7 @@ export class InvalidScriptError extends TaquitoError {
 
 /**
  *  @category Error
- *  @description Error that indicates an invalid RPC response being passed or used
+ *  Error that indicates an invalid RPC response being passed or used
  */
 export class InvalidRpcResponseError extends TaquitoError {
   public name = 'InvalidRpcResponseError';
@@ -65,7 +65,7 @@ export class InvalidRpcResponseError extends TaquitoError {
 
 /**
  *  @category Error
- *  @description Error that indicates an invalid big map schema being passed or used
+ *  Error that indicates an invalid big map schema being passed or used
  */
 export class InvalidBigMapSchemaError extends TaquitoError {
   public name = 'InvalidBigMapSchemaError';
@@ -76,7 +76,7 @@ export class InvalidBigMapSchemaError extends TaquitoError {
 
 /**
  *  @category Error
- *  @description Error that indicates an invalid big map diff being passed or used
+ *  Error that indicates an invalid big map diff being passed or used
  */
 export class InvalidBigMapDiffError extends TaquitoError {
   public name = 'InvalidBigMapDiffError';
@@ -90,7 +90,7 @@ export class InvalidBigMapDiffError extends TaquitoError {
 
 /**
  *  @category Error
- *  @description Error that indicates a failure when trying to encode big maps
+ *  Error that indicates a failure when trying to encode big maps
  */
 export class BigMapEncodingError extends TaquitoError {
   public name = 'BigMapEncodingError';
@@ -109,7 +109,7 @@ export class BigMapEncodingError extends TaquitoError {
 
 /**
  *  @category Error
- *  @description Error that indicates a failure when trying to encode storage
+ *  Error that indicates a failure when trying to encode storage
  */
 export class StorageEncodingError extends TaquitoError {
   public name = 'StorageEncodingError';
@@ -131,7 +131,7 @@ export class StorageEncodingError extends TaquitoError {
 
 /**
  *  @category Error
- *  @description General error that indicates a function not being passed a necessary argument
+ *  General error that indicates a function not being passed a necessary argument
  */
 export class MissingArgumentError extends TaquitoError {
   public name = 'MissingArgumentError';

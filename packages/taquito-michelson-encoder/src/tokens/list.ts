@@ -3,7 +3,7 @@ import { Token, TokenFactory, Semantic, TokenValidationError, SemanticEncoding }
 
 /**
  *  @category Error
- *  @description Error that indicates a failure happening when parsing encoding/executing a List
+ *  Error that indicates a failure happening when parsing encoding/executing a List
  */
 export class ListValidationError extends TokenValidationError {
   name = 'ListValidationError';

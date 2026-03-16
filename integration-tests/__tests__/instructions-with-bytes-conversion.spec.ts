@@ -6,8 +6,8 @@ CONFIGS().forEach(({ lib, setup }) => {
 
   describe(`Test origination of contract with instructions now supporting bytes conversion`, () => {
 
-    beforeEach(async () => {
-      await setup();
+    beforeAll(async () => {
+      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 });
     });
 
     it(`Should be able to originate a contract with BYTES -> INT -> BYTES instructions`, async () => {

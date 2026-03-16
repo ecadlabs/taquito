@@ -161,7 +161,7 @@ await batchOp.confirmation();
 
 When deploying a contract with global constants in its storage, Taquito needs to know the Michelson values of those constants. You provide these by setting a global constant provider on your `TezosToolkit` instance.
 
-Taquito provides a `DefaultGlobalConstantsProvider` that lets you manually register global constants using the `loadGlobalConstant` method. For each constant, you provide its hash and corresponding JSON Michelson value.
+Taquito provides a default global constant provider named `DefaultGlobalConstantsProvider` where the hash and corresponding JSON Michelson value must be manually provisioned using its `loadGlobalConstant` method.
 
 Alternatively, you can create your own provider by implementing the `GlobalConstantsProvider` interface with a `getGlobalConstantByHash` method.
 

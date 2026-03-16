@@ -15,6 +15,8 @@ const REVEAL_FEE = {
 // value is based on octez-client reveal operation storageLimit of all address type in Tallinn Protocol
 export const REVEAL_STORAGE_LIMIT = 0;
 // protocol constants in Tallinn Protocol
+// NOTE: When updating constants here, also check:
+//   website/src/config/tezos-constants.mjs (documentation constants, versioned by doc version)
 export const ORIGINATION_SIZE = 257;
 // protocol constants in Tallinn Protocol
 export const COST_PER_BYTE = 250;

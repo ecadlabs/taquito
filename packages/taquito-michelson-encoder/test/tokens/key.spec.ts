@@ -38,8 +38,11 @@ describe('Key token', () => {
 
       try {
         token.Encode(['test']);
-      } catch (ex) {
-        expect(ex.name).toEqual('KeyValidationError');
+      } catch (ex: unknown) {
+        expect(ex).toBeInstanceOf(KeyValidationError);
+        if (ex instanceof KeyValidationError) {
+          expect(ex.name).toEqual('KeyValidationError');
+        }
       }
     });
   });

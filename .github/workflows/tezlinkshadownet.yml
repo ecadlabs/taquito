@@ -1,0 +1,20 @@
+name: Tezlink_Shadownet Integration Tests
+on:
+  push:
+    branches:
+      - '**tezlink**'
+
+jobs:
+  integration-tests-tezlinkshadownet:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/Jod
+      - run: npm ci
+      - run: npm run build
+      - if: always()
+        id: integration-tests-tezlinkshadownet
+        run: npm -w integration-tests run test:tezlinkshadownet-secret-key -- --exclude='**/sapling/**' --exclude='**/ledger/**'

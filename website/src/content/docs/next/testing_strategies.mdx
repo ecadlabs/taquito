@@ -102,10 +102,6 @@ ECAD DevOps maintains an extensive performance tracking and monitoring setup usi
 
 Each time Tezos changes protocol, there is a new test network, and old ones are deprecated. Contracts originated in a more senior test network must be originated again on the new test network. We have to update RPC content values and recreate Live Code Example contracts. So each protocol change requires an overhaul of some of the test assets to suit the new protocol.
 
-The Taquito test suite will run tests in CI/CD against the current and next test network. There is also testing of “Weeklynet,” which represents the bleeding edge of the available Tezos test code.
+The Taquito test suite runs in CI/CD against the current and next protocol testnets.
 
-ECAD DevOps maintains a suite of Tezos public nodes that the Tezos community can use. By supporting and monitoring these nodes, ECAD engineers have an overview and insights into the behaviour of these systems and can contribute to problem isolation, bug fixes and general troubleshooting; or specific test scenarios that require DevOps level node access.
-
-## Weeklynet and Daily net
-
-To keep up with the current changes proposed for the following Tezos protocol, we can run our integration test suite against the node called "Weeklynet." This node captures the head of the Tezos development branch each Monday. By regression testing this node, we can ascertain changes Taquito may need to make early in the protocol development process. There is also "Daily net," which offers the current Tezos branch head each day.
+ECAD Devops maintains a suite of Tezos public nodes that the Tezos community can use. By supporting and monitoring these nodes, ECAD engineers have an overview and insights into the behaviour of these systems and can contribute to problem isolation, bug fixes and general troubleshooting; or specific test scenarios that require DevOps level node access.

@@ -3,7 +3,7 @@ import { SemanticEncoding, Token, TokenFactory, TokenValidationError } from './t
 
 /**
  *  @category Error
- *  @description Error that indicates a failure happening when parsing encoding/executing a BLS12-381 scalar field Fr
+ *  Error that indicates a failure happening when parsing encoding/executing a BLS12-381 scalar field Fr
  */
 export class Bls12381frValidationError extends TokenValidationError {
   name = 'Bls12381frValidationError';

@@ -79,8 +79,11 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
     );
     try {
       publicKeyHashEncoder('tz5WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5');
-    } catch (e) {
-      expect(e.message).toContain(`Invalid public key hash "tz5WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5"`);
+    } catch (e: unknown) {
+      expect(e).toBeInstanceOf(InvalidKeyHashError);
+      if (e instanceof InvalidKeyHashError) {
+        expect(e.message).toContain(`Invalid public key hash "tz5WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5"`);
+      }
     }
   });
 
@@ -104,8 +107,11 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
     );
     try {
       publicKeyHashesEncoder(['tz5WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5']);
-    } catch (e) {
-      expect(e.message).toContain(`Invalid public key hash "tz5WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5"`);
+    } catch (e: unknown) {
+      expect(e).toBeInstanceOf(InvalidKeyHashError);
+      if (e instanceof InvalidKeyHashError) {
+        expect(e.message).toContain(`Invalid public key hash "tz5WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5"`);
+      }
     }
   });
 

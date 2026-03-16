@@ -15,7 +15,7 @@ import {
 
 /**
  *
- * @description SmartRollupOriginate Operation provides utility to fetch properties for Operation of kind SmartRollupOriginate
+ * SmartRollupOriginate Operation provides utility to fetch properties for Operation of kind SmartRollupOriginate
  *
  */
 export class SmartRollupOriginateOperation

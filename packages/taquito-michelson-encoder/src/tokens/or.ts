@@ -10,7 +10,7 @@ import {
 
 /**
  *  @category Error
- *  @description Error that indicates a failure happening when parsing encoding/executing an OrToken
+ *  Error that indicates a failure happening when parsing encoding/executing an OrToken
  */
 export class OrValidationError extends TokenValidationError {
   name = 'OrValidationError';

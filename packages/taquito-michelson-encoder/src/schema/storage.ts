@@ -85,7 +85,7 @@ export function deepEqual(
 }
 
 /**
- * @warn Our current smart contract abstraction feature is currently in preview. Its API is not final, and it may not cover every use case (yet). We will greatly appreciate any feedback on this feature.
+ * @remarks Our current smart contract abstraction feature is currently in preview. Its API is not final, and it may not cover every use case (yet). We will greatly appreciate any feedback on this feature.
  */
 export class Schema {
   private root: Token;
@@ -165,7 +165,7 @@ export class Schema {
   }
 
   /**
-   * @description Validates that a value matches the schema type.
+   * Validates that a value matches the schema type.
    * Performs type checking with special handling for BigMap, Ticket, and nested Map tokens.
    *
    * @param val - The value to validate against the schema
@@ -242,7 +242,7 @@ export class Schema {
   }
 
   /**
-   * @throws {@link TokenValidationError}
+   * @throws TokenValidationError
    * @throws {@link StorageEncodingError}
    */
   Encode(value?: any, semantics?: SemanticEncoding) {
@@ -257,7 +257,7 @@ export class Schema {
   }
 
   /**
-   * @description Produce a representation of the storage schema.
+   * Produce a representation of the storage schema.
    * Note: Provide guidance on how to write the storage object for the origination operation with Taquito.
    */
   generateSchema(): TokenSchema {
@@ -265,7 +265,7 @@ export class Schema {
   }
 
   /**
-   * @description Look up in top-level pairs of the storage to find a value matching the specified type
+   * Look up in top-level pairs of the storage to find a value matching the specified type
    *
    * @returns The first value found that match the type or `undefined` if no value is found
    *
@@ -304,7 +304,7 @@ export class Schema {
     }
   }
   /**
-   * @description Look up the schema to find any occurrence of a particular token.
+   * Look up the schema to find any occurrence of a particular token.
    *
    * @returns an array of tokens of the specified kind or an empty array if no token was found
    *

@@ -5,7 +5,7 @@ import { SemanticEncoding, Token, TokenFactory, TokenValidationError } from './t
 
 /**
  *  @category Error
- *  @description Error that indicates a failure happening when parsing encoding/executing a Contract
+ *  Error that indicates a failure happening when parsing encoding/executing a Contract
  */
 export class ContractValidationError extends TokenValidationError {
   name = 'ContractValidationError';

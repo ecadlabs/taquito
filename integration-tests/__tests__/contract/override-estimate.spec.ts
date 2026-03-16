@@ -8,19 +8,20 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
     let pkh: string;
 
     beforeAll(async () => {
-      await setup();
+      await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
 
       try {
         const account = await createAddress();
         pkh = await account.signer.publicKeyHash();
       } catch (e) {
         console.log(JSON.stringify(e));
+        throw e;
       }
 
     });
 
     it('should throw an error when overriding origination estimate values with decimals', async () => {
-      expect(async () => {
+      await expect(async () => {
         const op = await Tezos.contract.originate({
           balance: "1",
           code: `parameter string;
@@ -39,7 +40,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
     });
 
     it('should throw an error when overriding transfer/transaction estimate values with decimal', async () => {
-      expect(async () => {
+      await expect(async () => {
         const op = await Tezos.contract.transfer({
           to: pkh,
           amount: 1,

@@ -7,7 +7,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   describe(`Test contract.batch to register global constant using: ${rpc}`, () => {
     const randomAnnots = () => crypto.randomBytes(3).toString('hex');
     beforeEach(async () => {
-      await setup(true);
+      await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
     });
 
     test('Verify the contract.batch transfer and register global constant operations', async () => {

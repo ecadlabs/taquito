@@ -46,7 +46,7 @@ export class Tzip12ContractAbstraction {
   }
 
   /**
-   * @description Fetches the contract metadata (according to the Tzip-016 standard)
+   * Fetches the contract metadata (according to the Tzip-016 standard)
    * @returns An object containing the metadata, the uri, an optional integrity check result and an optional sha256 hash
    * or `Undefined` if the contract has no metadata (non-compliant with Tzip-016)
    */
@@ -60,7 +60,7 @@ export class Tzip12ContractAbstraction {
   }
 
   /**
-   * @description The Tzip-016 "interfaces" field MUST be present in the contract metadata. It should contain "TZIP-012[version-info]"
+   * The Tzip-016 "interfaces" field MUST be present in the contract metadata. It should contain "TZIP-012[version-info]"
    * @returns True if "interfaces" field is present and contains "TZIP-012", false otherwise
    */
   async isTzip12Compliant() {
@@ -76,7 +76,7 @@ export class Tzip12ContractAbstraction {
   }
 
   /**
-   * @description Fetches the token metadata for a specified token ID.
+   * Fetches the token metadata for a specified token ID.
    * The function first tries to find a `token_metadata` view in the contract metadata and to execute it with the token ID.
    * If there is no view, the function tries to find a `token_metadata` bigmap in the top-level pairs of the storage.
    * @param tokenId The ID of the token for which we want to retrieve token metadata

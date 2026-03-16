@@ -4,7 +4,7 @@ import { ENTRYPOINT_MAX_LENGTH } from './constants';
 
 /**
  *  @category Error
- *  @description Error that indicates an invalid operation content being passed or used
+ *  Error that indicates an invalid operation content being passed or used
  */ export class InvalidOperationSchemaError extends ParameterValidationError {
   constructor(
     public readonly operation: OperationContents,
@@ -19,7 +19,7 @@ import { ENTRYPOINT_MAX_LENGTH } from './constants';
 
 /**
  *  @category Error
- *  @description Error that indicates an entrypoint name exceeding maximum length
+ *  Error that indicates an entrypoint name exceeding maximum length
  */
 export class OversizedEntryPointError extends ParameterValidationError {
   constructor(public readonly entrypoint: string) {
@@ -31,7 +31,7 @@ export class OversizedEntryPointError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error that indicates an invalid ballot value being used
+ *  Error that indicates an invalid ballot value being used
  */
 export class InvalidBallotValueError extends ParameterValidationError {
   constructor(public readonly ballotValue: string) {
@@ -43,7 +43,7 @@ export class InvalidBallotValueError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error that indicates a failure when trying to decode ballot value
+ *  Error that indicates a failure when trying to decode ballot value
  */
 export class DecodeBallotValueError extends ParameterValidationError {
   constructor(public readonly ballotValue: string) {
@@ -55,7 +55,7 @@ export class DecodeBallotValueError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error that indicates unexpected Michelson Value being passed or used
+ *  Error that indicates unexpected Michelson Value being passed or used
  */
 export class UnexpectedMichelsonValueError extends ParameterValidationError {
   constructor(public readonly value: string) {
@@ -67,7 +67,7 @@ export class UnexpectedMichelsonValueError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error that indicates a failure when trying to decode an operation
+ *  Error that indicates a failure when trying to decode an operation
  */
 export class OperationDecodingError extends ParameterValidationError {
   constructor(public readonly message: string) {
@@ -78,7 +78,7 @@ export class OperationDecodingError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error that indicates a failure when trying to encode an operation
+ *  Error that indicates a failure when trying to encode an operation
  */
 export class OperationEncodingError extends ParameterValidationError {
   constructor(public readonly message: string) {
@@ -89,7 +89,7 @@ export class OperationEncodingError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error that indicates an unsupported operation being passed or used
+ *  Error that indicates an unsupported operation being passed or used
  */
 export class UnsupportedOperationError extends ParameterValidationError {
   constructor(public readonly op: string) {
@@ -101,7 +101,7 @@ export class UnsupportedOperationError extends ParameterValidationError {
 
 /**
  * @cateogry Error
- * @description Error that indicates an unsupported pvm being passed or used
+ * Error that indicates an unsupported pvm being passed or used
  */
 export class UnsupportedPvmKindError extends ParameterValidationError {
   constructor(public readonly pvm: string) {
@@ -113,7 +113,7 @@ export class UnsupportedPvmKindError extends ParameterValidationError {
 
 /**
  * @category Error
- * @description Error that indicates an unsupported pvm to decode
+ * Error that indicates an unsupported pvm to decode
  */
 export class DecodePvmKindError extends ParameterValidationError {
   constructor(public readonly pvm: string) {
@@ -125,7 +125,7 @@ export class DecodePvmKindError extends ParameterValidationError {
 
 /**
  * @category Error
- * @description Error that indicates an invalid Smart Rollup Address (sr1)
+ * Error that indicates an invalid Smart Rollup Address (sr1)
  */
 export class InvalidSmartRollupAddressError extends ParameterValidationError {
   constructor(
@@ -141,7 +141,7 @@ export class InvalidSmartRollupAddressError extends ParameterValidationError {
 
 /**
  * @category Error
- * @description Error that indicates an invalid Smart Rollup commitment hash (src1)
+ * Error that indicates an invalid Smart Rollup commitment hash (src1)
  */
 export class InvalidSmartRollupCommitmentHashError extends ParameterValidationError {
   constructor(
@@ -157,7 +157,7 @@ export class InvalidSmartRollupCommitmentHashError extends ParameterValidationEr
 
 /**
  * @category Error
- * @description Error that indicates an invalid dal commitment (sh)
+ * Error that indicates an invalid dal commitment (sh)
  */
 export class InvalidDalCommitmentError extends ParameterValidationError {
   constructor(

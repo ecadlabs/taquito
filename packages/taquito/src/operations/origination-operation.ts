@@ -18,16 +18,16 @@ import {
 } from './types';
 
 /**
- * @description Origination operation provide utility function to fetch newly originated contract
+ * Origination operation provide utility function to fetch newly originated contract
  *
- * @warn Currently support only one origination per operation
+ * @remarks Currently support only one origination per operation
  */
 export class OriginationOperation<TContract extends DefaultContractType = DefaultContractType>
   extends Operation
   implements GasConsumingOperation, StorageConsumingOperation, FeeConsumingOperation
 {
   /**
-   * @description Contract address of the newly originated contract
+   * Contract address of the newly originated contract
    */
   public readonly contractAddress?: string;
 
@@ -103,8 +103,8 @@ export class OriginationOperation<TContract extends DefaultContractType = Defaul
   }
 
   /**
-   * @description Provide the contract abstract of the newly originated contract
-   * @throws {@link OriginationOperationError}
+   * Provide the contract abstract of the newly originated contract
+   * @throws OriginationOperationError
    */
   async contract(confirmations?: number, timeout?: number) {
     if (!this.contractAddress) {

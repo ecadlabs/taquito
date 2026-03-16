@@ -21,7 +21,7 @@ Once you have the address of the contract you want to update, calling the `trans
 ```typescript
 import { TezosToolkit } from "@taquito/taquito";
 
-const Tezos = await new TezosTooolkit(RPC_URL);
+const Tezos = new TezosToolkit(RPC_URL);
 const contract = await Tezos.wallet.at(FA2_CONTRACT_ADDRESS);
 const op = await contract.methodsObject.transfer(transfer_params).send();
 await op.confirmation();

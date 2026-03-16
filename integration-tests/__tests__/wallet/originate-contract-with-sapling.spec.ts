@@ -7,8 +7,8 @@ CONFIGS().forEach(({ lib, rpc, setup, }) => {
 
   describe(`Test contract origination with sapling through wallet api using: ${rpc}`, () => {
 
-    beforeEach(async () => {
-      await setup();
+    beforeAll(async () => {
+      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 });
     })
 
     it('Originates a contract made with wallet api with sapling states in its storage', async () => {
@@ -20,6 +20,7 @@ CONFIGS().forEach(({ lib, rpc, setup, }) => {
         }
       }).send();
       await op.confirmation();
+      expect(await op.status()).toBe('applied');
       expect(op.opHash).toBeDefined();
     });
   });

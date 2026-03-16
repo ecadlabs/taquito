@@ -5,17 +5,19 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   describe(`Test emptying a revealed implicit account through wallet api using: ${rpc}`, () => {
 
     beforeEach(async () => {
-      await setup()
+      await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 })
     })
     it('Verify that a new revealed implicit account can be created, funded and emptied', async () => {
       const LocalTez = await createAddress();
       const op = await Tezos.wallet.transfer({ to: await LocalTez.signer.publicKeyHash(), amount: 2 }).send();
       await op.confirmation();
+      expect(await op.status()).toBe('applied');
 
       // Sending token from the account we want to empty
       // This will do the reveal operation automatically
       const op2 = await LocalTez.wallet.transfer({ to: await Tezos.signer.publicKeyHash(), amount: 1 }).send();
       await op2.confirmation();
+      expect(await op2.status()).toBe('applied');
 
       const balance = await Tezos.tz.getBalance(await LocalTez.signer.publicKeyHash())
       const estimate = await LocalTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), amount: balance.toNumber(), mutez: true });
@@ -26,9 +28,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
       const op3 = await LocalTez.wallet.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: maxAmount }).send();
       await op3.confirmation();
-
-      //expect((await Tezos.tz.getBalance(await LocalTez.signer.publicKeyHash())).toString()).toEqual("0")
-      expect((await Tezos.tz.getBalance(await LocalTez.signer.publicKeyHash())).toString()).toBeDefined
+      expect(await op3.status()).toBe('applied');
     });
   });
 })

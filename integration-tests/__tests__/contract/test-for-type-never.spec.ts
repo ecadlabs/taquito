@@ -7,7 +7,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 	const Tezos = lib;
 	describe(`Test contract origination with type never through contract api using: ${rpc}`, () => {
 		beforeEach(async () => {
-			await setup();
+			await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 });
 		});
 
 		it('Verify contract.originate for a contract and then try to call its %admin entry-point of type never, expect the method call to fail', async () => {

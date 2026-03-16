@@ -29,7 +29,7 @@ const isErrorWithMessage = (error: any): error is TezosOperationErrorWithMessage
 
 /**
  *  @category Error
- *  @description Generic tezos error that will be thrown when a mistake occurs when doing an operation; more details here https://tezos.gitlab.io/api/errors.html
+ *  Generic tezos error that will be thrown when a mistake occurs when doing an operation; more details here https://tezos.gitlab.io/api/errors.html
  */
 export class TezosOperationError extends RpcError {
   public readonly lastError: TezosGenericOperationError;
@@ -67,7 +67,7 @@ export class TezosOperationError extends RpcError {
 
 /**
  *  @category Error
- *  @description Tezos error that will be thrown when a mistake happens during the preapply stage
+ *  Tezos error that will be thrown when a mistake happens during the preapply stage
  */
 export class TezosPreapplyFailureError extends Error {
   constructor(public readonly result: any) {
@@ -118,7 +118,7 @@ export const flattenOperationResult = (response: PreapplyResponse | PreapplyResp
 };
 
 /***
- * @description Flatten all error from preapply response (including internal error)
+ * Flatten all error from preapply response (including internal error)
  */
 export const flattenErrors = (
   response: PreapplyResponse | PreapplyResponse[],
@@ -159,7 +159,7 @@ export const flattenErrors = (
 
 /**
  *  @category Error
- *  @description Error that indicates a general failure happening during an origination operation.
+ *  Error that indicates a general failure happening during an origination operation.
  */
 export class OriginationOperationError extends TaquitoError {
   constructor(public readonly message: string) {
@@ -170,7 +170,7 @@ export class OriginationOperationError extends TaquitoError {
 
 /**
  *  @category Error
- *  @description Error that indicates an invalid estimate value being passed
+ *  Error that indicates an invalid estimate value being passed
  */
 export class InvalidEstimateValueError extends ParameterValidationError {
   constructor(public readonly message: string) {

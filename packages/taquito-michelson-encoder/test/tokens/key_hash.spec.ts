@@ -35,8 +35,11 @@ describe('KeyHash token', () => {
 
       try {
         token.Encode(['test']);
-      } catch (ex) {
-        expect(ex.name).toEqual('KeyHashValidationError');
+      } catch (ex: unknown) {
+        expect(ex).toBeInstanceOf(KeyHashValidationError);
+        if (ex instanceof KeyHashValidationError) {
+          expect(ex.name).toEqual('KeyHashValidationError');
+        }
       }
     });
   });

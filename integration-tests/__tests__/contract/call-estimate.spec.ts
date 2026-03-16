@@ -8,7 +8,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     let contractAddress: string | undefined;
 
     beforeEach(async () => {
-      await setup(true);
+      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 });
 
       const code = `parameter nat; storage nat; code { CAR ; NIL operation ; PAIR }`;
       op = await Tezos.contract.originate({

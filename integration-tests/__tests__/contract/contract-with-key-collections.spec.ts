@@ -8,8 +8,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   describe(`Test contract origination with key collections through contract api using: ${rpc}`, () => {
     type Storage = { keySet: string[], keyMap: MichelsonMap<string, number>; }
 
-    beforeEach(async () => {
-      await setup();
+    beforeAll(async () => {
+      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 });
     });
 
     it('Verify contract.originate for a contract with set and map of keys and change them using corresponding methods', async () => {

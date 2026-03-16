@@ -9,7 +9,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
      *  in case of a contract having no annotation in its code. */
 
     beforeEach(async () => {
-      await setup()
+      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 })
     })
 
     // Constants to replace annotations

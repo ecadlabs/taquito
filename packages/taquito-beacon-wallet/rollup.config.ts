@@ -7,7 +7,7 @@ const pkg = require('./package.json');
 
 const libraryName = 'taquito-beacon-wallet';
 
-export default {
+const mainConfig = {
   input: `src/${libraryName}.ts`,
   output: [
     {
@@ -16,9 +16,9 @@ export default {
       format: 'umd',
       sourcemap: true,
       globals: {
-        '@airgap/beacon-sdk': 'beacon',
+        '@ecadlabs/beacon-sdk': 'beacon',
         '@taquito/core': 'taquitoCore',
-        '@airgap/beacon-dapp': 'beaconDapp',
+        '@ecadlabs/beacon-dapp': 'beaconDapp',
         'typedarray-to-buffer': 'typedarrayToBuffer',
         '@taquito/taquito': 'taquito',
         '@taquito/utils': 'taquitoUtils',
@@ -30,18 +30,40 @@ export default {
     include: 'src/**',
   },
   external: [
-    '@airgap/beacon-sdk',
-    '@airgap/beacon-dapp',
+    '@ecadlabs/beacon-sdk',
+    '@ecadlabs/beacon-dapp',
     '@taquito/core',
     'typedarray-to-buffer',
     '@taquito/taquito',
     '@taquito/utils',
   ],
   plugins: [
-    // Allow json resolution
     json(),
-    // Compile TypeScript files
     typescript({ tsconfig: './tsconfig.prod.json', useTsconfigDeclarationDir: true }),
     nodePolyfills(),
   ],
 };
+
+const beaconTypesConfig = {
+  input: 'src/beacon-types.ts',
+  output: [
+    {
+      file: 'dist/beacon-types.umd.js',
+      name: 'taquitoBeaconTypes',
+      format: 'umd',
+      sourcemap: true,
+      globals: {
+        '@ecadlabs/beacon-types': 'beaconTypes',
+      },
+    },
+    { file: 'dist/beacon-types.es6.js', format: 'es', sourcemap: true },
+  ],
+  external: ['@ecadlabs/beacon-types'],
+  plugins: [
+    json(),
+    typescript({ tsconfig: './tsconfig.prod.json', useTsconfigDeclarationDir: true }),
+    nodePolyfills(),
+  ],
+};
+
+export default [mainConfig, beaconTypesConfig];

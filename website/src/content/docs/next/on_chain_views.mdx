@@ -7,7 +7,13 @@ On-chain views were introduced in the Hangzhou protocol. They allow contracts to
 
 Views take arguments as input and may depend on the declaring contract's storage. They return a result immediately available on the caller's stack without modifying any storage.
 
-The types `ticket`, `operation`, `big_map`, and `sapling_state` are not allowed in view arguments or return types.
+- On-chain views are a core Tezos feature, available on all current networks.
+- Views are meant to be called by a contract. It can be the contract where the view is defined or another contract.
+- Views help to avoid the need to use callbacks in contracts.
+- Views take arguments as input and may depend on the contract's storage declaring the view.
+- Views are read-only and won't modify the contract's storage where the view is defined.
+- Views return a result as output which is immediately available on the stack of the caller contract.
+- The types `ticket`, `operation`, `big_map`, and `sapling_state` are not allowed in the argument or return types of views.
 
 ## Declaring an on-chain view
 
