@@ -9,7 +9,7 @@ import { ForgedBytes } from './types';
 
 /**
  *
- * @description DrainDelegateOperation provides utility functions to fetch a new operation of kind drain_delegate
+ * DrainDelegateOperation provides utility functions to fetch a new operation of kind drain_delegate
  *
  */
 

@@ -68,7 +68,7 @@ export class Tzip16ContractAbstraction {
   }
 
   /**
-   * @description Return an object containing the metadata, the uri, an optional integrity check result and an optional sha256 hash
+   * Return an object containing the metadata, the uri, an optional integrity check result and an optional sha256 hash
    */
   async getMetadata() {
     if (!this._metadataProvider) {

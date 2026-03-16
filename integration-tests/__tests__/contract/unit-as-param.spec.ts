@@ -7,7 +7,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   describe(`Test contract origination with unit as params through contract api using: ${rpc}`, () => {
 
     beforeEach(async () => {
-      await setup(true)
+      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 })
     })
     test('Verify contract.originate for a contract and call deposit method with unit param', async () => {
       const op = await Tezos.contract.originate({

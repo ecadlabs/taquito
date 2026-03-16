@@ -42,6 +42,7 @@ export const sidebarConfig = [
       "fa2_parameters",
       "manager_lambda",
       "multisig_doc",
+      "failwith_errors",
     ],
   },
   {
@@ -62,7 +63,7 @@ export const sidebarConfig = [
   },
   {
     name: "Contract and Token Metadata",
-    items: ["tzip12", "metadata-tzip16"],
+    items: ["tzip12", "metadata-tzip16", "tzip16-sequence-diagram"],
   },
   {
     name: "Signers",
@@ -88,6 +89,17 @@ export const sidebarConfig = [
     ],
   },
   {
+    name: "Architecture",
+    items: [
+      "arch_framework",
+      "arch_tezos_toolkit",
+      "arch_entry_points",
+      "arch_operations",
+      "arch_michelson_encoder",
+      "arch_runcode_rpc",
+    ],
+  },
+  {
     name: "Advanced Scenarios",
     items: [
       "ophash_before_injecting",
@@ -105,8 +117,8 @@ export const sidebarConfig = [
     items: ["forger", "rpc-cache", "cancel_http_requests"],
   },
   {
-    name: "Running integration tests",
-    items: ["ledger_integration_test", "rpc_nodes_integration_test"],
+    name: "Testing",
+    items: ["testing_strategies", "ledger_integration_test", "rpc_nodes_integration_test"],
   },
   {
     name: "Dapp Development",

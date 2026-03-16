@@ -1,6 +1,6 @@
 {
   "name": "@taquito/beacon-wallet",
-  "version": "24.0.1",
+  "version": "24.2.0",
   "description": "Beacon wallet provider",
   "keywords": [
     "tezos",
@@ -10,6 +10,19 @@
   "main": "dist/taquito-beacon-wallet.umd.js",
   "module": "dist/taquito-beacon-wallet.es6.js",
   "typings": "dist/types/taquito-beacon-wallet.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/taquito-beacon-wallet.es6.js",
+      "require": "./dist/taquito-beacon-wallet.umd.js",
+      "types": "./dist/types/taquito-beacon-wallet.d.ts"
+    },
+    "./types": {
+      "import": "./dist/beacon-types.es6.js",
+      "require": "./dist/beacon-types.umd.js",
+      "types": "./dist/types/beacon-types.d.ts"
+    },
+    "./package.json": "./package.json"
+  },
   "files": [
     "signature.json",
     "dist"
@@ -24,7 +37,7 @@
   },
   "license": "Apache-2.0",
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "scripts": {
     "test": "jest --coverage",
@@ -91,7 +104,7 @@
       "^@noble/hashes/pbkdf2$": "<rootDir>/../../node_modules/@noble/hashes/pbkdf2.js"
     },
     "transformIgnorePatterns": [
-      "node_modules/(?!@noble/hashes|@airgap|@stablelib)"
+      "node_modules/(?!@noble/hashes|@ecadlabs|@stablelib)"
     ],
     "extensionsToTreatAsEsm": [
       ".ts",
@@ -107,14 +120,16 @@
     ]
   },
   "dependencies": {
-    "@airgap/beacon-dapp": "^4.6.4",
-    "@stablelib/ed25519": "^1.0.3",
-    "@taquito/core": "^24.0.1",
-    "@taquito/taquito": "^24.0.1",
+    "@ecadlabs/beacon-dapp": "^4.8.1-ecad",
+    "@ecadlabs/beacon-types": "^4.8.1-ecad",
+    "@taquito/core": "^24.2.0",
+    "@taquito/taquito": "^24.2.0",
     "crypto-browserify": "^3.12.1",
     "util": "^0.12.5"
   },
   "devDependencies": {
+    "@ecadlabs/beacon-transport-postmessage": "^4.8.1-ecad",
+    "@ecadlabs/beacon-ui": "^4.8.1-ecad",
     "@types/bluebird": "^3.5.42",
     "@types/chrome": "0.0.269",
     "@types/jest": "^29.5.12",
@@ -135,7 +150,7 @@
     "prompt": "^1.3.0",
     "replace-in-file": "^8.1.0",
     "rimraf": "^6.0.1",
-    "rollup": "^4.22.4",
+    "rollup": "^4.59.0",
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-polyfill-node": "^0.13.0",
     "rollup-plugin-typescript2": "^0.36.0",
@@ -143,7 +158,7 @@
     "ts-jest": "^29.2.3",
     "ts-node": "^10.9.2",
     "ts-toolbelt": "^9.6.0",
-    "typescript": "5.5.4",
+    "typescript": "^5.9.3",
     "webpack": "^5.94.0",
     "webpack-cli": "^5.1.4"
   },

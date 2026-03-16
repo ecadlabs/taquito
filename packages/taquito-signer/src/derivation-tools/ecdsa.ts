@@ -49,7 +49,7 @@ export class PrivateKey implements ExtendedPrivateKey {
    * @param seedSrc result of Bip39.mnemonicToSeed
    * @param curve known supported curve p256 or secp256k1
    * @returns instance of PrivateKey non-HD keys derived
-   * @throws {@link InvalidBitSize} | {@link InvalidCurveError} | {@link InvalidSeedLengthError}
+   * @throws InvalidBitSize | InvalidCurveError | InvalidSeedLengthError
    */
   static fromSeed(seedSrc: Uint8Array | string, curve: CurveName): PrivateKey {
     let seed = typeof seedSrc === 'string' ? parseHex(seedSrc) : seedSrc;
@@ -148,7 +148,7 @@ export class PrivateKey implements ExtendedPrivateKey {
   /**
    *
    * @returns Uint8Array (if contains a private key)
-   * @throws {@link InvalidKeyError}
+   * @throws InvalidKeyError
    */
   bytes(): Uint8Array {
     if (!this.keyPair.secretKey) {

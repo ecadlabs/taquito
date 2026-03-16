@@ -6,7 +6,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
   describe(`Test smart rollup originate with rpc: ${rpc}`, () => {
     beforeEach(async () => {
-      await setup(true);
+      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 });
     });
 
     it('verify smart rollup originate origination', async () => {

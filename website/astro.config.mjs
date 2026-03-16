@@ -10,10 +10,7 @@ import { fileURLToPath } from 'node:url';
 import tailwindcss from "@tailwindcss/vite";
 
 import sitemap from '@astrojs/sitemap';
-
-const fetchPolyfillPath = fileURLToPath(
-  new URL('./src/scripts/fetch-polyfill.ts', import.meta.url)
-);
+import { DEFAULT_VERSION } from './src/config/versions.mjs';
 
 // Resolve shim paths to absolute ESM paths for monorepo compatibility
 const nodePolyfillsDir = fileURLToPath(new URL('./node_modules/vite-plugin-node-polyfills', import.meta.url));
@@ -39,16 +36,36 @@ function polyfillShimsResolver() {
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://taquito.io',
   trailingSlash: 'never',
   integrations: [AutoImport({
     imports: [
       './src/components/SimpleCodeRunner.astro',
       './src/components/Tabs.astro',
       './src/components/TabItem.astro',
+      './src/components/TezosConstant.astro',
     ],
   }), mdx({
     extendMarkdownConfig: true,
-  }), sitemap()],
+  }), sitemap({
+    filter: (page) => {
+      // Only include pages from the default version in sitemap
+      // Exclude old versions and 'next' version to prevent duplicate content issues
+      const url = new URL(page);
+      const pathname = url.pathname;
+
+      // Skip docs pages for old versions and 'next'
+      if (pathname.startsWith('/docs/')) {
+        const versionMatch = pathname.match(/^\/docs\/([^/]+)\//);
+        if (versionMatch) {
+          const version = versionMatch[1];
+          // Only include the default version in sitemap
+          return version === DEFAULT_VERSION;
+        }
+      }
+      return true;
+    },
+  })],
   markdown: {
     remarkPlugins: [remarkRelativeLinks, remarkCallouts, remarkLiveCode],
     syntaxHighlight: false,
@@ -56,9 +73,6 @@ export default defineConfig({
   vite: {
     resolve: {
       alias: {
-        // Replace node-fetch with browser native fetch
-        'node-fetch': fetchPolyfillPath,
-
         // Component alias
         '@components': fileURLToPath(new URL('./src/components', import.meta.url)),
 

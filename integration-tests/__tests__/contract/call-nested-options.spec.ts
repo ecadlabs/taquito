@@ -6,7 +6,7 @@ CONFIGS().forEach(({ lib, setup }) => {
   describe(`Test nested options contract`, () => {
     let nestedOptionsContract: DefaultContractType;
     beforeAll(async () => {
-      await setup();
+      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 });
       const nestedOptionsOriginate = await Tezos.contract.originate({
         code: `{
           parameter

@@ -14,9 +14,9 @@ import {
 } from './types';
 
 /**
- * @description Delegation operation provide utility function to fetch newly issued delegation
+ * Delegation operation provide utility function to fetch newly issued delegation
  *
- * @warn Currently support only one delegation per operation
+ * @remarks Currently support only one delegation per operation
  */
 export class DelegateOperation
   extends Operation

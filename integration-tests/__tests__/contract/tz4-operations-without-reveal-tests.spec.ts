@@ -11,7 +11,11 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker, knownTicketCont
     let Tz4: TezosToolkit;
     let contractAddress = ''
     beforeAll(async () => {
-      await setup(true)
+      await setup({
+        preferFreshKey: true,
+        minBalanceMutez: 9000000,
+        maxAttempts: 8,
+      })
       Tz4 = await createAddress(PrefixV2.BLS12_381SecretKey)
       try {
         const fundOp = await Tezos.contract.transfer({ to: await Tz4.signer.publicKeyHash(), amount: 9 })
@@ -22,6 +26,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker, knownTicketCont
         expect(revealOp.status).toBe('applied')
       } catch (e) {
         console.log('beforeAll error', e)
+        throw e
       }
     })
 

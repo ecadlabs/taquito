@@ -25,7 +25,7 @@ import {
 } from '@taquito/core';
 
 /**
- * @description list of prefixes that can be used to decode an address
+ * list of prefixes that can be used to decode an address
  */
 export const addressPrefixes = [
   PrefixV2.P256PublicKeyHash,
@@ -38,7 +38,7 @@ export const addressPrefixes = [
 ];
 
 /**
- * @description list of prefixes that can be used to decode a public key
+ * list of prefixes that can be used to decode a public key
  */
 export const publicKeyPrefixes = [
   PrefixV2.P256PublicKey,
@@ -48,7 +48,7 @@ export const publicKeyPrefixes = [
 ];
 
 /**
- * @description list of prefixes that can be used to decode a public key hash
+ * list of prefixes that can be used to decode a public key hash
  */
 export const publicKeyHashPrefixes = [
   PrefixV2.P256PublicKeyHash,
@@ -58,7 +58,7 @@ export const publicKeyHashPrefixes = [
 ];
 
 /**
- * @description list of prefixes that can be used to decode a signature
+ * list of prefixes that can be used to decode a signature
  */
 export const signaturePrefixes = [
   PrefixV2.P256Signature,
@@ -69,7 +69,7 @@ export const signaturePrefixes = [
 ];
 
 /**
- * @description Decodes Base58 string, looks for known prefix and strips it
+ * Decodes Base58 string, looks for known prefix and strips it
  * @param src Base58 string
  * @returns Payload and prefix
  * @example b58DecodeAndCheckPrefix('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM') // returns [Uint8Array, PrefixV2.Ed25519PublicKeyHash]
@@ -133,7 +133,7 @@ export function b58DecodeAndCheckPrefix<T extends readonly PrefixV2[]>(
 }
 
 /**
- * @description Decode a Base58 public key and return its binary representation
+ * Decode a Base58 public key and return its binary representation
  * @param value Value to decode
  * @param fmt optional format of the decoded return value, 'hex' or 'array'
  * @returns string or Uint8Array of bytes
@@ -171,7 +171,7 @@ export function b58DecodePublicKey(value: string, fmt?: 'hex' | 'array'): Uint8A
 }
 
 /**
- * @description Decode a Base58 public key hash and return its binary representation
+ * Decode a Base58 public key hash and return its binary representation
  * @param value Value to decode
  * @param fmt optional format of the decoded return value, 'hex' or 'array'
  * @returns string or Uint8Array of bytes
@@ -209,7 +209,7 @@ export function b58DecodePublicKeyHash(value: string, fmt?: 'hex' | 'array'): Ui
 }
 
 /**
- * @description Decode a Base58 string and assert tz4 type
+ * Decode a Base58 string and assert tz4 type
  * @param value a bls address(tz4) to decode
  * @param fmt optional format of the decoded return value, 'hex' or 'array'
  * @returns string or Uint8Array of bytes
@@ -230,7 +230,7 @@ export function b58DecodeBlsAddress(value: string, fmt?: 'hex' | 'array'): Uint8
 }
 
 /**
- * @description Decode a Base58 contract ID and return its binary representation
+ * Decode a Base58 contract ID and return its binary representation
  * @param value Value to decode
  * @param fmt optional format of the decoded return value, 'hex' or 'array'
  * @returns string or Uint8Array of bytes
@@ -294,7 +294,7 @@ export function b58DecodeAddress(value: string, fmt?: 'hex' | 'array'): Uint8Arr
 }
 
 /**
- *  @description Gets Tezos address (PKH) from Public Key
+ *  Gets Tezos address (PKH) from Public Key
  *  @param publicKey Base58 Public Key
  *  @returns A string of the Tezos address (PKH) that was derived from the given Public Key
  *  @example getPkhfromPk('edpkuNjKKT48xBoT5asPrWdmuM1Yw8D93MwgFgVvtca8jb5pstzaCh') // return 'tz2MVED1t9Jery77Bwm1m5YhUx8Wp5KWWRQe'
@@ -323,7 +323,7 @@ export function getPkhfromPk(publicKey: string): string {
 }
 
 /**
- * @description Add the prefix to a hex string or Uint8Array and Base58 encode it
+ * Add the prefix to a hex string or Uint8Array and Base58 encode it
  * @param value Value to Base58 encode
  * @param pre prefix ID to append to the encoded string
  * @example b58Encode('e96b9f8b19af9c7ffa0c0480e1977b295850961f', PrefixV2.Ed25519PublicKeyHash) // returns 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'
@@ -338,7 +338,7 @@ export function b58Encode(value: string | Uint8Array, pre: PrefixV2): string {
 }
 
 /**
- * @description Parse binary public key and return Base58 representation
+ * Parse binary public key and return Base58 representation
  * @param value Binary key data
  * @returns return prefixed public key
  * @example encodeKey('02033aba7da4a2e7b5dd9f074555c118829aff16213ea1b65859686bd5fcfeaf3616') // return 'p2pk66xmhjiN7LpfrDGFwpxPtJxkLtPjQ6HUxJbKmRbxSR7RMpamDwi'
@@ -372,7 +372,7 @@ export function encodeKey(value: string | Uint8Array): string {
 }
 
 /**
- * @description Parse binary public key hash and return Base58 representation
+ * Parse binary public key hash and return Base58 representation
  * @param value Key hash to parse
  * @returns return prefixed public key hash
  * @example encodeKeyHash('0001907d6a7e9f084df840d6e67ffa8db5464f87d4d1') // return 'tz2MVED1t9Jery77Bwm1m5YhUx8Wp5KWWRQe'
@@ -406,7 +406,7 @@ export function encodeKeyHash(value: string | Uint8Array): string {
 }
 
 /**
- * @description Parse binary Contract ID and return Base58 representation
+ * Parse binary Contract ID and return Base58 representation
  * @param value Address to parse (tz1, tz2, tz3, KT1, or sr1).
  * @example encodeAddress('0000e96b9f8b19af9c7ffa0c0480e1977b295850961f') // return 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM'
  */
@@ -433,7 +433,7 @@ export function encodeAddress(value: string | Uint8Array): string {
 }
 
 /**
- * @description Base58 encode an address without predefined prefix
+ * Base58 encode an address without predefined prefix
  * @param value Address to base58 encode (tz4) hex dec
  * @returns return address
  * @example encodeBlsAddress('af2dc3c40667abc0e89c0ef40171d22aed08d5eb') // return 'tz4QyWfEiv56CVDATV3DT3CDVhPaMKif2Ce8'
@@ -443,7 +443,7 @@ export function encodeBlsAddress(value: string) {
 }
 
 /**
- * @description convert a fragment of Michelson code in hex string to an 'expr' prefix + base58 encoded BLAKE2b hash string
+ * convert a fragment of Michelson code in hex string to an 'expr' prefix + base58 encoded BLAKE2b hash string
  * @param value a fragment of Michelson code in hex string
  * @returns return 'expr' prefix + base58 encoded BLAKE2b hash
  * @example encodeExpr('050a000000160000b2e19a9e74440d86c59f13dab8a18ff873e889ea') // return 'exprv6UsC1sN3Fk2XfgcJCL8NCerP5rCGy1PRESZAqr7L2JdzX55EN'
@@ -454,7 +454,7 @@ export function encodeExpr(value: string): string {
 }
 
 /**
- * @description convert a signed operation in hex string to an 'op' prefix + base58 encoded BLAKE2b hash string
+ * convert a signed operation in hex string to an 'op' prefix + base58 encoded BLAKE2b hash string
  * @param value signed operation in hex string
  * @returns return 'op' prefix + base58 encoded BLAKE2b hash
  * @example encodeOpHash('0f185d8a30061e8134c162dbb7a6c3ab8f5fdb153363ccd6149b49a33481156a6c00b2e19a9e74440d86c59f13dab8a18ff873e889eaa304ab05da13000001f1585a7384f36e45fb43dc37e8ce172bced3e05700ff0000000002002110c033f3a990c2e46a3d6054ecc2f74072aae7a34b5ac4d9ce9edc11c2410a97695682108951786f05b361da03b97245dc9897e1955e08b5b8d9e153b0bdeb0d') // return 'opapqvVXmebRTCFd2GQFydr4tJj3V5QocQuTmuhbatcHm4Seo2t'
@@ -465,7 +465,7 @@ export function encodeOpHash(value: string) {
 }
 
 /**
- * @description Convert an hex string to a Uint8Array
+ * Convert an hex string to a Uint8Array
  * @param hex Hex string to convert
  * @throws {@link ValueConversionError}
  */
@@ -497,7 +497,7 @@ export function hex2buf(hex: string): Uint8Array {
 }
 
 /**
- * @description Merge 2 buffers together
+ * Merge 2 buffers together
  * @param b1 First buffer
  * @param b2 Second buffer
  */
@@ -509,7 +509,7 @@ export function mergebuf(b1: Uint8Array, b2: Uint8Array): Uint8Array {
 }
 
 /**
- * @description Flatten a michelson json representation to an array
+ * Flatten a michelson json representation to an array
  * @param s michelson json
  */
 export function mic2arr(s: any): any {
@@ -556,8 +556,8 @@ export function mic2arr(s: any): any {
 }
 
 /**
- * @description Convert a Uint8Array to an hex string
- * @param buffer Uint8Array to convert
+ * Convert a Uint8Array to an hex string
+ * @param bytes Uint8Array to convert
  */
 
 export function buf2hex(bytes: ArrayLike<number>): string {
@@ -567,7 +567,7 @@ export function buf2hex(bytes: ArrayLike<number>): string {
 }
 
 /**
- * @description Convert a string to a byte string representation
+ * Convert a string to a byte string representation
  * @param str String to convert
  */
 export function stringToBytes(str: string) {
@@ -575,7 +575,7 @@ export function stringToBytes(str: string) {
 }
 
 /**
- * @description Convert byte string representation to string
+ * Convert byte string representation to string
  * @param hex byte string to convert
  */
 export function bytesToString(hex: string): string {
@@ -583,7 +583,7 @@ export function bytesToString(hex: string): string {
 }
 
 /**
- * @description Convert hex string/UintArray/Buffer to bytes
+ * Convert hex string/UintArray/Buffer to bytes
  * @param hex String value to convert to bytes
  */
 export function hex2Bytes(hex: string): Buffer {
@@ -598,7 +598,7 @@ export function hex2Bytes(hex: string): Buffer {
 }
 
 /**
- * @description Converts a number or Bignumber to hexadecimal  string
+ * Converts a number or Bignumber to hexadecimal  string
  * @param val The value  that will be converted to a hexadecimal string value
  */
 export function toHexBuf(val: number | BigNumber, bitLength = 8) {
@@ -609,7 +609,7 @@ export function numToHexBuffer(val: number | BigNumber, bitLength = 8) {
 }
 
 /**
- * @description Converts a number or BigNumber to a padded hexadecimal string
+ * Converts a number or BigNumber to a padded hexadecimal string
  * @param val The value that will be converted into a padded hexadecimal string value
  * @param bitLength The length of bits
  *
@@ -646,7 +646,7 @@ function padHexWithZero(hex: string, targetLength: number): string {
 
 /**
  *
- * @description Strips the first 2 characters of a hex string (0x)
+ * Strips the first 2 characters of a hex string (0x)
  *
  * @param hex string to strip prefix from
  */

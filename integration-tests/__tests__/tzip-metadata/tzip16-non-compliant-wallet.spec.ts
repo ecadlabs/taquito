@@ -8,7 +8,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   describe(`Test contract origination of a Tzip16 non-complaint contract through wallet api using: ${rpc}`, () => {
 
     beforeEach(async () => {
-      await setup()
+      await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 })
     })
     it('Verify contract.originate for a simple contract having no metadata and then try to fetch metadata', async () => {
 

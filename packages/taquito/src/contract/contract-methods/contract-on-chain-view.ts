@@ -31,7 +31,7 @@ export class OnChainView {
   ) {}
 
   /**
-   * @description Get the signature of the smart contract view
+   * Get the signature of the smart contract view
    */
   getSignature() {
     return {
@@ -41,7 +41,7 @@ export class OnChainView {
   }
 
   /**
-   * @description Get the result of the view simulation
+   * Get the result of the view simulation
    * @param executionContext.source the public key hash of the account who initialized this view execution.
    * @param executionContext.viewCaller the contract address which is the caller of view.
    */
@@ -94,7 +94,7 @@ export class OnChainView {
     }
   }
   /**
-   * @description Loops through the view's instructions and replace BALANCE, SENDER, SELF_ADDRESS and AMOUNT with Michelson expressions that match the current context, if applicable.
+   * Loops through the view's instructions and replace BALANCE, SENDER, SELF_ADDRESS and AMOUNT with Michelson expressions that match the current context, if applicable.
    *
    * Certain specific instructions have different semantics in view:
    * BALANCE represents the current amount of mutez held by the contract where view is;

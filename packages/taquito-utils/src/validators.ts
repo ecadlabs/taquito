@@ -12,7 +12,7 @@ import { ParameterValidationError, ValidationResult } from '@taquito/core';
 export { ValidationResult } from '@taquito/core';
 
 /**
- * @description Used to check if a value has one of the allowed prefixes.
+ * Used to check if a value has one of the allowed prefixes.
  * @returns true if the value has one of the allowed prefixes, false otherwise
  * @example
  * ```
@@ -27,7 +27,7 @@ export function isValidPrefixedValue(value: string, prefixes?: PrefixV2[]): bool
 }
 
 /**
- * @description This function is called by the validation functions ([[validateAddress]], [[validateChain]], [[validateContractAddress]], [[validateKeyHash]], [[validateSignature]], [[validatePublicKey]]).
+ * This function is called by the validation functions ([[validateAddress]], [[validateChain]], [[validateContractAddress]], [[validateKeyHash]], [[validateSignature]], [[validatePublicKey]]).
  * Verify if the value can be decoded or return `1` (INVALID_CHECKSUM) / `5` (INVALID_ENCODING), then check if the prefix is valid or allowed or return `0` (NO_PREFIX_MATCHED) / `4` (PREFIX_NOT_ALLOWED)
  * If all checks pass, return `3` (VALID).
  * @param value Value to validate
@@ -54,7 +54,7 @@ function validatePrefixedValue(value: string, prefixes?: PrefixV2[]): Validation
 }
 
 /**
- * @description Used to check if an address or a contract address is valid.
+ * Used to check if an address or a contract address is valid.
  *
  * @returns
  * 0 = NO_PREFIX_MATCHED, 1 = INVALID_CHECKSUM, 2 = INVALID_LENGTH, 3 = VALID, 4 = PREFIX_NOT_ALLOWED, 5 = INVALID_ENCODING, 6 = OTHER,
@@ -74,7 +74,7 @@ export function validateAddress(value: string): ValidationResult {
 }
 
 /**
- * @description Used to check if a chain id is valid.
+ * Used to check if a chain id is valid.
  *
  * @returns
  * 0 = NO_PREFIX_MATCHED, 1 = INVALID_CHECKSUM, 2 = INVALID_LENGTH, 3 = VALID, 4 = PREFIX_NOT_ALLOWED, 5 = INVALID_ENCODING, 6 = OTHER,
@@ -93,7 +93,7 @@ export function validateChain(value: string): ValidationResult {
 }
 
 /**
- * @description Used to check if a contract address is valid.
+ * Used to check if a contract address is valid.
  *
  * @returns
  * 0 = NO_PREFIX_MATCHED, 1 = INVALID_CHECKSUM, 2 = INVALID_LENGTH, 3 = VALID, 4 = PREFIX_NOT_ALLOWED, 5 = INVALID_ENCODING, 6 = OTHER,
@@ -112,7 +112,7 @@ export function validateContractAddress(value: string): ValidationResult {
 }
 
 /**
- * @description Used to check if a key hash is valid.
+ * Used to check if a key hash is valid.
  *
  * @returns
  * 0 = NO_PREFIX_MATCHED, 1 = INVALID_CHECKSUM, 2 = INVALID_LENGTH, 3 = VALID, 4 = PREFIX_NOT_ALLOWED, 5 = INVALID_ENCODING, 6 = OTHER,
@@ -131,7 +131,7 @@ export function validateKeyHash(value: string): ValidationResult {
 }
 
 /**
- * @description Used to check if a signature is valid.
+ * Used to check if a signature is valid.
  *
  * @returns
  * 0 = NO_PREFIX_MATCHED, 1 = INVALID_CHECKSUM, 2 = INVALID_LENGTH, 3 = VALID, 4 = PREFIX_NOT_ALLOWED, 5 = INVALID_ENCODING, 6 = OTHER,
@@ -150,7 +150,7 @@ export function validateSignature(value: string): ValidationResult {
 }
 
 /**
- * @description Used to check if a public key is valid.
+ * Used to check if a public key is valid.
  *
  * @returns
  * 0 = NO_PREFIX_MATCHED, 1 = INVALID_CHECKSUM, 2 = INVALID_LENGTH, 3 = VALID, 4 = PREFIX_NOT_ALLOWED, 5 = INVALID_ENCODING, 6 = OTHER,
@@ -169,7 +169,7 @@ export function validatePublicKey(value: string): ValidationResult {
 }
 
 /**
- * @description Used to check if an operation hash is valid.
+ * Used to check if an operation hash is valid.
  *
  * @returns
  * 0 = NO_PREFIX_MATCHED, 1 = INVALID_CHECKSUM, 2 = INVALID_LENGTH, 3 = VALID, 4 = PREFIX_NOT_ALLOWED, 5 = INVALID_ENCODING, 6 = OTHER,
@@ -188,7 +188,7 @@ export function validateOperation(value: string): ValidationResult {
 }
 
 /**
- * @description Used to check if a protocol hash is valid.
+ * Used to check if a protocol hash is valid.
  *
  * @returns
  * 0 = NO_PREFIX_MATCHED, 1 = INVALID_CHECKSUM, 2 = INVALID_LENGTH, 3 = VALID, 4 = PREFIX_NOT_ALLOWED, 5 = INVALID_ENCODING, 6 = OTHER,
@@ -207,7 +207,7 @@ export function validateProtocol(value: string): ValidationResult {
 }
 
 /**
- * @description Used to check if a block hash is valid.
+ * Used to check if a block hash is valid.
  *
  * @returns
  * 0 = NO_PREFIX_MATCHED, 1 = INVALID_CHECKSUM, 2 = INVALID_LENGTH, 3 = VALID, 4 = PREFIX_NOT_ALLOWED, 5 = INVALID_ENCODING, 6 = OTHER,
@@ -226,7 +226,7 @@ export function validateBlock(value: string): ValidationResult {
 }
 
 /**
- * @description Used to check if a spending key is valid.
+ * Used to check if a spending key is valid.
  * @returns
  * 0 = NO_PREFIX_MATCHED, 1 = INVALID_CHECKSUM, 2 = INVALID_LENGTH, 3 = VALID, 4 = PREFIX_NOT_ALLOWED, 5 = INVALID_ENCODING, 6 = OTHER,
  *

@@ -16,9 +16,9 @@ import {
 
 /**
  *
- * @description Transfer tickets from a Tezos address (tz1, tz2 or tz3) to a smart contract address (KT1) (everything on layer 1 at this step)
+ * Transfer tickets from a Tezos address (tz1, tz2 or tz3) to a smart contract address (KT1) (everything on layer 1 at this step)
  *
- * @warn Currently only supports one L2 ticket holder transfer at once. ie. one collection of tickets owned by tz1, tz2 or tz3 to a smart contract.
+ * @remarks Currently only supports one L2 ticket holder transfer at once. ie. one collection of tickets owned by tz1, tz2 or tz3 to a smart contract.
  */
 export class TransferTicketOperation
   extends Operation

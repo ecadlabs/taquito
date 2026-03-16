@@ -13,7 +13,7 @@ export class ViewSchema {
 
   /**
    *
-   * @description Create an instance of ViewSchema for each view in a script
+   * Create an instance of ViewSchema for each view in a script
    *
    * @param val contract script obtained from the RPC
    * @returns array of ViewSchema or empty array if there is no view in the contract
@@ -64,7 +64,7 @@ export class ViewSchema {
 
   /**
    *
-   * @description Transform the view parameter into Michelson
+   * Transform the view parameter into Michelson
    *
    * @param args parameter of the view in js format
    * @returns parameter of the view in Michelson
@@ -80,7 +80,7 @@ export class ViewSchema {
 
   /**
    *
-   * @description Transform the view result from Michelson to readable data
+   * Transform the view result from Michelson to readable data
    *
    * @param val result of the view in JSON Michelson
    * @param semantics optional semantics to override the default decoding behavior
@@ -92,7 +92,7 @@ export class ViewSchema {
 
   /**
    *
-   * @description Return the signature of the view parameter
+   * Return the signature of the view parameter
    */
   extractArgsSchema() {
     return this.rootArgsType.generateSchema();
@@ -100,7 +100,7 @@ export class ViewSchema {
 
   /**
    *
-   * @description Return the format of the view result
+   * Return the format of the view result
    */
   extractResultSchema() {
     return this.rootReturnType.generateSchema();

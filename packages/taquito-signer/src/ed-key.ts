@@ -24,7 +24,7 @@ function generateKeyPairFromSeed(seed: Uint8Array): KeyPair {
 }
 
 /**
- * @description Provide signing logic for ed25519 curve based key (tz1)
+ * Provide signing logic for ed25519 curve based key (tz1)
  */
 export class EdKey implements SigningKey {
   #keyPair: KeyPair;
@@ -34,7 +34,7 @@ export class EdKey implements SigningKey {
    * @param key Encoded private key
    * @param encrypted Is the private key encrypted
    * @param decrypt Decrypt function
-   * @throws {@link InvalidKeyError}
+   * @throws InvalidKeyError
    */
   constructor(key: string, decrypt?: (k: Uint8Array) => Uint8Array) {
     const tmp = b58DecodeAndCheckPrefix(key, [

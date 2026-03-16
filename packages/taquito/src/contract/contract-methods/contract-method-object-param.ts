@@ -12,7 +12,7 @@ import {
 import { DEFAULT_SMART_CONTRACT_METHOD_NAME } from '../constants';
 
 /**
- * @description Utility class to send smart contract operation
+ * Utility class to send smart contract operation
  * The format for the arguments is the object representation
  */
 export class ContractMethodObject<T extends ContractProvider | Wallet>
@@ -29,7 +29,7 @@ export class ContractMethodObject<T extends ContractProvider | Wallet>
   ) {}
 
   /**
-   * @description Get the signature of the smart contract method
+   * Get the signature of the smart contract method
    */
   getSignature() {
     const generatedSchema = this.parameterSchema.generateSchema();
@@ -42,9 +42,9 @@ export class ContractMethodObject<T extends ContractProvider | Wallet>
 
   /**
    *
-   * @description Send the smart contract operation
+   * Send the smart contract operation
    *
-   * @param Options generic operation parameter
+   * @param params generic operation parameter
    */
   send(
     params: Partial<SendParams> = {}
@@ -61,9 +61,9 @@ export class ContractMethodObject<T extends ContractProvider | Wallet>
 
   /**
    *
-   * @description Create transfer params to be used with TezosToolkit.contract.transfer methods
+   * Create transfer params to be used with TezosToolkit.contract.transfer methods
    *
-   * @param Options generic transfer operation parameters
+   * @param params generic transfer operation parameters
    */
   toTransferParams({
     fee,

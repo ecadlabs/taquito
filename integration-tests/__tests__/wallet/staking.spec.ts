@@ -1,4 +1,4 @@
-import { TezosToolkit, TezosOperationError } from "@taquito/taquito";
+import { TezosToolkit } from "@taquito/taquito";
 import { CONFIGS } from '../../config';
 import { InvalidStakingAddressError, InvalidFinalizeUnstakeAmountError } from '@taquito/core';
 
@@ -8,17 +8,26 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   let thirdParty: TezosToolkit
   describe(`Test staking pseudo operations using: ${rpc}`, () => {
     beforeAll(async () => {
-      await setup(true);
-      try{
-        const address = await Tezos.signer.publicKeyHash()
-        if(!await Tezos.rpc.getDelegate(address)){
+      await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
+      const address = await Tezos.signer.publicKeyHash();
+      try {
+        const balance = await Tezos.tz.getBalance(address);
+        const delegate = await Tezos.rpc.getDelegate(address);
+        console.log(`[staking-setup] address=${address} balance=${balance.toNumber()} delegate=${delegate}`);
+
+        if (delegate !== address) {
           const delegateOp = await Tezos.contract.registerDelegate({});
           await delegateOp.confirmation();
+          expect(delegateOp.status).toEqual('applied');
         }
         thirdParty = await createAddress();
-        const op = await Tezos.contract.transfer({amount: 1, to: await thirdParty.signer.publicKeyHash() });
+        const op = await Tezos.contract.transfer({ amount: 1, to: await thirdParty.signer.publicKeyHash() });
         await op.confirmation();
-      }catch(e){console.log}
+        expect(op.status).toEqual('applied');
+      } catch (e) {
+        console.log('[staking-setup] beforeAll error', e);
+        throw e;
+      }
     });
 
     it(`should be able to stake successfully: ${rpc}`, async () => {
@@ -55,15 +64,15 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
 
     it('should throw error when param is against pseudo operation', async () => {
-      expect(async () => {
+      await expect(async () => {
         const op = await Tezos.wallet.stake({ amount: 1, to: 'tz1PZY3tEWmXGasYeehXYqwXuw2Z3iZ6QDnA' }).send();
         await op.confirmation()
       }).rejects.toThrow(InvalidStakingAddressError);
-      expect(async () => {
+      await expect(async () => {
         const op = await Tezos.wallet.unstake({ amount: 1, to: 'tz1PZY3tEWmXGasYeehXYqwXuw2Z3iZ6QDnA' }).send();
         await op.confirmation()
       }).rejects.toThrow(InvalidStakingAddressError);
-      expect(async () => {
+      await expect(async () => {
         const op = await Tezos.wallet.finalizeUnstake({ amount: 1 }).send();
         await op.confirmation()
       }).rejects.toThrow(InvalidFinalizeUnstakeAmountError);

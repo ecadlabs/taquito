@@ -1,7 +1,7 @@
 // ref https://gitlab.com/tezos/tezos/-/blob/master/src/lib_crypto/base58.ml
 
 /**
- * @description base58 name to prefix mapping
+ * base58 name to prefix mapping
  */
 export enum PrefixV2 {
   BlockHash = 'B',
@@ -68,7 +68,7 @@ export enum PrefixV2 {
 }
 
 /**
- * @description base58 prefix to bytes mapping
+ * base58 prefix to bytes mapping
  */
 export const prefixV2: { [key in PrefixV2]: Uint8Array } = {
   [PrefixV2.BlockHash]: new Uint8Array([1, 52]),
@@ -135,7 +135,7 @@ export const prefixV2: { [key in PrefixV2]: Uint8Array } = {
 };
 
 /**
- * @description base58 prefix to payload length mapping
+ * base58 prefix to payload length mapping
  */
 export const payloadLength: { [key in PrefixV2]: number } = {
   [PrefixV2.BlockHash]: 32,

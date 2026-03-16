@@ -12,13 +12,18 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker }) => {
   describe(`Test the Taquito batch api using: ${rpc}`, () => {
 
     beforeEach(async () => {
-      await setup()
+      await setup({
+        preferFreshKey: true,
+        minBalanceMutez: 9000000,
+        maxAttempts: 8,
+      })
       try {
         Bls = await createAddress(PrefixV2.BLS12_381SecretKey)
         let transferOp = await Tezos.contract.transfer({ to: await Bls.signer.publicKeyHash(), amount: 5 })
         await transferOp.confirmation()
       } catch (e) {
         console.log('beforeAll transferOp error', e)
+        throw e
       }
     })
 

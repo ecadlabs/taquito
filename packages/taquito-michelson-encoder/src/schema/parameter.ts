@@ -7,14 +7,14 @@ import { TokenSchema } from './types';
 import { InvalidRpcResponseError, ParameterEncodingError } from './errors';
 
 /**
- * @warn Our current smart contract abstraction feature is currently in preview. It's API is not final, and it may not cover every use case (yet). We will greatly appreciate any feedback on this feature.
+ * @remarks Our current smart contract abstraction feature is currently in preview. It's API is not final, and it may not cover every use case (yet). We will greatly appreciate any feedback on this feature.
  */
 export class ParameterSchema {
   private root: Token;
 
   /**
    *
-   * @description Create an instance of ParameterSchema from a contract script
+   * Create an instance of ParameterSchema from a contract script
    *
    * @param val contract script obtained from the RPC
    * @returns ParameterSchema
@@ -49,7 +49,7 @@ export class ParameterSchema {
   }
 
   /**
-   * @description Check if the Contract parameter is multiple entry point or not
+   * Check if the Contract parameter is multiple entry point or not
    */
   get isMultipleEntryPoint() {
     return (
@@ -59,7 +59,7 @@ export class ParameterSchema {
   }
 
   /**
-   * @description Check if the Contract parameter has an annotation or not
+   * Check if the Contract parameter has an annotation or not
    */
   get hasAnnotation() {
     if (this.isMultipleEntryPoint) {
@@ -70,23 +70,23 @@ export class ParameterSchema {
   }
 
   /**
-   * @description Return the schema of the parameter of a specific entry point
-   * @throws {@link InvalidTokenError}
+   * Return the schema of the parameter of a specific entry point
+   * @throws InvalidTokenError
    */
   constructor(val: MichelsonV1Expression) {
     this.root = createToken(val, 0);
   }
 
   /**
-   * @description Returns the javascript object equivalent of the Micheline value provided
+   * Returns the javascript object equivalent of the Micheline value provided
    */
   Execute(val: any, semantics?: Semantic) {
     return this.root.Execute(val, semantics);
   }
 
   /**
-   * @description Returns a micheline formatted object for the values provided
-   * @throws {@link TokenValidationError}
+   * Returns a micheline formatted object for the values provided
+   * @throws TokenValidationError
    * @throws {@link ParameterEncodingError}
    */
   Encode(...args: any[]) {
@@ -101,8 +101,8 @@ export class ParameterSchema {
   }
 
   /**
-   * @description Returns a micheline formatted object for the javascript object provided
-   * @throws {@link TokenValidationError}
+   * Returns a micheline formatted object for the javascript object provided
+   * @throws TokenValidationError
    * @throws {@link ParameterEncodingError}
    */
   EncodeObject(value?: any, semantics?: SemanticEncoding) {
@@ -117,7 +117,7 @@ export class ParameterSchema {
   }
 
   /**
-   * @description Produce a schema grouping together all the entry points of a contract.
+   * Produce a schema grouping together all the entry points of a contract.
    */
   generateSchema(): TokenSchema {
     return this.root.generateSchema();

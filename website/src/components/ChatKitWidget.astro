@@ -61,7 +61,10 @@ const apiEndpoint = 'https://taquito-chatkit.ops-taquito-cloudflare.workers.dev/
       },
     });
 
-    document.getElementById('chatkit-widget').appendChild(chatkit);
+    const widgetContainer = document.getElementById('chatkit-widget');
+    if (!widgetContainer) return;
+
+    widgetContainer.appendChild(chatkit);
     chatkitInitialized = true;
   }
 
@@ -69,6 +72,8 @@ const apiEndpoint = 'https://taquito-chatkit.ops-taquito-cloudflare.workers.dev/
     const toggleBtn = document.getElementById('chat-toggle');
     const closeBtn = document.getElementById('chat-close');
     const container = document.getElementById('chatkit-container');
+
+    if (!toggleBtn || !closeBtn || !container) return;
 
     toggleBtn.addEventListener('click', () => {
       container.classList.remove('hidden');

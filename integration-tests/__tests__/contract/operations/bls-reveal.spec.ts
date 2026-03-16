@@ -9,7 +9,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   describe(`Test reveal of account through contract API using: ${rpc}`, () => {
 
     beforeAll(async () => {
-      await setup(true)
+      await setup({ preferFreshKey: true, minBalanceMutez: 10_000_000 })
       try {
         Bls1 = await createAddress(PrefixV2.BLS12_381SecretKey)
         Bls2 = await createAddress(PrefixV2.BLS12_381SecretKey)
@@ -19,6 +19,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         await transferOp2.confirmation()
       } catch (e) {
         console.log('beforeAll transferOp error', e)
+        throw e;
       }
     })
 

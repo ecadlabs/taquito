@@ -37,7 +37,7 @@ export { InMemorySpendingKey } from './sapling-keys/in-memory-spending-key';
 export { InMemoryProvingKey } from './sapling-keys/in-memory-proving-key';
 
 /**
- * @description Class that surfaces all of the sapling capability allowing to read from a sapling state and prepare transactions
+ * Class that surfaces all of the sapling capability allowing to read from a sapling state and prepare transactions
  *
  * @param keys.saplingSigner Holds the sapling spending key
  * @param keys.saplingProver (Optional) Allows to generate the proofs with the proving key rather than the spending key
@@ -95,7 +95,7 @@ export class SaplingToolkit {
   }
 
   /**
-   * @description Get an instance of `SaplingTransactionViewer` which allows to retrieve and decrypt sapling transactions and calculate the unspent balance.
+   * Get an instance of `SaplingTransactionViewer` which allows to retrieve and decrypt sapling transactions and calculate the unspent balance.
    */
   async getSaplingTransactionViewer() {
     let saplingTransactionViewer: SaplingTransactionViewer;
@@ -113,7 +113,7 @@ export class SaplingToolkit {
   }
 
   /**
-   * @description Prepare a shielded transaction
+   * Prepare a shielded transaction
    * @param shieldedTxParams `to` is the payment address that will receive the shielded tokens (zet).
    * `amount` is the amount of shielded tokens in tez by default.
    * `mutez` needs to be set to true if the amount of shielded tokens is in mutez.
@@ -146,7 +146,7 @@ export class SaplingToolkit {
   }
 
   /**
-   * @description Prepare an unshielded transaction
+   * Prepare an unshielded transaction
    * @param unshieldedTxParams `to` is the Tezos address that will receive the unshielded tokens (tz1, tz2 or tz3).
    * `amount` is the amount of unshielded tokens in tez by default.
    * `mutez` needs to be set to true if the amount of unshielded tokens is in mutez.
@@ -183,7 +183,7 @@ export class SaplingToolkit {
   }
 
   /**
-   * @description Prepare a sapling transaction (zet to zet)
+   * Prepare a sapling transaction (zet to zet)
    * @param saplingTxParams `to` is the payment address that will receive the shielded tokens (zet).
    * `amount` is the amount of unshielded tokens in tez by default.
    * `mutez` needs to be set to true if the amount of unshielded tokens is in mutez.

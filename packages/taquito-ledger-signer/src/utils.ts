@@ -9,7 +9,7 @@ const MAX_CHUNK_SIZE = 230;
 
 /**
  *
- * @description Convert the path to a buffer that will be used as LC and CDATA in the APDU send to the ledger device (https://github.com/obsidiansystems/ledger-app-tezos/blob/master/APDUs.md)
+ * Convert the path to a buffer that will be used as LC and CDATA in the APDU send to the ledger device (https://github.com/obsidiansystems/ledger-app-tezos/blob/master/APDUs.md)
  *
  * @param path The ledger derivation path (default is "44'/1729'/0'/0'")
  * @returns A buffer where the first element is the length of the path (default is 4), then 3 bytes for each number of the path to which is added 0x8000000
@@ -37,7 +37,7 @@ export function transformPathToBuffer(path: string): Buffer {
 
 /**
  *
- * @description Converts uncompressed ledger key to standard tezos binary representation
+ * Converts uncompressed ledger key to standard tezos binary representation
  */
 export function compressPublicKey(publicKey: Buffer, curve: DerivationType) {
   if (curve === 0x00 || curve === 0x03) {
@@ -60,7 +60,7 @@ export function appendWatermark(bytes: string, watermark?: Uint8Array): string {
 
 /**
  *
- * @description In order not to exceed the data length allowed by the Ledger device, split the operation into buffers of 230 bytes (max) and add them to the message to send to the Ledger
+ * In order not to exceed the data length allowed by the Ledger device, split the operation into buffers of 230 bytes (max) and add them to the message to send to the Ledger
  * @param messageToSend The message to send to the Ledger device
  * @param operation The operation which will be chunk if its length is over 230 bytes
  * @returns The instruction to send to the Ledger device
@@ -80,7 +80,7 @@ export function chunkOperation(messageToSend: any, operation: Buffer) {
 
 /**
  *
- * @description Verify if the signature returned by the ledger for tz2 and tz3 is valid
+ * Verify if the signature returned by the ledger for tz2 and tz3 is valid
  * @param response The signature returned by the Ledger (return from the signWithLedger function)
  * @returns True if valid, false otherwise
  */
@@ -110,7 +110,7 @@ export function validateResponse(response: Buffer): boolean {
 
 /**
  *
- * @description Extract a part of the response returned by the Ledger
+ * Extract a part of the response returned by the Ledger
  * @param idxLength The index in the response from the Ledger that corresponds to the length of the part to extract
  * @param response The signature returned by the Ledger (return from the signWithLedger function)
  * @returns An object that contains the extracted buffer, the index where it starts in the response and the length of the extracted part

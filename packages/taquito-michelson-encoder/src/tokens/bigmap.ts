@@ -11,7 +11,7 @@ import {
 
 /**
  *  @category Error
- *  @description Error that indicates a failure happening when parsing encoding/executing Big Map types
+ *  Error that indicates a failure happening when parsing encoding/executing Big Map types
  */
 export class BigMapValidationError extends TokenValidationError {
   name = 'BigMapValidationError';

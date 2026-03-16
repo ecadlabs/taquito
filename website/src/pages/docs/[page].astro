@@ -1,0 +1,32 @@
+---
+/**
+ * Redirect handler for unversioned doc URLs.
+ * Redirects /docs/{page} to /docs/{DEFAULT_VERSION}/{page}
+ */
+import { DEFAULT_VERSION } from '../../config/versions.mjs';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const docs = await getCollection('docs');
+
+  // Get unique page slugs (without version) from the default version
+  const defaultVersionDocs = docs.filter((doc) => {
+    const slug = doc.id.replace(/\.mdx?$/, '');
+    return slug.startsWith(`${DEFAULT_VERSION}/`);
+  });
+
+  const pages = defaultVersionDocs.map((doc) => {
+    const slug = doc.id.replace(/\.mdx?$/, '');
+    // Extract just the page name (after the version)
+    const page = slug.split('/').slice(1).join('/');
+    return { params: { page } };
+  });
+
+  return pages;
+}
+
+const { page } = Astro.params;
+
+// 301 permanent redirect to the versioned URL
+return Astro.redirect(`/docs/${DEFAULT_VERSION}/${page}`, 301);
+---

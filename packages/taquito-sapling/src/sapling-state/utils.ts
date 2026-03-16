@@ -14,7 +14,7 @@ export function pairNodes<T>(leaves: T[]): (T | undefined)[][] {
 }
 
 /**
- * @description helper function to assist in Lazy initializing an object
+ * helper function to assist in Lazy initializing an object
  */
 export class Lazy<T> {
   private isInitialized = false;

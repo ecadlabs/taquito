@@ -19,7 +19,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
     describe(`Test contract origination having metadata stored at IPFS URL through wallet api using: ${rpc}`, () => {
         beforeEach(async () => {
-            await setup();
+            await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
         });
 
         test('Verify wallet.originate for a contract having metadata stored on IPFS', async () => {

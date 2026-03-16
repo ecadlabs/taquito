@@ -15,7 +15,7 @@ interface ContractsData {
 }
 
 /**
- * @description Allows to specify static data related to contracts (i.e., script and entrypoints) avoiding Taquito to fetch them from the network.
+ * Allows to specify static data related to contracts (i.e., script and entrypoints) avoiding Taquito to fetch them from the network.
  *
  * @example
  * ```
@@ -41,13 +41,13 @@ export class ContractsLibrary implements Extension {
   private _contractsLibrary: ContractsData = {};
 
   /**
-   * @description Saves one of several contract in the library
+   * Saves one of several contract in the library
    *
    * @param contract is an object where the key is a contract address and the value is an object having a script and an entrypoints properties.
    * Note: the expected format for the script and entrypoints properties are the same as the one respectivlely returned by
    * `TezosToolkit.rpc.getContract('contractAddress').script` and `TezosToolkit.rpc.getEntrypoints`
-   * @throws {@link InvalidAddressError} If the contract address is not valid
-   * @throws {@link InvalidScriptFormatError} If the script is not in the expected format
+   * @throws InvalidAddressError If the contract address is not valid
+   * @throws InvalidScriptFormatError If the script is not in the expected format
    */
   addContract(contract: ContractsData) {
     for (const contractAddress in contract) {

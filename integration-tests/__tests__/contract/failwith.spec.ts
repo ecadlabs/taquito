@@ -6,7 +6,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   describe(`Test contract origination that throws FAILWITH api through contract api using: ${rpc}`, () => {
 
     beforeEach(async () => {
-      await setup()
+      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 })
     })
     it('Verify contract.originate a contract with FAILWITH instruction and verify an error is thrown when calling the contract entrypoint', async () => {
       const op = await Tezos.contract.originate({

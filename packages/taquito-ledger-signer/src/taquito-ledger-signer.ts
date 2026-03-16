@@ -44,7 +44,7 @@ export { VERSION } from './version';
 
 /**
  *
- * @description Implementation of the Signer interface that will allow signing operation from a Ledger Nano device
+ * Implementation of the Signer interface that will allow signing operation from a Ledger Nano device
  *
  * @param transport A transport instance from LedgerJS libraries depending on the platform used (e.g. Web, Node)
  * @param path The ledger derivation path (default is "44'/1729'/0'/0'")

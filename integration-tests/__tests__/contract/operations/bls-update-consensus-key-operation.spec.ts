@@ -9,7 +9,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
     let delegateAccount: TezosToolkit;
 
     beforeAll(async () => {
-      await setup();
+      await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
       try {
         delegateAccount = await createAddress();
         const fund = await Tezos.contract.transfer({ amount: 2, to: await delegateAccount.signer.publicKeyHash() })
@@ -18,6 +18,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         await register.confirmation();
       } catch (e) {
         console.log(JSON.stringify(e));
+        throw e;
       }
     });
 

@@ -27,7 +27,7 @@ export class MichelsonStorageView implements View {
   ) {}
 
   /**
-   * @description According to the tzip-16 standard, the following instructions must not be used in the code of the view:
+   * According to the tzip-16 standard, the following instructions must not be used in the code of the view:
    * 'AMOUNT', 'CREATE_CONTRACT', 'SENDER', 'SET_DELEGATE', 'SOURCE', and 'TRANSFER_TOKENS'
    * The method throw an error if an illegal instruction is found
    */
@@ -54,7 +54,7 @@ export class MichelsonStorageView implements View {
   }
 
   /**
-   * @description According to the tzip-16 standard, in the first version of the specification, the instruction SELF should only be used before ADDRESS
+   * According to the tzip-16 standard, in the first version of the specification, the instruction SELF should only be used before ADDRESS
    * The method throws an error is the instruction SELF is present, but not followed by ADDRESS
    */
   private illegalUseOfSelfInstruction(code: MichelsonV1ExpressionExtended[]) {
@@ -75,7 +75,7 @@ export class MichelsonStorageView implements View {
   }
 
   /**
-   * @description Loops through the view's code and replace SELF, BALANCE, NOW, and CHAIN_ID with Michelson expressions that match the current context, if applicable.
+   * Loops through the view's code and replace SELF, BALANCE, NOW, and CHAIN_ID with Michelson expressions that match the current context, if applicable.
    */
   private adaptViewCodeToContext(
     code: MichelsonV1ExpressionExtended[],

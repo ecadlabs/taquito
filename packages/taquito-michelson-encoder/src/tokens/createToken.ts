@@ -5,7 +5,7 @@ import { TaquitoError } from '@taquito/core';
 
 /**
  *  @category Error
- *  @description Error that indicates a script having an invalid type or it being unsupported by the Michelson Encoder. Note some protocol changes might affect this, we encourage users to open an issue so we can look into implementing support for said types.
+ *  Error that indicates a script having an invalid type or it being unsupported by the Michelson Encoder. Note some protocol changes might affect this, we encourage users to open an issue so we can look into implementing support for said types.
  */
 export class InvalidTokenError extends TaquitoError {
   name = 'Invalid token error';
@@ -19,7 +19,7 @@ export class InvalidTokenError extends TaquitoError {
 
 /**
  *
- * @description Create a token from a value
+ * Create a token from a value
  * @throws {@link InvalidTokenError} If the value passed is not supported by the Michelson Encoder
  */
 export function createToken(

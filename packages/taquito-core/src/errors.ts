@@ -22,13 +22,13 @@ const resultDesc: { [key in ValidationResult]?: string } = {
 
 /**
  *  @category Error
- *  @description Parent error class all taquito errors to extend from
+ *  Parent error class all taquito errors to extend from
  */
 export class TaquitoError extends Error {}
 
 /**
  *  @category Error
- *  @description Error that indicates invalid user inputs
+ *  Error that indicates invalid user inputs
  */
 export class ParameterValidationError extends TaquitoError {
   public readonly errorDetail?: string;
@@ -77,31 +77,31 @@ export class ParameterValidationError extends TaquitoError {
 
 /**
  *  @category Error
- *  @description Error returned by RPC node
+ *  Error returned by RPC node
  */
 export class RpcError extends TaquitoError {}
 
 /**
  *  @category Error
- *  @description Error that indicates TezosToolKit has not been configured appropriately
+ *  Error that indicates TezosToolKit has not been configured appropriately
  */
 export class TezosToolkitConfigError extends TaquitoError {}
 
 /**
  *  @category Error
- *  @description Error that indicates a requested action is not supported by Taquito
+ *  Error that indicates a requested action is not supported by Taquito
  */
 export class UnsupportedActionError extends TaquitoError {}
 
 /**
  *  @category Error
- *  @description Error during a network operation
+ *  Error during a network operation
  */
 export class NetworkError extends TaquitoError {}
 
 /**
  *  @category Error
- *  @description Error that indicates user attempts an action without necessary permissions
+ *  Error that indicates user attempts an action without necessary permissions
  */
 export class PermissionDeniedError extends TaquitoError {}
 
@@ -110,7 +110,7 @@ export class PermissionDeniedError extends TaquitoError {}
 // ==========================================================================================
 /**
  *  @category Error
- *  @description Error that indicates an invalid originated or implicit address being passed or used
+ *  Error that indicates an invalid originated or implicit address being passed or used
  */
 export class InvalidAddressError extends ParameterValidationError {
   constructor(
@@ -157,7 +157,7 @@ export class InvalidFinalizeUnstakeAmountError extends ParameterValidationError 
 
 /**
  *  @category Error
- *  @description Error that indicates an invalid block hash being passed or used
+ *  Error that indicates an invalid block hash being passed or used
  */
 export class InvalidBlockHashError extends ParameterValidationError {
   constructor(
@@ -171,7 +171,7 @@ export class InvalidBlockHashError extends ParameterValidationError {
 
 /**
  * @category Error
- * @description Error that indicates an invalid amount of tez being passed as a parameter
+ * Error that indicates an invalid amount of tez being passed as a parameter
  */
 export class InvalidAmountError extends ParameterValidationError {
   constructor(
@@ -185,7 +185,7 @@ export class InvalidAmountError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error that indicates an invalid derivation path being passed or used
+ *  Error that indicates an invalid derivation path being passed or used
  */
 export class InvalidDerivationPathError extends ParameterValidationError {
   constructor(
@@ -199,7 +199,7 @@ export class InvalidDerivationPathError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error that indicates an invalid hex string have been passed or used
+ *  Error that indicates an invalid hex string have been passed or used
  */
 export class InvalidHexStringError extends ParameterValidationError {
   constructor(
@@ -213,7 +213,7 @@ export class InvalidHexStringError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error that indicates an invalid message being passed or used
+ *  Error that indicates an invalid message being passed or used
  */
 export class InvalidMessageError extends ParameterValidationError {
   constructor(
@@ -227,7 +227,7 @@ export class InvalidMessageError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error that indicates invalid view parameter of a smart contract
+ *  Error that indicates invalid view parameter of a smart contract
  */
 export class InvalidViewParameterError extends ParameterValidationError {
   constructor(
@@ -249,7 +249,7 @@ export class InvalidViewParameterError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error that indicates an invalid private key being passed or used
+ *  Error that indicates an invalid private key being passed or used
  */
 export class InvalidKeyError extends ParameterValidationError {
   constructor(errorDetail?: string | ValidationResult) {
@@ -260,7 +260,7 @@ export class InvalidKeyError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error that indicates an Invalid Public Key being passed or used
+ *  Error that indicates an Invalid Public Key being passed or used
  */
 export class InvalidPublicKeyError extends ParameterValidationError {
   constructor(
@@ -276,7 +276,7 @@ export class InvalidPublicKeyError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error that indicates an invalid signature being passed or used
+ *  Error that indicates an invalid signature being passed or used
  */
 export class InvalidSignatureError extends ParameterValidationError {
   constructor(
@@ -290,7 +290,7 @@ export class InvalidSignatureError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error that indicates an invalid contract address being passed or used
+ *  Error that indicates an invalid contract address being passed or used
  */
 export class InvalidContractAddressError extends ParameterValidationError {
   constructor(
@@ -304,7 +304,7 @@ export class InvalidContractAddressError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error that indicates an invalid chain id being passed or used
+ *  Error that indicates an invalid chain id being passed or used
  */
 export class InvalidChainIdError extends ParameterValidationError {
   constructor(
@@ -318,7 +318,7 @@ export class InvalidChainIdError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error that indicates an invalid public key hash being passed or used
+ *  Error that indicates an invalid public key hash being passed or used
  */
 export class InvalidKeyHashError extends ParameterValidationError {
   constructor(
@@ -332,7 +332,7 @@ export class InvalidKeyHashError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error that indicates an invalid operation hash being passed or used
+ *  Error that indicates an invalid operation hash being passed or used
  */
 export class InvalidOperationHashError extends ParameterValidationError {
   constructor(
@@ -346,7 +346,7 @@ export class InvalidOperationHashError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error that indicates an invalid operation kind being passed or used
+ *  Error that indicates an invalid operation kind being passed or used
  */
 export class InvalidOperationKindError extends ParameterValidationError {
   constructor(
@@ -360,7 +360,7 @@ export class InvalidOperationKindError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description General error that indicates something is no longer supported and/or deprecated
+ *  General error that indicates something is no longer supported and/or deprecated
  */
 export class DeprecationError extends UnsupportedActionError {
   constructor(message: string) {
@@ -371,7 +371,7 @@ export class DeprecationError extends UnsupportedActionError {
 
 /**
  *  @category Error
- *  @description General error that indicates an action is prohibited or not allowed
+ *  General error that indicates an action is prohibited or not allowed
  */
 export class ProhibitedActionError extends UnsupportedActionError {
   constructor(message: string) {
@@ -382,7 +382,7 @@ export class ProhibitedActionError extends UnsupportedActionError {
 
 /**
  *  @category Error
- *  @description Error that indicates a failure in grabbing the public key
+ *  Error that indicates a failure in grabbing the public key
  */
 export class PublicKeyNotFoundError extends TaquitoError {
   constructor(

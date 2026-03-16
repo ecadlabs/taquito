@@ -1,4 +1,5 @@
 import { CONFIGS } from '../../config';
+import { InvalidAddressError } from '@taquito/core';
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
 
@@ -6,7 +7,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   let simpleContractAddress: string;
   describe(`Test Increase Paid Storage using: ${rpc}`, () => {
     beforeAll(async () => {
-      await setup(true);
+      await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
 
       try {
         const op = await Tezos.wallet.originate({
@@ -22,10 +23,12 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         }).send();
 
         await op.confirmation();
+        expect(await op.status()).toBe('applied');
 
         simpleContractAddress = (await op.contract()).address
       } catch (e) {
         console.log(JSON.stringify(e));
+        throw e;
       }
     });
 
@@ -38,8 +41,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       }).send();
 
       await op.confirmation();
+      expect(await op.status()).toBe('applied');
       expect(op.opHash).toBeDefined();
-      expect(op.status).toBeTruthy();
 
       const paidSpaceAfter = await Tezos.rpc.getStoragePaidSpace(simpleContractAddress);
 
@@ -76,20 +79,20 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         currentConfirmation: 1,
         completed: true
       }))
-      expect(op.status).toBeTruthy();
+      expect(await op.status()).toBe('applied');
 
       const paidSpaceAfter = await Tezos.rpc.getStoragePaidSpace(simpleContractAddress);
 
       expect(parseInt(paidSpaceAfter)).toEqual(parseInt(paidSpaceBefore) + 1);
     });
 
-    it('should return error when destination contract address is invalid', async () => {
-      expect(async () => {
-        const op = await Tezos.wallet.increasePaidStorage({
+    it('should return error when destination contract address is invalid', () => {
+      expect(() =>
+        Tezos.wallet.increasePaidStorage({
           amount: 1,
           destination: 'invalid_address'
-        });
-      }).rejects.toThrow();
+        })
+      ).toThrow(InvalidAddressError);
     });
   });
 });

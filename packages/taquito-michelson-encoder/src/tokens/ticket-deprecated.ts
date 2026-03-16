@@ -6,7 +6,7 @@ import { Token, TokenFactory, Semantic, SemanticEncoding } from './token';
 
 /**
  *  @category Error
- *  @description Error that indicates a failure when encoding and sending a ticket to the blockchain
+ *  Error that indicates a failure when encoding and sending a ticket to the blockchain
  */
 export class EncodeTicketDeprecatedError extends TaquitoError {
   name = 'TicketDeprecatedEncodeError';

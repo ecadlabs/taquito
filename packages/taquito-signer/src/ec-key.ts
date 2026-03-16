@@ -42,7 +42,7 @@ const pref: CurvePrefix = {
 };
 
 /**
- * @description Provide signing logic for elliptic curve based key (tz2, tz3)
+ * Provide signing logic for elliptic curve based key (tz2, tz3)
  */
 export class ECKey implements SigningKey {
   #keyPair: { curve: Curve; secretKey: Uint8Array; publicKey: Uint8Array };
@@ -51,7 +51,7 @@ export class ECKey implements SigningKey {
    *
    * @param key Encoded private key
    * @param decrypt Decrypt function
-   * @throws {@link InvalidKeyError}
+   * @throws InvalidKeyError
    */
   constructor(key: string, decrypt?: (k: Uint8Array) => Uint8Array) {
     const [keyData, prefix] = b58DecodeAndCheckPrefix(key, [
