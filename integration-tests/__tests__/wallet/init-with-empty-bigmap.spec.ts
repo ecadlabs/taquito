@@ -4,14 +4,12 @@ import { MichelsonMap } from "@taquito/taquito";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
-  const test = require('jest-retries');
-
   describe(`Test contract origination with empty BigMap origination scenario through wallet api using: ${rpc}`, () => {
 
     beforeEach(async () => {
-      await setup()
+      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 })
     })
-    test('Verify wallet.originate for a contract and init the BigMap to empty map', 2, async () => {
+    it('Verify wallet.originate for a contract and init the BigMap to empty map', async () => {
       const op = await Tezos.wallet.originate({
         balance: "1",
         code: tokenBigmapCode,
@@ -22,6 +20,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         }
       }).send()
       await op.confirmation()
+      expect(await op.status()).toBe('applied');
       expect(op.opHash).toBeDefined();
     });
   });

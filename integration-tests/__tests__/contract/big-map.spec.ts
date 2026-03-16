@@ -13,7 +13,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract }) => {
     *   If the keys are not ordered, the node will reject the operation. */
 
     beforeEach(async () => {
-      await setup()
+      await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 })
     })
 
     it('Verify contract.originate with initialized Map with variants of data', async () => {

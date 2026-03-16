@@ -5,8 +5,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
 
   describe(`Test origination of contract with various types of bigmaps using: ${rpc}`, () => {
-    beforeEach(async () => {
-      await setup();
+    beforeAll(async () => {
+      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 });
     });
 
     test('Originates a contract having various types of bigmaps', async () => {

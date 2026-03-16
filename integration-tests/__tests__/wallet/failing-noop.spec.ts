@@ -9,11 +9,9 @@ CONFIGS().forEach(({ setup, rpc, lib }) => {
   describe(`Test failing_noop through wallet api using: ${rpc}`, () => {
     const Tezos = lib
     beforeAll(async () => {
-      setup(true)
+      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 })
       if (rpc.includes('tallinn')) {
         Tezos.setProvider({ signer: signerAlice, rpc: 'https://rpc.tzkt.io/tallinnnet' })
-      } else if(rpc.includes('seoul')) {
-        Tezos.setProvider({ signer: signerAlice, rpc: 'https://rpc.tzkt.io/seoulnet' })
       } else if (rpc.includes('ghost')) {
         Tezos.setProvider({ signer: signerAlice, rpc: 'https://rpc.tzkt.io/ghostnet' })
       } else if (rpc.includes('shadow')) {

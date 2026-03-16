@@ -6,8 +6,8 @@ CONFIGS().forEach(({ lib, setup }) => {
 
   describe(`Test origination of contract with instructions now supporting bytes`, () => {
 
-    beforeEach(async () => {
-      await setup();
+    beforeAll(async () => {
+      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 });
     });
 
     it(`Should be able to orignate contract with ADD parameter in michelson contract with bytes`, async () => {

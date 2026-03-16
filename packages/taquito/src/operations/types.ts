@@ -206,7 +206,7 @@ export type OriginateParamsBase = {
 };
 
 /**
- * @description Parameters for originate method
+ * Parameters for originate method
  */
 export type OriginateParams<TStorage = any> = OriginateParamsBase &
   (
@@ -228,7 +228,7 @@ export interface ActivationParams {
 }
 
 /**
- * @description RPC origination operation
+ * RPC origination operation
  */
 export interface RPCOriginationOperation {
   kind: OpKind.ORIGINATION;
@@ -245,7 +245,7 @@ export interface RPCOriginationOperation {
 }
 
 /**
- * @description RPC reveal operation
+ * RPC reveal operation
  */
 export interface RPCRevealOperation {
   kind: OpKind.REVEAL;
@@ -265,7 +265,7 @@ export interface RevealParams {
 }
 
 /**
- * @description Result of a forge operation contains the operation plus its encoded version
+ * Result of a forge operation contains the operation plus its encoded version
  */
 export interface ForgedBytes {
   opbytes: string;
@@ -274,7 +274,7 @@ export interface ForgedBytes {
 }
 
 /**
- * @description Parameters for setDelegate method
+ * Parameters for setDelegate method
  */
 export interface DelegateParams {
   source?: string;
@@ -285,7 +285,7 @@ export interface DelegateParams {
 }
 
 /**
- * @description Parameters for registerDelegate method
+ * Parameters for registerDelegate method
  */
 export interface RegisterDelegateParams {
   fee?: number;
@@ -294,7 +294,7 @@ export interface RegisterDelegateParams {
 }
 
 /**
- * @description RPC delegation operation
+ * RPC delegation operation
  */
 export interface RPCDelegateOperation {
   kind: OpKind.DELEGATION;
@@ -306,7 +306,7 @@ export interface RPCDelegateOperation {
 }
 
 /**
- * @description Parameters for transfer method
+ * Parameters for transfer method
  */
 export interface TransferParams {
   to: string;
@@ -320,7 +320,7 @@ export interface TransferParams {
 }
 
 /**
- * @description RPC Stake pseudo operation params
+ * RPC Stake pseudo operation params
  */
 export interface StakeParams {
   to?: string;
@@ -334,7 +334,7 @@ export interface StakeParams {
 }
 
 /**
- * @description RPC unstake pseudo operation params
+ * RPC unstake pseudo operation params
  */
 export interface UnstakeParams {
   to?: string;
@@ -348,7 +348,7 @@ export interface UnstakeParams {
 }
 
 /**
- * @description RPC finalize_unstake pseudo operation params
+ * RPC finalize_unstake pseudo operation params
  */
 export interface FinalizeUnstakeParams {
   to?: string;
@@ -362,7 +362,7 @@ export interface FinalizeUnstakeParams {
 }
 
 /**
- * @description RPC register global constant operation
+ * RPC register global constant operation
  */
 export interface RPCRegisterGlobalConstantOperation {
   kind: OpKind.REGISTER_GLOBAL_CONSTANT;
@@ -374,7 +374,7 @@ export interface RPCRegisterGlobalConstantOperation {
 }
 
 /**
- * @description Parameters for the `registerGlobalConstant` method
+ * Parameters for the `registerGlobalConstant` method
  */
 export interface RegisterGlobalConstantParams {
   value: MichelsonV1Expression;
@@ -385,7 +385,7 @@ export interface RegisterGlobalConstantParams {
 }
 
 /**
- * @description RPC transfer operation
+ * RPC transfer operation
  */
 export interface RPCTransferOperation {
   kind: OpKind.TRANSACTION;
@@ -399,7 +399,7 @@ export interface RPCTransferOperation {
 }
 
 /**
- * @description RPC activate account operation
+ * RPC activate account operation
  */
 export interface RPCActivateOperation {
   kind: OpKind.ACTIVATION;
@@ -408,7 +408,7 @@ export interface RPCActivateOperation {
 }
 
 /**
- * @description Parameters for the transferTicket contract provider
+ * Parameters for the transferTicket contract provider
  */
 export interface TransferTicketParams {
   source?: string;
@@ -424,7 +424,7 @@ export interface TransferTicketParams {
 }
 
 /**
- * @description Rpc transfer-ticket operation
+ * Rpc transfer-ticket operation
  */
 export interface RPCTransferTicketOperation {
   kind: OpKind.TRANSFER_TICKET;
@@ -441,7 +441,7 @@ export interface RPCTransferTicketOperation {
 }
 
 /**
- * @description Parameters for the increasePaidStorage method
+ * Parameters for the increasePaidStorage method
  */
 export interface IncreasePaidStorageParams {
   source?: string;
@@ -453,7 +453,7 @@ export interface IncreasePaidStorageParams {
 }
 
 /**
- * @description RPC IncreasePaidStorage operation
+ * RPC IncreasePaidStorage operation
  */
 export interface RPCIncreasePaidStorageOperation {
   kind: OpKind.INCREASE_PAID_STORAGE;
@@ -466,7 +466,7 @@ export interface RPCIncreasePaidStorageOperation {
 }
 
 /**
- * @description Parameters for the DrainDelegate method
+ * Parameters for the DrainDelegate method
  */
 export interface DrainDelegateParams {
   consensus_key: string;
@@ -475,7 +475,7 @@ export interface DrainDelegateParams {
 }
 
 /**
- * @description RPC DrainDelegate operation
+ * RPC DrainDelegate operation
  */
 export interface RPCDrainDelegateOperation {
   kind: OpKind.DRAIN_DELEGATE;
@@ -485,7 +485,7 @@ export interface RPCDrainDelegateOperation {
 }
 
 /**
- * @description Ballot operation params
+ * Ballot operation params
  */
 export interface BallotParams {
   source?: string;
@@ -611,7 +611,7 @@ export interface RPCSmartRollupOutboxMessageOperation {
 }
 
 /**
- * @description RPC failing noop operation
+ * RPC failing noop operation
  */
 export interface RPCFailingNoopOperation {
   kind: OpKind.FAILING_NOOP;
@@ -619,7 +619,7 @@ export interface RPCFailingNoopOperation {
 }
 
 /**
- * @description Parameters for the `failingNoop` method
+ * Parameters for the `failingNoop` method
  */
 export interface FailingNoopParams {
   arbitrary: string;

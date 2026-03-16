@@ -64,9 +64,9 @@ export * from './types';
 const TEZOS_PLACEHOLDER = 'tezos';
 
 /**
- * @description The `WalletConnect` class implements the `WalletProvider` interface, providing an alternative to `BeaconWallet`.
+ * The `WalletConnect` class implements the `WalletProvider` interface, providing an alternative to `BeaconWallet`.
  * This package enables dapps built with Taquito to connect to wallets via the WalletConnect/Reown protocol.
- * @note Currently, a QR code is displayed to establish a connection with a wallet. As more Tezos wallets integrate with WalletConnect,
+ \* @remarks Currently, a QR code is displayed to establish a connection with a wallet. As more Tezos wallets integrate with WalletConnect,
  * we plan showing a list of available wallets alongside the QR code.
  */
 export class WalletConnect implements WalletProvider {
@@ -105,7 +105,7 @@ export class WalletConnect implements WalletProvider {
   }
 
   /**
-   * @description Initialize a WalletConnect provider
+   * Initialize a WalletConnect provider
    * (Initialize a WalletConnect client with persisted storage and a network connection)
    *
    * @example
@@ -133,12 +133,12 @@ export class WalletConnect implements WalletProvider {
   }
 
   /**
-   * @description Request permission for a new session and establish a connection.
+   * Request permission for a new session and establish a connection.
    *
    * @param connectParams.permissionScope The networks, methods, and events that will be granted permission
    * @param connectParams.pairingTopic Option to connect to an existing active pairing. If pairingTopic is defined, a prompt will appear in the corresponding wallet to accept or decline the session proposal. If no pairingTopic, a QR code modal will open in the dapp, allowing to connect to a wallet.
    * @param connectParams.registryUrl Optional registry of wallet deep links to show in the Modal
-   * @error ConnectionFailed is thrown if no connection can be established with a wallet
+   \* @throws ConnectionFailed is thrown if no connection can be established with a wallet
    */
   async requestPermissions(connectParams: {
     permissionScope: PermissionScopeParam;
@@ -178,14 +178,14 @@ export class WalletConnect implements WalletProvider {
   }
 
   /**
-   * @description Access all existing active pairings
+   * Access all existing active pairings
    */
   getAvailablePairing(): PairingTypes.Struct[] {
     return this.signClient.pairing.getAll({ active: true });
   }
 
   /**
-   * @description Access all existing sessions
+   * Access all existing sessions
    * @return an array of strings which represent the session keys
    */
   getAllExistingSessionKeys() {
@@ -193,9 +193,9 @@ export class WalletConnect implements WalletProvider {
   }
 
   /**
-   * @description Configure the Client with an existing session.
+   * Configure the Client with an existing session.
    * The session is immediately restored without a prompt on the wallet to accept/decline it.
-   * @error InvalidSessionKey is thrown if the provided session key doesn't exist
+   \* @throws InvalidSessionKey is thrown if the provided session key doesn't exist
    */
   configureWithExistingSessionKey(key: string) {
     const sessions = this.getAllExistingSessionKeys();
@@ -221,8 +221,8 @@ export class WalletConnect implements WalletProvider {
   }
 
   /**
-   * @description Once the session is establish, send Tezos operations to be approved, signed and inject by the wallet.
-   * @error MissingRequiredScope is thrown if permission to send operation was not granted
+   * Once the session is establish, send Tezos operations to be approved, signed and inject by the wallet.
+   \* @throws MissingRequiredScope is thrown if permission to send operation was not granted
    */
   async sendOperations(params: OperationParams[]) {
     const session = this.getSession();
@@ -247,8 +247,8 @@ export class WalletConnect implements WalletProvider {
   }
 
   /**
-   * @description Once the session is establish, send payload to be signed by the wallet.
-   * @error MissingRequiredScope is thrown if permission to sign payload was not granted
+   * Once the session is establish, send payload to be signed by the wallet.
+   \* @throws MissingRequiredScope is thrown if permission to sign payload was not granted
    */
   async sign(bytes: string, watermark?: Uint8Array): Promise<string> {
     const session = this.getSession();
@@ -278,18 +278,18 @@ export class WalletConnect implements WalletProvider {
   }
 
   /**
-   * @description Return all connected accounts from the active session
-   * @error NotConnected if no active session
+   * Return all connected accounts from the active session
+   \* @throws NotConnected if no active session
    */
   getAccounts() {
     return this.getTezosNamespace().accounts.map((account) => account.split(':')[2]);
   }
 
   /**
-   * @description Set the active account.
+   * Set the active account.
    * Must be called if there are multiple accounts in the session and every time the active account is switched
    * @param pkh public key hash of the selected account
-   * @error InvalidAccount thrown if the pkh is not part of the active accounts in the session
+   \* @throws InvalidAccount thrown if the pkh is not part of the active accounts in the session
    */
   setActiveAccount(pkh: string) {
     if (!this.getAccounts().includes(pkh)) {
@@ -299,8 +299,8 @@ export class WalletConnect implements WalletProvider {
   }
 
   /**
-   * @description Access the public key hash of the active account
-   * @error ActiveAccountUnspecified thrown when there are multiple Tezos account in the session and none is set as the active one
+   * Access the public key hash of the active account
+   \* @throws ActiveAccountUnspecified thrown when there are multiple Tezos account in the session and none is set as the active one
    */
   async getPKH() {
     if (!this.activeAccount) {
@@ -311,10 +311,10 @@ export class WalletConnect implements WalletProvider {
   }
 
   /**
-   * @description Access the public key of the active account
-   * @error ActiveAccountUnspecified thrown when there are multiple Tezos account in the session and none is set as the active one
-   * @error MissingRequiredScope is thrown if permission to get accounts was not granted
-   * @error PublicKeyRetrievalError is thrown if the public key is not found
+   * Access the public key of the active account
+   \* @throws ActiveAccountUnspecified thrown when there are multiple Tezos account in the session and none is set as the active one
+   \* @throws MissingRequiredScope is thrown if permission to get accounts was not granted
+   \* @throws PublicKeyRetrievalError is thrown if the public key is not found
    */
   async getPK() {
     const session = this.getSession();
@@ -340,18 +340,18 @@ export class WalletConnect implements WalletProvider {
   }
 
   /**
-   * @description Return all networks from the namespace of the active session
-   * @error NotConnected if no active session
+   * Return all networks from the namespace of the active session
+   \* @throws NotConnected if no active session
    */
   getNetworks() {
     return this.getPermittedNetwork();
   }
 
   /**
-   * @description Set the active network.
+   * Set the active network.
    * Must be called if there are multiple network in the session and every time the active network is switched
    * @param network selected network
-   * @error InvalidNetwork thrown if the network is not part of the active networks in the session
+   \* @throws InvalidNetwork thrown if the network is not part of the active networks in the session
    */
   setActiveNetwork(network: NetworkType) {
     if (!this.getNetworks().includes(network)) {
@@ -361,8 +361,8 @@ export class WalletConnect implements WalletProvider {
   }
 
   /**
-   * @description Access the active network
-   * @error ActiveNetworkUnspecified thorwn when there are multiple Tezos netwroks in the session and none is set as the active one
+   * Access the active network
+   \* @throws ActiveNetworkUnspecified thorwn when there are multiple Tezos netwroks in the session and none is set as the active one
    */
   getActiveNetwork() {
     if (!this.activeNetwork) {

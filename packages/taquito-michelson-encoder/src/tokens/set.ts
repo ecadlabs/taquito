@@ -10,7 +10,7 @@ import {
 
 /**
  *  @category Error
- *  @description Error that indicates a failure happening when parsing encoding/executing a Set
+ *  Error that indicates a failure happening when parsing encoding/executing a Set
  */
 export class SetValidationError extends TokenValidationError {
   name = 'SetValidationError';

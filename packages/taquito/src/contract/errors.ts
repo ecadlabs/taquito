@@ -4,7 +4,7 @@ import { MichelsonV1Expression } from '@taquito/rpc';
 
 /**
  *  @category Error
- *  @description Error that indicates invalid smart contract parameters being passed or used
+ *  Error that indicates invalid smart contract parameters being passed or used
  */
 export class InvalidParameterError extends ParameterValidationError {
   constructor(
@@ -22,7 +22,7 @@ export class InvalidParameterError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error that indicates an invalid delegation source contract address being passed or used
+ *  Error that indicates an invalid delegation source contract address being passed or used
  */
 export class InvalidDelegationSource extends ParameterValidationError {
   constructor(public readonly source: string) {
@@ -34,7 +34,7 @@ export class InvalidDelegationSource extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error that indicates an invalid smart contract code parameter being passed or used
+ *  Error that indicates an invalid smart contract code parameter being passed or used
  */
 export class InvalidCodeParameter extends ParameterValidationError {
   constructor(
@@ -48,7 +48,7 @@ export class InvalidCodeParameter extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error that indicates invalid smart contract init parameter being passed or used
+ *  Error that indicates invalid smart contract init parameter being passed or used
  */
 export class InvalidInitParameter extends ParameterValidationError {
   constructor(
@@ -62,7 +62,7 @@ export class InvalidInitParameter extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error that indicates a failure when conducting a view simulation
+ *  Error that indicates a failure when conducting a view simulation
  */
 export class ViewSimulationError extends RpcError {
   constructor(
@@ -98,7 +98,7 @@ const isJsonString = (str: string) => {
 
 /**
  *  @category Error
- *  @description Error that indicates invalid or unconfigured context when executing a view
+ *  Error that indicates invalid or unconfigured context when executing a view
  */
 export class InvalidViewSimulationContext extends ParameterValidationError {
   constructor(public readonly info: string) {
@@ -110,7 +110,7 @@ export class InvalidViewSimulationContext extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error that indicates a mistake happening during the reveal operation
+ *  Error that indicates a mistake happening during the reveal operation
  */
 export class RevealOperationError extends RpcError {
   constructor(public readonly message: string) {
@@ -121,7 +121,7 @@ export class RevealOperationError extends RpcError {
 
 /**
  *  @category Error
- *  @description Error that indicates a mistake in the parameters in the preparation of an Origination operation
+ *  Error that indicates a mistake in the parameters in the preparation of an Origination operation
  */
 export class OriginationParameterError extends ParameterValidationError {
   constructor(public readonly message: string) {
@@ -132,7 +132,7 @@ export class OriginationParameterError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error that indicates an invalid balance being passed or used
+ *  Error that indicates an invalid balance being passed or used
  */
 export class InvalidBalanceError extends ParameterValidationError {
   constructor(public readonly message: string) {

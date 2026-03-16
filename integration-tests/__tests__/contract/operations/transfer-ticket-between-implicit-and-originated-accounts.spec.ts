@@ -18,7 +18,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownTicketContract }) => {
   describe(`Test transfer ticket between implicit and originated accounts, in ${rpc}`, () => {
 
     beforeAll(async () => {
-      await setup(true);
+      await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
       try {
         Tezos2 = await createAddress();
         tezos1Pkh = await Tezos1.signer.publicKeyHash();
@@ -40,6 +40,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownTicketContract }) => {
         ticketToken = { ticketer: ticketSendContract.address, content_type: { prim: 'string' }, content: { string: 'Ticket' } };
       } catch (error) {
         console.error(error);
+        throw error;
       }
     });
 

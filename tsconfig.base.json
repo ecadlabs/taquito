@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "moduleResolution": "node",
-    "target": "es6",
+    "target": "es2020",
     "module": "es2020",
     "lib": [
       "es2020",
@@ -10,7 +10,6 @@
     "strict": true,
     "sourceMap": true,
     "esModuleInterop": true,
-    "useUnknownInCatchVariables": false,
     "noImplicitAny": true,
     "declaration": true,
     "allowSyntheticDefaultImports": true,
@@ -19,7 +18,6 @@
     "emitDecoratorMetadata": true,
     "jsx": "react",
     "baseUrl": "packages",
-    "downlevelIteration": true,
     "paths": {
       "@taquito/core": [
         "taquito-core/src/taquito-core.ts"

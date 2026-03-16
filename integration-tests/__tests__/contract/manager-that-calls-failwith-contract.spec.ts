@@ -11,7 +11,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
   describe(`Test contract origination of a contract that calls 2nd contract that FAILs through contract api: ${rpc}`, () => {
     beforeEach(async () => {
-      await setup();
+      await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
 
       try {
         const op = await Tezos.contract.originate({
@@ -30,6 +30,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         await opManager.confirmation();
       } catch(e) {
         console.log(`Error when preparing the test: ${e}`);
+        throw e;
       }
     });
 
@@ -41,7 +42,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
       try {
         await managerContract.methodsObject.do(MANAGER_LAMBDA.transferToContract(contract.address, 1)).send({ amount: 0 })
-        fail('Expected transfer operation to throw error')
+        expect.fail('Expected transfer operation to throw error')
       } catch (ex: any) {
         expect(ex.message).toMatch('test')
       }

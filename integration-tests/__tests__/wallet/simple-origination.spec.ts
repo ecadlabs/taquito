@@ -5,7 +5,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   describe(`Test origination of a simple contract through the wallet API using: ${rpc}`, () => {
 
     beforeEach(async () => {
-      await setup()
+      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 })
     })
     it('Verify wallet.originate for a simple contract', async () => {
       const op = await Tezos.wallet.originate({
@@ -20,6 +20,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         init: `"test"`
       }).send();
       await op.confirmation()
+      expect(await op.status()).toBe('applied');
       expect(op.opHash).toBeDefined();
     });
   });

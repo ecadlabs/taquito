@@ -44,6 +44,14 @@ TALLINNNET=true npm run test
 
 Refer to the `taquito/integration-tests/config.ts` file for details on test configurations and target networks. Some configurations have default values that can be overridden using environment variables. Sometimes, you can use CLI commands to invoke a configuration instead of exporting it.
 
+### Common CI Reliability Variables
+
+- `TAQUITO_KEYGEN_URL`: overrides the Keygen API base URL (default: `https://keygen.ecadinfra.com`)
+- `TAQUITO_KEYGEN_REQUEST_TIMEOUT_MS`: fail-fast timeout (in ms) for Keygen API HTTP requests (default: `30000`)
+- `TAQUITO_FRESH_KEY_MAX_ATTEMPTS`: max attempts when selecting a fresh key (default: `5`)
+- `TAQUITO_FRESH_KEY_RETRY_MS`: delay between fresh-key retry attempts in ms (default: `0`)
+- `TAQUITO_ITEST_DIAGNOSTICS=true`: enables structured setup/key selection diagnostics in test logs
+
 
 ## CLI Options
 

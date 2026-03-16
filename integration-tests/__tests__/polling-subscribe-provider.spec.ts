@@ -1,5 +1,6 @@
-import { CONFIGS, sleep } from '../config';
+import { CONFIGS, TAQUITO_MUTEZ, sleep } from '../config';
 import { PollingSubscribeProvider, TezosToolkit } from '@taquito/taquito';
+import { rethrowInfrastructureRpcError } from '../test-helpers/rpc-error-assertions';
 
 /* mainContract.jsligo: This is the source code for the main contract.
 If you need to change the main contract, you can change this, use the ligo compiler to compile it, and update both the Michelson code below and the jsligo here.
@@ -106,11 +107,11 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
   describe(`Polling Subscribe Provider using ${rpc}`, () => {
     beforeAll(async () => {
-      await setup();
+      await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
 
       secondUser = await createAddress();
       const secondUserAddress = await secondUser.signer.publicKeyHash();
-      const transfer = await Tezos.contract.transfer({ to: secondUserAddress, amount: 1 });
+      const transfer = await Tezos.contract.transfer({ to: secondUserAddress, amount: TAQUITO_MUTEZ, mutez: true });
       await transfer.confirmation();
 
       Tezos.setStreamProvider(
@@ -136,6 +137,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         mainContractAddress = mainContract.contractAddress!;
       } catch (e) {
         console.log(e);
+        throw e;
       }
     });
 
@@ -154,14 +156,27 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
     it('should be able to subscribe to events with tag and address params given', async () => {
       const data: any = [];
-
       const eventSub = Tezos.stream.subscribeEvent({
         tag: 'intFromMainContract',
         address: mainContractAddress,
       });
+      const eventReceived = new Promise<void>((resolve, reject) => {
+        const timeoutHandle = setTimeout(() => {
+          reject(new Error('Timed out waiting for subscribed event'));
+        }, 15_000);
 
-      eventSub.on('data', (x) => {
-        data.push(x);
+        eventSub.on('error', (error) => {
+          clearTimeout(timeoutHandle);
+          reject(error);
+        });
+
+        eventSub.on('data', (x) => {
+          data.push(x);
+          if (data.length >= 1) {
+            clearTimeout(timeoutHandle);
+            resolve();
+          }
+        });
       });
 
       const contract1 = await Tezos.contract.at(mainContractAddress!);
@@ -176,8 +191,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       const sent1 = await operation1.send();
 
       await sent1.confirmation();
-
-      await sleep(5000);
+      await eventReceived;
       eventSub.close();
 
       expect(data.length).toEqual(1);
@@ -195,6 +209,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
     it.skip('should include events from failed operations when filter does not exclude events from failed operations', async () => {
       const data: any = [];
+      let failedOperationError: unknown;
 
       const eventSub = Tezos.stream.subscribeEvent({
         address: mainContractAddress,
@@ -237,8 +252,11 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         await sent1.confirmation();
         await sent2.confirmation();
       } catch (e) {
-        // Failure is expected
+        failedOperationError = e;
       }
+
+      rethrowInfrastructureRpcError(failedOperationError);
+      expect(failedOperationError).toBeInstanceOf(Error);
 
       await sleep(5000);
       eventSub.close();
@@ -249,6 +267,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
     it.skip('should properly filter events from failed operations', async () => {
       const data: any = [];
+      let failedOperationError: unknown;
 
       const eventSub = Tezos.stream.subscribeEvent({
         address: mainContractAddress,
@@ -292,8 +311,11 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         await sent1.confirmation();
         await sent2.confirmation();
       } catch (e) {
-        // Failure is expected
+        failedOperationError = e;
       }
+
+      rethrowInfrastructureRpcError(failedOperationError);
+      expect(failedOperationError).toBeInstanceOf(Error);
 
       await sleep(5000);
       eventSub.close();

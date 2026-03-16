@@ -12,7 +12,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     let opChestKey: OriginationOperation<DefaultContractType>;
 
     beforeAll(async () => {
-      await setup();
+      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 });
 
       opChest = await Tezos.contract.originate({
         balance: "1",

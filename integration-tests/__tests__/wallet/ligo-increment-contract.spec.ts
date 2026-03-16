@@ -6,7 +6,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   describe(`Test contract origination with simple ligo origination scenario through wallet api using: ${rpc}`, () => {
 
     beforeAll(async () => {
-      await setup()
+      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 })
     })
     it('Verify wallet.originate for a contract in Michelson format produced by LIGO (also increments a counter in a storage).', async () => {
       const op = await Tezos.wallet.originate({
@@ -15,6 +15,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         storage: 0,
       }).send();
       await op.confirmation()
+      expect(await op.status()).toBe('applied');
       expect(op.opHash).toBeDefined();
       const contract = await op.contract();
 
@@ -23,6 +24,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(storage1.toString()).toEqual("0")
       const opMethod = await contract.methodsObject.default("2").send();
       await opMethod.confirmation();
+      expect(await opMethod.status()).toBe('applied');
       expect(opMethod.opHash).toBeDefined();
       // file deepcode ignore no-any: any is good enough
       const storage2: any = await contract.storage()

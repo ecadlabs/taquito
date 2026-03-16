@@ -9,7 +9,11 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
     describe(`Test contract.batch containing a high number of operations through contract api using: ${rpc}`, () => {
         beforeEach(async () => {
-            await setup(true);
+            await setup({
+                preferFreshKey: true,
+                minBalanceMutez: 9000000,
+                maxAttempts: 8,
+            });
         });
 
         it('Verify contract.batch with 150 operations', async () => {

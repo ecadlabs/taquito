@@ -1,5 +1,6 @@
 ---
 import taquitoLogo from "../images/Taquito.png";
+import { DEFAULT_VERSION } from "../config/versions.mjs";
 ---
 
 <footer
@@ -35,14 +36,14 @@ import taquitoLogo from "../images/Taquito.png";
       <p class="text-lg tracking-wide ml-1 uppercase">GitHub</p>
     </a>
     <p class="mt-12 text-sm opacity-60">
-      Copyright © 2025 ECAD Labs - Open Source Apache 2.0 License
+      Copyright © 2026 ECAD Labs Inc. All rights reserved.
     </p>
   </div>
   <div class="grid grid-cols-2 md:flex gap-16 mb-12 md:mb-0">
     <div>
       <h4 class="font-bold mb-2">Documentation</h4>
       <ul class="text-sm space-y-2">
-        <li><a href="https://taquito.io/docs/quick_start/">Quick Start</a></li>
+        <li><a href={`/docs/${DEFAULT_VERSION}/quick_start`}>Quick Start</a></li>
         <li><a href="https://taquito.io/typedoc/" target="_blank" rel="noopener noreferrer">TypeDoc Reference</a></li>
       </ul>
     </div>

@@ -70,7 +70,7 @@ export class OperationBatch extends Provider {
 
   /**
    *
-   * @description Add a transaction operation to the batch
+   * Add a transaction operation to the batch
    *
    * @param params Transfer operation parameter
    */
@@ -88,7 +88,7 @@ export class OperationBatch extends Provider {
 
   /**
    *
-   * @description Transfer tickets from a Tezos address (tz1,tz2 or tz3) to a smart contract address( KT1)
+   * Transfer tickets from a Tezos address (tz1,tz2 or tz3) to a smart contract address( KT1)
    *
    * @param params Transfer operation parameter
    */
@@ -103,7 +103,7 @@ export class OperationBatch extends Provider {
 
   /**
    *
-   * @description Add a contract call to the batch
+   * Add a contract call to the batch
    *
    * @param params Call a contract method
    * @param options Generic operation parameters
@@ -117,7 +117,7 @@ export class OperationBatch extends Provider {
 
   /**
    *
-   * @description Add a delegation operation to the batch
+   * Add a delegation operation to the batch
    *
    * @param params Delegation operation parameter
    */
@@ -136,10 +136,10 @@ export class OperationBatch extends Provider {
 
   /**
    *
-   * @description Add an activation operation to the batch
+   * Add an activation operation to the batch
    *
    * @param params Activation operation parameter
-   * @throws {@link InvalidKeyHashError}
+   * @throws InvalidKeyHashError
    */
   withActivation({ pkh, secret }: ActivationParams) {
     const pkhValidation = validateKeyHash(pkh);
@@ -152,7 +152,7 @@ export class OperationBatch extends Provider {
 
   /**
    *
-   * @description Add an origination operation to the batch
+   * Add an origination operation to the batch
    *
    * @param params Origination operation parameter
    */
@@ -165,7 +165,7 @@ export class OperationBatch extends Provider {
 
   /**
    *
-   * @description Add a register a global constant operation to the batch
+   * Add a register a global constant operation to the batch
    *
    * @param params RegisterGlobalConstant operation parameter
    */
@@ -176,7 +176,7 @@ export class OperationBatch extends Provider {
 
   /**
    *
-   * @description Add an increase paid storage operation to the batch
+   * Add an increase paid storage operation to the batch
    *
    * @param params IncreasePaidStorage operation parameter
    */
@@ -187,7 +187,7 @@ export class OperationBatch extends Provider {
 
   /**
    *
-   * @description Add a update consensus key operation to the batch
+   * Add a update consensus key operation to the batch
    *
    * @param params UpdateConsensusKey operation parameter
    */
@@ -210,7 +210,7 @@ export class OperationBatch extends Provider {
 
   /**
    *
-   * @description Add a update companion key operation to the batch
+   * Add a update companion key operation to the batch
    *
    * @param params UpdateCompanionKey operation parameter
    */
@@ -228,7 +228,7 @@ export class OperationBatch extends Provider {
 
   /**
    *
-   * @description Add a smart rollup add messages operation to the batch
+   * Add a smart rollup add messages operation to the batch
    *
    * @param params Rollup origination operation parameter
    */
@@ -239,7 +239,7 @@ export class OperationBatch extends Provider {
 
   /**
    *
-   * @description Add a smart rollup originate operation to the batch
+   * Add a smart rollup originate operation to the batch
    *
    * @param params Smart Rollup Originate operation parameter
    */
@@ -250,7 +250,7 @@ export class OperationBatch extends Provider {
 
   /**
    *
-   * @description Add a smart rollup execute outbox message to the batch
+   * Add a smart rollup execute outbox message to the batch
    *
    * @param params Smart Rollup Execute Outbox Message operation parameter
    */
@@ -331,10 +331,10 @@ export class OperationBatch extends Provider {
 
   /**
    *
-   * @description Add a group operation to the batch. Operation will be applied in the order they are in the params array
+   * Add a group operation to the batch. Operation will be applied in the order they are in the params array
    *
    * @param params Operations parameter
-   * @throws {@link InvalidOperationKindError}
+   * @throws InvalidOperationKindError
    */
   with(params: ParamsWithKind[]) {
     for (const param of params) {
@@ -382,7 +382,7 @@ export class OperationBatch extends Provider {
 
   /**
    *
-   * @description Forge and Inject the operation batch
+   * Forge and Inject the operation batch
    *
    * @param params Optionally specify the source of the operation
    */
@@ -417,7 +417,7 @@ export class RPCBatchProvider {
 
   /***
    *
-   * @description Batch a group of operation together. Operations will be applied in the order in which they are added to the batch
+   * Batch a group of operation together. Operations will be applied in the order in which they are added to the batch
    *
    * @param params List of operation to batch together
    */

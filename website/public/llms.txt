@@ -44,9 +44,10 @@ The `next` version contains the latest unreleased documentation.
 - `fa2_parameters` - FA2 Parameters
 - `manager_lambda` - MANAGER_LAMBDA
 - `multisig_doc` - Multisig contract interactions
+- `failwith_errors` - Catching error messages
 
 ### Wallets
-- `walletconnect` - WalletConnect (BETA)
+- `walletconnect` - WalletConnect
 - `wallets` - Wallets
 - `transaction_limits` - Transaction limits
 
@@ -62,6 +63,7 @@ The `next` version contains the latest unreleased documentation.
 ### Contract and Token Metadata
 - `tzip12` - TZIP-12 Token Metadata
 - `metadata-tzip16` - TZIP-16 Contract Metadata and Views
+- `tzip16-sequence-diagram` - TZIP-16 Sequence diagrams
 
 ### Signers
 - `signing` - Signing data
@@ -80,6 +82,14 @@ The `next` version contains the latest unreleased documentation.
   - `sapling_in_memory_spending_key` - InMemorySpendingKey
   - `sapling_in_memory_viewing_key` - InMemoryViewingKey
 
+### Architecture
+- `arch_framework` - The Taquito Framework
+- `arch_tezos_toolkit` - A First Look at TezosToolkit
+- `arch_entry_points` - Taquito Entry Points
+- `arch_operations` - Operations and Injection Model
+- `arch_michelson_encoder` - Michelson Encoder Internals
+- `arch_runcode_rpc` - Understanding the RunCode RPC
+
 ### Advanced Scenarios
 - `ophash_before_injecting` - Getting the Operation Hash without Injecting
 - `drain_account` - Drain an account
@@ -95,7 +105,8 @@ The `next` version contains the latest unreleased documentation.
 - `rpc-cache` - RPC caching
 - `cancel_http_requests` - Cancel HTTP requests
 
-### Running integration tests
+### Testing
+- `testing_strategies` - Taquito Testing Strategies
 - `ledger_integration_test` - Ledger tests
 - `rpc_nodes_integration_test` - RPC tests
 
@@ -113,11 +124,6 @@ The `next` version contains the latest unreleased documentation.
 - `contract-test-collection` - Smart contract collection
 - `validators` - Validation functions
 - `ballot` - Ballot Operation
-
-### Other
-- `failwith_errors` - Catching error messages
-- `testing_strategies` - Taquito Testing Strategies
-- `tzip16-sequence-diagram` - TZIP-16 Sequence diagrams
 
 ## API Reference
 

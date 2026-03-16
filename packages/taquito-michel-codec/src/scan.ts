@@ -2,7 +2,7 @@ import { TaquitoError } from '@taquito/core';
 
 /**
  *  @category Error
- *  @description Error that indicates a failure when performing the scan step when parsing Michelson
+ *  Error that indicates a failure when performing the scan step when parsing Michelson
  */
 export class ScanError extends TaquitoError {
   constructor(

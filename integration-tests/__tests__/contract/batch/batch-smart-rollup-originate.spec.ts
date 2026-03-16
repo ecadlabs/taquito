@@ -7,7 +7,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
   describe(`Test contract.batch with smart rollup originate using: ${rpc}`, () => {
     beforeEach(async () => {
-      await setup(true);
+      await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
     });
 
     it('should be able to batch smart rollup originate with other operations', async () => {

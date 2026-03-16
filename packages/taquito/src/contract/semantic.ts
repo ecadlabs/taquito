@@ -6,8 +6,8 @@ import { MichelsonV1Expression } from '@taquito/rpc';
 import { SaplingStateAbstraction } from './sapling-state-abstraction';
 
 /**
- * @description Override the default michelson encoder semantic to provide richer abstraction over storage properties
- * @param provider ContractProvider (contract API)
+ * Override the default michelson encoder semantic to provide richer abstraction over storage properties
+ * @param p ContractProvider (contract API)
  */
 // Override the default michelson encoder semantic to provide richer abstraction over storage properties
 export const smartContractAbstractionSemantic: (p: ContractProvider) => Semantic = (

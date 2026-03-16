@@ -48,7 +48,7 @@ export type ContractSchema = Schema | unknown;
 export interface StorageProvider {
   /**
    *
-   * @description Return a well formatted json object of the contract storage
+   * Return a well formatted json object of the contract storage
    *
    * @param contract contract address you want to get the storage from
    * @param schema optional schema can either be the contract script rpc response or a michelson-encoder schema
@@ -59,7 +59,7 @@ export interface StorageProvider {
 
   /**
    *
-   * @description Return a well formatted json object of a big map value
+   * Return a well formatted json object of a big map value
    *
    * @param id Big Map ID
    * @param keyToEncode key to query (will be encoded properly according to the schema)
@@ -77,7 +77,7 @@ export interface StorageProvider {
 
   /**
    *
-   * @description Fetch multiple values in a big map
+   * Fetch multiple values in a big map
    *
    * @param id Big Map ID
    * @param keysToEncode Array of keys to query (will be encoded properly according to the schema)
@@ -97,7 +97,7 @@ export interface StorageProvider {
 
   /**
    *
-   * @description Return a well formatted json object of a sapling state
+   * Return a well formatted json object of a sapling state
    *
    * @param id Sapling state ID
    * @param block optional block level to fetch the value from
@@ -109,11 +109,11 @@ export interface StorageProvider {
 export interface ContractProvider extends StorageProvider {
   /**
    *
-   * @description Originate a new contract according to the script in parameters. Will sign and inject an operation using the current context
+   * Originate a new contract according to the script in parameters. Will sign and inject an operation using the current context
    *
    * @returns An operation handle with the result from the rpc node
    *
-   * @param OriginationOperation Originate operation parameter
+   * @param contract Originate operation parameter
    */
   originate<TContract extends DefaultContractType = DefaultContractType>(
     contract: OriginateParams<ContractStorageType<TContract>>
@@ -121,80 +121,80 @@ export interface ContractProvider extends StorageProvider {
 
   /**
    *
-   * @description Set the delegate for a contract. Will sign and inject an operation using the current context
+   * Set the delegate for a contract. Will sign and inject an operation using the current context
    *
    * @returns An operation handle with the result from the rpc node
    *
-   * @param SetDelegate operation parameter
+   * @param params SetDelegate operation parameter
    */
   setDelegate(params: DelegateParams): Promise<DelegateOperation>;
 
   /**
    *
-   * @description Register the current address as delegate. Will sign and inject an operation using the current context
+   * Register the current address as delegate. Will sign and inject an operation using the current context
    *
    * @returns An operation handle with the result from the rpc node
    *
-   * @param RegisterDelegate operation parameter
+   * @param params RegisterDelegate operation parameter
    */
   registerDelegate(params: RegisterDelegateParams): Promise<DelegateOperation>;
 
   /**
    *
-   * @description Transfer tz from current address to a specific address. Will sign and inject an operation using the current context
+   * Transfer tz from current address to a specific address. Will sign and inject an operation using the current context
    *
    * @returns An operation handle with the result from the rpc node
    *
-   * @param Transfer operation parameter
+   * @param params Transfer operation parameter
    */
   transfer(params: TransferParams): Promise<TransactionOperation>;
 
   /**
    *
-   * @description Stake tz from current address to a specific address. Built on top of the existing transaction operation
+   * Stake tz from current address to a specific address. Built on top of the existing transaction operation
    *
    * @returns An operation handle with the result from the rpc node
    *
-   * @param Stake pseudo-operation parameter
+   * @param params Stake pseudo-operation parameter
    */
   stake(params: StakeParams): Promise<TransactionOperation>;
 
   /**
    *
-   * @description Unstake tz from current address to a specific address. Built on top of the existing transaction operation
+   * Unstake tz from current address to a specific address. Built on top of the existing transaction operation
    *
    * @returns An operation handle with the result from the rpc node
    *
-   * @param Unstake pseudo-operation parameter
+   * @param params Unstake pseudo-operation parameter
    */
   unstake(params: UnstakeParams): Promise<TransactionOperation>;
 
   /**
    *
-   * @description Finalize unstake tz from current address to a specific address. Built on top of the existing transaction operation
+   * Finalize unstake tz from current address to a specific address. Built on top of the existing transaction operation
    *
    * @returns An operation handle with the result from the rpc node
    *
-   * @param finalize_unstake pseudo-operation parameter
+   * @param params Finalize unstake pseudo-operation parameter
    */
   finalizeUnstake(params: FinalizeUnstakeParams): Promise<TransactionOperation>;
 
   /**
    *
-   * @description Transfer tickets from an implicit account to a contract or another implicit account.
+   * Transfer tickets from an implicit account to a contract or another implicit account.
    *
    * @returns An operation handle with the result from the rpc node
    *
-   * @param TransferTicket operation parameter
+   * @param params TransferTicket operation parameter
    */
   transferTicket(params: TransferTicketParams): Promise<TransferTicketOperation>;
 
   /**
    *
-   * @description Reveal the current address. Will throw an error if the address is already revealed.
+   * Reveal the current address. Will throw an error if the address is already revealed.
    * @returns An operation handle with the result from the rpc node
    *
-   * @param Reveal operation parameter
+   * @param params Reveal operation parameter
    */
   reveal(params: RevealParams): Promise<RevealOperation>;
 
@@ -208,7 +208,7 @@ export interface ContractProvider extends StorageProvider {
 
   /**
    *
-   * @description Batch a group of operation together. Operations will be applied in the order in which they are added to the batch
+   * Batch a group of operation together. Operations will be applied in the order in which they are added to the batch
    *
    * @param params List of operation to batch together
    */
@@ -216,7 +216,7 @@ export interface ContractProvider extends StorageProvider {
 
   /**
    *
-   * @description Register a Micheline expression in a global table of constants. Will sign and inject an operation using the current context
+   * Register a Micheline expression in a global table of constants. Will sign and inject an operation using the current context
    *
    * @returns An operation handle with the result from the rpc node
    *
@@ -228,7 +228,7 @@ export interface ContractProvider extends StorageProvider {
 
   /**
    *
-   * @description Increase the amount of bytes in a smart contract storage by paying a fee
+   * Increase the amount of bytes in a smart contract storage by paying a fee
    *
    * @returns An operation handle with the result from the rpc node
    *
@@ -238,77 +238,77 @@ export interface ContractProvider extends StorageProvider {
 
   /**
    *
-   * @description Submit a drain delegate operation
+   * Submit a drain delegate operation
    *
    * @returns An operation handle with the result from the RPC node
    *
-   * @param DrainDelegateParams DrainDelegate operation parameter
+   * @param params DrainDelegate operation parameter
    */
   drainDelegate(params: DrainDelegateParams): Promise<DrainDelegateOperation>;
 
   /**
    *
-   * @description Submit ballot for an ongoing proposal
+   * Submit ballot for an ongoing proposal
    *
    * @returns An operation handle with the result from the RPC node
    *
-   * @param BallotParams Ballot operation parameter
+   * @param params Ballot operation parameter
    */
   ballot(params: BallotParams): Promise<BallotOperation>;
 
   /**
    *
-   * @description Submit proposal
+   * Submit proposal
    *
    * @returns An operation handle with the result from the RPC node
    *
-   * @param ProposalsParams Proposals operation parameter
+   * @param params Proposals operation parameter
    */
   proposals(params: ProposalsParams): Promise<ProposalsOperation>;
 
   /**
    *
-   * @description Update consensus key
+   * Update consensus key
    * @returns An operation handle with the result from the RPC node
    *
-   * @param UpdateConsensusKeyParams UpdateConsensusKey operation parameter
+   * @param params UpdateConsensusKey operation parameter
    */
   updateConsensusKey(params: UpdateConsensusKeyParams): Promise<UpdateConsensusKeyOperation>;
 
   /**
    *
-   * @description Update companion key
+   * Update companion key
    * @returns An operation handle with the result from the RPC node
    *
-   * @param UpdateCompanionKeyParams UpdateCompanionKey operation parameter
+   * @param params UpdateCompanionKey operation parameter
    */
   updateCompanionKey(params: UpdateCompanionKeyParams): Promise<UpdateCompanionKeyOperation>;
 
   /**
    *
-   * @description Smart Rollup Add Messages
+   * Smart Rollup Add Messages
    *
    * @returns An operation handle with the result from the RPC node
    *
-   * @param SmartRollupAddMessagesParams smartRollupAddMessages operation parameter
+   * @param params smartRollupAddMessages operation parameter
    */
   smartRollupAddMessages(
     params: SmartRollupAddMessagesParams
   ): Promise<SmartRollupAddMessagesOperation>;
   /**
-   * @description Smart rollup originate
+   * Smart rollup originate
    *
    * @returns An operation handle with the result from the RPC node
    *
-   * @param SmartRollupOriginateParams smartRollupOriginate operation parameter
+   * @param params smartRollupOriginate operation parameter
    */
   smartRollupOriginate(params: SmartRollupOriginateParams): Promise<SmartRollupOriginateOperation>;
   /**
-   * @description Execute a message from a smart rollup's outbox of a cemented commitment
+   * Execute a message from a smart rollup's outbox of a cemented commitment
    *
    * @returns An operation handle with the result from the RPC node
    *
-   * @param SmartRollupExecuteOutboxMessageParams smartRollupExecuteOutboxMessage operation parameter
+   * @param params smartRollupExecuteOutboxMessage operation parameter
    */
   smartRollupExecuteOutboxMessage(
     params: SmartRollupExecuteOutboxMessageParams
@@ -316,7 +316,7 @@ export interface ContractProvider extends StorageProvider {
 
   /**
    *
-   * @description Send arbitrary data inside a failing_noop operation that's guaranteed to fail.
+   * Send arbitrary data inside a failing_noop operation that's guaranteed to fail.
    *
    * @returns An operation handle with the result from the rpc node
    *

@@ -1,8 +1,10 @@
 import { CONFIGS } from '../../config';
 import { MichelsonMap } from '@taquito/taquito';
 import { tzip16, Tzip16Module } from '@taquito/tzip16';
+import { HttpResponseError } from '@taquito/http-utils';
 import { stringToBytes } from '@taquito/utils';
 import { contractCode, metadataViewsExample1, metadataViewsExample2 } from '../../data/metadataViews';
+import { rethrowInfrastructureRpcError } from '../../test-helpers/rpc-error-assertions';
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
 	const Tezos = lib;
@@ -10,7 +12,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
 	describe(`Test contract origination with metadata having views that return bytes and calls the views from TZComet through contract api using: ${rpc}`, () => {
 		beforeEach(async () => {
-			await setup();
+			await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
 		});
 
 		test('Verify contract.originate for a contract with metadata having views that return bytes (example taken from TZComet) and then call the views', async () => {
@@ -77,8 +79,10 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
 			try {
 				await metadataViews['an-empty-useless-view']().executeView();
+				expect.fail('Expected the malformed metadata view execution to fail');
 			} catch (e: any) {
-				expect(e.message).toContain('Http error response');
+				rethrowInfrastructureRpcError(e);
+				expect(e).toBeInstanceOf(HttpResponseError);
 			}
 
 			const viewMultiplyNegativeNumberResult = await metadataViews['multiply-negative-number-or-call-failwith']().executeView(-2);

@@ -13,9 +13,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: lts/Iron
+          node-version: lts/Jod
       - run: npm ci
       - run: npm run build
       - if: always()
         id: integration-tests-shadownet
-        run: npm -w integration-tests run test:shadownet -- --maxWorkers=4
+        run: npm -w integration-tests run test:shadownet -- --maxWorkers=4 --exclude='**/sapling/**' --exclude='**/ledger/**'

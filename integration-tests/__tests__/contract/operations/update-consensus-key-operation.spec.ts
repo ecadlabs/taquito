@@ -9,7 +9,11 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
     let consensusPk: string;
     let delegateAccount: TezosToolkit;
     beforeAll(async () => {
-      await setup(true);
+      await setup({
+        preferFreshKey: true,
+        minBalanceMutez: 9000000,
+        maxAttempts: 8,
+      });
 
       try {
         delegateAccount = await createAddress();
@@ -28,6 +32,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
       } catch (e) {
         console.log(JSON.stringify(e));
+        throw e;
       }
 
     });

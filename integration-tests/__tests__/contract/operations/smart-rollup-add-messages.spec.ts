@@ -5,7 +5,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
   describe(`Smart Rollup Add Messages operation test using: ${rpc}`, () => {
     beforeEach(async () => {
-      await setup(true);
+      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 });
 
     });
 

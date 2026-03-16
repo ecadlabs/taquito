@@ -11,13 +11,13 @@ import BigNumber from 'bignumber.js';
 import { BigMapQuery, BlockIdentifier, SaplingStateQuery, TzReadProvider } from './interface';
 
 /**
- * @description Converts calls from TzReadProvider into calls to the wrapped RpcClient in a format it can understand.
+ * Converts calls from TzReadProvider into calls to the wrapped RpcClient in a format it can understand.
  */
 export class RpcReadAdapter implements TzReadProvider {
   constructor(private rpc: RpcClientInterface) {}
 
   /**
-   * @description The spendable balance of a contract (in mutez), also known as liquid balance. Corresponds to tez owned by the contract that are neither staked, nor in unstaked requests, nor in frozen bonds. Identical to the 'spendable' RPC.
+   * The spendable balance of a contract (in mutez), also known as liquid balance. Corresponds to tez owned by the contract that are neither staked, nor in unstaked requests, nor in frozen bonds. Identical to the 'spendable' RPC.
    * @param address address from which we want to retrieve the spendable balance
    * @param block from which we want to retrieve the balance
    * @returns the balance in mutez
@@ -27,7 +27,7 @@ export class RpcReadAdapter implements TzReadProvider {
   }
 
   /**
-   * @description The spendable balance of a contract (in mutez), also known as liquid balance. Corresponds to tez owned by the contract that are neither staked, nor in unstaked requests, nor in frozen bonds. Identical to the 'balance' RPC.
+   * The spendable balance of a contract (in mutez), also known as liquid balance. Corresponds to tez owned by the contract that are neither staked, nor in unstaked requests, nor in frozen bonds. Identical to the 'balance' RPC.
    * @param address address from which we want to retrieve the spendable balance
    * @param block from which we want to retrieve the balance
    * @returns the balance in mutez
@@ -37,7 +37,7 @@ export class RpcReadAdapter implements TzReadProvider {
   }
 
   /**
-   * @description Access the delegate of a contract, if any.
+   * Access the delegate of a contract, if any.
    * @param address contract address from which we want to retrieve the delegate (baker)
    * @param block from which we want to retrieve the delegate
    * @returns the public key hash of the delegate or null if no delegate
@@ -47,7 +47,7 @@ export class RpcReadAdapter implements TzReadProvider {
   }
 
   /**
-   * @description Access the next protocol hash
+   * Access the next protocol hash
    * @param block from which we want to retrieve the next protocol hash
    */
   async getNextProtocol(block: BlockIdentifier): Promise<string> {
@@ -56,7 +56,7 @@ export class RpcReadAdapter implements TzReadProvider {
   }
 
   /**
-   * @description Access protocol constants used in Taquito
+   * Access protocol constants used in Taquito
    * @param block from which we want to retrieve the constants
    */
   async getProtocolConstants(block: BlockIdentifier): Promise<{
@@ -89,7 +89,7 @@ export class RpcReadAdapter implements TzReadProvider {
   }
 
   /**
-   * @description Access the script (code and storage) of a smart contract
+   * Access the script (code and storage) of a smart contract
    * @param contract contract address from which we want to retrieve the script
    * @param block from which we want to retrieve the storage value
    * @returns Note: The code must be in the JSON format and not contain global constant
@@ -100,7 +100,7 @@ export class RpcReadAdapter implements TzReadProvider {
   }
 
   /**
-   * @description Access the storage value of a contract
+   * Access the storage value of a contract
    * @param contract contract address from which we want to retrieve the storage
    * @param block from which we want to retrieve the storage value
    */
@@ -109,7 +109,7 @@ export class RpcReadAdapter implements TzReadProvider {
   }
 
   /**
-   * @description Access the block hash
+   * Access the block hash
    */
   async getBlockHash(block: BlockIdentifier): Promise<string> {
     const { hash } = await this.rpc.getBlockHeader({ block: String(block) });
@@ -117,7 +117,7 @@ export class RpcReadAdapter implements TzReadProvider {
   }
 
   /**
-   * @description Access the block level
+   * Access the block level
    */
   async getBlockLevel(block: BlockIdentifier): Promise<number> {
     const { level } = await this.rpc.getBlockHeader({ block: String(block) });
@@ -125,7 +125,7 @@ export class RpcReadAdapter implements TzReadProvider {
   }
 
   /**
-   * @description Access the counter of an address
+   * Access the counter of an address
    * @param pkh from which we want to retrieve the counter
    * @param block from which we want to retrieve the counter
    */
@@ -135,7 +135,7 @@ export class RpcReadAdapter implements TzReadProvider {
   }
 
   /**
-   * @description Access the timestamp of a block
+   * Access the timestamp of a block
    * @param block from which we want to retrieve the timestamp
    * @returns date ISO format zero UTC offset ("2022-01-19T22:37:07Z")
    */
@@ -145,7 +145,7 @@ export class RpcReadAdapter implements TzReadProvider {
   }
 
   /**
-   * @description Access the value associated with a key in a big map.
+   * Access the value associated with a key in a big map.
    * @param bigMapQuery Big Map ID and Expression hash to query (A b58check encoded Blake2b hash of the expression)
    * @param block from which we want to retrieve the big map value
    */
@@ -159,8 +159,8 @@ export class RpcReadAdapter implements TzReadProvider {
   }
 
   /**
-   * @description Access the value associated with a sapling state ID.
-   * @param id Sapling state ID
+   * Access the value associated with a sapling state ID.
+   * @param saplingStateQuery Sapling state ID query
    * @param block from which we want to retrieve the sapling state
    */
   async getSaplingDiffById(
@@ -171,7 +171,7 @@ export class RpcReadAdapter implements TzReadProvider {
   }
 
   /**
-   * @description Access the sapling state of a smart contract.
+   * Access the sapling state of a smart contract.
    * @param contractAddress The address of the smart contract
    * @param block The block you want to retrieve the sapling state from
    */
@@ -183,7 +183,7 @@ export class RpcReadAdapter implements TzReadProvider {
   }
 
   /**
-   * @description Return the list of entrypoints of the contract
+   * Return the list of entrypoints of the contract
    * @param contract address of the contract we want to get the entrypoints of
    */
   async getEntrypoints(contract: string): Promise<EntrypointsResponse> {
@@ -191,14 +191,14 @@ export class RpcReadAdapter implements TzReadProvider {
   }
 
   /**
-   * @description Access the chain id
+   * Access the chain id
    */
   async getChainId(): Promise<string> {
     return this.rpc.getChainId();
   }
 
   /**
-   * @description Indicate if an account is revealed
+   * Indicate if an account is revealed
    * @param publicKeyHash of the account
    * @param block from which we want to know if the account is revealed
    */
@@ -209,7 +209,7 @@ export class RpcReadAdapter implements TzReadProvider {
   }
 
   /**
-   * @description Return all the information about a block
+   * Return all the information about a block
    * @param block from which we want to retrieve the information
    */
   async getBlock(block: BlockIdentifier): Promise<BlockResponse> {
@@ -217,7 +217,7 @@ export class RpcReadAdapter implements TzReadProvider {
   }
 
   /**
-   * @description Return a list of the ancestors of the given block which, if referred to as the branch in an operation header, are recent enough for that operation to be included in the current block.
+   * Return a list of the ancestors of the given block which, if referred to as the branch in an operation header, are recent enough for that operation to be included in the current block.
    * @param block from which we want to retrieve the information
    */
   getLiveBlocks(block: BlockIdentifier): Promise<string[]> {
@@ -225,7 +225,7 @@ export class RpcReadAdapter implements TzReadProvider {
   }
 
   /**
-   * @description Returns the cycle at which the launch of the Adaptive Issuance feature is set to happen. A result of null means that the feature is not yet set to launch.
+   * Returns the cycle at which the launch of the Adaptive Issuance feature is set to happen. A result of null means that the feature is not yet set to launch.
    * @param block from which we want to retrieve the information
    */
   getAdaptiveIssuanceLaunchCycle(block: BlockIdentifier): Promise<AILaunchCycleResponse> {

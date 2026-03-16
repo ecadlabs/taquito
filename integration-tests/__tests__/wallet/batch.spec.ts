@@ -9,7 +9,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownContract, knownBaker, createAddress }
 
     describe(`Test wallet.batch using: ${rpc}`, () => {
         beforeEach(async () => {
-            await setup();
+            await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
         });
 
         test('Verify wallet.batch simple transfers with origination code in JSON Michelson format', async () => {

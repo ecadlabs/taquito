@@ -14,7 +14,7 @@ CONFIGS().forEach(({ rpc, setup, protocol }) => {
 
   describe(`Test contracts using: ${rpc}`, () => {
     beforeEach(async () => {
-      await setup();
+      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 });
 
     });
 

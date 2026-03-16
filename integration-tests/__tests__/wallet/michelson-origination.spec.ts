@@ -8,7 +8,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   describe(`Test contract origination in a plain Michelson contract through wallet api using: ${rpc}`, () => {
 
     beforeEach(async () => {
-      await setup()
+      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 })
     })
     it('Verify wallet.originate for an ID contract written in plain Michelson', async () => {
       const op = await Tezos.wallet.originate({
@@ -17,15 +17,15 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         init: idInitData
       }).send()
       await op.confirmation()
+      expect(await op.status()).toBe('applied');
       expect(op.opHash).toBeDefined();
-      expect(op.status).toBeDefined();
     });
   });
 
   describe(`Test contract origination to configure parserProvider to parse plain Michelson`, () => {
 
     beforeEach(async () => {
-      await setup()
+      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 })
     })
     it('uses noopParser to originate Michelson code and fails', async () => {
       // Configure the Tezostoolkit to use the NoopParser (the Michelson won't be parsed)
@@ -54,8 +54,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         init: idInitData
       }).send();
       await op.confirmation()
+      expect(await op.status()).toBe('applied');
       expect(op.opHash).toBeDefined();
-      expect(op.status).toBeDefined();
     });
 
     it('no parser configured will use MichelCodecParser by default to originate Michelson code and succeeds', async () => {
@@ -66,8 +66,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         init: idInitData
       }).send();
       await op.confirmation()
+      expect(await op.status()).toBe('applied');
       expect(op.opHash).toBeDefined();
-      expect(op.status).toBeDefined();
     });
   });
 

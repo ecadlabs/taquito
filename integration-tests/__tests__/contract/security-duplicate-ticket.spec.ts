@@ -8,8 +8,8 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
   const weeklynet = protocol === Protocols.ProtoALpha ? test : test.skip;
 
   describe(`Test contracts using: ${rpc}`, () => {
-    beforeEach(async () => {
-      await setup();
+    beforeAll(async () => {
+      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 });
     });
 
     weeklynet('Verify type ticket string cannot be used with "dup" here because it is not duplicable', async () => {

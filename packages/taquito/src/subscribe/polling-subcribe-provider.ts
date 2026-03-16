@@ -7,6 +7,7 @@ import { BehaviorSubject, from, Observable, ObservableInput, OperatorFunction, t
 import {
   concatMap,
   distinctUntilKeyChanged,
+  exhaustMap,
   first,
   map,
   share,
@@ -116,7 +117,7 @@ export class PollingSubscribeProvider implements SubscribeProvider {
       })
     );
     this.newBlock$ = this.timer$.pipe(
-      switchMap(() => getLastBlock(this.context)),
+      exhaustMap(() => getLastBlock(this.context)),
       distinctUntilKeyChanged('hash'),
       share({
         resetOnError: false,

@@ -5,7 +5,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
   describe(`Test delegation of account through contract api using: ${rpc}`, () => {
 
     beforeEach(async () => {
-      await setup(true)
+      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 })
     })
     it('Verify that account can be delegated to a known baker using contract.setDelegate', async () => {
       const delegate = knownBaker
@@ -28,6 +28,10 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
         const account = await Tezos.rpc.getDelegate(pkh)
         expect(account).toEqual(delegate)
       } catch (ex: any) {
+        // Only handle known delegation protocol errors; rethrow network failures
+        if (!ex.message?.includes('delegate.')) {
+          throw ex;
+        }
         if (await Tezos.rpc.getDelegate(pkh) === pkh) {
           // Forbidden delegate deletion
           expect(ex.message).toMatch('delegate.no_deletion')

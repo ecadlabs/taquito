@@ -6,7 +6,7 @@ import { TaquitoError } from '@taquito/core';
 
 /**
  *  @category Error
- *  @description Error that indicates in invalid token argument being passed
+ *  Error that indicates in invalid token argument being passed
  */
 export class TokenArgumentValidationError extends TaquitoError {
   public name = 'TokenArgumentValidationError';
@@ -17,7 +17,7 @@ export class TokenArgumentValidationError extends TaquitoError {
 
 /**
  *  @category Error
- *  @description Error that indicates a failure occurring when doing a comparison of tokens
+ *  Error that indicates a failure occurring when doing a comparison of tokens
  */
 export class TokenComparisonError extends TaquitoError {
   public name = 'TokenComparisonError';

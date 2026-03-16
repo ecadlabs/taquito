@@ -6,7 +6,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   describe(`Test contract origination with set bool prop on init and via call through wallet api using: ${rpc}`, () => {
 
     beforeEach(async () => {
-      await setup()
+      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 })
     })
     it('Verify wallet.originate for a contract with bool storage init to true and then sets to false', async () => {
       const op = await Tezos.wallet.originate({
@@ -15,8 +15,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         storage: true,
       }).send();
       await op.confirmation()
+      expect(await op.status()).toBe('applied');
       expect(op.opHash).toBeDefined();
-      expect(op.status).toBeTruthy
       const contract = await op.contract();
 
       expect(await contract.storage()).toBeTruthy();
@@ -24,7 +24,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       const opMethod = await contract.methodsObject.setBool(false).send();
 
       await opMethod.confirmation();
-      expect(op.opHash).toBeDefined();
+      expect(await opMethod.status()).toBe('applied');
 
       expect(await contract.storage()).toBeFalsy();
     });

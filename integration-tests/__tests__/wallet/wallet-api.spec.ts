@@ -1,10 +1,14 @@
 import { CONFIGS } from "../../config";
+import { firstValueFrom, throwError } from 'rxjs';
+import { timeout, toArray } from 'rxjs/operators';
+
+const CONFIRMATION_OBSERVABLE_TIMEOUT_MS = 60_000;
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
 
   beforeEach(async () => {
-    await setup();
+    await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
   })
 
   describe(`Test wallet api using: ${rpc}`, () => {
@@ -22,6 +26,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       }).send();
 
       let conf1 = await walletOp.confirmation();
+      expect(await walletOp.status()).toBe('applied');
       let currentConf1 = await walletOp.getCurrentConfirmation();
       expect(currentConf1).toEqual(1)
       expect(conf1).toEqual(expect.objectContaining({
@@ -63,10 +68,18 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         init: `"test"`
       }).send();
 
-      const events = await new Promise((resolve, reject) => {
-        const evts: any[] = [];
-        walletOp.confirmationObservable(3).subscribe((event: any) => evts.push(event), reject, () => resolve(evts))
-      });
+      const events = await firstValueFrom(
+        walletOp.confirmationObservable(3).pipe(
+          timeout({
+            each: CONFIRMATION_OBSERVABLE_TIMEOUT_MS,
+            with: () =>
+              throwError(
+                () => new Error('Timed out waiting for wallet confirmation observable to complete')
+              ),
+          }),
+          toArray()
+        )
+      );
 
       expect(events).toEqual(expect.arrayContaining([
         expect.objectContaining({
@@ -85,6 +98,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
           completed: true
         })
       ]));
+      expect(await walletOp.status()).toBe('applied');
 
     });
   });
