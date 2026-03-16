@@ -1,6 +1,6 @@
 import { InMemorySigner } from '@taquito/signer';
 import { TezosToolkit } from '@taquito/taquito';
-import { CONFIGS } from '../config';
+import { CONFIGS, TAQUITO_MUTEZ } from '../config';
 import * as Bip39 from 'bip39';
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
@@ -16,7 +16,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     beforeAll(async () => {
       mnemonic = Bip39.generateMnemonic();
       Funder = lib;
-      await setup();
+      await setup({ preferFreshKey: true, minBalanceMutez: 10_000_000 });
 
       try {
         funderPKH = await Funder.signer.publicKeyHash();
@@ -42,35 +42,36 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         const tez3Pkh = await Tez3.signer.publicKeyHash();
 
         // Fund all the signer accounts
-        const send1 = await Funder.contract.transfer({ to: tez1Pkh, amount: 2 });
+        const send1 = await Funder.contract.transfer({ to: tez1Pkh, amount: 0.5 });
         await send1.confirmation();
 
-        const send2 = await Funder.contract.transfer({ to: tez2Pkh, amount: 2 });
+        const send2 = await Funder.contract.transfer({ to: tez2Pkh, amount: 0.5 });
         await send2.confirmation();
 
-        const send3 = await Funder.contract.transfer({ to: tez3Pkh, amount: 2 });
+        const send3 = await Funder.contract.transfer({ to: tez3Pkh, amount: 0.5 });
         await send3.confirmation();
       } catch (e) {
         console.log(`Error when trying to fund account: \n ${JSON.stringify(e)}`)
+        throw e;
       }
     });
 
     it('should create a signer instance (ed25519) using the fromMnemonic method and successfully sign an op', async () => {
-      const op = await Tez1.contract.transfer({ to: funderPKH, amount: 0.1 });
+      const op = await Tez1.contract.transfer({ to: funderPKH, amount: TAQUITO_MUTEZ, mutez: true });
       await op.confirmation();
 
       expect(op.hash).toBeDefined();
     });
 
     it('should create a signer instance (secp256k1) using the fromMnemonic method and successfully sign an op', async () => {
-      const op = await Tez2.contract.transfer({ to: funderPKH, amount: 0.1 });
+      const op = await Tez2.contract.transfer({ to: funderPKH, amount: TAQUITO_MUTEZ, mutez: true });
       await op.confirmation();
 
       expect(op.hash).toBeDefined();
     });
 
     it('should create a signer instance (p256) using the fromMnemonic method and successfully sign an op', async () => {
-      const op = await Tez3.contract.transfer({ to: funderPKH, amount: 0.1 });
+      const op = await Tez3.contract.transfer({ to: funderPKH, amount: TAQUITO_MUTEZ, mutez: true });
       await op.confirmation();
 
       expect(op.hash).toBeDefined();

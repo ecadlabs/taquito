@@ -1,5 +1,5 @@
 import { Protocols } from '@taquito/taquito';
-import { CONFIGS } from '../../config';
+import { CONFIGS, TAQUITO_MUTEZ } from '../../config';
 
 /**
  * TC-002/003 This test case originates a contract with a "payout" entrypoint. When calling the payout entrypoint, a contract can transfer
@@ -16,7 +16,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
 
   describe(`Test contracts using: ${rpc}`, () => {
     beforeEach(async () => {
-      await setup(true);
+      await setup({ preferFreshKey: true, minBalanceMutez: 10_000_000 });
     });
 
     weeklynet('Reentrance attack test', async () => {
@@ -72,7 +72,7 @@ CONFIGS().forEach(({ lib, rpc, setup, protocol }) => {
       expect(await vestingContract.storage()).toBeTruthy();
 
       const publicKeyHash = await Tezos.signer.publicKeyHash();
-      const opTransfer = await Tezos.contract.transfer({ to: publicKeyHash, amount: 1 });
+      const opTransfer = await Tezos.contract.transfer({ to: publicKeyHash, amount: TAQUITO_MUTEZ, mutez: true });
       await opTransfer.confirmation();
 
       const attackContractOp = await Tezos.contract.originate({

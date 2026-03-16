@@ -24,11 +24,15 @@ In the following example, we transfer 0.5ꜩ from a `tz1aaYoabvj2DQtpHz74Z83fSNj
 ```js live
 try {
   console.log(`Fetching a private key...`);
-  const response = await fetch('https://keygen.ecadinfra.com/ghostnet/', {
+  const response = await fetch('https://keygen.ecadinfra.com/v2/ghostnet', {
     method: 'POST',
-    headers: { Authorization: 'Bearer taquito-example' },
+    headers: {
+      Authorization: 'Bearer taquito-example',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ key_prefixes: ['tz1'] }),
   });
-  const privateKey = await response.text();
+  const { secret_key: privateKey } = await response.json();
 
   console.log(`Importing the private key...`);
   await importKey(Tezos, privateKey);

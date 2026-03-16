@@ -43,17 +43,17 @@ type KeyPrefix =
   | PrefixV2.BLS12_381SecretKey;
 
 /**
- * @description A local implementation of the signer. Will represent a Tezos account and be able to produce signature in its behalf
+ * A local implementation of the signer. Will represent a Tezos account and be able to produce signature in its behalf
  *
- * @warn If running in production and dealing with tokens that have real value, it is strongly recommended to use a HSM backed signer so that private key material is not stored in memory or on disk
- * @throws {@link InvalidMnemonicError}
+ * @remarks If running in production and dealing with tokens that have real value, it is strongly recommended to use a HSM backed signer so that private key material is not stored in memory or on disk
+ * @throws InvalidMnemonicError
  */
 export class InMemorySigner implements Signer {
   #key!: SigningKey;
 
   static fromFundraiser(email: string, password: string, mnemonic: string) {
     if (!Bip39.validateMnemonic(mnemonic)) {
-      throw new InvalidMnemonicError(mnemonic);
+      throw new InvalidMnemonicError();
     }
     const seed = Bip39.mnemonicToSeedSync(mnemonic, `${email}${password}`);
     const key = b58Encode(seed.subarray(0, 32), PrefixV2.Ed25519Seed);
@@ -66,13 +66,9 @@ export class InMemorySigner implements Signer {
 
   /**
    *
-   * @description Instantiation of an InMemorySigner instance from a mnemonic
-   * @param mnemonic 12-24 word mnemonic
-   * @param password password used to encrypt the mnemonic to seed value
-   * @param derivationPath default 44'/1729'/0'/0' (44'/1729' mandatory)
-   * @param curve currently only supported for tz1, tz2, tz3 addresses. soon bip25519
+   * Instantiation of an InMemorySigner instance from a mnemonic
    * @returns InMemorySigner
-   * @throws {@link InvalidMnemonicError}
+   * @throws InvalidMnemonicError
    */
   static fromMnemonic({
     mnemonic,
@@ -82,8 +78,7 @@ export class InMemorySigner implements Signer {
   }: FromMnemonicParams) {
     // check if curve is defined if not default tz1
     if (!Bip39.validateMnemonic(mnemonic)) {
-      // avoiding exposing mnemonic again in case of mistake making invalid
-      throw new InvalidMnemonicError(mnemonic);
+      throw new InvalidMnemonicError();
     }
     const seed = Bip39.mnemonicToSeedSync(mnemonic, password);
 
@@ -95,7 +90,7 @@ export class InMemorySigner implements Signer {
    *
    * @param key Encoded private key
    * @param passphrase Passphrase to decrypt the private key if it is encrypted
-   * @throws {@link InvalidKeyError}
+   * @throws InvalidKeyError
    *
    */
   constructor(key: string, passphrase?: string) {
@@ -176,7 +171,7 @@ export class InMemorySigner implements Signer {
 
   /**
    *
-   * @param bytes Bytes to sign
+   * @param message Bytes to sign
    * @param watermark Watermark to append to the bytes
    */
   async sign(message: string | Uint8Array, watermark?: Uint8Array): Promise<SignResult> {

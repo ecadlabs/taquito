@@ -1,6 +1,6 @@
 {
   "name": "@taquito/ledger-signer",
-  "version": "24.0.2",
+  "version": "24.2.0",
   "description": "Ledger signer provider",
   "keywords": [
     "tezos",
@@ -20,7 +20,7 @@
   },
   "license": "Apache-2.0",
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "scripts": {
     "lint": "eslint --ext .js,.ts .",
@@ -59,9 +59,9 @@
   "dependencies": {
     "@ledgerhq/hw-transport": "^6.31.15",
     "@stablelib/blake2b": "^1.0.1",
-    "@taquito/core": "^24.0.2",
-    "@taquito/taquito": "^24.0.2",
-    "@taquito/utils": "^24.0.2",
+    "@taquito/core": "^24.2.0",
+    "@taquito/taquito": "^24.2.0",
+    "@taquito/utils": "^24.2.0",
     "buffer": "^6.0.3"
   },
   "devDependencies": {
@@ -83,14 +83,14 @@
     "prompt": "^1.3.0",
     "replace-in-file": "^8.1.0",
     "rimraf": "^6.0.1",
-    "rollup": "^4.22.4",
+    "rollup": "^4.59.0",
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-typescript2": "^0.36.0",
     "shelljs": "^0.8.5",
     "ts-jest": "^29.2.3",
     "ts-node": "^10.9.2",
     "ts-toolbelt": "^9.6.0",
-    "typescript": "~5.5.4"
+    "typescript": "^5.9.3"
   },
   "gitHead": "551e35aeff7d6dcde1c72284238c0ed3c3aae77e"
 }

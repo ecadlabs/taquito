@@ -1,6 +1,6 @@
 import { PollingSubscribeProvider } from "@taquito/taquito";
 import BigNumber from "bignumber.js";
-import { CONFIGS } from "../../config";
+import { CONFIGS, TAQUITO_MUTEZ } from "../../config";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
@@ -8,7 +8,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   describe(`Test handling of missed blocks through contract api using: ${rpc}`, () => {
 
     beforeEach(async () => {
-      await setup();
+      await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
       timeBetweenBlocks = (await Tezos.rpc.getConstants()).delay_increment_per_round ?? new BigNumber(15);
     })
 
@@ -17,7 +17,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       // Before fixing issue #1783, if the block containing the operation was skipped, the operation was never found, and the test ended with a timeout
       // After fixing issue #1783, if blocks are skipped, they will be retrieved and inspected by the Operation class
       Tezos.setStreamProvider(Tezos.getFactory(PollingSubscribeProvider)({ pollingIntervalMilliseconds: Number(timeBetweenBlocks.multipliedBy(4000)) }));
-      const op = await Tezos.contract.transfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 });
+      const op = await Tezos.contract.transfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: TAQUITO_MUTEZ, mutez: true });
       await op.confirmation();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
       expect(op.status).toBe('applied');

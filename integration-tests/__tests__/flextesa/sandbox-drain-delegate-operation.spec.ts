@@ -42,6 +42,7 @@ CONFIGS().forEach(({ lib, rpc, protocol, setup, createAddress }) => {
 
       } catch (e) {
         console.log(JSON.stringify(e));
+        throw e;
       }
     })
     flextesanet('Should be able to inject drain_delegate operation', async () => {

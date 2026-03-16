@@ -90,164 +90,196 @@ describe('common error classes', () => {
   it('should throw an InvalidAddressError', () => {
     try {
       throw new InvalidAddressError('foo');
-    } catch (error) {
+    } catch (error: unknown) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidAddressError);
-      expect(error.message).toContain(`Invalid address "foo"`);
+      if (error instanceof InvalidAddressError) {
+        expect(error.message).toContain(`Invalid address "foo"`);
+      }
     }
   });
 
   it('should throw an InvalidBlockHashError', () => {
     try {
       throw new InvalidBlockHashError('foo');
-    } catch (error) {
+    } catch (error: unknown) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidBlockHashError);
-      expect(error.message).toContain(`Invalid block hash "foo"`);
+      if (error instanceof InvalidBlockHashError) {
+        expect(error.message).toContain(`Invalid block hash "foo"`);
+      }
     }
   });
 
   it('should throw an InvalidDerivationPathError', () => {
     try {
       throw new InvalidDerivationPathError('foo');
-    } catch (error) {
+    } catch (error: unknown) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidDerivationPathError);
-      expect(error.message).toContain(`Invalid derivation path "foo"`);
+      if (error instanceof InvalidDerivationPathError) {
+        expect(error.message).toContain(`Invalid derivation path "foo"`);
+      }
     }
   });
 
   it('should throw an InvalidHexStringError', () => {
     try {
       throw new InvalidHexStringError('0x12');
-    } catch (error) {
+    } catch (error: unknown) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidHexStringError);
-      expect(error.message).toContain(`Invalid hex string "0x12"`);
+      if (error instanceof InvalidHexStringError) {
+        expect(error.message).toContain(`Invalid hex string "0x12"`);
+      }
     }
   });
 
   it('should throw an InvalidMessageError', () => {
     try {
       throw new InvalidMessageError('foo');
-    } catch (error) {
+    } catch (error: unknown) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidMessageError);
-      expect(error.message).toContain(`Invalid message "foo"`);
+      if (error instanceof InvalidMessageError) {
+        expect(error.message).toContain(`Invalid message "foo"`);
+      }
     }
   });
 
   it('should throw an InvalidViewParameterError', () => {
     try {
       throw new InvalidViewParameterError('foo', { parameter: 'nat', result: 'nat' }, 'bar');
-    } catch (error) {
+    } catch (error: unknown) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidViewParameterError);
-      expect(error.message).toContain(
-        `Invalid view arguments "bar" received for name "foo" expecting one of the following signatures ${JSON.stringify(
-          { parameter: 'nat', result: 'nat' }
-        )}`
-      );
+      if (error instanceof InvalidViewParameterError) {
+        expect(error.message).toContain(
+          `Invalid view arguments "bar" received for name "foo" expecting one of the following signatures ${JSON.stringify(
+            { parameter: 'nat', result: 'nat' }
+          )}`
+        );
+      }
     }
   });
 
   it('should throw an InvalidKeyError', () => {
     try {
       throw new InvalidKeyError();
-    } catch (error) {
+    } catch (error: unknown) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidKeyError);
-      expect(error.message).toContain(`Invalid private key`);
+      if (error instanceof InvalidKeyError) {
+        expect(error.message).toContain(`Invalid private key`);
+      }
     }
   });
 
   it('should throw an InvalidPublicKeyError', () => {
     try {
       throw new InvalidPublicKeyError('foo');
-    } catch (error) {
+    } catch (error: unknown) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidPublicKeyError);
-      expect(error.message).toContain(`Invalid public key "foo"`);
+      if (error instanceof InvalidPublicKeyError) {
+        expect(error.message).toContain(`Invalid public key "foo"`);
+      }
     }
   });
 
   it('should throw an InvalidSignatureError', () => {
     try {
       throw new InvalidSignatureError('foo');
-    } catch (error) {
+    } catch (error: unknown) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidSignatureError);
-      expect(error.message).toContain(`Invalid signature "foo"`);
+      if (error instanceof InvalidSignatureError) {
+        expect(error.message).toContain(`Invalid signature "foo"`);
+      }
     }
   });
 
   it('should throw an InvalidContractAddressError', () => {
     try {
       throw new InvalidContractAddressError('foo');
-    } catch (error) {
+    } catch (error: unknown) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidContractAddressError);
-      expect(error.message).toContain(`Invalid contract address "foo"`);
+      if (error instanceof InvalidContractAddressError) {
+        expect(error.message).toContain(`Invalid contract address "foo"`);
+      }
     }
   });
 
   it('should throw an InvalidChainIdError', () => {
     try {
       throw new InvalidChainIdError('foo');
-    } catch (error) {
+    } catch (error: unknown) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidChainIdError);
-      expect(error.message).toContain(`Invalid chain id "foo"`);
+      if (error instanceof InvalidChainIdError) {
+        expect(error.message).toContain(`Invalid chain id "foo"`);
+      }
     }
   });
 
   it('should throw an InvalidKeyHashError', () => {
     try {
       throw new InvalidKeyHashError('foo');
-    } catch (error) {
+    } catch (error: unknown) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidKeyHashError);
-      expect(error.message).toContain(`Invalid public key hash "foo"`);
+      if (error instanceof InvalidKeyHashError) {
+        expect(error.message).toContain(`Invalid public key hash "foo"`);
+      }
     }
   });
 
   it('should throw an InvalidOperationHashError', () => {
     try {
       throw new InvalidOperationHashError('foo');
-    } catch (error) {
+    } catch (error: unknown) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidOperationHashError);
-      expect(error.message).toContain(`Invalid operation hash "foo"`);
+      if (error instanceof InvalidOperationHashError) {
+        expect(error.message).toContain(`Invalid operation hash "foo"`);
+      }
     }
   });
 
   it('should throw an InvalidOperationKindError', () => {
     try {
       throw new InvalidOperationKindError('foo');
-    } catch (error) {
+    } catch (error: unknown) {
       expect(error).toBeInstanceOf(ParameterValidationError);
       expect(error).toBeInstanceOf(InvalidOperationKindError);
-      expect(error.message).toContain(`Invalid operation kind "foo"`);
+      if (error instanceof InvalidOperationKindError) {
+        expect(error.message).toContain(`Invalid operation kind "foo"`);
+      }
     }
   });
 
   it('should throw an DeprecationError', () => {
     try {
       throw new DeprecationError('foo');
-    } catch (error) {
+    } catch (error: unknown) {
       expect(error).toBeInstanceOf(UnsupportedActionError);
       expect(error).toBeInstanceOf(DeprecationError);
-      expect(error.message).toContain(`foo`);
+      if (error instanceof DeprecationError) {
+        expect(error.message).toContain(`foo`);
+      }
     }
   });
 
   it('should throw an ProhibitedActionError', () => {
     try {
       throw new ProhibitedActionError('foo');
-    } catch (error) {
+    } catch (error: unknown) {
       expect(error).toBeInstanceOf(UnsupportedActionError);
       expect(error).toBeInstanceOf(ProhibitedActionError);
-      expect(error.message).toContain(`foo`);
+      if (error instanceof ProhibitedActionError) {
+        expect(error.message).toContain(`foo`);
+      }
     }
   });
 });

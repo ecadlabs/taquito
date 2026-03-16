@@ -10,7 +10,7 @@ import { BaseTokenSchema } from '../schema/types';
 
 /**
  *  @category Error
- *  @description Error that indicates a failure happening when parsing encoding/executing a Signature
+ *  Error that indicates a failure happening when parsing encoding/executing a Signature
  */
 export class SignatureValidationError extends TokenValidationError {
   name = 'SignatureValidationError';

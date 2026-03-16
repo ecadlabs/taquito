@@ -7,7 +7,7 @@ export class DefaultGlobalConstantsProvider implements GlobalConstantsProvider {
 
   /**
    *
-   * @description Allows to load global constant hashes and their corresponding Michelson JSON values
+   * Allows to load global constant hashes and their corresponding Michelson JSON values
    */
   loadGlobalConstant(globalConstant: GlobalConstantHashAndValue) {
     for (const hash in globalConstant) {
@@ -19,7 +19,7 @@ export class DefaultGlobalConstantsProvider implements GlobalConstantsProvider {
 
   /**
    *
-   * @description Retrieve the Michelson value of a global constant based on its hash
+   * Retrieve the Michelson value of a global constant based on its hash
    *
    * @param hash a string representing the global constant hash
    * @returns Expr, the JSON Michelson value

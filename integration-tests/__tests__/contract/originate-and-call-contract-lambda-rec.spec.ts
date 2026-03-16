@@ -7,7 +7,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   describe(`Test deploying and interacting with contracts having recursive lambda through the contract api using: ${rpc}`, () => {
 
     beforeEach(async () => {
-      await setup(true);
+      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 });
     })
 
     it('Verify that a contract having the LAMBDA_REC instruction in its code can be deployed', async () => {

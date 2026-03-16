@@ -4,6 +4,241 @@ description: Release notes and version history for Taquito, the TypeScript libra
 author: Jev Bjorsell
 layout: ../layouts/MarkdownLayout.astro
 ---
+# Taquito v24.2.0
+
+## Fixes wallet connection freezes, simplifies Beacon imports
+
+**TL;DR:** Wallet connections that freeze on page load are fixed (affected ~33% of users). You can now import `NetworkType`, `BeaconEvent`, etc. from `@taquito/beacon-wallet` instead of depending on Beacon SDK packages directly. Update your imports and remove `@airgap/beacon-*` from your `package.json`.
+
+---
+
+### Fixes wallet connections that freeze on page load
+
+If your dApp's wallet connection has been hanging indefinitely on page load, with no way to recover except manually clearing site data, this release fixes it. We estimate roughly 33% of users have been affected, corresponding to those with established sessions on relay servers that were decommissioned during the Octez.connect & Papers node transition/reorganization.
+
+This beta ships with a patched Beacon SDK fork maintained by ECAD Labs ([ecadlabs/beacon-sdk-taquito-patches](https://github.com/ecadlabs/beacon-sdk-taquito-patches)), published as `@ecadlabs/beacon-*` on npm. The Beacon SDK is outside the scope of Taquito and not maintained by the Taquito team, but these bugs are urgent enough that we've taken matters into our own hands.
+
+Fixes are available to the AirGap, Beacon SDK, and Octez.connect teams. They will be dropped from the fork if and when upstream merges and adequately tests them.
+
+**What was happening:** During the Octez.connect transition, relay servers were decommissioned while new ones were added, with insufficient testing. Users who had established sessions on the old servers got stuck in a deadlock: the SDK tries to reconnect to a server that no longer exists, an internal promise never resolves, and every subsequent call hangs permanently. The wallet can't recover or re-pair. The only workaround was clearing site data.
+
+**What we fixed:**
+
+- **10s timeout on relay server health checks** so dead servers fail fast instead of hanging indefinitely
+- **Automatic recovery from stale servers**: when a stored server is unreachable, it's removed from storage and the SDK discovers a working one
+- **No more hung promises**: concurrent callers get a proper error instead of waiting forever
+- **Connections route to working servers**: Taquito injects known-good relay nodes operated by Papers and Trilitech, replacing decommissioned ones
+
+### Beacon SDK types re-exported from `@taquito/beacon-wallet`
+
+Until now, using `@taquito/beacon-wallet` for basic things like setting a network type or subscribing to wallet events required installing and importing directly from Beacon SDK packages. That couples your app to whichever Beacon implementation Taquito happens to use internally, and the underlying package name has already changed across releases.
+
+`@taquito/beacon-wallet` now re-exports the Beacon SDK types that dApps actually use, so you no longer need a direct dependency on any Beacon package.
+
+**Side-effect-free types** (enums, interfaces) are available from the `./types` subpath:
+
+```typescript
+import { NetworkType, SigningType, PermissionScope } from '@taquito/beacon-wallet/types';
+import type { RequestSignPayloadInput } from '@taquito/beacon-wallet/types';
+```
+
+**`BeaconEvent` and `DAppClientOptions`** are re-exported from the main entry point (they live in `beacon-dapp` which has unavoidable side effects):
+
+```typescript
+import { BeaconWallet, BeaconEvent } from '@taquito/beacon-wallet';
+import type { DAppClientOptions } from '@taquito/beacon-wallet';
+```
+
+**Dynamic imports** also work with the new paths:
+
+```typescript
+const { SigningType } = await import('@taquito/beacon-wallet/types');
+```
+
+#### Migration
+
+```diff
+ // Before
+-import { NetworkType } from '@airgap/beacon-dapp';
+-import { NetworkType } from '@airgap/beacon-types';
+-import { BeaconEvent } from '@airgap/beacon-sdk';
+
+ // After
++import { NetworkType } from '@taquito/beacon-wallet/types';
++import { BeaconEvent } from '@taquito/beacon-wallet';
+```
+
+```diff
+ {
+   "dependencies": {
+     "@taquito/taquito": "^24.2.0-beta.1",
+     "@taquito/beacon-wallet": "^24.2.0-beta.1",
+-    "@airgap/beacon-dapp": "...",
+-    "@airgap/beacon-sdk": "...",
+-    "@airgap/beacon-types": "..."
+   }
+ }
+```
+
+If you had `@airgap/beacon-*` overrides in your `package.json`, those can also be removed.
+
+#### Build config updates
+
+If your Vite, webpack, or other bundler config references `@airgap/beacon-*` packages by name (e.g., in `manualChunks`, `externals`, or chunk splitting), update those references. The underlying packages are now `@ecadlabs/beacon-*`:
+
+```diff
+ // vite.config.ts
+ manualChunks: {
+   beacon: [
+-    "@airgap/beacon-sdk",
+-    "@airgap/beacon-dapp",
+-    "@airgap/beacon-ui",
+-    "@airgap/beacon-types",
++    "@taquito/beacon-wallet",
++    "@ecadlabs/beacon-dapp",
++    "@ecadlabs/beacon-ui",
++    "@ecadlabs/beacon-types",
+   ],
+ }
+```
+
+Note: there is no `@ecadlabs/beacon-sdk` meta-package. If you referenced `@airgap/beacon-sdk` in your build config, drop it or replace with the specific packages above.
+
+#### Who must migrate now
+
+If you use pnpm strict mode or Yarn PnP, importing from undeclared transitive dependencies will fail. Switch to the new paths.
+
+#### Who should migrate now
+
+Everyone else. Your current imports still work under npm's flat hoisting, but if the underlying Beacon package ever changes again, you'd need to update all your imports a second time. Do it once now and you're insulated.
+
+#### Full re-export reference
+
+| Symbol | Import from |
+|--------|-------------|
+| `NetworkType`, `SigningType`, `PermissionScope`, `Regions` | `@taquito/beacon-wallet/types` |
+| `RequestPermissionInput`, `RequestSignPayloadInput`, `NodeDistributions` (type-only) | `@taquito/beacon-wallet/types` |
+| `BeaconEvent` | `@taquito/beacon-wallet` |
+| `DAppClientOptions` (type-only) | `@taquito/beacon-wallet` |
+
+If you import other Beacon SDK types not listed here (e.g., `ExtendedPeerInfo`, `PeerInfo`), those are not re-exported. You'll need to import them from the underlying Beacon package directly, but consider whether your code actually needs them.
+
+#### Migration assistant prompt
+
+Paste this into Claude Code, Cursor, or your AI editor of choice at the root of your project:
+
+```
+Search this project for any imports from @airgap/beacon-sdk, @airgap/beacon-dapp,
+or @airgap/beacon-types.
+
+For each one found:
+- If the imported symbol is NetworkType, SigningType, PermissionScope, Regions,
+  RequestPermissionInput, RequestSignPayloadInput, or NodeDistributions, change
+  the import to: import { ... } from '@taquito/beacon-wallet/types'
+- If the imported symbol is BeaconEvent or DAppClientOptions, change the import
+  to: import { ... } from '@taquito/beacon-wallet'
+- If the imported symbol is something else, flag it for manual review.
+
+Also check:
+- package.json for direct dependencies or overrides referencing @airgap/beacon-*.
+  These can be removed.
+- Build configs (vite.config.ts, webpack.config.js, etc.) for references to
+  @airgap/beacon-* in manualChunks, externals, or similar. Replace with the
+  corresponding @ecadlabs/beacon-* package, but note there is no
+  @ecadlabs/beacon-sdk meta-package — drop that entry or replace with the
+  specific packages (@ecadlabs/beacon-dapp, @ecadlabs/beacon-ui,
+  @ecadlabs/beacon-types).
+
+Show me a summary of all changes before making them.
+```
+
+### Use `disconnect()` for logout, not `clearActiveAccount()`
+
+Many Tezos dApps use `clearActiveAccount()` to implement "logout" or "disconnect" functionality. This is incorrect and contributes to the stale relay node problems described above.
+
+`clearActiveAccount()` only removes the active account reference from `localStorage`. It does not clear other Beacon session state, including the cached relay node stored under the `beacon:matrix-selected-node` key. When relay nodes change or go offline, users with stale cached nodes get stuck in a state where wallet connections silently fail. The only recovery is manually clearing `localStorage`.
+
+The correct method for logout is `disconnect()`, which calls `destroy()` under the hood and removes all `beacon:*` keys from `localStorage`. On next connection, the SDK selects a fresh, reachable node.
+
+```diff
+ // Before (incorrect for logout — leaves stale relay node state)
+-await wallet.client.clearActiveAccount();
+
+ // After (correct — clears all Beacon state)
++await wallet.disconnect();
+```
+
+After calling `disconnect()`, the `BeaconWallet` instance is no longer usable. Create a new instance to reconnect:
+
+```typescript
+await wallet.disconnect();
+
+// Reconnect with a fresh instance
+const wallet = new BeaconWallet({ name: 'MyDapp' });
+await wallet.requestPermissions({ network: { type: NetworkType.MAINNET } });
+```
+
+`clearActiveAccount()` is still appropriate if you're implementing account switching within an active session, where you want to preserve the Beacon connection but change which account is active.
+
+#### Disconnect migration prompt
+
+```
+Search this project for any calls to clearActiveAccount() on a BeaconWallet
+instance or its client property. Common patterns:
+
+  await wallet.client.clearActiveAccount()
+  await beaconWallet.client.clearActiveAccount()
+
+For each one found, determine from context whether it's being used for:
+
+1. Logout/disconnect (e.g., in a disconnect handler, logout button, cleanup
+   function): Replace with await wallet.disconnect(). Note that after
+   disconnect(), the BeaconWallet instance is no longer usable and a new
+   instance must be created to reconnect.
+
+2. Account switching within an active session: Leave as-is.
+   clearActiveAccount() is correct when preserving the Beacon connection
+   but changing the active account.
+
+Flag any ambiguous cases for manual review. Show me a summary of all
+changes before making them.
+```
+
+### Other changes
+
+- **docs:** Updated all Beacon SDK import references in tutorial, signing, and wallet API docs (#3336)
+- **docs:** Document `disconnect()` vs `clearActiveAccount()` lifecycle (#3329)
+
+---
+
+Report bugs on [GitHub](https://github.com/ecadlabs/taquito/issues). Questions? Join [@tezostaquito](https://t.me/tezostaquito) on Telegram.
+
+# Taquito v24.1.0
+
+## Summary
+
+### Beacon SDK Update
+
+This release updates Taquito's Beacon SDK dependency to the latest [v4.8.0](https://github.com/airgap-it/beacon-sdk/releases/tag/v4.8.0) release from Papers AG. This update adds the new octez.io Matrix relay nodes operated by Trilitech to the server pool, alongside the existing Papers.ch relay nodes.
+We understand from the Papers.ch team that their relay servers will continue to operate for the near term, so there is no immediate urgency for the ecosystem to rotate away from the existing server pool.
+Regarding Octez.connect: we are currently evaluating it for a future Taquito release. Octez.connect is a fork of the Beacon SDK v5.0.0-beta.3 branch, which introduces changes to error handling, transport serialization, and protocol negotiation. We want to make sure we understand the impact of these changes on existing dApps and wallets before shipping them to Taquito users. We welcome any interoperability testing documentation or results from the Trilitech team and will factor them into our evaluation.
+
+---
+
+### Beacon Version Update
+- @taquito/beacon-wallet
+   - Updated Beacon version to v4.8.0 #3325 #3326
+   - overrode Beacon SDK default matrix relay nodes with a curated list of Papers and Trilitech operated nodes (Synapse 1.148.0)
+and emptied decommissioned regional nodes (Users can still pass their own matrixNodes to override Taquito's defaults)
+
+### Website Improvements
+- established dual licensing for website and source code #3322
+- published Taquito architecture documentation #3323
+- fixed factual errors across documentation #3327
+
+### Internal Changes
+- Updated dependencies #3324
+
 # Taquito v24.0.2
 
 ## Summary
@@ -37,7 +272,7 @@ layout: ../layouts/MarkdownLayout.astro
 
 # Taquito v24.0.0
 
-# Summary
+## Summary
 
 ## Tallinn Protocol Support
 > This is official release of v24.0.0.

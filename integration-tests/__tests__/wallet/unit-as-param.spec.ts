@@ -6,7 +6,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   describe(`Test smart contract entrypoint call with unit as param through wallet API using:: ${rpc}`, () => {
 
     beforeEach(async () => {
-      await setup(true)
+      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 })
     })
     test('Verify wallet.originate for a contract and call deposit method with unit param', async () => {
       const op = await Tezos.wallet.originate({
@@ -18,7 +18,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
       const operation = await contract.methodsObject.deposit(null).send({ amount: 1, });
       await operation.confirmation();
-      expect(operation.status).toBeTruthy
+      expect(await operation.status()).toBe('applied');
     })
   });
 })

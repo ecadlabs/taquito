@@ -3,8 +3,8 @@ import { CONFIGS } from '../../config';
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
   describe(`Test contract origination and method calls with types bls12_381_fr, bls12_381_g1 and bls12_381_g2 through contract api using: ${rpc}`, () => {
-    beforeEach(async () => {
-      await setup();
+    beforeAll(async () => {
+      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 });
     });
 
     it('Verify contract.originate for a contract with a hex string matching type bls12_381_fr in initial storage and update the storage value via default method call', async () => {

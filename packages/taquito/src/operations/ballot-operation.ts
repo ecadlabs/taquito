@@ -9,7 +9,7 @@ import { ForgedBytes } from './types';
 
 /**
  *
- * @description BallotOperation provides utility functions to fetch a new operation of kind ballot
+ * BallotOperation provides utility functions to fetch a new operation of kind ballot
  *
  */
 export class BallotOperation extends Operation {

@@ -7,7 +7,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
   describe(`Test multisig contract through wallet api for origination, contract interaction, and tranfer to an implicit account with: ${rpc}`, () => {
     beforeEach(async () => {
-      await setup()
+      await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 })
     })
     test('Verify contract.originate, contract interaction, and transfer to an implicit account for a contract with multiple signatures', async () => {
       const account1 = await createAddress();
@@ -25,7 +25,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         }
       }).send();
       const contract = await op.contract();
-      expect(op.status).toBeTruthy
+      expect(await op.status()).toBe('applied');
 
       // Utility function that mimics the PAIR operation of michelson
       // deepcode ignore no-any: any is good enough
@@ -122,6 +122,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       ).send()
 
       await op2.confirmation();
+      expect(await op2.status()).toBe('applied');
     })
   })
 });

@@ -6,8 +6,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
   describe(`Test contract origination having ticket with init through wallet api using: ${rpc}`, () => {
 
-    beforeEach(async () => {
-      await setup();
+    beforeAll(async () => {
+      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 });
     });
 
     it('Verify wallet.originate for a contract having ticket with init', async () => {
@@ -17,6 +17,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       }).send();
 
       await op.confirmation();
+      expect(await op.status()).toBe('applied');
       expect(op.opHash).toBeDefined();
 
     });
@@ -28,6 +29,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       }).send();
 
       await op.confirmation();
+      expect(await op.status()).toBe('applied');
       expect(op.opHash).toBeDefined();
     });
 
@@ -41,6 +43,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       }).send();
 
       await op.confirmation();
+      expect(await op.status()).toBe('applied');
       expect(op.opHash).toBeDefined();
 
     });

@@ -3,6 +3,7 @@ import { DefaultContractType } from '@taquito/taquito';
 import { Chest, Timelock, ChestKey } from '@taquito/timelock';
 import { stringToBytes } from '@taquito/utils';
 import { timelockCode, timelockStorage } from '../data/timelock-flip-contract';
+import { sequentialTestSuite } from '../sequential-test';
 
 // please read the following link to understand the game (with guessing blocks increase from 10 to 20)
 // https://gitlab.com/tezos/tezos/-/blob/master/src/proto_alpha/lib_protocol/contracts/timelock_flip.tz
@@ -14,9 +15,10 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   let chestKey: ChestKey;
 
   describe(`Timelock test coin flip contract ${rpc}`, () => {
+    const step = sequentialTestSuite();
     let contract: DefaultContractType
     beforeAll(async () => {
-      await setup();
+      await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
       const originate = await Tezos.contract.originate({ code: timelockCode, init: timelockStorage });
       await originate.confirmation()
       contract = await originate.contract();
@@ -27,7 +29,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(storageB4.result).toBe('ff')
     })
 
-    it('should be able to initialize the game with chest', async () => {
+    step('should be able to initialize the game with chest', async () => {
       const payload = new TextEncoder().encode(message);
       const { chest, key } = Chest.newChestAndKey(payload, time);
       chestKey = key;
@@ -40,7 +42,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(storageInit.result).toBe('a0')
     });
 
-    it('should be able to guess right', async () => {
+    step('should be able to guess right', async () => {
       let guess1 = await contract.methodsObject.guess(stringToBytes(message)).send()
       await guess1.confirmation()
       const storageGuess: any = await contract.storage()
@@ -49,7 +51,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(storageGuess.result).toBe('b0')
     });
 
-    it('should be able to finish/unlock the game', async () => {
+    step('should be able to finish/unlock the game', async () => {
       let finish = await contract.methodsObject.finish_game(chestKey.encode()).send()
       await finish.confirmation()
       const storageFinish: any = await contract.storage()
@@ -59,7 +61,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     });
 
 
-    it('should be able to guess wrong', async () => {
+    step('should be able to guess wrong', async () => {
       const payload = new TextEncoder().encode(message);
       const precomputedTimelock = Timelock.precompute(time);
       const { chest, key } = Chest.fromTimelock(payload, time, precomputedTimelock);
@@ -80,7 +82,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(storageGuess.result).toBe('b0')
     });
 
-    it('should be able to finish/unlock the wrong guess game', async () => {
+    step('should be able to finish/unlock the wrong guess game', async () => {
       let finish = await contract.methodsObject.finish_game(chestKey.encode()).send()
       await finish.confirmation()
       const storageFinish: any = await contract.storage()
@@ -89,7 +91,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(storageFinish.result).toBe('01')
     });
 
-    it(`shouldn't unlock the game with wrong key`, async () => {
+    step(`shouldn't unlock the game with wrong key`, async () => {
       const payload = new TextEncoder().encode(message);
       const { chest } = Chest.newChestAndKey(payload, time);
       let init = await contract.methodsObject.initialize_game(chest.encode()).send()

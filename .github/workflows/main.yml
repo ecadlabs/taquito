@@ -2,6 +2,8 @@ name: Node.js CI
 
 on:
   pull_request:
+    paths-ignore:
+      - 'website/**'
   push:
     branches:
       - master
@@ -11,19 +13,45 @@ concurrency:
   cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull/') }}
 
 jobs:
+  http-utils-test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node:
+          - '22'
+          - '24'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci
+      - run: npx nx build @taquito/http-utils
+      - run: npx nx test @taquito/http-utils -- --coverage
+
+  integration-tests-keygen-preflight:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Keygen preflight
+        run: bash .github/scripts/check-keygen-health.sh
+
   lint-and-test:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         node:
-          - 'lts/Iron'
           - 'lts/Jod'
+          - '24'
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
+          cache: npm
       - run: npm ci
       - run: npm run build
       - run: npm run lint
@@ -38,29 +66,172 @@ jobs:
           RUN_INTEGRATION: true
 
   integration-tests-testnet:
+    needs: integration-tests-keygen-preflight
     runs-on: ubuntu-latest
-    continue-on-error: true
-    strategy:
-      matrix:
-        include:
-          - testnet: tallinnnet
-            testnet_uppercase: TALLINNNET
-            rpc_url: http://ecad-tezos-tallinnnet-rolling-1.i.ecadinfra.com/
+    concurrency:
+      # Keep testnet at one concurrent slot across PR runs until the shared
+      # Tallinnnet RPC is stable enough to handle sharded load again.
+      group: tallinnnet-itest-testnet
+      cancel-in-progress: false
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: lts/Iron
+          node-version: lts/Jod
+          cache: npm
       - run: npm ci
       - run: npm run build
       - if: ${{ !github.event.pull_request.head.repo.fork }}
         name: Tailscale
-        uses: tailscale/github-action@v1
+        # Pinned to SHA to prevent supply-chain attacks via mutable tags.
+        # Verify before bumping: https://github.com/tailscale/github-action/releases
+        uses: tailscale/github-action@306e68a486fd2350f2bfc3b19fcd143891a4a2d8 # v4.1.2
         with:
-          authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
-          version: 1.32.2
+          oauth-client-id: ${{ secrets.TAILSCALE_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TAILSCALE_OAUTH_SECRET }}
+          tags: tag:github-runner
+          ping: ecad-tezos-tallinnnet-rolling-1.i.ecadinfra.com
       - id: run-tests
-        run: npm -w integration-tests run test:${{ matrix.testnet }} -- --maxWorkers=4
+        shell: bash
+        run: |
+          set -euo pipefail
+          start_epoch="$(date +%s)"
+          start_iso="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+
+          set +e
+          npm -w integration-tests run test:tallinnnet -- \
+            --exclude='**/sapling/**' \
+            --exclude='**/ledger/**'
+          test_exit_code="$?"
+          set -e
+
+          end_epoch="$(date +%s)"
+          end_iso="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          elapsed_seconds="$((end_epoch - start_epoch))"
+
+          mkdir -p ci-metrics
+          cat > "ci-metrics/itest-testnet-0.json" <<EOF
+          {"suite":"testnet","shard":"0","status":"$([ "$test_exit_code" -eq 0 ] && echo pass || echo fail)","exit_code":$test_exit_code,"elapsed_seconds":$elapsed_seconds,"started_at":"$start_iso","completed_at":"$end_iso","run_id":"${{ github.run_id }}","run_attempt":"${{ github.run_attempt }}","sha":"${{ github.sha }}"}
+          EOF
+
+          echo "### Integration timing: testnet shard 0" >> "$GITHUB_STEP_SUMMARY"
+          echo "- status: $([ "$test_exit_code" -eq 0 ] && echo pass || echo fail)" >> "$GITHUB_STEP_SUMMARY"
+          echo "- exit_code: $test_exit_code" >> "$GITHUB_STEP_SUMMARY"
+          echo "- elapsed_seconds: $elapsed_seconds" >> "$GITHUB_STEP_SUMMARY"
+
+          exit "$test_exit_code"
         env:
-          # Ternary operator workaround
-          TEZOS_RPC_${{ matrix.testnet_uppercase }}: ${{ github.event.pull_request.head.repo.fork && matrix.rpc_url || null }}
+          TAQUITO_ITEST_DIAGNOSTICS: 'true'
+          TAQUITO_DIAG_BALANCE_WARN_MUTEZ: '9000000'
+          TEZOS_RPC_TALLINNNET: ${{ github.event.pull_request.head.repo.fork && 'http://ecad-tezos-tallinnnet-rolling-1.i.ecadinfra.com/' || null }}
+      - name: Upload timing artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: itest-timing-testnet-0
+          path: ci-metrics/itest-testnet-0.json
+          if-no-files-found: warn
+          retention-days: 30
+
+  integration-tests-sapling:
+    needs: integration-tests-keygen-preflight
+    runs-on: ubuntu-latest
+    concurrency:
+      # Keep sapling at one concurrent slot across PR runs on shared infra.
+      group: tallinnnet-itest-sapling
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/Jod
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - if: ${{ !github.event.pull_request.head.repo.fork }}
+        name: Tailscale
+        # Pinned to SHA to prevent supply-chain attacks via mutable tags.
+        # Verify before bumping: https://github.com/tailscale/github-action/releases
+        uses: tailscale/github-action@306e68a486fd2350f2bfc3b19fcd143891a4a2d8 # v4.1.2
+        with:
+          oauth-client-id: ${{ secrets.TAILSCALE_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TAILSCALE_OAUTH_SECRET }}
+          tags: tag:github-runner
+          ping: ecad-tezos-tallinnnet-rolling-1.i.ecadinfra.com
+      - id: run-tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          start_epoch="$(date +%s)"
+          start_iso="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+
+          set +e
+          npm -w integration-tests run test:tallinnnet -- sapling
+          test_exit_code="$?"
+          set -e
+
+          end_epoch="$(date +%s)"
+          end_iso="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          elapsed_seconds="$((end_epoch - start_epoch))"
+
+          mkdir -p ci-metrics
+          cat > "ci-metrics/itest-sapling.json" <<EOF
+          {"suite":"sapling","shard":"1/1","status":"$([ "$test_exit_code" -eq 0 ] && echo pass || echo fail)","exit_code":$test_exit_code,"elapsed_seconds":$elapsed_seconds,"started_at":"$start_iso","completed_at":"$end_iso","run_id":"${{ github.run_id }}","run_attempt":"${{ github.run_attempt }}","sha":"${{ github.sha }}"}
+          EOF
+
+          echo "### Integration timing: sapling" >> "$GITHUB_STEP_SUMMARY"
+          echo "- status: $([ "$test_exit_code" -eq 0 ] && echo pass || echo fail)" >> "$GITHUB_STEP_SUMMARY"
+          echo "- exit_code: $test_exit_code" >> "$GITHUB_STEP_SUMMARY"
+          echo "- elapsed_seconds: $elapsed_seconds" >> "$GITHUB_STEP_SUMMARY"
+
+          exit "$test_exit_code"
+        env:
+          TAQUITO_ITEST_DIAGNOSTICS: 'true'
+          TAQUITO_DIAG_BALANCE_WARN_MUTEZ: '9000000'
+          TEZOS_RPC_TALLINNNET: ${{ github.event.pull_request.head.repo.fork && 'http://ecad-tezos-tallinnnet-rolling-1.i.ecadinfra.com/' || null }}
+      - name: Upload timing artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: itest-timing-sapling
+          path: ci-metrics/itest-sapling.json
+          if-no-files-found: warn
+          retention-days: 30
+
+  integration-tests-timing-summary:
+    needs:
+      - integration-tests-testnet
+      - integration-tests-sapling
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download timing artifacts
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          pattern: itest-timing-*
+          path: ci-metrics
+          merge-multiple: true
+      - name: Render timing summary
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          echo "## Integration timing summary" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+
+          if ! ls ci-metrics/*.json >/dev/null 2>&1; then
+            echo "No timing artifacts found for this run." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          echo "| suite | shard | status | elapsed_seconds | exit_code | started_at | completed_at |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|---|---:|---|---:|---:|---|---|" >> "$GITHUB_STEP_SUMMARY"
+          jq -s -r '
+            sort_by(.suite, .shard)
+            | .[]
+            | "| \(.suite) | \(.shard) | \(.status) | \(.elapsed_seconds) | \(.exit_code) | \(.started_at) | \(.completed_at) |"
+          ' ci-metrics/*.json >> "$GITHUB_STEP_SUMMARY"
+
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "Raw timing JSON artifacts are attached to this run under names matching \`itest-timing-*\`." >> "$GITHUB_STEP_SUMMARY"

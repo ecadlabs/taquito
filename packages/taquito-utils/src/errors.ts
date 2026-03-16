@@ -19,7 +19,7 @@ export {
 
 /**
  *  @category Error
- *  @description Error that indicates invalid protocol hash being passed or used
+ *  Error that indicates invalid protocol hash being passed or used
  */
 export class InvalidProtocolHashError extends ParameterValidationError {
   public name = 'InvalidProtocolHashError';
@@ -31,7 +31,7 @@ export class InvalidProtocolHashError extends ParameterValidationError {
 
 /**
  *  @category Error
- *  @description Error that indicates unable to convert data type from one to another
+ *  Error that indicates unable to convert data type from one to another
  */
 export class ValueConversionError extends UnsupportedActionError {
   constructor(public readonly value: string, public readonly desiredType: string) {

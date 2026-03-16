@@ -5,7 +5,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
   describe(`Test account delegation with estimation through wallet api using: ${rpc}`, () => {
 
     beforeEach(async () => {
-      await setup(true)
+      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 })
     })
     it('Verify that an address can be delegated to a known baker with an automatic estimate', async () => {
       const delegate = knownBaker
@@ -15,6 +15,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
           delegate,
         }).send()
         await op.confirmation()
+        expect(await op.status()).toBe('applied');
         expect(op.opHash).toBeDefined();
 
         const account = await Tezos.rpc.getDelegate(pkh)

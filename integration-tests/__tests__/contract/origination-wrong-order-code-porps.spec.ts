@@ -6,7 +6,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   describe(`Test contract origination with code properties in atypical order through contract api: ${rpc}`, () => {
 
     beforeEach(async () => {
-      await setup()
+      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 })
     })
     it('Verify contract.originate for a contract despite the code storage,parameter,code props are in wrong order', async () => {
       const op = await Tezos.contract.originate({

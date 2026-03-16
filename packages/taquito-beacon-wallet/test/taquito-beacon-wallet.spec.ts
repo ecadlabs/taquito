@@ -4,7 +4,7 @@ import {
   MissingRequiredScopes,
 } from '../src/taquito-beacon-wallet';
 import LocalStorageMock from './mock-local-storage';
-import { PermissionScope, LocalStorage, SigningType } from '@airgap/beacon-dapp';
+import { PermissionScope, LocalStorage, SigningType } from '@ecadlabs/beacon-dapp';
 import { indexedDB } from 'fake-indexeddb';
 global.localStorage = new LocalStorageMock();
 global.indexedDB = indexedDB;
@@ -18,7 +18,7 @@ jest.mock('@stablelib/random', () => ({
   })),
 }));
 
-jest.mock('@airgap/beacon-ui', () => {
+jest.mock('@ecadlabs/beacon-ui', () => {
   return {
     AlertButton: jest.fn(),
     closeToast: jest.fn(),
@@ -40,9 +40,9 @@ jest.mock('@airgap/beacon-ui', () => {
   };
 });
 // thanks to IsaccoSordo's contribution of https://github.com/ecadlabs/taquito/pull/3015
-jest.mock('@airgap/beacon-transport-postmessage', () => {
+jest.mock('@ecadlabs/beacon-transport-postmessage', () => {
   jest.useFakeTimers();
-  const originalModule = jest.requireActual('@airgap/beacon-transport-postmessage');
+  const originalModule = jest.requireActual('@ecadlabs/beacon-transport-postmessage');
   jest.runAllTimers();
 
   return {

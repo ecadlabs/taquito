@@ -5,7 +5,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   describe(`Test emptying a revealed implicit account through contract api using: ${rpc}`, () => {
 
     beforeEach(async () => {
-      await setup()
+      await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 })
     })
     it('Verify that a new revealed implicit account can be created, funded and emptied', async () => {
       const LocalTez = await createAddress();

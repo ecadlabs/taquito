@@ -8,7 +8,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract, createAddress }
 
   describe(`Test contract.batch through contract api using: ${rpc}`, () => {
     beforeEach(async () => {
-      await setup();
+      await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
     });
 
     it('Verify contract.batch simple transfers with origination code in JSON Michelson format', async () => {

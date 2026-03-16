@@ -1,14 +1,12 @@
 import { CONFIGS } from "../config";
 
 CONFIGS().forEach(({ rpc, setup, createAddress }) => {
-  const test = require('jest-retries');
-
   describe(`Test obtaining the delegate when there is none: ${rpc}`, () => {
 
     beforeEach(async () => {
-      await setup(true)
+      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 })
     })
-    test('Verify null is returned for getDelegate when the account has no delegate', 2, async () => {
+    it('Verify null is returned for getDelegate when the account has no delegate', async () => {
       const LocalTez = await createAddress()
       const signer = await LocalTez.signer.publicKeyHash();
 

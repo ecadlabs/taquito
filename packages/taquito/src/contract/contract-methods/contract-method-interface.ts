@@ -18,17 +18,17 @@ export interface ContractMethodInterface {
 
     /**
      *
-     * @description Send the smart contract operation
+     * Send the smart contract operation
      *
-     * @param Options generic operation parameter
+     * @param params generic operation parameter
      */
     send(params: Partial<SendParams>): Promise<TransactionWalletOperation | TransactionOperation>;
 
     /**
      *
-     * @description Create transfer params to be used with TezosToolkit.contract.transfer methods
+     * Create transfer params to be used with TezosToolkit.contract.transfer methods
      *
-     * @param Options generic transfer operation parameters
+     * @param params generic transfer operation parameters
      */
     toTransferParams(params: Partial<SendParams>): TransferParams;
 }

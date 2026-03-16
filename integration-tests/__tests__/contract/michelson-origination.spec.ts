@@ -8,7 +8,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   describe(`Test contract origination to configure parserProvider to parse plain Michelson`, () => {
 
     beforeEach(async () => {
-      await setup();
+      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 });
     })
     it('uses noopParser to originate Michelson code and fails', async () => {
       // Configure the Tezostoolkit to use the NoopParser (the Michelson won't be parsed)
@@ -55,7 +55,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   describe(`Test contract origination in a plain Michelson through contract api using: ${rpc}`, () => {
 
     beforeEach(async () => {
-      await setup()
+      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 })
     })
     it('Verify contract.originate for an ID contract written in plain Michelson', async () => {
       const op = await Tezos.contract.originate({
@@ -78,7 +78,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
     });
     it('Origination should thow error if given NaN for balance', async () => {
-      expect(() => Tezos.contract.originate({
+      await expect(() => Tezos.contract.originate({
         balance: "asdf",
         code: idMichelsonCode,
         init: idInitData

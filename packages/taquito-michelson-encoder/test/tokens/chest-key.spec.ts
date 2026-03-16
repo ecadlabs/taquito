@@ -56,8 +56,11 @@ describe('ChestKey token', () => {
 
             try {
                 token.Encode(['test']);
-            } catch (ex) {
-                expect(ex.name).toEqual('ChestKeyValidationError');
+            } catch (ex: unknown) {
+                expect(ex).toBeInstanceOf(ChestKeyValidationError);
+                if (ex instanceof ChestKeyValidationError) {
+                    expect(ex.name).toEqual('ChestKeyValidationError');
+                }
             }
         });
     });

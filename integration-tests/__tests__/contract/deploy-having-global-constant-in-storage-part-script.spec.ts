@@ -50,7 +50,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         }
 
         beforeEach(async () => {
-            await setup(true);
+            await setup({ preferFreshKey: true, minBalanceMutez: 10_000_000 });
 
             // We need to set up a global constants provider on the TezosToolkit
             // We use an instance of DefaultGlobalConstantsProvider where the global constant hash and its corresponding expression need to be loaded manually

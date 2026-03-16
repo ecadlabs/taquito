@@ -1,83 +1,56 @@
 {
   "name": "integration-tests",
   "scripts": {
-    "test": "jest",
-    "test:secret-key": "RUN_WITH_SECRET_KEY=true jest --runInBand",
-    "test:tallinnnet": "TALLINNNET=true jest",
-    "test:tallinnnet-secret-key": "RUN_TALLINNNET_WITH_SECRET_KEY=true jest --runInBand",
-    "test:ghostnet": "GHOSTNET=true jest",
-    "test:ghostnet-secret-key": "RUN_GHOSTNET_WITH_SECRET_KEY=true jest --runInBand",
-    "test:shadownet": "SHADOWNET=true jest",
-    "test:shadownet-secret-key": "RUN_SHADOWNET_WITH_SECRET_KEY=true jest --runInBand",
-    "test:weeklynet-secret-key": "RUN_WEEKLYNET_WITH_SECRET_KEY=true jest --runInBand",
-    "test:tezlinkshadownet-secret-key": "RUN_TEZLINKSHADOWNET_WITH_SECRET_KEY=true jest --runInBand",
+    "test": "vitest run",
+    "test:secret-key": "RUN_WITH_SECRET_KEY=true vitest run",
+    "test:tallinnnet": "TALLINNNET=true vitest run",
+    "test:tallinnnet:shard": "TALLINNNET=true vitest run --passWithNoTests",
+    "test:tallinnnet-secret-key": "RUN_TALLINNNET_WITH_SECRET_KEY=true vitest run",
+    "test:ghostnet": "GHOSTNET=true vitest run",
+    "test:ghostnet-secret-key": "RUN_GHOSTNET_WITH_SECRET_KEY=true vitest run",
+    "test:shadownet": "SHADOWNET=true vitest run",
+    "test:shadownet-secret-key": "RUN_SHADOWNET_WITH_SECRET_KEY=true vitest run",
+    "test:weeklynet-secret-key": "RUN_WEEKLYNET_WITH_SECRET_KEY=true vitest run",
+    "test:tezlinkshadownet-secret-key": "RUN_TEZLINKSHADOWNET_WITH_SECRET_KEY=true vitest run",
     "originate-known-contracts": "node -r ts-node/register originate-known-contracts.ts",
-    "originate-known-contracts-and-run-test": "node -r ts-node/register originate-known-contracts.ts && jest"
+    "originate-known-contracts-and-run-test": "node -r ts-node/register originate-known-contracts.ts && vitest run",
+    "rpc-hammer:inject": "node -r ts-node/register rpc-injection-hammer.ts"
   },
-  "version": "24.0.2",
-  "dependencies": {
+  "version": "24.2.0",
+  "optionalDependencies": {
     "@ledgerhq/devices": "^8.8.0",
     "@ledgerhq/hw-transport": "^6.31.15",
-    "@ledgerhq/hw-transport-node-hid": "6.29.16",
-    "@ledgerhq/hw-transport-node-hid-noevents": "6.30.16",
-    "@taquito/contracts-library": "^24.0.2",
-    "@taquito/core": "^24.0.2",
-    "@taquito/http-utils": "^24.0.2",
-    "@taquito/local-forging": "^24.0.2",
-    "@taquito/michel-codec": "^24.0.2",
-    "@taquito/michelson-encoder": "^24.0.2",
-    "@taquito/remote-signer": "^24.0.2",
-    "@taquito/rpc": "^24.0.2",
-    "@taquito/sapling": "^24.0.2",
-    "@taquito/signer": "^24.0.2",
-    "@taquito/taquito": "^24.0.2",
-    "@taquito/tzip12": "^24.0.2",
-    "@taquito/tzip16": "^24.0.2",
-    "@taquito/utils": "^24.0.2",
+    "@ledgerhq/hw-transport-node-hid": "6.30.0",
+    "@ledgerhq/hw-transport-node-hid-noevents": "6.31.0"
+  },
+  "dependencies": {
+    "@taquito/contracts-library": "^24.2.0",
+    "@taquito/core": "^24.2.0",
+    "@taquito/http-utils": "^24.2.0",
+    "@taquito/local-forging": "^24.2.0",
+    "@taquito/michel-codec": "^24.2.0",
+    "@taquito/michelson-encoder": "^24.2.0",
+    "@taquito/remote-signer": "^24.2.0",
+    "@taquito/rpc": "^24.2.0",
+    "@taquito/sapling": "^24.2.0",
+    "@taquito/signer": "^24.2.0",
+    "@taquito/taquito": "^24.2.0",
+    "@taquito/tzip12": "^24.2.0",
+    "@taquito/tzip16": "^24.2.0",
+    "@taquito/utils": "^24.2.0",
     "bignumber.js": "^9.1.2",
     "bip39": "3.1.0",
     "blakejs": "^1.2.1"
   },
   "private": true,
-  "jest": {
-    "transform": {
-      ".(ts|tsx)": "ts-jest"
-    },
-    "testEnvironment": "node",
-    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js"
-    ],
-    "coveragePathIgnorePatterns": [
-      "/node_modules/",
-      "/test/"
-    ],
-    "testPathIgnorePatterns": [
-      "./ledger-signer.spec.ts",
-      "./ledger-signer-failing-tests.spec.ts"
-    ],
-    "reporters": [
-      "default",
-      "jest-stare"
-    ],
-    "testResultsProcessor": "../node_modules/jest-stare"
-  },
   "devDependencies": {
-    "@types/jest": "^29.5.12",
     "@types/node": "^22.0.0",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "eslint": "^8.57.0",
-    "jest": "^29.7.0",
-    "jest-config": "^29.7.0",
-    "jest-retries": "^1.0.1",
-    "jest-stare": "2.5.1",
     "lint-staged": "^15.2.7",
-    "ts-jest": "^29.2.3",
     "ts-node": "^10.9.2",
-    "typescript": "~5.5.4"
+    "typescript": "^5.9.3"
   },
   "config": {
     "commitizen": {

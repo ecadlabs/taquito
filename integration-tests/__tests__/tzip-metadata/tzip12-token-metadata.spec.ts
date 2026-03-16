@@ -14,7 +14,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
 	describe(`Test contract origination for a Fa2 contract and fetch metadata (token metadata are in the big map %token_metadata) through contract api using: ${rpc}`, () => {
 		beforeEach(async () => {
-			await setup();
+			await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
 		});
 
 		it('Verify contract.originate for a Fa2 contract having metadata on HTTPS and token metadata inside a bigmap %token_metadata', async () => {
@@ -159,7 +159,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
 	describe(`Test originating a Fa2 contract and fetch metadata (token metadata are obtained from a view %token_metadata) through contract api using: ${rpc}`, () => {
 		beforeEach(async () => {
-			await setup();
+			await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
 		});
 
 		it('Verify contract.originate for a Fa2 contract having metadata on HTTPS and a view %token_metadata', async () => {

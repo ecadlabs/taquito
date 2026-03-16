@@ -30,7 +30,7 @@ CONFIGS().forEach(
     let freshAddress: string;
 
     beforeAll(async () => {
-      await setup();
+      await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
       try {
         // originate ticket contract
         const ticketOp = await Tezos.contract.originate({
@@ -46,6 +46,7 @@ CONFIGS().forEach(
         freshAddress = await (await createAddress()).signer.publicKeyHash();
       } catch (e) {
         console.log('Failed to originate ticket contract', JSON.stringify(e));
+        throw e;
       }
 
     });

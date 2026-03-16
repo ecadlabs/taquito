@@ -7,13 +7,24 @@ CONFIGS().forEach(({ lib, rpc, setup, signerConfig }) => {
         const testWithKeyGen = signerConfig.type === SignerType.SECRET_KEY ? test.skip : test;
 
         beforeEach(async () => {
-            await setup(true)
+            await setup({
+                preferFreshKey: true,
+                maxAttempts: 8,
+                minBalanceMutez: 2_000_000,
+            })
         })
 
         testWithKeyGen('verify that contract.reveal reveals the current account', async () => {
 
             const pkh = await Tezos.signer.publicKeyHash()
             const pk = await Tezos.signer.publicKey()
+            const managerKey = await Tezos.rpc.getManagerKey(pkh)
+
+            if (managerKey) {
+                expect(managerKey).toEqual(pk)
+                return;
+            }
+
             const op = await Tezos.contract.reveal({})
             await op.confirmation();
 

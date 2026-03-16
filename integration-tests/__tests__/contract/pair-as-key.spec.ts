@@ -10,7 +10,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
   describe(`Test contract origination with pair as key in storage through contract api using: ${rpc}`, () => {
     beforeAll(async () => {
-      await setup();
+      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 });
 
       storageMap = new MichelsonMap();
       // The contract schema in this example has a key with 8 nested pairs
