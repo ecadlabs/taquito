@@ -23,10 +23,18 @@ npm install @taquito/taquito
 
 A `TezosToolkit` is the core of your Taquito setup. The constructor of the `TezosToolkit` class takes an RPC URL as a parameter. It can be a string or a [RpcClient](rpc_package) object. A list of well-known public RPC nodes can be found [here](rpc_nodes).
 
+The `TezosToolkit` also accepts a `clientInfo` object, which can contain any combination of your `appName`, `appUrl`, and choice of `sendSdkVersion`. Client info is optional, but highly recommended as it helps RPC node providers understand their userbase.
+
 ```js
 import { TezosToolkit } from '@taquito/taquito';
 
-const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
+const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL', {
+  clientInfo: {
+    appName: 'My App',
+    appUrl: 'https://example.com',
+    sendSdkVersion: true,
+  }
+});
 ```
 
 In a simple app, you will likely only want to create one instance of the Tezos Toolkit. That said, in some cases it can be useful to make more than one instance of Taquito, perhaps if you wanted to communicate with two different RPC nodes or offer other Signing options. 
@@ -45,7 +53,13 @@ You can set which signer you wish to use with `Tezos.setProvider({})`. The examp
 import { TezosToolkit } from '@taquito/taquito';
 import { RemoteSigner } from '@taquito/remote-signer';
 
-const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
+const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL', {
+  clientInfo: {
+    appName: 'My App',
+    appUrl: 'https://example.com',
+    sendSdkVersion: true,
+  }
+});
 
 Tezos.setProvider({
   signer: new RemoteSigner(pkh, rootUrl, { headers: requestHeaders });,
@@ -67,7 +81,13 @@ The `InMemorySigner` will import your private key into memory and sign operation
 import { TezosToolkit } from '@taquito/taquito';
 import { InMemorySigner, importKey } from '@taquito/signer';
 
-const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
+const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL', {
+  clientInfo: {
+    appName: 'My App',
+    appUrl: 'https://example.com',
+    sendSdkVersion: true,
+  }
+});
 
 Tezos.setProvider({
   signer: new InMemorySigner('YOUR_PRIVATE_KEY'),

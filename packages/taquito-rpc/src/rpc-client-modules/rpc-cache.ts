@@ -1422,4 +1422,17 @@ export class RpcClientCache implements RpcClientInterface {
       return response;
     }
   }
+
+  /**
+   * @description Verifies which analytics headers are supported by the RPC server via CORS.
+   * Delegates to the underlying RPC client.
+   */
+  async verifyCorsSupport(): Promise<{
+    sdkHeader: boolean;
+    appNameHeader: boolean;
+    appUrlHeader: boolean;
+    allowedHeaders: string[];
+  }> {
+    return this.rpcClient.verifyCorsSupport();
+  }
 }

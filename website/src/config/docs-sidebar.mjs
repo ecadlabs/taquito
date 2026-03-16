@@ -13,6 +13,7 @@ export const sidebarConfig = [
       "rpc_nodes",
       "web3js_taquito",
       "fallback_rpc",
+      "rpc_analytics_headers",
     ],
   },
   {

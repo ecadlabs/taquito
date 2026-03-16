@@ -22,7 +22,13 @@ Here is a simple example on getting the operation hash of a transaction (transfe
 // import { encodeOpHash } from '@taquito/utils';
 // import { LocalForger } from '@taquito/local-forging';
 
-// const Tezos = new TezosToolkit('RPC_ENDPOINT');
+/* const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL', {
+  clientInfo: {
+    appName: 'My App',
+    appUrl: 'https://example.com',
+    sendSdkVersion: true,
+  }
+}); */
 
 const preparedTransfer = await Tezos.prepare.transaction({
   amount: 1,

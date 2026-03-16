@@ -34,7 +34,13 @@ import { Tzip12Module } from '@taquito/tzip12';
 import { tzip12 } from '@taquito/tzip12';
 import BigNumber from 'bignumber.js';
 
-const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
+const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL', {
+  clientInfo: {
+    appName: 'My App',
+    appUrl: 'https://example.com',
+    sendSdkVersion: true,
+  }
+});
 Tezos.addExtension(new Tzip12Module());
 
 const contract = await Tezos.contract.at("contractAddress", tzip12)

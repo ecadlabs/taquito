@@ -37,7 +37,13 @@ The `PrepareProvider` class affords extension and control to users when preparin
 ### Individual Operations
 The `PrepareProvider` is accessible via the `TezosToolkit` class:
 ```typescript
-// const Tezos = new TezosToolkit('RPC_ENDPOINT');
+/* const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL', {
+  clientInfo: {
+    appName: 'My App',
+    appUrl: 'https://example.com',
+    sendSdkVersion: true,
+  }
+}); */
 
 const prepared = await Tezos.prepare.transaction({
   to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',

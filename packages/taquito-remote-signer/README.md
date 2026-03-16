@@ -22,7 +22,13 @@ When the `RemoteSigner` is configured on the `TezosToolkit`, Taquito features th
 import { TezosToolkit } from '@taquito/taquito';
 import { RemoteSigner } from '@taquito/remote-signer';
 
-const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
+const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL', {
+  clientInfo: {
+    appName: 'My App',
+    appUrl: 'https://example.com',
+    sendSdkVersion: true,
+  }
+});
 const signer = new RemoteSigner(pkh, rootUrl);
 Tezos.setSignerProvider(signer);
 
