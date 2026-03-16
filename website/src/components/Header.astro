@@ -361,18 +361,15 @@ const currentPageSlug = pageSlugMatch?.[1] || "quick_start";
   .header-logo {
     width: 160px;
     height: 92px;
-    background: url('/taquito-logo.webp') no-repeat 0 0;
+    background: url('/taquito-logo-sprite.webp') no-repeat 0 0;
     background-size: 160px auto;
-  }
-
-  .logo:hover .header-logo {
-    background-image: url('/taquito-logo-sprite.webp');
-    animation: logo-sprite 3.3s steps(51) infinite;
+    animation: logo-sprite 8.3s steps(51) infinite;
   }
 
   @keyframes logo-sprite {
-    from { background-position: 0 0; }
-    to { background-position: 0 -4692px; }
+    0% { background-position: 0 0; }
+    39.76% { background-position: 0 -4692px; }
+    100% { background-position: 0 -4692px; }
   }
 
   #hamburger-btn.open .hamburger-line:nth-child(1) {
