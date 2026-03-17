@@ -125,7 +125,8 @@
     "@taquito/core": "^24.2.0",
     "@taquito/taquito": "^24.2.0",
     "crypto-browserify": "^3.12.1",
-    "util": "^0.12.5"
+    "util": "^0.12.5",
+    "@stablelib/ed25519": "^2.0.2"
   },
   "devDependencies": {
     "@ecadlabs/beacon-transport-postmessage": "^4.8.1-ecad",
