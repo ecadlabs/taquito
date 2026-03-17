@@ -22,6 +22,10 @@ module.exports = {
     modules: ['node_modules'],
     fallback: {
       "stream": require.resolve("stream-browserify")
+    },
+    conditionNames: ['import', 'module', 'browser', 'default'],
+    alias: {
+      '@noble/hashes': path.resolve(__dirname, '../../node_modules/@noble/hashes/esm')
     }
   },
   output: {

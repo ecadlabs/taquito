@@ -46,7 +46,8 @@
   },
   "jest": {
     "transform": {
-      ".(ts|tsx)": "ts-jest"
+      ".(ts|tsx)": "ts-jest",
+      "node_modules/@noble/hashes/.+\\.(j|t)sx?$": "ts-jest"
     },
     "testEnvironment": "node",
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
@@ -56,7 +57,11 @@
       "js"
     ],
     "moduleNameMapper": {
-      "^@taquito/utils$": "<rootDir>/../taquito-utils/src/taquito-utils.ts"
+      "^@taquito/utils$": "<rootDir>/../taquito-utils/src/taquito-utils.ts",
+      "^@noble/hashes/blake2$": "<rootDir>/../../node_modules/@noble/hashes/blake2.js",
+      "^@noble/hashes/hmac$": "<rootDir>/../../node_modules/@noble/hashes/hmac.js",
+      "^@noble/hashes/sha2$": "<rootDir>/../../node_modules/@noble/hashes/sha2.js",
+      "^@noble/hashes/pbkdf2$": "<rootDir>/../../node_modules/@noble/hashes/pbkdf2.js"
     },
     "coveragePathIgnorePatterns": [
       "/node_modules/",
@@ -64,6 +69,9 @@
     ],
     "collectCoverageFrom": [
       "src/**/*.{js,ts}"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!@noble/hashes)"
     ]
   },
   "dependencies": {

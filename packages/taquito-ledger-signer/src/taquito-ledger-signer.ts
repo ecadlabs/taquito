@@ -14,7 +14,7 @@ import {
   validateResponse,
   extractValue,
 } from './utils';
-import { hash } from '@stablelib/blake2b';
+import { blake2b } from '@noble/hashes/blake2.js';
 import {
   PublicKeyHashRetrievalError,
   PublicKeyRetrievalError,
@@ -120,7 +120,7 @@ export class LedgerSigner implements Signer {
 
     const prefixes = this.getPrefixes();
     const publicKey = b58Encode(compressedPublicKey, prefixes.prefPk);
-    const publicKeyHash = b58Encode(hash(compressedPublicKey, 20), prefixes.prefPkh);
+    const publicKeyHash = b58Encode(blake2b(compressedPublicKey, { dkLen: 20 }), prefixes.prefPkh);
 
     this._publicKey = publicKey;
     this._publicKeyHash = publicKeyHash;

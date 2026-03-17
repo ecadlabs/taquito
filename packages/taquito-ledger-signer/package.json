@@ -39,7 +39,8 @@
   },
   "jest": {
     "transform": {
-      ".(ts|tsx)": "ts-jest"
+      ".(ts|tsx)": "ts-jest",
+      "node_modules/@noble/hashes/.+\\.(j|t)sx?$": "ts-jest"
     },
     "testEnvironment": "node",
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
@@ -54,7 +55,14 @@
     ],
     "collectCoverageFrom": [
       "src/**/*.{js,ts}"
-    ]
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!@noble/hashes)"
+    ],
+    "moduleNameMapper": {
+      "^@taquito/utils$": "<rootDir>/../taquito-utils/src/taquito-utils.ts",
+      "^@noble/hashes/blake2$": "<rootDir>/../../node_modules/@noble/hashes/blake2.js"
+    }
   },
   "dependencies": {
     "@ledgerhq/hw-transport": "^6.31.15",
@@ -65,6 +73,7 @@
     "buffer": "^6.0.3"
   },
   "devDependencies": {
+    "@rollup/plugin-node-resolve": "^16.0.3",
     "@types/bluebird": "^3.5.42",
     "@types/jest": "^29.5.12",
     "@types/node": "^20",

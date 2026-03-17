@@ -80,7 +80,8 @@
             "module": "es2020"
           }
         }
-      ]
+      ],
+      "node_modules/@noble/hashes/.+\\.(j|t)sx?$": "ts-jest"
     },
     "testEnvironment": "node",
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
@@ -94,10 +95,16 @@
     ],
     "moduleNameMapper": {
       "^@taquito/taquito$": "<rootDir>/../taquito/src/taquito.ts",
-      "^(\\.{1,2}/.*)\\.js$": "$1"
+      "^@taquito/utils$": "<rootDir>/../taquito-utils/src/taquito-utils.ts",
+      "^(\\.{1,2}/.*)\\.js$": "$1",
+      "^@noble/hashes/blake2$": "<rootDir>/../../node_modules/@noble/hashes/blake2.js",
+      "^@stablelib/blake2b$": "<rootDir>/../../node_modules/@stablelib/blake2b/lib/blake2b.js",
+      "^@noble/hashes/hmac$": "<rootDir>/../../node_modules/@noble/hashes/hmac.js",
+      "^@noble/hashes/sha2$": "<rootDir>/../../node_modules/@noble/hashes/sha2.js",
+      "^@noble/hashes/pbkdf2$": "<rootDir>/../../node_modules/@noble/hashes/pbkdf2.js"
     },
     "transformIgnorePatterns": [
-      "/node_modules/(?!(@ecadlabs|@stablelib)/.*)"
+      "node_modules/(?!@noble/hashes|@ecadlabs|@stablelib)"
     ],
     "extensionsToTreatAsEsm": [
       ".ts",
@@ -118,7 +125,8 @@
     "@taquito/core": "^24.2.0",
     "@taquito/taquito": "^24.2.0",
     "crypto-browserify": "^3.12.1",
-    "util": "^0.12.5"
+    "util": "^0.12.5",
+    "@stablelib/ed25519": "^2.0.2"
   },
   "devDependencies": {
     "@ecadlabs/beacon-transport-postmessage": "^4.8.1-ecad",

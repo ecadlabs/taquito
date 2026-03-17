@@ -45,8 +45,10 @@
     ]
   },
   "jest": {
+    "testTimeout": 30000,
     "transform": {
-      ".(ts|tsx)": "ts-jest"
+      ".(ts|tsx)": "ts-jest",
+      "node_modules/@noble/hashes/.+\\.(j|t)sx?$": "ts-jest"
     },
     "testEnvironment": "node",
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
@@ -55,17 +57,27 @@
       "tsx",
       "js"
     ],
-    "moduleNameMapper": {},
+    "moduleNameMapper": {
+      "^@taquito/utils$": "<rootDir>/../taquito-utils/src/taquito-utils.ts",
+      "^@noble/hashes/blake2$": "<rootDir>/../../node_modules/@noble/hashes/blake2.js",
+      "^@noble/hashes/hmac$": "<rootDir>/../../node_modules/@noble/hashes/hmac.js",
+      "^@noble/hashes/sha2$": "<rootDir>/../../node_modules/@noble/hashes/sha2.js",
+      "^@noble/hashes/pbkdf2$": "<rootDir>/../../node_modules/@noble/hashes/pbkdf2.js"
+    },
     "coveragePathIgnorePatterns": [
       "/node_modules/",
       "/test/"
     ],
     "collectCoverageFrom": [
       "src/**/*.{js,ts}"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!@noble/hashes)"
     ]
   },
   "dependencies": {
     "@airgap/sapling-wasm": "0.0.9",
+    "@noble/hashes": "^2.0.1",
     "@stablelib/nacl": "^1.0.4",
     "@stablelib/random": "^1.0.2",
     "@taquito/core": "^24.2.0",
@@ -75,14 +87,13 @@
     "bignumber.js": "^9.1.2",
     "bip39": "3.1.0",
     "blakejs": "^1.2.1",
-    "pbkdf2": "^3.1.2",
     "typedarray-to-buffer": "^4.0.0"
   },
   "devDependencies": {
     "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^16.0.3",
     "@types/jest": "^29.5.12",
     "@types/node": "^20",
-    "@types/pbkdf2": "^3.1.2",
     "@types/typedarray-to-buffer": "^4.0.4",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
