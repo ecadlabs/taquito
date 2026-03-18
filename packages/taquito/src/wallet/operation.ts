@@ -128,6 +128,14 @@ export class WalletOperation {
     return this._operationResult.pipe(first()).toPromise();
   }
 
+  private async getOperationResultsIfIncluded() {
+    if (!this._included) {
+      return undefined;
+    }
+
+    return this.operationResults().catch(() => undefined);
+  }
+
   /**
    * Receipt expose the total amount of tezos token burn and spent on fees
    * The promise returned by receipt will resolve only once the transaction is included
@@ -244,7 +252,7 @@ export class WalletOperation {
 
     try {
       const confirmationResult = await this.confirmationObservable(confirmations).toPromise();
-      const operationResults = await this.operationResults().catch(() => undefined);
+      const operationResults = await this.getOperationResultsIfIncluded();
       const summary = summarizeWalletOperationResults(operationResults);
       const nonAppliedStatuses = summary
         .filter((result) => result.status !== 'applied')
@@ -269,7 +277,7 @@ export class WalletOperation {
       }
       return confirmationResult;
     } catch (error: unknown) {
-      const operationResults = await this.operationResults().catch(() => undefined);
+      const operationResults = await this.getOperationResultsIfIncluded();
       traceWalletOperation({
         stage: 'confirmation-error',
         opHash: this.opHash,
