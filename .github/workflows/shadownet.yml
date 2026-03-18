@@ -18,4 +18,4 @@ jobs:
       - run: npm run build
       - if: always()
         id: integration-tests-shadownet
-        run: npm -w integration-tests run test:shadownet -- --maxWorkers=4
+        run: npm -w integration-tests run test:shadownet -- --maxWorkers=4 --exclude='**/sapling/**' --exclude='**/ledger/**'

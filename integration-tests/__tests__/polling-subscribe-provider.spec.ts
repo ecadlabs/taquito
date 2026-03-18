@@ -1,5 +1,6 @@
 import { CONFIGS, TAQUITO_MUTEZ, sleep } from '../config';
 import { PollingSubscribeProvider, TezosToolkit } from '@taquito/taquito';
+import { rethrowInfrastructureRpcError } from '../test-helpers/rpc-error-assertions';
 
 /* mainContract.jsligo: This is the source code for the main contract.
 If you need to change the main contract, you can change this, use the ligo compiler to compile it, and update both the Michelson code below and the jsligo here.
@@ -208,6 +209,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
     it.skip('should include events from failed operations when filter does not exclude events from failed operations', async () => {
       const data: any = [];
+      let failedOperationError: unknown;
 
       const eventSub = Tezos.stream.subscribeEvent({
         address: mainContractAddress,
@@ -250,8 +252,11 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         await sent1.confirmation();
         await sent2.confirmation();
       } catch (e) {
-        // Failure is expected
+        failedOperationError = e;
       }
+
+      rethrowInfrastructureRpcError(failedOperationError);
+      expect(failedOperationError).toBeInstanceOf(Error);
 
       await sleep(5000);
       eventSub.close();
@@ -262,6 +267,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
     it.skip('should properly filter events from failed operations', async () => {
       const data: any = [];
+      let failedOperationError: unknown;
 
       const eventSub = Tezos.stream.subscribeEvent({
         address: mainContractAddress,
@@ -305,8 +311,11 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         await sent1.confirmation();
         await sent2.confirmation();
       } catch (e) {
-        // Failure is expected
+        failedOperationError = e;
       }
+
+      rethrowInfrastructureRpcError(failedOperationError);
+      expect(failedOperationError).toBeInstanceOf(Error);
 
       await sleep(5000);
       eventSub.close();

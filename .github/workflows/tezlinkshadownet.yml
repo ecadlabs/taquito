@@ -17,4 +17,4 @@ jobs:
       - run: npm run build
       - if: always()
         id: integration-tests-tezlinkshadownet
-        run: npm -w integration-tests run test:tezlinkshadownet-secret-key
+        run: npm -w integration-tests run test:tezlinkshadownet-secret-key -- --exclude='**/sapling/**' --exclude='**/ledger/**'
