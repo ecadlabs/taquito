@@ -3,16 +3,12 @@ title: InMemorySpendingKey
 author: Zainen Suzuki
 ---
 
-# Sapling Spending Key Instantiation
+>[!CAUTION]
+> Storing private keys in memory is suitable for development workflows but risky for production use-cases! Use the `InMemorySpendingKey` appropriately given your risk profile.
 
-:::caution Warning
-**Storing private keys in memory is suitable for development workflows but risky for
-production use-cases! Use the `InMemorySpendingKey` appropriately given your risk profile**
-:::
+### From mnemonic
 
-### From Mnemonic
-
-Instantiation of a `InMemorySpendingkey` from Mnemonic does not require a password as it is only used to change an unencrypted `sask...` to an encrypted `MMXj...` spending key or vice versa
+Instantiation of a `InMemorySpendingkey` from Mnemonic does not require a password as it is only used to change an unencrypted `sask...` to an encrypted `MMXj...` spending key or vice versa.
 
 Params:
   - `mnemonic` list of words
@@ -31,13 +27,13 @@ Returns:
 
 ```
 
-### From Encrypted Spending Key
+### From encrypted spending key
 
 If the spending key is encrypted prefixed with `MMXj...` then a password is required to decrypt to a unencrypted Spending Key `sask...`
 
 Params: 
-  - `spendingKey` unencrypted sask... or encrypted MMXj...
-  - `password` required for MMXj encrypted keys
+  - `spendingKey` unencrypted `sask...` or encrypted `MMXj...`
+  - `password` required for `MMXj` encrypted keys
 
 ```js
   const SaplingKeyProvider = new InMemorySpendingKey(

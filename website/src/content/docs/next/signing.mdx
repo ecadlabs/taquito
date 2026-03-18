@@ -1,14 +1,9 @@
 ---
-title: Signing data
-id: signing
+title: Signing Data
 author: Claude Barde
 ---
 
-
-
 Signing arbitrary chunks of data is a common practice in a blockchain environment and is usually done to prove that a user has access to a certain account or that a message comes from a certain account.
-
-This practice is still new on Tezos and the use cases are rare. However, as the interactions between users and smart contracts increase, knowing how to sign data and send the signature to a smart contract can set you one step ahead in your knowledge of the Tezos blockchain.
 
 ## Understanding what a signature is
 
@@ -39,7 +34,7 @@ The `signer` method returns the following object:
 
 ## Generating a signature with Beacon SDK
 
-You can also sign a string of bytes with a wallet. Unlike the `InMemorySigner`, the wallets require a certain format for the bytes that need to be signed. Here is how the string must be formatted:
+You can also sign a string of bytes with a wallet. Unlike the `InMemorySigner`, wallets require a certain format for the bytes that need to be signed. Here is how the string must be formatted:
 
 ```js
 const formattedInput: string = [
@@ -145,11 +140,11 @@ const isVerified = verifySignature(
 
 ## Generating a TZIP-32 message signature
 
-The community have proposed [TZIP-32](https://gitlab.com/tezos/tzip/-/blob/71be45d3ae2e15cec5c7a2f84feb88aac58fbe5e/drafts/current/draft-message-signing/tzip-32.md)(draft), Off-Chain Message Signing, which aims to define a formal message signing standard  that is simple, secure, extendable and compatible with hardware wallets. TZIP-32 can be further used in [TZIP-33](https://gitlab.com/tezos/tzip/-/blob/6483efc9e591960effe76f4ae996ec187bf13bf4/drafts/current/draft-sign-in-with-tezos.md)(draft) which is a [CAIP-122](https://chainagnostic.org/CAIPs/caip-122) compliant sign-in with Tezos standard.
+The community have proposed [TZIP-32](https://gitlab.com/tezos/tzip/-/blob/71be45d3ae2e15cec5c7a2f84feb88aac58fbe5e/drafts/current/draft-message-signing/tzip-32.md) (draft), Off-Chain Message Signing, which aims to define a formal message signing standard  that is simple, secure, extendable and compatible with hardware wallets. TZIP-32 can be further used in [TZIP-33](https://gitlab.com/tezos/tzip/-/blob/6483efc9e591960effe76f4ae996ec187bf13bf4/drafts/current/draft-sign-in-with-tezos.md) (draft) which is a [CAIP-122](https://standards.chainagnostic.org/CAIPs/caip-122) compliant sign-in with Tezos standard.
 
-**Message encoding**
+### Message encoding
 
-This is the schema to encode the message into bytes, please read the [TZIP-32](https://gitlab.com/tezos/tzip/-/blob/71be45d3ae2e15cec5c7a2f84feb88aac58fbe5e/drafts/current/draft-message-signing/tzip-32.md) for more detail.
+This is the schema to encode the message into bytes, please read the [TZIP-32](https://gitlab.com/tezos/tzip/-/blob/71be45d3ae2e15cec5c7a2f84feb88aac58fbe5e/drafts/current/draft-message-signing/tzip-32.md) proposal for more detail.
 
 | Name                  | Size     | Contents                |
 |-----------------------|----------|-------------------------|
@@ -160,9 +155,9 @@ This is the schema to encode the message into bytes, please read the [TZIP-32](h
 | # Bytes in next field | 2 bytes  | unsigned 16-bit integer |
 | message               | Variable | bytes                   |
 
-**Examples of signing TZIP-32 message on contractAPI and walletAPI**
+### Examples of signing TZIP-32 message with the Contract API and Wallet API
 
-The Off-Chain Message Signing magic bytes is `0x80` defined in [TZIP-31](https://gitlab.com/tezos/tzip/-/blob/71be45d3ae2e15cec5c7a2f84feb88aac58fbe5e/drafts/current/draft-signer-requests/tzip-31.md)(draft).
+The Off-Chain Message Signing magic bytes is `0x80` defined in [TZIP-31](https://gitlab.com/tezos/tzip/-/blob/71be45d3ae2e15cec5c7a2f84feb88aac58fbe5e/drafts/current/draft-signer-requests/tzip-31.md) (draft).
 
 <Tabs
 defaultValue="contractAPI"
@@ -261,13 +256,16 @@ Then, you create a new instance of the `michel-codec` parser and call the `parse
 Once done, you can pack the data using the `packDataBytes` function available in the `@taquito/michel-codec` package.
 To finish, use one of the methods presented above to sign the packed data (with the `InMemorySigner` like in this example or with the Beacon SDK).
 
-:::caution
-In the previous example, the data is packed locally in Taquito using the `packDataBytes` function of the `@taquito/michel-codec` package instead of the RPC. You should always verify the packed bytes before signing or requesting that they be signed when using the RPC to pack. This precaution helps protect you and your applications users from RPC nodes that have been compromised. A node that is operated by a bad actor, or compromised by a bad actor could return a fully formed operation that does not correspond to the input provided to the RPC endpoint.
-:::
+>[!CAUTION]
+> In the previous example, the data is packed locally in Taquito using the `packDataBytes` function of the `@taquito/michel-codec` package instead of the RPC. You should always verify the packed bytes before signing or requesting that they be signed when using the RPC to pack. This precaution helps protect you and your applications users from RPC nodes that have been compromised. 
+>
+> A node that is operated by a bad actor or compromised by a bad actor could return a fully formed operation that does not correspond to the input provided to the RPC endpoint.
 
 ## Sending the signature to a smart contract
 
-After forging a signature, you may want to send it to a contract so it can use it within its own logic. Let's imagine you have a contract with an entrypoint that accepts a public key, a signature and bytes called `%check_signature`. Here is how to send it to the contract using Taquito:
+After forging a signature, you may want to send it to a contract so it can use it within its own logic. 
+
+Let's imagine you have a contract with an entrypoint that accepts a public key, a signature, and bytes called `%check_signature`. Here is how to send it to the contract using Taquito:
 
 ```js
 const contract = await Tezos.wallet.at(CONTRACT_ADDRESS);
@@ -283,7 +281,4 @@ In the contract, we can use the `CHECK_SIGNATURE` instruction to compare the sig
 
 The signing functionality has been implemented recently by the web wallets on Tezos and it's still very little used because it presents a major security concern.
 
-A fraudulent dapp could convince less tech-savvy users to sign arbitrary data and hide it as another type of operation before sending the signature to a smart contract. If the signature is used by the contract to allow the signer to perform certain actions, this would allow the fraudulent dapp to pose as the signer, which could be disastrous for the user.
-
-A signature can also be used in a replay attack when a dapp uses the same signature multiple times to gain access to a contract functionality. A signature should be used one single time and destroyed and a smart contract should implement a verification process to ensure the signature hasn't been used already.
-
+A fraudulent dApp could convince less tech-savvy users to sign arbitrary data and hide it as another type of operation before sending the signature to a smart contract. If the signature is used by the contract to allow the signer to perform certain actions, this would allow the fraudulent dApp to pose as the signer, which could be disastrous for the user.

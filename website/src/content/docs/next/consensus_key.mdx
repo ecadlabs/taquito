@@ -5,7 +5,7 @@ author: Davis Sawali & Hui-An Yang
 
 The "consensus key" feature allows bakers to use a different key, called the consensus key. It will allow for baking and signing consensus operations (i.e. preattestation and attestation). For more detailed information on consensus keys, refer to the [Octez documentation](https://octez.tezos.com/docs/active/consensus_key.html).
 
-## Update Consensus Key
+## Update consensus key
 This is a manager operation that must be signed by the manager key of the baker. This operation updates the consensus key of the baker to `PUBLIC_KEY` starting from the current cycle plus `PRESERVED_CYCLES + 1`. A consensus key can only be used by a single baker, and the operation will fail if it is already in use..
 
 ### Examples
@@ -19,7 +19,7 @@ await op.confirmation();
 - `pk` is the public key you want the consensus key to point to
 
 
-## Drain Delegate
+## Drain delegate
 This is an operation that must be signed by the active consensus key `consensus_pkh` of the baker `baker_pkh`. This operation immediately transfers all the spendable balance of the `baker_pkh`’s implicit account into the `destination_pkh` implicit account. It has no effect on the frozen balance. 
 
 This operation is included in pass 2 (anonymous operations), meaning drain operations don’t compete with regular manager operations for gas and block size quota; the 1M restriction (one-operation-per-manager-per-block) applies to drain operations as well, meaning that a drain for a baker and a transfer operation from the same baker are in conflict.

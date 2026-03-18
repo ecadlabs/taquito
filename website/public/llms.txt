@@ -39,12 +39,12 @@ The `next` version contains the latest unreleased documentation.
 - `staking` - Staking and Adaptive Issuance
 
 ### Smart Contracts
-- `smartcontracts` - Smart contract interaction
+- `smartcontracts` - Smart Contract Interaction
 - `contract_call_parameters` - Contract call parameters
 - `fa2_parameters` - FA2 Parameters
 - `manager_lambda` - MANAGER_LAMBDA
-- `multisig_doc` - Multisig contract interactions
-- `failwith_errors` - Catching error messages
+- `multisig_doc` - Multisig Contract Interactions
+- `failwith_errors` - Catching FAILWITH errors
 
 ### Wallets
 - `walletconnect` - WalletConnect
@@ -53,7 +53,7 @@ The `next` version contains the latest unreleased documentation.
 
 ### Michelson
 - `maps_bigmaps` - Maps and BigMaps
-- `michelsonmap` - MichelsonMap class
+- `michelsonmap` - MichelsonMap Class
 - `tickets` - Tickets
 
 ### Views
@@ -66,7 +66,7 @@ The `next` version contains the latest unreleased documentation.
 - `tzip16-sequence-diagram` - TZIP-16 Sequence diagrams
 
 ### Signers
-- `signing` - Signing data
+- `signing` - Signing Data
 - `inmemory_signer` - In Memory Signer
 - `ledger_signer` - Ledger Signer
 
@@ -96,13 +96,13 @@ The `next` version contains the latest unreleased documentation.
 - `complex_parameters` - Working with contracts having complex storage/parameters
 - `confirmation_event_stream` - Confirmation Event Stream
 - `events` - Contract Events
-- `liquidity_baking` - Liquidity Baking interactions
-- `storage_annotations` - Storage with/without annotations
+- `liquidity_baking` - Liquidity Baking Interactions
+- `storage_annotations` - Storage With and Without Annotations
 - `tezos_domains` - Tezos Domains
 
 ### Modules customization
 - `forger` - Forger
-- `rpc-cache` - RPC caching
+- `rpc-cache` - RPC Caching
 - `cancel_http_requests` - Cancel HTTP requests
 
 ### Testing
@@ -112,17 +112,16 @@ The `next` version contains the latest unreleased documentation.
 
 ### Dapp Development
 - `package_bundle` - Client-Side Environments
-- `dapp_template` - Dapp Templates
-- `dapp_prelaunch` - Dapp pre-launch checklist
+- `dapp_template` - dApp Templates
+- `dapp_prelaunch` - dApp Pre-launch Checklist
 
 ### Taquito Public API
 - `wallet_API` - Wallet API
 - `batch-api` - Batch API
 
 ### Misc
-- `tutorial_links` - Tutorial Links
+- `tutorial_links` - External Tutorials
 - `contract-test-collection` - Smart contract collection
-- `validators` - Validation functions
 - `ballot` - Ballot Operation
 
 ## API Reference

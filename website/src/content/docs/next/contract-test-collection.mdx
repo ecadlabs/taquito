@@ -47,7 +47,7 @@ Each contract description will include the storage in Michelson and the storage 
 
 This contract serves as the default introductory example. The contract is used to demo addition and subtraction by a smart contract.
 
-#### Entrypoints:
+### Entrypoints:
 
 - `decrement`
 - `increment`
@@ -80,7 +80,7 @@ The contract supports a [Michelson Tutorial](michelsonmap). It has a default end
 
 - [See the full tutorial](https://medium.com/coinmonks/working-with-michelson-maps-in-taquito-8d8be9930662)
 
-#### Entrypoints:
+### Entrypoints:
 
 - `default`
 
@@ -110,7 +110,7 @@ storage: MichelsonMap<string, BigNumber>
 
 This contract has a stored counter. The contract is used in some Taquito integration tests for generic tests for features like transfers.
 
-#### Entrypoints:
+### Entrypoints:
 
 - `default`
 - `main`
@@ -151,7 +151,7 @@ Lambda views are introduced in [Tzip4](https://gitlab.com/tezos/tzip/-/blob/mast
 
 Not a supported FA1.2 contract. Almost an FA2 interface but is missing `update_operators`.
 
-#### Entrypoints:
+### Entrypoints:
 
 - `approve`
 - `getAllowance`
@@ -201,7 +201,7 @@ const allowances = new MichelsonMap();
 
 This contract is another example of a Lambda contract, this time involving a token. It is not a supported FA1.2 contract, but it does have the entrypoints that define an FA2 interface: `balance_of`, `transfer`, and `update_operators`.
 
-#### Entrypoints:
+### Entrypoints:
 
 - `balance_of`
 - `token_metadata_registry`
@@ -281,7 +281,7 @@ A simple contract with a default entrypoint that takes unit. Not a supported FA1
 
 The contract is used to demonstrate the `get` method of the `MichelsonMap` class, which accesses values of the map for a specified key. If the storage does not annotate its properties, the caller must use numeric indexes instead. This contract does not annotate the pairs of the key pair either so numeric indexes are used for this also.
 
-#### Entrypoints:
+### Entrypoints:
 
 - `default`
 
@@ -350,7 +350,7 @@ Pair 10 (Pair 20 (Pair "Hello" (Pair 0xffff (Pair 100 (Pair False (Pair "tz1KqTp
 
 The get method of the MichelsonMap class accesses values of the map for a specified key.
 
-#### Entrypoints:
+### Entrypoints:
 
 - `default`
 
@@ -424,7 +424,7 @@ Note the lack of annotations in the Michelson for the storage. If the storage do
 
 Taquito provides a get method of the MichelsonMap on storage of type Map. We can only change contract storage by calling the function provided by the contract. The main function on this Smart Contract is decreasing the value of the current_stock associated with the key 1.
 
-#### Entrypoints:
+### Entrypoints:
 
 - `default`
 
@@ -457,7 +457,7 @@ storageMap.set('3', { current_stock: '50', max_price: '60' });
 
 The get method of the MichelsonMap class accesses the values of the map and values of the bigMap. The difference is that the value gets returned directly for a map while the get method on a bigMap returns a promise.
 
-#### Entrypoints:
+### Entrypoints:
 
 - `default`
 
@@ -518,7 +518,7 @@ This contract has an FA1.2 interface.
 
 It is possible to fetch multiple big map values using Taquito with one call using the getMultipleValues method of the BigMapAbstraction class. Taquito will ensure that all fetched big maps come from the same block to ensure a consistent state.
 
-#### Entrypoints:
+### Entrypoints:
 
 - `approve`
 - `burn`
@@ -574,7 +574,7 @@ This contract is used in many Taquito documentation Live Code Examples to demons
 
 The storage uses a pair composed of a nested pair and a map (annotated as %validators). The nested pair consists of an address (annotated as %owner) and a bigMap (annotated as %records). The map %validators use a natural number (nat) as its key and address its value. The bigMap %records uses a value in bytes as its key and a pair consisting of nested pairs as its value. We find addresses and natural numbers in these nested pairs, where some are optional, and a map (annotated %data). The map %data uses a string as its key, and the user needs to choose the value of the map between different proposed types (int, bytes, bool, ...).
 
-#### Entrypoints:
+### Entrypoints:
 
 - `admin_update`
 - `resolve`
@@ -656,7 +656,7 @@ const op = await tezos.contract.originate({
 
 This contract is used in Taquito integration tests. It is not a FA1.2 contract, since Entrypoint "transfer" has type (pair (pair (address %0) (address %1)) (nat %2)), but should have type (pair address address nat). Also not an FA2 contract as it does not have an entrypoint for update_operators.
 
-#### Entrypoints:
+### Entrypoints:
 
 - `approve`
 - `burn`
@@ -714,7 +714,7 @@ Now, Taquito allows you to pack the required data locally to fetch values from a
 
 This contract is for demonstrating packing. Not a supported FA1.2 contract.
 
-#### Entrypoints:
+### Entrypoints:
 
 - `default`
 
@@ -761,7 +761,7 @@ Views are meant to be called by a contract using the Michelson Instruction View 
 
 This contract is used to demonstrate On Chain views. It calls the view 'fib' in another contract called contractTopLevelViews.
 
-#### Entrypoints:
+### Entrypoints:
 
 - `default`
 
@@ -797,7 +797,7 @@ view "add" nat nat { UNPAIR ; ADD } ;
 
 which can be called by other contracts to calculate and return some value.
 
-#### Entrypoints:
+### Entrypoints:
 
 - `default`
 
@@ -837,7 +837,7 @@ This contract has an FA1.2 interface. To determine if a contract has an FA1.2 in
 tezos-client check contract KT1CfFBaLoUrgv93k8668KCCcu2hNDNYPz4L implements fa1.2
 ```
 
-#### Entrypoints:
+### Entrypoints:
 
 - `approve`
 - `burn`
@@ -895,7 +895,7 @@ A contract has an FA2 interface if it has entrypoints: transfer, balance_of, and
 
 This contract has an FA2 interface.
 
-#### Entrypoints:
+### Entrypoints:
 
 - `balance_of`
 - `mint`
@@ -1022,7 +1022,7 @@ Each of the following contracts is used to demonstrate an aspect of getMetadata.
 
 In this example the storage holds the metadata in a bigmap.
 
-#### Entrypoints:
+### Entrypoints:
 
 - `default`
 
@@ -1087,7 +1087,7 @@ homepage: https://taquito.io/
 
 In this example the storage holds a URL that refers to the metadata.
 
-#### Entrypoints:
+### Entrypoints:
 
 - `default`
 
@@ -1145,7 +1145,7 @@ homepage: https://github.com/ecadlabs/taquito
 
 In this example the storage holds a URL encrypted with SHA 256 that refers to the metadata.
 
-#### Entrypoints:
+### Entrypoints:
 
 - `default`
 
@@ -1207,7 +1207,7 @@ homepage: https://github.com/ecadlabs/taquito
 
 In this example the storage holds an IPFS location that refers to the metadata.
 
-#### Entrypoints:
+### Entrypoints:
 
 - `default`
 
@@ -1264,7 +1264,7 @@ homepage: https://github.com/ecadlabs/taquitoj
 
 This contract has a view named `someJson` that can be found in the metadata. When we inspect those metadata, we can see that this view takes no parameter and has a returnType of bytes.
 
-#### Entrypoints:
+### Entrypoints:
 
 - `default`
 
@@ -1313,7 +1313,7 @@ license: MIT
 
 This contract has a view named `multiply-the-nat-in-storage` that can be found in the metadata. When we inspect those metadata, we can see that this view takes a `nat` has a parameter, has a returnType of `nat` and has the following instructions: `DUP, CDR, CAR, SWAP, CAR, MUL`.
 
-#### Entrypoints:
+### Entrypoints:
 
 - `default`
 
@@ -1374,7 +1374,7 @@ This line creates a contract abstraction with multiple methods named after the c
 
 For more details see [Taquito Wallet API doc](https://taquito.io/docs/wallet_API)
 
-#### Entrypoints:
+### Entrypoints:
 
 - `default`
 
@@ -1404,7 +1404,7 @@ storage: 1;
 
 This is a simple smart contract with two methods: `areYouThere` expects a value of type `boolean` to update the `areYouThere` value in the storage of the same type, and `addName` expects a value of type `string` to add it to the map in the contract.
 
-#### Entrypoints:
+### Entrypoints:
 
 - `addName`
 - `areYouThere`
@@ -1444,7 +1444,7 @@ Sapling is a protocol enabling privacy-preserving transactions of fungible token
 in Taquito Integration Tests is a single-state sapling contract. It features the Michelson instruction "SAPLING_VERIFY_UPDATE".
 A sapling_state is represented by an integer value in the contract storage.
 
-#### Entrypoints:
+### Entrypoints:
 
 - `default`
 

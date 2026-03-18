@@ -67,12 +67,12 @@ Tracking the confirmation of transactions and the update of the transaction coun
 ### Using the Batch API
 For a more in-depth explanation of the Batch API, please refer to [this document](batch-api) for examples and use cases that you can adopt into your own projects.
 
-## Interacting Directly With the Flow of Operations
+## Interacting directly with the flow of operations
 As developers, there might come a time when you need to customize the flow of operations to suit your needs. For example, you would like to modify one of the steps in the flow, or you'd like to have just the prepared object and forge them independently.
 
 Without using the Contract/Wallet API the flow of operations would look something like this:
 
-### Preparing a Transaction Operation
+### Preparing a transaction operation
 ```typescript
 import { TezosToolkit } from '@taquito/taquito'
 const Tezos = new TezosToolkit(RPC_URL);
@@ -89,7 +89,7 @@ const prepared = await Tezos.prepare.transaction({
 const forgeable = await Tezos.prepare.toForge(prepared);
 ```
 
-### Forging the Transaction Operation
+### Forging the transaction operation
 ```typescript
 // Import the LocalForger
 import { LocalForger } from '@taquito/local-forging';
@@ -98,13 +98,13 @@ const forger = new LocalForger();
 const forgedBytes = await forger.forge(forgeable);
 ```
 
-### Signing the Operation
+### Signing the operation
 After the transaction operation has been forged, it can be signed as such:
 ```typescript
 const signed = await Tezos.signer.sign(forgedBytes, new Uint8Array([3]))
 ```
 
-### Injecting the Operation
+### Injecting the operation
 Finally after signing, you can inject your operation to the blockchain.
 
 ```typescript

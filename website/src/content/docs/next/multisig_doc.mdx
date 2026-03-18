@@ -1,12 +1,12 @@
 ---
-title: Multisig contract interactions
+title: Multisig Contract Interactions
 author: Claude Barde
 ---
 
-# Interacting with the multisig contract
+## Interacting with the multisig contract
 The `tezos-client` provides a simple multisig contract that you can originate and interact with directly from the command line.  
 
-However, you may want to build a dapp that interacts with the contract, and writing the JavaScript to do so turns out to be tricky.  
+However, you may want to build a dApp that interacts with the contract, and writing the JavaScript to do so turns out to be tricky.  
 
 After understanding the structure of the contract, you will be able to use Taquito to write code that will send a `transfer` transaction and a `change_keys` transaction to your originated multisig contract.
 
@@ -18,10 +18,10 @@ The multisig contract in the `tezos-client` allows three actions:
 - the transfer of tez stored in the contract to a given address
 - the update of the participants to the multisig contract
 
-> Note:
-> Only the first action is not subject to the agreement of the participants, anybody can send tez to the contract
+>[!NOTE]
+> Only the transfer and update actions are subject to the agreement of the participants. Anybody can send tez to the contract.
 
-In order to transfer tez or to change the participants of the multisig contract, a transaction must be sent to the contract. The transaction must include a payload and a list of signatures generated from the payload, and the length of the list must match or exceed the current threshold stored in the contract storage.
+In order to transfer tez or to change the participants of the multisig contract, a transaction must be sent to the contract. The transaction must include a payload, a list of signatures generated from the payload, and the length of the list must match or exceed the current threshold stored in the contract storage.
 
 The storage of the contract includes also a counter that is incremented at every successful transaction to prevent operations from being replayed.
 
@@ -33,7 +33,7 @@ The multisig contract allows the participants to send a Michelson lambda along w
 - Having the participants of the contract sign the packed value
 - Sending a transaction to the contract with the payload and the obtained signatures
 
-> Note:
+>[!NOTE]
 > A `lambda` is an inline function made of Michelson code within curly braces that will be run during the contract execution.
 
 Let's see how that translates into JavaScript:
@@ -122,7 +122,7 @@ const { bytes: payload } = packDataBytes(
 
 This action uses the `packDataBytes` method that you can find in the `@taquito/michel-codec` package to pack the data we created above locally. This will output the payload that will be signed.
 
->Note:
+>[!NOTE]
 > `packDataBytes` allows local packing, which removes any risk of data corruption that may exist when using the packing feature of a remote RPC node.
 
 ```typescript
@@ -160,7 +160,7 @@ If everything works correctly, the counter of the multisig contract should be in
 
 ## Using the `change_keys` entrypoint
 
-Sending a `change_keys` operation is going to be very similar to sending a `transfer` operation, with a little difference in the arguments you provide.
+Sending a `change_keys` operation is very similar to sending a `transfer` operation, with a small difference in the arguments you provide.
 
 The purpose of the `change_keys` operation is to update the threshold and the keys in the list of participants while asking all the current participants if they approve the update.
 
@@ -199,12 +199,12 @@ const michelsonData = `(
 const dataToPack = p.parseMichelineExpression(michelsonData);
 
 const michelsonType = `(pair chain_id (pair address (pair nat (or (lambda unit (list operation)) (pair nat (list key))))))`;
-  const typeToPack = p.parseMichelineExpression(michelsonType);
+const typeToPack = p.parseMichelineExpression(michelsonType);
 
-  const { bytes: payload } = packDataBytes(
+const { bytes: payload } = packDataBytes(
     dataToPack as any,
     typeToPack as any
-  );
+);
 ```
 
 This creates the Michelson value and its type that will be ultimately packed in order to generate the payload that the other participants must sign.  
@@ -285,7 +285,7 @@ const lambda = `{
         } ;
 }`;
 ```
-The lambda here is going to prepare an operation to the liquidity baking DEX (also called "SIRIUS DEX"), the only value that you have to calculate beforehand is the minimum amount of tzBTC expected to be received in exchange for 50 XTZ:
+The lambda here is going to prepare an operation to the liquidity baking DEX (also called "SIRIUS DEX"). The only value that you have to calculate beforehand is the minimum amount of tzBTC expected to be received in exchange for 50 XTZ:
 
 ```typescript
 const tokenOut_ = new BigNumber(tokenOut).times(new BigNumber(1000));

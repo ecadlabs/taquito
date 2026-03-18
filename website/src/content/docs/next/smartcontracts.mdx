@@ -1,5 +1,5 @@
 ---
-title: Smart contract interaction
+title: Smart Contract Interaction
 author: Jev Bjorsell
 ---
 
@@ -13,11 +13,11 @@ Taquito makes developing applications (dApps or traditional programs) around a T
 
 Michelson is a somewhat specialized language that isn't typical in Javascript or Typescript development contexts. Taquito helps to bridge the gap between the Tezos blockchain and a standard Javascript or Typescript development environment.
 
-## Taquito's Smart Contract Abstraction
+## Taquito's smart contract abstraction
 
 Taquito assists developers by reading the Michelson code for a given contract from the blockchain. Based on the retrieved Michelson code, Taquito generates a `contract` javascript object with methods and storage that correspond to the contract's Michelson entry points, storage definitions, and values.
 
-## The Counter Contract
+## The counter contract
 
 In this guide, we use a straightforward "counter" smart contract to illustrate how Taquito works.
 
@@ -25,7 +25,7 @@ The counter contract has two entry points named `increment` and `decrement.` Taq
 
 The counter contract's storage is a simple integer that gets increased or decreased based on the calls to the entrypoints.
 
-### Counter Contract in JSLIGO v1.3.0
+### Counter contract in JSLIGO v1.3.0
 
 ```
 namespace Counter {
@@ -47,7 +47,7 @@ namespace Counter {
 
 You can view this contract and deploy it to a testnet using the [Ligo WebIDE][2]
 
-### Counter Contract Michelson source code
+### Counter contract Michelson source code
 
 ```
 { parameter (or (unit %reset) (or (int %decrement) (int %increment))) ;
@@ -141,7 +141,7 @@ try {
   </TabItem>
 </Tabs>
 
-## Calling the Increment function
+## Calling the increment function
 
 In the next example, we call the `send()` method. This example requires a different ceremony for getting a temporary key for signing.
 
@@ -190,119 +190,6 @@ try {
   console.log(`Error: ${JSON.stringify(error, null, 2)}`);
 }
 ```
-  </TabItem>
-</Tabs>
-
-## Choosing between the `methods` or `methodsObject` members to interact with smart contracts
-
-:::note
-Since Taquito version 16.2.0, we introduced syntax support for nested options in `methodsObject` but not `methods` due to the limitation of the flattened form. We recommend users migrate to using `methodsObject` as its syntax is consistent with storage parameters, supports all Michelson data types, and is continually maintained.
-
-Since Taquito version 10.2.0, parameters can be passed in an object format when calling a smart contract entry point. The `ContractAbstraction` class has a new member called `methodsObject`, which serves the same purpose as the `methods` member. The format expected by the smart contract method differs: methods expect flattened arguments while `methodsObject` expects an object. `methodsObject` provides Taquito users with a way to pass an object when calling a contract entry point using a format similar to that used by the storage parameter when deploying a contract.
-
-An example showing the difference is provided below.
-:::
-
-<Tabs
-defaultValue="object"
-values={[
-{label: 'Parameter as an object', value: 'object'},
-{label: 'Flattened arguments', value: 'flat'},
-]}>
-
-<TabItem value='object'>
-
-In the following example, a contract's `set_child_record` method will be called by passing the parameter in an object format. The `methodsObject` member of the `ContractAbstraction` class allows doing so. First, it is possible to obtain details about the signature of the `set_child_record` entry point by using the `getSignature` method as follow:
-
-```js live
-try {
-  const contract = await Tezos.contract.at('KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN');
-  console.log(`List all contract methods: ${Object.keys(contract.methodsObject)}\n`);
-  console.log(
-    `Inspect the signature of the 'set_child_record' contract method: ${JSON.stringify(
-      contract.methodsObject.set_child_record().getSignature(),
-      null,
-      2
-    )}`
-  );
-} catch (error) {
-  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
-}
-```
-
-The preceding example returns an object giving indication on how to structure the parameter when calling the`set_child_record` method. Here is an example where the `set_child_record` method is called by passing the parameter in an object format:
-
-```js live
-try {
-  await importKey(Tezos, secretKey);
-  const contract = await Tezos.contract.at('KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN');
-
-  const operation = await contract.methodsObject
-    .set_child_record({
-      address: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr',
-      data: new MichelsonMap(),
-      label: 'EEEE',
-      owner: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr',
-      parent: 'FFFF',
-    })
-    .send();
-
-  console.log(`Awaiting for ${operation.hash} to be confirmed...`);
-  const hash = await operation.confirmation();
-
-  console.log(`Operation injected: https://ghostnet.tzkt.io/${hash}/operations`);
-} catch (error) {
-  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
-}
-```
-</TabItem>
-<TabItem value='flat'>
-
-In the following example, a contract's `set_child_record` method will be called by passing the arguments using the flattened representation. The `methods` member of the `ContractAbstraction` class allows doing so. First, it is possible to obtain details about the signature of the `set_child_record` entry point by using the `getSignature` method as follow:
-
-```js live
-try {
-  const contract = await Tezos.contract.at('KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN');
-  console.log(`List all contract methods: ${Object.keys(contract.methodsObject)}\n`);
-  console.log(
-    `Inspect the signature of the 'set_child_record' contract method: ${JSON.stringify(
-      contract.methods.set_child_record().getSignature(),
-      null,
-      2
-    )}`
-  );
-} catch (error) {
-  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
-}
-```
-
-The preceding example returns an array which contains the different possible signatures. Different signatures are possible as the `set_child_record` method contains some optional arguments. In the following example the `set_child_record` method is called by passing the arguments in the flattened way:
-
-```js live
-try {
-  await importKey(Tezos, secretKey);
-  const contract = await Tezos.contract.at('KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN');
-
-  const operation = await contract.methods
-    .set_child_record(
-      'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr', //address(optional)
-      new MichelsonMap(), //data
-      'EEEE', //label
-      'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr', //owner
-      'FFFF', //parent
-      '10' //ttl(optional)
-    )
-    .send();
-
-  console.log(`Awaiting for ${operation.hash} to be confirmed...`);
-  const hash = await operation.confirmation();
-
-  console.log(`Operation injected: https://ghostnet.tzkt.io/${hash}/operations`);
-} catch (error) {
-  console.log(`Error: ${JSON.stringify(error, null, 2)}`);
-}
-```
-
   </TabItem>
 </Tabs>
 
