@@ -78,9 +78,20 @@ describe('inmemory-signer', () => {
   it('fromFundraiser: InvalidMnemonicError must not leak mnemonic in message or properties', () => {
     const invalidWord = 'veryveryverwrong';
     const mnemonic = [
-      'economy', 'venture', 'sad', 'marriage', 'attitude', 'borrow',
-      'limit', 'country', 'agent', 'away', invalidWord, 'nerve',
-      'laptop', 'oven',
+      'economy',
+      'venture',
+      'sad',
+      'marriage',
+      'attitude',
+      'borrow',
+      'limit',
+      'country',
+      'agent',
+      'away',
+      invalidWord,
+      'nerve',
+      'laptop',
+      'oven',
     ].join(' ');
 
     try {
@@ -95,8 +106,9 @@ describe('inmemory-signer', () => {
   });
 
   it('deprecated InvalidMnemonicError(mnemonic) constructor must not leak secret', () => {
-    const secret = 'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about';
-    const err = new InvalidMnemonicError(secret);
+    const secret =
+      'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about';
+    const err = new InvalidMnemonicError();
     expectNoSecretLeak(err, secret);
     expect(err.message).toContain('Invalid mnemonic');
   });
@@ -258,7 +270,9 @@ describe('inmemory-signer', () => {
       'BLsigAMExDCYjNtvjLUqvLiEQJro6VrJFZ7yr7eNY4YCAVTYVerMnrNtk7cY8ve8D4HfJ55YtK93sQNFTcXTYGt8c6HutFneTz31aR198QkbBfZpHmvJV4zGQTHKroNFDRWLw3c3eJXyAu'
     );
     expect(signer.canProvePossession).toEqual(true);
-    expect((await signer.provePossession())?.prefixSig).toEqual('BLsigAp94rBWCJU7yM7X5F4zSw15AKkW1JZ5dwkqa2Xjdo1y4jhcQKVf6Sh7GFV261MUEx3WbfStUkP83tmKRpAucD4NEo1bLCB3s1TM4ByDUYZ1vUV5qsAWFLagvbnHfn61DnouoxmTij');
+    expect((await signer.provePossession())?.prefixSig).toEqual(
+      'BLsigAp94rBWCJU7yM7X5F4zSw15AKkW1JZ5dwkqa2Xjdo1y4jhcQKVf6Sh7GFV261MUEx3WbfStUkP83tmKRpAucD4NEo1bLCB3s1TM4ByDUYZ1vUV5qsAWFLagvbnHfn61DnouoxmTij'
+    );
   });
 
   it('Should instantiate tz1 from mnemonic from in memory signer', async () => {
