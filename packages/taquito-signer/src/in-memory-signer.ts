@@ -54,7 +54,7 @@ export class InMemorySigner implements Signer {
 
   static fromFundraiser(email: string, password: string, mnemonic: string) {
     if (!bip39.validateMnemonic(mnemonic, wordlist)) {
-      throw new InvalidMnemonicError(mnemonic);
+      throw new InvalidMnemonicError();
     }
     const seed = bip39.mnemonicToSeedSync(mnemonic, `${email}${password}`);
     const key = b58Encode(seed.subarray(0, 32), PrefixV2.Ed25519Seed);
@@ -80,7 +80,7 @@ export class InMemorySigner implements Signer {
     // check if curve is defined if not default tz1
     if (!bip39.validateMnemonic(mnemonic, wordlist)) {
       // avoiding exposing mnemonic again in case of mistake making invalid
-      throw new InvalidMnemonicError(mnemonic)
+      throw new InvalidMnemonicError();
     }
     const seed = bip39.mnemonicToSeedSync(mnemonic, password);
 
