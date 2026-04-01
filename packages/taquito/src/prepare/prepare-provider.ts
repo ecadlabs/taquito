@@ -1319,14 +1319,17 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     });
 
     const ops: RPCOperation[] = [];
+    const gasLimitPatchableFlags: boolean[] = [];
     if (!estimates) {
       for (const op of batchParams) {
         if (isOpWithFee(op)) {
           const limits = mergeLimits(op, DEFAULT_PARAMS);
 
           ops.push(await this.getRPCOp({ ...op, ...limits }));
+          gasLimitPatchableFlags.push(typeof op.gasLimit === 'undefined');
         } else {
           ops.push({ ...op });
+          gasLimitPatchableFlags.push(false);
         }
       }
     } else {
@@ -1339,8 +1342,10 @@ export class PrepareProvider extends Provider implements PreparationProvider {
             gasLimit: e!.gasLimit,
           });
           ops.push(await this.getRPCOp({ ...op, ...limits }));
+          gasLimitPatchableFlags.push(false);
         } else {
           ops.push({ ...op });
+          gasLimitPatchableFlags.push(false);
         }
       }
     }
@@ -1365,6 +1370,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
           publicKey
         )
       );
+      gasLimitPatchableFlags.unshift(false);
     }
 
     const hash = await this.getBlockHash();
@@ -1374,6 +1380,9 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
 
     const contents = this.constructOpContents(ops, headCounter, pkh);
+    const gasLimitPatchableIndexes = gasLimitPatchableFlags.flatMap((isPatchable, index) =>
+      isPatchable ? [index] : []
+    );
     return {
       opOb: {
         branch: hash,
@@ -1381,6 +1390,12 @@ export class PrepareProvider extends Provider implements PreparationProvider {
         protocol,
       },
       counter: headCounter,
+      simulation:
+        gasLimitPatchableIndexes.length > 0
+          ? {
+              gasLimitPatchableIndexes,
+            }
+          : undefined,
     };
   }
 

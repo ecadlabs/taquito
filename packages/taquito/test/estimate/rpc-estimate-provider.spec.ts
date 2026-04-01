@@ -29,6 +29,7 @@ import {
   finalizeUnstakeNoRevealDiffSourceDestination,
 } from '../contract/helper';
 import { OpKind, PvmKind } from '@taquito/rpc';
+import { HttpResponseError } from '@taquito/http-utils';
 import { TransferTicketParams } from '../../src/operations/types';
 import { InvalidAddressError } from '@taquito/utils';
 import { ContractAbstraction } from '../../src/contract';
@@ -1518,6 +1519,64 @@ describe('RPCEstimateProvider test wallet', () => {
         suggestedFeeMutez: 1333,
       });
     });
+
+    it('retries simulation with RPC expected counters when counter_in_the_past is returned', async () => {
+      mockRpcClient.getManagerKey.mockResolvedValue(null);
+      mockRpcClient.getContract.mockResolvedValue({ counter: '8903746' });
+      mockRpcClient.simulateOperation
+        .mockRejectedValueOnce(
+          new HttpResponseError(
+            'Http error response: (500) counter_in_the_past',
+            500 as any,
+            'Internal Server Error',
+            JSON.stringify([
+              {
+                kind: 'branch',
+                id: 'proto.024-PtTALLiN.contract.counter_in_the_past',
+                contract: 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
+                expected: '8903756',
+                found: '8903747',
+              },
+            ]),
+            'http://example.test/chains/main/blocks/head/helpers/scripts/simulate_operation'
+          )
+        )
+        .mockResolvedValueOnce({
+          contents: [
+            {
+              kind: 'reveal',
+              source: 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
+              fee: 10000,
+              metadata: {
+                operation_result: { status: 'applied', consumed_milligas: '1000' },
+              },
+            },
+            {
+              kind: 'delegation',
+              source: 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
+              fee: 10000,
+              metadata: {
+                operation_result: { status: 'applied', consumed_milligas: '10000000' },
+              },
+            },
+          ],
+        });
+
+      mockForger.forge.mockResolvedValue(new Array(149).fill('aa').join(''));
+
+      const estimate = await estimateProvider.registerDelegate({});
+      expect(estimate.gasLimit).toBeGreaterThan(0);
+
+      expect(mockRpcClient.simulateOperation).toHaveBeenCalledTimes(2);
+      const firstCallContents = mockRpcClient.simulateOperation.mock.calls[0][0].operation.contents;
+      const secondCallContents =
+        mockRpcClient.simulateOperation.mock.calls[1][0].operation.contents;
+
+      expect(firstCallContents[0].counter).toEqual('8903747');
+      expect(firstCallContents[1].counter).toEqual('8903748');
+      expect(secondCallContents[0].counter).toEqual('8903756');
+      expect(secondCallContents[1].counter).toEqual('8903757');
+    });
   });
 
   describe('batch', () => {
@@ -1571,6 +1630,199 @@ describe('RPCEstimateProvider test wallet', () => {
       expect(estimate[0].gasLimit).toEqual(1000);
       expect(estimate[1].gasLimit).toEqual(1000);
       expect(estimate[2].gasLimit).toEqual(1330);
+    });
+
+    it('retries simulation with rebalanced gas when RPC returns gas_limit_too_high and gas_exhausted.block', async () => {
+      const highLimits = {
+        hard_gas_limit_per_operation: new BigNumber(1040000),
+        hard_storage_limit_per_operation: new BigNumber(60000),
+        hard_gas_limit_per_block: new BigNumber(5200000),
+        cost_per_byte: new BigNumber(1000),
+      };
+      const lowLimits = {
+        hard_gas_limit_per_operation: new BigNumber(1040000),
+        hard_storage_limit_per_operation: new BigNumber(60000),
+        hard_gas_limit_per_block: new BigNumber(1040000),
+        cost_per_byte: new BigNumber(1000),
+      };
+
+      mockRpcClient.getConstants
+        .mockResolvedValueOnce(highLimits)
+        .mockResolvedValueOnce(highLimits)
+        .mockResolvedValueOnce(lowLimits)
+        .mockResolvedValue(highLimits);
+
+      mockRpcClient.simulateOperation
+        .mockRejectedValueOnce(
+          new HttpResponseError(
+            'Http error response: (500) gas limits',
+            500 as any,
+            'Internal Server Error',
+            JSON.stringify([
+              { kind: 'permanent', id: 'proto.024-PtTALLiN.gas_limit_too_high' },
+              { kind: 'temporary', id: 'proto.024-PtTALLiN.gas_exhausted.block' },
+            ]),
+            'http://example.test/chains/main/blocks/head/helpers/scripts/simulate_operation'
+          )
+        )
+        .mockResolvedValueOnce({
+          contents: [
+            {
+              kind: 'transaction',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              fee: '0',
+              metadata: {
+                operation_result: {
+                  status: 'applied',
+                  consumed_milligas: '1000',
+                },
+              },
+            },
+            {
+              kind: 'transaction',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              fee: '0',
+              metadata: {
+                operation_result: {
+                  status: 'applied',
+                  consumed_milligas: '1000',
+                },
+              },
+            },
+            {
+              kind: 'transaction',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              fee: '0',
+              metadata: {
+                operation_result: {
+                  status: 'applied',
+                  consumed_milligas: '1000',
+                },
+              },
+            },
+          ],
+        });
+
+      const estimates = await estimateProvider.batch([
+        { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 2 },
+        { kind: OpKind.TRANSACTION, to: 'tz3hRZUScFCcEVhdDjXWoyekbgd1Gatga6mp', amount: 2 },
+        { kind: OpKind.TRANSACTION, to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn', amount: 2 },
+      ]);
+
+      expect(estimates).toHaveLength(3);
+      expect(mockRpcClient.simulateOperation).toHaveBeenCalledTimes(2);
+
+      const firstCallContents = mockRpcClient.simulateOperation.mock.calls[0][0].operation.contents;
+      const secondCallContents =
+        mockRpcClient.simulateOperation.mock.calls[1][0].operation.contents;
+
+      expect(firstCallContents.map((content: { gas_limit: string }) => content.gas_limit)).toEqual([
+        '1040000',
+        '1040000',
+        '1040000',
+      ]);
+      expect(secondCallContents.map((content: { gas_limit: string }) => content.gas_limit)).toEqual(
+        ['346666', '346666', '346666']
+      );
+    });
+
+    it('retries simulation for the same auto-patched batch operations when their initial gas is already below the hard limit', async () => {
+      const highLimits = {
+        hard_gas_limit_per_operation: new BigNumber(1040000),
+        hard_storage_limit_per_operation: new BigNumber(60000),
+        hard_gas_limit_per_block: new BigNumber(1040000),
+        cost_per_byte: new BigNumber(1000),
+      };
+      const lowLimits = {
+        hard_gas_limit_per_operation: new BigNumber(1040000),
+        hard_storage_limit_per_operation: new BigNumber(60000),
+        hard_gas_limit_per_block: new BigNumber(600000),
+        cost_per_byte: new BigNumber(1000),
+      };
+
+      mockRpcClient.getConstants
+        .mockResolvedValueOnce(highLimits)
+        .mockResolvedValueOnce(highLimits)
+        .mockResolvedValueOnce(lowLimits)
+        .mockResolvedValue(highLimits);
+
+      mockRpcClient.simulateOperation
+        .mockRejectedValueOnce(
+          new HttpResponseError(
+            'Http error response: (500) gas limits',
+            500 as any,
+            'Internal Server Error',
+            JSON.stringify([
+              { kind: 'permanent', id: 'proto.024-PtTALLiN.gas_limit_too_high' },
+              { kind: 'temporary', id: 'proto.024-PtTALLiN.gas_exhausted.block' },
+            ]),
+            'http://example.test/chains/main/blocks/head/helpers/scripts/simulate_operation'
+          )
+        )
+        .mockResolvedValueOnce({
+          contents: [
+            {
+              kind: 'transaction',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              fee: '0',
+              metadata: {
+                operation_result: {
+                  status: 'applied',
+                  consumed_milligas: '1000',
+                },
+              },
+            },
+            {
+              kind: 'transaction',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              fee: '0',
+              metadata: {
+                operation_result: {
+                  status: 'applied',
+                  consumed_milligas: '1000',
+                },
+              },
+            },
+            {
+              kind: 'transaction',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              fee: '0',
+              metadata: {
+                operation_result: {
+                  status: 'applied',
+                  consumed_milligas: '1000',
+                },
+              },
+            },
+          ],
+        });
+
+      const estimates = await estimateProvider.batch([
+        {
+          kind: OpKind.TRANSACTION,
+          to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
+          amount: 2,
+          gasLimit: 1000,
+        },
+        { kind: OpKind.TRANSACTION, to: 'tz3hRZUScFCcEVhdDjXWoyekbgd1Gatga6mp', amount: 2 },
+        { kind: OpKind.TRANSACTION, to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn', amount: 2 },
+      ]);
+
+      expect(estimates).toHaveLength(3);
+      expect(mockRpcClient.simulateOperation).toHaveBeenCalledTimes(2);
+
+      const firstCallContents = mockRpcClient.simulateOperation.mock.calls[0][0].operation.contents;
+      const secondCallContents =
+        mockRpcClient.simulateOperation.mock.calls[1][0].operation.contents;
+
+      expect(firstCallContents.map((content: { gas_limit: string }) => content.gas_limit)).toEqual([
+        '1000',
+        '519500',
+        '519500',
+      ]);
+      expect(secondCallContents.map((content: { gas_limit: string }) => content.gas_limit)).toEqual(
+        ['1000', '299500', '299500']
+      );
     });
   });
 
