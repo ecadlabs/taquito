@@ -46,7 +46,7 @@ Refer to the `taquito/integration-tests/config.ts` file for details on test conf
 
 ### Common CI Reliability Variables
 
-- `TAQUITO_KEYGEN_URL`: overrides the Keygen API base URL (default: `https://keygen.ecadinfra.com`)
+- `TAQUITO_KEYGEN_URL`: overrides the Keygen API base URL (default: `http://keygen-direct.ecadinfra.com` on GitHub Actions, otherwise `https://keygen.ecadinfra.com`)
 - `TAQUITO_KEYGEN_REQUEST_TIMEOUT_MS`: fail-fast timeout (in ms) for Keygen API HTTP requests (default: `30000`)
 - `TAQUITO_FRESH_KEY_MAX_ATTEMPTS`: max attempts when selecting a fresh key (default: `5`)
 - `TAQUITO_FRESH_KEY_RETRY_MS`: delay between fresh-key retry attempts in ms (default: `0`)

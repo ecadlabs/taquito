@@ -213,6 +213,7 @@ describe('PrepareProvider test', () => {
               kind: 'reveal',
               fee: '334',
               public_key: 'test_pub_key',
+              proof: undefined,
               source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
               gas_limit: '633',
               storage_limit: '0',
@@ -234,6 +235,88 @@ describe('PrepareProvider test', () => {
         },
         counter: 0,
       });
+    });
+
+    it('should reserve reveal gas from the block budget when operation and block gas limits are equal', async () => {
+      mockReadProvider.isAccountRevealed.mockResolvedValue(false);
+      mockRpcClient.getConstants.mockResolvedValue({
+        hard_gas_limit_per_operation: new BigNumber(1040000),
+        hard_storage_limit_per_operation: new BigNumber(60000),
+        hard_gas_limit_per_block: new BigNumber(1040000),
+        cost_per_byte: new BigNumber(1000),
+      });
+      mockReadProvider.getProtocolConstants.mockResolvedValue({
+        hard_gas_limit_per_operation: new BigNumber('1040000'),
+        hard_gas_limit_per_block: new BigNumber('1040000'),
+        cost_per_byte: new BigNumber('250'),
+        hard_storage_limit_per_operation: new BigNumber('60000'),
+        minimal_block_delay: new BigNumber('30'),
+        time_between_blocks: [new BigNumber('60'), new BigNumber('40')],
+      });
+
+      const prepared = await prepareProvider.transaction({
+        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+        amount: 2,
+      });
+
+      expect(prepared).toEqual({
+        opOb: {
+          branch: 'test_block_hash',
+          contents: [
+            {
+              kind: 'reveal',
+              fee: '334',
+              public_key: 'test_pub_key',
+              proof: undefined,
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              gas_limit: '633',
+              storage_limit: '0',
+              counter: '1',
+            },
+            {
+              kind: 'transaction',
+              fee: '0',
+              gas_limit: '1039367',
+              storage_limit: '60000',
+              amount: '2000000',
+              destination: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              counter: '2',
+              parameters: undefined,
+            },
+          ],
+          protocol: 'test_protocol',
+        },
+        counter: 0,
+      });
+    });
+
+    it('should track the auto-assigned manager operation gas for simulation retries', async () => {
+      mockReadProvider.isAccountRevealed.mockResolvedValue(false);
+      mockRpcClient.getConstants.mockResolvedValue({
+        hard_gas_limit_per_operation: new BigNumber(1040000),
+        hard_storage_limit_per_operation: new BigNumber(60000),
+        hard_gas_limit_per_block: new BigNumber(1040000),
+        cost_per_byte: new BigNumber(1000),
+      });
+      mockReadProvider.getProtocolConstants.mockResolvedValue({
+        hard_gas_limit_per_operation: new BigNumber('1040000'),
+        hard_gas_limit_per_block: new BigNumber('1040000'),
+        cost_per_byte: new BigNumber('250'),
+        hard_storage_limit_per_operation: new BigNumber('60000'),
+        minimal_block_delay: new BigNumber('30'),
+        time_between_blocks: [new BigNumber('60'), new BigNumber('40')],
+      });
+
+      const prepared = await prepareProvider.transaction({
+        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+        amount: 2,
+      });
+
+      expect(prepared.simulation).toEqual({
+        gasLimitPatchableIndexes: [1],
+      });
+      expect(Object.keys(prepared)).not.toContain('simulation');
     });
 
     it('should be able to prepare transaction op without reveal op when estimate returns undefined', async () => {
@@ -766,6 +849,7 @@ describe('PrepareProvider test', () => {
                 kind: 'reveal',
                 fee: '334',
                 public_key: 'test_pub_key',
+                proof: undefined,
                 source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
                 gas_limit: '633',
                 storage_limit: '0',
@@ -779,6 +863,7 @@ describe('PrepareProvider test', () => {
                 storage_limit: '60000',
                 pk: 'edpkti5K5JbdLpp2dCqiTLoLQqs5wqzeVhfHVnNhsSCuoU8zdHYoY7',
                 counter: '2',
+                proof: undefined,
               },
             ],
             protocol: 'test_protocol',
@@ -833,6 +918,7 @@ describe('PrepareProvider test', () => {
                 kind: 'reveal',
                 fee: '334',
                 public_key: 'test_pub_key',
+                proof: undefined,
                 source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
                 gas_limit: '633',
                 storage_limit: '0',
@@ -912,6 +998,7 @@ describe('PrepareProvider test', () => {
                 kind: 'reveal',
                 fee: '334',
                 public_key: 'test_pub_key',
+                proof: undefined,
                 source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
                 gas_limit: '633',
                 storage_limit: '0',
@@ -1049,6 +1136,7 @@ describe('PrepareProvider test', () => {
                 kind: 'reveal',
                 fee: '334',
                 public_key: 'test_pub_key',
+                proof: undefined,
                 source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
                 gas_limit: '633',
                 storage_limit: '0',
@@ -1217,6 +1305,7 @@ describe('PrepareProvider test', () => {
                 kind: 'reveal',
                 fee: '334',
                 public_key: 'test_pub_key',
+                proof: undefined,
                 source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
                 gas_limit: '633',
                 storage_limit: '0',
@@ -1297,6 +1386,7 @@ describe('PrepareProvider test', () => {
                 kind: 'reveal',
                 fee: '334',
                 public_key: 'test_pub_key',
+                proof: undefined,
                 source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
                 gas_limit: '633',
                 storage_limit: '0',
@@ -1327,8 +1417,52 @@ describe('PrepareProvider test', () => {
             ],
             protocol: 'test_protocol',
           },
+          simulation: {
+            gasLimitPatchableIndexes: [1, 2],
+          },
           counter: 0,
         });
+      });
+
+      it('should patch remaining batch operations with 0 gas when reveal and explicit gas exhaust the block budget', async () => {
+        mockReadProvider.isAccountRevealed.mockResolvedValue(false);
+        mockReadProvider.getProtocolConstants.mockResolvedValue({
+          hard_gas_limit_per_operation: new BigNumber('1040000'),
+          hard_gas_limit_per_block: new BigNumber('1040000'),
+          cost_per_byte: new BigNumber('250'),
+          hard_storage_limit_per_operation: new BigNumber('60000'),
+          minimal_block_delay: new BigNumber('30'),
+          time_between_blocks: [new BigNumber('60'), new BigNumber('40')],
+        });
+
+        const prepared = await prepareProvider.batch([
+          {
+            kind: OpKind.TRANSACTION,
+            to: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
+            amount: 2,
+            gasLimit: 1039367,
+          },
+          {
+            kind: OpKind.TRANSACTION,
+            to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+            amount: 2,
+          },
+        ]);
+
+        expect(prepared.opOb.contents).toEqual([
+          expect.objectContaining({
+            kind: 'reveal',
+            gas_limit: '633',
+          }),
+          expect.objectContaining({
+            kind: 'transaction',
+            gas_limit: '1039367',
+          }),
+          expect.objectContaining({
+            kind: 'transaction',
+            gas_limit: '0',
+          }),
+        ]);
       });
 
       it('should be able to prepare a batch operation', async () => {
@@ -1360,6 +1494,7 @@ describe('PrepareProvider test', () => {
                 destination: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
                 source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
                 counter: '1',
+                parameters: undefined,
               },
               {
                 kind: 'transaction',
@@ -1370,9 +1505,13 @@ describe('PrepareProvider test', () => {
                 destination: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
                 source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
                 counter: '2',
+                parameters: undefined,
               },
             ],
             protocol: 'test_protocol',
+          },
+          simulation: {
+            gasLimitPatchableIndexes: [0, 1],
           },
           counter: 0,
         });

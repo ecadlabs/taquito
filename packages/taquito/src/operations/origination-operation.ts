@@ -112,6 +112,13 @@ export class OriginationOperation<TContract extends DefaultContractType = Defaul
     }
 
     await this.confirmation(confirmations, timeout);
-    return this.contractProvider.at<TContract>(this.contractAddress);
+    if (!Number.isFinite(this.includedInBlock)) {
+      throw new OriginationOperationError('Confirmation completed but includedInBlock was not set');
+    }
+    return this.contractProvider.at<TContract>(
+      this.contractAddress,
+      undefined,
+      this.includedInBlock
+    );
   }
 }

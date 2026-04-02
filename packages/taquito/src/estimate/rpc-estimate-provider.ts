@@ -140,7 +140,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
       chain_id: await this.context.readProvider.getChainId(),
     };
 
-    const { opResponse } = await this.simulate(operation);
+    const { opResponse } = await this.simulate(operation, op);
     const { cost_per_byte, origination_size } = constants;
     const errors = [...flattenErrors(opResponse, 'backtracked'), ...flattenErrors(opResponse)];
 

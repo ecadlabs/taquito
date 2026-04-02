@@ -9,10 +9,10 @@ import { Context } from '../context';
 import { DefaultWalletType } from '../contract/contract';
 import { findWithKind } from '../operations/types';
 import { WalletOperation, OperationStatus } from './operation';
-import { ObservableError } from './errors';
+import { ObservableError, OriginationWalletOperationError } from './errors';
 
 export class OriginationWalletOperation<
-  TWallet extends DefaultWalletType = DefaultWalletType
+  TWallet extends DefaultWalletType = DefaultWalletType,
 > extends WalletOperation {
   constructor(
     public readonly opHash: string,
@@ -60,6 +60,13 @@ export class OriginationWalletOperation<
   public async contract() {
     const op = await this.originationOperation();
     const address = (op?.metadata.operation_result.originated_contracts || [])[0];
-    return this.context.wallet.at<TWallet>(address);
+    if (!address) {
+      throw new OriginationWalletOperationError('No contract was originated in this operation');
+    }
+
+    await this.confirmation();
+    const inclusionBlock = await this.getInclusionBlock();
+
+    return this.context.wallet.at<TWallet>(address, undefined, inclusionBlock.header.level);
   }
 }

@@ -19,6 +19,8 @@ import {
   OperationContentsUpdateConsensusKey,
   OperationContentsUpdateCompanionKey,
   ScriptResponse,
+  EntrypointsResponse,
+  ScriptedContracts,
 } from '@taquito/rpc';
 import {
   encodeExpr,
@@ -87,6 +89,7 @@ import { SmartRollupExecuteOutboxMessageOperation } from '../operations/smart-ro
 import { Provider } from '../provider';
 import { PrepareProvider } from '../prepare';
 import { FailingNoopOperation } from '../operations/failing-noop-operation';
+import { BlockIdentifier } from '../read-provider/interface';
 
 export class RpcContractProvider extends Provider implements ContractProvider, StorageProvider {
   constructor(
@@ -915,7 +918,8 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
    */
   async at<T extends DefaultContractType = DefaultContractType>(
     address: string,
-    contractAbstractionComposer: ContractAbstractionComposer<T> = (x) => x as any
+    contractAbstractionComposer: ContractAbstractionComposer<T> = (x) => x as any,
+    block: BlockIdentifier = 'head'
   ): Promise<T> {
     const addressValidation = validateContractAddress(address);
     if (addressValidation !== ValidationResult.VALID) {
@@ -923,14 +927,44 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
     }
     const rpc = this.context.withExtensions().rpc;
     const readProvider = this.context.withExtensions().readProvider;
-    const script = await readProvider.getScript(address, 'head');
-    const entrypoints = await readProvider.getEntrypoints(address);
+
+    const loadContractState = async (
+      requestedBlock: BlockIdentifier
+    ): Promise<{ script: ScriptedContracts; entrypoints: EntrypointsResponse }> => {
+      const script = await readProvider.getScript(address, requestedBlock);
+      const entrypoints =
+        requestedBlock === 'head'
+          ? await readProvider.getEntrypoints(address)
+          : await rpc.getEntrypoints(address, { block: String(requestedBlock) });
+
+      return { script, entrypoints };
+    };
+
+    let contractState: { script: ScriptedContracts; entrypoints: EntrypointsResponse };
+
+    try {
+      contractState = await loadContractState(block);
+    } catch (error) {
+      // Shadownet's rolling nodes occasionally 404 a just-originated contract at the exact
+      // inclusion level even after confirmation. Retry at head so the contract abstraction still
+      // resolves once the node's contract index catches up.
+      if (
+        block !== 'head' &&
+        error instanceof HttpResponseError &&
+        error.status === STATUS_CODE.NOT_FOUND
+      ) {
+        contractState = await loadContractState('head');
+      } else {
+        throw error;
+      }
+    }
+
     const abs = new ContractAbstraction(
       address,
-      script,
+      contractState.script,
       this,
       this,
-      entrypoints,
+      contractState.entrypoints,
       rpc,
       readProvider
     );

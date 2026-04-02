@@ -2,6 +2,7 @@ import { defaultConfigConfirmation } from '../../src/context';
 import { OriginationOperation, ForgedBytes } from '@taquito/taquito';
 import { OperationContentsAndResult } from '@taquito/rpc';
 import { OriginationOperationBuilder, RevealOperationBuilder } from '../helpers';
+import { OriginationOperationError } from '../../src/operations/errors';
 import { PollingSubscribeProvider } from '../../src/subscribe/polling-subcribe-provider';
 
 describe('Origination operation', () => {
@@ -178,7 +179,31 @@ describe('Origination operation', () => {
       );
       const contract = await op.contract();
       expect(contract).toBe('contract');
-      expect(fakeContractProvider.at).toHaveBeenCalledWith('KT1KjGmnNQ6iXWr8VHGM8n8b8EQXHc6eRsPD');
+      expect(fakeContractProvider.at).toHaveBeenCalledWith(
+        'KT1KjGmnNQ6iXWr8VHGM8n8b8EQXHc6eRsPD',
+        undefined,
+        200
+      );
+    });
+
+    it('should throw if confirmation completes without an inclusion level', async () => {
+      const fakeContractProvider: any = {
+        at: jest.fn(),
+      };
+
+      const op = new OriginationOperation(
+        'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
+        {} as any,
+        fakeForgedBytes,
+        successfulResult,
+        fakeContext,
+        fakeContractProvider
+      );
+      jest.spyOn(op, 'confirmation').mockResolvedValue(200);
+
+      await expect(op.contract()).rejects.toEqual(
+        new OriginationOperationError('Confirmation completed but includedInBlock was not set')
+      );
     });
 
     it('should throw an error if no contract is available', async () => {

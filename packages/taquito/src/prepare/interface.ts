@@ -150,9 +150,7 @@ export interface PreparationProvider {
    * @param contractMethod ContractMethodObject retrieved from smart contract
    * @returns a PreparedOperation object
    */
-  contractCall(
-    contractMethod: ContractMethodObject<ContractProvider>
-  ): Promise<PreparedOperation>;
+  contractCall(contractMethod: ContractMethodObject<ContractProvider>): Promise<PreparedOperation>;
 
   /**
    *
@@ -178,4 +176,13 @@ export interface PreparedOperation {
     protocol: string;
   };
   counter: number;
+  simulation?: {
+    /**
+     * Indexes of operation contents whose gas limit was auto-assigned for simulation.
+     * This mirrors octez-client's `may_patch_limits` behavior, which tracks manager
+     * operations with unknown gas limits and rebalances only that set against the
+     * block gas budget during simulation.
+     */
+    gasLimitPatchableIndexes?: number[];
+  };
 }

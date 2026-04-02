@@ -6,6 +6,7 @@ import { ligoSample } from '../../data/ligo-simple-contract';
 import { managerCode } from '../../data/manager_code';
 import { InvalidAmountError } from '@taquito/core';
 import { PrefixV2 } from '@taquito/utils';
+import { waitForContractAt } from './contract-test-helpers';
 
 CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
   const Tezos = lib;
@@ -31,7 +32,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
           fee: 800,
         });
         await originate.confirmation();
-        contract = await Tz1.contract.at((await originate.contract()).address);
+        contract = await waitForContractAt(Tz1, (await originate.contract()).address);
         expect(originate.status).toEqual('applied');
       }
       catch (ex: any) {
