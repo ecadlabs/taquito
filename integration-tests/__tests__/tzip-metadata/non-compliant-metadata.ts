@@ -1,8 +1,8 @@
-import { HttpResponseError } from '@taquito/http-utils';
+import { HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
 import { BigMapContractMetadataNotFoundError } from '@taquito/tzip16';
 import { sleep } from '../../config';
 
-const transientRpcRetries = 3;
+const transientRpcRetries = 5;
 
 export const expectMetadataLookupToRejectWithoutMetadata = async (
   getMetadata: () => Promise<unknown>
@@ -16,9 +16,14 @@ export const expectMetadataLookupToRejectWithoutMetadata = async (
         return;
       }
 
-      if (error instanceof HttpResponseError && error.status >= 500 && attempt < transientRpcRetries) {
-        await sleep(250 * attempt);
-        continue;
+      if (error instanceof HttpResponseError && attempt < transientRpcRetries) {
+        const transientStatus =
+          error.status === STATUS_CODE.NOT_FOUND || error.status >= STATUS_CODE.INTERNAL_SERVER_ERROR;
+
+        if (transientStatus) {
+          await sleep(250 * attempt);
+          continue;
+        }
       }
 
       throw error;
