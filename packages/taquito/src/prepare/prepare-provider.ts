@@ -263,6 +263,39 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     }
   }
 
+  private getSingleManagerOperationSimulation(
+    ops: RPCOperation[],
+    gasLimit?: number
+  ): PreparedOperation['simulation'] | undefined {
+    if (typeof gasLimit !== 'undefined' || ops.length === 0) {
+      return;
+    }
+
+    return {
+      gasLimitPatchableIndexes: [ops.length - 1],
+    };
+  }
+
+  private withSimulationMetadata(
+    preparedOperation: PreparedOperation,
+    simulation?: PreparedOperation['simulation']
+  ): PreparedOperation {
+    if (!simulation) {
+      return preparedOperation;
+    }
+
+    // Keep retry bookkeeping available to estimation without changing the
+    // enumerable shape of single-op prepared results.
+    Object.defineProperty(preparedOperation, 'simulation', {
+      value: simulation,
+      configurable: true,
+      enumerable: false,
+      writable: true,
+    });
+
+    return preparedOperation;
+  }
+
   private constructOpContents(
     ops: RPCOperation[],
     headCounter: number,
@@ -368,7 +401,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
     const contents = this.constructOpContents(ops, headCounter, pkh);
 
-    return {
+    const preparedOperation = {
       opOb: {
         branch: hash,
         contents,
@@ -376,6 +409,8 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       },
       counter: headCounter,
     };
+
+    return preparedOperation;
   }
 
   /**
@@ -428,7 +463,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
     const contents = this.constructOpContents(ops, headCounter, pkh);
 
-    return {
+    const preparedOperation = {
       opOb: {
         branch: hash,
         contents,
@@ -436,6 +471,8 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       },
       counter: headCounter,
     };
+
+    return preparedOperation;
   }
 
   /**
@@ -476,7 +513,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
     const contents = this.constructOpContents(ops, headCounter, pkh, source);
 
-    return {
+    const preparedOperation = {
       opOb: {
         branch: hash,
         contents,
@@ -484,6 +521,11 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       },
       counter: headCounter,
     };
+
+    return this.withSimulationMetadata(
+      preparedOperation,
+      this.getSingleManagerOperationSimulation(ops, gasLimit)
+    );
   }
 
   /**
@@ -522,7 +564,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
     const contents = this.constructOpContents(ops, headCounter, pkh, rest.source);
 
-    return {
+    const preparedOperation = {
       opOb: {
         branch: hash,
         contents,
@@ -530,6 +572,11 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       },
       counter: headCounter,
     };
+
+    return this.withSimulationMetadata(
+      preparedOperation,
+      this.getSingleManagerOperationSimulation(ops, gasLimit)
+    );
   }
 
   /**
@@ -569,7 +616,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
     const contents = this.constructOpContents(ops, headCounter, pkh, rest.source);
 
-    return {
+    const preparedOperation = {
       opOb: {
         branch: hash,
         contents,
@@ -577,6 +624,11 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       },
       counter: headCounter,
     };
+
+    return this.withSimulationMetadata(
+      preparedOperation,
+      this.getSingleManagerOperationSimulation(ops, gasLimit)
+    );
   }
 
   /**
@@ -619,7 +671,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
     const contents = this.constructOpContents(ops, headCounter, pkh, rest.source);
 
-    return {
+    const preparedOperation = {
       opOb: {
         branch: hash,
         contents,
@@ -627,6 +679,11 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       },
       counter: headCounter,
     };
+
+    return this.withSimulationMetadata(
+      preparedOperation,
+      this.getSingleManagerOperationSimulation(ops, gasLimit)
+    );
   }
 
   /**
@@ -671,7 +728,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
     const contents = this.constructOpContents(ops, headCounter, pkh, rest.source);
 
-    return {
+    const preparedOperation = {
       opOb: {
         branch: hash,
         contents,
@@ -679,6 +736,11 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       },
       counter: headCounter,
     };
+
+    return this.withSimulationMetadata(
+      preparedOperation,
+      this.getSingleManagerOperationSimulation(ops, gasLimit)
+    );
   }
 
   /**
@@ -718,7 +780,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
     const contents = this.constructOpContents(ops, headCounter, pkh, rest.source);
 
-    return {
+    const preparedOperation = {
       opOb: {
         branch: hash,
         contents,
@@ -726,6 +788,11 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       },
       counter: headCounter,
     };
+
+    return this.withSimulationMetadata(
+      preparedOperation,
+      this.getSingleManagerOperationSimulation(ops, gasLimit)
+    );
   }
 
   /**
@@ -769,7 +836,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
     const contents = this.constructOpContents(ops, headCounter, pkh, source);
 
-    return {
+    const preparedOperation = {
       opOb: {
         branch: hash,
         contents,
@@ -777,6 +844,11 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       },
       counter: headCounter,
     };
+
+    return this.withSimulationMetadata(
+      preparedOperation,
+      this.getSingleManagerOperationSimulation(ops, gasLimit)
+    );
   }
 
   /**
@@ -816,7 +888,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
     const contents = this.constructOpContents(ops, headCounter, pkh, rest.source);
 
-    return {
+    const preparedOperation = {
       opOb: {
         branch: hash,
         contents,
@@ -824,6 +896,11 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       },
       counter: headCounter,
     };
+
+    return this.withSimulationMetadata(
+      preparedOperation,
+      this.getSingleManagerOperationSimulation(ops, gasLimit)
+    );
   }
 
   /**
@@ -874,7 +951,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
     const contents = this.constructOpContents(ops, headCounter, pkh, source);
 
-    return {
+    const preparedOperation = {
       opOb: {
         branch: hash,
         contents,
@@ -882,6 +959,11 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       },
       counter: headCounter,
     };
+
+    return this.withSimulationMetadata(
+      preparedOperation,
+      this.getSingleManagerOperationSimulation(ops, gasLimit)
+    );
   }
 
   /**
@@ -927,7 +1009,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
     const contents = this.constructOpContents(ops, headCounter, pkh, source);
 
-    return {
+    const preparedOperation = {
       opOb: {
         branch: hash,
         contents,
@@ -935,6 +1017,11 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       },
       counter: headCounter,
     };
+
+    return this.withSimulationMetadata(
+      preparedOperation,
+      this.getSingleManagerOperationSimulation(ops, gasLimit)
+    );
   }
 
   /**
@@ -974,7 +1061,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
     const contents = this.constructOpContents(ops, headCounter, pkh, rest.source);
 
-    return {
+    const preparedOperation = {
       opOb: {
         branch: hash,
         contents,
@@ -982,6 +1069,11 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       },
       counter: headCounter,
     };
+
+    return this.withSimulationMetadata(
+      preparedOperation,
+      this.getSingleManagerOperationSimulation(ops, gasLimit)
+    );
   }
 
   /**
@@ -1020,7 +1112,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       currentVotingPeriod
     );
 
-    return {
+    const preparedOperation = {
       opOb: {
         branch: hash,
         contents,
@@ -1028,6 +1120,8 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       },
       counter: headCounter,
     };
+
+    return preparedOperation;
   }
 
   /**
@@ -1067,7 +1161,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       currentVotingPeriod
     );
 
-    return {
+    const preparedOperation = {
       opOb: {
         branch: hash,
         contents,
@@ -1075,6 +1169,8 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       },
       counter: headCounter,
     };
+
+    return preparedOperation;
   }
 
   /**
@@ -1100,7 +1196,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
     const contents = this.constructOpContents(ops, headCounter, pkh, source);
 
-    return {
+    const preparedOperation = {
       opOb: {
         branch: hash,
         contents,
@@ -1108,6 +1204,8 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       },
       counter: headCounter,
     };
+
+    return preparedOperation;
   }
 
   /**
@@ -1147,7 +1245,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
     const contents = this.constructOpContents(ops, headCounter, pkh, rest.source);
 
-    return {
+    const preparedOperation = {
       opOb: {
         branch: hash,
         contents,
@@ -1155,6 +1253,11 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       },
       counter: headCounter,
     };
+
+    return this.withSimulationMetadata(
+      preparedOperation,
+      this.getSingleManagerOperationSimulation(ops, gasLimit)
+    );
   }
 
   /**
@@ -1193,7 +1296,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
     const contents = this.constructOpContents(ops, headCounter, pkh, rest.source);
 
-    return {
+    const preparedOperation = {
       opOb: {
         branch: hash,
         contents,
@@ -1201,6 +1304,11 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       },
       counter: headCounter,
     };
+
+    return this.withSimulationMetadata(
+      preparedOperation,
+      this.getSingleManagerOperationSimulation(ops, gasLimit)
+    );
   }
 
   /**
@@ -1239,7 +1347,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
     const contents = this.constructOpContents(ops, headCounter, pkh, rest.source);
 
-    return {
+    const preparedOperation = {
       opOb: {
         branch: hash,
         contents,
@@ -1247,6 +1355,11 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       },
       counter: headCounter,
     };
+
+    return this.withSimulationMetadata(
+      preparedOperation,
+      this.getSingleManagerOperationSimulation(ops, gasLimit)
+    );
   }
 
   /**
@@ -1285,7 +1398,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
     const contents = this.constructOpContents(ops, headCounter, pkh, rest.source);
 
-    return {
+    const preparedOperation = {
       opOb: {
         branch: hash,
         contents,
@@ -1293,6 +1406,11 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       },
       counter: headCounter,
     };
+
+    return this.withSimulationMetadata(
+      preparedOperation,
+      this.getSingleManagerOperationSimulation(ops, gasLimit)
+    );
   }
 
   /**
@@ -1450,7 +1568,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
     const contents = this.constructOpContents(ops, headCounter, pkh);
 
-    return {
+    const preparedOperation = {
       opOb: {
         branch: hash,
         contents,
@@ -1458,6 +1576,11 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       },
       counter: headCounter,
     };
+
+    return this.withSimulationMetadata(
+      preparedOperation,
+      this.getSingleManagerOperationSimulation(ops, params.gasLimit)
+    );
   }
 
   /**

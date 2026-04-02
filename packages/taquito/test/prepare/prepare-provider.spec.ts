@@ -291,6 +291,34 @@ describe('PrepareProvider test', () => {
       });
     });
 
+    it('should track the auto-assigned manager operation gas for simulation retries', async () => {
+      mockReadProvider.isAccountRevealed.mockResolvedValue(false);
+      mockRpcClient.getConstants.mockResolvedValue({
+        hard_gas_limit_per_operation: new BigNumber(1040000),
+        hard_storage_limit_per_operation: new BigNumber(60000),
+        hard_gas_limit_per_block: new BigNumber(1040000),
+        cost_per_byte: new BigNumber(1000),
+      });
+      mockReadProvider.getProtocolConstants.mockResolvedValue({
+        hard_gas_limit_per_operation: new BigNumber('1040000'),
+        hard_gas_limit_per_block: new BigNumber('1040000'),
+        cost_per_byte: new BigNumber('250'),
+        hard_storage_limit_per_operation: new BigNumber('60000'),
+        minimal_block_delay: new BigNumber('30'),
+        time_between_blocks: [new BigNumber('60'), new BigNumber('40')],
+      });
+
+      const prepared = await prepareProvider.transaction({
+        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+        amount: 2,
+      });
+
+      expect(prepared.simulation).toEqual({
+        gasLimitPatchableIndexes: [1],
+      });
+      expect(Object.keys(prepared)).not.toContain('simulation');
+    });
+
     it('should be able to prepare transaction op without reveal op when estimate returns undefined', async () => {
       mockReadProvider.isAccountRevealed.mockResolvedValue(true);
 

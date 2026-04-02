@@ -1577,6 +1577,78 @@ describe('RPCEstimateProvider test wallet', () => {
       expect(secondCallContents[0].counter).toEqual('8903756');
       expect(secondCallContents[1].counter).toEqual('8903757');
     });
+
+    it('retries simulation for a single auto-patched manager operation when reveal-reserved gas is already below the hard limit', async () => {
+      const highLimits = {
+        hard_gas_limit_per_operation: new BigNumber(1040000),
+        hard_storage_limit_per_operation: new BigNumber(60000),
+        hard_gas_limit_per_block: new BigNumber(1040000),
+        cost_per_byte: new BigNumber(1000),
+      };
+      const lowLimits = {
+        hard_gas_limit_per_operation: new BigNumber(1040000),
+        hard_storage_limit_per_operation: new BigNumber(60000),
+        hard_gas_limit_per_block: new BigNumber(900000),
+        cost_per_byte: new BigNumber(1000),
+      };
+
+      mockRpcClient.getManagerKey.mockResolvedValue(null);
+      mockRpcClient.getConstants
+        .mockResolvedValueOnce(highLimits)
+        .mockResolvedValueOnce(highLimits)
+        .mockResolvedValueOnce(lowLimits)
+        .mockResolvedValue(highLimits);
+
+      mockRpcClient.simulateOperation
+        .mockRejectedValueOnce(
+          new HttpResponseError(
+            'Http error response: (500) gas limits',
+            500 as any,
+            'Internal Server Error',
+            JSON.stringify([
+              { kind: 'permanent', id: 'proto.024-PtTALLiN.gas_limit_too_high' },
+              { kind: 'temporary', id: 'proto.024-PtTALLiN.gas_exhausted.block' },
+            ]),
+            'http://example.test/chains/main/blocks/head/helpers/scripts/simulate_operation'
+          )
+        )
+        .mockResolvedValueOnce({
+          contents: [
+            {
+              kind: 'reveal',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              fee: 10000,
+              metadata: {
+                operation_result: { status: 'applied', consumed_milligas: '1000' },
+              },
+            },
+            {
+              kind: 'delegation',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              fee: 10000,
+              metadata: {
+                operation_result: { status: 'applied', consumed_milligas: '10000000' },
+              },
+            },
+          ],
+        });
+
+      const estimate = await estimateProvider.registerDelegate({});
+      expect(estimate.gasLimit).toBeGreaterThan(0);
+      expect(mockRpcClient.simulateOperation).toHaveBeenCalledTimes(2);
+
+      const firstCallContents = mockRpcClient.simulateOperation.mock.calls[0][0].operation.contents;
+      const secondCallContents =
+        mockRpcClient.simulateOperation.mock.calls[1][0].operation.contents;
+
+      expect(firstCallContents.map((content: { gas_limit: string }) => content.gas_limit)).toEqual([
+        '633',
+        '1039367',
+      ]);
+      expect(secondCallContents.map((content: { gas_limit: string }) => content.gas_limit)).toEqual(
+        ['633', '899367']
+      );
+    });
   });
 
   describe('batch', () => {
