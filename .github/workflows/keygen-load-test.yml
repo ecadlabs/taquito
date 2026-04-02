@@ -1,0 +1,75 @@
+name: Keygen TTFB Load Test
+
+on:
+  workflow_dispatch:
+    inputs:
+      duration:
+        description: 'Test duration in seconds'
+        default: '300'
+        required: false
+      concurrency:
+        description: 'Concurrent requests per batch'
+        default: '20'
+        required: false
+      ttfb_threshold_ms:
+        description: 'Fail if any TTFB exceeds this (ms)'
+        default: '5000'
+        required: false
+      compare:
+        description: 'Compare CF-proxied vs direct (true/false)'
+        default: 'false'
+        required: false
+  schedule:
+    # Run nightly at 02:00 UTC
+    - cron: '0 2 * * *'
+
+jobs:
+  keygen-load-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/Jod
+          cache: npm
+
+      - run: npm ci
+
+      - name: Run keygen TTFB load test
+        id: load-test
+        run: |
+          set +e
+          node -r ts-node/register scripts/keygen-load-test.ts \
+            | tee /tmp/keygen-load-test-output.txt
+          echo "exit_code=$?" >> "$GITHUB_OUTPUT"
+          set -e
+        env:
+          TAQUITO_KEYGEN_AUTH_HEADER: ${{ secrets.TAQUITO_KEYGEN_AUTH_HEADER }}
+          KEYGEN_URL: https://keygen.ecadinfra.com/ghostnet
+          KEYGEN_DIRECT_URL: https://keygen-direct.ecadinfra.com/ghostnet
+          KEYGEN_TEST_DURATION: ${{ github.event.inputs.duration || '300' }}
+          KEYGEN_CONCURRENCY: ${{ github.event.inputs.concurrency || '20' }}
+          KEYGEN_TTFB_THRESHOLD_MS: ${{ github.event.inputs.ttfb_threshold_ms || '5000' }}
+          KEYGEN_COMPARE: ${{ github.event.inputs.compare || 'false' }}
+
+      - name: Write step summary
+        if: always()
+        run: |
+          echo '## Keygen TTFB Load Test Results' >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          cat /tmp/keygen-load-test-output.txt >> "$GITHUB_STEP_SUMMARY" || true
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload output artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: keygen-load-test-output
+          path: /tmp/keygen-load-test-output.txt
+          retention-days: 30
+
+      - name: Fail on threshold breach
+        if: steps.load-test.outputs.exit_code != '0'
+        run: exit 1

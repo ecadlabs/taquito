@@ -5,7 +5,12 @@
  * for KEYGEN_TEST_DURATION seconds (default 300) and reports TTFB statistics.
  *
  * Usage:
- *   KEYGEN_TOKEN=<token> node -r ts-node/register scripts/keygen-load-test.ts
+ *   TAQUITO_KEYGEN_AUTH_HEADER="Authorization: Bearer <token>" \
+ *     node -r ts-node/register scripts/keygen-load-test.ts
+ *
+ * Auth (pick one — TAQUITO_KEYGEN_AUTH_HEADER takes precedence):
+ *   TAQUITO_KEYGEN_AUTH_HEADER  — full header string, e.g. "Authorization: Bearer taquito-example"
+ *   KEYGEN_TOKEN                — bare bearer token (TAQUITO_KEYGEN_AUTH_HEADER preferred in CI)
  *
  * Optional env vars:
  *   KEYGEN_URL                 — target URL (default: https://keygen.ecadinfra.com/ghostnet)
@@ -23,12 +28,21 @@ import { URL } from 'url';
 const KEYGEN_URL = process.env.KEYGEN_URL ?? 'https://keygen.ecadinfra.com/ghostnet';
 const KEYGEN_DIRECT_URL =
   process.env.KEYGEN_DIRECT_URL ?? 'https://keygen-direct.ecadinfra.com/ghostnet';
-const KEYGEN_TOKEN = process.env.KEYGEN_TOKEN ?? '';
 const DURATION_MS = parseInt(process.env.KEYGEN_TEST_DURATION ?? '300', 10) * 1000;
 const CONCURRENCY = parseInt(process.env.KEYGEN_CONCURRENCY ?? '20', 10);
 const TTFB_THRESHOLD_MS = parseInt(process.env.KEYGEN_TTFB_THRESHOLD_MS ?? '5000', 10);
 const COMPARE = process.env.KEYGEN_COMPARE === 'true';
 const REQUEST_TIMEOUT_MS = 60_000;
+
+// Resolve auth header — prefer the full-header form used by existing keygen infra scripts
+function resolveAuthHeader(): string {
+  const full = process.env.TAQUITO_KEYGEN_AUTH_HEADER;
+  if (full) return full;
+  const token = process.env.KEYGEN_TOKEN;
+  if (token) return `Authorization: Bearer ${token}`;
+  return '';
+}
+const AUTH_HEADER = resolveAuthHeader();
 
 interface RequestResult {
   probeNumber: number;
@@ -39,13 +53,17 @@ interface RequestResult {
   error?: string;
 }
 
-function makeRequest(url: string, token: string, probeNumber: number): Promise<RequestResult> {
+function makeRequest(url: string, probeNumber: number): Promise<RequestResult> {
   return new Promise((resolve) => {
     const parsed = new URL(url);
     const isHttps = parsed.protocol === 'https:';
     const lib = isHttps ? https : http;
 
     const body = '{}';
+    // AUTH_HEADER is "Authorization: Bearer <token>" — split on first ": " for the headers map
+    const [authName, ...authValueParts] = AUTH_HEADER.split(': ');
+    const authValue = authValueParts.join(': ');
+
     const options: https.RequestOptions = {
       hostname: parsed.hostname,
       port: parsed.port || (isHttps ? 443 : 80),
@@ -54,7 +72,7 @@ function makeRequest(url: string, token: string, probeNumber: number): Promise<R
       headers: {
         'Content-Type': 'application/json',
         'Content-Length': Buffer.byteLength(body),
-        Authorization: `Bearer ${token}`,
+        [authName]: authValue,
       },
     };
 
@@ -185,7 +203,7 @@ async function runTest(url: string, label: string): Promise<RequestResult[]> {
     const promises: Promise<RequestResult>[] = [];
     for (let i = 0; i < CONCURRENCY; i++) {
       probeNumber++;
-      promises.push(makeRequest(url, KEYGEN_TOKEN, probeNumber));
+      promises.push(makeRequest(url, probeNumber));
     }
 
     const results = await Promise.all(promises);
@@ -217,8 +235,10 @@ async function runTest(url: string, label: string): Promise<RequestResult[]> {
 }
 
 async function main(): Promise<void> {
-  if (!KEYGEN_TOKEN) {
-    console.error('Error: KEYGEN_TOKEN environment variable is required.');
+  if (!AUTH_HEADER) {
+    console.error(
+      'Error: set TAQUITO_KEYGEN_AUTH_HEADER="Authorization: Bearer <token>" or KEYGEN_TOKEN=<token>'
+    );
     process.exit(1);
   }
 
