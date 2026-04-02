@@ -1,6 +1,7 @@
 import { InvalidCurveError, InvalidMnemonicError, ToBeImplemented } from '../src/errors';
 import { InMemorySigner } from '../src/taquito-signer';
 import { InvalidDerivationPathError, InvalidKeyError } from '@taquito/core';
+import { verifySignature } from '@taquito/utils';
 
 const serialize = (value: unknown): string => {
   try {
@@ -19,6 +20,28 @@ const expectNoSecretLeak = (error: Error, secret: string) => {
 
   for (const surface of surfaces) {
     expect(surface).not.toContain(secret);
+  }
+};
+
+const verificationMessages = Array.from({ length: 64 }, (_, index) =>
+  Buffer.from(
+    Array.from({ length: (index % 31) + 1 }, (_, inner) => (index * 17 + inner * 31) % 256)
+  ).toString('hex')
+);
+
+const expectSignerSignaturesToVerify = async (
+  signer: InMemorySigner,
+  { supportsPop = false }: { supportsPop?: boolean } = {}
+) => {
+  const publicKey = await signer.publicKey();
+
+  for (const [index, message] of verificationMessages.entries()) {
+    const asBytes = index % 2 === 0;
+    const watermark = supportsPop ? undefined : index % 3 === 0 ? undefined : new Uint8Array([3]);
+    const payload = asBytes ? Uint8Array.from(Buffer.from(message, 'hex')) : message;
+    const signed = await signer.sign(payload, watermark);
+
+    expect(verifySignature(signed.bytes, publicKey, signed.prefixSig, watermark)).toBe(true);
   }
 };
 
@@ -78,9 +101,20 @@ describe('inmemory-signer', () => {
   it('fromFundraiser: InvalidMnemonicError must not leak mnemonic in message or properties', () => {
     const invalidWord = 'veryveryverwrong';
     const mnemonic = [
-      'economy', 'venture', 'sad', 'marriage', 'attitude', 'borrow',
-      'limit', 'country', 'agent', 'away', invalidWord, 'nerve',
-      'laptop', 'oven',
+      'economy',
+      'venture',
+      'sad',
+      'marriage',
+      'attitude',
+      'borrow',
+      'limit',
+      'country',
+      'agent',
+      'away',
+      invalidWord,
+      'nerve',
+      'laptop',
+      'oven',
     ].join(' ');
 
     try {
@@ -95,7 +129,8 @@ describe('inmemory-signer', () => {
   });
 
   it('deprecated InvalidMnemonicError(mnemonic) constructor must not leak secret', () => {
-    const secret = 'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about';
+    const secret =
+      'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about';
     const err = new InvalidMnemonicError(secret);
     expectNoSecretLeak(err, secret);
     expect(err.message).toContain('Invalid mnemonic');
@@ -258,7 +293,26 @@ describe('inmemory-signer', () => {
       'BLsigAMExDCYjNtvjLUqvLiEQJro6VrJFZ7yr7eNY4YCAVTYVerMnrNtk7cY8ve8D4HfJ55YtK93sQNFTcXTYGt8c6HutFneTz31aR198QkbBfZpHmvJV4zGQTHKroNFDRWLw3c3eJXyAu'
     );
     expect(signer.canProvePossession).toEqual(true);
-    expect((await signer.provePossession())?.prefixSig).toEqual('BLsigAp94rBWCJU7yM7X5F4zSw15AKkW1JZ5dwkqa2Xjdo1y4jhcQKVf6Sh7GFV261MUEx3WbfStUkP83tmKRpAucD4NEo1bLCB3s1TM4ByDUYZ1vUV5qsAWFLagvbnHfn61DnouoxmTij');
+    expect((await signer.provePossession())?.prefixSig).toEqual(
+      'BLsigAp94rBWCJU7yM7X5F4zSw15AKkW1JZ5dwkqa2Xjdo1y4jhcQKVf6Sh7GFV261MUEx3WbfStUkP83tmKRpAucD4NEo1bLCB3s1TM4ByDUYZ1vUV5qsAWFLagvbnHfn61DnouoxmTij'
+    );
+  });
+
+  it('should verify signatures across representative messages for edge-case signers', async () => {
+    const signers = [
+      new InMemorySigner(
+        'edskS3DtVSbWbPD1yviMGebjYwWJtruMjDcfAZsH9uba22EzKeYhmQkkraFosFETmEMfFNVcDYQ5QbFerj9ozDKroXZ6mb5oxV'
+      ),
+      new InMemorySigner('spsk2rBDDeUqakQ42nBHDGQTtP3GErb6AahHPwF9bhca3Q5KA5HESE'),
+      new InMemorySigner('spsk24EJohZHJkZnWEzj3w9wE7BFARpFmq5WAo9oTtqjdJ2t4pyoB3'),
+      new InMemorySigner('p2sk2obfVMEuPUnadAConLWk7Tf4Dt3n4svSgJwrgpamRqJXvaYcg1'),
+      new InMemorySigner('p2sk2ke47zhFz3znRZj39TW5KKS9VgfU1Hax7KeErgnShNe9oQFQUP'),
+      new InMemorySigner('BLsk2zk6pBGysG9BJn4u3XNtFnJQ1wpUYz6sQMTZQdfxQaiBWkqLyh'),
+    ];
+
+    for (const signer of signers) {
+      await expectSignerSignaturesToVerify(signer, { supportsPop: signer.canProvePossession });
+    }
   });
 
   it('Should instantiate tz1 from mnemonic from in memory signer', async () => {

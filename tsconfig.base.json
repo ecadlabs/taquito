@@ -8,6 +8,7 @@
       "dom"
     ],
     "strict": true,
+    "isolatedModules": true,
     "sourceMap": true,
     "esModuleInterop": true,
     "noImplicitAny": true,

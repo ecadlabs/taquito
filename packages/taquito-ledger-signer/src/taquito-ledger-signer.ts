@@ -171,7 +171,7 @@ export class LedgerSigner implements Signer {
       }
       const idxLengthRVal = 3; // Third element of response is length of r value
       const rValue = extractValue(idxLengthRVal, ledgerResponse);
-      const idxLengthSVal = rValue.idxValueStart + rValue.length + 1;
+      const idxLengthSVal = idxLengthRVal + 2 + ledgerResponse[idxLengthRVal];
       const sValue = extractValue(idxLengthSVal, ledgerResponse);
       const signatureBuffer = Buffer.concat([rValue.buffer, sValue.buffer]);
       signature = signatureBuffer.toString('hex');
