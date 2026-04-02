@@ -59,7 +59,6 @@ function makeRequest(url: string, probeNumber: number): Promise<RequestResult> {
     const isHttps = parsed.protocol === 'https:';
     const lib = isHttps ? https : http;
 
-    const body = '{}';
     // AUTH_HEADER is "Authorization: Bearer <token>" — split on first ": " for the headers map
     const [authName, ...authValueParts] = AUTH_HEADER.split(': ');
     const authValue = authValueParts.join(': ');
@@ -68,10 +67,8 @@ function makeRequest(url: string, probeNumber: number): Promise<RequestResult> {
       hostname: parsed.hostname,
       port: parsed.port || (isHttps ? 443 : 80),
       path: parsed.pathname + parsed.search,
-      method: 'POST',
+      method: 'GET',
       headers: {
-        'Content-Type': 'application/json',
-        'Content-Length': Buffer.byteLength(body),
         [authName]: authValue,
       },
     };
@@ -132,7 +129,6 @@ function makeRequest(url: string, probeNumber: number): Promise<RequestResult> {
       req.destroy(new Error(`Request timeout (${REQUEST_TIMEOUT_MS}ms)`));
     });
 
-    req.write(body);
     req.end();
   });
 }
