@@ -1,5 +1,6 @@
 import { CONFIGS } from "../../config";
-import { tzip16, Tzip16Module, BigMapContractMetadataNotFoundError } from '@taquito/tzip16';
+import { tzip16, Tzip16Module } from '@taquito/tzip16';
+import { expectMetadataLookupToRejectWithoutMetadata } from './non-compliant-metadata';
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
@@ -33,11 +34,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       const contractAddress = (await op.contract()).address;
 
       const contract = await Tezos.wallet.at(contractAddress, tzip16);
-      try {
-        await contract.tzip16().getMetadata();
-      } catch (ex) {
-        expect(ex).toBeInstanceOf(BigMapContractMetadataNotFoundError);
-      }
+      await expectMetadataLookupToRejectWithoutMetadata(() => contract.tzip16().getMetadata());
     });
   });
 })

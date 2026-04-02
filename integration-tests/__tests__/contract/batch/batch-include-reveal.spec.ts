@@ -7,6 +7,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, signerConfig }) => {
     beforeEach(async () => {
       await setup({
         preferFreshKey: true,
+        requireUnrevealed: true,
         maxAttempts: 8,
         minBalanceMutez: 2_000_000,
       });
@@ -27,6 +28,8 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, signerConfig }) => {
         if (currentDelegate === pkh) {
           // Registered delegates cannot be delegated away from self on live networks.
           expect(ex.message).toMatch('delegate.no_deletion');
+        } else if (currentDelegate === knownBaker) {
+          expect(ex.message).toMatch('delegate.unchanged');
         } else if (signerConfig.type === SignerType.SECRET_KEY) {
           // Secret-key testnets can also reuse accounts that were already left in a bad state.
           expect(ex.message).toMatch('delegate.no_deletion');
@@ -56,6 +59,8 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, signerConfig }) => {
       } catch (ex: any) {
         if (currentDelegate === pkh) {
           expect(ex.message).toMatch('delegate.no_deletion');
+        } else if (currentDelegate === knownBaker) {
+          expect(ex.message).toMatch('delegate.unchanged');
         } else if (signerConfig.type === SignerType.SECRET_KEY) {
           // When running the test multiple times with the same key, can not reveal an already revealed contract.
           expect(ex.message).toMatch(`The publicKeyHash '${pkh}' has already been revealed.`);

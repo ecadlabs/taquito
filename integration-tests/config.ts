@@ -680,6 +680,12 @@ const configureRpcCache = (rpc: string, rpcCacheMilliseconds: string) => {
   }
 };
 
+export const clearRpcCache = (Tezos: TezosToolkit) => {
+  if (Tezos.rpc instanceof RpcClientCache) {
+    Tezos.rpc.deleteAllCachedData();
+  }
+};
+
 export const CONFIGS = () => {
   return forgers.reduce((prev, forger: ForgerType) => {
     const configs = providers.map(
@@ -730,6 +736,7 @@ export const CONFIGS = () => {
             // (e.g. custom stream polling intervals) do not leak across tests.
             Tezos.setProvider({ config: { confirmationPollingTimeoutSecond: 320 } });
             configurePollingInterval(Tezos, pollingIntervalMilliseconds);
+            clearRpcCache(Tezos);
 
             diagnosticsLog({
               stage: 'setup-start',

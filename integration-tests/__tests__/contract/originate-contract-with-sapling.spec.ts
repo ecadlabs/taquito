@@ -18,8 +18,12 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
   }
 
   describe(`Test origination of contracts with sapling using: ${rpc}`, () => {
-    beforeAll(async () => {
-      await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 });
+    beforeEach(async () => {
+      await setup({
+        preferFreshKey: true,
+        requireUnrevealed: true,
+        minBalanceMutez: 2_000_000,
+      });
     });
 
     test('Originates a Sapling Double contract', async () => {

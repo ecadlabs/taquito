@@ -1,3 +1,4 @@
+import { getRevealFee } from '@taquito/taquito';
 import { CONFIGS } from '../../config';
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
@@ -11,22 +12,23 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       const LocalTez = await createAddress();
       const op = await Tezos.contract.transfer({
         to: await LocalTez.signer.publicKeyHash(),
-        amount: 0.005,
+        amount: 0.01,
       });
       await op.confirmation();
 
       const pkh = await LocalTez.signer.publicKeyHash();
       const balance = await Tezos.tz.getBalance(pkh);
+      const revealFee = getRevealFee(pkh);
       const estimate = await LocalTez.estimate.transfer({
         to: await Tezos.signer.publicKeyHash(),
         mutez: true,
-        amount: balance.toNumber(),
+        amount: balance.minus(revealFee).toNumber(),
       });
 
       const op3 = await LocalTez.contract.transfer({
         to: await Tezos.signer.publicKeyHash(),
         mutez: true,
-        amount: balance.minus(estimate.suggestedFeeMutez).toNumber(),
+        amount: balance.minus(estimate.suggestedFeeMutez + revealFee).toNumber(),
         fee: estimate.suggestedFeeMutez,
         gasLimit: estimate.gasLimit,
         storageLimit: 0,
