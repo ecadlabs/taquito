@@ -25,6 +25,7 @@ import { OpKind, ParamsWithKind, TransferTicketParams } from '../../src/operatio
 import { NoopParser } from '../../src/taquito';
 import { OperationBatch } from '../../src/batch/rpc-batch-provider';
 import { PvmKind } from '@taquito/rpc';
+import { HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
 
 /**
  * RPCContractProvider test
@@ -56,6 +57,8 @@ describe('RpcContractProvider test', () => {
     getNextProtocol: jest.Mock<any, any>;
     getCounter: jest.Mock<any, any>;
     getProtocolConstants: jest.Mock<any, any>;
+    getScript: jest.Mock<any, any>;
+    getEntrypoints: jest.Mock<any, any>;
     getBalance: jest.Mock<any, any>;
     getSpendable: jest.Mock<any, any>;
     isAccountRevealed: jest.Mock<any, any>;
@@ -123,6 +126,8 @@ describe('RpcContractProvider test', () => {
       getNextProtocol: jest.fn(),
       getCounter: jest.fn(),
       getProtocolConstants: jest.fn(),
+      getScript: jest.fn(),
+      getEntrypoints: jest.fn(),
       getBalance: jest.fn(),
       getSpendable: jest.fn(),
       isAccountRevealed: jest.fn(),
@@ -213,11 +218,17 @@ describe('RpcContractProvider test', () => {
       minimal_block_delay: new BigNumber('30'),
       time_between_blocks: [new BigNumber('60'), new BigNumber('40')],
     });
+    mockReadProvider.getScript.mockResolvedValue({
+      code: [{ prim: 'parameter', args: [{ prim: 'unit' }] }, sample],
+      storage: sampleStorage,
+    });
+    mockReadProvider.getEntrypoints.mockResolvedValue({ entrypoints: {} });
     mockReadProvider.getBalance.mockResolvedValue(new BigNumber('10000000000'));
     mockReadProvider.getNextProtocol.mockResolvedValue('test_proto');
     mockReadProvider.getBlockHash.mockResolvedValue('test');
 
     mockRpcClient.getChainId.mockResolvedValue('chain-id');
+    mockRpcClient.getEntrypoints.mockResolvedValue({ entrypoints: {} });
     const estimateReveal = new Estimate(1000000, 0, 64, 250);
     mockEstimate.reveal.mockResolvedValue(estimateReveal);
 
@@ -359,6 +370,56 @@ describe('RpcContractProvider test', () => {
         },
         opbytes: 'test',
       });
+    });
+  });
+
+  describe('at', () => {
+    it('should read entrypoints from the read provider by default', async () => {
+      await rpcContractProvider.at('KT1KjGmnNQ6iXWr8VHGM8n8b8EQXHc6eRsPD');
+
+      expect(mockReadProvider.getScript).toHaveBeenCalledWith(
+        'KT1KjGmnNQ6iXWr8VHGM8n8b8EQXHc6eRsPD',
+        'head'
+      );
+      expect(mockReadProvider.getEntrypoints).toHaveBeenCalledWith(
+        'KT1KjGmnNQ6iXWr8VHGM8n8b8EQXHc6eRsPD'
+      );
+      expect(mockRpcClient.getEntrypoints).not.toHaveBeenCalled();
+    });
+
+    it('should read script and entrypoints from the requested block', async () => {
+      await rpcContractProvider.at('KT1KjGmnNQ6iXWr8VHGM8n8b8EQXHc6eRsPD', undefined, 200);
+
+      expect(mockReadProvider.getScript).toHaveBeenCalledWith(
+        'KT1KjGmnNQ6iXWr8VHGM8n8b8EQXHc6eRsPD',
+        200
+      );
+      expect(mockRpcClient.getEntrypoints).toHaveBeenCalledWith(
+        'KT1KjGmnNQ6iXWr8VHGM8n8b8EQXHc6eRsPD',
+        { block: '200' }
+      );
+    });
+
+    it('should retry at head when the inclusion block temporarily returns 404', async () => {
+      mockReadProvider.getScript.mockRejectedValueOnce(
+        new HttpResponseError('fail', STATUS_CODE.NOT_FOUND, 'err', 'test', 'https://test.com')
+      );
+
+      await rpcContractProvider.at('KT1KjGmnNQ6iXWr8VHGM8n8b8EQXHc6eRsPD', undefined, 200);
+
+      expect(mockReadProvider.getScript).toHaveBeenNthCalledWith(
+        1,
+        'KT1KjGmnNQ6iXWr8VHGM8n8b8EQXHc6eRsPD',
+        200
+      );
+      expect(mockReadProvider.getScript).toHaveBeenNthCalledWith(
+        2,
+        'KT1KjGmnNQ6iXWr8VHGM8n8b8EQXHc6eRsPD',
+        'head'
+      );
+      expect(mockReadProvider.getEntrypoints).toHaveBeenCalledWith(
+        'KT1KjGmnNQ6iXWr8VHGM8n8b8EQXHc6eRsPD'
+      );
     });
   });
 
