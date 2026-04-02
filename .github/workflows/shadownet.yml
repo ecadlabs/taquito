@@ -1,12 +1,16 @@
-name: Shadownet Integration Tests
+name: Ad Hoc Shadownet Integration Tests
 
 on:
   push:
     branches:
-      - '**shadow**'
+      # Keep this as an opt-in CI lane for dedicated shadownet branches. The PR workflow in
+      # main.yml already runs shadownet integration checks, so matching every feature branch
+      # containing "shadow" just duplicates the same suite with worse names.
+      - 'ci/**shadow**'
 
 jobs:
   integration-tests-shadownet:
+    name: integration-tests-shadownet-push
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:
@@ -19,3 +23,5 @@ jobs:
       - if: always()
         id: integration-tests-shadownet
         run: npm -w integration-tests run test:shadownet -- --maxWorkers=4 --exclude='**/sapling/**' --exclude='**/ledger/**'
+        env:
+          TAQUITO_FRESH_KEY_PREFETCH: '4'

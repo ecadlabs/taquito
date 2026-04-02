@@ -1,4 +1,4 @@
-import { CONFIGS } from "../config";
+import { CONFIGS } from '../config';
 import { DefaultContractType } from '@taquito/taquito';
 import { Chest, Timelock, ChestKey } from '@taquito/timelock';
 import { stringToBytes } from '@taquito/utils';
@@ -16,99 +16,110 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
   describe(`Timelock test coin flip contract ${rpc}`, () => {
     const step = sequentialTestSuite();
-    let contract: DefaultContractType
+    let contract: DefaultContractType;
     beforeAll(async () => {
       await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
-      const originate = await Tezos.contract.originate({ code: timelockCode, init: timelockStorage });
-      await originate.confirmation()
+      const originate = await Tezos.contract.originate({
+        code: timelockCode,
+        init: timelockStorage,
+      });
+      await originate.confirmation();
       contract = await originate.contract();
-      const storageB4: any = await contract.storage()
+      const storageB4: any = await contract.storage();
 
-      expect(storageB4.level.toNumber()).toBe(0)
-      expect(storageB4.guess).toBe('ff')
-      expect(storageB4.result).toBe('ff')
-    })
+      expect(storageB4.level.toNumber()).toBe(0);
+      expect(storageB4.guess).toBe('ff');
+      expect(storageB4.result).toBe('ff');
+    });
 
     step('should be able to initialize the game with chest', async () => {
       const payload = new TextEncoder().encode(message);
       const { chest, key } = Chest.newChestAndKey(payload, time);
       chestKey = key;
-      let init = await contract.methodsObject.initialize_game(chest.encode()).send()
-      await init.confirmation()
-      const storageInit: any = await contract.storage()
+      let init = await contract.methodsObject.initialize_game(chest.encode()).send();
+      await init.confirmation();
+      const storageInit: any = await contract.storage();
 
-      expect(storageInit.level.toNumber()).toBeGreaterThan(0)
-      expect(storageInit.guess).toBe('a0')
-      expect(storageInit.result).toBe('a0')
+      expect(storageInit.level.toNumber()).toBeGreaterThan(0);
+      expect(storageInit.guess).toBe('a0');
+      expect(storageInit.result).toBe('a0');
     });
 
     step('should be able to guess right', async () => {
-      let guess1 = await contract.methodsObject.guess(stringToBytes(message)).send()
-      await guess1.confirmation()
-      const storageGuess: any = await contract.storage()
+      let guess1 = await contract.methodsObject.guess(stringToBytes(message)).send();
+      await guess1.confirmation();
+      const storageGuess: any = await contract.storage();
 
-      expect(storageGuess.guess).toBe(stringToBytes(message))
-      expect(storageGuess.result).toBe('b0')
+      expect(storageGuess.guess).toBe(stringToBytes(message));
+      expect(storageGuess.result).toBe('b0');
     });
 
     step('should be able to finish/unlock the game', async () => {
-      let finish = await contract.methodsObject.finish_game(chestKey.encode()).send()
-      await finish.confirmation()
-      const storageFinish: any = await contract.storage()
+      let finish = await contract.methodsObject.finish_game(chestKey.encode()).send();
+      await finish.confirmation();
+      const storageFinish: any = await contract.storage();
 
-      expect(storageFinish.guess).toBe(stringToBytes(message))
-      expect(storageFinish.result).toBe('00')
+      expect(storageFinish.guess).toBe(stringToBytes(message));
+      expect(storageFinish.result).toBe('00');
     });
-
 
     step('should be able to guess wrong', async () => {
       const payload = new TextEncoder().encode(message);
       const precomputedTimelock = Timelock.precompute(time);
       const { chest, key } = Chest.fromTimelock(payload, time, precomputedTimelock);
       chestKey = key;
-      let init = await contract.methodsObject.initialize_game(chest.encode()).send()
-      await init.confirmation()
-      const storageInit: any = await contract.storage()
+      let init = await contract.methodsObject.initialize_game(chest.encode()).send();
+      await init.confirmation();
+      const storageInit: any = await contract.storage();
 
-      expect(storageInit.level.toNumber()).toBeGreaterThan(0)
-      expect(storageInit.guess).toBe('a0')
-      expect(storageInit.result).toBe('a0')
+      expect(storageInit.level.toNumber()).toBeGreaterThan(0);
+      expect(storageInit.guess).toBe('a0');
+      expect(storageInit.result).toBe('a0');
 
-      let guess1 = await contract.methodsObject.guess(stringToBytes('bad')).send()
-      await guess1.confirmation()
-      const storageGuess: any = await contract.storage()
+      let guess1 = await contract.methodsObject.guess(stringToBytes('bad')).send();
+      await guess1.confirmation();
+      const storageGuess: any = await contract.storage();
 
-      expect(storageGuess.guess).toBe(stringToBytes('bad'))
-      expect(storageGuess.result).toBe('b0')
+      expect(storageGuess.guess).toBe(stringToBytes('bad'));
+      expect(storageGuess.result).toBe('b0');
     });
 
     step('should be able to finish/unlock the wrong guess game', async () => {
-      let finish = await contract.methodsObject.finish_game(chestKey.encode()).send()
-      await finish.confirmation()
-      const storageFinish: any = await contract.storage()
+      let finish = await contract.methodsObject.finish_game(chestKey.encode()).send();
+      await finish.confirmation();
+      const storageFinish: any = await contract.storage();
 
-      expect(storageFinish.guess).toBe(stringToBytes('bad'))
-      expect(storageFinish.result).toBe('01')
+      expect(storageFinish.guess).toBe(stringToBytes('bad'));
+      expect(storageFinish.result).toBe('01');
     });
 
     step(`shouldn't unlock the game with wrong key`, async () => {
+      const originate = await Tezos.contract.originate({
+        code: timelockCode,
+        init: timelockStorage,
+      });
+      await originate.confirmation();
+      const isolatedContract = await originate.contract();
+
       const payload = new TextEncoder().encode(message);
       const { chest } = Chest.newChestAndKey(payload, time);
-      let init = await contract.methodsObject.initialize_game(chest.encode()).send()
-      await init.confirmation()
-      const storageInit: any = await contract.storage()
+      const init = await isolatedContract.methodsObject.initialize_game(chest.encode()).send();
+      await init.confirmation();
+      expect(init.status).toBe('applied');
+      const storageInit: any = await isolatedContract.storage();
 
-      expect(storageInit.level.toNumber()).toBeGreaterThan(0)
-      expect(storageInit.guess).toBe('a0')
-      expect(storageInit.result).toBe('a0')
+      expect(storageInit.level.toNumber()).toBeGreaterThan(0);
+      expect(storageInit.guess).toBe('a0');
+      expect(storageInit.result).toBe('a0');
 
       const { key } = Chest.newChestAndKey(payload, time);
-      let finish = await contract.methodsObject.finish_game(key.encode()).send()
-      await finish.confirmation()
-      const storageFinish: any = await contract.storage()
+      const finish = await isolatedContract.methodsObject.finish_game(key.encode()).send();
+      await finish.confirmation();
+      expect(finish.status).toBe('applied');
+      const storageFinish: any = await isolatedContract.storage();
 
-      expect(storageFinish.guess).toBe('a0')
-      expect(storageFinish.result).toBe('10')
-    })
+      expect(storageFinish.guess).toBe('a0');
+      expect(storageFinish.result).toBe('10');
+    });
   });
 });

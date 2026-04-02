@@ -22,3 +22,14 @@ export class ObservableError extends NetworkError {
     this.name = 'ObservableError';
   }
 }
+
+/**
+ *  @category Error
+ *  Error that indicates a newly originated wallet contract could not be resolved
+ */
+export class OriginationWalletOperationError extends ObservableError {
+  constructor(public readonly message: string) {
+    super(message);
+    this.name = 'OriginationWalletOperationError';
+  }
+}

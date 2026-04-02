@@ -25,8 +25,10 @@ import {
   InvalidStakingAddressError,
   InvalidFinalizeUnstakeAmountError,
 } from '@taquito/core';
+import { HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
 import { validateAddress, validateContractAddress, ValidationResult } from '@taquito/utils';
-import { OperationContentsFailingNoop } from '@taquito/rpc';
+import { EntrypointsResponse, OperationContentsFailingNoop, ScriptedContracts } from '@taquito/rpc';
+import { BlockIdentifier } from '../read-provider/interface';
 
 export interface PKHOption {
   forceRefetch?: boolean;
@@ -501,7 +503,8 @@ export class Wallet {
   async at<T extends ContractAbstraction<Wallet>>(
     address: string,
     contractAbstractionComposer: (abs: ContractAbstraction<Wallet>, context: Context) => T = (x) =>
-      x as any
+      x as any,
+    block: BlockIdentifier = 'head'
   ): Promise<T> {
     const addressValidation = validateContractAddress(address);
     if (addressValidation !== ValidationResult.VALID) {
@@ -509,14 +512,45 @@ export class Wallet {
     }
     const rpc = this.context.withExtensions().rpc;
     const readProvider = this.context.withExtensions().readProvider;
-    const script = await readProvider.getScript(address, 'head');
-    const entrypoints = await readProvider.getEntrypoints(address);
+
+    const loadContractState = async (
+      requestedBlock: BlockIdentifier
+    ): Promise<{ script: ScriptedContracts; entrypoints: EntrypointsResponse }> => {
+      const script = await readProvider.getScript(address, requestedBlock);
+      const entrypoints =
+        requestedBlock === 'head'
+          ? await readProvider.getEntrypoints(address)
+          : await rpc.getEntrypoints(address, { block: String(requestedBlock) });
+
+      return { script, entrypoints };
+    };
+
+    let contractState: { script: ScriptedContracts; entrypoints: EntrypointsResponse };
+
+    try {
+      contractState = await loadContractState(block);
+    } catch (error) {
+      // Newly originated contracts can be visible at the operation's inclusion level in one RPC
+      // call and still lag on another endpoint of the same rolling node. Retry at head so
+      // wallet op.contract() behaves like octez-client, which resolves the originated contract
+      // after confirmation instead of pinning itself to a stale context forever.
+      if (
+        block !== 'head' &&
+        error instanceof HttpResponseError &&
+        error.status === STATUS_CODE.NOT_FOUND
+      ) {
+        contractState = await loadContractState('head');
+      } else {
+        throw error;
+      }
+    }
+
     const abs = new ContractAbstraction(
       address,
-      script,
+      contractState.script,
       this,
       this.context.contract,
-      entrypoints,
+      contractState.entrypoints,
       rpc,
       readProvider
     );

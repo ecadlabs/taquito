@@ -2,30 +2,31 @@ import { CONFIGS } from '../../config';
 import { InvalidAddressError } from '@taquito/core';
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
-
   const Tezos = lib;
   let simpleContractAddress: string;
   describe(`Test Increase Paid Storage using: ${rpc}`, () => {
-    beforeAll(async () => {
+    beforeEach(async () => {
       await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
 
       try {
-        const op = await Tezos.wallet.originate({
-          balance: "1",
-          code: `parameter string;
+        const op = await Tezos.wallet
+          .originate({
+            balance: '1',
+            code: `parameter string;
           storage string;
           code {CAR;
                 PUSH string "Hello ";
                 CONCAT;
                 NIL operation; PAIR};
           `,
-          init: `"test"`
-        }).send();
+            init: `"test"`,
+          })
+          .send();
 
         await op.confirmation();
         expect(await op.status()).toBe('applied');
 
-        simpleContractAddress = (await op.contract()).address
+        simpleContractAddress = (await op.contract()).address;
       } catch (e) {
         console.log(JSON.stringify(e));
         throw e;
@@ -35,10 +36,12 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     it(`should be able to increase the paid storage of a contract successfully: ${rpc}`, async () => {
       const paidSpaceBefore = await Tezos.rpc.getStoragePaidSpace(simpleContractAddress);
 
-      const op = await Tezos.wallet.increasePaidStorage({
-        amount: 1,
-        destination: simpleContractAddress
-      }).send();
+      const op = await Tezos.wallet
+        .increasePaidStorage({
+          amount: 1,
+          destination: simpleContractAddress,
+        })
+        .send();
 
       await op.confirmation();
       expect(await op.status()).toBe('applied');
@@ -55,7 +58,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       const batch = await Tezos.wallet
         .batch()
         .withOrigination({
-          balance: "1",
+          balance: '1',
           code: `parameter string;
           storage string;
           code {CAR;
@@ -63,22 +66,24 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
                 CONCAT;
                 NIL operation; PAIR};
           `,
-          init: `"test"`
+          init: `"test"`,
         })
         .withIncreasePaidStorage({
           amount: 1,
-          destination: simpleContractAddress
-        })
+          destination: simpleContractAddress,
+        });
       const op = await batch.send();
       const conf = await op.confirmation();
       const currentConf = await op.getCurrentConfirmation();
 
       expect(currentConf).toEqual(1);
-      expect(conf).toEqual(expect.objectContaining({
-        expectedConfirmation: 1,
-        currentConfirmation: 1,
-        completed: true
-      }))
+      expect(conf).toEqual(
+        expect.objectContaining({
+          expectedConfirmation: 1,
+          currentConfirmation: 1,
+          completed: true,
+        })
+      );
       expect(await op.status()).toBe('applied');
 
       const paidSpaceAfter = await Tezos.rpc.getStoragePaidSpace(simpleContractAddress);
@@ -90,7 +95,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(() =>
         Tezos.wallet.increasePaidStorage({
           amount: 1,
-          destination: 'invalid_address'
+          destination: 'invalid_address',
         })
       ).toThrow(InvalidAddressError);
     });
