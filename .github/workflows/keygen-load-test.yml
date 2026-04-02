@@ -48,7 +48,7 @@ jobs:
           set -e
         env:
           TAQUITO_KEYGEN_AUTH_HEADER: ${{ secrets.TAQUITO_KEYGEN_AUTH_HEADER }}
-          KEYGEN_URL: https://keygen.ecadinfra.com/ghostnet
+          KEYGEN_URL: http://keygen-direct.ecadinfra.com/ghostnet
           KEYGEN_DIRECT_URL: https://keygen-direct.ecadinfra.com/ghostnet
           KEYGEN_TEST_DURATION: ${{ github.event.inputs.duration || '300' }}
           KEYGEN_CONCURRENCY: ${{ github.event.inputs.concurrency || '20' }}
