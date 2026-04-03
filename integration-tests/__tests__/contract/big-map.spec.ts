@@ -12,7 +12,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract }) => {
     /** The purpose of the test is to make sure that the keys in the map are properly ordered by Taquito before injection of the operation,
     *   If the keys are not ordered, the node will reject the operation. */
 
-    beforeEach(async () => {
+    beforeAll(async () => {
       await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 })
     })
 
