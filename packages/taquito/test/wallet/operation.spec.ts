@@ -1,6 +1,8 @@
 import { TestScheduler } from 'rxjs/testing';
+import { throwError } from 'rxjs';
 import { BlockResponse } from '@taquito/rpc';
 import { Context } from '../../src/context';
+import { ConfirmationTimeoutError } from '../../src/errors';
 import { WalletOperation } from '../../src/wallet';
 import { blockResponse } from './data';
 
@@ -239,6 +241,19 @@ describe('WalletOperation', () => {
         expect(mockRpcClient.getBlock).toHaveBeenCalledWith({ block: '2' });
         expect(mockRpcClient.getBlock).toHaveBeenLastCalledWith({ block: '3' });
       });
+    });
+  });
+
+  describe('confirmation error handling', () => {
+    it('should reject when the head observable errors before the operation is included', async () => {
+      const timeoutError = new ConfirmationTimeoutError('Confirmation polling timed out');
+      const op = new WalletOperation(
+        'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
+        new Context('url'),
+        throwError(() => timeoutError)
+      );
+
+      await expect(op.confirmation()).rejects.toBe(timeoutError);
     });
   });
 
