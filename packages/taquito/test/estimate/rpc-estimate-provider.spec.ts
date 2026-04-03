@@ -58,6 +58,7 @@ describe('RPCEstimateProvider test signer', () => {
     getChainId: jest.Mock<any, any>;
     getConstants: jest.Mock<any, any>;
     getProtocols: jest.Mock<any, any>;
+    getMempoolFilter: jest.Mock<any, any>;
   };
 
   let mockForger: {
@@ -89,6 +90,7 @@ describe('RPCEstimateProvider test signer', () => {
       getChainId: jest.fn(),
       getConstants: jest.fn(),
       getProtocols: jest.fn(),
+      getMempoolFilter: jest.fn(),
     };
 
     mockForger = {
@@ -118,6 +120,11 @@ describe('RPCEstimateProvider test signer', () => {
     mockForger.forge.mockResolvedValue('1234');
     mockRpcClient.preapplyOperations.mockResolvedValue([]);
     mockRpcClient.getChainId.mockResolvedValue('chain-id');
+    mockRpcClient.getMempoolFilter.mockResolvedValue({
+      minimal_fees: '100',
+      minimal_nanotez_per_gas_unit: ['100', '1'],
+      minimal_nanotez_per_byte: ['1000', '1'],
+    });
     mockRpcClient.getConstants.mockResolvedValue({
       hard_gas_limit_per_operation: new BigNumber(1040000),
       hard_storage_limit_per_operation: new BigNumber(60000),
@@ -336,6 +343,26 @@ describe('RPCEstimateProvider test signer', () => {
         storageLimit: 0,
         suggestedFeeMutez: 1196,
       });
+    });
+
+    it('uses fee parameters from mempool/filter when computing the fee', async () => {
+      mockRpcClient.getManagerKey.mockResolvedValue(null);
+      mockRpcClient.getMempoolFilter.mockResolvedValue({
+        minimal_fees: '100',
+        minimal_nanotez_per_gas_unit: ['4000', '1'],
+        minimal_nanotez_per_byte: ['4000', '1'],
+      });
+      mockRpcClient.simulateOperation.mockResolvedValue(transferWithoutAllocation());
+      mockForger.forge.mockResolvedValue(new Array(153).fill('aa').join(''));
+
+      const estimate = await estimateProvider.transfer({
+        to: 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
+        amount: 2,
+      });
+
+      expect(estimate.minimalFeeMutez).toEqual(
+        Math.ceil(estimate.gasLimit * 4 + Number(estimate.opSize) * 4 + 100)
+      );
     });
 
     it('return the correct estimate for transfer with allocation', async () => {

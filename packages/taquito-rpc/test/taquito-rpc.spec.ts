@@ -4431,4 +4431,24 @@ describe('RpcClient test', () => {
       expect(response).toBeNull();
     });
   });
+
+  describe('getMempoolFilter', () => {
+    it('should query the correct url with include_default', async () => {
+      const mockedResponse = {
+        minimal_fees: '100',
+        minimal_nanotez_per_gas_unit: ['100', '1'],
+        minimal_nanotez_per_byte: ['1000', '1'],
+      };
+      httpBackend.createRequest.mockReturnValue(Promise.resolve(mockedResponse));
+
+      const response = await client.getMempoolFilter({ include_default: true });
+
+      expect(httpBackend.createRequest.mock.calls[0][0]).toEqual({
+        method: 'GET',
+        query: { include_default: true },
+        url: 'root/chains/test/mempool/filter',
+      });
+      expect(response).toEqual(mockedResponse);
+    });
+  });
 });

@@ -47,6 +47,8 @@ import {
   AllTicketBalances,
   PendingOperationsQueryArguments,
   PendingOperationsV2,
+  MempoolFilterQueryArguments,
+  MempoolFilterResponse,
   RPCSimulateOperationParam,
   AILaunchCycleResponse,
   AllDelegatesQueryArguments,
@@ -78,6 +80,7 @@ type RpcMethodParam =
   | BakingRightsQueryArguments
   | AllDelegatesQueryArguments
   | PendingOperationsQueryArguments
+  | MempoolFilterQueryArguments
   | AttestationRightsQueryArguments;
 
 const defaultTtl = 1000;
@@ -1344,6 +1347,23 @@ export class RpcClientCache implements RpcClientInterface {
       return this.get(key);
     } else {
       const response = this.rpcClient.getPendingOperations(args);
+      this.put(key, response);
+      return response;
+    }
+  }
+
+  /**
+   * Returns the current mempool fee filter configuration.
+   * @param args optional query arguments for the mempool/filter endpoint
+   */
+  async getMempoolFilter(args: MempoolFilterQueryArguments = {}): Promise<MempoolFilterResponse> {
+    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_MEMPOOL_FILTER, [
+      args,
+    ]);
+    if (this.has(key)) {
+      return this.get(key);
+    } else {
+      const response = this.rpcClient.getMempoolFilter(args);
       this.put(key, response);
       return response;
     }
