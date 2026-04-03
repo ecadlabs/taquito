@@ -75,4 +75,22 @@ describe('Contract abstraction composer test', () => {
       'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D'
     );
   });
+
+  it('should read the contract from the exact block hash without consulting head entrypoints', async () => {
+    await toolkit.wallet.atExactBlock(
+      'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
+      undefined,
+      'BLockHash200'
+    );
+
+    expect(mockRpcClient.getContract).toHaveBeenCalledWith('KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D', {
+      block: 'BLockHash200',
+    });
+    expect(mockRpcClient.getEntrypoints).toHaveBeenCalledWith(
+      'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
+      {
+        block: 'BLockHash200',
+      }
+    );
+  });
 });

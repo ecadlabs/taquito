@@ -918,7 +918,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
    */
   async at<T extends DefaultContractType = DefaultContractType>(
     address: string,
-    contractAbstractionComposer: ContractAbstractionComposer<T> = (x) => x as any,
+    contractAbstractionComposer: ContractAbstractionComposer<T> = (x) => x as unknown as T,
     block: BlockIdentifier = 'head'
   ): Promise<T> {
     const addressValidation = validateContractAddress(address);
@@ -945,9 +945,9 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
     try {
       contractState = await loadContractState(block);
     } catch (error) {
-      // Shadownet's rolling nodes occasionally 404 a just-originated contract at the exact
-      // inclusion level even after confirmation. Retry at head so the contract abstraction still
-      // resolves once the node's contract index catches up.
+      // Some RPC deployments can transiently 404 a freshly originated contract on an exact
+      // block-pinned read before their recent contract indexes converge. Retry at head to
+      // preserve existing contract lookup behavior for callers that do not require exact pinning.
       if (
         block !== 'head' &&
         error instanceof HttpResponseError &&
@@ -968,6 +968,33 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
       rpc,
       readProvider
     );
+    return contractAbstractionComposer(abs, this.context);
+  }
+
+  async atExactBlock<T extends DefaultContractType = DefaultContractType>(
+    address: string,
+    contractAbstractionComposer: ContractAbstractionComposer<T> = (x) => x as unknown as T,
+    block: BlockIdentifier
+  ): Promise<T> {
+    const addressValidation = validateContractAddress(address);
+    if (addressValidation !== ValidationResult.VALID) {
+      throw new InvalidContractAddressError(address, addressValidation);
+    }
+
+    const rpc = this.context.withExtensions().rpc;
+    const readProvider = this.context.withExtensions().readProvider;
+    const script = await readProvider.getScript(address, block);
+    const entrypoints = await rpc.getEntrypoints(address, { block: String(block) });
+    const abs = new ContractAbstraction(
+      address,
+      script,
+      this,
+      this,
+      entrypoints,
+      rpc,
+      readProvider
+    );
+
     return contractAbstractionComposer(abs, this.context);
   }
 

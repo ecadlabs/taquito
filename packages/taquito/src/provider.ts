@@ -438,12 +438,27 @@ export abstract class Provider {
   }
 
   protected async signAndInject(forgedBytes: ForgedBytes) {
-    const signed = await this.signer.sign(forgedBytes.opbytes, new Uint8Array([3]));
-    forgedBytes.opbytes = signed.sbytes;
-    forgedBytes.opOb.signature = signed.prefixSig;
+    let signedForgedBytes = await this.signForgedBytes(forgedBytes);
 
     const opResponse: OperationContentsAndResult[] = [];
-    const results = await this.rpc.preapplyOperations([forgedBytes.opOb]);
+    let results;
+
+    try {
+      results = await this.rpc.preapplyOperations([signedForgedBytes.opOb]);
+    } catch (error) {
+      const adjustments = this.parseCounterInThePastAdjustments(error);
+      const patchedForgedBytes = await this.patchForgedBytesCounters(
+        signedForgedBytes,
+        adjustments
+      );
+
+      if (!patchedForgedBytes) {
+        throw error;
+      }
+
+      signedForgedBytes = await this.signForgedBytes(patchedForgedBytes);
+      results = await this.rpc.preapplyOperations([signedForgedBytes.opOb]);
+    }
 
     if (!Array.isArray(results)) {
       throw new TezosPreapplyFailureError(results);
@@ -466,10 +481,78 @@ export abstract class Provider {
     }
 
     return {
-      hash: await this.context.injector.inject(forgedBytes.opbytes),
-      forgedBytes,
+      hash: await this.context.injector.inject(signedForgedBytes.opbytes),
+      forgedBytes: signedForgedBytes,
       opResponse,
       context: this.context.clone(),
+    };
+  }
+
+  private async signForgedBytes(forgedBytes: ForgedBytes): Promise<ForgedBytes> {
+    const signed = await this.signer.sign(forgedBytes.opbytes, new Uint8Array([3]));
+
+    return {
+      ...forgedBytes,
+      opbytes: signed.sbytes,
+      opOb: {
+        ...forgedBytes.opOb,
+        signature: signed.prefixSig,
+      },
+    };
+  }
+
+  private async patchForgedBytesCounters(
+    forgedBytes: ForgedBytes,
+    adjustments: { contract: string; expected: bigint; found: bigint }[]
+  ): Promise<ForgedBytes | undefined> {
+    if (adjustments.length === 0 || !Array.isArray(forgedBytes.opOb.contents)) {
+      return;
+    }
+
+    const branch = forgedBytes.opOb.branch;
+    if (typeof branch !== 'string') {
+      return;
+    }
+
+    const contents = forgedBytes.opOb.contents.map((content) => ({ ...content }));
+    let patched = false;
+
+    for (const adjustment of adjustments) {
+      const delta = adjustment.expected - adjustment.found;
+      for (const content of contents) {
+        const source = (content as { source?: string }).source;
+        const counter = (content as { counter?: string | number }).counter;
+
+        if (source !== adjustment.contract || typeof counter === 'undefined') {
+          continue;
+        }
+
+        const contentCounter = BigInt(String(counter));
+        if (contentCounter < adjustment.found) {
+          continue;
+        }
+
+        (content as { counter: string }).counter = (contentCounter + delta).toString();
+        patched = true;
+      }
+    }
+
+    if (!patched) {
+      return;
+    }
+
+    const unsignedOpBytes = await this.context.forger.forge({
+      branch,
+      contents,
+    });
+
+    return {
+      ...forgedBytes,
+      opbytes: unsignedOpBytes,
+      opOb: {
+        ...forgedBytes.opOb,
+        contents,
+      },
     };
   }
 }
