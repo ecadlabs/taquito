@@ -2755,6 +2755,19 @@ export interface PendingOperationsQueryArguments {
   operationHash?: string;
 }
 
+export type MempoolFilterQueryArguments = {
+  include_default?: boolean;
+};
+
+export type RpcRatio = [string | number, string | number];
+
+export interface MempoolFilterResponse {
+  minimal_fees?: string | number;
+  minimal_nanotez_per_gas_unit?: RpcRatio;
+  minimal_nanotez_per_byte?: RpcRatio;
+  [key: string]: unknown;
+}
+
 type FailedProcessedOperation = Pick<
   OperationEntry,
   'hash' | 'protocol' | 'branch' | 'contents' | 'signature'

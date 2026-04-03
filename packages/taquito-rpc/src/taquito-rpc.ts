@@ -69,6 +69,8 @@ import {
   ActiveStakingParametersResponse,
   PendingStakingParametersResponse,
   DestinationIndexResponse,
+  MempoolFilterQueryArguments,
+  MempoolFilterResponse,
 } from './types';
 import { castToBigNumber } from './utils/utils';
 import {
@@ -1264,6 +1266,23 @@ export class RpcClient implements RpcClientInterface {
   ): Promise<PendingOperationsV2> {
     return this.httpBackend.createRequest<PendingOperationsV2>({
       url: this.createURL(`/chains/${this.chain}/mempool/pending_operations`),
+      method: 'GET',
+      query: args,
+    });
+  }
+
+  /**
+   * Returns the current mempool fee filter configuration.
+   *
+   * On Tezos L1 these values commonly resemble the historical fee defaults used by clients.
+   * On Tezos X / Tezlink, the same fields are used for estimation but may differ materially,
+   * especially the byte fee and the gas-price component.
+   *
+   * @param args optional query arguments for the mempool/filter endpoint
+   */
+  async getMempoolFilter(args: MempoolFilterQueryArguments = {}): Promise<MempoolFilterResponse> {
+    return this.httpBackend.createRequest<MempoolFilterResponse>({
+      url: this.createURL(`/chains/${this.chain}/mempool/filter`),
       method: 'GET',
       query: args,
     });
