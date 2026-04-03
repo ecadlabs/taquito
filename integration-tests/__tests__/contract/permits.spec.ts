@@ -79,7 +79,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   Tezos.setPackerProvider(new MichelCodecPacker());
 
   describe(`Verify contract origination, transfer, and minting with a permit for tzip-17 through contract api: ${rpc}`, () => {
-    beforeEach(async () => {
+    beforeAll(async () => {
       await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
     });
 
@@ -239,7 +239,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
     });
 
     describe(`Verify contract having a permit for tzip-17: ${rpc}`, () => {
-      beforeEach(async () => {
+      beforeAll(async () => {
         await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
       });
 

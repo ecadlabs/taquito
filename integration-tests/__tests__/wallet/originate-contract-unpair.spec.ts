@@ -4,7 +4,7 @@ import { miStr, miObject } from '../../data/contractWithUnpair';
 CONFIGS().forEach(({ lib, rpc, setup }) => {
     const Tezos = lib;
     describe(`Test contract origination with UNPAIR through wallet api using: ${rpc}`, () => {
-        beforeEach(async () => {
+        beforeAll(async () => {
             await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 });
         });
 

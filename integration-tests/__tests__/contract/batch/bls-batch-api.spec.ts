@@ -22,7 +22,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker }) => {
         let transferOp = await Tezos.contract.transfer({ to: await Bls.signer.publicKeyHash(), amount: 5 })
         await transferOp.confirmation()
       } catch (e) {
-        console.log('beforeAll transferOp error', e)
+        console.log('beforeEach transferOp error', e)
         throw e
       }
     })
