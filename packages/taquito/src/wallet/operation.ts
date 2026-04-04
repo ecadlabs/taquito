@@ -128,6 +128,22 @@ export class WalletOperation {
     return this._operationResult.pipe(first()).toPromise();
   }
 
+  protected async getInclusionBlock() {
+    const inclusionBlock = await this._includedInBlock.pipe(first()).toPromise();
+    if (!inclusionBlock) {
+      throw new ObservableError('Inclusion block is undefined');
+    }
+
+    return inclusionBlock;
+  }
+
+  private async getOperationResultsIfIncluded() {
+    if (!this._included) {
+      return undefined;
+    }
+
+    return this.operationResults().catch(() => undefined);
+  }
   /**
    * Receipt expose the total amount of tezos token burn and spent on fees
    * The promise returned by receipt will resolve only once the transaction is included
@@ -184,10 +200,7 @@ export class WalletOperation {
     }
 
     const tipBlockHeaderLevel = await this.context.readProvider.getBlockLevel(tipBlockIdentifier);
-    const inclusionBlock = await this._includedInBlock.pipe(first()).toPromise();
-    if (!inclusionBlock) {
-      throw new ObservableError('Inclusion block is undefined');
-    }
+    const inclusionBlock = await this.getInclusionBlock();
     const levelDiff = (tipBlockHeaderLevel - inclusionBlock.header.level) as number;
 
     // Block produced before the operation is included are assumed to be part of the current branch
@@ -244,7 +257,7 @@ export class WalletOperation {
 
     try {
       const confirmationResult = await this.confirmationObservable(confirmations).toPromise();
-      const operationResults = await this.operationResults().catch(() => undefined);
+      const operationResults = await this.getOperationResultsIfIncluded();
       const summary = summarizeWalletOperationResults(operationResults);
       const nonAppliedStatuses = summary
         .filter((result) => result.status !== 'applied')
@@ -269,7 +282,7 @@ export class WalletOperation {
       }
       return confirmationResult;
     } catch (error: unknown) {
-      const operationResults = await this.operationResults().catch(() => undefined);
+      const operationResults = await this.getOperationResultsIfIncluded();
       traceWalletOperation({
         stage: 'confirmation-error',
         opHash: this.opHash,

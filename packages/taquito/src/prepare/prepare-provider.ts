@@ -85,6 +85,11 @@ interface Limits {
   gasLimit?: number;
 }
 
+interface OperationLimitsOptions {
+  opsNeedingGasLimitPatch?: number;
+  explicitGasLimitTotal?: BigNumber;
+}
+
 const mergeLimits = (
   userDefinedLimit: Limits,
   defaultLimits: Required<Limits>
@@ -119,41 +124,74 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     return this.context.readProvider.getCounter(pkh, 'head') ?? '0';
   }
 
-  private adjustGasForBatchOperation(
+  private adjustGasForManagerOperations(
     gasLimitBlock: BigNumber,
     gaslimitOp: BigNumber,
-    numberOfOps: number
+    opsNeedingGasLimitPatch: number,
+    explicitGasLimitTotal = new BigNumber(0)
   ) {
-    return BigNumber.min(gaslimitOp, gasLimitBlock.div(numberOfOps + 1));
+    if (opsNeedingGasLimitPatch <= 0) {
+      return gaslimitOp;
+    }
+
+    const remainingBlockGas = gasLimitBlock.minus(explicitGasLimitTotal);
+
+    if (remainingBlockGas.lte(0)) {
+      return new BigNumber(0);
+    }
+
+    return BigNumber.min(
+      gaslimitOp,
+      remainingBlockGas.div(opsNeedingGasLimitPatch).integerValue(BigNumber.ROUND_DOWN)
+    );
   }
 
-  private async getOperationLimits(
+  private getOperationLimits(
     constants: Pick<
       ConstantsResponse,
       | 'hard_gas_limit_per_operation'
       | 'hard_gas_limit_per_block'
       | 'hard_storage_limit_per_operation'
     >,
-    numberOfOps?: number
+    options: OperationLimitsOptions = {}
   ) {
     const {
       hard_gas_limit_per_operation,
       hard_gas_limit_per_block,
       hard_storage_limit_per_operation,
     } = constants;
+
     return {
       fee: 0,
-      gasLimit: numberOfOps
-        ? Math.floor(
-            this.adjustGasForBatchOperation(
-              hard_gas_limit_per_block,
-              hard_gas_limit_per_operation,
-              numberOfOps
-            ).toNumber()
-          )
-        : hard_gas_limit_per_operation.toNumber(),
+      gasLimit: this.adjustGasForManagerOperations(
+        hard_gas_limit_per_block,
+        hard_gas_limit_per_operation,
+        options.opsNeedingGasLimitPatch ?? 0,
+        options.explicitGasLimitTotal
+      ).toNumber(),
       storageLimit: hard_storage_limit_per_operation.toNumber(),
     };
+  }
+
+  private async getOperationLimitsForManagerOperation(
+    constants: Pick<
+      ConstantsResponse,
+      | 'hard_gas_limit_per_operation'
+      | 'hard_gas_limit_per_block'
+      | 'hard_storage_limit_per_operation'
+    >,
+    publicKeyHash: string,
+    kind: OpKind,
+    gasLimit?: number
+  ) {
+    const revealNeeded = await this.isRevealOpNeeded([{ kind } as RPCOperation], publicKeyHash);
+
+    return this.getOperationLimits(constants, {
+      opsNeedingGasLimitPatch: typeof gasLimit === 'undefined' ? 1 : 0,
+      explicitGasLimitTotal: revealNeeded
+        ? new BigNumber(getRevealGasLimit(publicKeyHash))
+        : undefined,
+    });
   }
 
   private getFee(op: RPCOpWithFee, pkh: string, headCounter: number) {
@@ -210,9 +248,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
   }> {
     const isSignerConfigured = this.context.isAnySignerConfigured();
     return {
-      pkh: isSignerConfigured
-        ? await this.signer.publicKeyHash()
-        : await this.context.wallet.pkh(),
+      pkh: isSignerConfigured ? await this.signer.publicKeyHash() : await this.context.wallet.pkh(),
       publicKey: isSignerConfigured
         ? await this.signer.publicKey()
         : await this.context.wallet.pk(),
@@ -225,6 +261,39 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     } else {
       return [op];
     }
+  }
+
+  private getSingleManagerOperationSimulation(
+    ops: RPCOperation[],
+    gasLimit?: number
+  ): PreparedOperation['simulation'] | undefined {
+    if (typeof gasLimit !== 'undefined' || ops.length === 0) {
+      return;
+    }
+
+    return {
+      gasLimitPatchableIndexes: [ops.length - 1],
+    };
+  }
+
+  private withSimulationMetadata(
+    preparedOperation: PreparedOperation,
+    simulation?: PreparedOperation['simulation']
+  ): PreparedOperation {
+    if (!simulation) {
+      return preparedOperation;
+    }
+
+    // Keep retry bookkeeping available to estimation without changing the
+    // enumerable shape of single-op prepared results.
+    Object.defineProperty(preparedOperation, 'simulation', {
+      value: simulation,
+      configurable: true,
+      enumerable: false,
+      writable: true,
+    });
+
+    return preparedOperation;
   }
 
   private constructOpContents(
@@ -332,7 +401,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
     const contents = this.constructOpContents(ops, headCounter, pkh);
 
-    return {
+    const preparedOperation = {
       opOb: {
         branch: hash,
         contents,
@@ -340,6 +409,8 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       },
       counter: headCounter,
     };
+
+    return preparedOperation;
   }
 
   /**
@@ -392,7 +463,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
     const contents = this.constructOpContents(ops, headCounter, pkh);
 
-    return {
+    const preparedOperation = {
       opOb: {
         branch: hash,
         contents,
@@ -400,6 +471,8 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       },
       counter: headCounter,
     };
+
+    return preparedOperation;
   }
 
   /**
@@ -415,7 +488,12 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const { pkh } = await this.getKeys();
 
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
-    const DEFAULT_PARAMS = await this.getOperationLimits(protocolConstants);
+    const DEFAULT_PARAMS = await this.getOperationLimitsForManagerOperation(
+      protocolConstants,
+      pkh,
+      OpKind.ORIGINATION,
+      gasLimit
+    );
 
     const op = await createOriginationOperation(
       await this.context.parser.prepareCodeOrigination({
@@ -435,7 +513,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
     const contents = this.constructOpContents(ops, headCounter, pkh, source);
 
-    return {
+    const preparedOperation = {
       opOb: {
         branch: hash,
         contents,
@@ -443,6 +521,11 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       },
       counter: headCounter,
     };
+
+    return this.withSimulationMetadata(
+      preparedOperation,
+      this.getSingleManagerOperationSimulation(ops, gasLimit)
+    );
   }
 
   /**
@@ -459,7 +542,12 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const { pkh } = await this.getKeys();
 
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
-    const DEFAULT_PARAMS = await this.getOperationLimits(protocolConstants);
+    const DEFAULT_PARAMS = await this.getOperationLimitsForManagerOperation(
+      protocolConstants,
+      pkh,
+      OpKind.TRANSACTION,
+      gasLimit
+    );
     const op = await createTransferOperation({
       ...rest,
       ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
@@ -476,7 +564,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
     const contents = this.constructOpContents(ops, headCounter, pkh, rest.source);
 
-    return {
+    const preparedOperation = {
       opOb: {
         branch: hash,
         contents,
@@ -484,6 +572,11 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       },
       counter: headCounter,
     };
+
+    return this.withSimulationMetadata(
+      preparedOperation,
+      this.getSingleManagerOperationSimulation(ops, gasLimit)
+    );
   }
 
   /**
@@ -495,7 +588,12 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const { pkh } = await this.getKeys();
 
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
-    const DEFAULT_PARAMS = await this.getOperationLimits(protocolConstants);
+    const DEFAULT_PARAMS = await this.getOperationLimitsForManagerOperation(
+      protocolConstants,
+      pkh,
+      OpKind.TRANSACTION,
+      gasLimit
+    );
     const op = await createTransferOperation({
       ...rest,
       to: pkh,
@@ -518,7 +616,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
     const contents = this.constructOpContents(ops, headCounter, pkh, rest.source);
 
-    return {
+    const preparedOperation = {
       opOb: {
         branch: hash,
         contents,
@@ -526,6 +624,11 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       },
       counter: headCounter,
     };
+
+    return this.withSimulationMetadata(
+      preparedOperation,
+      this.getSingleManagerOperationSimulation(ops, gasLimit)
+    );
   }
 
   /**
@@ -542,7 +645,12 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const { pkh } = await this.getKeys();
 
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
-    const DEFAULT_PARAMS = await this.getOperationLimits(protocolConstants);
+    const DEFAULT_PARAMS = await this.getOperationLimitsForManagerOperation(
+      protocolConstants,
+      pkh,
+      OpKind.TRANSACTION,
+      gasLimit
+    );
     const op = await createTransferOperation({
       ...rest,
       to: pkh,
@@ -563,7 +671,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
     const contents = this.constructOpContents(ops, headCounter, pkh, rest.source);
 
-    return {
+    const preparedOperation = {
       opOb: {
         branch: hash,
         contents,
@@ -571,6 +679,11 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       },
       counter: headCounter,
     };
+
+    return this.withSimulationMetadata(
+      preparedOperation,
+      this.getSingleManagerOperationSimulation(ops, gasLimit)
+    );
   }
 
   /**
@@ -588,7 +701,12 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const { pkh } = await this.getKeys();
 
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
-    const DEFAULT_PARAMS = await this.getOperationLimits(protocolConstants);
+    const DEFAULT_PARAMS = await this.getOperationLimitsForManagerOperation(
+      protocolConstants,
+      pkh,
+      OpKind.TRANSACTION,
+      gasLimit
+    );
     const op = await createTransferOperation({
       ...rest,
       to: to ? to : pkh,
@@ -610,7 +728,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
     const contents = this.constructOpContents(ops, headCounter, pkh, rest.source);
 
-    return {
+    const preparedOperation = {
       opOb: {
         branch: hash,
         contents,
@@ -618,6 +736,11 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       },
       counter: headCounter,
     };
+
+    return this.withSimulationMetadata(
+      preparedOperation,
+      this.getSingleManagerOperationSimulation(ops, gasLimit)
+    );
   }
 
   /**
@@ -634,7 +757,12 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const { pkh } = await this.getKeys();
 
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
-    const DEFAULT_PARAMS = await this.getOperationLimits(protocolConstants);
+    const DEFAULT_PARAMS = await this.getOperationLimitsForManagerOperation(
+      protocolConstants,
+      pkh,
+      OpKind.DELEGATION,
+      gasLimit
+    );
 
     const op = await createSetDelegateOperation({
       ...rest,
@@ -652,7 +780,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
     const contents = this.constructOpContents(ops, headCounter, pkh, rest.source);
 
-    return {
+    const preparedOperation = {
       opOb: {
         branch: hash,
         contents,
@@ -660,6 +788,11 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       },
       counter: headCounter,
     };
+
+    return this.withSimulationMetadata(
+      preparedOperation,
+      this.getSingleManagerOperationSimulation(ops, gasLimit)
+    );
   }
 
   /**
@@ -675,7 +808,12 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const { pkh } = await this.getKeys();
 
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
-    const DEFAULT_PARAMS = await this.getOperationLimits(protocolConstants);
+    const DEFAULT_PARAMS = await this.getOperationLimitsForManagerOperation(
+      protocolConstants,
+      pkh,
+      OpKind.DELEGATION,
+      gasLimit
+    );
     const mergedEstimates = mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS);
 
     const op = await createRegisterDelegateOperation(
@@ -698,7 +836,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
     const contents = this.constructOpContents(ops, headCounter, pkh, source);
 
-    return {
+    const preparedOperation = {
       opOb: {
         branch: hash,
         contents,
@@ -706,6 +844,11 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       },
       counter: headCounter,
     };
+
+    return this.withSimulationMetadata(
+      preparedOperation,
+      this.getSingleManagerOperationSimulation(ops, gasLimit)
+    );
   }
 
   /**
@@ -722,7 +865,12 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const { pkh } = await this.getKeys();
 
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
-    const DEFAULT_PARAMS = await this.getOperationLimits(protocolConstants);
+    const DEFAULT_PARAMS = await this.getOperationLimitsForManagerOperation(
+      protocolConstants,
+      pkh,
+      OpKind.REGISTER_GLOBAL_CONSTANT,
+      gasLimit
+    );
 
     const op = await createRegisterGlobalConstantOperation({
       ...rest,
@@ -740,7 +888,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
     const contents = this.constructOpContents(ops, headCounter, pkh, rest.source);
 
-    return {
+    const preparedOperation = {
       opOb: {
         branch: hash,
         contents,
@@ -748,6 +896,11 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       },
       counter: headCounter,
     };
+
+    return this.withSimulationMetadata(
+      preparedOperation,
+      this.getSingleManagerOperationSimulation(ops, gasLimit)
+    );
   }
 
   /**
@@ -775,7 +928,12 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       }
     }
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
-    const DEFAULT_PARAMS = await this.getOperationLimits(protocolConstants);
+    const DEFAULT_PARAMS = await this.getOperationLimitsForManagerOperation(
+      protocolConstants,
+      pkh,
+      OpKind.UPDATE_CONSENSUS_KEY,
+      gasLimit
+    );
 
     const op = await createUpdateConsensusKeyOperation({
       ...rest,
@@ -793,7 +951,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
     const contents = this.constructOpContents(ops, headCounter, pkh, source);
 
-    return {
+    const preparedOperation = {
       opOb: {
         branch: hash,
         contents,
@@ -801,6 +959,11 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       },
       counter: headCounter,
     };
+
+    return this.withSimulationMetadata(
+      preparedOperation,
+      this.getSingleManagerOperationSimulation(ops, gasLimit)
+    );
   }
 
   /**
@@ -823,7 +986,12 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       throw new InvalidProofError('Proof is required to set a bls account as companion key ');
     }
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
-    const DEFAULT_PARAMS = await this.getOperationLimits(protocolConstants);
+    const DEFAULT_PARAMS = await this.getOperationLimitsForManagerOperation(
+      protocolConstants,
+      pkh,
+      OpKind.UPDATE_COMPANION_KEY,
+      gasLimit
+    );
 
     const op = await createUpdateCompanionKeyOperation({
       ...rest,
@@ -841,7 +1009,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
     const contents = this.constructOpContents(ops, headCounter, pkh, source);
 
-    return {
+    const preparedOperation = {
       opOb: {
         branch: hash,
         contents,
@@ -849,6 +1017,11 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       },
       counter: headCounter,
     };
+
+    return this.withSimulationMetadata(
+      preparedOperation,
+      this.getSingleManagerOperationSimulation(ops, gasLimit)
+    );
   }
 
   /**
@@ -865,7 +1038,12 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const { pkh } = await this.getKeys();
 
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
-    const DEFAULT_PARAMS = await this.getOperationLimits(protocolConstants);
+    const DEFAULT_PARAMS = await this.getOperationLimitsForManagerOperation(
+      protocolConstants,
+      pkh,
+      OpKind.INCREASE_PAID_STORAGE,
+      gasLimit
+    );
 
     const op = await createIncreasePaidStorageOperation({
       ...rest,
@@ -883,7 +1061,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
     const contents = this.constructOpContents(ops, headCounter, pkh, rest.source);
 
-    return {
+    const preparedOperation = {
       opOb: {
         branch: hash,
         contents,
@@ -891,6 +1069,11 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       },
       counter: headCounter,
     };
+
+    return this.withSimulationMetadata(
+      preparedOperation,
+      this.getSingleManagerOperationSimulation(ops, gasLimit)
+    );
   }
 
   /**
@@ -929,7 +1112,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       currentVotingPeriod
     );
 
-    return {
+    const preparedOperation = {
       opOb: {
         branch: hash,
         contents,
@@ -937,6 +1120,8 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       },
       counter: headCounter,
     };
+
+    return preparedOperation;
   }
 
   /**
@@ -976,7 +1161,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       currentVotingPeriod
     );
 
-    return {
+    const preparedOperation = {
       opOb: {
         branch: hash,
         contents,
@@ -984,6 +1169,8 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       },
       counter: headCounter,
     };
+
+    return preparedOperation;
   }
 
   /**
@@ -1009,7 +1196,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
     const contents = this.constructOpContents(ops, headCounter, pkh, source);
 
-    return {
+    const preparedOperation = {
       opOb: {
         branch: hash,
         contents,
@@ -1017,6 +1204,8 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       },
       counter: headCounter,
     };
+
+    return preparedOperation;
   }
 
   /**
@@ -1033,7 +1222,12 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const { pkh } = await this.getKeys();
 
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
-    const DEFAULT_PARAMS = await this.getOperationLimits(protocolConstants);
+    const DEFAULT_PARAMS = await this.getOperationLimitsForManagerOperation(
+      protocolConstants,
+      pkh,
+      OpKind.TRANSFER_TICKET,
+      gasLimit
+    );
 
     const op = await createTransferTicketOperation({
       ...rest,
@@ -1051,7 +1245,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
     const contents = this.constructOpContents(ops, headCounter, pkh, rest.source);
 
-    return {
+    const preparedOperation = {
       opOb: {
         branch: hash,
         contents,
@@ -1059,6 +1253,11 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       },
       counter: headCounter,
     };
+
+    return this.withSimulationMetadata(
+      preparedOperation,
+      this.getSingleManagerOperationSimulation(ops, gasLimit)
+    );
   }
 
   /**
@@ -1075,7 +1274,12 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const { pkh } = await this.getKeys();
 
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
-    const DEFAULT_PARAMS = await this.getOperationLimits(protocolConstants);
+    const DEFAULT_PARAMS = await this.getOperationLimitsForManagerOperation(
+      protocolConstants,
+      pkh,
+      OpKind.SMART_ROLLUP_ADD_MESSAGES,
+      gasLimit
+    );
 
     const op = await createSmartRollupAddMessagesOperation({
       ...rest,
@@ -1092,7 +1296,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
     const contents = this.constructOpContents(ops, headCounter, pkh, rest.source);
 
-    return {
+    const preparedOperation = {
       opOb: {
         branch: hash,
         contents,
@@ -1100,6 +1304,11 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       },
       counter: headCounter,
     };
+
+    return this.withSimulationMetadata(
+      preparedOperation,
+      this.getSingleManagerOperationSimulation(ops, gasLimit)
+    );
   }
 
   /**
@@ -1116,7 +1325,12 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const { pkh } = await this.getKeys();
 
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
-    const DEFAULT_PARAMS = await this.getOperationLimits(protocolConstants);
+    const DEFAULT_PARAMS = await this.getOperationLimitsForManagerOperation(
+      protocolConstants,
+      pkh,
+      OpKind.SMART_ROLLUP_ORIGINATE,
+      gasLimit
+    );
 
     const op = await createSmartRollupOriginateOperation({
       ...mergeLimits({ fee, storageLimit, gasLimit }, DEFAULT_PARAMS),
@@ -1133,7 +1347,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
     const contents = this.constructOpContents(ops, headCounter, pkh, rest.source);
 
-    return {
+    const preparedOperation = {
       opOb: {
         branch: hash,
         contents,
@@ -1141,6 +1355,11 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       },
       counter: headCounter,
     };
+
+    return this.withSimulationMetadata(
+      preparedOperation,
+      this.getSingleManagerOperationSimulation(ops, gasLimit)
+    );
   }
 
   /**
@@ -1157,7 +1376,12 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const { pkh } = await this.getKeys();
 
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
-    const DEFAULT_PARAMS = await this.getOperationLimits(protocolConstants);
+    const DEFAULT_PARAMS = await this.getOperationLimitsForManagerOperation(
+      protocolConstants,
+      pkh,
+      OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE,
+      gasLimit
+    );
 
     const op = await createSmartRollupExecuteOutboxMessageOperation({
       ...rest,
@@ -1174,7 +1398,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
     const contents = this.constructOpContents(ops, headCounter, pkh, rest.source);
 
-    return {
+    const preparedOperation = {
       opOb: {
         branch: hash,
         contents,
@@ -1182,6 +1406,11 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       },
       counter: headCounter,
     };
+
+    return this.withSimulationMetadata(
+      preparedOperation,
+      this.getSingleManagerOperationSimulation(ops, gasLimit)
+    );
   }
 
   /**
@@ -1194,18 +1423,31 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const { pkh, publicKey } = await this.getKeys();
 
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
-    const DEFAULT_PARAMS = await this.getOperationLimits(protocolConstants, batchParams.length);
     const revealNeeded = await this.isRevealOpNeeded(batchParams, pkh);
+    const explicitGasLimitTotal = batchParams.reduce(
+      (acc, op) =>
+        isOpWithFee(op) && typeof op.gasLimit !== 'undefined' ? acc.plus(op.gasLimit) : acc,
+      revealNeeded ? new BigNumber(getRevealGasLimit(pkh)) : new BigNumber(0)
+    );
+    const DEFAULT_PARAMS = this.getOperationLimits(protocolConstants, {
+      opsNeedingGasLimitPatch: batchParams.filter(
+        (op) => isOpWithFee(op) && typeof op.gasLimit === 'undefined'
+      ).length,
+      explicitGasLimitTotal,
+    });
 
     const ops: RPCOperation[] = [];
+    const gasLimitPatchableFlags: boolean[] = [];
     if (!estimates) {
       for (const op of batchParams) {
         if (isOpWithFee(op)) {
           const limits = mergeLimits(op, DEFAULT_PARAMS);
 
           ops.push(await this.getRPCOp({ ...op, ...limits }));
+          gasLimitPatchableFlags.push(typeof op.gasLimit === 'undefined');
         } else {
           ops.push({ ...op });
+          gasLimitPatchableFlags.push(false);
         }
       }
     } else {
@@ -1218,8 +1460,10 @@ export class PrepareProvider extends Provider implements PreparationProvider {
             gasLimit: e!.gasLimit,
           });
           ops.push(await this.getRPCOp({ ...op, ...limits }));
+          gasLimitPatchableFlags.push(false);
         } else {
           ops.push({ ...op });
+          gasLimitPatchableFlags.push(false);
         }
       }
     }
@@ -1244,6 +1488,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
           publicKey
         )
       );
+      gasLimitPatchableFlags.unshift(false);
     }
 
     const hash = await this.getBlockHash();
@@ -1253,6 +1498,9 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const headCounter = parseInt(await this.getHeadCounter(pkh), 10);
 
     const contents = this.constructOpContents(ops, headCounter, pkh);
+    const gasLimitPatchableIndexes = gasLimitPatchableFlags.flatMap((isPatchable, index) =>
+      isPatchable ? [index] : []
+    );
     return {
       opOb: {
         branch: hash,
@@ -1260,6 +1508,12 @@ export class PrepareProvider extends Provider implements PreparationProvider {
         protocol,
       },
       counter: headCounter,
+      simulation:
+        gasLimitPatchableIndexes.length > 0
+          ? {
+              gasLimitPatchableIndexes,
+            }
+          : undefined,
     };
   }
 
@@ -1283,7 +1537,12 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     const params = contractMethod.toTransferParams();
 
     const protocolConstants = await this.context.readProvider.getProtocolConstants('head');
-    const DEFAULT_PARAMS = await this.getOperationLimits(protocolConstants);
+    const DEFAULT_PARAMS = await this.getOperationLimitsForManagerOperation(
+      protocolConstants,
+      pkh,
+      OpKind.TRANSACTION,
+      params.gasLimit
+    );
 
     const estimateLimits = mergeLimits(
       {
@@ -1309,7 +1568,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
     const contents = this.constructOpContents(ops, headCounter, pkh);
 
-    return {
+    const preparedOperation = {
       opOb: {
         branch: hash,
         contents,
@@ -1317,6 +1576,11 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       },
       counter: headCounter,
     };
+
+    return this.withSimulationMetadata(
+      preparedOperation,
+      this.getSingleManagerOperationSimulation(ops, params.gasLimit)
+    );
   }
 
   /**

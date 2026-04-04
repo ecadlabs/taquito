@@ -1,4 +1,4 @@
-import { CONFIGS } from "../../config";
+import { clearRpcCache, CONFIGS } from "../../config";
 import { booleanCode } from "../../data/boolean_parameter";
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
@@ -30,6 +30,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(op.hash).toBeDefined();
       expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY)
 
+      clearRpcCache(Tezos);
       expect(await contract.storage()).toBeFalsy();
     });
   });

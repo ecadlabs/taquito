@@ -27,7 +27,13 @@ import {
   UnstakeParams,
   FinalizeUnstakeParams,
 } from '../operations/types';
-import { Estimate, EstimateProperties } from './estimate';
+import {
+  Estimate,
+  EstimateProperties,
+  FeeParams,
+  DEFAULT_FEE_PARAMS,
+  feeParamsFromMempoolFilter,
+} from './estimate';
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
 import {
   b58DecodeAndCheckPrefix,
@@ -55,6 +61,14 @@ import {
 const STUB_SIGNATURE =
   'edsigtkpiSSschcaCt9pUVrpNPf7TTcgvgDEDD6NCEHMy8NNQJCGnMfLZzYoQj74yLjo9wx6MPVV29CvVzgi7qEcEUok3k7AuMg';
 
+/**
+ * Estimates gas, storage, and fees by simulating operations against the node RPC.
+ *
+ * On Tezos L1, Taquito historically matched estimation with built-in fee defaults because the
+ * fee-per-byte and fee-per-gas terms were usually close to those values. Tezos X / Tezlink keeps
+ * the same fee formula shape, but those terms are surfaced through `mempool/filter` and may be
+ * significantly higher or dynamic, so this provider reads them from RPC before computing fees.
+ */
 export class RPCEstimateProvider extends Provider implements EstimationProvider {
   private readonly REVEAL_LENGTH = 324; // injecting size tz1=320, tz2=322, tz3=322
   private readonly REVEAL_LENGTH_TZ4 = 622; // injecting size tz4=620
@@ -131,6 +145,19 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
     op: PreparedOperation,
     constants: Pick<ConstantsResponse, 'cost_per_byte' | 'origination_size'>
   ) {
+    let feeParams: FeeParams = DEFAULT_FEE_PARAMS;
+    try {
+      // Tezos X / Tezlink nodes expose the current fee acceptance thresholds through
+      // `mempool/filter`. On L1 these values are usually close to Taquito's historical
+      // defaults, but on Tezos X the byte fee is higher and the gas-price component is
+      // dynamic, so hardcoded L1 constants can underprice operations.
+      feeParams = feeParamsFromMempoolFilter(
+        await this.rpc.getMempoolFilter({ include_default: true })
+      );
+    } catch {
+      // Fall back to L1 defaults when the endpoint is missing or unavailable.
+    }
+
     const {
       opbytes,
       opOb: { branch, contents },
@@ -140,7 +167,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
       chain_id: await this.context.readProvider.getChainId(),
     };
 
-    const { opResponse } = await this.simulate(operation);
+    const { opResponse } = await this.simulate(operation, op);
     const { cost_per_byte, origination_size } = constants;
     const errors = [...flattenErrors(opResponse, 'backtracked'), ...flattenErrors(opResponse)];
 
@@ -172,13 +199,16 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
         revealSize = this.REVEAL_LENGTH / 2;
         eachOpSize = (opbytes.length / 2 + sigSize[PrefixV2.Ed25519Signature]) / numberOfOps;
       }
-      return this.getEstimationPropertiesFromOperationContent(
-        x,
-        // diff between estimated and injecting OP_SIZE is 124-126, we added buffer to use 130
-        x.kind === 'reveal' ? revealSize : eachOpSize,
-        cost_per_byte,
-        origination_size ?? 257 // protocol constants
-      );
+      return {
+        ...this.getEstimationPropertiesFromOperationContent(
+          x,
+          // diff between estimated and injecting OP_SIZE is 124-126, we added buffer to use 130
+          x.kind === 'reveal' ? revealSize : eachOpSize,
+          cost_per_byte,
+          origination_size ?? 257 // protocol constants
+        ),
+        feeParams,
+      };
     });
   }
 

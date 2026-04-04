@@ -17,7 +17,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
     storage (option bytes);
     code { CAR ; PUSH nat 10000 ; DUP 2 ; CAR ; DIG 2 ; CDR ; OPEN_CHEST ; NIL operation ; PAIR }`;
 
-    beforeEach(async () => {
+    beforeAll(async () => {
       await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 });
 
       const contract = await Tezos.contract.originate({
@@ -62,7 +62,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       const precomputedTimelock = Timelock.precompute(time);
       const { chest, key } = Chest.fromTimelock(payload, time, precomputedTimelock);
 
-      //chest and key value will be used in the next test
+      // chest and key value will be used in the next step
       chestBytes = chest.encode();
       keyBytes = key.encode();
 

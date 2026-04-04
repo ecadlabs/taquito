@@ -3,7 +3,7 @@ set -euo pipefail
 
 keygen_url="${TAQUITO_KEYGEN_URL:-https://keygen.ecadinfra.com}"
 keygen_url="${keygen_url%/}"
-probe_url="${keygen_url}/v2/tallinnnet"
+probe_url="${keygen_url}/v2/shadownet"
 auth_header="${TAQUITO_KEYGEN_AUTH_HEADER:-Authorization: Bearer taquito-example}"
 
 connect_timeout_seconds="${TAQUITO_KEYGEN_PREFLIGHT_CONNECT_TIMEOUT_SECONDS:-5}"

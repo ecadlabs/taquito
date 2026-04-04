@@ -22,7 +22,7 @@ const currentPageSlug = pageSlugMatch?.[1] || "quick_start";
 >
   <div class="mx-2 md:mx-8 flex justify-between items-center py-2">
     <a href="/" class="logo no-underline flex items-center gap-2" aria-label="Taquito home">
-      <div id="lottie-logo" class="w-32 md:w-40 flex items-center justify-center"></div>
+      <div class="header-logo" role="img" aria-label="Taquito"></div>
     </a>
 
     <!-- Desktop Navigation -->
@@ -220,32 +220,6 @@ const currentPageSlug = pageSlugMatch?.[1] || "quick_start";
 <SearchModal currentVersion={currentVersion} />
 
 <script>
-  import lottie from "lottie-web";
-
-  const logoContainer = document.getElementById("lottie-logo");
-
-  if (logoContainer) {
-    const animation = lottie.loadAnimation({
-      container: logoContainer,
-      renderer: "svg",
-      loop: true,
-      autoplay: false,
-      path: "/Taquito_loop_logo.json",
-    });
-
-    const logoLink = logoContainer.closest(".logo");
-
-    if (logoLink) {
-      logoLink.addEventListener("mouseenter", () => {
-        animation.play();
-      });
-
-      logoLink.addEventListener("mouseleave", () => {
-        animation.stop();
-      });
-    }
-  }
-
   // Header hide/show on scroll
   let lastScrollY = window.scrollY;
   let ticking = false;
@@ -384,6 +358,20 @@ const currentPageSlug = pageSlugMatch?.[1] || "quick_start";
 </script>
 
 <style>
+  .header-logo {
+    width: 160px;
+    height: 92px;
+    background: url('/taquito-logo-sprite.webp') no-repeat 0 0;
+    background-size: 160px auto;
+    animation: logo-sprite 8.3s steps(51) infinite;
+  }
+
+  @keyframes logo-sprite {
+    0% { background-position: 0 0; }
+    39.76% { background-position: 0 -4692px; }
+    100% { background-position: 0 -4692px; }
+  }
+
   #hamburger-btn.open .hamburger-line:nth-child(1) {
     transform: translateY(8px) rotate(45deg);
   }

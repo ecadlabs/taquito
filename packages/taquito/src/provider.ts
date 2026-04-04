@@ -3,6 +3,7 @@ import {
   RPCSimulateOperationParam,
   RpcClientInterface,
 } from '@taquito/rpc';
+import { HttpResponseError } from '@taquito/http-utils';
 import { Context } from './context';
 import { ForgedBytes, ParamsWithKind, RPCOperation, isOpRequireReveal } from './operations/types';
 import {
@@ -30,6 +31,228 @@ import { PreparedOperation } from './prepare';
 import { Estimate } from './estimate';
 
 export abstract class Provider {
+  private parseRpcErrors(error: unknown) {
+    if (!(error instanceof HttpResponseError)) {
+      return [];
+    }
+
+    let parsed: unknown;
+    try {
+      parsed = JSON.parse(error.body);
+    } catch {
+      return [];
+    }
+
+    if (!Array.isArray(parsed)) {
+      return [];
+    }
+
+    return parsed.filter((value): value is Record<string, unknown> => {
+      return typeof value === 'object' && value !== null;
+    });
+  }
+
+  private toBigInt(value: unknown) {
+    if (typeof value === 'bigint') {
+      return value;
+    }
+
+    if (typeof value === 'number' && Number.isFinite(value) && Number.isInteger(value)) {
+      return BigInt(value);
+    }
+
+    if (typeof value === 'string' && /^-?\d+$/.test(value)) {
+      return BigInt(value);
+    }
+
+    if (typeof value === 'object' && value !== null && 'toString' in value) {
+      const normalized = value.toString();
+      if (/^-?\d+$/.test(normalized)) {
+        return BigInt(normalized);
+      }
+    }
+  }
+
+  private parseCounterInThePastAdjustments(error: unknown) {
+    return this.parseRpcErrors(error)
+      .filter(
+        (value): value is { id: string; contract: string; expected: string; found: string } => {
+          const id = value.id;
+          const contract = value.contract;
+          const expected = value.expected;
+          const found = value.found;
+          return (
+            typeof id === 'string' &&
+            id.endsWith('contract.counter_in_the_past') &&
+            typeof contract === 'string' &&
+            typeof expected === 'string' &&
+            typeof found === 'string'
+          );
+        }
+      )
+      .map((value) => ({
+        contract: value.contract,
+        expected: BigInt(value.expected),
+        found: BigInt(value.found),
+      }))
+      .filter((value) => value.expected > value.found);
+  }
+
+  private hasGasLimitTooHighAndBlockExhausted(error: unknown) {
+    const ids = this.parseRpcErrors(error)
+      .map((value) => value.id)
+      .filter((value): value is string => typeof value === 'string');
+
+    return (
+      ids.some((id) => id.endsWith('gas_limit_too_high')) &&
+      ids.some((id) => id.endsWith('gas_exhausted.block'))
+    );
+  }
+
+  private async patchSimulationGasLimits(
+    op: RPCSimulateOperationParam,
+    error: unknown,
+    gasLimitPatchableIndexes?: number[]
+  ): Promise<RPCSimulateOperationParam | undefined> {
+    if (!this.hasGasLimitTooHighAndBlockExhausted(error)) {
+      return;
+    }
+
+    if (!Array.isArray(op.operation.contents)) {
+      return;
+    }
+
+    const constants = await this.context.readProvider.getProtocolConstants('head');
+    const hardGasLimitPerOperation = this.toBigInt(constants.hard_gas_limit_per_operation);
+    const hardGasLimitPerBlock = this.toBigInt(constants.hard_gas_limit_per_block);
+    const zero = BigInt(0);
+
+    if (
+      typeof hardGasLimitPerOperation === 'undefined' ||
+      typeof hardGasLimitPerBlock === 'undefined' ||
+      hardGasLimitPerOperation <= zero ||
+      hardGasLimitPerBlock <= zero
+    ) {
+      return;
+    }
+
+    const contents = op.operation.contents.map((content) => ({ ...content }));
+    const adjustableIndexes =
+      gasLimitPatchableIndexes && gasLimitPatchableIndexes.length > 0
+        ? gasLimitPatchableIndexes.filter((index) => index >= 0 && index < contents.length)
+        : [];
+    let explicitGasLimitTotal = zero;
+
+    for (const [index, content] of contents.entries()) {
+      const kind = (content as { kind?: string }).kind;
+      const gasLimit = this.toBigInt((content as { gas_limit?: unknown }).gas_limit);
+
+      if (typeof gasLimit === 'undefined') {
+        continue;
+      }
+
+      if (adjustableIndexes.length === 0) {
+        if (kind !== 'reveal' && gasLimit >= hardGasLimitPerOperation) {
+          adjustableIndexes.push(index);
+          continue;
+        }
+      } else if (adjustableIndexes.includes(index)) {
+        continue;
+      }
+
+      explicitGasLimitTotal += gasLimit;
+    }
+
+    if (adjustableIndexes.length === 0) {
+      return;
+    }
+
+    // Mirror octez-client's `may_patch_limits` logic in injection.ml:
+    // only rebalance manager operations whose gas limit was auto-assigned for
+    // simulation, while treating reveal and user-specified gas limits as already
+    // consuming part of the block budget.
+    const remainingBlockGas = hardGasLimitPerBlock - explicitGasLimitTotal;
+    const evenlyDistributedGas =
+      remainingBlockGas > zero ? remainingBlockGas / BigInt(adjustableIndexes.length) : zero;
+    const patchedGasLimit =
+      evenlyDistributedGas > hardGasLimitPerOperation
+        ? hardGasLimitPerOperation
+        : evenlyDistributedGas;
+
+    let patched = false;
+    for (const index of adjustableIndexes) {
+      const content = contents[index] as { gas_limit?: unknown };
+      const currentGasLimit = this.toBigInt(content.gas_limit);
+
+      if (currentGasLimit === patchedGasLimit) {
+        continue;
+      }
+
+      (contents[index] as { gas_limit: string }).gas_limit = patchedGasLimit.toString();
+      patched = true;
+    }
+
+    if (!patched) {
+      return;
+    }
+
+    return {
+      ...op,
+      operation: {
+        ...op.operation,
+        contents,
+      },
+    };
+  }
+
+  private patchSimulationCounters(
+    op: RPCSimulateOperationParam,
+    adjustments: { contract: string; expected: bigint; found: bigint }[]
+  ): RPCSimulateOperationParam | undefined {
+    if (adjustments.length === 0) {
+      return;
+    }
+
+    if (!Array.isArray(op.operation.contents)) {
+      return;
+    }
+
+    const contents = op.operation.contents.map((content) => ({ ...content }));
+    let patched = false;
+
+    for (const adjustment of adjustments) {
+      const delta = adjustment.expected - adjustment.found;
+      for (const content of contents) {
+        const source = (content as { source?: string }).source;
+        const counter = (content as { counter?: string | number }).counter;
+
+        if (source !== adjustment.contract || typeof counter === 'undefined') {
+          continue;
+        }
+
+        const contentCounter = BigInt(String(counter));
+        if (contentCounter < adjustment.found) {
+          continue;
+        }
+
+        (content as { counter: string }).counter = (contentCounter + delta).toString();
+        patched = true;
+      }
+    }
+
+    if (!patched) {
+      return;
+    }
+
+    return {
+      ...op,
+      operation: {
+        ...op.operation,
+        contents,
+      },
+    };
+  }
+
   get rpc(): RpcClientInterface {
     return this.context.rpc;
   }
@@ -142,12 +365,56 @@ export abstract class Provider {
     }
   }
 
-  protected async simulate(op: RPCSimulateOperationParam) {
-    return {
-      opResponse: await this.rpc.simulateOperation(op),
-      op,
-      context: this.context.clone(),
-    };
+  protected async simulate(op: RPCSimulateOperationParam, preparedOperation?: PreparedOperation) {
+    const gasLimitPatchableIndexes = preparedOperation?.simulation?.gasLimitPatchableIndexes;
+    try {
+      return {
+        opResponse: await this.rpc.simulateOperation(op),
+        op,
+        context: this.context.clone(),
+      };
+    } catch (error) {
+      const adjustments = this.parseCounterInThePastAdjustments(error);
+      const patchedOp = this.patchSimulationCounters(op, adjustments);
+
+      if (patchedOp) {
+        try {
+          return {
+            opResponse: await this.rpc.simulateOperation(patchedOp),
+            op: patchedOp,
+            context: this.context.clone(),
+          };
+        } catch (counterRetryError) {
+          const gasPatchedOp = await this.patchSimulationGasLimits(
+            patchedOp,
+            counterRetryError,
+            gasLimitPatchableIndexes
+          );
+
+          if (!gasPatchedOp) {
+            throw counterRetryError;
+          }
+
+          return {
+            opResponse: await this.rpc.simulateOperation(gasPatchedOp),
+            op: gasPatchedOp,
+            context: this.context.clone(),
+          };
+        }
+      }
+
+      const gasPatchedOp = await this.patchSimulationGasLimits(op, error, gasLimitPatchableIndexes);
+
+      if (!gasPatchedOp) {
+        throw error;
+      }
+
+      return {
+        opResponse: await this.rpc.simulateOperation(gasPatchedOp),
+        op: gasPatchedOp,
+        context: this.context.clone(),
+      };
+    }
   }
 
   protected async isRevealOpNeeded(op: RPCOperation[] | ParamsWithKind[], pkh: string) {

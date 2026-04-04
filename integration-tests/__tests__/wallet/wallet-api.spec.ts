@@ -7,7 +7,7 @@ const CONFIRMATION_OBSERVABLE_TIMEOUT_MS = 60_000;
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
   })
 

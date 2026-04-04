@@ -1,4 +1,8 @@
-import { Estimate } from '../../src/estimate/estimate';
+import {
+  Estimate,
+  feeParamsFromMempoolFilter,
+  DEFAULT_FEE_PARAMS,
+} from '../../src/estimate/estimate';
 
 describe('Estimate', () => {
   it('Calculate fees in mutez properly for Carthagenet', () => {
@@ -37,5 +41,34 @@ describe('Estimate', () => {
     expect(estimate.burnFeeMutez).toStrictEqual(75000);
     expect(estimate.totalCost).toEqual(77012);
     expect(estimate.consumedMilligas).toStrictEqual(17311000);
+  });
+
+  it('Calculate fees in mutez properly with dynamic mempool/filter parameters', () => {
+    const estimate = new Estimate(
+      2100000,
+      0,
+      152,
+      250,
+      undefined,
+      feeParamsFromMempoolFilter({
+        minimal_fees: '100',
+        minimal_nanotez_per_gas_unit: ['4000', '1'],
+        minimal_nanotez_per_byte: ['4000', '1'],
+      })
+    );
+
+    expect(estimate.minimalFeeMutez).toStrictEqual(9108);
+    expect(estimate.suggestedFeeMutez).toStrictEqual(9128);
+    expect(estimate.totalCost).toStrictEqual(9108);
+  });
+
+  it('Falls back to L1 defaults when mempool/filter values are malformed', () => {
+    expect(
+      feeParamsFromMempoolFilter({
+        minimal_fees: 'wat',
+        minimal_nanotez_per_gas_unit: ['100', '0'],
+        minimal_nanotez_per_byte: ['nan', '1'],
+      })
+    ).toEqual(DEFAULT_FEE_PARAMS);
   });
 });

@@ -7,7 +7,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract, createAddress }
   const Tezos = lib;
 
   describe(`Test contract.batch through contract api using: ${rpc}`, () => {
-    beforeEach(async () => {
+    beforeAll(async () => {
       await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
     });
 
