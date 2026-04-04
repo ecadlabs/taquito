@@ -4,9 +4,11 @@ import {
   OperationContentsOrigination,
 } from '@taquito/rpc';
 import { BigNumber } from 'bignumber.js';
+import { HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
 import { Context } from '../context';
 import { DefaultContractType } from '../contract/contract';
 import { RpcContractProvider } from '../contract/rpc-contract-provider';
+import { isBlockHashIdentifier } from '../read-provider/interface';
 import { OriginationOperationError } from './errors';
 import { Operation } from './operations';
 import {
@@ -115,10 +117,28 @@ export class OriginationOperation<TContract extends DefaultContractType = Defaul
     if (!Number.isFinite(this.includedInBlock)) {
       throw new OriginationOperationError('Confirmation completed but includedInBlock was not set');
     }
-    return this.contractProvider.at<TContract>(
-      this.contractAddress,
-      undefined,
-      this.includedInBlock
-    );
+
+    const inclusionBlock = await this.getInclusionBlock();
+    if (!isBlockHashIdentifier(inclusionBlock.hash)) {
+      throw new OriginationOperationError('Confirmation completed but includedInBlock was not set');
+    }
+
+    try {
+      return await this.contractProvider.atExactBlock<TContract>(
+        this.contractAddress,
+        undefined,
+        inclusionBlock.hash
+      );
+    } catch (error) {
+      if (error instanceof HttpResponseError && error.status === STATUS_CODE.NOT_FOUND) {
+        return this.contractProvider.at<TContract>(
+          this.contractAddress,
+          undefined,
+          inclusionBlock.hash
+        );
+      }
+
+      throw error;
+    }
   }
 }

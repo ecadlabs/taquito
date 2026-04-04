@@ -503,7 +503,7 @@ export class Wallet {
   async at<T extends ContractAbstraction<Wallet>>(
     address: string,
     contractAbstractionComposer: (abs: ContractAbstraction<Wallet>, context: Context) => T = (x) =>
-      x as any,
+      x as unknown as T,
     block: BlockIdentifier = 'head'
   ): Promise<T> {
     const addressValidation = validateContractAddress(address);
@@ -530,10 +530,9 @@ export class Wallet {
     try {
       contractState = await loadContractState(block);
     } catch (error) {
-      // Newly originated contracts can be visible at the operation's inclusion level in one RPC
-      // call and still lag on another endpoint of the same rolling node. Retry at head so
-      // wallet op.contract() behaves like octez-client, which resolves the originated contract
-      // after confirmation instead of pinning itself to a stale context forever.
+      // Some RPC deployments can transiently 404 a freshly originated contract on an exact
+      // block-pinned read before their recent contract indexes converge. Retry at head to
+      // preserve existing wallet lookup behavior for callers that do not require exact pinning.
       if (
         block !== 'head' &&
         error instanceof HttpResponseError &&
@@ -554,6 +553,34 @@ export class Wallet {
       rpc,
       readProvider
     );
+    return contractAbstractionComposer(abs, this.context);
+  }
+
+  async atExactBlock<T extends ContractAbstraction<Wallet>>(
+    address: string,
+    contractAbstractionComposer: (abs: ContractAbstraction<Wallet>, context: Context) => T = (x) =>
+      x as unknown as T,
+    block: BlockIdentifier
+  ): Promise<T> {
+    const addressValidation = validateContractAddress(address);
+    if (addressValidation !== ValidationResult.VALID) {
+      throw new InvalidContractAddressError(address, addressValidation);
+    }
+
+    const rpc = this.context.withExtensions().rpc;
+    const readProvider = this.context.withExtensions().readProvider;
+    const script = await readProvider.getScript(address, block);
+    const entrypoints = await rpc.getEntrypoints(address, { block: String(block) });
+    const abs = new ContractAbstraction(
+      address,
+      script,
+      this,
+      this.context.contract,
+      entrypoints,
+      rpc,
+      readProvider
+    );
+
     return contractAbstractionComposer(abs, this.context);
   }
 }

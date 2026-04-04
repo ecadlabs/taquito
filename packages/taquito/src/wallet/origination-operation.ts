@@ -4,9 +4,11 @@ import {
   OperationContentsAndResultReveal,
   OpKind,
 } from '@taquito/rpc';
+import { HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
 import { Observable } from 'rxjs';
 import { Context } from '../context';
 import { DefaultWalletType } from '../contract/contract';
+import { isBlockHashIdentifier } from '../read-provider/interface';
 import { findWithKind } from '../operations/types';
 import { WalletOperation, OperationStatus } from './operation';
 import { ObservableError, OriginationWalletOperationError } from './errors';
@@ -66,7 +68,22 @@ export class OriginationWalletOperation<
 
     await this.confirmation();
     const inclusionBlock = await this.getInclusionBlock();
+    if (!isBlockHashIdentifier(inclusionBlock.hash)) {
+      throw new OriginationWalletOperationError('Inclusion block hash is invalid');
+    }
 
-    return this.context.wallet.at<TWallet>(address, undefined, inclusionBlock.header.level);
+    try {
+      return await this.context.wallet.atExactBlock<TWallet>(
+        address,
+        undefined,
+        inclusionBlock.hash
+      );
+    } catch (error) {
+      if (error instanceof HttpResponseError && error.status === STATUS_CODE.NOT_FOUND) {
+        return this.context.wallet.at<TWallet>(address, undefined, inclusionBlock.hash);
+      }
+
+      throw error;
+    }
   }
 }
