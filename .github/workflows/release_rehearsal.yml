@@ -7,6 +7,11 @@ on:
         description: Rehearsal version (e.g. 24.3.0-beta.0)
         required: true
         type: string
+      prerelease:
+        description: Rehearse prerelease publishing on the next dist-tag
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   rehearse:
@@ -28,6 +33,30 @@ jobs:
 
       - run: npm ci
 
+      - name: Resolve release mode
+        run: |
+          set -euo pipefail
+          version_is_prerelease=false
+          if [[ "${VERSION}" == *-* ]]; then
+            version_is_prerelease=true
+          fi
+
+          if [[ "${{ inputs.prerelease }}" == "true" && "${version_is_prerelease}" != "true" ]]; then
+            echo "prerelease=true requires a prerelease version string" >&2
+            exit 1
+          fi
+
+          if [[ "${{ inputs.prerelease }}" != "true" && "${version_is_prerelease}" == "true" ]]; then
+            echo "prerelease=false is incompatible with a prerelease version string" >&2
+            exit 1
+          fi
+
+          if [[ "${version_is_prerelease}" == "true" ]]; then
+            echo "DIST_TAG=next" >> "$GITHUB_ENV"
+          else
+            echo "DIST_TAG=latest" >> "$GITHUB_ENV"
+          fi
+
       - name: Set rehearsal version
         run: node scripts/sync-workspace-deps.js "${VERSION}"
 
@@ -44,4 +73,4 @@ jobs:
         run: npm test -- --runInBand
 
       - name: Rehearse workspace publish
-        run: npm publish --workspaces --dry-run --access public
+        run: npm publish --workspaces --dry-run --tag "${DIST_TAG}" --access public

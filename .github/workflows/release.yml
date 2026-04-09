@@ -34,6 +34,30 @@ jobs:
 
       - run: npm ci
 
+      - name: Resolve release mode
+        run: |
+          set -euo pipefail
+          version_is_prerelease=false
+          if [[ "${VERSION}" == *-* ]]; then
+            version_is_prerelease=true
+          fi
+
+          if [[ "${{ inputs.prerelease }}" == "true" && "${version_is_prerelease}" != "true" ]]; then
+            echo "prerelease=true requires a prerelease version string" >&2
+            exit 1
+          fi
+
+          if [[ "${{ inputs.prerelease }}" != "true" && "${version_is_prerelease}" == "true" ]]; then
+            echo "prerelease=false is incompatible with a prerelease version string" >&2
+            exit 1
+          fi
+
+          if [[ "${version_is_prerelease}" == "true" ]]; then
+            echo "DIST_TAG=next" >> "$GITHUB_ENV"
+          else
+            echo "DIST_TAG=latest" >> "$GITHUB_ENV"
+          fi
+
       - name: Set release version
         run: node scripts/sync-workspace-deps.js "${VERSION}"
 
@@ -59,11 +83,11 @@ jobs:
 
       - name: Publish prerelease packages
         if: ${{ inputs.prerelease }}
-        run: npm publish --workspaces --tag next --provenance --access public
+        run: npm publish --workspaces --tag "${DIST_TAG}" --provenance --access public
 
       - name: Publish stable packages
         if: ${{ !inputs.prerelease }}
-        run: npm publish --workspaces --provenance --access public
+        run: npm publish --workspaces --tag "${DIST_TAG}" --provenance --access public
 
       - name: Push release commit and tag
         run: |
