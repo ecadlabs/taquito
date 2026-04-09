@@ -1,9 +1,13 @@
 {
   "name": "@taquito/contracts-library",
   "version": "24.2.0",
-  "description": "Can be used as an extension on the TezosToolkit to provide contracts data",
+  "description": "Static Michelson scripts and entrypoints library for Taquito contract interactions.",
   "keywords": [
-    "tezos"
+    "taquito",
+    "tezos",
+    "typescript",
+    "contracts",
+    "smart-contracts"
   ],
   "main": "dist/taquito-contracts-library.umd.js",
   "module": "dist/taquito-contracts-library.es6.js",
@@ -12,10 +16,19 @@
     "signature.json",
     "dist"
   ],
-  "author": "Roxane Letourneau <roxane@ecadlabs.com>",
+  "author": "ECAD Labs Inc <info@ecadlabs.com>",
+  "contributors": [
+    "Davis Sawali <davis.sawali@ecadlabs.com>",
+    "Roxane Letourneau <roxane@ecadlabs.com>",
+    "Jev Björsell (jevonearth)"
+  ],
+  "homepage": "https://taquito.io/",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "git+https://github.com/ecadlabs/taquito.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ecadlabs/taquito/issues"
   },
   "publishConfig": {
     "access": "public"

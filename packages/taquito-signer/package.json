@@ -1,11 +1,14 @@
 {
   "name": "@taquito/signer",
   "version": "24.2.0",
-  "description": "Provide signing functionality to be with taquito",
+  "description": "Software signer implementations and signing utilities for Taquito.",
   "keywords": [
+    "taquito",
     "tezos",
+    "typescript",
     "blockchain",
-    "signer"
+    "signer",
+    "crypto"
   ],
   "main": "dist/taquito-signer.umd.js",
   "module": "dist/taquito-signer.es6.js",
@@ -17,10 +20,20 @@
   "publishConfig": {
     "access": "public"
   },
-  "author": "Simon Boissonneault-Robert <simon@ecadlabs.com>",
+  "author": "ECAD Labs Inc <info@ecadlabs.com>",
+  "contributors": [
+    "Jev Björsell (jevonearth)",
+    "Roxane Letourneau <roxane@ecadlabs.com>",
+    "Davis Sawali <davis.sawali@ecadlabs.com>",
+    "Simon Boissonneault-Robert <simon@ecadlabs.com>"
+  ],
+  "homepage": "https://taquito.io/",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "git+https://github.com/ecadlabs/taquito.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ecadlabs/taquito/issues"
   },
   "license": "Apache-2.0",
   "engines": {

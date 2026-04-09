@@ -1,10 +1,15 @@
 {
   "name": "@taquito/taquito",
   "version": "24.2.0",
-  "description": "High level functionality that builds upon the other packages in the Tezos Typescript Library Suite.",
+  "description": "TypeScript SDK for building wallets, dapps, and tooling on Tezos.",
   "keywords": [
+    "taquito",
     "tezos",
-    "blockchain"
+    "typescript",
+    "blockchain",
+    "sdk",
+    "wallet",
+    "dapp"
   ],
   "main": "dist/taquito.umd.js",
   "unpkg": "dist/taquito.min.js",
@@ -18,7 +23,14 @@
   "publishConfig": {
     "access": "public"
   },
-  "author": "Simon Boissonneault-Robert <simon@ecadlabs.com>",
+  "author": "ECAD Labs Inc <info@ecadlabs.com>",
+  "contributors": [
+    "Simon Boissonneault-Robert <simon@ecadlabs.com>",
+    "Roxane Letourneau <roxane@ecadlabs.com>",
+    "Davis Sawali <davis.sawali@ecadlabs.com>",
+    "Jev Björsell (jevonearth)"
+  ],
+  "homepage": "https://taquito.io/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ecadlabs/taquito.git"

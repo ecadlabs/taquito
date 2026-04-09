@@ -1,10 +1,11 @@
 {
   "name": "@taquito/tzip16",
   "version": "24.2.0",
-  "description": "Tzip16",
+  "description": "TZIP-16 contract metadata support for Taquito.",
   "keywords": [
+    "taquito",
     "tezos",
-    "blockchain",
+    "typescript",
     "tzip16"
   ],
   "main": "dist/taquito-tzip16.umd.js",
@@ -17,10 +18,19 @@
   "publishConfig": {
     "access": "public"
   },
-  "author": "Roxane Letourneau <roxane@ecadlabs.com>",
+  "author": "ECAD Labs Inc <info@ecadlabs.com>",
+  "contributors": [
+    "Roxane Letourneau <roxane@ecadlabs.com>",
+    "Davis Sawali <davis.sawali@ecadlabs.com>",
+    "Jev Björsell (jevonearth)"
+  ],
+  "homepage": "https://taquito.io/",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "git+https://github.com/ecadlabs/taquito.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ecadlabs/taquito/issues"
   },
   "license": "Apache-2.0",
   "engines": {

@@ -6,11 +6,14 @@ on:
       - 'website/**'
   push:
     branches:
-      - master
+      - main
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.ref != 'refs/heads/master' || github.run_number }}
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.ref != 'refs/heads/main' || github.run_number }}
   cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull/') }}
+
+permissions:
+  contents: read
 
 jobs:
   http-utils-test:
@@ -27,7 +30,7 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
           cache: npm
-      - run: npm ci
+      - run: npx -y npm@11 ci
       - run: npx nx build @taquito/http-utils
       - run: npx nx test @taquito/http-utils -- --coverage
 
@@ -41,6 +44,9 @@ jobs:
   lint-and-test:
     name: build-lint-docs-unit
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     strategy:
       fail-fast: false
       matrix:
@@ -53,15 +59,16 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
           cache: npm
-      - run: npm ci
+      - run: npx -y npm@11 ci
       - run: npm run build
       - run: npm run lint
       - run: npm run build-docs
       - run: npm run test -- --runInBand
       - name: Codecov
-        uses: codecov/codecov-action@v3.1.1
+        uses: codecov/codecov-action@v5
         with:
-          file: .coverage/*.json
+          files: .coverage/*.json
+          use_oidc: true
         env:
           CI: true
           RUN_INTEGRATION: true
@@ -81,7 +88,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: lts/Jod
+          node-version: 24
           cache: npm
       - run: npm ci
       - run: npm run build
@@ -195,7 +202,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: lts/Jod
+          node-version: 24
           cache: npm
       - run: npm ci
       - run: npm run build
