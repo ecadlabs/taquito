@@ -17,8 +17,7 @@
   "typings": "dist/types/taquito.d.ts",
   "files": [
     "signature.json",
-    "dist",
-    "patch.js"
+    "dist"
   ],
   "publishConfig": {
     "access": "public"
@@ -53,8 +52,7 @@
     "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts --bundleConfigAsCjs",
     "build:release": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts --bundleConfigAsCjs && npm run build:web",
     "build:web": "webpack && node update-readme.js",
-    "start": "rollup -c rollup.config.ts --bundleConfigAsCjs -w",
-    "postinstall": "node patch.js"
+    "start": "rollup -c rollup.config.ts --bundleConfigAsCjs -w"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [
