@@ -29,6 +29,7 @@
     "@taquito/contracts-library": "^24.2.0",
     "@taquito/core": "^24.2.0",
     "@taquito/http-utils": "^24.2.0",
+    "@taquito/ledger-signer": "^24.2.0",
     "@taquito/local-forging": "^24.2.0",
     "@taquito/michel-codec": "^24.2.0",
     "@taquito/michelson-encoder": "^24.2.0",
@@ -37,11 +38,13 @@
     "@taquito/sapling": "^24.2.0",
     "@taquito/signer": "^24.2.0",
     "@taquito/taquito": "^24.2.0",
+    "@taquito/timelock": "^24.2.0",
     "@taquito/tzip12": "^24.2.0",
     "@taquito/tzip16": "^24.2.0",
     "@taquito/utils": "^24.2.0",
     "bignumber.js": "^9.1.2",
-    "blakejs": "^1.2.1"
+    "blakejs": "^1.2.1",
+    "rxjs": "^7.8.2"
   },
   "private": true,
   "devDependencies": {
@@ -51,7 +54,8 @@
     "eslint": "^8.57.0",
     "lint-staged": "^15.2.7",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
   },
   "config": {
     "commitizen": {

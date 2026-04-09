@@ -88,15 +88,17 @@
     ]
   },
   "dependencies": {
+    "@taquito/utils": "^24.2.0",
     "@taquito/core": "^24.2.0",
     "@taquito/michelson-encoder": "^24.2.0",
     "@taquito/taquito": "^24.2.0",
-    "@taquito/tzip16": "^24.2.0"
+    "@taquito/tzip16": "^24.2.0",
+    "bignumber.js": "^9.1.2"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.42",
     "@types/jest": "^29.5.12",
-    "@types/node": "^20",
+    "@types/node": "^22.0.0",
     "@types/ws": "^8.5.12",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",

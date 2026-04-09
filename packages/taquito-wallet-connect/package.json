@@ -105,7 +105,7 @@
     "@types/bluebird": "^3.5.42",
     "@types/chrome": "0.0.171",
     "@types/jest": "^29.5.12",
-    "@types/node": "^20",
+    "@types/node": "^22.0.0",
     "@types/pino": "^7.0.5",
     "@types/ws": "^8.5.12",
     "@typescript-eslint/eslint-plugin": "^6.21.0",

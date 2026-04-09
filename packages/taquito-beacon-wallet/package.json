@@ -139,9 +139,11 @@
     "@ecadlabs/beacon-types": "^4.8.1-ecad",
     "@taquito/core": "^24.2.0",
     "@taquito/taquito": "^24.2.0",
+    "@taquito/utils": "^24.2.0",
+    "@stablelib/ed25519": "^2.0.2",
     "crypto-browserify": "^3.12.1",
-    "util": "^0.12.5",
-    "@stablelib/ed25519": "^2.0.2"
+    "typedarray-to-buffer": "^4.0.0",
+    "util": "^0.12.5"
   },
   "devDependencies": {
     "@ecadlabs/beacon-transport-postmessage": "^4.8.1-ecad",
@@ -149,7 +151,7 @@
     "@types/bluebird": "^3.5.42",
     "@types/chrome": "0.0.269",
     "@types/jest": "^29.5.12",
-    "@types/node": "^20",
+    "@types/node": "^22.0.0",
     "@types/ws": "^8.5.12",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
