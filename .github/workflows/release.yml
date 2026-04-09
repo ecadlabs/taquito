@@ -73,14 +73,6 @@ jobs:
       - name: Test
         run: npm test -- --runInBand
 
-      - name: Commit release metadata
-        run: |
-          git config user.email "actions@github.com"
-          git config user.name "GitHub Actions"
-          git add -A
-          git commit -m "chore: release v${VERSION}"
-          git tag "v${VERSION}"
-
       - name: Publish prerelease packages
         if: ${{ inputs.prerelease }}
         run: npm publish --workspaces --tag "${DIST_TAG}" --provenance --access public
@@ -89,15 +81,11 @@ jobs:
         if: ${{ !inputs.prerelease }}
         run: npm publish --workspaces --tag "${DIST_TAG}" --provenance --access public
 
-      - name: Push release commit and tag
-        run: |
-          git push origin HEAD:main
-          git push origin "v${VERSION}"
-
       - name: Create GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
           PRERELEASE: ${{ inputs.prerelease }}
+          TARGET_SHA: ${{ github.sha }}
         run: |
           prerelease_flag=""
           if [ "${PRERELEASE}" = "true" ]; then
@@ -105,6 +93,7 @@ jobs:
           fi
 
           gh release create "v${VERSION}" \
+            --target "${TARGET_SHA}" \
             --title "v${VERSION}" \
             --generate-notes \
             ${prerelease_flag}
