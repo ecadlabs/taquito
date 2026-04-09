@@ -4,7 +4,13 @@ import {
   MissingRequiredScopes,
 } from '../src/taquito-beacon-wallet';
 import LocalStorageMock from './mock-local-storage';
-import { PermissionScope, LocalStorage, SigningType } from '@ecadlabs/beacon-dapp';
+import {
+  PermissionScope,
+  LocalStorage,
+  SigningType,
+  getDAppClientInstance,
+  Regions,
+} from '@ecadlabs/beacon-dapp';
 import { indexedDB } from 'fake-indexeddb';
 global.localStorage = new LocalStorageMock();
 global.indexedDB = indexedDB;
@@ -17,6 +23,20 @@ jest.mock('@stablelib/random', () => ({
     randomBytes: (n: number) => new Uint8Array(n).fill(1),
   })),
 }));
+
+jest.mock('@ecadlabs/beacon-dapp', () => {
+  const originalModule = jest.requireActual('@ecadlabs/beacon-dapp');
+
+  return {
+    ...originalModule,
+    getDAppClientInstance: jest.fn().mockImplementation(() => ({
+      requestPermissions: jest.fn(),
+      getActiveAccount: jest.fn(),
+      showPrepare: jest.fn(),
+      hideUI: jest.fn(),
+    })),
+  };
+});
 
 jest.mock('@ecadlabs/beacon-ui', () => {
   return {
@@ -60,8 +80,64 @@ jest.mock('@ecadlabs/beacon-transport-postmessage', () => {
 });
 
 describe('Beacon Wallet tests', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('Verify that BeaconWallet is instantiable', () => {
     expect(new BeaconWallet({ name: 'testWallet' })).toBeInstanceOf(BeaconWallet);
+  });
+
+  it('Uses only octez.io relays in the curated default matrix node list', () => {
+    new BeaconWallet({ name: 'testWallet' });
+
+    expect(getDAppClientInstance).toHaveBeenCalledWith(
+      expect.objectContaining({
+        matrixNodes: {
+          [Regions.EUROPE_WEST]: [
+            'beacon-node-1.octez.io',
+            'beacon-node-2.octez.io',
+            'beacon-node-3.octez.io',
+            'beacon-node-4.octez.io',
+            'beacon-node-5.octez.io',
+            'beacon-node-6.octez.io',
+            'beacon-node-7.octez.io',
+            'beacon-node-8.octez.io',
+          ],
+          [Regions.NORTH_AMERICA_EAST]: [],
+          [Regions.NORTH_AMERICA_WEST]: [],
+          [Regions.ASIA_EAST]: [],
+          [Regions.AUSTRALIA]: [],
+        },
+      })
+    );
+  });
+
+  it('Merges caller-provided matrix node overrides on top of the curated defaults', () => {
+    new BeaconWallet({
+      name: 'testWallet',
+      matrixNodes: {
+        [Regions.NORTH_AMERICA_EAST]: ['custom-relay.example'],
+      },
+    });
+
+    expect(getDAppClientInstance).toHaveBeenCalledWith(
+      expect.objectContaining({
+        matrixNodes: expect.objectContaining({
+          [Regions.EUROPE_WEST]: [
+            'beacon-node-1.octez.io',
+            'beacon-node-2.octez.io',
+            'beacon-node-3.octez.io',
+            'beacon-node-4.octez.io',
+            'beacon-node-5.octez.io',
+            'beacon-node-6.octez.io',
+            'beacon-node-7.octez.io',
+            'beacon-node-8.octez.io',
+          ],
+          [Regions.NORTH_AMERICA_EAST]: ['custom-relay.example'],
+        }),
+      })
+    );
   });
 
   it('Verify BeaconWallet not initialized error', () => {
