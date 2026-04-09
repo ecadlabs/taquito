@@ -30,8 +30,7 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
           cache: npm
-      - run: npm install -g npm@11
-      - run: npm ci
+      - run: npx -y npm@11 ci
       - run: npx nx build @taquito/http-utils
       - run: npx nx test @taquito/http-utils -- --coverage
 
@@ -60,8 +59,7 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
           cache: npm
-      - run: npm install -g npm@11
-      - run: npm ci
+      - run: npx -y npm@11 ci
       - run: npm run build
       - run: npm run lint
       - run: npm run build-docs
