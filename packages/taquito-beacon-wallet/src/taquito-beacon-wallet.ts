@@ -50,29 +50,18 @@ export type { DAppClientOptions } from '@ecadlabs/beacon-dapp';
 /**
  * Default matrix relay nodes curated by Taquito.
  *
- * Includes only nodes operated by Papers and Trilitech running the latest
- * Synapse version. These replace the Beacon SDK built-in defaults so that
- * Taquito controls which relay infrastructure its users hit.
+ * Includes only Trilitech-operated `octez.io` nodes. These replace the Beacon
+ * SDK built-in defaults so that Taquito controls which relay infrastructure
+ * its users hit.
  *
- * The geographically distributed Papers nodes (NA-East, NA-West, Asia-East,
- * Australia) have been decommissioned by Papers, so those regions are emptied
- * to prevent connection attempts to dead servers.
+ * Non-European regions are intentionally empty because Taquito no longer
+ * curates Papers-operated relay nodes for those regions.
  *
  * Users can still override specific regions (or the entire list) by passing
  * their own `matrixNodes` in the BeaconWallet constructor options.
  */
 const TAQUITO_CURATED_MATRIX_NODES: NodeDistributions = {
   [Regions.EUROPE_WEST]: [
-    // Papers
-    'beacon-node-1.diamond.papers.tech',
-    'beacon-node-1.sky.papers.tech',
-    'beacon-node-2.sky.papers.tech',
-    'beacon-node-1.hope.papers.tech',
-    'beacon-node-1.hope-2.papers.tech',
-    'beacon-node-1.hope-3.papers.tech',
-    'beacon-node-1.hope-4.papers.tech',
-    'beacon-node-1.hope-5.papers.tech',
-    // Trilitech
     'beacon-node-1.octez.io',
     'beacon-node-2.octez.io',
     'beacon-node-3.octez.io',
@@ -82,7 +71,7 @@ const TAQUITO_CURATED_MATRIX_NODES: NodeDistributions = {
     'beacon-node-7.octez.io',
     'beacon-node-8.octez.io',
   ],
-  // Decommissioned by Papers; emptied to prevent connections to dead servers
+  // Left empty so Taquito does not point users at soon-to-be-retired Papers relays
   [Regions.NORTH_AMERICA_EAST]: [],
   [Regions.NORTH_AMERICA_WEST]: [],
   [Regions.ASIA_EAST]: [],
@@ -275,7 +264,9 @@ export class BeaconWallet implements WalletProvider {
     );
   }
 
-  async mapRegisterGlobalConstantParamsToWalletParams(params: () => Promise<WalletRegisterGlobalConstantParams>) {
+  async mapRegisterGlobalConstantParamsToWalletParams(
+    params: () => Promise<WalletRegisterGlobalConstantParams>
+  ) {
     let walletParams: WalletRegisterGlobalConstantParams;
     await this.client.showPrepare();
     try {
