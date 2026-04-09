@@ -16,7 +16,7 @@ export default {
       name: camelCase(libraryName), 
       format: 'umd', 
       sourcemap: true, 
-      globals: { 
+      globals: {
         "bignumber.js": "BigNumber",
         "@taquito/taquito": "taquito",
         "@taquito/utils": "utils",
@@ -26,7 +26,6 @@ export default {
         "@stablelib/nacl": "nacl",
         "@stablelib/random": "random",
         "typedarray-to-buffer": "toBuffer",
-        "pbkdf2": "pbkdf2"
       }
     },
     { file: pkg.module, format: 'es', sourcemap: true },
@@ -42,7 +41,7 @@ export default {
     'bignumber.js',
     '@airgap/sapling-wasm',
     '@stablelib/nacl',
-    'pbkdf2',
+    'bip39',
     '@stablelib/random',
     '@taquito/taquito'
   ],

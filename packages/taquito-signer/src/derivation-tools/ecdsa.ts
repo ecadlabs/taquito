@@ -2,8 +2,8 @@
 import { secp256k1 } from '@noble/curves/secp256k1';
 import { p256 } from '@noble/curves/nist';
 import { Hard, ExtendedPrivateKey } from './types';
-import { HMAC } from '@stablelib/hmac';
-import { SHA512 } from '@stablelib/sha512';
+import { hmac } from '@noble/hashes/hmac.js';
+import { sha512 } from '@noble/hashes/sha2.js';
 import BN from 'bn.js';
 import { parseHex } from './utils';
 import { InvalidBitSize, InvalidCurveError, InvalidSeedLengthError } from '../errors';
@@ -80,7 +80,7 @@ export class PrivateKey implements ExtendedPrivateKey {
     let chain: Uint8Array = new Uint8Array();
     let i = 0;
     while (i === 0) {
-      const sum = new HMAC(SHA512, key).update(seed).digest();
+      const sum = hmac(sha512, key, seed);
       d = new BN(sum.subarray(0, 32));
       chain = sum.subarray(32);
       if (d.isZero() || d.cmp(curveOrder) >= 0) {
@@ -111,7 +111,7 @@ export class PrivateKey implements ExtendedPrivateKey {
     let chain: Uint8Array = new Uint8Array();
     let i = 0;
     while (i === 0) {
-      const sum = new HMAC(SHA512, this.chainCode).update(data).digest();
+      const sum = hmac(sha512, this.chainCode, data);
       d = new BN(sum.subarray(0, 32));
       chain = sum.subarray(32);
       // Get curve order for comparison

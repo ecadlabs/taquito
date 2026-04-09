@@ -56,7 +56,8 @@
   },
   "jest": {
     "transform": {
-      ".(ts|tsx)": "ts-jest"
+      ".(ts|tsx)": "ts-jest",
+      "node_modules/@noble/hashes/.+\\.(j|t)sx?$": "ts-jest"
     },
     "transformIgnorePatterns": [
       "node_modules/(?!(@scure/bip39|@noble/hashes|@scure/base)/)"
@@ -77,11 +78,16 @@
     ],
     "collectCoverageFrom": [
       "src/**/*.{js,ts}"
-    ]
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!@noble/hashes)"
+    ],
+    "moduleNameMapper": {
+      "^@taquito/utils$": "<rootDir>/../taquito-utils/src/taquito-utils.ts",
+      "^@noble/hashes/blake2$": "<rootDir>/../../node_modules/@noble/hashes/blake2.js"
+    }
   },
   "dependencies": {
-    "@stablelib/blake2b": "^1.0.1",
-    "@stablelib/ed25519": "^1.0.3",
     "@taquito/core": "^24.2.0",
     "@taquito/http-utils": "^24.2.0",
     "@taquito/taquito": "^24.2.0",

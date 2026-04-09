@@ -1,5 +1,5 @@
-import { hash as blake2b } from '@stablelib/blake2b';
-import { generateKeyPairFromSeed, sign, KeyPair } from '@stablelib/ed25519';
+import { blake2b } from '@noble/hashes/blake2.js';
+import { ed25519 } from '@noble/curves/ed25519';
 import {
   PrefixV2,
   b58DecodeAndCheckPrefix,
@@ -9,6 +9,19 @@ import {
 } from '@taquito/utils';
 import { SigningKey, PublicKey } from './key-interface';
 import { RawSignResult } from '@taquito/core';
+
+interface KeyPair {
+  secretKey: Uint8Array;
+  publicKey: Uint8Array;
+}
+
+function generateKeyPairFromSeed(seed: Uint8Array): KeyPair {
+  const publicKey = ed25519.getPublicKey(seed);
+  const secretKey = new Uint8Array(64);
+  secretKey.set(seed);
+  secretKey.set(publicKey, 32);
+  return { secretKey, publicKey };
+}
 
 /**
  * Provide signing logic for ed25519 curve based key (tz1)
@@ -55,8 +68,9 @@ export class EdKey implements SigningKey {
    * @param bytesHash Blake2b hash of the bytes to sign
    */
   sign(bytes: Uint8Array): RawSignResult {
-    const hash = blake2b(bytes, 32);
-    const signature = sign(this.#keyPair.secretKey, hash);
+    const hash = blake2b(bytes, { dkLen: 32 });
+    const seed = this.#keyPair.secretKey.subarray(0, 32);
+    const signature = ed25519.sign(hash, seed);
 
     return {
       rawSignature: signature,
@@ -101,7 +115,7 @@ export class EdPublicKey implements PublicKey {
   }
 
   hash(): string {
-    return b58Encode(blake2b(this.#key, 20), PrefixV2.Ed25519PublicKeyHash);
+    return b58Encode(blake2b(this.#key, { dkLen: 20 }), PrefixV2.Ed25519PublicKeyHash);
   }
 
   bytes(): Uint8Array {

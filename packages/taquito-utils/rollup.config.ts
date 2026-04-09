@@ -2,6 +2,7 @@ import camelCase from 'lodash.camelcase';
 import typescript from 'rollup-plugin-typescript2';
 import json from 'rollup-plugin-json';
 import nodePolyfills from 'rollup-plugin-polyfill-node';
+import resolve from '@rollup/plugin-node-resolve';
 
 const pkg = require('./package.json');
 
@@ -17,13 +18,11 @@ export default {
       sourcemap: true,
       globals: {
         buffer: "buffer",
-        "@stablelib/blake2b": "blake2b",
         bs58check: "bs58check",
         "bignumber.js": "BigNumber",
         "typedarray-to-buffer": "toBuffer",
         "@taquito/core": "core",
-        "@stablelib/ed25519": "ed25519",
-        elliptic: "elliptic",
+        "@noble/curves/ed25519": "ed25519",
         "@noble/curves/bls12-381": "bls12381",
         "@noble/curves/secp256k1": "secp256k1",
         "@noble/curves/nist": "nist"
@@ -36,10 +35,8 @@ export default {
     'typedarray-to-buffer',
     'blakejs',
     'bs58check',
-    '@stablelib/blake2b',
     '@taquito/core',
-    '@stablelib/ed25519',
-    'elliptic',
+    '@noble/curves/ed25519',
     '@noble/curves/bls12-381',
     '@noble/curves/secp256k1',
     '@noble/curves/nist',
@@ -49,6 +46,8 @@ export default {
     include: 'src/**',
   },
   plugins: [
+    // Resolve node_modules
+    resolve(),
     // Allow json resolution
     json(),
     // Compile TypeScript files

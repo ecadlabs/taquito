@@ -8,7 +8,7 @@ import {
   InvalidPublicKeyError,
 } from '@taquito/utils';
 import { bls12_381 } from '@noble/curves/bls12-381';
-import { hash } from '@stablelib/blake2b';
+import { blake2b } from '@noble/hashes/blake2.js';
 import { PublicKey, SigningKeyWithProofOfPossession } from './key-interface';
 import { RawSignResult } from '@taquito/core';
 
@@ -88,7 +88,7 @@ export class BLSPublicKey implements PublicKey {
     }
   }
   hash(): string {
-    return b58Encode(hash(this.#key, 20), PrefixV2.BLS12_381PublicKeyHash);
+    return b58Encode(blake2b(this.#key, { dkLen: 20 }), PrefixV2.BLS12_381PublicKeyHash);
   }
 
   bytes(): Uint8Array {

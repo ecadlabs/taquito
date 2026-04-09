@@ -11,7 +11,7 @@
 
 import { Buffer } from 'buffer';
 import { PrefixV2, prefixV2, payloadLength } from './constants';
-import { hash as blake2b } from '@stablelib/blake2b';
+import { blake2b } from '@noble/hashes/blake2.js';
 import bs58check from 'bs58check';
 import BigNumber from 'bignumber.js';
 import toBuffer from 'typedarray-to-buffer';
@@ -318,7 +318,7 @@ export function getPkhfromPk(publicKey: string): string {
     default:
       throw new InvalidPublicKeyError(publicKey, ValidationResult.NO_PREFIX_MATCHED);
   }
-  const hashed = blake2b(key, 20);
+  const hashed = blake2b(key, { dkLen: 20 });
   return b58Encode(hashed, pkhPre);
 }
 
@@ -449,7 +449,7 @@ export function encodeBlsAddress(value: string) {
  * @example encodeExpr('050a000000160000b2e19a9e74440d86c59f13dab8a18ff873e889ea') // return 'exprv6UsC1sN3Fk2XfgcJCL8NCerP5rCGy1PRESZAqr7L2JdzX55EN'
  */
 export function encodeExpr(value: string): string {
-  const blakeHash = blake2b(hex2buf(value), 32);
+  const blakeHash = blake2b(hex2buf(value), { dkLen: 32 });
   return b58Encode(blakeHash, PrefixV2.ScriptExpr);
 }
 
@@ -460,7 +460,7 @@ export function encodeExpr(value: string): string {
  * @example encodeOpHash('0f185d8a30061e8134c162dbb7a6c3ab8f5fdb153363ccd6149b49a33481156a6c00b2e19a9e74440d86c59f13dab8a18ff873e889eaa304ab05da13000001f1585a7384f36e45fb43dc37e8ce172bced3e05700ff0000000002002110c033f3a990c2e46a3d6054ecc2f74072aae7a34b5ac4d9ce9edc11c2410a97695682108951786f05b361da03b97245dc9897e1955e08b5b8d9e153b0bdeb0d') // return 'opapqvVXmebRTCFd2GQFydr4tJj3V5QocQuTmuhbatcHm4Seo2t'
  */
 export function encodeOpHash(value: string) {
-  const blakeHash = blake2b(hex2buf(value), 32);
+  const blakeHash = blake2b(hex2buf(value), { dkLen: 32 });
   return b58Encode(blakeHash, PrefixV2.OperationHash);
 }
 
