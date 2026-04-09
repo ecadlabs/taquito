@@ -14,7 +14,7 @@ Taquito reads maps in contract storage and represents them as instances of the `
 - **Key/value methods**: access and iterate over keys and values
 - **Update methods**: modify the map (set, delete, clear)
 
-This tutorial uses a [smart contract deployed on ghostnet](https://ghostnet.tzkt.io/KT1M5C76aSjpWXdoBvuzRdi3UJoC3jEzrSUW/operations/) with a map containing addresses as keys and tez as values.
+This tutorial uses a [smart contract deployed on shadownet](https://shadownet.tzkt.io/KT1WdjpRSsmC93iPkXqkm2XZcbv6CSwKeqpj/operations/) with a map containing addresses as keys and tez as values.
 
 ## Loading the smart contract storage
 
@@ -24,9 +24,9 @@ As a reminder, you can load the storage of a smart contract as such:
 import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
 import { BigNumber } from 'bignumber.js';
 
-const contractAddress: string = 'KT1M5C76aSjpWXdoBvuzRdi3UJoC3jEzrSUW';
+const contractAddress: string = 'KT1WdjpRSsmC93iPkXqkm2XZcbv6CSwKeqpj';
 
-const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
+const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
 
 const contract = await Tezos.contract.at(contractAddress);
 const storage: MichelsonMap<string, BigNumber> = await contract.storage();

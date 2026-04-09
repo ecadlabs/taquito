@@ -12,7 +12,7 @@ On this page we will explore how to use Taquito to:
 
 Here we have the storage of the contract defined in Michelson.
 
-The storage uses a pair composed of a nested pair and a `map` (annotated as `%validators`). The nested pair consists of an address (annotated as `%owner`) and a `bigMap` (annotated as `%records`). The `map %validators` use a natural number (`nat`) as its key and address its value. The `bigMap %records` uses a value in `bytes` as its key and a pair consisting of nested pairs as its value. 
+The storage uses a pair composed of a nested pair and a `map` (annotated as `%validators`). The nested pair consists of an address (annotated as `%owner`) and a `bigMap` (annotated as `%records`). The `map %validators` use a natural number (`nat`) as its key and address its value. The `bigMap %records` uses a value in `bytes` as its key and a pair consisting of nested pairs as its value.
 
 In these nested pairs we find addresses, natural numbers (some are optional), and a `map` (annotated `%data`). The `map %data` uses a `string` as its key, and the user needs to choose the value of the between different proposed types (`int,` `bytes,` `bool`, ...). We can notice in this example that an annotation identifies all the arguments.
 
@@ -63,7 +63,7 @@ dataMap.set('Hello', { bool : true })
 const recordsBigMap = new MichelsonMap();
 recordsBigMap.set(
     'FFFF', //key of the bigMap %records is in bytes
-    { 
+    {
       //address %address is optional,
       data: dataMap,
       owner: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr',
@@ -72,7 +72,7 @@ recordsBigMap.set(
     })
 recordsBigMap.set(
     'AAAA', //key of the bigMap %records is in bytes
-    { 
+    {
       //address %address is optional
       data: dataMap,
       owner: 'tz1PgQt52JMirBUhhkq1eanX8hVd1Fsg71Lr',
@@ -138,7 +138,7 @@ The way to write the parameter when calling the function of a contract with Taqu
 
 try {
   await importKey(Tezos, secretKey);
-  const myContract = await Tezos.contract.at('KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN');
+  const myContract = await Tezos.contract.at('KT1XbU7axZzQ3pL8mJwEi5HAkW99YhXjaNQq');
 
   const dataMap = new MichelsonMap();
   dataMap.set("Hello World", { bool: true });
@@ -165,7 +165,7 @@ try {
 
 try {
   await importKey(Tezos, secretKey);
-  const myContract = await Tezos.contract.at('KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN');
+  const myContract = await Tezos.contract.at('KT1XbU7axZzQ3pL8mJwEi5HAkW99YhXjaNQq');
 
   const dataMap = new MichelsonMap();
   dataMap.set("Hello World", { bool : true });
@@ -182,7 +182,7 @@ try {
   console.log(`Waiting for ${op.hash} to be confirmed...`);
   await op.confirmation(1);
 
-  console.log(`Operation injected: https://ghostnet.tzkt.io/${op.hash}/operations`);
+  console.log(`Operation injected: https://shadownet.tzkt.io/${op.hash}/operations`);
 } catch (error) {
   console.log(`Error: ${JSON.stringify(error, null, 2)}`);
 }
@@ -196,7 +196,7 @@ The `address %address` and the `nat %ttl` of the `set_child_record` function are
 
 try {
   await importKey(Tezos, secretKey);
-  const myContract = await Tezos.contract.at('KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN');
+  const myContract = await Tezos.contract.at('KT1XbU7axZzQ3pL8mJwEi5HAkW99YhXjaNQq');
 
   const dataMap = new MichelsonMap();
   dataMap.set("Hello World", { nat : '3' });
@@ -213,7 +213,7 @@ try {
   console.log(`Waiting for ${op.hash} to be confirmed...`);
   await op.confirmation(1);
 
-  console.log(`Operation injected: https://ghostnet.tzkt.io/${op.hash}/operations`);
+  console.log(`Operation injected: https://shadownet.tzkt.io/${op.hash}/operations`);
 } catch (error) {
   console.log(`Error: ${JSON.stringify(error, null, 2)}`);
 }

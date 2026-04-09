@@ -1,7 +1,7 @@
 import { BigMapAbstraction, TezosToolkit, MichelCodecPacker } from '@taquito/taquito';
 import BigNumber from 'bignumber.js';
 
-const rpc = 'https://ghostnet.tezos.ecadinfra.com';
+const rpc = 'https://shadownet.tezos.ecadinfra.com';
 const numberOfValueToFetch = 410; // max 410
 const repeat = 1; // How many time we want to fetch all the keys
 
@@ -29,7 +29,7 @@ async function example() {
             }
         }
         await Promise.all(promisesRpc);
-        
+
         const durationRpcPack = new Date().getTime() - startRpcPack;
 
         // Fetch values of the big map using local implementation to pack data
@@ -89,6 +89,3 @@ example();
         await op.confirmation()
         const contractAddress = op.contractAddress;
         console.log(contractAddress); */
-
-
-

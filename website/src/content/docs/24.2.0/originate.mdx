@@ -34,7 +34,7 @@ This requires a signer to be configured, ie:
 ```
 import { importKey } from '@taquito/signer';
 import { TezosToolkit } from '@taquito/taquito';
-const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
+const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
 importKey(Tezos, "p2sk2obfVMEuPUnadAConLWk7Tf4Dt3n4svSgJwrgpamRqJXvaYcg1")
 ```
 
@@ -44,8 +44,8 @@ importKey(Tezos, "p2sk2obfVMEuPUnadAConLWk7Tf4Dt3n4svSgJwrgpamRqJXvaYcg1")
 ```
 import {  BeaconWallet } from '@taquito/beacon-wallet';
 import { TezosToolkit } from '@taquito/taquito';
-const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
-const option = { name: "nameOfWallet", network: { type: 'ghostnet' }, enableMetrics: true};
+const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
+const option = { name: "nameOfWallet", network: { type: 'shadownet' }, enableMetrics: true};
 const wallet = new BeaconWallet(option);
 
 await wallet.client.subscribeToEvent(
@@ -286,7 +286,7 @@ try {
 
 It is also possible to use Taquito to originate multiple contracts in one operation. The origination operations must be batched with the [Batch API](https://taquito.io/docs/batch_API) and after the contracts have been originated, the addresses will be available in an array returned by the `getOriginatedContractAddresses` method of the operation object:
 
-```js 
+```js
 const batch = Tezos.contract
   .batch()
   .withOrigination({

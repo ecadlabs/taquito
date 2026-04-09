@@ -3,6 +3,10 @@ title: Building Your First dApp
 author: [Alireza Haghshenas, Maxwell Ward]
 ---
 
+>[!NOTE]
+> This page is now deprecated due to no functioning objkt shadownet smart contract for now.
+> We still reference now deprecated ghostnet and it's smart contracts until there is objkt shadownet support
+
 ## Introduction
 
 In this tutorial, we will walk through the process of creating a simple dApp (short for "Decentralized Application") using Taquito. We will:
@@ -33,7 +37,7 @@ We need a development machine with the following software installed:
 This tutorial should work on Windows, Linux, and macOS. On other systems like a Chromebook or a tablet, you might need additional setup not covered in this tutorial.
 
 > [!NOTE]
-> If you are using windows, there are two ways to run the commands in this tutorial: inside a WSL2 terminal, or inside the PowerShell. 
+> If you are using windows, there are two ways to run the commands in this tutorial: inside a WSL2 terminal, or inside the PowerShell.
 >
 > Generally, WSL2 is recommended for programming. But if you prefer, you can still use PowerShell. If you use WSL2, you can use the same commands as Linux. For PowerShell, we will provide commands in a separate tab **only when they are different from Linux**.
 
@@ -98,7 +102,7 @@ Open the file `index.ts` and replace the code with the following:
 ```ts
 import { TezosToolkit } from "@taquito/taquito";
 
-const Tezos = new TezosToolkit("https://ghostnet.tezos.ecadinfra.com");
+const Tezos = new TezosToolkit("https://shadownet.tezos.ecadinfra.com");
 
 Tezos.tz.getBalance("tz1YvE7Sfo92ueEPEdZceNWd5MWNeMNSt16L").then(balance => {
     console.log(balance.toNumber());
@@ -198,8 +202,8 @@ For the purpose of this section, we are using a pre-defined address that is bein
     docker run --pull always -it --entrypoint sh docker.io/tezos/tezos:latest
 
     # You should now be inside the docker container
-    octez-client -E https://ghostnet.tezos.ecadinfra.com gen keys mysamplekey -s secp256k1
-    octez-client -E https://ghostnet.tezos.ecadinfra.com show address mysamplekey -S
+    octez-client -E https://shadownet.tezos.ecadinfra.com gen keys mysamplekey -s secp256k1
+    octez-client -E https://shadownet.tezos.ecadinfra.com show address mysamplekey -S
   ```
 
   The new address you just created will have a balance of zero. For the testnet, You can go to [ghostnet faucet](https://faucet.ghostnet.teztnets.com/) and send some ꜩ to it for free. On mainnet, you need to buy actual Tez on an exchange.
@@ -223,7 +227,7 @@ import { InMemorySigner } from "@taquito/signer";
 import { TezosToolkit } from "@taquito/taquito";
 
 const main = async () => {
-    const Tezos = new TezosToolkit("https://ghostnet.tezos.ecadinfra.com");
+    const Tezos = new TezosToolkit("https://shadownet.tezos.ecadinfra.com");
 
     // DANGER: FOR DEMONSTRATION ONLY! DO NOT DO THIS IN PRODUCTION, KEEP YOUR SECRETS SAFE!
     const signer = await InMemorySigner.fromSecretKey('spsk29SxqYRjnreqGzsYiAUEqxyhDwD8j2J57pJjaGgGtReZVD2UiD');
@@ -280,12 +284,12 @@ Open the file `index.ts` and change the `main` function to the following:
 
 ```ts
 const main = async () => {
-    const Tezos = new TezosToolkit("https://ghostnet.tezos.ecadinfra.com");
+    const Tezos = new TezosToolkit("https://shadownet.tezos.ecadinfra.com");
 
     const signer = await InMemorySigner.fromSecretKey('spsk29SxqYRjnreqGzsYiAUEqxyhDwD8j2J57pJjaGgGtReZVD2UiD');
     Tezos.setProvider({ signer });
 
-    const contract = await Tezos.contract.at('KT1JarALvhDLjtFhraeTMGGoeNLUkuL6jGtM');
+    const contract = await Tezos.contract.at('KT1VMN1uDrhuddff6RGndrcJESEjTJGrbw9a');
     const op = await contract.methodsObject.mint_artist({
         collection_id: 71947,
         editions: 1,
@@ -317,7 +321,7 @@ Luckily for us, there is an elegant solution to this problem.
 
 ## dApps and Crypto Wallets
 
-A "wallet" is a program that stores the users secrets (like private keys) and signs operations on behalf of the user. The wallet is not part of the dApp, but rather a separate program such as a browser extension, separate website, mobile app, or hardware device. 
+A "wallet" is a program that stores the users secrets (like private keys) and signs operations on behalf of the user. The wallet is not part of the dApp, but rather a separate program such as a browser extension, separate website, mobile app, or hardware device.
 
 The wallet is also responsible for showing the operations to the user and asking them to approve the operation. The user only needs to fully trust the wallet, as the dApp cannot make any write operations to the blockchain unless it is signed by the wallet. This moves most of the responsibility off the developer of the dApp and on to the developer of the wallet, creating a simpler and more cohesive ecosystem for the user.
 
@@ -391,7 +395,7 @@ import { BeaconWallet } from "@taquito/beacon-wallet";
 
 const App = () => {
   const [Tezos] = useState<TezosToolkit>(
-    new TezosToolkit("https://ghostnet.tezos.ecadinfra.com")
+    new TezosToolkit("https://shadownet.tezos.ecadinfra.com")
   );
   const [wallet, setWallet] = useState<BeaconWallet | undefined>(undefined);
   const [userAddress, setUserAddress] = useState<string | undefined>(undefined);
@@ -454,8 +458,8 @@ const ConnectButton = ({
 			const wallet = new BeaconWallet({
 				name: "My dApp",
 				network: {
-					type: NetworkType.GHOSTNET,
-					rpcUrl: "https://ghostnet.tezos.ecadinfra.com",
+					type: NetworkType.SHADOWNET,
+					rpcUrl: "https://shadownet.tezos.ecadinfra.com",
 				},
 				enableMetrics: true,
 			});

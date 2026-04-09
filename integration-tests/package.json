@@ -6,8 +6,6 @@
     "test:tallinnnet": "TALLINNNET=true vitest run",
     "test:tallinnnet:shard": "TALLINNNET=true vitest run --passWithNoTests",
     "test:tallinnnet-secret-key": "RUN_TALLINNNET_WITH_SECRET_KEY=true vitest run",
-    "test:ghostnet": "GHOSTNET=true vitest run",
-    "test:ghostnet-secret-key": "RUN_GHOSTNET_WITH_SECRET_KEY=true vitest run",
     "test:shadownet": "SHADOWNET=true vitest run",
     "test:shadownet:shard": "SHADOWNET=true vitest run --passWithNoTests",
     "test:shadownet-secret-key": "RUN_SHADOWNET_WITH_SECRET_KEY=true vitest run",

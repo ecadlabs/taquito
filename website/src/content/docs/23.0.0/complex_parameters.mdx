@@ -134,7 +134,7 @@ The way to write the parameter when calling the function of a contract with Taqu
 
 try {
   await importKey(Tezos, secretKey);
-  const myContract = await Tezos.contract.at('KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN');
+  const myContract = await Tezos.contract.at('KT1XbU7axZzQ3pL8mJwEi5HAkW99YhXjaNQq');
 
   const dataMap = new MichelsonMap();
   dataMap.set("Hello World", { bool : true });
@@ -161,7 +161,7 @@ try {
 
 try {
   await importKey(Tezos, secretKey);
-  const myContract = await Tezos.contract.at('KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN');
+  const myContract = await Tezos.contract.at('KT1XbU7axZzQ3pL8mJwEi5HAkW99YhXjaNQq');
 
   const dataMap = new MichelsonMap();
   dataMap.set("Hello World", { bool : true });
@@ -178,7 +178,7 @@ try {
   console.log(`Waiting for ${op.hash} to be confirmed...`);
   await op.confirmation(1);
 
-  console.log(`Operation injected: https://ghostnet.tzkt.io/${op.hash}/operations`);
+  console.log(`Operation injected: https://shadownet.tzkt.io/${op.hash}/operations`);
 } catch (error) {
   console.log(`Error: ${JSON.stringify(error, null, 2)}`);
 }
@@ -192,7 +192,7 @@ The `address %address` and the `nat %ttl` of the `set_child_record` function are
 
 try {
   await importKey(Tezos, secretKey);
-  const myContract = await Tezos.contract.at('KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN');
+  const myContract = await Tezos.contract.at('KT1XbU7axZzQ3pL8mJwEi5HAkW99YhXjaNQq');
 
   const dataMap = new MichelsonMap();
   dataMap.set("Hello World", { nat : '3' });
@@ -209,7 +209,7 @@ try {
   console.log(`Waiting for ${op.hash} to be confirmed...`);
   await op.confirmation(1);
 
-  console.log(`Operation injected: https://ghostnet.tzkt.io/${op.hash}/operations`);
+  console.log(`Operation injected: https://shadownet.tzkt.io/${op.hash}/operations`);
 } catch (error) {
   console.log(`Error: ${JSON.stringify(error, null, 2)}`);
 }

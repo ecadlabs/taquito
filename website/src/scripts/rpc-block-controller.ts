@@ -45,7 +45,7 @@ export function getPollingIntervalByNetwork(network: string): number {
   if (network === 'shadownet' || network === 'tallinnnet') {
     return 4000;
   }
-  if (network === 'mainnet' || network === 'ghostnet') {
+  if (network === 'mainnet') {
     return 8000;
   }
   return 8000;

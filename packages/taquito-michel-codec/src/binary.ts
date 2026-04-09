@@ -1035,7 +1035,7 @@ const writePassThrough: WriteTransformFunc = (e: Expr) => {
  *
  * ```typescript
  * const data: MichelsonData = {
- *     string: "KT1RvkwF4F7pz1gCoxkyZrG1RkrxQy3gmFTv%foo"
+ *     string: "KT1J4E79F1qL6kGBSQ3yXBdXmuq5j4FNThK2%main"
  * };
  *
  * const typ: MichelsonType = {
@@ -1044,18 +1044,18 @@ const writePassThrough: WriteTransformFunc = (e: Expr) => {
  *
  * const packed = packData(data, typ);
  *
- * // 050a0000001901be41ee922ddd2cf33201e49d32da0afec571dce300666f6f
+ * // 050a0000001a0167ea84b1082efb9619d6ce04e033633906636e1d006d61696e
  * ```
  *
  * Without a type definition the base58 encoded address will be treated as a string
  * ```typescript
  * const data: MichelsonData = {
- *     string: "KT1RvkwF4F7pz1gCoxkyZrG1RkrxQy3gmFTv%foo"
+ *     string: "KT1J4E79F1qL6kGBSQ3yXBdXmuq5j4FNThK2%main"
  * };
  *
  * const packed = packData(data);
  *
- * // 0501000000284b543152766b7746344637707a3167436f786b795a724731526b7278517933676d46547625666f6f
+ * // 0501000000294b54314a344537394631714c366b474253513379584264586d7571356a34464e54684b32256d61696e
  * ```
  * @param d Data object
  * @param t Optional type definition

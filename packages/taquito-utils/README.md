@@ -52,7 +52,7 @@ console.log(validateKeyHash(keyHash));
 ```ts
 import { validateContractAddress } from '@taquito/utils';
 
-const contractAddress = 'KT1AfxAKKLnEg6rQ6kHdvCWwagjSaxEwURSJ';
+const contractAddress = 'KT1J4E79F1qL6kGBSQ3yXBdXmuq5j4FNThK2';
 console.log(validateContractAddress(contractAddress));
 // output: 3 which is valid
 ```

@@ -176,7 +176,7 @@ values={[
 // import { TezosToolkit } from '@taquito/taquito'
 // import { InMemorySigner } from '@taquito/signer'
 // import { stringToBytes, num2PaddedHex } from '@taquito/utils';
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
 
 let magicByte = '0x80'
 let magicString = 'tezos signed offchain message'
@@ -203,7 +203,7 @@ try {
 // import { TezosToolkit } from '@taquito/taquito'
 // import { InMemorySigner } from '@taquito/signer'
 // import { stringToBytes, num2PaddedHex } from '@taquito/utils';
-// const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
+// const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
 
 let magicByte = '0x80'
 let magicString = 'tezos signed offchain message'
@@ -286,4 +286,3 @@ The signing functionality has been implemented recently by the web wallets on Te
 A fraudulent dapp could convince less tech-savvy users to sign arbitrary data and hide it as another type of operation before sending the signature to a smart contract. If the signature is used by the contract to allow the signer to perform certain actions, this would allow the fraudulent dapp to pose as the signer, which could be disastrous for the user.
 
 A signature can also be used in a replay attack when a dapp uses the same signature multiple times to gain access to a contract functionality. A signature should be used one single time and destroyed and a smart contract should implement a verification process to ensure the signature hasn't been used already.
-

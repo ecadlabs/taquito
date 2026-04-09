@@ -16,7 +16,7 @@ The `RpcClient` constructor takes the URL of the node you want to use and the ch
 // Initializing the RPC client
 import { RpcClient } from '@taquito/rpc';
 
-const client = new RpcClient(' https://ghostnet.tezos.ecadinfra.com/', 'NetXLH1uAxK7CCh');
+const client = new RpcClient(' https://shadownet.tezos.ecadinfra.com/', 'NetXLH1uAxK7CCh');
 ```
 
 The balance is returned as a `BigNumber` and must be converted to a number to output it. Please note that the returned value is in mutez (micro ꜩ), so if you need the balance in ꜩ, you can divide it by 1000000.
@@ -52,7 +52,7 @@ console.log('Constants:', constants);
 This method returns the balance of the contract, the code, and the storage.
 ```js
 // gets contract
-const contractExample = 'KT1JbALUVvUEJyC4Cqwrnryc7RPK7mKBkqMa';
+const contractExample = 'KT1J4E79F1qL6kGBSQ3yXBdXmuq5j4FNThK2';
 const contract = await client.getContract(contractExample);
 console.log('Contract:', contract);
 ```
