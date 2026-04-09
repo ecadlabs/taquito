@@ -5,6 +5,8 @@ author: Roxane Letourneau
 
 The `@taquito/wallet-connect` package provides a `WalletConnect` class which implements the `WalletProvider` interface. The package is intended to be used by dapp developers. Similarly to `BeaconWallet`, an instance of `WalletConnect` can be injected into the `TezosToolkit` to work with the wallet API.
 
+The current QR pairing flow still relies on the legacy WalletConnect modal package. We plan to replace that modal integration in a future release.
+
 ## Instantiate `WalletConnect` and connect to a wallet
 
 The first step is to instantiate `WalletConnect` by passing your dapp details as a parameter of the `init` method as follows:
@@ -42,13 +44,11 @@ await walletConnect.requestPermissions({
 
 The parameter of the `requestPermissions` method has a `permissionScope` property allowing to specify the networks, methods, and events that will be granted permission.
 
-It has an optional `pairingTopic` property, which allows connecting to an existing active pairing. If `pairingTopic` is undefined, a QR/deep-links Modal will open in the dapp, allowing the user to connect to a wallet. If `pairingTopic` is defined, no modal will be shown in the dapp, and a prompt will appear in the corresponding wallet to accept or decline the session proposal. The list of active pairings can be accessed using the `getAvailablePairing` method. A good practice is to show the dapp user available pairings if they exist and to allow him to connect through one of them (skip the QR/deep-links Modal) or to connect using a new pairing (using the QR/deep-links)
-
-The parameter of the `requestPermissions` method also has an optional `registryUrl` parameter allowing to customize the list of wallet deep links to show in the Modal.
+It has an optional `pairingTopic` property, which allows connecting to an existing active pairing. If `pairingTopic` is undefined, a QR/deep-links Modal will open in the dapp, allowing the user to connect to a wallet. If `pairingTopic` is defined, no modal will be shown in the dapp, and a prompt will appear in the corresponding wallet to accept or decline the session proposal. The list of active pairings can be accessed using the `getAvailablePairing` method. A good practice is to show the dapp user available pairings if they exist and to allow them to connect through one of them (skip the QR/deep-links Modal) or to connect using a new pairing (using the QR/deep-links Modal).
 
 If no connection can be established with a wallet, the error `ConnectionFailed` will be thrown.
 
-Suppose there is a need to restore a session in the dapp rather than using the `requestPermissions` method, which would establish a new session. In that case, it is possible to configure the `WalletConnect` class with an existing session using the `configureWithExistingSessionKey` method. The session will be immediately restored without a prompt in the wallet to accept/decline it. The list of existing sessions can be retrieved with the `getAllExistingSessionKeys` method. An `InvalidSessionKey` error will be thrown if the provided session key doesn't exist.
+Suppose there is a need to restore a session in the dapp rather than using the `requestPermissions` method, which would establish a new session. In that case, it is possible to configure the `WalletConnect` class with an existing session using the `configureWithExistingSessionKey` method. The session will be immediately restored without a prompt in the wallet to accept/decline it. The list of existing sessions can be retrieved with the `getAllExistingSessionKeys` method. An `InvalidSessionKey` error will be thrown if the provided session key doesn't exist. Restored sessions are also validated before activation, so invalid or stale non-Tezos session data may be rejected during restore.
 
 ## Send Tezos operation with `WalletConnect` and `TezosToolkit`
 
@@ -101,18 +101,20 @@ The `sign` method of `WalletConnect` can be called to sign a payload. The respon
 
 ## Events handling
 
-Wallet connect allows listening to specific events. Taquito has listeners on the events `session_delete`, `session_expire`, and `session_update` and will update its internal session member accordingly if one of these events is emitted. The dapp should also handle those events as follow:
+WalletConnect allows listening to specific events. Taquito has listeners on the events `session_delete`, `session_expire`, and `session_update` and reconciles its internal session state if one of these events is emitted. The dapp should also handle those events as follows:
 
 ```ts
 walletConnect.signClient.on("session_delete", ({ topic }) => {
   // The session was deleted from the wallet
+  // Taquito clears its local session state
   // the dapp should listen for the event and reset the dapp state,
   // clean up from user session (for example, go back to the connect wallet page)
 });
 
 walletConnect.signClient.on("session_update", ({ topic }) => {
   // The session was updated in the wallet
-  // Does the accounts/network have changed, which requires calling the `setActiveAccount/setActiveNetwork` methods?
+  // Taquito revalidates the session and reconciles the active account/network
+  // the app should still update its own derived state (selected account, balances, UI, ...)
   // Update the app's state (selected account, available accounts, balance, ...)
 });
 ```

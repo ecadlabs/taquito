@@ -58,9 +58,9 @@
   "dependencies": {
     "@taquito/taquito": "^24.2.0",
     "@walletconnect/modal": "^2.7.0",
-    "@walletconnect/sign-client": "^2.16.2",
-    "@walletconnect/types": "^2.16.2",
-    "@walletconnect/utils": "^2.16.2"
+    "@walletconnect/sign-client": "^2.23.9",
+    "@walletconnect/types": "^2.23.9",
+    "@walletconnect/utils": "^2.23.9"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.42",

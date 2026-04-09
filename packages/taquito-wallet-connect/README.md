@@ -10,6 +10,7 @@ _Documentation can be found [here](https://taquito.io/docs/walletconnect)_
 
 `@taquito/wallet-connect` is an npm package that provides developers a way to connect a dapp built with Taquito to a wallet giving the freedom to the users of the dapp to choose the wallet via the WalletConnect/Reown protocol. The `WalletConnect` class implements the `WalletProvider` interface, providing an alternative to `BeaconWallet`.
 Note: Currently, a QR code is displayed to establish a connection with a wallet. As more Tezos wallets integrate with WalletConnect, we plan showing a list of available wallets alongside the QR code.
+Note: The current QR pairing flow still relies on the legacy WalletConnect modal package. We plan to replace that modal integration in a future release.
 
 ## Install
 
@@ -52,6 +53,8 @@ await wallet.requestPermissions({
 const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
 Tezos.setWalletProvider(wallet);
 ```
+
+Existing sessions can be restored with `configureWithExistingSessionKey()`. Restored sessions are validated before activation, so invalid or stale non-Tezos session data may be rejected during restore.
 
 ## Additional Info
 
