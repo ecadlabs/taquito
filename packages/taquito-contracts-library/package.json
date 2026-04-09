@@ -15,7 +15,7 @@
   "author": "Roxane Letourneau <roxane@ecadlabs.com>",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "git+https://github.com/ecadlabs/taquito.git"
   },
   "publishConfig": {
     "access": "public"

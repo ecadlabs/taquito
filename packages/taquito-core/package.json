@@ -19,7 +19,7 @@
   "author": "huianyang <hui-an.yang@ecadlabs.com>",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "git+https://github.com/ecadlabs/taquito.git"
   },
   "license": "Apache-2.0",
   "engines": {
