@@ -62,8 +62,20 @@
   },
   "jest": {
     "transform": {
-      ".(ts|tsx)": "ts-jest"
+      "^.+\\.(ts|tsx|js|mjs)$": [
+        "ts-jest",
+        {
+          "useESM": true,
+          "tsconfig": {
+            "esModuleInterop": true,
+            "allowJs": true
+          }
+        }
+      ]
     },
+    "transformIgnorePatterns": [
+      "node_modules/(?!(@scure/bip39|@noble/hashes|@scure/base)/)"
+    ],
     "testEnvironment": "node",
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
     "moduleFileExtensions": [
@@ -76,7 +88,8 @@
       "^@taquito/michelson-encoder$": "<rootDir>/../taquito-michelson-encoder/src/taquito-michelson-encoder.ts",
       "^@taquito/michel-codec$": "<rootDir>/../taquito-michel-codec/src/taquito-michel-codec.ts",
       "^@taquito/http-utils$": "<rootDir>/../taquito-http-utils/src/taquito-http-utils.ts",
-      "^@taquito/utils$": "<rootDir>/../taquito-utils/src/taquito-utils.ts"
+      "^@taquito/utils$": "<rootDir>/../taquito-utils/src/taquito-utils.ts",
+      "^@scure/bip39/wordlists/english.js$": "<rootDir>/../../node_modules/@scure/bip39/wordlists/english.js"
     },
     "coveragePathIgnorePatterns": [
       "/node_modules/",

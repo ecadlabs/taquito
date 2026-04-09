@@ -2,6 +2,8 @@ import camelCase from 'lodash.camelcase';
 import typescript from 'rollup-plugin-typescript2';
 import json from 'rollup-plugin-json';
 import nodePolyfills from 'rollup-plugin-polyfill-node';
+import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
 
 const pkg = require('./package.json');
 
@@ -31,7 +33,6 @@ export default {
         "@noble/curves/nist": "nist",
         "@stablelib/nacl": "nacl",
         "pbkdf2": "pbkdf2",
-        "bip39": "Bip39",
         "typedarray-to-buffer": "toBuffer"
       }
     },
@@ -54,7 +55,6 @@ export default {
     '@noble/curves/nist',
     '@stablelib/nacl',
     'pbkdf2',
-    'bip39',
     'typedarray-to-buffer'
   ],
   watch: {
@@ -63,6 +63,9 @@ export default {
   plugins: [
     // Allow json resolution
     json(),
+    // Resolve node_modules (needed for @scure/bip39)
+    resolve({ preferBuiltins: false }),
+    commonjs(),
     // Compile TypeScript files
     typescript({ tsconfig: './tsconfig.prod.json', useTsconfigDeclarationDir: true }),
     nodePolyfills(),
