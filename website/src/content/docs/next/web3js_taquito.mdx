@@ -4,7 +4,7 @@ id: web3js_taquito
 author: Claude Barde
 ---
 
-Web3js and Taquito have a common goal: connecting dapps to the Ethereum and Tezos blockchain (respectively) and thus implement similar approaches. However, these approaches are also different due to the nature of Ethereum and the Tezos blockchains.
+Web3js and Taquito have a common goal: connecting dApps to the Ethereum and Tezos blockchain (respectively) and thus implement similar approaches. However, these approaches are also different due to the nature of Ethereum and the Tezos blockchains.
 
 This page will highlight some of the differences between the two systems. This is not to attempt to determine which package is superior, as the two are used for different purposes. Instead, this is more suited for developers who are familiar with Web3js and are interested in learning to work with Taquito.
 
@@ -93,7 +93,7 @@ const contract = new web3.eth.Contract(JSON_ABI);
 const contract = await Tezos.wallet.at('contract_address');
 ```
 
-The two approaches are radically different here: Web3js constructs the contract interface from the "ABI" that's shipped with the dapp while Taquito fetches the contract structure directly from the blockchain to construct the interface.
+The two approaches are radically different here: Web3js constructs the contract interface from the "ABI" that's shipped with the dApp while Taquito fetches the contract structure directly from the blockchain to construct the interface.
 
 ## Get the "counter" value from the contract storage
 
@@ -110,7 +110,7 @@ const counter = await contract.storage();
 ```
 
 This is another point that shows how different the Ethereum and the Tezos blockchains are.
-On Ethereum, the contract has to implement getter functions to return values from its storage and make them available to dapps.
+On Ethereum, the contract has to implement getter functions to return values from its storage and make them available to dApps.
 On Tezos, the whole storage is always available, and developers don't have to add view functions to their contracts to make the storage values available.
 
 ## Call the increment method on the contract instance

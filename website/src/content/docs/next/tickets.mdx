@@ -1,25 +1,20 @@
 ---
 title: Tickets
-id: tickets
 author: Claude Barde
 ---
 
-## Using tickets with Taquito
-
-### What is a ticket?
-
-Tickets are a new feature introduced to the Tezos blockchain with the Edo upgrade. Tickets are fungible tokens represented by 3 values:
+Tickets are a feature introduced to the Tezos blockchain with the Edo protocol. Tickets are fungible tokens represented by 3 values:
 - The address of the contract that created the ticket
 - A value of a comparable type
 - An amount of type `nat`
 
-Tickets open a wide range of permission use cases where they can be used to allow access to certain functionalities of a smart contract to one or multiple users. The goal of tickets explains 2 of their main characteristics: they can only be created on-chain and they cannot be duplicated. 
+Tickets open a wide range of permission use cases where they can be used to allow access to certain functionalities of a smart contract to one or multiple users. The goal of tickets explains two of their main characteristics: they can only be created on-chain and they cannot be duplicated. 
 
 In this regard, the only interaction available to Taquito with tickets is reading them. This can be particularly useful to inform users if they have access to the functionality of a contract before they send a transaction to a forbidden entrypoint.
 
-### How to read a ticket with Taquito?
+## How to read a ticket with Taquito?
 
-Although tickets can be stored in any part of the storage of a contract, it is more common to see them in complex types like a pair or a map/big map. Taquito treats tickets like any other value fetched from a contract and they are available in JavaScript/TypeScript as an object with 3 properties:  
+Although tickets can be stored in any part of the storage of a contract, it's more common to see them in complex types like a pair or a map/big map. Taquito treats tickets like any other value fetched from a contract and they're available in JavaScript/TypeScript as an object with 3 properties:  
 `{ ticketer: string; value: any; amount: BigNumber }`
 
 - The `ticketer` property is a string representing the address of the contract that issued the ticket. As tickets can only be joined if they have the same ticketer and value, this is the guarantee that the ticket hasn't been tampered with.
@@ -28,7 +23,7 @@ Although tickets can be stored in any part of the storage of a contract, it is m
 
 - The `amount` property is a non-negative `BigNumber` in Taquito and it's the only property of a ticket likely to change after the ticket creation.
 
-### Examples of values returned when reading a ticket with Taquito
+## Examples of values returned when reading a ticket with Taquito
 
 || Ticket in Michelson | Ticket with Taquito |
 |----------------|---------------------|---------------------|

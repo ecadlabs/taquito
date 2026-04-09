@@ -15,10 +15,10 @@ const p = new Parser()
 ### Configuration
 You can configure the parser class by passing `ParserOptions` through initialization with `expandMacros` and `expandGlobalConstant` properties.
 
-* `expandMacros` -  defaults to true unless you don't want `Parser` class to expand them; you can pass `{ expandMacros: false }` to disable it. ref: Expand [Michelson macros](https://tezos.gitlab.io/whitedoc/michelson.html#macros) during parsing
+* `expandMacros` - expands [Michelson macros](https://tezos.gitlab.io/whitedoc/michelson.html#macros) during parsing. Defaults to `true`. Pass `{ expandMacros: false }` to disable.
 * `expandGlobalConstant` - expects an object where the keys are global constant hashes and the values are the corresponding JSON Micheline expressions.
 
-for example
+Example:
 
 ```ts
 import { Parser } from '@taquito/michel-codec'
@@ -32,9 +32,9 @@ const parserOptions: ParserOptions = {
 const p = new Parser(parserOptions);
 ```
 
-### parseJSON & emitMicheline - Parse JSON Michelson and convert it to Micheline
+### `parseJSON` & `emitMicheline` - Parse JSON Michelson and convert it to Micheline
 * `parseJSON` - takes a JSON-encoded Michelson, validates it, strips away unneeded properties and expands macros based on your configuration.
-* `emitMicheline` takes a parsed JSON Michelson object and converts it to a Micheline expression with formatting options.
+* `emitMicheline` - takes a parsed JSON Michelson object and converts it to a Micheline expression with formatting options.
 
 ```js live
 // import { Parser, emitMicheline } from '@taquito/michel-codec'
@@ -55,7 +55,7 @@ try {
 }
 ```
 
-### parseMichelineExpression - Parse Micheline and convert it to JSON Michelson
+### `parseMichelineExpression` - Parse Micheline and convert it to JSON Michelson
 Takes a Micheline expression in the form of script or data and converts it to JSON Michelson
 
 ```js live 
@@ -74,8 +74,9 @@ console.log('JSON Michelson data: ' + JSON.stringify(data));
 
 ## PACK and UNPACK locally
 
-### packData & packDataBytes - Pack Michelson data
+### `packData` & `packDataBytes` - Pack Michelson data
 Serialize any value of packable type to its optimized binary representation identical to the one used by PACK Michelson instructions.
+
 Without a type definition (not recommended), `packData` and `packDataBytes` will encode the data as a binary form of a generic Michelson expression.
 Type definition allows types like `timestamp`, `address` and other base58 representable types to be encoded to corresponding optimized binary forms borrowed from the Tezos protocol.
 
@@ -92,8 +93,9 @@ const packedBytes = packDataBytes(data, typ);
 // { bytes: "050a0000001901be41ee922ddd2cf33201e49d32da0afec571dce300666f6f" }
 ```
 
-### unpackData & unpackDataBytes - Unpack Michelson data
+### `unpackData` & `unpackDataBytes` - Unpack Michelson data
 Deserialize a byte array into its corresponding Michelson value.
+
 Without a type definition (not recommended), the binary data will be treated as a binary form of a generic Michelson expression and returned as is.
 Type definition allows some types, like `timestamp` and `address` and others, usually encoded in optimized binary forms, to be transformed back to their string representations like base58 and ISO timestamps.
 

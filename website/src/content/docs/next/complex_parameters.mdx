@@ -131,7 +131,7 @@ Here is the parameter of the function defined in Michelson :
 
 The way to write the parameter when calling the function of a contract with Taquito differs from the way of writing its storage during the origination step. When calling the contract function, we do not write the annotations of the arguments (nor the indexes). So the order of the arguments is important. Before calling the contract function, it may be useful to use Taquito's `toTransferParams` method to inspect the parameter.
 
-#### Inspect parameter
+### Inspect parameter
 
 ```js live
 // import { MichelsonMap } from '@taquito/taquito';
@@ -158,7 +158,7 @@ try {
 }
 ```
 
-#### Call the set_child_record function when all the arguments are defined
+### Call the set_child_record function when all the arguments are defined
 
 ```js live
 // import { MichelsonMap } from '@taquito/taquito';
@@ -187,7 +187,7 @@ try {
   console.log(`Error: ${JSON.stringify(error, null, 2)}`);
 }
 ```
-#### Call the set_child_record function when optional arguments are null
+### Call the set_child_record function when optional arguments are null
 
 The `address %address` and the `nat %ttl` of the `set_child_record` function are optional. If we want one or both to be null, we must specify the value of the argument as `null` or `undefined`.
 

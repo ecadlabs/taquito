@@ -3,8 +3,7 @@ title: Maps and BigMaps
 author: Roxane Letourneau
 ---
 
-Learn how to:
-
+This page will help you understand the following actions and concepts:
 - Fetch data from a `Map` datatype on a Tezos Smart Contract
 - Fetch data from a `BigMap` datatype on a Tezos Smart Contract
 - Initialize `Map` data while originating a new contract to the Tezos Blockchain
@@ -15,14 +14,13 @@ Taquito provides `MichelsonMap` to make it easy for developers to work with the 
 
 Michelson offers two variants of `Maps` that are semantically the same but have different implementations and trade-offs in terms of `gas` and `storage` costs on a contract. A `Map` uses more storage but costs less gas, whereas a `BigMap` consumes less storage but has higher gas costs during the Smart Contract's execution.
 
-- [Michelson documentation for Map][michelson_map]
-- [Michelson documentation for BigMap][michelson_bigmap]
+- [Michelson documentation for Map and BigMap](https://docs.tezos.com/smart-contracts/data-types/complex-data-types#big-maps)
 
-## A Contract with a single Map for storage
+## A contract with a single Map for storage
 
 ### Origination of the contract with an initial storage
 
-This example builds on the Ligo Lang Taco Shop learning resources.
+This example builds on the [Ligo Lang Taco Shop learning resources](https://ligolang.org/docs/tutorials/taco-shop/tezos-taco-shop-smart-contract/?lang=jsligo).
 
 The storage of the contract used in the following example is a map where a key is a natural number (a `nat`), and a value is a pair composed of two values representing the quantity of stock and `tez` tokens, respectively. The contract's source code is available [here](https://ligolang.org/docs/tutorials/taco-shop/tezos-taco-shop-smart-contract/?lang=jsligo). In the example, the contract is originated with initial values using the `MichelsonMap` class' `set` method.
 
@@ -34,7 +32,7 @@ values={[
 ]}>
 <TabItem value="contractAPI">
 
-```js live 
+```js live
 // import { MichelsonMap } from '@taquito/taquito';
 // import { TezosToolkit } from '@taquito/taquito';
 // const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
@@ -156,7 +154,7 @@ try {
 
 This example loads the same type of Taco Shop contract (we created this one earlier). Taquito provides a `get` method of the `MichelsonMap` on storage of type `Map`, and in this case, we access the value stored with a key of `1`.
 
-The example calls the Contracts `main` function of the contract using the key `1` as its parameter. Remember, we can only change contract storage by calling the function provided by the contract. The `main` function on this Smart Contract is decreasing the value of the `current_stock` associated with the key `1`. We use the `get` method of the `MichelsonMap` class to see the difference in storage after the method call.
+The example calls the contracts `main` function using the key `1` as its parameter. Remember, we can only change contract storage by calling the function provided by the contract. The `main` function on this Smart Contract is decreasing the value of the `current_stock` associated with the key `1`. We use the `get` method of the `MichelsonMap` class to see the difference in storage after the method call.
 
 <Tabs
 defaultValue="contractAPI"
@@ -236,7 +234,7 @@ try {
   </TabItem>
 </Tabs>
 
-## A Contract with a Map using an unannotated pair/tuple as a key
+## A contract with a Map using an unannotated pair/tuple as a key
 
 Here we have the storage of our contract defined in Michelson.
 
@@ -371,7 +369,7 @@ try {
   </TabItem>
 </Tabs>
 
-### Accessing Map values using Pairs
+### Accessing Map values using pairs
 
 The `get` method of the `MichelsonMap` class accesses values of the map for a specified key.
 
@@ -423,7 +421,7 @@ try {
   </TabItem>
 </Tabs>
 
-## A Map with nested Pairs as keys
+## A map with nested Pairs as keys
 
 This contract schema has a key with eight nested pairs and the value of an int. This example type of key is impractical, but we offer it as an example to illustrate how to work with complex keys.
 
@@ -557,9 +555,8 @@ try {
 
 The `get` method of the `MichelsonMap` class accesses values of the map for a specified key.
 
-:::caution Reminder
-** Taquito will handle timestamps with the milliseconds as 2019-09-06T15:08:29.000Z rather than 2019-09-06T15:08:29Z which is crucial when accessing maps with complex keys **
-:::
+>[!CAUTION]
+> Taquito will handle timestamps with the milliseconds as `2026-09-06T15:08:29.000Z` rather than `2026-09-06T15:08:29Z` which is crucial when accessing maps with complex keys.
 
 <Tabs
 defaultValue="contractAPI"
@@ -619,7 +616,9 @@ try {
 
 ## BigMaps
 
-Map and BigMap are semantically the same except for everything you learned about Maps applies to working with BigMaps. The only difference is that when calling `get` on a bigMap will return a Javascript Promise, whereas get on a Map returns directly. In this example, the contract schema does not have map annotations, which means that each value needs to have an index as a property name.
+Map and BigMap are semantically the same except for everything you learned about Maps applies to working with BigMaps. The only difference is that calling `get` on a bigMap will return a Javascript Promise, whereas `get` on a Map returns directly.
+
+In this example, the contract schema does not have map annotations, which means that each value needs to have an index as a property name.
 
 ### Contract storage containing a map and a bigMap
 
@@ -820,12 +819,12 @@ try {
 
 By default, a call to an RPC node is used to pack data when fetching values from a big map. Big map keys need to be serialized or packed and Taquito relies on the PACK functionality of a Tezos RPC node to pack the big map keys. This may be considered inefficient as it adds a request to a remote node to fetch data.
 
-Now, Taquito allows you to pack the required data locally to fetch values from a big map. By relying on the local pack implementation, Taquito eliminates one RPC roundtrip when fetching big map values. This feature makes fetching big map values **50% faster**.
+Taquito allows you to pack the required data locally to fetch values from a big map. By relying on the local pack implementation, Taquito eliminates one RPC roundtrip when fetching big map values. This feature makes fetching big map values approximately **50% faster**.
 
 Implementing this feature is a very easy 2 step process:
 
-1. Importing the `MichelCodecPacker` class from `@taquito/taquito`
-2. Creating an instance of the `MichelCodecPacker` class and passing it to the `setPackerProvider` method of the `TezosToolkit` instance.
+1. Import the `MichelCodecPacker` class from `@taquito/taquito`
+2. Create an instance of the `MichelCodecPacker` class and pass it to the `setPackerProvider` method of the `TezosToolkit` instance.
 
 Here is an example:
 
@@ -904,8 +903,3 @@ try {
 
   </TabItem>
 </Tabs>
-
----
-
-[michelson_map]: https://michelson.nomadic-labs.com/#type-big_map
-[michelson_bigmap]: https://michelson.nomadic-labs.com/#type-big_map

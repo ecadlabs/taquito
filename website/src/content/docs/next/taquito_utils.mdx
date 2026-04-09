@@ -3,12 +3,11 @@ title: Taquito Utils
 author: Davis Sawali & Roxane Letourneau
 ---
 
-## Description
 The `@taquito/utils` package provides developers with utility functions in Taquito.
 
-You can find a full list of available utility functions in Taquito [here](https://taquito.io/typedoc/modules/_taquito_utils.html)
+You can find a full list of available utility functions in Taquito [here](https://taquito.io/typedoc/modules/_taquito_utils.html).
 
-## Usage Example
+## Usage example
 To use the functions, simply import the function you need as such:
 
 ```js
@@ -21,7 +20,7 @@ const payload = b58DecodeAndCheckPrefix('tz1...', [PrefixV2.Ed25519PublicKeyHash
 const length = payloadLength[PrefixV2.Ed25519PublicKeyHash]
 ```
 
-## Using Validation Functions from `@taquito/utils`
+## Using validation functions from `@taquito/utils`
 
 Taquito provides functions that allow us to see if an address, a chain, a key hash, a contract address, a public key, or a signature is valid. Note that these validations do not rely on a node but are done based on checksums. Thus, they allow us to check if a value is valid and not if it exists on a chain. The `ValidationResult` returned by these functions is an enum that can take the following values:
 
@@ -61,7 +60,7 @@ console.log(`Calling the validateAddress function with ${invalidPkh} returns ${i
 
 This function is used to validate implicit addresses (tz1, tz2, tz3).
 
-Here is a valid example with a pkh and an invalid one where the prefix is missing :
+Here is a valid example with a pkh and an invalid one where the prefix is missing:
 
 ```js 
 import { validateKeyHash } from '@taquito/utils';
@@ -81,7 +80,7 @@ console.log(`Calling the validateKeyHash function with ${keyHash} returns ${inva
 
 This function is used to validate originated addresses (KT1).
 
-Here is a valid example with the address of an existing contract :
+Here is a valid example with the address of an existing contract:
 
 ```js 
 import { validateContractAddress } from '@taquito/utils';
@@ -96,7 +95,7 @@ console.log(`Calling the validateContractAddress function with ${contractAddress
 
 The `validateChain` function is used to validate a chain id.
 
-The following example shows a valid result when using the mainnet chain id and an invalid result if the prefix is missing :
+The following example shows a valid result when using the mainnet chain id and an invalid result if the prefix is missing:
 
 ```js 
 import { validateChain } from '@taquito/utils';
@@ -200,7 +199,7 @@ const invalidValidation = validateProtocol(invalidProtocol);
 console.log(`Calling the validateProtocol function with ${invalidProtocol} returns ${invalidValidation}.`);
 ```
 
-# Verification of a signature
+## Verification of a signature
 
 Taquito provides a function named `verifySignature` that allows verifying signatures of payloads. The function takes a message, a public key, and a signature as parameters and returns a boolean indicating if the signature matches.
 

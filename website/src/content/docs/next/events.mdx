@@ -1,15 +1,12 @@
 ---
 title: Contract Events
-id: subscribe_event
 author: Davis Sawali
 ---
 
-# Contract Events
-
 ## Introduction
-Contract events is a way for contracts to deliver event-like information to third-party (off-chain) applications. It can be emitted by using the EMIT instruction in Michelson.
+Contract events are a way for contracts to deliver event-like information to third-party (off-chain) applications. They can be emitted by using the `EMIT` instruction in Michelson.
 
-For more details and examples of how the EMIT instruction works, refer to [this article](https://tezos.gitlab.io/active/event.html).
+For more details and examples of how the `EMIT` instruction works, refer to [this article](https://tezos.gitlab.io/active/event.html).
 
 ## Getting contract events in Taquito
 You can get the events in a contract through the `eventSchema` field of the `ContractAbstraction`.
@@ -71,20 +68,17 @@ try {
   });
 
   sub.on('data', console.log);
-
 } catch (e) {
   console.log(e);
 }
 ```
 
-
 - `tag` is the tag string that was defined in the smart contract with the EMIT instruction
 - `address` is the address of the smart contract that was called
-- `excludeFailedOperations`: In rare cases, events from failed operations can be received by the subscriber. You can use this field to filter out these events (if you pass `true` to this field, only events from successful operations will be received)
+- `excludeFailedOperations` In rare cases, events from failed operations can be received by the subscriber. You can use this field to filter out these events (if you pass `true` to this field, only events from successful operations will be received)
 
-:::info
-If you would like to subscribe to **_any_** event that goes through, you can call `subscribeEvent()` as is without any parameters
-:::
+>[!NOTE]
+> If you would like to subscribe to **_any_** event that goes through, you can call `subscribeEvent()` as is without any parameters
 
 #### Output
 The output of the `subscribeEvent` method will look something like this:

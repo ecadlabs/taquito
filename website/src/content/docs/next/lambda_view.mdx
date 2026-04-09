@@ -1,19 +1,14 @@
 ---
-id: lambda_view
 title: Lambda View
 ---
 
-:::caution note
-Lambda View implementation have recently changed due to a recent protocol update. Lambda Views now utilize the `run_view` endpoint. For more information refer to [this document](https://tezos.gitlab.io/CHANGES.html?highlight=run_view#id16)
-:::
-Lambda View is a way to retrieve data from a smart contract's storage
-without incurring fees via a contract's view method.
+Lambda View is a way to retrieve data from a smart contract's storage without incurring fees via a contract's view method.
 
 ## Recap: Views & Callbacks
 
 As you develop applications on the blockchain, you'll soon realize you not only
 want to interact with Smart Contracts by updating information but also by
-reading back pieces of data.
+reading pieces of data.
 
 Many Smart Contracts have what's known as `view methods,` which allow you to
 specify parameters around what data you'd like to retrieve. They also require
@@ -26,12 +21,12 @@ One issue with using views and callbacks is that, just like any operation
 executed on Tezos, each read has a small fee attached to it. The amount is
 trivial for occasional reads, but it becomes a burden at higher volumes.
 
-Another drawback is speed: since we're invoking a contract method, we have to wait for confirmation to retrieve the requested data. You may not find this
+Another drawback is speed: since we're invoking a contract method as a callback, we have to wait for confirmation to retrieve the requested data. You may not find this
 acceptable if the application you're working on requires consistent, faster
 response times.
 
 ### `run_view` endpoint
-Fortunately with the recently implemented `run_view` endpoint, users can now run views without needing to inject operations into the blockchain. This means that no fees will be incurred when running views using this endpoint.
+Fortunately with the `run_view` endpoint, users can run views without needing to inject operations into the blockchain. This means that no fees will be incurred when running views using this endpoint.
 
 ## Usage
 
@@ -45,11 +40,10 @@ Taquito dynamically creates a `getAllowance`, `getBalance` and `getTotalSupply` 
 - `myContract.views.getBalance(parameters)`
 - `myContract.view.getTotalSupply(parameters)`
 
-:::note
-Parameters must not include the callback parameter
-:::
+>[!NOTE]
+> Parameters must not include the callback parameter
 
-Then we call the `read()` method. (Note that we have no longer need a lambda contract)
+Then we call the `read()` method (note that we have no longer need a lambda contract).
 ```js live
 try {
   const contract = await Tezos.contract.at('KT1MhfAnNbg2oACFBP4VDU5bNY5MZUXdeDWs');
@@ -59,8 +53,6 @@ try {
   console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`);
 }
 ```
-
-**More examples:**
 
 ```js live
 try {
