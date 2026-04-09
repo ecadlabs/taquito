@@ -57,7 +57,16 @@
   },
   "jest": {
     "transform": {
-      ".(ts|tsx)": "ts-jest"
+      "^.+\\.(ts|tsx|js|mjs)$": [
+        "ts-jest",
+        {
+          "useESM": true,
+          "tsconfig": {
+            "esModuleInterop": true,
+            "allowJs": true
+          }
+        }
+      ]
     },
     "transformIgnorePatterns": [
       "node_modules/(?!(@scure/bip39|@noble/hashes|@scure/base)/)"
@@ -71,7 +80,7 @@
     ],
     "moduleNameMapper": {
       "^@taquito/taquito$": "<rootDir>/../taquito/src/taquito.ts",
-      "^@scure/bip39/wordlists/english$": "<rootDir>/../../node_modules/@scure/bip39/wordlists/english.js"
+      "^@scure/bip39/wordlists/english.js$": "<rootDir>/../../node_modules/@scure/bip39/wordlists/english.js"
     },
     "coveragePathIgnorePatterns": [
       "/node_modules/",
