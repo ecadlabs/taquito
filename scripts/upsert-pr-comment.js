@@ -36,7 +36,9 @@ async function github(path, init = {}) {
 
   if (!response.ok) {
     const text = await response.text();
-    throw new Error(`GitHub API ${response.status}: ${text}`);
+    const error = new Error(`GitHub API ${response.status}: ${text}`);
+    error.status = response.status;
+    throw error;
   }
 
   return response.status === 204 ? null : response.json();
@@ -69,6 +71,10 @@ async function main() {
 }
 
 main().catch((error) => {
+  if (error.status === 403 || error.status === 404) {
+    console.warn(`${error.message}. Skipping PR comment update.`);
+    process.exit(0);
+  }
   console.error(error.message);
   process.exit(1);
 });
