@@ -17,13 +17,13 @@ jobs:
     permissions:
       contents: read
       deployments: write
-      pull-requests: write
+      issues: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22.18.0
+          node-version: 24
       # Install and build all packages (required for TypeDoc)
       - name: Install root dependencies
         run: npm ci
@@ -42,19 +42,23 @@ jobs:
 
       - name: Publish to Cloudflare Pages
         id: cloudflare_publish
-        uses: cloudflare/pages-action@v1
+        uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           accountId: ${{ secrets.CF_ACCOUNT_ID}}
-          projectName: taquito
-          directory: website/dist
+          command: pages deploy website/dist --project-name=taquito
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
-          wranglerVersion: '3'
 
 
       # Notify the PR of the deploy preview
-      - uses: marocchino/sticky-pull-request-comment@v2
-        if: github.event_name == 'pull_request'
-        with:
-          header: taquito.io Preview
-          message: 'A new deploy preview for taquito.io is available on Cloudflare Pages at ${{ steps.cloudflare_publish.outputs.URL }}'
+      - if: github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PREVIEW_URL: ${{ steps.cloudflare_publish.outputs.pages-deployment-alias-url }}
+          DEPLOYMENT_URL: ${{ steps.cloudflare_publish.outputs.deployment-url }}
+        run: |
+          preview_url="${PREVIEW_URL:-$DEPLOYMENT_URL}"
+          node scripts/upsert-pr-comment.js \
+            --header "taquito.io Preview" \
+            --message "A new deploy preview for taquito.io is available on Cloudflare Pages at ${preview_url}"

@@ -12,6 +12,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-${{ github.ref != 'refs/heads/main' || github.run_number }}
   cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull/') }}
 
+permissions:
+  contents: read
+
 jobs:
   bundle-webpack:
     runs-on: ubuntu-latest
@@ -20,7 +23,7 @@ jobs:
         uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: lts/Jod
+          node-version: 24
       - run: npm ci
       - run: npm run build
       - run: npm -w packages/taquito-local-forging run build-webpack
