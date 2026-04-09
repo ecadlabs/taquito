@@ -1,10 +1,15 @@
 {
   "name": "@taquito/taquito",
   "version": "24.2.0",
-  "description": "High level functionality that builds upon the other packages in the Tezos Typescript Library Suite.",
+  "description": "TypeScript SDK for building wallets, dapps, and tooling on Tezos.",
   "keywords": [
+    "taquito",
     "tezos",
-    "blockchain"
+    "typescript",
+    "blockchain",
+    "sdk",
+    "wallet",
+    "dapp"
   ],
   "main": "dist/taquito.umd.js",
   "unpkg": "dist/taquito.min.js",
@@ -12,13 +17,19 @@
   "typings": "dist/types/taquito.d.ts",
   "files": [
     "signature.json",
-    "dist",
-    "patch.js"
+    "dist"
   ],
   "publishConfig": {
     "access": "public"
   },
-  "author": "Simon Boissonneault-Robert <simon@ecadlabs.com>",
+  "author": "ECAD Labs Inc <info@ecadlabs.com>",
+  "contributors": [
+    "Simon Boissonneault-Robert <simon@ecadlabs.com>",
+    "Roxane Letourneau <roxane@ecadlabs.com>",
+    "Davis Sawali <davis.sawali@ecadlabs.com>",
+    "Jev Björsell (jevonearth)"
+  ],
+  "homepage": "https://taquito.io/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ecadlabs/taquito.git"
@@ -41,8 +52,7 @@
     "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts --bundleConfigAsCjs",
     "build:release": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts --bundleConfigAsCjs && npm run build:web",
     "build:web": "webpack && node update-readme.js",
-    "start": "rollup -c rollup.config.ts --bundleConfigAsCjs -w",
-    "postinstall": "node patch.js"
+    "start": "rollup -c rollup.config.ts --bundleConfigAsCjs -w"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [
@@ -52,8 +62,20 @@
   },
   "jest": {
     "transform": {
-      ".(ts|tsx)": "ts-jest"
+      "^.+\\.(ts|tsx|js|mjs)$": [
+        "ts-jest",
+        {
+          "useESM": true,
+          "tsconfig": {
+            "esModuleInterop": true,
+            "allowJs": true
+          }
+        }
+      ]
     },
+    "transformIgnorePatterns": [
+      "node_modules/(?!(@scure/bip39|@noble/hashes|@scure/base)/)"
+    ],
     "testEnvironment": "node",
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
     "moduleFileExtensions": [
@@ -66,7 +88,8 @@
       "^@taquito/michelson-encoder$": "<rootDir>/../taquito-michelson-encoder/src/taquito-michelson-encoder.ts",
       "^@taquito/michel-codec$": "<rootDir>/../taquito-michel-codec/src/taquito-michel-codec.ts",
       "^@taquito/http-utils$": "<rootDir>/../taquito-http-utils/src/taquito-http-utils.ts",
-      "^@taquito/utils$": "<rootDir>/../taquito-utils/src/taquito-utils.ts"
+      "^@taquito/utils$": "<rootDir>/../taquito-utils/src/taquito-utils.ts",
+      "^@scure/bip39/wordlists/english.js$": "<rootDir>/../../node_modules/@scure/bip39/wordlists/english.js"
     },
     "coveragePathIgnorePatterns": [
       "/node_modules/",

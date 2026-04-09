@@ -1,11 +1,14 @@
 {
   "name": "@taquito/rpc",
   "version": "24.2.0",
-  "description": "Provides low level methods, and types to invoke RPC calls from a Nomadic Tezos RPC node",
+  "description": "TypeScript client and types for the Tezos RPC used by Taquito.",
   "keywords": [
+    "taquito",
     "tezos",
+    "typescript",
     "blockchain",
-    "rpc"
+    "rpc",
+    "client"
   ],
   "main": "dist/taquito-rpc.umd.js",
   "module": "dist/taquito-rpc.es6.js",
@@ -17,10 +20,20 @@
   "publishConfig": {
     "access": "public"
   },
-  "author": "Simon Boissonneault-Robert <simon@ecadlabs.com>",
+  "author": "ECAD Labs Inc <info@ecadlabs.com>",
+  "contributors": [
+    "Jev Björsell (jevonearth)",
+    "Roxane Letourneau <roxane@ecadlabs.com>",
+    "Davis Sawali <davis.sawali@ecadlabs.com>",
+    "Simon Boissonneault-Robert <simon@ecadlabs.com>"
+  ],
+  "homepage": "https://taquito.io/",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "git+https://github.com/ecadlabs/taquito.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ecadlabs/taquito/issues"
   },
   "license": "Apache-2.0",
   "engines": {
@@ -47,6 +60,9 @@
     "transform": {
       ".(ts|tsx)": "ts-jest"
     },
+    "transformIgnorePatterns": [
+      "node_modules/(?!(@scure/bip39|@noble/hashes|@scure/base)/)"
+    ],
     "testEnvironment": "node",
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
     "moduleFileExtensions": [
@@ -55,7 +71,8 @@
       "js"
     ],
     "moduleNameMapper": {
-      "^@taquito/http-utils$": "<rootDir>/../taquito-http-utils/src/taquito-http-utils.ts"
+      "^@taquito/http-utils$": "<rootDir>/../taquito-http-utils/src/taquito-http-utils.ts",
+      "^@scure/bip39/wordlists/english.js$": "<rootDir>/../../node_modules/@scure/bip39/wordlists/english.js"
     },
     "coveragePathIgnorePatterns": [
       "/node_modules/",

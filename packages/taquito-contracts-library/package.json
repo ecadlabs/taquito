@@ -1,9 +1,13 @@
 {
   "name": "@taquito/contracts-library",
   "version": "24.2.0",
-  "description": "Can be used as an extension on the TezosToolkit to provide contracts data",
+  "description": "Static Michelson scripts and entrypoints library for Taquito contract interactions.",
   "keywords": [
-    "tezos"
+    "taquito",
+    "tezos",
+    "typescript",
+    "contracts",
+    "smart-contracts"
   ],
   "main": "dist/taquito-contracts-library.umd.js",
   "module": "dist/taquito-contracts-library.es6.js",
@@ -12,10 +16,19 @@
     "signature.json",
     "dist"
   ],
-  "author": "Roxane Letourneau <roxane@ecadlabs.com>",
+  "author": "ECAD Labs Inc <info@ecadlabs.com>",
+  "contributors": [
+    "Davis Sawali <davis.sawali@ecadlabs.com>",
+    "Roxane Letourneau <roxane@ecadlabs.com>",
+    "Jev Björsell (jevonearth)"
+  ],
+  "homepage": "https://taquito.io/",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "git+https://github.com/ecadlabs/taquito.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ecadlabs/taquito/issues"
   },
   "publishConfig": {
     "access": "public"
@@ -45,6 +58,9 @@
     "transform": {
       ".(ts|tsx)": "ts-jest"
     },
+    "transformIgnorePatterns": [
+      "node_modules/(?!(@scure/bip39|@noble/hashes|@scure/base)/)"
+    ],
     "testEnvironment": "node",
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
     "moduleFileExtensions": [
@@ -56,7 +72,8 @@
       "^@taquito/taquito$": "<rootDir>/../taquito/src/taquito.ts",
       "^@taquito/rpc$": "<rootDir>/../taquito-rpc/src/taquito-rpc.ts",
       "^@taquito/taquito-utils$": "<rootDir>/../taquito-utils/src/taquito-utils.ts",
-      "^@taquito/taquito-http-utils$": "<rootDir>/../taquito-http-utils/src/taquito-http-utils.ts"
+      "^@taquito/taquito-http-utils$": "<rootDir>/../taquito-http-utils/src/taquito-http-utils.ts",
+      "^@scure/bip39/wordlists/english.js$": "<rootDir>/../../node_modules/@scure/bip39/wordlists/english.js"
     },
     "coveragePathIgnorePatterns": [
       "/node_modules/",

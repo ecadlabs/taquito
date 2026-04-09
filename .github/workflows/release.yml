@@ -1,0 +1,99 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Release version (e.g. 24.3.0-beta.0, 24.3.0-rc.0, 24.3.0)
+        required: true
+        type: string
+      prerelease:
+        description: Publish as a prerelease on the next dist-tag
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      contents: write
+      id-token: write
+    env:
+      VERSION: ${{ inputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+
+      - run: npm ci
+
+      - name: Resolve release mode
+        run: |
+          set -euo pipefail
+          version_is_prerelease=false
+          if [[ "${VERSION}" == *-* ]]; then
+            version_is_prerelease=true
+          fi
+
+          if [[ "${{ inputs.prerelease }}" == "true" && "${version_is_prerelease}" != "true" ]]; then
+            echo "prerelease=true requires a prerelease version string" >&2
+            exit 1
+          fi
+
+          if [[ "${{ inputs.prerelease }}" != "true" && "${version_is_prerelease}" == "true" ]]; then
+            echo "prerelease=false is incompatible with a prerelease version string" >&2
+            exit 1
+          fi
+
+          if [[ "${version_is_prerelease}" == "true" ]]; then
+            echo "DIST_TAG=next" >> "$GITHUB_ENV"
+          else
+            echo "DIST_TAG=latest" >> "$GITHUB_ENV"
+          fi
+
+      - name: Set release version
+        run: node scripts/sync-workspace-deps.js "${VERSION}"
+
+      - name: Version stamp
+        run: npm run version-stamp
+
+      - name: Build
+        run: npm run build
+
+      - name: Build release artifacts
+        run: npm run -w @taquito/taquito build:release
+
+      - name: Test
+        run: npm test -- --runInBand
+
+      - name: Publish prerelease packages
+        if: ${{ inputs.prerelease }}
+        run: npm publish --workspaces --tag "${DIST_TAG}" --provenance --access public
+
+      - name: Publish stable packages
+        if: ${{ !inputs.prerelease }}
+        run: npm publish --workspaces --tag "${DIST_TAG}" --provenance --access public
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PRERELEASE: ${{ inputs.prerelease }}
+          TARGET_SHA: ${{ github.sha }}
+        run: |
+          prerelease_flag=""
+          if [ "${PRERELEASE}" = "true" ]; then
+            prerelease_flag="--prerelease"
+          fi
+
+          gh release create "v${VERSION}" \
+            --target "${TARGET_SHA}" \
+            --title "v${VERSION}" \
+            --generate-notes \
+            ${prerelease_flag}

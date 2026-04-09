@@ -1,10 +1,11 @@
 {
   "name": "@taquito/tzip12",
   "version": "24.2.0",
-  "description": "Tzip12",
+  "description": "TZIP-12 token metadata support for Taquito.",
   "keywords": [
+    "taquito",
     "tezos",
-    "blockchain",
+    "typescript",
     "tzip12"
   ],
   "main": "dist/taquito-tzip12.umd.js",
@@ -17,10 +18,19 @@
   "publishConfig": {
     "access": "public"
   },
-  "author": "Roxane Letourneau <roxane@ecadlabs.com>",
+  "author": "ECAD Labs Inc <info@ecadlabs.com>",
+  "contributors": [
+    "Roxane Letourneau <roxane@ecadlabs.com>",
+    "Davis Sawali <davis.sawali@ecadlabs.com>",
+    "Jev Björsell (jevonearth)"
+  ],
+  "homepage": "https://taquito.io/",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "git+https://github.com/ecadlabs/taquito.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ecadlabs/taquito/issues"
   },
   "license": "Apache-2.0",
   "engines": {
@@ -45,6 +55,9 @@
     "transform": {
       ".(ts|tsx)": "ts-jest"
     },
+    "transformIgnorePatterns": [
+      "node_modules/(?!(@scure/bip39|@noble/hashes|@scure/base)/)"
+    ],
     "testEnvironment": "node",
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
     "moduleFileExtensions": [
@@ -52,6 +65,9 @@
       "tsx",
       "js"
     ],
+    "moduleNameMapper": {
+      "^@scure/bip39/wordlists/english.js$": "<rootDir>/../../node_modules/@scure/bip39/wordlists/english.js"
+    },
     "coveragePathIgnorePatterns": [
       "/node_modules/",
       "/test/",

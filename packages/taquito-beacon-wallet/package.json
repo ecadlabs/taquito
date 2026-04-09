@@ -1,11 +1,14 @@
 {
   "name": "@taquito/beacon-wallet",
   "version": "24.2.0",
-  "description": "Beacon wallet provider",
+  "description": "TZIP-10 Beacon wallet integration for Taquito dapps built on the Beacon SDK DAppClient.",
   "keywords": [
+    "taquito",
     "tezos",
+    "typescript",
     "blockchain",
-    "websocket"
+    "wallet",
+    "beacon"
   ],
   "main": "dist/taquito-beacon-wallet.umd.js",
   "module": "dist/taquito-beacon-wallet.es6.js",
@@ -30,10 +33,20 @@
   "publishConfig": {
     "access": "public"
   },
-  "author": "Simon Boissonneault-Robert <simon@ecadlabs.com>",
+  "author": "ECAD Labs Inc <info@ecadlabs.com>",
+  "contributors": [
+    "Roxane Letourneau <roxane@ecadlabs.com>",
+    "Davis Sawali <davis.sawali@ecadlabs.com>",
+    "Jev Björsell (jevonearth)",
+    "Simon Boissonneault-Robert <simon@ecadlabs.com>"
+  ],
+  "homepage": "https://taquito.io/",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "git+https://github.com/ecadlabs/taquito.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ecadlabs/taquito/issues"
   },
   "license": "Apache-2.0",
   "engines": {
@@ -94,10 +107,11 @@
     ],
     "moduleNameMapper": {
       "^@taquito/taquito$": "<rootDir>/../taquito/src/taquito.ts",
-      "^(\\.{1,2}/.*)\\.js$": "$1"
+      "^(\\.{1,2}/.*)\\.js$": "$1",
+      "^@scure/bip39/wordlists/english.js$": "<rootDir>/../../node_modules/@scure/bip39/wordlists/english.js"
     },
     "transformIgnorePatterns": [
-      "/node_modules/(?!(@ecadlabs|@stablelib)/.*)"
+      "/node_modules/(?!(@ecadlabs|@stablelib|@scure/bip39|@noble/hashes|@scure/base)/.*)"
     ],
     "extensionsToTreatAsEsm": [
       ".ts",

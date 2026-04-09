@@ -1,12 +1,15 @@
 {
   "name": "@taquito/utils",
   "version": "24.2.0",
-  "description": "converts michelson data and types into convenient JS/TS objects",
+  "description": "Encoding, crypto, and utility helpers for Taquito.",
   "keywords": [
+    "taquito",
     "tezos",
+    "typescript",
     "blockchain",
-    "michelson",
-    "smart-contract"
+    "encoding",
+    "crypto",
+    "utilities"
   ],
   "main": "dist/taquito-utils.umd.js",
   "module": "dist/taquito-utils.es6.js",
@@ -18,10 +21,20 @@
   "publishConfig": {
     "access": "public"
   },
-  "author": "Simon Boissonneault-Robert <simon@ecadlabs.com>",
+  "author": "ECAD Labs Inc <info@ecadlabs.com>",
+  "contributors": [
+    "Jev Björsell (jevonearth)",
+    "Roxane Letourneau <roxane@ecadlabs.com>",
+    "Davis Sawali <davis.sawali@ecadlabs.com>",
+    "Simon Boissonneault-Robert <simon@ecadlabs.com>"
+  ],
+  "homepage": "https://taquito.io/",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "git+https://github.com/ecadlabs/taquito.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ecadlabs/taquito/issues"
   },
   "license": "Apache-2.0",
   "engines": {
