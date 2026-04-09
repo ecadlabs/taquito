@@ -1,0 +1,47 @@
+name: Release Rehearsal
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Rehearsal version (e.g. 24.3.0-beta.0)
+        required: true
+        type: string
+
+jobs:
+  rehearse:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      VERSION: ${{ inputs.version }}
+      npm_config_cache: /tmp/taquito-npm-cache
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+
+      - run: npm ci
+
+      - name: Set rehearsal version
+        run: node scripts/sync-workspace-deps.js "${VERSION}"
+
+      - name: Version stamp
+        run: npm run version-stamp
+
+      - name: Build
+        run: npm run build
+
+      - name: Build release artifacts
+        run: npm run -w @taquito/taquito build:release
+
+      - name: Test
+        run: npm test -- --runInBand
+
+      - name: Rehearse workspace publish
+        run: npm publish --workspaces --dry-run --access public
