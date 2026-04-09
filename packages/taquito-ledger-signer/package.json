@@ -1,11 +1,15 @@
 {
   "name": "@taquito/ledger-signer",
   "version": "24.2.0",
-  "description": "Ledger signer provider",
+  "description": "Ledger hardware wallet signer integration for Taquito.",
   "keywords": [
+    "taquito",
     "tezos",
+    "typescript",
     "blockchain",
-    "ledger"
+    "wallet",
+    "ledger",
+    "signer"
   ],
   "main": "dist/taquito-ledger-signer.umd.js",
   "module": "dist/taquito-ledger-signer.es6.js",
@@ -13,10 +17,19 @@
   "publishConfig": {
     "access": "public"
   },
-  "author": "Roxane Letourneau <roxane@ecadlabs.com>",
+  "author": "ECAD Labs Inc <info@ecadlabs.com>",
+  "contributors": [
+    "Roxane Letourneau <roxane@ecadlabs.com>",
+    "Davis Sawali <davis.sawali@ecadlabs.com>",
+    "Jev Björsell (jevonearth)"
+  ],
+  "homepage": "https://taquito.io/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ecadlabs/taquito.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ecadlabs/taquito/issues"
   },
   "license": "Apache-2.0",
   "engines": {

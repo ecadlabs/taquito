@@ -1,10 +1,13 @@
 {
   "name": "@taquito/core",
   "version": "24.2.0",
-  "description": "Classes, interfaces, and types shared across Taquito packages",
+  "description": "Shared types, interfaces, and primitives for Taquito packages.",
   "keywords": [
+    "taquito",
     "tezos",
-    "blockchain"
+    "typescript",
+    "blockchain",
+    "sdk"
   ],
   "main": "dist/taquito-core.umd.js",
   "module": "dist/taquito-core.es6.js",
@@ -16,10 +19,19 @@
   "publishConfig": {
     "access": "public"
   },
-  "author": "huianyang <hui-an.yang@ecadlabs.com>",
+  "author": "ECAD Labs Inc <info@ecadlabs.com>",
+  "contributors": [
+    "hui-an.yang <hui-an.yang@ecadlabs.com>",
+    "Davis Sawali <davis.sawali@ecadlabs.com>",
+    "Jev Björsell (jevonearth)"
+  ],
+  "homepage": "https://taquito.io/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ecadlabs/taquito.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ecadlabs/taquito/issues"
   },
   "license": "Apache-2.0",
   "engines": {

@@ -1,5 +1,34 @@
 {
+  "name": "taquito-monorepo",
+  "version": "24.2.0",
+  "description": "Canonical monorepo for the Taquito TypeScript SDK for Tezos, maintained by ECAD Labs Inc.",
   "private": true,
+  "author": "ECAD Labs Inc <info@ecadlabs.com>",
+  "contributors": [
+    "Simon Boissonneault-Robert <simon@ecadlabs.com>",
+    "Roxane Letourneau <roxane@ecadlabs.com>",
+    "Davis Sawali <davis.sawali@ecadlabs.com>",
+    "Jev Björsell (jevonearth)"
+  ],
+  "homepage": "https://taquito.io/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ecadlabs/taquito.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ecadlabs/taquito/issues"
+  },
+  "license": "Apache-2.0",
+  "keywords": [
+    "taquito",
+    "tezos",
+    "typescript",
+    "sdk",
+    "wallet",
+    "dapp",
+    "michelson",
+    "rpc"
+  ],
   "workspaces": [
     "packages/*",
     "packages/taquito-michel-codec/pack-test-tool",

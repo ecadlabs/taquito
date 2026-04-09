@@ -1,10 +1,14 @@
 {
   "name": "@taquito/remote-signer",
   "version": "24.2.0",
-  "description": "Remote signer provider",
+  "description": "Remote signer client for Taquito, designed to work with services such as Signatory.",
   "keywords": [
+    "taquito",
     "tezos",
-    "blockchain"
+    "typescript",
+    "blockchain",
+    "signer",
+    "remote-signer"
   ],
   "main": "dist/taquito-remote-signer.umd.js",
   "module": "dist/taquito-remote-signer.es6.js",
@@ -16,10 +20,20 @@
   "publishConfig": {
     "access": "public"
   },
-  "author": "Simon Boissonneault-Robert <simon@ecadlabs.com>",
+  "author": "ECAD Labs Inc <info@ecadlabs.com>",
+  "contributors": [
+    "Jev Björsell (jevonearth)",
+    "Davis Sawali <davis.sawali@ecadlabs.com>",
+    "Roxane Letourneau <roxane@ecadlabs.com>",
+    "Simon Boissonneault-Robert <simon@ecadlabs.com>"
+  ],
+  "homepage": "https://taquito.io/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ecadlabs/taquito.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ecadlabs/taquito/issues"
   },
   "license": "Apache-2.0",
   "engines": {

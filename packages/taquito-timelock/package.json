@@ -1,7 +1,14 @@
 {
   "name": "@taquito/timelock",
   "version": "24.2.0",
-  "description": "TypeScript implementation of the Timelock feature in Tezos",
+  "description": "Timelock cryptography support for Taquito and Tezos applications.",
+  "keywords": [
+    "taquito",
+    "tezos",
+    "typescript",
+    "timelock",
+    "crypto"
+  ],
   "main": "./dist/taquito-timelock.umd.js",
   "module": "./dist/taquito-timelock.es6.js",
   "typings": "./dist/types/taquito-timelock.d.ts",
@@ -12,10 +19,20 @@
   "publishConfig": {
     "access": "public"
   },
-  "author": "Eugene Zagidullin <eugene@ecadlabs.com>",
+  "author": "ECAD Labs Inc <info@ecadlabs.com>",
+  "contributors": [
+    "Eugene Zagidullin <eugene@ecadlabs.com>",
+    "hui-an.yang <hui-an.yang@ecadlabs.com>",
+    "Davis Sawali <davis.sawali@ecadlabs.com>",
+    "Jev Björsell (jevonearth)"
+  ],
+  "homepage": "https://taquito.io/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ecadlabs/taquito.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ecadlabs/taquito/issues"
   },
   "license": "Apache-2.0",
   "engines": {
