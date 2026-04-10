@@ -25,8 +25,8 @@ jobs:
           - '22'
           - '24'
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node }}
           cache: npm
@@ -37,7 +37,7 @@ jobs:
   integration-tests-keygen-preflight:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Keygen preflight
         run: bash .github/scripts/check-keygen-health.sh
 
@@ -54,8 +54,8 @@ jobs:
           - 'lts/Jod'
           - '24'
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node }}
           cache: npm
@@ -65,7 +65,7 @@ jobs:
       - run: npm run build-docs
       - run: npm run test
       - name: Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v6
         with:
           files: packages/**/coverage/coverage-final.json
           use_oidc: true
@@ -85,8 +85,8 @@ jobs:
       group: shadownet-itest-testnet-shard-${{ matrix.shard }}
       cancel-in-progress: false
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: 24
           cache: npm
@@ -184,7 +184,7 @@ jobs:
           done
       - name: Upload timing artifact
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: itest-timing-shadownet-${{ matrix.shard }}
           path: ci-metrics/itest-shadownet-${{ matrix.shard }}.json
@@ -199,8 +199,8 @@ jobs:
       group: shadownet-itest-sapling
       cancel-in-progress: false
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: 24
           cache: npm
@@ -293,7 +293,7 @@ jobs:
           done
       - name: Upload timing artifact
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: itest-timing-sapling
           path: ci-metrics/itest-sapling.json
@@ -309,7 +309,7 @@ jobs:
     steps:
       - name: Download timing artifacts
         continue-on-error: true
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           pattern: itest-timing-*
           path: ci-metrics
