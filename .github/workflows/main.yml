@@ -16,6 +16,21 @@ permissions:
   contents: read
 
 jobs:
+  integration-tests-change-filter:
+    runs-on: ubuntu-latest
+    outputs:
+      run_expensive: ${{ steps.filter.outputs.run_expensive }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - id: filter
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: echo "run_expensive=$(node scripts/should-run-expensive-integration.js)" >> "$GITHUB_OUTPUT"
+
   http-utils-test:
     runs-on: ubuntu-latest
     strategy:
@@ -25,8 +40,8 @@ jobs:
           - '22'
           - '24'
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node }}
           cache: npm
@@ -35,9 +50,11 @@ jobs:
       - run: npx nx test @taquito/http-utils -- --coverage
 
   integration-tests-keygen-preflight:
+    needs: integration-tests-change-filter
+    if: ${{ needs.integration-tests-change-filter.outputs.run_expensive == 'true' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Keygen preflight
         run: bash .github/scripts/check-keygen-health.sh
 
@@ -54,8 +71,8 @@ jobs:
           - 'lts/Jod'
           - '24'
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node }}
           cache: npm
@@ -65,7 +82,7 @@ jobs:
       - run: npm run build-docs
       - run: npm run test
       - name: Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v6
         with:
           files: packages/**/coverage/coverage-final.json
           use_oidc: true
@@ -74,8 +91,11 @@ jobs:
           RUN_INTEGRATION: true
 
   integration-tests-testnet:
+    if: ${{ needs.integration-tests-change-filter.outputs.run_expensive == 'true' }}
     name: integration-tests-shadownet
-    needs: integration-tests-keygen-preflight
+    needs:
+      - integration-tests-change-filter
+      - integration-tests-keygen-preflight
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -85,8 +105,8 @@ jobs:
       group: shadownet-itest-testnet-shard-${{ matrix.shard }}
       cancel-in-progress: false
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: 24
           cache: npm
@@ -184,7 +204,7 @@ jobs:
           done
       - name: Upload timing artifact
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: itest-timing-shadownet-${{ matrix.shard }}
           path: ci-metrics/itest-shadownet-${{ matrix.shard }}.json
@@ -192,15 +212,18 @@ jobs:
           retention-days: 30
 
   integration-tests-sapling:
+    if: ${{ needs.integration-tests-change-filter.outputs.run_expensive == 'true' }}
     name: integration-tests-shadownet-sapling
-    needs: integration-tests-keygen-preflight
+    needs:
+      - integration-tests-change-filter
+      - integration-tests-keygen-preflight
     runs-on: ubuntu-latest
     concurrency:
       group: shadownet-itest-sapling
       cancel-in-progress: false
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: 24
           cache: npm
@@ -293,7 +316,7 @@ jobs:
           done
       - name: Upload timing artifact
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: itest-timing-sapling
           path: ci-metrics/itest-sapling.json
@@ -302,14 +325,15 @@ jobs:
 
   integration-tests-timing-summary:
     needs:
+      - integration-tests-change-filter
       - integration-tests-testnet
       - integration-tests-sapling
-    if: always()
+    if: ${{ always() && needs.integration-tests-change-filter.outputs.run_expensive == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: Download timing artifacts
         continue-on-error: true
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           pattern: itest-timing-*
           path: ci-metrics

@@ -20,17 +20,19 @@ jobs:
     permissions:
       contents: write
       id-token: write
+      pull-requests: write
     env:
       VERSION: ${{ inputs.version }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 24
           registry-url: https://registry.npmjs.org
+          package-manager-cache: false
 
       - run: npm ci
 
@@ -97,3 +99,84 @@ jobs:
             --title "v${VERSION}" \
             --generate-notes \
             ${prerelease_flag}
+
+      - name: Sync website release metadata
+        if: ${{ !inputs.prerelease }}
+        run: node scripts/sync-website-release.js "${VERSION}"
+
+      - name: Sync root lockfile metadata
+        if: ${{ !inputs.prerelease }}
+        run: npm install --package-lock-only --ignore-scripts
+
+      - name: Sync website lockfile metadata
+        if: ${{ !inputs.prerelease }}
+        run: npm install --package-lock-only --ignore-scripts
+        working-directory: website
+
+      - name: Snapshot website docs for stable release
+        if: ${{ !inputs.prerelease }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -d "src/content/docs/${VERSION}" ]; then
+            npm run docs:version -- "${VERSION}"
+          fi
+        working-directory: website
+
+      - name: Open release sync PR
+        if: ${{ !inputs.prerelease }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ inputs.version }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          branch="release-sync/v${VERSION}"
+          pr_body_file="$(mktemp)"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -C "${branch}"
+          git add \
+            package.json \
+            package-lock.json \
+            example/package.json \
+            integration-tests/package.json \
+            packages/*/package.json \
+            packages/*/src/version.ts \
+            packages/taquito-michel-codec/pack-test-tool/package.json \
+            packages/taquito/README.md \
+            website/package.json \
+            website/package-lock.json \
+            website/src/config/versions.mjs \
+            website/src/content/docs
+
+          if git diff --cached --quiet; then
+            echo "No release sync changes to commit."
+            exit 0
+          fi
+
+          git commit -m "chore: sync repo after v${VERSION} release"
+          git push --force-with-lease --set-upstream origin "${branch}"
+
+          existing_pr="$(gh pr list --base main --head "${branch}" --json number --jq '.[0].number')"
+          if [ -n "${existing_pr}" ]; then
+            echo "PR #${existing_pr} already exists for ${branch}."
+            exit 0
+          fi
+
+          cat > "${pr_body_file}" <<EOF
+          Syncs repository metadata after publishing Taquito v${VERSION}.
+
+          - updates workspace package versions and generated version stamps
+          - updates website Taquito dependencies and lockfile
+          - snapshots docs/next into docs/${VERSION}
+          - updates website default docs version
+          EOF
+
+          gh pr create \
+            --base main \
+            --head "${branch}" \
+            --title "chore: sync repo after v${VERSION} release" \
+            --body-file "${pr_body_file}"
