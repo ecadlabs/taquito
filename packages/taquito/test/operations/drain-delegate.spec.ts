@@ -51,7 +51,7 @@ describe('DrainDelegate operation', () => {
   beforeEach(() => {
     fakeContext = {
       rpc: {
-        getBlock: jest.fn(),
+        getBlock: vi.fn(),
       },
       config: { ...defaultConfigConfirmation },
     };

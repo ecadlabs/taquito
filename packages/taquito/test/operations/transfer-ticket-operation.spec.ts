@@ -115,7 +115,7 @@ describe('Transfer Operation L2 Tx Rollup', () => {
   beforeEach(() => {
     fakeContext = {
       rpc: {
-        getBlock: jest.fn(),
+        getBlock: vi.fn(),
       },
       config: { ...defaultConfigConfirmation },
     };

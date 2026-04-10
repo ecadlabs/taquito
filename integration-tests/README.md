@@ -105,7 +105,7 @@ If running the test with a configured secret key, ensure that the account balanc
 ## Test Report
 
 
-To review the graphical report of the test run, open the index.html file in ~/taquito/integration-tests/jest-stare after each test run.
+Vitest prints the test summary directly in the terminal. Coverage artifacts are written under the integration test coverage output directory when coverage is enabled.
 
 
 ## Taquito Integration Tests with Flextesa

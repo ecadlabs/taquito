@@ -44,34 +44,12 @@
     "version-stamp": "node ../taquito/version-stamping.js",
     "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts --bundleConfigAsCjs",
     "start": "rollup -c rollup.config.ts --bundleConfigAsCjs -w",
-    "test": "jest"
+    "test": "vitest run --config ./vitest.config.ts"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [
       "prettier --write",
       "eslint --fix"
-    ]
-  },
-  "jest": {
-    "transform": {
-      ".(ts|tsx)": "ts-jest"
-    },
-    "transformIgnorePatterns": [
-      "node_modules/(?!(@scure/bip39|@noble/hashes|@scure/base)/)"
-    ],
-    "testEnvironment": "node",
-    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js"
-    ],
-    "coveragePathIgnorePatterns": [
-      "/node_modules/",
-      "/test/"
-    ],
-    "collectCoverageFrom": [
-      "src/**/*.{js,ts}"
     ]
   },
   "dependencies": {

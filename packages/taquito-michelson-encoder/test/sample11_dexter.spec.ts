@@ -8,7 +8,7 @@ import {
 import BigNumber from 'bignumber.js';
 import { ParameterSchema } from '../src/schema/parameter';
 import { MichelsonMap } from '../src/michelson-map';
-import { expectMichelsonMap } from './utils';
+import { normalizeMichelsonValue } from './utils';
 import { Token } from '../src/taquito-michelson-encoder';
 describe('Exchange contract test', () => {
   it('Test storage schema', () => {
@@ -402,13 +402,15 @@ describe('Exchange contract test', () => {
 
   it('Test storage parsing', () => {
     const schema = new Schema(storageDexter);
-    expect(schema.Execute(rpcContractResponse.script.storage)).toEqual({
-      '0': expectMichelsonMap(),
-      '1': 'KT1XAMU1kn8EJLM2uqrP71Jevvkyo7yyfNTK',
-      '2': 'KT1DmCHxit2bQ2GiHVc24McY6meuJPMTrqD8',
-      '3': new BigNumber('100000000'),
-      '4': expectMichelsonMap(),
-    });
+    expect(normalizeMichelsonValue(schema.Execute(rpcContractResponse.script.storage))).toEqual(
+      normalizeMichelsonValue({
+        '0': {},
+        '1': 'KT1XAMU1kn8EJLM2uqrP71Jevvkyo7yyfNTK',
+        '2': 'KT1DmCHxit2bQ2GiHVc24McY6meuJPMTrqD8',
+        '3': new BigNumber('100000000'),
+        '4': {},
+      })
+    );
   });
 
   it('Test storage encoding', () => {
@@ -792,12 +794,14 @@ describe('Exchange contract test', () => {
 
   it('Test storage parsing', () => {
     const schema = new Schema(storageToken);
-    expect(schema.Execute(rpcToken.script.storage)).toEqual({
-      '0': expectMichelsonMap(),
-      '1': new BigNumber('1000000'),
-      '2': 'Tezos Gold',
-      '3': 'TGD',
-    });
+    expect(normalizeMichelsonValue(schema.Execute(rpcToken.script.storage))).toEqual(
+      normalizeMichelsonValue({
+        '0': {},
+        '1': new BigNumber('1000000'),
+        '2': 'Tezos Gold',
+        '3': 'TGD',
+      })
+    );
   });
 
   it('Test parameter schema', () => {

@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { SaplingTransactionViewer } from '../../src/sapling-tx-viewer/sapling-transaction-viewer';
 import { InMemoryViewingKey } from '../../src/sapling-keys/in-memory-viewing-key';
 import { saplingStateDiff, saplingStateDiffMemo4 } from '../data';
@@ -9,7 +10,7 @@ describe('SaplingTransactionViewer', () => {
 
   beforeEach(async () => {
     mockRpcClient = {
-      getSaplingDiffById: jest.fn(),
+      getSaplingDiffById: vi.fn(),
     };
     mockRpcClient.getSaplingDiffById.mockResolvedValue(saplingStateDiff);
 

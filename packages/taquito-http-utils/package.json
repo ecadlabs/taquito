@@ -48,7 +48,7 @@
     "version-stamp": "node ../taquito/version-stamping.js",
     "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts --bundleConfigAsCjs",
     "start": "rollup -c rollup.config.ts --bundleConfigAsCjs -w",
-    "test": "jest --coverage"
+    "test": "vitest run --config ./vitest.config.ts"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [
@@ -56,30 +56,10 @@
       "eslint --fix"
     ]
   },
-  "jest": {
-    "transform": {
-      ".(ts|tsx)": "ts-jest"
-    },
-    "testEnvironment": "node",
-    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js"
-    ],
-    "coveragePathIgnorePatterns": [
-      "/node_modules/",
-      "/test/"
-    ],
-    "collectCoverageFrom": [
-      "src/**/*.{js,ts}"
-    ]
-  },
   "dependencies": {
     "@taquito/core": "^24.2.0"
   },
   "devDependencies": {
-    "@types/jest": "^29.5.12",
     "@types/node": "^22.0.0",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
@@ -87,8 +67,6 @@
     "coveralls": "^3.1.1",
     "cross-env": "^7.0.3",
     "eslint": "^8.57.0",
-    "jest": "^29.7.0",
-    "jest-config": "^29.7.0",
     "lint-staged": "^15.2.7",
     "lodash.camelcase": "^4.3.0",
     "prettier": "^3.3.3",
@@ -99,7 +77,6 @@
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-typescript2": "^0.36.0",
     "shelljs": "^0.8.5",
-    "ts-jest": "^29.2.3",
     "ts-node": "^10.9.2",
     "ts-toolbelt": "^9.6.0",
     "typescript": "^5.9.3"

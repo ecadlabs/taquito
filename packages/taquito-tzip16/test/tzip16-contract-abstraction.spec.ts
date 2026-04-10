@@ -1,39 +1,40 @@
+import { vi, type Mock } from 'vitest';
 import { Tzip16ContractAbstraction } from '../src/tzip16-contract-abstraction';
 import { BigMapContractMetadataNotFoundError, UriNotFoundError } from '../src/errors';
 
 describe('Tzip16 contract abstraction test', () => {
   let mockMetadataProvider: {
-    provideMetadata: jest.Mock<any, any>;
+    provideMetadata: Mock;
   };
   const mockContractAbstraction: any = {};
   let mockSchema: {
-    FindFirstInTopLevelPair: jest.Mock<any, any>;
+    FindFirstInTopLevelPair: Mock;
   };
   const mockContext: any = {};
 
   let mockRpcContractProvider: {
-    getBigMapKeyByID: jest.Mock<any, any>;
+    getBigMapKeyByID: Mock;
   };
 
   let mockReadProvider: {
-    getStorage: jest.Mock<any, any>;
+    getStorage: Mock;
   };
 
   beforeEach(() => {
     mockMetadataProvider = {
-      provideMetadata: jest.fn(),
+      provideMetadata: vi.fn(),
     };
 
     mockSchema = {
-      FindFirstInTopLevelPair: jest.fn(),
+      FindFirstInTopLevelPair: vi.fn(),
     };
 
     mockRpcContractProvider = {
-      getBigMapKeyByID: jest.fn(),
+      getBigMapKeyByID: vi.fn(),
     };
 
     mockReadProvider = {
-      getStorage: jest.fn(),
+      getStorage: vi.fn(),
     };
 
     mockMetadataProvider.provideMetadata.mockResolvedValue({

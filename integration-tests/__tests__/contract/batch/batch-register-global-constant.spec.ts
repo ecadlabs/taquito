@@ -1,4 +1,4 @@
-import { CONFIGS } from '../../../config';
+import { CONFIGS, TEST_FUNDS_RECOVERY_ADDRESS } from '../../../config';
 import { OpKind } from '@taquito/taquito';
 const crypto = require('crypto');
 
@@ -15,7 +15,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
       const batchOp = await Tezos.contract
         .batch([
-          { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 },
+          { kind: OpKind.TRANSACTION, to: TEST_FUNDS_RECOVERY_ADDRESS, amount: 0.02 },
           {
             kind: OpKind.REGISTER_GLOBAL_CONSTANT,
             value: {
@@ -26,7 +26,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
           }
         ])
         .with([
-          { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 },
+          { kind: OpKind.TRANSACTION, to: TEST_FUNDS_RECOVERY_ADDRESS, amount: 0.02 },
           {
             kind: OpKind.REGISTER_GLOBAL_CONSTANT,
             value: {

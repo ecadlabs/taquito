@@ -2,153 +2,158 @@ import { Schema } from '../src/schema/storage';
 import { storage, rpcContractResponse } from '../data/sample20';
 import BigNumber from 'bignumber.js';
 import { MichelsonMap } from '../src/michelson-map';
-import { expectMichelsonMap } from './utils';
+import { normalizeMichelsonValue } from './utils';
 
 describe('Contract test where the value of the map "selling" is a big_map', () => {
   it('Test storage schema', () => {
     const schema = new Schema(storage);
     expect(schema.generateSchema()).toEqual({
-      "__michelsonType": "pair",
+      __michelsonType: 'pair',
       schema: {
         _euranov: {
-          "__michelsonType": "address",
-          "schema": "address"
+          __michelsonType: 'address',
+          schema: 'address',
         },
         admin: {
-          "__michelsonType": "address",
-          "schema": "address"
+          __michelsonType: 'address',
+          schema: 'address',
         },
         auctions: {
-          "__michelsonType": "big_map",
-          "schema": {
+          __michelsonType: 'big_map',
+          schema: {
             key: {
-              "__michelsonType": "address",
-              "schema": "address"
+              __michelsonType: 'address',
+              schema: 'address',
             },
             value: {
               __michelsonType: 'map',
               schema: {
                 key: {
-                  "__michelsonType": "nat",
-                  "schema": "nat"
+                  __michelsonType: 'nat',
+                  schema: 'nat',
                 },
                 value: {
-                  "__michelsonType": "pair",
-                  "schema": {
+                  __michelsonType: 'pair',
+                  schema: {
                     assetId: {
-                      "__michelsonType": "nat",
-                      "schema": "nat"
+                      __michelsonType: 'nat',
+                      schema: 'nat',
                     },
                     bidCount: {
-                      "__michelsonType": "nat",
-                      "schema": "nat"
+                      __michelsonType: 'nat',
+                      schema: 'nat',
                     },
                     claimed: {
-                      "__michelsonType": "bool",
-                      "schema": "bool"
+                      __michelsonType: 'bool',
+                      schema: 'bool',
                     },
                     creator: {
-                      "__michelsonType": "address",
-                      "schema": "address"
+                      __michelsonType: 'address',
+                      schema: 'address',
                     },
                     currentBidAmount: {
-                      "__michelsonType": "mutez",
-                      "schema": "mutez"
+                      __michelsonType: 'mutez',
+                      schema: 'mutez',
                     },
                     currentBidOwner: {
-                      "__michelsonType": "address",
-                      "schema": "address"
+                      __michelsonType: 'address',
+                      schema: 'address',
                     },
                     duration: {
-                      "__michelsonType": "int",
-                      "schema": "int"
+                      __michelsonType: 'int',
+                      schema: 'int',
                     },
                     startTime: {
-                      "__michelsonType": "timestamp",
-                      "schema": "timestamp"
+                      __michelsonType: 'timestamp',
+                      schema: 'timestamp',
                     },
-                  }
+                  },
                 },
               },
             },
-          }
+          },
         },
         authorizedSC: {
-          "__michelsonType": "big_map",
-          "schema": {
+          __michelsonType: 'big_map',
+          schema: {
             key: {
-              "__michelsonType": "address",
-              "schema": "address"
+              __michelsonType: 'address',
+              schema: 'address',
             },
             value: {
-              "__michelsonType": "bool",
-              "schema": "bool"
+              __michelsonType: 'bool',
+              schema: 'bool',
             },
           },
         },
         balance: {
-          "__michelsonType": "int",
-          "schema": "int"
+          __michelsonType: 'int',
+          schema: 'int',
         },
         paused: {
-          "__michelsonType": "bool",
-          "schema": "bool"
+          __michelsonType: 'bool',
+          schema: 'bool',
         },
         selling: {
-          "__michelsonType": "map",
-          "schema": {
+          __michelsonType: 'map',
+          schema: {
             key: {
-              "__michelsonType": "address",
-              "schema": "address"
+              __michelsonType: 'address',
+              schema: 'address',
             },
             value: {
-              "__michelsonType": "big_map",
-              "schema": {
+              __michelsonType: 'big_map',
+              schema: {
                 key: {
-                  "__michelsonType": "nat",
-                  "schema": "nat"
+                  __michelsonType: 'nat',
+                  schema: 'nat',
                 },
                 value: {
-                  "__michelsonType": "pair",
-                  "schema": {
+                  __michelsonType: 'pair',
+                  schema: {
                     fee: {
-                      "__michelsonType": "nat",
-                      "schema": "nat"
+                      __michelsonType: 'nat',
+                      schema: 'nat',
                     },
                     owner: {
-                      "__michelsonType": "address",
-                      "schema": "address"
+                      __michelsonType: 'address',
+                      schema: 'address',
                     },
                     price: {
-                      "__michelsonType": "mutez",
-                      "schema": "mutez"
+                      __michelsonType: 'mutez',
+                      schema: 'mutez',
                     },
-                  }
+                  },
                 },
               },
             },
           },
         },
         tokenAddress: {
-          "__michelsonType": "address",
-          "schema": "address"
+          __michelsonType: 'address',
+          schema: 'address',
         },
-      }
+      },
     });
   });
 
   it('Test storage parsing', () => {
     const schema = new Schema(storage);
-    expect(schema.Execute(rpcContractResponse.script.storage)).toEqual({
-      _euranov: 'tz1b3cJ4Vz9cERNN3mJVxSkf4ksXrRjpGwao',
-      admin: 'tz1gi6qyzWuK2ciD2tAXDW2XdudmoQHy5YR9',
-      auctions: '68953',
-      authorizedSC: '68954',
-      balance: new BigNumber('5000000000000000000'),
-      paused: false,
-      selling: expectMichelsonMap(),
-      tokenAddress: 'KT1Dd8G6EVG3HTYZpp4wn8dnzKBEeE1eftTt',
-    });
+    expect(normalizeMichelsonValue(schema.Execute(rpcContractResponse.script.storage))).toEqual(
+      normalizeMichelsonValue({
+        _euranov: 'tz1b3cJ4Vz9cERNN3mJVxSkf4ksXrRjpGwao',
+        admin: 'tz1gi6qyzWuK2ciD2tAXDW2XdudmoQHy5YR9',
+        auctions: '68953',
+        authorizedSC: '68954',
+        balance: new BigNumber('5000000000000000000'),
+        paused: false,
+        selling: {
+          KT1LGGwuY8BVnnzuQCNmJgsY49VhqnxmnZh8: '68955',
+          KT1VWwhVZmpaKCLUPDdJxjF1YQsRtixF5ejy: '68978',
+        },
+        tokenAddress: 'KT1Dd8G6EVG3HTYZpp4wn8dnzKBEeE1eftTt',
+      })
+    );
   });
 
   it('Test storage encoding', () => {

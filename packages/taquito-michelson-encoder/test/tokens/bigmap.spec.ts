@@ -1,5 +1,5 @@
 import { createToken } from '../../src/tokens/createToken';
-import { expectMichelsonMap } from '../utils';
+import { normalizeMichelsonValue } from '../utils';
 
 describe('BigMap', () => {
   const bigMap = createToken({ prim: 'big_map', args: [{ prim: 'address' }, { prim: 'int' }] }, 0);
@@ -11,7 +11,7 @@ describe('BigMap', () => {
 
   it('Should use default semantic when omitted', () => {
     const result = bigMap.Execute([]);
-    expect(result).toEqual(expectMichelsonMap());
+    expect(normalizeMichelsonValue(result)).toEqual({});
   });
 
   it('Should use default semantic (return id) when omitted', () => {
@@ -25,14 +25,13 @@ describe('BigMap', () => {
       schema: {
         key: {
           __michelsonType: 'address',
-          schema: 'address'
+          schema: 'address',
         },
         value: {
           __michelsonType: 'int',
-          schema: 'int'
-        }
-      }
+          schema: 'int',
+        },
+      },
     });
   });
-
 });

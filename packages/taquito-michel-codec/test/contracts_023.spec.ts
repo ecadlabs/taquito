@@ -18,6 +18,10 @@ const contracts: {
 
 describe('PtSeouLou', () => {
   for (const [group, list] of Object.entries(contracts)) {
+    if (list.length === 0) {
+      continue;
+    }
+
     describe(group, () => {
       for (const contract of list) {
         it(contract, () => {

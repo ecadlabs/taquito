@@ -1,3 +1,4 @@
+import { vi, type Mock } from 'vitest';
 import { Handler, MetadataProvider } from '../src/metadata-provider';
 import { InvalidContractMetadataError, InvalidUriError } from '../src/errors';
 
@@ -7,24 +8,24 @@ describe('Metadata provider test', () => {
   const mockContractAbstraction: any = {};
   const mockContext: any = {};
   let mockHttpHandler: {
-    getMetadata: jest.Mock<any, any>;
+    getMetadata: Mock;
   };
   let mockTezosStorageHandler: {
-    getMetadata: jest.Mock<any, any>;
+    getMetadata: Mock;
   };
   let mockIpfsHttpHandler: {
-    getMetadata: jest.Mock<any, any>;
+    getMetadata: Mock;
   };
 
   beforeEach(() => {
     mockHttpHandler = {
-      getMetadata: jest.fn(),
+      getMetadata: vi.fn(),
     };
     mockTezosStorageHandler = {
-      getMetadata: jest.fn(),
+      getMetadata: vi.fn(),
     };
     mockIpfsHttpHandler = {
-      getMetadata: jest.fn(),
+      getMetadata: vi.fn(),
     };
     handlers = new Map<string, Handler>([
       ['http', mockHttpHandler],

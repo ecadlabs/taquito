@@ -1,4 +1,4 @@
-import { CONFIGS, TAQUITO_MUTEZ } from '../config';
+import { CONFIGS, TAQUITO_MUTEZ, TEST_FUNDS_RECOVERY_ADDRESS } from '../config';
 import { rethrowInfrastructureRpcError } from '../test-helpers/rpc-error-assertions';
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
@@ -13,8 +13,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       let caughtError: unknown;
 
       try {
-        const op1 = await Tezos.contract.transfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: TAQUITO_MUTEZ, mutez: true });
-        const op2 = await Tezos.contract.transfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: TAQUITO_MUTEZ, mutez: true });
+        const op1 = await Tezos.contract.transfer({ to: TEST_FUNDS_RECOVERY_ADDRESS, amount: TAQUITO_MUTEZ, mutez: true });
+        const op2 = await Tezos.contract.transfer({ to: TEST_FUNDS_RECOVERY_ADDRESS, amount: TAQUITO_MUTEZ, mutez: true });
 
         await op1.confirmation();
         await op2.confirmation();

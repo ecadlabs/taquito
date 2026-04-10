@@ -17,16 +17,16 @@ describe('TezosToolkit test', () => {
 
   beforeEach(() => {
     mockRpcClient = {
-      getBlock: jest.fn(),
-      getScript: jest.fn(),
-      getManagerKey: jest.fn(),
-      getStorage: jest.fn(),
-      getBlockHeader: jest.fn(),
-      getBlockMetadata: jest.fn(),
-      getContract: jest.fn(),
-      forgeOperations: jest.fn(),
-      injectOperation: jest.fn(),
-      preapplyOperations: jest.fn(),
+      getBlock: vi.fn(),
+      getScript: vi.fn(),
+      getManagerKey: vi.fn(),
+      getStorage: vi.fn(),
+      getBlockHeader: vi.fn(),
+      getBlockMetadata: vi.fn(),
+      getContract: vi.fn(),
+      forgeOperations: vi.fn(),
+      injectOperation: vi.fn(),
+      preapplyOperations: vi.fn(),
     };
 
     mockRpcClient.getContract.mockResolvedValue({ counter: 0 });

@@ -1,3 +1,4 @@
+import { vi, type Mock } from 'vitest';
 import { MichelsonMap, ViewSimulationError } from '@taquito/taquito';
 import { InvalidUriError } from '@taquito/tzip16';
 import { stringToBytes } from '@taquito/utils';
@@ -12,37 +13,37 @@ describe('Tzip12 contract abstraction test', () => {
   let tzip12Abs: Tzip12ContractAbstraction;
   let mockMichelsonStorageView: any;
   let mockMetadataProvider: {
-    provideMetadata: jest.Mock<any, any>;
+    provideMetadata: Mock;
   };
   let mockSchema: {
-    FindFirstInTopLevelPair: jest.Mock<any, any>;
+    FindFirstInTopLevelPair: Mock;
   };
   let mockRpcContractProvider: {
-    getBigMapKeyByID: jest.Mock<any, any>;
+    getBigMapKeyByID: Mock;
   };
   let mockReadProvider: {
-    getStorage: jest.Mock<any, any>;
+    getStorage: Mock;
   };
 
   beforeEach(() => {
     mockMetadataProvider = {
-      provideMetadata: jest.fn(),
+      provideMetadata: vi.fn(),
     };
     mockTzip16ContractAbstraction = {
-      getMetadata: jest.fn(),
-      metadataViews: jest.fn(),
+      getMetadata: vi.fn(),
+      metadataViews: vi.fn(),
     };
     mockMichelsonStorageView = {
-      executeView: jest.fn(),
+      executeView: vi.fn(),
     };
     mockSchema = {
-      FindFirstInTopLevelPair: jest.fn(),
+      FindFirstInTopLevelPair: vi.fn(),
     };
     mockRpcContractProvider = {
-      getBigMapKeyByID: jest.fn(),
+      getBigMapKeyByID: vi.fn(),
     };
     mockReadProvider = {
-      getStorage: jest.fn(),
+      getStorage: vi.fn(),
     };
     mockContractAbstraction.address = 'test';
     mockContractAbstraction['schema'] = mockSchema;
@@ -142,7 +143,10 @@ describe('Tzip12 contract abstraction test', () => {
       '1': tokenMap,
     });
 
-    const tokenMetadata = await tzip12Abs['executeTokenMetadataView'](mockMichelsonStorageView, BigNumber(0));
+    const tokenMetadata = await tzip12Abs['executeTokenMetadataView'](
+      mockMichelsonStorageView,
+      BigNumber(0)
+    );
     expect(tokenMetadata).toEqual({
       token_id: BigNumber(0),
       name: 'Taquito',
@@ -156,9 +160,9 @@ describe('Tzip12 contract abstraction test', () => {
       throw new ViewSimulationError('view simulation failed', 'test');
     });
 
-    expect(tzip12Abs['executeTokenMetadataView'](mockMichelsonStorageView, BigNumber(0))).rejects.toEqual(
-      new ViewSimulationError('view simulation failed', 'test')
-    );
+    expect(
+      tzip12Abs['executeTokenMetadataView'](mockMichelsonStorageView, BigNumber(0))
+    ).rejects.toEqual(new ViewSimulationError('view simulation failed', 'test'));
   });
 
   it('Test 3 for executeTokenMetadataView(): should throw TokenMetadataNotFound if the type of the view result is wrong (no map)', async () => {
@@ -167,17 +171,17 @@ describe('Tzip12 contract abstraction test', () => {
       '1': 'I am not a map',
     });
 
-    expect(tzip12Abs['executeTokenMetadataView'](mockMichelsonStorageView, BigNumber(0))).rejects.toEqual(
-      new TokenMetadataNotFound(mockContractAbstraction.address)
-    );
+    expect(
+      tzip12Abs['executeTokenMetadataView'](mockMichelsonStorageView, BigNumber(0))
+    ).rejects.toEqual(new TokenMetadataNotFound(mockContractAbstraction.address));
   });
 
   it('Test 4 for executeTokenMetadataView(): should throw TokenMetadataNotFound if the type of the view result is wrong', async () => {
     mockMichelsonStorageView.executeView.mockResolvedValue('wrong type');
 
-    expect(tzip12Abs['executeTokenMetadataView'](mockMichelsonStorageView, BigNumber(0))).rejects.toEqual(
-      new TokenMetadataNotFound(mockContractAbstraction.address)
-    );
+    expect(
+      tzip12Abs['executeTokenMetadataView'](mockMichelsonStorageView, BigNumber(0))
+    ).rejects.toEqual(new TokenMetadataNotFound(mockContractAbstraction.address));
   });
 
   it('Test 5 for executeTokenMetadataView(): Should properly return the TokenMetadata when the map contains a URI', async () => {
@@ -201,7 +205,10 @@ describe('Tzip12 contract abstraction test', () => {
       token_info: tokenMap,
     });
 
-    const tokenMetadata = await tzip12Abs['executeTokenMetadataView'](mockMichelsonStorageView, BigNumber(0));
+    const tokenMetadata = await tzip12Abs['executeTokenMetadataView'](
+      mockMichelsonStorageView,
+      BigNumber(0)
+    );
     expect(tokenMetadata).toEqual({
       token_id: BigNumber(0),
       name: 'Taquito test',
@@ -326,14 +333,18 @@ describe('Tzip12 contract abstraction test', () => {
       throw new Error();
     });
 
-    expect(tzip12Abs['retrieveTokenMetadataFromBigMap'](BigNumber(0))).rejects.toEqual(new TokenIdNotFound(BigNumber(0)));
+    expect(tzip12Abs['retrieveTokenMetadataFromBigMap'](BigNumber(0))).rejects.toEqual(
+      new TokenIdNotFound(BigNumber(0))
+    );
   });
 
   it('Test 4 for retrieveTokenMetadataFromBigMap(): Should throw TokenIdNotFound', async () => {
     mockSchema.FindFirstInTopLevelPair.mockReturnValue({ int: '20350' });
     mockRpcContractProvider.getBigMapKeyByID.mockResolvedValue('I am not a pair');
 
-    expect(tzip12Abs['retrieveTokenMetadataFromBigMap'](BigNumber(0))).rejects.toEqual(new TokenIdNotFound(BigNumber(0)));
+    expect(tzip12Abs['retrieveTokenMetadataFromBigMap'](BigNumber(0))).rejects.toEqual(
+      new TokenIdNotFound(BigNumber(0))
+    );
   });
 
   it('Test 1 for getTokenMetadata(): Should succeed to fetch the token metadata', async () => {

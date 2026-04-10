@@ -3,7 +3,7 @@ import { bigMapDiff, params, rpcContractResponse, storage, txParams } from '../d
 import { ParameterSchema } from '../src/schema/parameter';
 import { Schema } from '../src/schema/storage';
 import { MichelsonMap } from '../src/michelson-map';
-import { expectMichelsonMap } from './utils';
+import { normalizeMichelsonValue } from './utils';
 import { Token } from '../src/taquito-michelson-encoder';
 
 describe('Schema test', () => {
@@ -153,25 +153,27 @@ describe('Schema test', () => {
   it('Should parse storage properly', () => {
     const schema = new Schema(storage);
     const s = schema.Execute(rpcContractResponse.script.storage);
-    expect(s).toEqual({
-      accounts: expectMichelsonMap(),
-      name: 'Token B',
-      owner: 'tz1ccqAEwfPgeoipnXtjAv1iucrpQv3DFmmS',
-      symbol: 'B',
-      totalSupply: new BigNumber('1000'),
-      version: new BigNumber('1'),
-    });
+    expect(normalizeMichelsonValue(s)).toEqual(
+      normalizeMichelsonValue({
+        accounts: {},
+        name: 'Token B',
+        owner: 'tz1ccqAEwfPgeoipnXtjAv1iucrpQv3DFmmS',
+        symbol: 'B',
+        totalSupply: new BigNumber('1000'),
+        version: new BigNumber('1'),
+      })
+    );
   });
 
   it('Should parse big map properly', () => {
     const schema = new Schema(storage);
     const s = schema.ExecuteOnBigMapDiff(bigMapDiff);
-    expect(s).toEqual(
-      expectMichelsonMap({
+    expect(normalizeMichelsonValue(s)).toEqual(
+      normalizeMichelsonValue({
         tz1Ra8yQVQN4Nd7LpPQ6UT6t3bsWWqHZ9wa6: {
-          allowances: MichelsonMap.fromLiteral({
+          allowances: {
             tz1fPjyo55HwUAkd1xcL5vo6DGzJrkxAMpiD: new BigNumber('60'),
-          }),
+          },
           balance: new BigNumber('200'),
         },
       })

@@ -347,12 +347,14 @@ describe('PairToken mixed with and without annotations', () => {
 
   const javaScriptObject = new Schema(schema).Execute(michelineJson);
 
-  expect(javaScriptObject).toEqual({
-    1: new BigNumber(33),
-    2: true,
-    A3: {
-      0: new BigNumber(11),
-      1: new BigNumber(22),
-    },
+  it('Should decode mixed annotated pairs', () => {
+    expect(javaScriptObject).toEqual({
+      1: new BigNumber(33),
+      2: true,
+      A3: {
+        0: new BigNumber(11),
+        1: new BigNumber(22),
+      },
+    });
   });
 });
