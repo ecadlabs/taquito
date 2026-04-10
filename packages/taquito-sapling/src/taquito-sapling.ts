@@ -3,7 +3,9 @@
  * @module @taquito/sapling
  */
 
-import BigNumber from 'bignumber.js';
+import BigNumberJs from 'bignumber.js';
+type BigNumber = InstanceType<typeof BigNumberJs>;
+const BigNumber = BigNumberJs;
 import { MichelCodecPacker, Packer, TzReadProvider } from '@taquito/taquito';
 import {
   b58DecodeAndCheckPrefix,

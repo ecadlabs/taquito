@@ -60,7 +60,7 @@
   "dependencies": {
     "@taquito/core": "^24.2.0",
     "@taquito/utils": "^24.2.0",
-    "bignumber.js": "^9.1.2",
+    "bignumber.js": "^10.0.2",
     "fast-text-encoding": "^1.0.6",
     "whatwg-url": "^15.1.0"
   },

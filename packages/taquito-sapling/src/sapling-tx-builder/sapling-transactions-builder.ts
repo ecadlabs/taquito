@@ -2,7 +2,9 @@ import blake from 'blakejs';
 import { secretBox } from '@stablelib/nacl';
 import { DEFAULT_MEMO, KDF_KEY, OCK_KEY } from '../constants';
 import { SaplingForger } from '../sapling-forger/sapling-forger';
-import BigNumber from 'bignumber.js';
+import BigNumberJs from 'bignumber.js';
+type BigNumber = InstanceType<typeof BigNumberJs>;
+const BigNumber = BigNumberJs;
 import {
   Input,
   SaplingTransactionOutput,

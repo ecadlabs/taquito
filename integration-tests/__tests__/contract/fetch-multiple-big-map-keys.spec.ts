@@ -1,7 +1,9 @@
 import { CONFIGS } from '../../config';
 import { tokenCode } from '../../data/tokens';
 import { MichelsonMap, BigMapAbstraction } from '@taquito/taquito';
-import BigNumber from 'bignumber.js';
+import BigNumberJs from 'bignumber.js';
+type BigNumber = InstanceType<typeof BigNumberJs>;
+const BigNumber = BigNumberJs;
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
     const Tezos = lib;

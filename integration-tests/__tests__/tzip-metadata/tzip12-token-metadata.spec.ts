@@ -3,7 +3,9 @@ import { compose, MichelsonMap, ViewSimulationError } from '@taquito/taquito';
 import { tzip16, Tzip16Module } from '@taquito/tzip16';
 import { stringToBytes } from '@taquito/utils';
 import { tzip12, Tzip12Module, TokenIdNotFound, InvalidTokenMetadata } from '@taquito/tzip12';
-import BigNumber from 'bignumber.js';
+import BigNumberJs from 'bignumber.js';
+type BigNumber = InstanceType<typeof BigNumberJs>;
+const BigNumber = BigNumberJs;
 import { fa2TokenFactory } from '../../data/fa2-token-factory';
 import { fa2ForTokenMetadataView } from '../../data/fa2-for-token-metadata-view';
 

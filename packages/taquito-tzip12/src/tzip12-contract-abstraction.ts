@@ -1,13 +1,10 @@
 import { MichelsonMap, Schema } from '@taquito/michelson-encoder';
 import { ContractAbstraction, ContractProvider, Wallet } from '@taquito/taquito';
-import {
-  Tzip16ContractAbstraction,
-  MetadataContext,
-  View,
-  BigMapId,
-} from '@taquito/tzip16';
+import { Tzip16ContractAbstraction, MetadataContext, View, BigMapId } from '@taquito/tzip16';
 import { bytesToString } from '@taquito/utils';
-import BigNumber from 'bignumber.js';
+import BigNumberJs from 'bignumber.js';
+type BigNumber = InstanceType<typeof BigNumberJs>;
+const BigNumber = BigNumberJs;
 import { InvalidTokenMetadata, TokenIdNotFound, TokenMetadataNotFound } from './errors';
 
 const tokenMetadataBigMapType = {

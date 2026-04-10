@@ -3,7 +3,9 @@ import { storageContract } from '../../data/storage-contract';
 import { MichelsonMap, BigMapAbstraction, MichelCodecPacker } from '@taquito/taquito';
 import { tokenBigmapCode } from '../../data/token_bigmap';
 import { tokenCode, tokenInit } from '../../data/tokens';
-import BigNumber from 'bignumber.js';
+import BigNumberJs from 'bignumber.js';
+type BigNumber = InstanceType<typeof BigNumberJs>;
+const BigNumber = BigNumberJs;
 
 CONFIGS().forEach(({ lib, rpc, setup, knownBigMapContract }) => {
   const Tezos = lib;

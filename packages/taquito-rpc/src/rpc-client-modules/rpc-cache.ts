@@ -1,5 +1,7 @@
 import { RPCMethodName } from './../rpc-client-interface';
-import BigNumber from 'bignumber.js';
+import BigNumberJs from 'bignumber.js';
+type BigNumber = InstanceType<typeof BigNumberJs>;
+const BigNumber = BigNumberJs;
 import { defaultRPCOptions, RpcClientInterface, RPCOptions } from '../rpc-client-interface';
 import {
   BakingRightsQueryArguments,

@@ -1,4 +1,6 @@
-import BigNumber from 'bignumber.js';
+import BigNumberJs from 'bignumber.js';
+type BigNumber = InstanceType<typeof BigNumberJs>;
+const BigNumber = BigNumberJs;
 import { Operation } from '../operations/operations';
 
 export interface TzProvider {

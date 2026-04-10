@@ -70,7 +70,9 @@ import {
 import { Estimate } from '../estimate';
 import { ForgeParams } from '@taquito/local-forging';
 import { Provider } from '../provider';
-import BigNumber from 'bignumber.js';
+import BigNumberJs from 'bignumber.js';
+type BigNumber = InstanceType<typeof BigNumberJs>;
+const BigNumber = BigNumberJs;
 import { BlockIdentifier } from '../read-provider/interface';
 import {
   b58DecodeAndCheckPrefix,

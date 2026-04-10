@@ -3,7 +3,9 @@ import { MichelsonMap, OriginateParams, RpcForger, TezosToolkit } from '@taquito
 import { singleSaplingStateContractJProtocol } from './data/single_sapling_state_contract_jakarta_michelson';
 import { fa2ForTokenMetadataView } from './data/fa2-for-token-metadata-view';
 import { stringToBytes } from '@taquito/utils';
-import BigNumber from 'bignumber.js';
+import BigNumberJs from 'bignumber.js';
+type BigNumber = InstanceType<typeof BigNumberJs>;
+const BigNumber = BigNumberJs;
 import { codeViewsTopLevel } from './data/contract_views_top_level';
 import { knownBigMapContract } from './data/knownBigMapContract';
 import { knownContract } from './data/knownContract';

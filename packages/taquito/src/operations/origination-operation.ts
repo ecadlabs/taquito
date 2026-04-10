@@ -3,7 +3,9 @@ import {
   OperationContentsAndResultOrigination,
   OperationContentsOrigination,
 } from '@taquito/rpc';
-import { BigNumber } from 'bignumber.js';
+import { BigNumber as BigNumberJs } from 'bignumber.js';
+type BigNumber = InstanceType<typeof BigNumberJs>;
+const BigNumber = BigNumberJs;
 import { Context } from '../context';
 import { DefaultContractType } from '../contract/contract';
 import { RpcContractProvider } from '../contract/rpc-contract-provider';

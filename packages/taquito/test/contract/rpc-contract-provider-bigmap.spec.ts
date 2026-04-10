@@ -623,11 +623,7 @@ describe('RpcContractProvider test', () => {
       );
       mockRpcClient.getBigMapExpr.mockRejectedValue(expectedError);
       const schema = new Schema(sampleBigMapAbstractionValue);
-      const bigMap = new BigMapAbstraction(
-        new BigNumber('tz2UBGrEBKzzW6hjXjxxiQFJNg6WR2bm6GEN'),
-        schema,
-        rpcContractProvider
-      );
+      const bigMap = new BigMapAbstraction(new BigNumber(123), schema, rpcContractProvider);
       const returnValue = await bigMap.get('test');
       expect(returnValue).toEqual(undefined);
     });
@@ -641,11 +637,7 @@ describe('RpcContractProvider test', () => {
       );
       mockRpcClient.getBigMapExpr.mockRejectedValue(expectedError);
       const schema = new Schema(sampleBigMapAbstractionValue);
-      const bigMap = new BigMapAbstraction(
-        new BigNumber('tz2UBGrEBKzzW6hjXjxxiQFJNg6WR2bm6GEN'),
-        schema,
-        rpcContractProvider
-      );
+      const bigMap = new BigMapAbstraction(new BigNumber(123), schema, rpcContractProvider);
       await expect(bigMap.get('test')).rejects.toEqual(expectedError);
     });
   });
