@@ -14,7 +14,11 @@ import { BaseTokenSchema } from '../../schema/types';
  */
 export class IntValidationError extends TokenValidationError {
   name = 'IntValidationError';
-  constructor(public value: any, public token: IntToken, message: string) {
+  constructor(
+    public value: any,
+    public token: IntToken,
+    message: string
+  ) {
     super(value, token, message);
   }
 }
@@ -45,7 +49,12 @@ export class IntToken extends ComparableToken {
    * @throws {@link IntValidationError}
    */
   private validate(val: any) {
-    const bigNumber = new BigNumber(val);
+    let bigNumber: BigNumber;
+    try {
+      bigNumber = new BigNumber(val);
+    } catch {
+      throw new IntValidationError(val, this, `Value is not a number: ${JSON.stringify(val)}`);
+    }
     if (bigNumber.isNaN()) {
       throw new IntValidationError(val, this, `Value is not a number: ${JSON.stringify(val)}`);
     }

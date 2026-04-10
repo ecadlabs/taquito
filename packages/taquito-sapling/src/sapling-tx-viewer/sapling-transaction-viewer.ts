@@ -1,5 +1,7 @@
 import * as sapling from '@airgap/sapling-wasm';
-import BigNumber from 'bignumber.js';
+import BigNumberJs from 'bignumber.js';
+type BigNumber = InstanceType<typeof BigNumberJs>;
+const BigNumber = BigNumberJs;
 import { hex2buf, mergebuf } from '@taquito/utils';
 import { CommitmentsAndCiphertexts, SaplingDiffResponse } from '@taquito/rpc';
 import blake from 'blakejs';

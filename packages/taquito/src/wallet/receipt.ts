@@ -1,5 +1,7 @@
 import { OperationContentsAndResult } from '@taquito/rpc';
-import BigNumber from 'bignumber.js';
+import BigNumberJs from 'bignumber.js';
+type BigNumber = InstanceType<typeof BigNumberJs>;
+const BigNumber = BigNumberJs;
 import { COST_PER_BYTE } from '../constants';
 import { flattenOperationResult } from '../operations/errors';
 

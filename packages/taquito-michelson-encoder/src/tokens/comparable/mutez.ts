@@ -14,7 +14,11 @@ import { BaseTokenSchema } from '../../schema/types';
  */
 export class MutezValidationError extends TokenValidationError {
   name = 'MutezValidationError';
-  constructor(public value: any, public token: MutezToken, message: string) {
+  constructor(
+    public value: any,
+    public token: MutezToken,
+    message: string
+  ) {
     super(value, token, message);
   }
 }
@@ -45,7 +49,12 @@ export class MutezToken extends ComparableToken {
    * @throws {@link MutezValidationError}
    */
   private validate(val: any) {
-    const bigNumber = new BigNumber(val);
+    let bigNumber: BigNumber;
+    try {
+      bigNumber = new BigNumber(val);
+    } catch {
+      throw new MutezValidationError(val, this, `Value is not a number: ${val}`);
+    }
     if (bigNumber.isNaN()) {
       throw new MutezValidationError(val, this, `Value is not a number: ${val}`);
     }

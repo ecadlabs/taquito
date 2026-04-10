@@ -14,7 +14,11 @@ import { BaseTokenSchema } from '../../schema/types';
  */
 export class NatValidationError extends TokenValidationError {
   name = 'NatValidationError';
-  constructor(public value: any, public token: NatToken, message: string) {
+  constructor(
+    public value: any,
+    public token: NatToken,
+    message: string
+  ) {
     super(value, token, message);
   }
 }
@@ -49,7 +53,12 @@ export class NatToken extends ComparableToken {
    * @throws {@link NatValidationError}
    */
   private validate(val: any) {
-    const bigNumber = new BigNumber(val);
+    let bigNumber: BigNumber;
+    try {
+      bigNumber = new BigNumber(val);
+    } catch {
+      throw new NatValidationError(val, this, `Value is not a number: ${JSON.stringify(val)}`);
+    }
     if (bigNumber.isNaN()) {
       throw new NatValidationError(val, this, `Value is not a number: ${JSON.stringify(val)}`);
     }

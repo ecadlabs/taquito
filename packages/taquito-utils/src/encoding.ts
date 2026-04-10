@@ -13,7 +13,9 @@ import { Buffer } from 'buffer';
 import { PrefixV2, prefixV2, payloadLength } from './constants';
 import { blake2b } from '@noble/hashes/blake2.js';
 import bs58check from 'bs58check';
-import BigNumber from 'bignumber.js';
+import BigNumberJs from 'bignumber.js';
+type BigNumber = InstanceType<typeof BigNumberJs>;
+const BigNumber = BigNumberJs;
 import toBuffer from 'typedarray-to-buffer';
 import {
   InvalidAddressError,

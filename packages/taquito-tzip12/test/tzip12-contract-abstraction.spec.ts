@@ -2,7 +2,9 @@ import { vi, type Mock } from 'vitest';
 import { MichelsonMap, ViewSimulationError } from '@taquito/taquito';
 import { InvalidUriError } from '@taquito/tzip16';
 import { stringToBytes } from '@taquito/utils';
-import BigNumber from 'bignumber.js';
+import BigNumberJs from 'bignumber.js';
+type BigNumber = InstanceType<typeof BigNumberJs>;
+const BigNumber = BigNumberJs;
 import { Tzip12ContractAbstraction } from '../src/tzip12-contract-abstraction';
 import { InvalidTokenMetadata, TokenIdNotFound, TokenMetadataNotFound } from '../src/errors';
 

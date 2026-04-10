@@ -1047,9 +1047,12 @@ export class RpcClient implements RpcClientInterface {
     );
 
     let formattedGas = gas;
-    const tryBigNumber = new BigNumber(gas || '');
-    if (!tryBigNumber.isNaN()) {
-      formattedGas = tryBigNumber;
+    if (typeof gas === 'string') {
+      try {
+        formattedGas = new BigNumber(gas);
+      } catch {
+        formattedGas = gas;
+      }
     }
 
     return { gas: formattedGas, ...rest };

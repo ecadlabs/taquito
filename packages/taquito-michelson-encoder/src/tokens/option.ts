@@ -48,6 +48,9 @@ export class OptionToken extends ComparableToken {
       return { prim: 'None' };
     }
     value = typeof value === 'object' && 'Some' in value ? value['Some'] : value;
+    if (Array.isArray(value) && value.length === 1) {
+      value = value[0];
+    }
     return { prim: 'Some', args: [this.schema().EncodeObject(value, semantic)] };
   }
 

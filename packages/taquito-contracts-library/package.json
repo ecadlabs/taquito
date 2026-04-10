@@ -59,7 +59,7 @@
     "@taquito/rpc": "^24.2.0",
     "@taquito/taquito": "^24.2.0",
     "@taquito/utils": "^24.2.0",
-    "bignumber.js": "^9.1.2"
+    "bignumber.js": "^10.0.2"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.42",

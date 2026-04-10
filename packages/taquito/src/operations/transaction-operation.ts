@@ -3,7 +3,9 @@ import {
   OperationContentsAndResultTransaction,
   OperationContentsTransaction,
 } from '@taquito/rpc';
-import BigNumber from 'bignumber.js';
+import BigNumberJs from 'bignumber.js';
+type BigNumber = InstanceType<typeof BigNumberJs>;
+const BigNumber = BigNumberJs;
 import { Context } from '../context';
 import { flattenErrors, flattenOperationResult, MergedOperationResult } from './errors';
 import { Operation } from './operations';

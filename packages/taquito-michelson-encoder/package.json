@@ -61,7 +61,7 @@
     "@taquito/rpc": "^24.2.0",
     "@taquito/signer": "^24.2.0",
     "@taquito/utils": "^24.2.0",
-    "bignumber.js": "^9.1.2",
+    "bignumber.js": "^10.0.2",
     "fast-json-stable-stringify": "^2.1.0"
   },
   "devDependencies": {

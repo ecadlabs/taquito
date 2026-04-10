@@ -60,7 +60,7 @@
     "@noble/hashes": "^2.0.1",
     "@taquito/core": "^24.2.0",
     "@types/bs58check": "^2.1.2",
-    "bignumber.js": "^9.1.2",
+    "bignumber.js": "^10.0.2",
     "blakejs": "^1.2.1",
     "bs58check": "^3.0.1",
     "buffer": "^6.0.3",
