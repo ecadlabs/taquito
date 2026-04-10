@@ -32,12 +32,13 @@ export interface Tzip16Uri {
   location: string;
 }
 
+const SHA256_PREFIX = 'sha256://0x';
+const SUPPORTED_PROTOCOLS = new Set(['http', 'https', 'ipfs', 'tezos-storage']);
+
 /**
  \* Metadata Provider
  */
 export class MetadataProvider implements MetadataProviderInterface {
-  private readonly PROTOCOL_REGEX = /(?:sha256:\/\/0x(.*)\/)?(https?|ipfs|tezos-storage):(.*)/;
-
   constructor(private handlers: Map<string, Handler>) {}
 
   /**
@@ -80,12 +81,33 @@ export class MetadataProvider implements MetadataProviderInterface {
   }
 
   private extractProtocolInfo(_uri: string) {
-    const extractor = this.PROTOCOL_REGEX.exec(_uri);
-    if (!extractor) return;
+    let uri = _uri;
+    let sha256hash: string | undefined;
+
+    if (uri.startsWith(SHA256_PREFIX)) {
+      const sha256EndIndex = uri.indexOf('/', SHA256_PREFIX.length);
+      if (sha256EndIndex === -1) {
+        return;
+      }
+
+      sha256hash = uri.slice(SHA256_PREFIX.length, sha256EndIndex);
+      uri = uri.slice(sha256EndIndex + 1);
+    }
+
+    const protocolSeparatorIndex = uri.indexOf(':');
+    if (protocolSeparatorIndex === -1) {
+      return;
+    }
+
+    const protocol = uri.slice(0, protocolSeparatorIndex);
+    if (!SUPPORTED_PROTOCOLS.has(protocol)) {
+      return;
+    }
+
     return {
-      sha256hash: extractor[1],
-      protocol: extractor[2],
-      location: extractor[3],
+      sha256hash,
+      protocol,
+      location: uri.slice(protocolSeparatorIndex + 1),
     };
   }
 }

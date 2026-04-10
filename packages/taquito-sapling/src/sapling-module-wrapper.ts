@@ -1,5 +1,4 @@
 import * as sapling from '@airgap/sapling-wasm';
-import { randomBytes } from '@stablelib/random';
 import { ParametersOutputProof } from './types';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const saplingOutputParams = require('../saplingOutputParams');
@@ -8,6 +7,20 @@ const saplingSpendParams = require('@taquito/sapling-spend-params');
 
 let cachedParams: { spend: Buffer; output: Buffer } | undefined;
 
+type RandomValueSource = {
+  getRandomValues<T extends ArrayBufferView | null>(array: T): T;
+};
+
+const getRandomValueSource = (): RandomValueSource => {
+  const crypto = globalThis.crypto as RandomValueSource | undefined;
+
+  if (!crypto?.getRandomValues) {
+    throw new Error('Sapling randomness requires globalThis.crypto.getRandomValues');
+  }
+
+  return crypto;
+};
+
 export class SaplingWrapper {
   async withProvingContext<T>(action: (context: number) => Promise<T>) {
     await this.initSaplingParameters();
@@ -15,7 +28,9 @@ export class SaplingWrapper {
   }
 
   getRandomBytes(length: number) {
-    return randomBytes(length);
+    const bytes = new Uint8Array(length);
+    getRandomValueSource().getRandomValues(bytes);
+    return bytes;
   }
 
   async randR() {
