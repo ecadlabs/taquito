@@ -107,6 +107,38 @@ describe('RpcContractProvider test', () => {
         '3': new BigNumber('200'),
       });
     });
+
+    it('should retry head reads when the contract index briefly returns 404', async () => {
+      mockRpcClient.getContract
+        .mockRejectedValueOnce(
+          new HttpResponseError('fail', STATUS_CODE.NOT_FOUND, 'err', 'test', 'https://test.com')
+        )
+        .mockRejectedValueOnce(
+          new HttpResponseError('fail', STATUS_CODE.NOT_FOUND, 'err', 'test', 'https://test.com')
+        )
+        .mockResolvedValueOnce({
+          counter: 0,
+          script: {
+            code: [sample],
+            storage: sampleStorage,
+          },
+        });
+
+      const result = await rpcContractProvider.getStorage('KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D');
+
+      expect(result).toEqual({
+        '0': {},
+        '1': 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+        '2': false,
+        '3': new BigNumber('200'),
+      });
+      expect(mockRpcClient.getContract).toHaveBeenCalledTimes(3);
+      expect(mockRpcClient.getContract).toHaveBeenNthCalledWith(
+        1,
+        'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D',
+        { block: 'head' }
+      );
+    });
   });
 
   describe('getBigMapKeyByID', () => {
@@ -710,6 +742,24 @@ describe('RpcContractProvider test', () => {
 
       const keyList = storage.keyMap;
       expect(keyList.size).toEqual(1);
+    });
+
+    it('reuses the pinned script storage for exact-block contract abstractions', async () => {
+      mockRpcClient.getEntrypoints.mockResolvedValue({
+        entrypoints: {},
+      });
+      mockRpcClient.getContract.mockResolvedValue(ticketTokenTestMock);
+
+      const rpcContract = await rpcContractProvider.atExactBlock(
+        'KT19mzgsjrR2Er4rm4vuDqAcMfBF5DBMs2uq',
+        undefined,
+        'BLockHash200'
+      );
+      const storage = (await rpcContract.storage()) as any;
+
+      expect(mockRpcClient.getContract).toHaveBeenCalledTimes(1);
+      expect(rpcContract.readBlock).toEqual('BLockHash200');
+      expect(storage.keyMap.size).toEqual(3);
     });
   });
 });

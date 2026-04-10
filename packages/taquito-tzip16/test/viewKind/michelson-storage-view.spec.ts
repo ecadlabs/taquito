@@ -19,6 +19,7 @@ describe('MichelsonStorageView test', () => {
     };
 
     mockContractAbstraction.address = 'KT1test';
+    mockContractAbstraction.readBlock = 'BLockHash200';
     mockContractAbstraction.script = {
       code: [
         { prim: 'parameter', args: [{ prim: 'unit' }] },
@@ -81,6 +82,9 @@ describe('MichelsonStorageView test', () => {
     const result = await michelsonStorageView.executeView();
 
     expect(result.toString()).toEqual('0');
+    expect(mockRpcClient.getStorage).not.toHaveBeenCalled();
+    expect(mockRpcClient.getBalance).toHaveBeenCalledWith('KT1test', { block: 'BLockHash200' });
+    expect(mockRpcClient.getBlockHeader).toHaveBeenCalledWith({ block: 'BLockHash200' });
   });
 
   it('Should throw IllegalInstructionInViewCode when code of the view contains the instruction AMOUNT', async () => {

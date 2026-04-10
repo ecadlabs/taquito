@@ -54,6 +54,18 @@ describe('Tzip16 contract abstraction test', () => {
     mockContext['readProvider'] = mockReadProvider;
 
     mockContractAbstraction['schema'] = mockSchema;
+    mockContractAbstraction['readBlock'] = 'BLockHash200';
+    mockContractAbstraction['script'] = {
+      storage: {
+        prim: 'Pair',
+        args: [
+          {
+            int: '20350',
+          },
+          [],
+        ],
+      },
+    };
     mockReadProvider.getStorage.mockResolvedValue({
       prim: 'Pair',
       args: [
@@ -80,6 +92,13 @@ describe('Tzip16 contract abstraction test', () => {
       authors: ['Test <https://test/>'],
       homepage: 'https://test/',
     });
+    expect(mockReadProvider.getStorage).not.toHaveBeenCalled();
+    expect(mockRpcContractProvider.getBigMapKeyByID).toHaveBeenCalledWith(
+      '20350',
+      '',
+      expect.anything(),
+      'BLockHash200'
+    );
   });
 
   it('Should get metadata by each property', async () => {

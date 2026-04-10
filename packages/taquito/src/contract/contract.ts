@@ -5,13 +5,9 @@ import {
   RpcClientInterface,
   ScriptResponse,
 } from '@taquito/rpc';
-import {
-  validateChain,
-  validateContractAddress,
-  ValidationResult,
-} from '@taquito/utils';
+import { validateChain, validateContractAddress, ValidationResult } from '@taquito/utils';
 import { ChainIds } from '../constants';
-import { TzReadProvider } from '../read-provider/interface';
+import { BlockIdentifier, TzReadProvider } from '../read-provider/interface';
 import type { Wallet } from '../wallet/wallet';
 import { ContractMethodFactory } from './contract-methods/contract-method-factory';
 import { ContractMethodObject } from './contract-methods/contract-method-object-param';
@@ -20,6 +16,7 @@ import { InvalidParameterError } from './errors';
 import { ContractProvider, StorageProvider } from './interface';
 import { InvalidChainIdError, DeprecationError } from '@taquito/core';
 import { DEFAULT_SMART_CONTRACT_METHOD_NAME } from './constants';
+import { smartContractAbstractionSemantic } from './semantic';
 
 export { DEFAULT_SMART_CONTRACT_METHOD_NAME };
 
@@ -35,7 +32,7 @@ export class ContractView {
     private args: any[],
     private rpc: RpcClientInterface,
     private readProvider: TzReadProvider
-  ) { }
+  ) {}
 
   async read(chainId?: ChainIds) {
     const chainIdValidation = validateChain(chainId ?? '');
@@ -141,7 +138,8 @@ export class ContractAbstraction<
     private storageProvider: StorageProvider,
     public readonly entrypoints: EntrypointsResponse,
     private rpc: RpcClientInterface,
-    private readProvider: TzReadProvider
+    private readProvider: TzReadProvider,
+    public readonly readBlock: BlockIdentifier = 'head'
   ) {
     this.contractMethodFactory = new ContractMethodFactory(provider, address);
     this.schema = Schema.fromRPCResponse({ script: this.script });
@@ -208,9 +206,10 @@ export class ContractAbstraction<
       // Deal with methods with no annotations which were not discovered by the RPC endpoint
       // Methods with no annotations are discovered using parameter schema
       const generatedSchema = parameterSchema.generateSchema();
-      const schemaKeys = generatedSchema.schema && typeof generatedSchema.schema === 'object'
-        ? Object.keys(generatedSchema.schema)
-        : [];
+      const schemaKeys =
+        generatedSchema.schema && typeof generatedSchema.schema === 'object'
+          ? Object.keys(generatedSchema.schema)
+          : [];
       const anonymousMethods = schemaKeys.filter(
         (key) => Object.keys(entrypoints).indexOf(key) === -1
       );
@@ -267,7 +266,14 @@ export class ContractAbstraction<
   /**
    * Return a friendly representation of the smart contract storage
    */
-  public storage<T extends TStorage = TStorage>() {
-    return this.storageProvider.getStorage<T>(this.address, this.schema);
+  public async storage<T extends TStorage = TStorage>() {
+    if (this.readBlock !== 'head') {
+      return this.schema.Execute(
+        this.script.storage,
+        smartContractAbstractionSemantic(this.storageProvider, this.readBlock)
+      ) as T;
+    }
+
+    return this.storageProvider.getStorage<T>(this.address, this.schema, this.readBlock);
   }
 }

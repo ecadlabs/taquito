@@ -1,5 +1,6 @@
 import { defaultConfigConfirmation } from '../../src/context';
-import { OriginationOperation, ForgedBytes } from '@taquito/taquito';
+import { OriginationOperation } from '../../src/operations/origination-operation';
+import { ForgedBytes } from '../../src/operations/types';
 import { OperationContentsAndResult } from '@taquito/rpc';
 import { OriginationOperationBuilder, RevealOperationBuilder } from '../helpers';
 import { OriginationOperationError } from '../../src/operations/errors';
@@ -78,6 +79,7 @@ describe('Origination operation', () => {
     };
 
     fakeContext.rpc.getBlock.mockResolvedValue({
+      hash: 'BLJjnzaPtSsxykZ9pLTFLSfsKuiN3z7SjSPDPWwbE4Q68u5EpBw',
       operations: [[{ hash: 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj' }], [], [], []],
       header: {
         level: 200,
@@ -182,7 +184,32 @@ describe('Origination operation', () => {
       expect(fakeContractProvider.at).toHaveBeenCalledWith(
         'KT1KjGmnNQ6iXWr8VHGM8n8b8EQXHc6eRsPD',
         undefined,
-        200
+        'BLJjnzaPtSsxykZ9pLTFLSfsKuiN3z7SjSPDPWwbE4Q68u5EpBw'
+      );
+    });
+
+    it('should resolve the originated contract using the inclusion block hash for bootstrap', async () => {
+      const fakeContractProvider: any = {
+        at: vi.fn(),
+      };
+
+      fakeContractProvider.at.mockResolvedValue('contract');
+
+      const op = new OriginationOperation(
+        'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
+        {} as any,
+        fakeForgedBytes,
+        successfulResult,
+        fakeContext,
+        fakeContractProvider
+      );
+
+      await expect(op.contract()).resolves.toBe('contract');
+      expect(fakeContractProvider.at).toHaveBeenCalledTimes(1);
+      expect(fakeContractProvider.at).toHaveBeenCalledWith(
+        'KT1KjGmnNQ6iXWr8VHGM8n8b8EQXHc6eRsPD',
+        undefined,
+        'BLJjnzaPtSsxykZ9pLTFLSfsKuiN3z7SjSPDPWwbE4Q68u5EpBw'
       );
     });
 
@@ -208,10 +235,10 @@ describe('Origination operation', () => {
 
     it('should throw an error if no contract is available', async () => {
       const fakeContractProvider: any = {
-        at: vi.fn(),
+        atExactBlock: vi.fn(),
       };
 
-      fakeContractProvider.at.mockResolvedValue('contract');
+      fakeContractProvider.atExactBlock.mockResolvedValue('contract');
       const op = new OriginationOperation(
         'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
         {} as any,

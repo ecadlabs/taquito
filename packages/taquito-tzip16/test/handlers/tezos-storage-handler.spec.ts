@@ -69,6 +69,30 @@ describe('Tzip16 tezos storage handler test', () => {
   const tezosStorageHandler = new TezosStorageHandler();
 
   beforeEach(() => {
+    mockContractAbstraction.readBlock = 'BLockHash200';
+    mockContractAbstraction.address = 'KT1CurrentContractAddress111111111111111';
+    mockContractAbstraction.script = {
+      code: [
+        {
+          prim: 'storage',
+          args: [
+            {
+              prim: 'pair',
+              args: [
+                {
+                  prim: 'big_map',
+                  args: [{ prim: 'string' }, { prim: 'bytes' }],
+                  annots: ['%metadata'],
+                },
+                {},
+              ],
+            },
+          ],
+        },
+        { prim: 'code', args: [] },
+      ],
+      storage: { prim: 'Pair', args: [{ int: '32527' }, []] },
+    };
     mockReadProvider = {
       getScript: vi.fn(),
     };
@@ -121,6 +145,41 @@ describe('Tzip16 tezos storage handler test', () => {
 
     expect(metadata).toEqual(
       `{"name":"test","description":"A metadata test","version":"0.1","license":"MIT","authors":["Taquito <https://taquito.io/>"],"homepage":"https://taquito.io/"}`
+    );
+    expect(mockReadProvider.getScript).toHaveBeenCalledWith(
+      'KT1RF4nXUitQb2G8TE5H9zApatxeKLtQymtg',
+      'BLockHash200'
+    );
+    expect(mockContractProvider.getBigMapKeyByID).toHaveBeenCalledWith(
+      '32527',
+      'here',
+      expect.anything(),
+      'BLockHash200'
+    );
+  });
+
+  it('Should reuse the pinned contract script for same-contract metadata', async () => {
+    mockContractProvider.getBigMapKeyByID.mockResolvedValue('63616665');
+
+    const tzip16Uri = {
+      sha256hash: undefined,
+      protocol: 'tezos-storage',
+      location: 'here',
+    };
+
+    const metadata = await tezosStorageHandler.getMetadata(
+      mockContractAbstraction,
+      tzip16Uri,
+      mockContext as any
+    );
+
+    expect(metadata).toEqual('cafe');
+    expect(mockReadProvider.getScript).not.toHaveBeenCalled();
+    expect(mockContractProvider.getBigMapKeyByID).toHaveBeenCalledWith(
+      '32527',
+      'here',
+      expect.anything(),
+      'BLockHash200'
     );
   });
 

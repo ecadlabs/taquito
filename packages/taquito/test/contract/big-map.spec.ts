@@ -128,6 +128,28 @@ describe('BigMapAbstraction test', () => {
       expect(rpcContractProvider.getBigMapKeyByID).toHaveBeenCalledWith('1', '23', schema, 123456);
     });
 
+    it('uses the pinned read block when no block is provided', async () => {
+      rpcContractProvider.getBigMapKeyByID.mockResolvedValue('test');
+      const schema = new Schema({
+        prim: 'big_map',
+        args: [{ prim: 'int' }, { prim: 'string' }],
+      });
+      const bigMap = new BigMapAbstraction(
+        new BigNumber('1'),
+        schema,
+        rpcContractProvider as any,
+        'BLockHash200'
+      );
+
+      expect(await bigMap.get('23')).toEqual('test');
+      expect(rpcContractProvider.getBigMapKeyByID).toHaveBeenCalledWith(
+        '1',
+        '23',
+        schema,
+        'BLockHash200'
+      );
+    });
+
     it('includes type argument when calling the get method', async () => {
       rpcContractProvider.getBigMapKeyByID.mockResolvedValue('test');
       const schema = new Schema({

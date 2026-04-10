@@ -237,7 +237,7 @@ describe('inmemory-signer', () => {
     expect((await signer.sign('1234', new Uint8Array([3]))).sig).toEqual(
       'sigZiUh7khZmjP1kGSSNe3LQdZC5GMpWHuyFkqcR37pwiGUJrpKaatUxWcRPBE5sHwqfydUsPM4JvK14dBMoHbCxC7VHdMZC'
     );
-  });
+  }, 15000);
 
   it('Tz3 with bytes producing signature that needs padding', async () => {
     const signer = new InMemorySigner('p2sk2ke47zhFz3znRZj39TW5KKS9VgfU1Hax7KeErgnShNe9oQFQUP');

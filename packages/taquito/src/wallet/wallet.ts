@@ -25,10 +25,10 @@ import {
   InvalidStakingAddressError,
   InvalidFinalizeUnstakeAmountError,
 } from '@taquito/core';
-import { HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
 import { validateAddress, validateContractAddress, ValidationResult } from '@taquito/utils';
 import { EntrypointsResponse, OperationContentsFailingNoop, ScriptedContracts } from '@taquito/rpc';
 import { BlockIdentifier } from '../read-provider/interface';
+import { isNotFoundError, retryOnNotFound } from '../contract/not-found-retry';
 
 export interface PKHOption {
   forceRefetch?: boolean;
@@ -503,7 +503,7 @@ export class Wallet {
   async at<T extends ContractAbstraction<Wallet>>(
     address: string,
     contractAbstractionComposer: (abs: ContractAbstraction<Wallet>, context: Context) => T = (x) =>
-      x as any,
+      x as unknown as T,
     block: BlockIdentifier = 'head'
   ): Promise<T> {
     const addressValidation = validateContractAddress(address);
@@ -533,13 +533,10 @@ export class Wallet {
       // Newly originated contracts can be visible at the operation's inclusion level in one RPC
       // call and still lag on another endpoint of the same rolling node. Retry at head so
       // wallet op.contract() behaves like octez-client, which resolves the originated contract
-      // after confirmation instead of pinning itself to a stale context forever.
-      if (
-        block !== 'head' &&
-        error instanceof HttpResponseError &&
-        error.status === STATUS_CODE.NOT_FOUND
-      ) {
-        contractState = await loadContractState('head');
+      // after confirmation instead of pinning itself to a stale context forever. The head index
+      // can lag briefly as well, so bound a few retries there too.
+      if (block !== 'head' && isNotFoundError(error)) {
+        contractState = await retryOnNotFound(() => loadContractState('head'));
       } else {
         throw error;
       }
@@ -552,8 +549,38 @@ export class Wallet {
       this.context.contract,
       contractState.entrypoints,
       rpc,
-      readProvider
+      readProvider,
+      'head'
     );
+    return contractAbstractionComposer(abs, this.context);
+  }
+
+  async atExactBlock<T extends ContractAbstraction<Wallet>>(
+    address: string,
+    contractAbstractionComposer: (abs: ContractAbstraction<Wallet>, context: Context) => T = (x) =>
+      x as unknown as T,
+    block: BlockIdentifier
+  ): Promise<T> {
+    const addressValidation = validateContractAddress(address);
+    if (addressValidation !== ValidationResult.VALID) {
+      throw new InvalidContractAddressError(address, addressValidation);
+    }
+
+    const rpc = this.context.withExtensions().rpc;
+    const readProvider = this.context.withExtensions().readProvider;
+    const script = await readProvider.getScript(address, block);
+    const entrypoints = await rpc.getEntrypoints(address, { block: String(block) });
+    const abs = new ContractAbstraction(
+      address,
+      script,
+      this,
+      this.context.contract,
+      entrypoints,
+      rpc,
+      readProvider,
+      block
+    );
+
     return contractAbstractionComposer(abs, this.context);
   }
 }

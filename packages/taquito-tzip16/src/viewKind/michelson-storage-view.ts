@@ -147,12 +147,15 @@ export class MichelsonStorageView implements View {
     const storageArgs = storageType.args[0];
 
     // currentContext
-    const storageValue: any = await this.readProvider.getStorage(this.contract.address, 'head');
+    const storageValue: any =
+      this.contract.readBlock === 'head'
+        ? await this.readProvider.getStorage(this.contract.address, 'head')
+        : this.contract.script.storage;
     const chainId = await this.readProvider.getChainId();
     const contractBalance = (
-      await this.readProvider.getBalance(this.contract.address, 'head')
+      await this.readProvider.getBalance(this.contract.address, this.contract.readBlock)
     ).toString();
-    const blockTimestamp = await this.readProvider.getBlockTimestamp('head');
+    const blockTimestamp = await this.readProvider.getBlockTimestamp(this.contract.readBlock);
 
     const code = this.adaptViewCodeToContext(this.code, contractBalance, blockTimestamp, chainId);
 
