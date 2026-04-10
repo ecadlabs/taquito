@@ -16,6 +16,21 @@ permissions:
   contents: read
 
 jobs:
+  integration-tests-change-filter:
+    runs-on: ubuntu-latest
+    outputs:
+      run_expensive: ${{ steps.filter.outputs.run_expensive }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - id: filter
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: echo "run_expensive=$(node scripts/should-run-expensive-integration.js)" >> "$GITHUB_OUTPUT"
+
   http-utils-test:
     runs-on: ubuntu-latest
     strategy:
@@ -35,6 +50,8 @@ jobs:
       - run: npx nx test @taquito/http-utils -- --coverage
 
   integration-tests-keygen-preflight:
+    needs: integration-tests-change-filter
+    if: ${{ needs.integration-tests-change-filter.outputs.run_expensive == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -74,8 +91,11 @@ jobs:
           RUN_INTEGRATION: true
 
   integration-tests-testnet:
+    if: ${{ needs.integration-tests-change-filter.outputs.run_expensive == 'true' }}
     name: integration-tests-shadownet
-    needs: integration-tests-keygen-preflight
+    needs:
+      - integration-tests-change-filter
+      - integration-tests-keygen-preflight
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -192,8 +212,11 @@ jobs:
           retention-days: 30
 
   integration-tests-sapling:
+    if: ${{ needs.integration-tests-change-filter.outputs.run_expensive == 'true' }}
     name: integration-tests-shadownet-sapling
-    needs: integration-tests-keygen-preflight
+    needs:
+      - integration-tests-change-filter
+      - integration-tests-keygen-preflight
     runs-on: ubuntu-latest
     concurrency:
       group: shadownet-itest-sapling
@@ -302,9 +325,10 @@ jobs:
 
   integration-tests-timing-summary:
     needs:
+      - integration-tests-change-filter
       - integration-tests-testnet
       - integration-tests-sapling
-    if: always()
+    if: ${{ always() && needs.integration-tests-change-filter.outputs.run_expensive == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: Download timing artifacts
