@@ -14,8 +14,7 @@
   "module": "dist/taquito-local-forging.es6.js",
   "typings": "dist/types/taquito-local-forging.d.ts",
   "files": [
-    "dist",
-    "signature.json"
+    "dist"
   ],
   "publishConfig": {
     "access": "public"
@@ -61,8 +60,7 @@
     "@taquito/core": "^24.2.0",
     "@taquito/utils": "^24.2.0",
     "bignumber.js": "^10.0.2",
-    "fast-text-encoding": "^1.0.6",
-    "whatwg-url": "^15.1.0"
+    "fast-text-encoding": "^1.0.6"
   },
   "devDependencies": {
     "@taquito/rpc": "^24.2.0",

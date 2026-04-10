@@ -12,7 +12,6 @@
   "module": "dist/taquito-tzip16.es6.js",
   "typings": "dist/types/taquito-tzip16.d.ts",
   "files": [
-    "signature.json",
     "dist"
   ],
   "publishConfig": {
@@ -59,8 +58,7 @@
     "@taquito/taquito": "^24.2.0",
     "@taquito/utils": "^24.2.0",
     "bignumber.js": "^10.0.2",
-    "crypto-js": "^4.2.0",
-    "whatwg-url": "^15.1.0"
+    "crypto-js": "^4.2.0"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.42",

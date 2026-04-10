@@ -16,7 +16,6 @@
   "module": "dist/taquito.es6.js",
   "typings": "dist/types/taquito.d.ts",
   "files": [
-    "signature.json",
     "dist"
   ],
   "publishConfig": {

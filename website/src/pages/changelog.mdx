@@ -2020,8 +2020,8 @@ RunScriptViewResult = {
 
 We implemented a package `@taquito/sapling` providing functionality for Sapling. For documentation, please refer to the following link: https://taquito.io/docs/next/sapling
 
-We added a post-install script that fetches the z cash parameters required to initialize the sapling state. Excluding the files from the package avoids having an unsustainable bundle size.
-The files `saplingOutputParams.js` and `saplingSpendParams.js` will be created in the users `node_modules/@taquito/sapling` folder and avoid them having to download and inject those files.
+The Sapling proving parameters are shipped as vendored package assets instead of being fetched during installation.
+The output parameters live in `@taquito/sapling` and the spend parameters live in `@taquito/sapling-spend-params`, avoiding runtime downloads during installation while keeping publish artifacts manageable.
 
 As the next steps for the sapling package, we will provide interfaces for the key providers, making it easier to generate the proof and produced signature from a remote signer or a ledger. We currently offer an `InMemorySpendingKey` that must be used appropriately, given your risk profile. We will be looking for integration with wallets as well.
 
@@ -4134,7 +4134,6 @@ Documentation:
 - New boilerplate app see: https://github.com/ecadlabs/taquito-boilerplate
 - New origination example
 - More integration tests
-- Fix pkgsign badge in every readme (Need to url encode keybase profile)
 
 ## 4.1.0-beta.4: Public release of `taquito`
 

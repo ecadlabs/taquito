@@ -14,7 +14,6 @@
   "module": "dist/taquito-rpc.es6.js",
   "typings": "dist/types/taquito-rpc.d.ts",
   "files": [
-    "signature.json",
     "dist"
   ],
   "publishConfig": {
@@ -60,8 +59,7 @@
     "@taquito/core": "^24.2.0",
     "@taquito/http-utils": "^24.2.0",
     "@taquito/utils": "^24.2.0",
-    "bignumber.js": "^10.0.2",
-    "whatwg-url": "^15.1.0"
+    "bignumber.js": "^10.0.2"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.42",
