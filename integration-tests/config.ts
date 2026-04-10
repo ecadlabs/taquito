@@ -397,8 +397,7 @@ const defaultConfig = ({
     rpc: process.env[`TEZOS_RPC_${networkName}`] || defaultRpc,
     pollingIntervalMilliseconds: process.env[`POLLING_INTERVAL_MILLISECONDS`] || undefined,
     rpcCacheMilliseconds: process.env[`RPC_CACHE_MILLISECONDS`] || '1000',
-    knownBaker:
-      process.env[`TEZOS_BAKER`] || 'tz1TnEtqDV9mZyts2pfMy6Jw1BTPs4LMjL8M', // ECAD 1 : Teztnets Baker
+    knownBaker: process.env[`TEZOS_BAKER`] || 'tz1TnEtqDV9mZyts2pfMy6Jw1BTPs4LMjL8M', // ECAD 1 : Teztnets Baker
     knownContract: process.env[`TEZOS_${networkName}_CONTRACT_ADDRESS`] || knownContracts.contract,
     knownBigMapContract:
       process.env[`TEZOS_${networkName}_BIGMAPCONTRACT_ADDRESS`] || knownContracts.bigMapContract,
@@ -428,7 +427,7 @@ const shadownetEphemeral: Config = defaultConfig({
 
 const shadownetSecretKey: Config = {
   ...shadownetEphemeral,
-  ...{ signerConfig: defaultSecretKey, rpc: 'https://shadownet.tezos.ecadinfra.com' },
+  signerConfig: defaultSecretKey,
 };
 
 const tallinnnetEphemeral: Config = defaultConfig({

@@ -103,6 +103,7 @@ interface PollingConfig {
 export class Operation {
   private _pollingConfig$ = new ReplaySubject<PollingConfig>(1);
   private lastHead: BlockResponse | undefined;
+  protected _includedInBlock = new ReplaySubject<BlockResponse>(1);
 
   private currentHead$ = this._pollingConfig$.pipe(
     switchMap((config) => {
@@ -135,11 +136,13 @@ export class Operation {
   private confirmed$ = this.currentHead$.pipe(
     map((head) => {
       for (let i = 3; i >= 0; i--) {
-        head.operations[i].forEach((op) => {
+        for (const op of head.operations[i]) {
           if (op.hash === this.hash) {
             this._foundAt = head.header.level;
+            this._includedInBlock.next(head);
+            return this._foundAt;
           }
-        });
+        }
       }
 
       if (head.header.level - this._foundAt >= 0) {
@@ -154,6 +157,15 @@ export class Operation {
   protected _foundAt = Number.POSITIVE_INFINITY;
   get includedInBlock() {
     return this._foundAt;
+  }
+
+  protected async getInclusionBlock() {
+    const inclusionBlock = await this._includedInBlock.pipe(first()).toPromise();
+    if (!inclusionBlock) {
+      throw new Error('Inclusion block is undefined');
+    }
+
+    return inclusionBlock;
   }
   /**
    *

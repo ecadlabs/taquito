@@ -1605,6 +1605,64 @@ describe('RPCEstimateProvider test wallet', () => {
       expect(secondCallContents[1].counter).toEqual('8903757');
     });
 
+    it('retries simulation with RPC expected counters when counter_in_the_future is returned', async () => {
+      mockRpcClient.getManagerKey.mockResolvedValue(null);
+      mockRpcClient.getContract.mockResolvedValue({ counter: '8903746' });
+      mockRpcClient.simulateOperation
+        .mockRejectedValueOnce(
+          new HttpResponseError(
+            'Http error response: (500) counter_in_the_future',
+            500 as any,
+            'Internal Server Error',
+            JSON.stringify([
+              {
+                kind: 'temporary',
+                id: 'proto.024-PtTALLiN.contract.counter_in_the_future',
+                contract: 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
+                expected: '8903746',
+                found: '8903747',
+              },
+            ]),
+            'http://example.test/chains/main/blocks/head/helpers/scripts/simulate_operation'
+          )
+        )
+        .mockResolvedValueOnce({
+          contents: [
+            {
+              kind: 'reveal',
+              source: 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
+              fee: 10000,
+              metadata: {
+                operation_result: { status: 'applied', consumed_milligas: '1000' },
+              },
+            },
+            {
+              kind: 'delegation',
+              source: 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
+              fee: 10000,
+              metadata: {
+                operation_result: { status: 'applied', consumed_milligas: '10000000' },
+              },
+            },
+          ],
+        });
+
+      mockForger.forge.mockResolvedValue(new Array(149).fill('aa').join(''));
+
+      const estimate = await estimateProvider.registerDelegate({});
+      expect(estimate.gasLimit).toBeGreaterThan(0);
+
+      expect(mockRpcClient.simulateOperation).toHaveBeenCalledTimes(2);
+      const firstCallContents = mockRpcClient.simulateOperation.mock.calls[0][0].operation.contents;
+      const secondCallContents =
+        mockRpcClient.simulateOperation.mock.calls[1][0].operation.contents;
+
+      expect(firstCallContents[0].counter).toEqual('8903747');
+      expect(firstCallContents[1].counter).toEqual('8903748');
+      expect(secondCallContents[0].counter).toEqual('8903746');
+      expect(secondCallContents[1].counter).toEqual('8903747');
+    });
+
     it('retries simulation for a single auto-patched manager operation when reveal-reserved gas is already below the hard limit', async () => {
       const highLimits = {
         hard_gas_limit_per_operation: new BigNumber(1040000),

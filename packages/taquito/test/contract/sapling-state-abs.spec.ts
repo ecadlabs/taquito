@@ -145,6 +145,18 @@ describe('SaplingStateAbstraction test', () => {
       expect(result.nullifiers.length).toEqual(2);
     });
 
+    it('uses the pinned read block when no block is provided', async () => {
+      const saplingState = new SaplingStateAbstraction(
+        new BigNumber('1'),
+        rpcContractProvider as any,
+        'BLockHash200'
+      );
+
+      await saplingState.getSaplingDiff();
+
+      expect(rpcContractProvider.getSaplingDiffByID).toHaveBeenCalledWith('1', 'BLockHash200');
+    });
+
     it('returns the sapling state id', async () => {
       const saplingState = new SaplingStateAbstraction(
         new BigNumber('12'),

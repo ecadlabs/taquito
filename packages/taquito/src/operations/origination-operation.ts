@@ -7,6 +7,7 @@ import { BigNumber } from 'bignumber.js';
 import { Context } from '../context';
 import { DefaultContractType } from '../contract/contract';
 import { RpcContractProvider } from '../contract/rpc-contract-provider';
+import { isBlockHashIdentifier } from '../read-provider/interface';
 import { OriginationOperationError } from './errors';
 import { Operation } from './operations';
 import {
@@ -115,10 +116,16 @@ export class OriginationOperation<TContract extends DefaultContractType = Defaul
     if (!Number.isFinite(this.includedInBlock)) {
       throw new OriginationOperationError('Confirmation completed but includedInBlock was not set');
     }
+
+    const inclusionBlock = await this.getInclusionBlock();
+    if (!isBlockHashIdentifier(inclusionBlock.hash)) {
+      throw new OriginationOperationError('Confirmation completed but includedInBlock was not set');
+    }
+
     return this.contractProvider.at<TContract>(
       this.contractAddress,
       undefined,
-      this.includedInBlock
+      inclusionBlock.hash
     );
   }
 }

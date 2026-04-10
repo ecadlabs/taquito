@@ -42,6 +42,7 @@ import { SmartRollupAddMessagesOperation } from '../operations/smart-rollup-add-
 import { SmartRollupOriginateOperation } from '../operations/smart-rollup-originate-operation';
 import { SmartRollupExecuteOutboxMessageOperation } from '../operations/smart-rollup-execute-outbox-message-operation';
 import { FailingNoopOperation } from '../operations/failing-noop-operation';
+import type { BlockIdentifier } from '../read-provider/interface';
 
 export type ContractSchema = Schema | unknown;
 
@@ -55,7 +56,7 @@ export interface StorageProvider {
    *
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-contracts-contract-id-script
    */
-  getStorage<T>(contract: string, schema?: ContractSchema): Promise<T>;
+  getStorage<T>(contract: string, schema?: ContractSchema, block?: BlockIdentifier): Promise<T>;
 
   /**
    *
@@ -72,7 +73,7 @@ export interface StorageProvider {
     id: string,
     keyToEncode: BigMapKeyType,
     schema: Schema,
-    block?: number
+    block?: BlockIdentifier
   ): Promise<T>;
 
   /**
@@ -91,7 +92,7 @@ export interface StorageProvider {
     id: string,
     keysToEncode: Array<BigMapKeyType>,
     schema: Schema,
-    block?: number,
+    block?: BlockIdentifier,
     batchSize?: number
   ): Promise<MichelsonMap<MichelsonMapKey, T | undefined>>;
 
@@ -103,7 +104,7 @@ export interface StorageProvider {
    * @param block optional block level to fetch the value from
    *
    */
-  getSaplingDiffByID(id: string, block?: number): Promise<SaplingDiffResponse>;
+  getSaplingDiffByID(id: string, block?: BlockIdentifier): Promise<SaplingDiffResponse>;
 }
 
 export interface ContractProvider extends StorageProvider {

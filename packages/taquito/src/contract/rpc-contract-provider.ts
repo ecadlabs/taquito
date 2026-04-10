@@ -90,6 +90,7 @@ import { Provider } from '../provider';
 import { PrepareProvider } from '../prepare';
 import { FailingNoopOperation } from '../operations/failing-noop-operation';
 import { BlockIdentifier } from '../read-provider/interface';
+import { isNotFoundError, retryOnNotFound } from './not-found-retry';
 
 export class RpcContractProvider extends Provider implements ContractProvider, StorageProvider {
   constructor(
@@ -110,12 +111,19 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
    * @throws {@link InvalidContractAddressError}
    * @see https://tezos.gitlab.io/api/rpc.html#get-block-id-context-contracts-contract-id-script
    */
-  async getStorage<T>(contract: string, schema?: ContractSchema): Promise<T> {
+  async getStorage<T>(
+    contract: string,
+    schema?: ContractSchema,
+    block: BlockIdentifier = 'head'
+  ): Promise<T> {
     const contractValidation = validateContractAddress(contract);
     if (contractValidation !== ValidationResult.VALID) {
       throw new InvalidContractAddressError(contract, contractValidation);
     }
-    const script = await this.context.readProvider.getScript(contract, 'head');
+    const script =
+      block === 'head'
+        ? await retryOnNotFound(() => this.context.readProvider.getScript(contract, 'head'))
+        : await this.context.readProvider.getScript(contract, block);
     if (!schema) {
       schema = script;
     }
@@ -127,7 +135,10 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
       contractSchema = Schema.fromRPCResponse({ script: schema as ScriptResponse });
     }
 
-    return contractSchema.Execute(script.storage, smartContractAbstractionSemantic(this)) as T; // Cast into T because only the caller can know the true type of the storage
+    return contractSchema.Execute(
+      script.storage,
+      smartContractAbstractionSemantic(this, block)
+    ) as T; // Cast into T because only the caller can know the true type of the storage
   }
 
   /**
@@ -145,24 +156,23 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
     id: string,
     keyToEncode: BigMapKeyType,
     schema: Schema,
-    block?: number
+    block?: BlockIdentifier
   ): Promise<T> {
     const { key, type } = schema.EncodeBigMapKey(keyToEncode);
     const { packed } = await this.context.packer.packData({ data: key, type });
 
     const encodedExpr = encodeExpr(packed);
 
-    const bigMapValue = block
-      ? await this.context.readProvider.getBigMapValue(
-          { id: id.toString(), expr: encodedExpr },
-          block
-        )
-      : await this.context.readProvider.getBigMapValue(
-          { id: id.toString(), expr: encodedExpr },
-          'head'
-        );
+    const requestedBlock = block ?? 'head';
+    const bigMapValue = await this.context.readProvider.getBigMapValue(
+      { id: id.toString(), expr: encodedExpr },
+      requestedBlock
+    );
 
-    return schema.ExecuteOnBigMapValue(bigMapValue, smartContractAbstractionSemantic(this)) as T;
+    return schema.ExecuteOnBigMapValue(
+      bigMapValue,
+      smartContractAbstractionSemantic(this, requestedBlock)
+    ) as T;
   }
 
   /**
@@ -184,7 +194,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
     id: string,
     keys: Array<BigMapKeyType>,
     schema: Schema,
-    block?: number,
+    block?: BlockIdentifier,
     batchSize = 5
   ): Promise<MichelsonMap<MichelsonMapKey, T | undefined>> {
     const level = await this.getBlockForRequest(keys, block);
@@ -210,7 +220,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
     return bigMapValues;
   }
 
-  private async getBlockForRequest(keys: Array<BigMapKeyType>, block?: number) {
+  private async getBlockForRequest(keys: Array<BigMapKeyType>, block?: BlockIdentifier) {
     return keys.length === 1 || typeof block !== 'undefined'
       ? block
       : await this.context.readProvider.getBlockLevel('head');
@@ -220,7 +230,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
     keyToEncode: BigMapKeyType,
     id: string,
     schema: Schema,
-    level?: number
+    level?: BlockIdentifier
   ) {
     try {
       return await this.getBigMapKeyByID<T>(id, keyToEncode, schema, level);
@@ -241,11 +251,8 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
    * @param block optional block level to fetch the value from
    *
    */
-  async getSaplingDiffByID(id: string, block?: number) {
-    const saplingState = block
-      ? await this.context.readProvider.getSaplingDiffById({ id: id.toString() }, block)
-      : await this.context.readProvider.getSaplingDiffById({ id: id.toString() }, 'head');
-    return saplingState;
+  async getSaplingDiffByID(id: string, block: BlockIdentifier = 'head') {
+    return this.context.readProvider.getSaplingDiffById({ id: id.toString() }, block);
   }
 
   /**
@@ -918,7 +925,7 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
    */
   async at<T extends DefaultContractType = DefaultContractType>(
     address: string,
-    contractAbstractionComposer: ContractAbstractionComposer<T> = (x) => x as any,
+    contractAbstractionComposer: ContractAbstractionComposer<T> = (x) => x as unknown as T,
     block: BlockIdentifier = 'head'
   ): Promise<T> {
     const addressValidation = validateContractAddress(address);
@@ -947,13 +954,10 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
     } catch (error) {
       // Shadownet's rolling nodes occasionally 404 a just-originated contract at the exact
       // inclusion level even after confirmation. Retry at head so the contract abstraction still
-      // resolves once the node's contract index catches up.
-      if (
-        block !== 'head' &&
-        error instanceof HttpResponseError &&
-        error.status === STATUS_CODE.NOT_FOUND
-      ) {
-        contractState = await loadContractState('head');
+      // resolves once the node's contract index catches up. The head index can lag briefly too,
+      // so give it a few bounded retries before surfacing the 404.
+      if (block !== 'head' && isNotFoundError(error)) {
+        contractState = await retryOnNotFound(() => loadContractState('head'));
       } else {
         throw error;
       }
@@ -966,8 +970,37 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
       this,
       contractState.entrypoints,
       rpc,
-      readProvider
+      readProvider,
+      'head'
     );
+    return contractAbstractionComposer(abs, this.context);
+  }
+
+  async atExactBlock<T extends DefaultContractType = DefaultContractType>(
+    address: string,
+    contractAbstractionComposer: ContractAbstractionComposer<T> = (x) => x as unknown as T,
+    block: BlockIdentifier
+  ): Promise<T> {
+    const addressValidation = validateContractAddress(address);
+    if (addressValidation !== ValidationResult.VALID) {
+      throw new InvalidContractAddressError(address, addressValidation);
+    }
+
+    const rpc = this.context.withExtensions().rpc;
+    const readProvider = this.context.withExtensions().readProvider;
+    const script = await readProvider.getScript(address, block);
+    const entrypoints = await rpc.getEntrypoints(address, { block: String(block) });
+    const abs = new ContractAbstraction(
+      address,
+      script,
+      this,
+      this,
+      entrypoints,
+      rpc,
+      readProvider,
+      block
+    );
+
     return contractAbstractionComposer(abs, this.context);
   }
 
