@@ -1,6 +1,6 @@
 # Taquito Beacon Wallet package
 
-_Documentation can be found [here](https://taquito.io/docs/wallet_API)_  
+_Documentation can be found [here](https://taquito.io/docs/wallet_API)_
 _TypeDoc style documentation is available [here](https://taquito.io/typedoc/modules/_taquito_beacon_wallet.html)_
 
 ## General Information
@@ -26,7 +26,7 @@ import { BeaconWallet } from '@taquito/beacon-wallet';
 const options = {
   name: 'MyAwesomeDapp',
   iconUrl: 'https://taquito.io/img/favicon.svg',
-  network: { type: 'ghostnet' },
+  network: { type: 'shadownet' },
   enableMetrics: true,
 };
 const wallet = new BeaconWallet(options);

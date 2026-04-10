@@ -105,7 +105,7 @@ async function init() {
     const { LedgerSigner, DerivationType, HDPathTemplate } = await import('@taquito/ledger-signer');
     const { WalletConnect, NetworkType, PermissionScopeMethods } = await import("@taquito/wallet-connect");
 
-    const Tezos = new TezosToolkit('https://ghostnet.tezos.ecadinfra.com');
+    const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
     window.Tezos = Tezos;
     window.TezosToolkit = TezosToolkit;
     window.InMemorySigner = InMemorySigner;
@@ -153,7 +153,7 @@ async function init() {
     window.contractStorageWithoutAnnot = contractStorageWithoutAnnot;
     window.managerCode = managerCode;
 
-    console.log('Taquito initialized with Ghostnet RPC');
+    console.log('Taquito initialized with Shadownet RPC');
 
     // Resolve the global promise if we created the resolvers
     if (resolveInit) resolveInit();
@@ -179,7 +179,7 @@ window.configureSigner = async function () {
 
   try {
     // Generate a key for demo purposes
-    const response = await fetch("https://keygen.ecadinfra.com/v2/ghostnet", {
+    const response = await fetch("https://keygen.ecadinfra.com/v2/shadownet", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -235,7 +235,7 @@ window.connectWallet = async function () {
     if (!window.wallet) {
       const options = {
         name: 'Taquito Docs',
-        network: { type: 'ghostnet' as const },
+        network: { type: 'shadownet' as const },
         enableMetrics: true,
       };
       window.wallet = new window.BeaconWallet(options);

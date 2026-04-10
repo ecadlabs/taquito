@@ -19,7 +19,7 @@ export function createFallbackRpcClient(rpcUrls: string[], chain: string = 'main
 	const handler: ProxyHandler<RpcClient> = {
 		get(target, prop, receiver) {
 		const value = Reflect.get(target, prop, receiver);
-		
+
 		// Only wrap methods (functions), not properties
 		if (typeof value !== 'function') {
 			return value;
@@ -60,7 +60,7 @@ You can then import the `createFallbackRpcClient` function where you initialize 
   const fallbackClient = createFallbackRpcClient([
     'https://example.com',
     'https://example.org',
-	'https://ghostnet.tezos.ecadinfra.com'
+	'https://shadownet.tezos.ecadinfra.com'
   ])
 
   const Tezos = new TezosToolkit(fallbackClient);

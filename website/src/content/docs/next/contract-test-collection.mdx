@@ -143,7 +143,7 @@ storage (pair (nat %stored_counter) (pair (nat %threshold) (list %keys key)));
 
 # Lambda Contracts
 
-Taquito internally contains a list of lambda contracts. Thus, there is no need to deploy a lambda contract if you are using Mainnet, Ghostnet or another testnet. Taquito will detect the current network and use the appropriate lambda contract.
+Taquito internally contains a list of lambda contracts. Thus, there is no need to deploy a lambda contract if you are using Mainnet, Shadownet or another testnet. Taquito will detect the current network and use the appropriate lambda contract.
 
 Lambda views are introduced in [Tzip4](https://gitlab.com/tezos/tzip/-/blob/master/proposals/tzip-4/tzip-4.md#view-entrypoints).
 
@@ -479,7 +479,7 @@ storage (pair (big_map %thebigmap (pair nat address) int)
 
 ```js
 Tezos.contract
-  .at('KT1RBE127YSA96FwCYrA8sazvr8pt1TYaThS')
+  .at('KT1XUDnehGqGQddfuWA4ffdDMGQEDTk7CzuH')
   .then((myContract) => {
     return myContract
       .storage()
@@ -834,7 +834,7 @@ Tzip-7 introduced the approvable ledger: [Tzip-7](https://gitlab.com/tezos/tzip/
 This contract has an FA1.2 interface. To determine if a contract has an FA1.2 interface we can use
 
 ```
-tezos-client check contract KT1CfFBaLoUrgv93k8668KCCcu2hNDNYPz4L implements fa1.2
+tezos-client check contract KT1HFpdVddiw5DhCQUXqVJp7WCsy28soWCcH implements fa1.2
 ```
 
 ### Entrypoints:
@@ -1367,7 +1367,7 @@ Sending a transaction to a smart contract to update its storage will be a differ
 Fortunately, Taquito will make this operation go like a breeze! First, you need the contract abstraction created with the address of the smart contract you are targeting:
 
 ```js
-const contract = await Tezos.wallet.at('KT1B4WtE3MSEjGKnucRL5xhqnXCEX1QkLGPx');
+const contract = await Tezos.wallet.at('KT1J3gLYoC7KNWS5h9NXuDjHbR1bFTDdyCNc');
 ```
 
 This line creates a contract abstraction with multiple methods named after the contract entrypoints. For example, if you have a `transfer` entrypoint in your contract, you will also have a `.transfer()` method in the `contract` object. Each method accepts parameters required by the contract entrypoint.

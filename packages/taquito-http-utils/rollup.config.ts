@@ -31,6 +31,6 @@ export default {
     // Allow json resolution
     json(),
     // Compile TypeScript files
-    typescript({ tsconfig: './tsconfig.prod.json', useTsconfigDeclarationDir: true }),
+    typescript({ tsconfig: './tsconfig.prod.json', useTsconfigDeclarationDir: true, include: ['**/*.ts', '**/*.tsx'] }),
   ],
 };

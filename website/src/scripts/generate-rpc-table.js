@@ -3,7 +3,7 @@
 /**
  * Script to convert rpc_nodes.json into MDX table format for community nodes
  * Usage: npm run generate:rpc
- * 
+ *
  * Copy output, replace the table tabs in rpc_nodes.mdx
  */
 
@@ -60,8 +60,8 @@ function generateTable(network, endpoints) {
 // Generate community nodes tables content
 function generateCommunityTables() {
   const networks = Object.keys(networkEndpoints).sort((a, b) => {
-    // Sort mainnet first, then ghostnet, then alphabetically
-    const order = ['mainnet', 'ghostnet'];
+    // Sort mainnet first, then shadownet, then alphabetically
+    const order = ['mainnet', 'shadownet'];
     const aIdx = order.indexOf(a);
     const bIdx = order.indexOf(b);
     if (aIdx !== -1 && bIdx !== -1) return aIdx - bIdx;

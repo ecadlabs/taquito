@@ -147,7 +147,7 @@ describe('ContractView test', () => {
     const contractView = await rpcContractProvider.at('KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D');
     const result = await contractView.views
       .getBalance('tz1c1X8vD4pKV9TgV1cyosR7qdnkc8FTEyM1')
-      .read(ChainIds.GHOSTNET);
+      .read(ChainIds.SHADOWNET);
 
     expect(result.toString()).toEqual('100');
   });

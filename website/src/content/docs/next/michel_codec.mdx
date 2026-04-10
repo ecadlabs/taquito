@@ -42,7 +42,7 @@ const p = new Parser(parserOptions);
 const p = new Parser();
 
 try {
-  const contract = await Tezos.contract.at("KT1BJadpDyLCACMH7Tt9xtpx4dQZVKw9cDF7");
+  const contract = await Tezos.contract.at("KT1RNPmCdU9EKRVquuXnVWAbCSQJPbJh2HXc");
   const code = p.parseJSON(contract.script.code);
   console.log("Pretty print Michelson smart contract:");
   console.log(emitMicheline(code, {indent:" ", newline: "\n",}));
@@ -58,7 +58,7 @@ try {
 ### `parseMichelineExpression` - Parse Micheline and convert it to JSON Michelson
 Takes a Micheline expression in the form of script or data and converts it to JSON Michelson
 
-```js live 
+```js live
 // import { Parser } from '@taquito/michel-codec'
 
 const p = new Parser();
@@ -83,14 +83,14 @@ Type definition allows types like `timestamp`, `address` and other base58 repres
 ```ts
 // import { packData, packDataBytes } from '@taquito/michel-codec'
 
-const data: MichelsonData = { string: 'KT1RvkwF4F7pz1gCoxkyZrG1RkrxQy3gmFTv%foo' };
-const typ: MichelsonType = { prim: 'address' };
+  const data: MichelsonData = { string: 'KT1J4E79F1qL6kGBSQ3yXBdXmuq5j4FNThK2%main' };
+  const typ: MichelsonType = { prim: 'address' };
 
-const packed = packData(data, typ);
-// 050a0000001901be41ee922ddd2cf33201e49d32da0afec571dce300666f6f
+  const packed = packData(data, typ);
+  //[5, 10, 0, 0, 0, 26, 1, 103, 234, 132, 177, 8, 46, 251, 150, 25, 214, 206, 4, 224, 51, 99, 57, 6, 99, 110, 29, 0, 109, 97, 105, 110]
 
-const packedBytes = packDataBytes(data, typ);
-// { bytes: "050a0000001901be41ee922ddd2cf33201e49d32da0afec571dce300666f6f" }
+  const packedBytes = packDataBytes(data, typ);
+  //{ bytes: '050a0000001a0167ea84b1082efb9619d6ce04e033633906636e1d006d61696e' }
 ```
 
 ### `unpackData` & `unpackDataBytes` - Unpack Michelson data

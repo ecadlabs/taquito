@@ -18,7 +18,7 @@ Methods in the RPC package map one-to-one to the corresponding Tezos RPC API end
 
 import { RpcClient } from '@taquito/rpc';
 
-const client = new RpcClient(' https://ghostnet.tezos.ecadinfra.com/', 'NetXLH1uAxK7CCh');
+const client = new RpcClient(' https://shadownet.tezos.ecadinfra.com/', 'NetXLH1uAxK7CCh');
 ```
 
 The `RpcClient` constructor takes the URL of the node you want to use and the chain ID.
@@ -59,7 +59,7 @@ This method returns some blockchain constants pertaining for example to the gas 
 
 ```js
 // gets contract
-const contractExample = 'KT1JbALUVvUEJyC4Cqwrnryc7RPK7mKBkqMa';
+const contractExample = 'KT1J4E79F1qL6kGBSQ3yXBdXmuq5j4FNThK2';
 const contract = await client.getContract(contractExample);
 console.log('-- Contract:', contract);
 ```

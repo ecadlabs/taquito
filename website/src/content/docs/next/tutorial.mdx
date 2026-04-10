@@ -3,6 +3,10 @@ title: Building Your First dApp
 author: [Alireza Haghshenas, Maxwell Ward]
 ---
 
+>[!NOTE]
+> This page is now deprecated due to no functioning objkt shadownet smart contract for now.
+> We still reference now deprecated ghostnet and it's smart contracts until there is objkt shadownet support
+
 ## Introduction
 
 In this tutorial, we will walk through the process of creating a simple dApp (short for "Decentralized Application") using Taquito. We will:
@@ -98,7 +102,7 @@ Open the file `index.ts` and replace the code with the following:
 ```ts
 import { TezosToolkit } from "@taquito/taquito";
 
-const Tezos = new TezosToolkit("https://ghostnet.tezos.ecadinfra.com");
+const Tezos = new TezosToolkit("https://shadownet.tezos.ecadinfra.com");
 
 Tezos.tz.getBalance("tz1YvE7Sfo92ueEPEdZceNWd5MWNeMNSt16L").then(balance => {
     console.log(balance.toNumber());
@@ -198,8 +202,8 @@ For the purpose of this section, we are using a pre-defined address that is bein
     docker run --pull always -it --entrypoint sh docker.io/tezos/tezos:latest
 
     # You should now be inside the docker container
-    octez-client -E https://ghostnet.tezos.ecadinfra.com gen keys mysamplekey -s secp256k1
-    octez-client -E https://ghostnet.tezos.ecadinfra.com show address mysamplekey -S
+    octez-client -E https://shadownet.tezos.ecadinfra.com gen keys mysamplekey -s secp256k1
+    octez-client -E https://shadownet.tezos.ecadinfra.com show address mysamplekey -S
   ```
 
   The new address you just created will have a balance of zero. For the testnet, You can go to [ghostnet faucet](https://faucet.ghostnet.teztnets.com/) and send some ꜩ to it for free. On mainnet, you need to buy actual Tez on an exchange.
@@ -223,7 +227,7 @@ import { InMemorySigner } from "@taquito/signer";
 import { TezosToolkit } from "@taquito/taquito";
 
 const main = async () => {
-    const Tezos = new TezosToolkit("https://ghostnet.tezos.ecadinfra.com");
+    const Tezos = new TezosToolkit("https://shadownet.tezos.ecadinfra.com");
 
     // DANGER: FOR DEMONSTRATION ONLY! DO NOT DO THIS IN PRODUCTION, KEEP YOUR SECRETS SAFE!
     const signer = await InMemorySigner.fromSecretKey('spsk29SxqYRjnreqGzsYiAUEqxyhDwD8j2J57pJjaGgGtReZVD2UiD');
@@ -280,7 +284,7 @@ Open the file `index.ts` and change the `main` function to the following:
 
 ```ts
 const main = async () => {
-    const Tezos = new TezosToolkit("https://ghostnet.tezos.ecadinfra.com");
+    const Tezos = new TezosToolkit("https://shadownet.tezos.ecadinfra.com");
 
     const signer = await InMemorySigner.fromSecretKey('spsk29SxqYRjnreqGzsYiAUEqxyhDwD8j2J57pJjaGgGtReZVD2UiD');
     Tezos.setProvider({ signer });
@@ -391,7 +395,7 @@ import { BeaconWallet } from "@taquito/beacon-wallet";
 
 const App = () => {
   const [Tezos] = useState<TezosToolkit>(
-    new TezosToolkit("https://ghostnet.tezos.ecadinfra.com")
+    new TezosToolkit("https://shadownet.tezos.ecadinfra.com")
   );
   const [wallet, setWallet] = useState<BeaconWallet | undefined>(undefined);
   const [userAddress, setUserAddress] = useState<string | undefined>(undefined);
@@ -454,8 +458,8 @@ const ConnectButton = ({
 			const wallet = new BeaconWallet({
 				name: "My dApp",
 				network: {
-					type: NetworkType.GHOSTNET,
-					rpcUrl: "https://ghostnet.tezos.ecadinfra.com",
+					type: NetworkType.SHADOWNET,
+					rpcUrl: "https://shadownet.tezos.ecadinfra.com",
 				},
 				enableMetrics: true,
 			});

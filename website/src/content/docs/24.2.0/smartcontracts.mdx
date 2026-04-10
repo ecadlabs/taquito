@@ -75,7 +75,7 @@ values={[
 
 ```js live
 try {
-  const contract = await Tezos.contract.at('KT1KAUbe1gsdw5BeVQfgjh9xZFrHrKVs8ApD');
+  const contract = await Tezos.contract.at('KT1VNTTHJ56xDoBoS1n3HDcr4s2zt6yDshbG');
   const methods = contract.parameterSchema.ExtractSignatures();
   console.log(JSON.stringify(methods, null, 2));
 } catch (error) {
@@ -88,7 +88,7 @@ try {
 
 ```js live wallet
 try {
-  const contract = await Tezos.wallet.at('KT1KAUbe1gsdw5BeVQfgjh9xZFrHrKVs8ApD');
+  const contract = await Tezos.wallet.at('KT1VNTTHJ56xDoBoS1n3HDcr4s2zt6yDshbG');
   const methods = contract.parameterSchema.ExtractSignatures();
   console.log(JSON.stringify(methods, null, 2));
 } catch (error) {
@@ -119,7 +119,7 @@ values={[
 
 ```js live
 try {
-  const contract = await Tezos.contract.at('KT1KAUbe1gsdw5BeVQfgjh9xZFrHrKVs8ApD');
+  const contract = await Tezos.contract.at('KT1VNTTHJ56xDoBoS1n3HDcr4s2zt6yDshbG');
   const incrementParams = contract.methodsObject.increment(2).toTransferParams();
   console.log(JSON.stringify(incrementParams, null, 2));
 } catch (error) {
@@ -131,7 +131,7 @@ try {
 
 ```js live wallet
 try {
-  const contract = await Tezos.wallet.at('KT1KAUbe1gsdw5BeVQfgjh9xZFrHrKVs8ApD');
+  const contract = await Tezos.wallet.at('KT1VNTTHJ56xDoBoS1n3HDcr4s2zt6yDshbG');
   const incrementParams = contract.methodsObject.increment(2).toTransferParams();
   console.log(JSON.stringify(incrementParams, null, 2));
 } catch (error) {
@@ -159,7 +159,7 @@ values={[
 
 ```js live
 try {
-  const contract = await Tezos.contract.at('KT1KAUbe1gsdw5BeVQfgjh9xZFrHrKVs8ApD');
+  const contract = await Tezos.contract.at('KT1VNTTHJ56xDoBoS1n3HDcr4s2zt6yDshbG');
 
   console.log(`Incrementing storage value by 7...`);
   const operation = await contract.methodsObject.increment(7).send();
@@ -167,7 +167,7 @@ try {
   console.log(`Waiting for ${operation.hash} to be confirmed...`);
   const hash = await operation.confirmation(3);
 
-  console.log(`Operation injected: https://ghostnet.tzkt.io/${hash}/operations`);
+  console.log(`Operation injected: https://shadownet.tzkt.io/${hash}/operations`);
 } catch (error) {
   console.log(`Error: ${JSON.stringify(error, null, 2)}`);
 }
@@ -177,7 +177,7 @@ try {
 
 ```js live wallet
 try {
-  const contract = await Tezos.wallet.at('KT1KAUbe1gsdw5BeVQfgjh9xZFrHrKVs8ApD');
+  const contract = await Tezos.wallet.at('KT1VNTTHJ56xDoBoS1n3HDcr4s2zt6yDshbG');
 
   console.log(`Incrementing storage value by 7...`);
   const operation = await contract.methodsObject.increment(7).send();
@@ -185,7 +185,7 @@ try {
   console.log(`Waiting for ${operation.opHash} to be confirmed...`);
   const confirmation = await operation.confirmation(3);
 
-  console.log(`Operation injected: https://ghostnet.tzkt.io/${confirmation.block.hash}/operations`);
+  console.log(`Operation injected: https://shadownet.tzkt.io/${confirmation.block.hash}/operations`);
 } catch (error) {
   console.log(`Error: ${JSON.stringify(error, null, 2)}`);
 }
@@ -216,7 +216,7 @@ In the following example, a contract's `set_child_record` method will be called 
 
 ```js live
 try {
-  const contract = await Tezos.contract.at('KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN');
+  const contract = await Tezos.contract.at('KT1XbU7axZzQ3pL8mJwEi5HAkW99YhXjaNQq');
   console.log(`List all contract methods: ${Object.keys(contract.methodsObject)}\n`);
   console.log(
     `Inspect the signature of the 'set_child_record' contract method: ${JSON.stringify(
@@ -235,7 +235,7 @@ The preceding example returns an object giving indication on how to structure th
 ```js live
 try {
   await importKey(Tezos, secretKey);
-  const contract = await Tezos.contract.at('KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN');
+  const contract = await Tezos.contract.at('KT1XbU7axZzQ3pL8mJwEi5HAkW99YhXjaNQq');
 
   const operation = await contract.methodsObject
     .set_child_record({
@@ -250,7 +250,7 @@ try {
   console.log(`Awaiting for ${operation.hash} to be confirmed...`);
   const hash = await operation.confirmation();
 
-  console.log(`Operation injected: https://ghostnet.tzkt.io/${hash}/operations`);
+  console.log(`Operation injected: https://shadownet.tzkt.io/${hash}/operations`);
 } catch (error) {
   console.log(`Error: ${JSON.stringify(error, null, 2)}`);
 }
@@ -262,7 +262,7 @@ In the following example, a contract's `set_child_record` method will be called 
 
 ```js live
 try {
-  const contract = await Tezos.contract.at('KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN');
+  const contract = await Tezos.contract.at('KT1XbU7axZzQ3pL8mJwEi5HAkW99YhXjaNQq');
   console.log(`List all contract methods: ${Object.keys(contract.methodsObject)}\n`);
   console.log(
     `Inspect the signature of the 'set_child_record' contract method: ${JSON.stringify(
@@ -281,7 +281,7 @@ The preceding example returns an array which contains the different possible sig
 ```js live
 try {
   await importKey(Tezos, secretKey);
-  const contract = await Tezos.contract.at('KT1B2exfRrGMjfZqWK1bDemr3nBFhHsUWQuN');
+  const contract = await Tezos.contract.at('KT1XbU7axZzQ3pL8mJwEi5HAkW99YhXjaNQq');
 
   const operation = await contract.methods
     .set_child_record(
@@ -297,7 +297,7 @@ try {
   console.log(`Awaiting for ${operation.hash} to be confirmed...`);
   const hash = await operation.confirmation();
 
-  console.log(`Operation injected: https://ghostnet.tzkt.io/${hash}/operations`);
+  console.log(`Operation injected: https://shadownet.tzkt.io/${hash}/operations`);
 } catch (error) {
   console.log(`Error: ${JSON.stringify(error, null, 2)}`);
 }

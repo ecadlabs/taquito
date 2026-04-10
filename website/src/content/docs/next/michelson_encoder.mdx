@@ -52,7 +52,7 @@ const storageSchema = new Schema(storageType);
 ```
 or
 ```js
-const script = await Tezos.rpc.getScript('KT1MTFjUeqBeZoFeW1NLSrzJdcS5apFiUXoB');
+const script = await Tezos.rpc.getScript('KT1J4E79F1qL6kGBSQ3yXBdXmuq5j4FNThK2');
 const storageSchema = Schema.fromRPCResponse({ script });
 ```
 ### The GenerateSchema method
@@ -376,7 +376,7 @@ Here is an example for the `ticket` type:
 
 ```js 
 const schema = new Schema({"prim":"ticket","args":[{"prim":"string"}]});
-const dataMichelson = {"prim":"Pair","args":[{"string":"KT1PVuv7af4VkPsZVZ8oZz9GSSdGnGBCbFWw"},{"string":"test"},{"int":"2"}]}
+const dataMichelson = {"prim":"Pair","args":[{"string":"KT1LAbD14CzzK88e67hpyiCfrB3XgfPVku68"},{"string":"test"},{"int":"2"}]}
 
 const data = schema.Execute(dataMichelson)
 console.log(`Default representation of the ticket value returned by the Michelson Encoder: ${JSON.stringify(data, null, 2)}`);

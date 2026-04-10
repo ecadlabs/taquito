@@ -17,7 +17,7 @@ try {
 If the type of value returned by the contract is a `string`, the value will be available in the `message` property of the `TezosOperationError` instance, for example:
 ```ts
 try {
-    const contractAddress = "KT1XemmsT8w5obkXt6eoJ8UYn4Vhsjze9zsb";
+    const contractAddress = "KT1Twi2y5n7YuViPqkAtFyPM8hrdpkrsjtC8";
     const contract = await Tezos.contract.at(contractAddress);
     const op = await contract.methodsObject.fail_with_string("a string error").send();
     await op.confirmation();
@@ -35,7 +35,7 @@ Among other information, the `TezosOperationError` instance has a property calle
 For example:
 ```ts
 try {
-    const contractAddress = "KT1XemmsT8w5obkXt6eoJ8UYn4Vhsjze9zsb";
+    const contractAddress = "KT1Twi2y5n7YuViPqkAtFyPM8hrdpkrsjtC8";
     const contract = await Tezos.contract.at(contractAddress);
     const op = await contract.methodsObject.fail_with_int(2).send();
     await op.confirmation();

@@ -108,7 +108,7 @@ try {
   console.log(`Waiting for ${operation.hash} to be confirmed...`);
   const hash = await operation.confirmation(1);
 
-  console.log(`Operation injected: https://ghostnet.tzkt.io/${hash}/operations`);
+  console.log(`Operation injected: https://shadownet.tzkt.io/${hash}/operations`);
 } catch (error) {
   console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`);
 }
@@ -129,7 +129,7 @@ try {
   console.log(`Waiting for ${operation.opHash} to be confirmed...`);
   const confirmation = await operation.confirmation(1);
 
-  console.log(`Operation injected: https://ghostnet.tzkt.io/${confirmation.block.hash}/operations`);
+  console.log(`Operation injected: https://shadownet.tzkt.io/${confirmation.block.hash}/operations`);
 } catch (error) {
   console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`);
 }
@@ -140,7 +140,7 @@ try {
 
 ### Interact with a smart contract
 
-Calling smart contract operations requires a configured signer. The Ligo source code for the smart contract [KT1BJadpDyLCACMH7Tt9xtpx4dQZVKw9cDF7][smart_contract_on_better_call_dev] used in this example can be found in a [Ligo Web IDE][smart_contract_source].
+Calling smart contract operations requires a configured signer. The Ligo source code for the smart contract [KT1RNPmCdU9EKRVquuXnVWAbCSQJPbJh2HXc][smart_contract_on_better_call_dev] used in this example can be found in a [Ligo Web IDE][smart_contract_source].
 
 <Tabs
 defaultValue="contractAPI"
@@ -152,7 +152,7 @@ values={[
 
 ```js live
 try {
-  const contract = await Tezos.contract.at('KT1BJadpDyLCACMH7Tt9xtpx4dQZVKw9cDF7');
+  const contract = await Tezos.contract.at('KT1RNPmCdU9EKRVquuXnVWAbCSQJPbJh2HXc');
 
   console.log(`Incrementing storage value by 7...`);
   const operation = await contract.methodsObject.increment(7).send();
@@ -160,7 +160,7 @@ try {
   console.log(`Waiting for ${operation.hash} to be confirmed...`);
   const hash = await operation.confirmation(1);
 
-  console.log(`Operation injected: https://ghostnet.tzkt.io/${hash}/operations`);
+  console.log(`Operation injected: https://shadownet.tzkt.io/${hash}/operations`);
 } catch (error) {
   console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`);
 }
@@ -171,7 +171,7 @@ try {
 
 ```js live wallet
 try {
-  const contract = await Tezos.wallet.at('KT1BJadpDyLCACMH7Tt9xtpx4dQZVKw9cDF7');
+  const contract = await Tezos.wallet.at('KT1RNPmCdU9EKRVquuXnVWAbCSQJPbJh2HXc');
 
   console.log(`Incrementing storage value by 7...`);
   const operation = await contract.methodsObject.increment(7).send();
@@ -179,7 +179,7 @@ try {
   console.log(`Waiting for ${operation.opHash} to be confirmed...`);
   const confirmation = await operation.confirmation(1);
 
-  console.log(`Operation injected: https://ghostnet.tzkt.io/${confirmation.block.hash}/operations`);
+  console.log(`Operation injected: https://shadownet.tzkt.io/${confirmation.block.hash}/operations`);
 } catch (error) {
   console.log(`Error: ${error} ${JSON.stringify(error, null, 2)}`);
 }
@@ -191,4 +191,4 @@ try {
 
 [boilerplate]: https://github.com/ecadlabs/taquito-boilerplate
 [smart_contract_source]: https://ide.ligolang.org/p/2sVshnZ_Aat5pIuUypIBsQ
-[smart_contract_on_better_call_dev]: https://better-call.dev/ghostnet/KT1BJadpDyLCACMH7Tt9xtpx4dQZVKw9cDF7/operations
+[smart_contract_on_better_call_dev]: https://better-call.dev/shadownet/KT1RNPmCdU9EKRVquuXnVWAbCSQJPbJh2HXc/operations

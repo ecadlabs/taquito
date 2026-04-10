@@ -21,7 +21,7 @@ import type { DAppClientOptions } from '../src/taquito-beacon-wallet';
 
 describe('beacon-types re-exports (side-effect-free)', () => {
   it('should export NetworkType enum', () => {
-    expect(NetworkType.GHOSTNET).toBeDefined();
+    expect(NetworkType.SHADOWNET).toBeDefined();
     expect(NetworkType.MAINNET).toBeDefined();
   });
 

@@ -40,7 +40,7 @@ const wallet = await WalletConnect.init({
 
 await wallet.requestPermissions({
     permissionScope: {
-        networks: [NetworkType.GHOSTNET],
+        networks: [NetworkType.SHADOWNET],
         events: [],
         methods: [
             PermissionScopeMethods.TEZOS_SEND,
