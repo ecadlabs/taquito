@@ -59,8 +59,7 @@
     "@taquito/taquito": "^24.2.0",
     "@taquito/utils": "^24.2.0",
     "bignumber.js": "^10.0.2",
-    "crypto-js": "^4.2.0",
-    "whatwg-url": "^15.1.0"
+    "crypto-js": "^4.2.0"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.42",
