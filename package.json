@@ -53,8 +53,8 @@
     "version-stamp": "npm run --workspaces --if-present version-stamp"
   },
   "devDependencies": {
-    "@commitlint/cli": "^19.3.0",
-    "@commitlint/config-conventional": "^19.2.2",
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
     "@nx/vite": "^22.5.4",
     "@types/bluebird": "^3.5.42",
     "@types/estree": "^1.0.5",
