@@ -63,7 +63,6 @@
     "@scure/bip39": "^2.0.1",
     "@noble/hashes": "^2.0.1",
     "@stablelib/nacl": "^1.0.4",
-    "@stablelib/random": "^1.0.2",
     "@taquito/core": "^24.2.0",
     "@taquito/rpc": "^24.2.0",
     "@taquito/taquito": "^24.2.0",
