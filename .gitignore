@@ -21,6 +21,9 @@ integration-tests/.rpc-hammer.local.env
 integration-tests/run-rpc-hammer.local.sh
 **/saplingOutputParams*
 **/saplingSpendParams*
+!packages/taquito-sapling/saplingOutputParams.js
+!packages/taquito-sapling/saplingSpendParams.js
+!packages/taquito-sapling-spend-params/saplingSpendParams.js
 apps/**/node_modules
 .nx
 .ansible

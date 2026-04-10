@@ -16,7 +16,8 @@
   "files": [
     "signature.json",
     "dist",
-    "fetch-sapling-params.js"
+    "saplingOutputParams.js",
+    "SAPLING_PARAMS_PROVENANCE.md"
   ],
   "publishConfig": {
     "access": "public"
@@ -49,8 +50,7 @@
     "prebuild": "rimraf dist",
     "version-stamp": "node ../taquito/version-stamping.js",
     "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts --bundleConfigAsCjs",
-    "start": "rollup -c rollup.config.ts --bundleConfigAsCjs -w",
-    "postinstall": "node fetch-sapling-params.js"
+    "start": "rollup -c rollup.config.ts --bundleConfigAsCjs -w"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [
@@ -66,6 +66,7 @@
     "@stablelib/random": "^1.0.2",
     "@taquito/core": "^24.2.0",
     "@taquito/rpc": "^24.2.0",
+    "@taquito/sapling-spend-params": "^24.2.0",
     "@taquito/taquito": "^24.2.0",
     "@taquito/utils": "^24.2.0",
     "bignumber.js": "^10.0.2",
