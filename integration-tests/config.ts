@@ -398,10 +398,7 @@ const defaultConfig = ({
     pollingIntervalMilliseconds: process.env[`POLLING_INTERVAL_MILLISECONDS`] || undefined,
     rpcCacheMilliseconds: process.env[`RPC_CACHE_MILLISECONDS`] || '1000',
     knownBaker:
-      process.env[`TEZOS_BAKER`] ||
-      (process.env[`TEZOS_RPC_${networkName}`] || defaultRpc).includes('ghost')
-        ? 'tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD'
-        : 'tz1TnEtqDV9mZyts2pfMy6Jw1BTPs4LMjL8M', // ECAD 1 : Teztnets Baker
+      process.env[`TEZOS_BAKER`] || 'tz1TnEtqDV9mZyts2pfMy6Jw1BTPs4LMjL8M', // ECAD 1 : Teztnets Baker
     knownContract: process.env[`TEZOS_${networkName}_CONTRACT_ADDRESS`] || knownContracts.contract,
     knownBigMapContract:
       process.env[`TEZOS_${networkName}_BIGMAPCONTRACT_ADDRESS`] || knownContracts.bigMapContract,

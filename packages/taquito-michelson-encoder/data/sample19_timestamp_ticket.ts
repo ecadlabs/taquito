@@ -2679,5 +2679,5 @@ export const params = rpcContractResponse.script.code.find((x) => x.prim === 'pa
 
 export const bigMapValue = {
 	prim: 'Pair',
-	args: [ { string: 'KT1PVuv7af4VkPsZVZ8oZz9GSSdGnGBCbFWw' }, { string: '2021-03-09T16:32:15Z' }, { int: '2' } ]
+	args: [ { string: 'KT1LAbD14CzzK88e67hpyiCfrB3XgfPVku68' }, { string: '2021-03-09T16:32:15Z' }, { int: '2' } ]
 };

@@ -167,7 +167,7 @@ describe('Schema with a ticket of type timestamp inside a big map %tickets in st
     });
     const value = schema.ExecuteOnBigMapValue(bigMapValue);
     expect(value).toEqual({
-      ticketer: 'KT1PVuv7af4VkPsZVZ8oZz9GSSdGnGBCbFWw',
+      ticketer: 'KT1LAbD14CzzK88e67hpyiCfrB3XgfPVku68',
       value: '2021-03-09T16:32:15.000Z',
       amount: new BigNumber('2'),
     });
