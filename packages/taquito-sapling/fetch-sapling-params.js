@@ -9,7 +9,7 @@ const PARAMS = [
   {
     sourceFileName: 'sapling-spend.params',
     moduleName: 'saplingSpendParams',
-    outputFileName: 'saplingSpendParams.js',
+    outputFileName: '../taquito-sapling-spend-params/saplingSpendParams.js',
     sha256: '8e48ffd23abb3a5fd9c5589204f32d9c31285a04b78096ba40a79b75677efc13',
     bytes: 47958396,
   },
@@ -72,6 +72,7 @@ async function fetchParamFile(param) {
 
 async function writeVendoredModule(param, buffer) {
   const outputPath = path.join(__dirname, param.outputFileName);
+  await fs.mkdir(path.dirname(outputPath), { recursive: true });
   await fs.writeFile(outputPath, formatModule(param.moduleName, buffer.toString('base64')));
   console.log(`Wrote ${param.outputFileName}`);
 }

@@ -35,7 +35,7 @@ export default {
     'typedarray-to-buffer',
     'blakejs',
     '../saplingOutputParams',
-    '../saplingSpendParams',
+    '@taquito/sapling-spend-params',
     '@taquito/core',
     '@taquito/utils',
     'bignumber.js',

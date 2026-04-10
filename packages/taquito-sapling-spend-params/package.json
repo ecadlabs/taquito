@@ -1,0 +1,36 @@
+{
+  "name": "@taquito/sapling-spend-params",
+  "version": "24.2.0",
+  "description": "Vendored Sapling spend proving parameters for Taquito.",
+  "files": [
+    "saplingSpendParams.js",
+    "SAPLING_PARAMS_PROVENANCE.md",
+    "README.md"
+  ],
+  "main": "saplingSpendParams.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "ECAD Labs Inc <info@ecadlabs.com>",
+  "contributors": [
+    "Davis Sawali <davis.sawali@ecadlabs.com>",
+    "hui-an.yang <hui-an.yang@ecadlabs.com>",
+    "Roxane Letourneau <roxane@ecadlabs.com>",
+    "Jev Björsell (jevonearth)"
+  ],
+  "homepage": "https://taquito.io/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ecadlabs/taquito.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ecadlabs/taquito/issues"
+  },
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "version-stamp": "node ../taquito/version-stamping.js"
+  }
+}

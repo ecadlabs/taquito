@@ -1,6 +1,6 @@
 ## Sapling Parameter Provenance
 
-The `saplingSpendParams.js` and `saplingOutputParams.js` files in this package are vendored copies of the Sapling proving parameters distributed by the Zcash project.
+The `saplingOutputParams.js` file in this package and the `saplingSpendParams.js` file in the sibling `@taquito/sapling-spend-params` package are vendored copies of the Sapling proving parameters distributed by the Zcash project.
 
 Source:
 - `https://download.z.cash/downloads/sapling-spend.params`

@@ -17,7 +17,6 @@
     "signature.json",
     "dist",
     "saplingOutputParams.js",
-    "saplingSpendParams.js",
     "SAPLING_PARAMS_PROVENANCE.md"
   ],
   "publishConfig": {
@@ -67,6 +66,7 @@
     "@stablelib/random": "^1.0.2",
     "@taquito/core": "^24.2.0",
     "@taquito/rpc": "^24.2.0",
+    "@taquito/sapling-spend-params": "^24.2.0",
     "@taquito/taquito": "^24.2.0",
     "@taquito/utils": "^24.2.0",
     "bignumber.js": "^10.0.2",

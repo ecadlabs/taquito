@@ -4,7 +4,7 @@ import { ParametersOutputProof } from './types';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const saplingOutputParams = require('../saplingOutputParams');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const saplingSpendParams = require('../saplingSpendParams');
+const saplingSpendParams = require('@taquito/sapling-spend-params');
 
 let cachedParams: { spend: Buffer; output: Buffer } | undefined;
 
