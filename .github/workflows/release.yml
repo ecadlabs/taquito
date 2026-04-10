@@ -143,11 +143,14 @@ jobs:
             package-lock.json \
             example/package.json \
             integration-tests/package.json \
+            packages/*/package.json \
+            packages/*/src/version.ts \
+            packages/taquito-michel-codec/pack-test-tool/package.json \
+            packages/taquito/README.md \
             website/package.json \
             website/package-lock.json \
             website/src/config/versions.mjs \
             website/src/content/docs
-          git add -u packages
 
           if git diff --cached --quiet; then
             echo "No release sync changes to commit."
