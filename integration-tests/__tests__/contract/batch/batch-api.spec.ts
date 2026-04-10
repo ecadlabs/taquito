@@ -1,4 +1,4 @@
-import { CONFIGS } from "../../../config";
+import { CONFIGS, TEST_FUNDS_RECOVERY_ADDRESS } from "../../../config";
 import { ligoSample, ligoSampleMichelson } from "../../../data/ligo-simple-contract";
 import { managerCode } from "../../../data/manager_code";
 import { MANAGER_LAMBDA, OpKind } from "@taquito/taquito";
@@ -12,9 +12,9 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
     })
     it('Verify simple batch transfers with origination', async () => {
       const batch = await Tezos.contract.batch()
-        .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
-        .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
-        .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
+        .withTransfer({ to: TEST_FUNDS_RECOVERY_ADDRESS, amount: 0.02 })
+        .withTransfer({ to: TEST_FUNDS_RECOVERY_ADDRESS, amount: 0.02 })
+        .withTransfer({ to: TEST_FUNDS_RECOVERY_ADDRESS, amount: 0.02 })
         .withOrigination({
           balance: "1",
           code: ligoSample,
@@ -35,7 +35,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
       const op = await Tezos.contract.batch([
         {
           kind: OpKind.TRANSACTION,
-          to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
+          to: TEST_FUNDS_RECOVERY_ADDRESS,
           amount: 0.02
         },
         {
@@ -45,8 +45,8 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
           storage: 0,
         }
       ])
-        .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
-        .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
+        .withTransfer({ to: TEST_FUNDS_RECOVERY_ADDRESS, amount: 0.02 })
+        .withTransfer({ to: TEST_FUNDS_RECOVERY_ADDRESS, amount: 0.02 })
         .send();
       await op.confirmation();
       expect(op.status).toEqual('applied')
@@ -56,9 +56,9 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
       expect.assertions(1);
       try {
         await Tezos.contract.batch()
-          .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
-          .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
-          .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
+          .withTransfer({ to: TEST_FUNDS_RECOVERY_ADDRESS, amount: 0.02 })
+          .withTransfer({ to: TEST_FUNDS_RECOVERY_ADDRESS, amount: 0.02 })
+          .withTransfer({ to: TEST_FUNDS_RECOVERY_ADDRESS, amount: 0.02 })
           .withOrigination({
             balance: "1",
             code: ligoSample,
@@ -81,7 +81,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
       const batchOp = await LocalTez.contract.batch([
         {
           kind: OpKind.TRANSACTION,
-          to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
+          to: TEST_FUNDS_RECOVERY_ADDRESS,
           amount: 1
         },
         {
@@ -107,7 +107,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
 
       const batch = Tezos.contract.batch()
         .withTransfer({ to: contract.address, amount: 1 })
-        .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 5)))
+        .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.transferImplicit(TEST_FUNDS_RECOVERY_ADDRESS, 5)))
         .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.setDelegate(knownBaker)))
         .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.removeDelegate()))
 
@@ -130,7 +130,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
 
       const batch = Tezos.contract.batch()
         .withTransfer({ to: contract.address, amount: 1 })
-        .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.transferImplicit("tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh", 5)))
+        .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.transferImplicit(TEST_FUNDS_RECOVERY_ADDRESS, 5)))
         .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.setDelegate(knownBaker)))
         .withContractCall(contract.methodsObject.do(MANAGER_LAMBDA.removeDelegate()))
 
@@ -143,9 +143,9 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress }) => {
 
     it('Verify simple batch transfers with origination from code in Michelson format', async () => {
       const batch = Tezos.contract.batch()
-        .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
-        .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
-        .withTransfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 })
+        .withTransfer({ to: TEST_FUNDS_RECOVERY_ADDRESS, amount: 0.02 })
+        .withTransfer({ to: TEST_FUNDS_RECOVERY_ADDRESS, amount: 0.02 })
+        .withTransfer({ to: TEST_FUNDS_RECOVERY_ADDRESS, amount: 0.02 })
         .withOrigination({
           balance: "1",
           code: ligoSampleMichelson,

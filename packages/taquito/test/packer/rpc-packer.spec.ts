@@ -9,7 +9,7 @@ describe('RpcPacker test', () => {
   describe('packData', () => {
     it('calls packData from the rpc client', async () => {
       const mockRpcClient = {
-        packData: jest.fn(),
+        packData: vi.fn(),
       };
 
       mockRpcClient.packData.mockResolvedValue({ packed: '0500a7e8e4d80b' });

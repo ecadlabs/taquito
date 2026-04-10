@@ -13,68 +13,68 @@ describe('PrepareProvider test', () => {
   let prepareProvider: PrepareProvider;
 
   let mockForger: {
-    forge: jest.Mock<any, any>;
+    forge: ReturnType<typeof vi.fn>;
   };
 
   let mockReadProvider: {
-    getBlockHash: jest.Mock<any, any>;
-    getNextProtocol: jest.Mock<any, any>;
-    getCounter: jest.Mock<any, any>;
-    getProtocolConstants: jest.Mock<any, any>;
-    getBalance: jest.Mock<any, any>;
-    getSpendable: jest.Mock<any, any>;
-    isAccountRevealed: jest.Mock<any, any>;
-    getChainId: jest.Mock<any, any>;
+    getBlockHash: ReturnType<typeof vi.fn>;
+    getNextProtocol: ReturnType<typeof vi.fn>;
+    getCounter: ReturnType<typeof vi.fn>;
+    getProtocolConstants: ReturnType<typeof vi.fn>;
+    getBalance: ReturnType<typeof vi.fn>;
+    getSpendable: ReturnType<typeof vi.fn>;
+    isAccountRevealed: ReturnType<typeof vi.fn>;
+    getChainId: ReturnType<typeof vi.fn>;
   };
 
   let mockRpcClient: {
-    getBlockHeader: jest.Mock<any, any>;
-    getProtocols: jest.Mock<any, any>;
-    getContract: jest.Mock<any, any>;
-    getCurrentPeriod: jest.Mock<any, any>;
-    getConstants: jest.Mock<any, any>;
-    getManagerKey: jest.Mock<any, any>;
-    forgeOperations: jest.Mock<any, any>;
+    getBlockHeader: ReturnType<typeof vi.fn>;
+    getProtocols: ReturnType<typeof vi.fn>;
+    getContract: ReturnType<typeof vi.fn>;
+    getCurrentPeriod: ReturnType<typeof vi.fn>;
+    getConstants: ReturnType<typeof vi.fn>;
+    getManagerKey: ReturnType<typeof vi.fn>;
+    forgeOperations: ReturnType<typeof vi.fn>;
   };
 
   let mockSigner: {
-    publicKeyHash: jest.Mock<any, any>;
-    publicKey: jest.Mock<any, any>;
-    sign: jest.Mock<any, any>;
+    publicKeyHash: ReturnType<typeof vi.fn>;
+    publicKey: ReturnType<typeof vi.fn>;
+    sign: ReturnType<typeof vi.fn>;
   };
 
   let context: Context;
 
   beforeEach(() => {
     mockReadProvider = {
-      getBlockHash: jest.fn(),
-      getNextProtocol: jest.fn(),
-      getCounter: jest.fn(),
-      getProtocolConstants: jest.fn(),
-      getBalance: jest.fn(),
-      getSpendable: jest.fn(),
-      isAccountRevealed: jest.fn(),
-      getChainId: jest.fn(),
+      getBlockHash: vi.fn(),
+      getNextProtocol: vi.fn(),
+      getCounter: vi.fn(),
+      getProtocolConstants: vi.fn(),
+      getBalance: vi.fn(),
+      getSpendable: vi.fn(),
+      isAccountRevealed: vi.fn(),
+      getChainId: vi.fn(),
     };
 
     mockForger = {
-      forge: jest.fn(),
+      forge: vi.fn(),
     };
 
     mockRpcClient = {
-      getBlockHeader: jest.fn(),
-      getProtocols: jest.fn(),
-      getContract: jest.fn(),
-      getCurrentPeriod: jest.fn(),
-      getConstants: jest.fn(),
-      getManagerKey: jest.fn(),
-      forgeOperations: jest.fn(),
+      getBlockHeader: vi.fn(),
+      getProtocols: vi.fn(),
+      getContract: vi.fn(),
+      getCurrentPeriod: vi.fn(),
+      getConstants: vi.fn(),
+      getManagerKey: vi.fn(),
+      forgeOperations: vi.fn(),
     };
 
     mockSigner = {
-      publicKeyHash: jest.fn(),
-      publicKey: jest.fn(),
-      sign: jest.fn(),
+      publicKeyHash: vi.fn(),
+      publicKey: vi.fn(),
+      sign: vi.fn(),
     };
 
     mockRpcClient.getContract.mockResolvedValue({

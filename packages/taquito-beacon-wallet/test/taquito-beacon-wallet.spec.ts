@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import {
   BeaconWallet,
   BeaconWalletNotInitialized,
@@ -12,76 +13,81 @@ import {
   Regions,
 } from '@ecadlabs/beacon-dapp';
 import { indexedDB } from 'fake-indexeddb';
+
 global.localStorage = new LocalStorageMock();
 global.indexedDB = indexedDB;
-global.window = { addEventListener: jest.fn() } as any;
+global.window = { addEventListener: vi.fn() } as any;
 
-// Mock the random byte generator
-jest.mock('@stablelib/random', () => ({
+vi.mock('broadcast-channel', async () => {
+  return await import('./__mocks__/broadcast-channel');
+});
+
+vi.mock('@stablelib/random', () => ({
   randomBytes: (n: number) => new Uint8Array(n).fill(1),
-  SystemRandomSource: jest.fn().mockImplementation(() => ({
+  SystemRandomSource: vi.fn().mockImplementation(() => ({
     randomBytes: (n: number) => new Uint8Array(n).fill(1),
   })),
 }));
 
-jest.mock('@ecadlabs/beacon-dapp', () => {
-  const originalModule = jest.requireActual('@ecadlabs/beacon-dapp');
+vi.mock('@ecadlabs/beacon-dapp', async () => {
+  const originalModule =
+    await vi.importActual<typeof import('@ecadlabs/beacon-dapp')>('@ecadlabs/beacon-dapp');
 
   return {
     ...originalModule,
-    getDAppClientInstance: jest.fn().mockImplementation(() => ({
-      requestPermissions: jest.fn(),
-      getActiveAccount: jest.fn(),
-      showPrepare: jest.fn(),
-      hideUI: jest.fn(),
+    getDAppClientInstance: vi.fn().mockImplementation(() => ({
+      requestPermissions: vi.fn(),
+      getActiveAccount: vi.fn(),
+      showPrepare: vi.fn(),
+      hideUI: vi.fn(),
     })),
   };
 });
 
-jest.mock('@ecadlabs/beacon-ui', () => {
+vi.mock('@ecadlabs/beacon-ui', () => {
   return {
-    AlertButton: jest.fn(),
-    closeToast: jest.fn(),
-    getColorMode: jest.fn(),
-    setColorMode: jest.fn(),
-    setDesktopList: jest.fn(),
-    setExtensionList: jest.fn(),
-    setWebList: jest.fn(),
-    setiOSList: jest.fn(),
-    getiOSList: jest.fn(),
-    getDesktopList: jest.fn(),
-    getExtensionList: jest.fn(),
-    getWebList: jest.fn(),
-    isBrowser: jest.fn(),
-    isDesktop: jest.fn(),
-    isMobileOS: jest.fn(),
-    isIOS: jest.fn(),
-    currentOS: jest.fn(),
+    AlertButton: vi.fn(),
+    closeToast: vi.fn(),
+    getColorMode: vi.fn(),
+    setColorMode: vi.fn(),
+    setDesktopList: vi.fn(),
+    setExtensionList: vi.fn(),
+    setWebList: vi.fn(),
+    setiOSList: vi.fn(),
+    getiOSList: vi.fn(),
+    getDesktopList: vi.fn(),
+    getExtensionList: vi.fn(),
+    getWebList: vi.fn(),
+    isBrowser: vi.fn(),
+    isDesktop: vi.fn(),
+    isMobileOS: vi.fn(),
+    isIOS: vi.fn(),
+    currentOS: vi.fn(),
   };
 });
 // thanks to IsaccoSordo's contribution of https://github.com/ecadlabs/taquito/pull/3015
-jest.mock('@ecadlabs/beacon-transport-postmessage', () => {
-  jest.useFakeTimers();
-  const originalModule = jest.requireActual('@ecadlabs/beacon-transport-postmessage');
-  jest.runAllTimers();
+vi.mock('@ecadlabs/beacon-transport-postmessage', async () => {
+  const originalModule = await vi.importActual<
+    typeof import('@ecadlabs/beacon-transport-postmessage')
+  >('@ecadlabs/beacon-transport-postmessage');
 
   return {
     ...originalModule,
-    PostMessageTransport: jest.fn().mockImplementation(() => {
+    PostMessageTransport: vi.fn().mockImplementation(() => {
       return {
-        connect: jest.fn(),
-        startOpenChannelListener: jest.fn(),
-        getPairingRequestInfo: jest.fn(),
-        listen: jest.fn(),
+        connect: vi.fn(),
+        startOpenChannelListener: vi.fn(),
+        getPairingRequestInfo: vi.fn(),
+        listen: vi.fn(),
       };
     }),
-    getAvailableExtensions: jest.fn(),
+    getAvailableExtensions: vi.fn(),
   };
 });
 
 describe('Beacon Wallet tests', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('Verify that BeaconWallet is instantiable', () => {
@@ -161,7 +167,7 @@ describe('Beacon Wallet tests', () => {
     const wallet = new BeaconWallet({ name: 'Test', storage: new LocalStorage() });
     // Mock the client's beaconId property
     Object.defineProperty(wallet.client, 'beaconId', {
-      get: jest.fn().mockResolvedValue('mock-beacon-id'),
+      get: vi.fn().mockResolvedValue('mock-beacon-id'),
     });
     const beaconId = await wallet.client.beaconId;
     expect(typeof beaconId).toEqual('string');

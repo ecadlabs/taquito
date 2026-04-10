@@ -1,3 +1,4 @@
+import { vi, type Mock } from 'vitest';
 import { HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
 import { BadSigningDataError, OperationNotAuthorizedError } from '../src/errors';
 import { PublicKeyNotFoundError } from '@taquito/core';
@@ -8,12 +9,12 @@ import { RemoteSigner } from '../src/taquito-remote-signer';
  */
 describe('RemoteSigner test', () => {
   let httpBackend: {
-    createRequest: jest.Mock<any, any>;
+    createRequest: Mock;
   };
 
   beforeEach(() => {
     httpBackend = {
-      createRequest: jest.fn(),
+      createRequest: vi.fn(),
     };
   });
 

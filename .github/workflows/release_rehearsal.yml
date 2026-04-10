@@ -70,7 +70,7 @@ jobs:
         run: npm run -w @taquito/taquito build:release
 
       - name: Test
-        run: npm test -- --runInBand
+        run: npm test
 
       - name: Rehearse workspace publish
         run: npm publish --workspaces --dry-run --tag "${DIST_TAG}" --access public

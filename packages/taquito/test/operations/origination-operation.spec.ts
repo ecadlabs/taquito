@@ -71,10 +71,10 @@ describe('Origination operation', () => {
     fakeContext = {
       stream: new PollingSubscribeProvider(fakeContext),
       rpc: {
-        getBlock: jest.fn(),
+        getBlock: vi.fn(),
       },
       config: { ...defaultConfigConfirmation },
-      getConfirmationPollingInterval: jest.fn(),
+      getConfirmationPollingInterval: vi.fn(),
     };
 
     fakeContext.rpc.getBlock.mockResolvedValue({
@@ -147,7 +147,7 @@ describe('Origination operation', () => {
   describe('Contract', () => {
     it('should return proper confirmation head', async () => {
       const fakeContractProvider: any = {
-        at: jest.fn(),
+        at: vi.fn(),
       };
 
       fakeContractProvider.at.mockResolvedValue('contract');
@@ -165,7 +165,7 @@ describe('Origination operation', () => {
 
     it('should create a contract given a successful result', async () => {
       const fakeContractProvider: any = {
-        at: jest.fn(),
+        at: vi.fn(),
       };
 
       fakeContractProvider.at.mockResolvedValue('contract');
@@ -188,7 +188,7 @@ describe('Origination operation', () => {
 
     it('should throw if confirmation completes without an inclusion level', async () => {
       const fakeContractProvider: any = {
-        at: jest.fn(),
+        at: vi.fn(),
       };
 
       const op = new OriginationOperation(
@@ -199,7 +199,7 @@ describe('Origination operation', () => {
         fakeContext,
         fakeContractProvider
       );
-      jest.spyOn(op, 'confirmation').mockResolvedValue(200);
+      vi.spyOn(op, 'confirmation').mockResolvedValue(200);
 
       await expect(op.contract()).rejects.toEqual(
         new OriginationOperationError('Confirmation completed but includedInBlock was not set')
@@ -208,7 +208,7 @@ describe('Origination operation', () => {
 
     it('should throw an error if no contract is available', async () => {
       const fakeContractProvider: any = {
-        at: jest.fn(),
+        at: vi.fn(),
       };
 
       fakeContractProvider.at.mockResolvedValue('contract');
@@ -221,8 +221,10 @@ describe('Origination operation', () => {
         fakeContractProvider
       );
 
-      await expect(op.contract()).rejects.toEqual(
-        new Error('No contract was originated in this operation')
+      await expect(op.contract()).rejects.toBeInstanceOf(OriginationOperationError);
+      await expect(op.contract()).rejects.toHaveProperty(
+        'message',
+        'No contract was originated in this operation'
       );
     });
   });

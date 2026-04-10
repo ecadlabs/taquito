@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { vi, type Mock } from 'vitest';
 import { MichelCodecPacker } from '@taquito/taquito';
 import BigNumber from 'bignumber.js';
 import { SaplingForger } from '../src/sapling-forger/sapling-forger';
@@ -17,26 +18,26 @@ describe('SaplingToolkit', () => {
   );
 
   let mockSaplingTxBuilder: {
-    createShieldedTx: jest.Mock<any, any>;
-    createSaplingTx: jest.Mock<any, any>;
+    createShieldedTx: Mock;
+    createSaplingTx: Mock;
   };
 
   let mockReadProvider: {
-    getSaplingDiffById: jest.Mock<any, any>;
-    getSaplingDiffByContract: jest.Mock<any, any>;
-    getChainId: jest.Mock<any, any>;
+    getSaplingDiffById: Mock;
+    getSaplingDiffByContract: Mock;
+    getChainId: Mock;
   };
 
   beforeEach(() => {
     mockSaplingTxBuilder = {
-      createShieldedTx: jest.fn(),
-      createSaplingTx: jest.fn(),
+      createShieldedTx: vi.fn(),
+      createSaplingTx: vi.fn(),
     };
 
     mockReadProvider = {
-      getSaplingDiffById: jest.fn(),
-      getSaplingDiffByContract: jest.fn(),
-      getChainId: jest.fn(),
+      getSaplingDiffById: vi.fn(),
+      getSaplingDiffByContract: vi.fn(),
+      getChainId: vi.fn(),
     };
 
     mockReadProvider.getSaplingDiffById.mockResolvedValue(saplingState);
@@ -257,9 +258,7 @@ describe('SaplingToolkit', () => {
           memo: 'Taquito',
         },
       ])
-    ).rejects.toThrow(
-      `Invalid address "tz1awHvfqEVsmNpXtLsLoHcjLk9HaXkzHf7Z"`
-    );
+    ).rejects.toThrow(`Invalid address "tz1awHvfqEVsmNpXtLsLoHcjLk9HaXkzHf7Z"`);
   });
 
   it('should throw when preparing a shielded transaction if the memo is too large', async () => {
@@ -512,9 +511,7 @@ describe('SaplingToolkit', () => {
         to: 'tz2V17qQHTuQ3GJLu5bmPQDJTLDVwiWCrYFh',
         amount: 10,
       })
-    ).rejects.toThrow(
-      'Unable to spend "10000000" mutez while the balance is only 8000000 mutez.'
-    );
+    ).rejects.toThrow('Unable to spend "10000000" mutez while the balance is only 8000000 mutez.');
   });
 
   it('Should prepare a valid sapling transaction', async () => {
@@ -632,9 +629,7 @@ describe('SaplingToolkit', () => {
           amount: 8,
         },
       ])
-    ).rejects.toThrow(
-      `Invalid address "tz2V17qQHTuQ3GJLu5bmPQDJTLDVwiWCrYFh"`
-    );
+    ).rejects.toThrow(`Invalid address "tz2V17qQHTuQ3GJLu5bmPQDJTLDVwiWCrYFh"`);
   });
 
   it('should throw when preparing a sapling transaction if the memo is to large', async () => {
@@ -660,8 +655,6 @@ describe('SaplingToolkit', () => {
           memo: 'test',
         },
       ])
-    ).rejects.toThrow(
-      'Unable to spend "10000000" mutez while the balance is only 8000000 mutez.'
-    );
+    ).rejects.toThrow('Unable to spend "10000000" mutez while the balance is only 8000000 mutez.');
   });
 });

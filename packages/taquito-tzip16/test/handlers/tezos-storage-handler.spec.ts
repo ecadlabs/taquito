@@ -1,3 +1,4 @@
+import { vi, type Mock } from 'vitest';
 import { TezosStorageHandler } from '../../src/handlers/tezos-storage-handler';
 import {
   InvalidContractMetadataTypeError,
@@ -55,24 +56,24 @@ describe('Parse Tezos storage URI test', () => {
 describe('Tzip16 tezos storage handler test', () => {
   const mockContractAbstraction: any = {};
   let mockReadProvider: {
-    getScript: jest.Mock<any, any>;
+    getScript: Mock;
   };
   let mockContext: {
     readProvider: any;
     contract: any;
   };
   let mockContractProvider: {
-    getBigMapKeyByID: jest.Mock<any, any>;
+    getBigMapKeyByID: Mock;
   };
 
   const tezosStorageHandler = new TezosStorageHandler();
 
   beforeEach(() => {
     mockReadProvider = {
-      getScript: jest.fn(),
+      getScript: vi.fn(),
     };
     mockContractProvider = {
-      getBigMapKeyByID: jest.fn(),
+      getBigMapKeyByID: vi.fn(),
     };
     mockContext = {
       readProvider: mockReadProvider,

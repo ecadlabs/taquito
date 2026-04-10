@@ -72,11 +72,11 @@ describe('WalletOperation', () => {
   beforeAll(() => {
     mockContext = {
       operationFactory: {
-        createIncreasePaidStorageOperation: jest.fn(),
+        createIncreasePaidStorageOperation: vi.fn(),
       },
       walletProvider: {
-        mapIncreasePaidStorageWalletParams: jest.fn(),
-        sendOperations: jest.fn(),
+        mapIncreasePaidStorageWalletParams: vi.fn(),
+        sendOperations: vi.fn(),
       },
     };
     mockContext.walletProvider.mapIncreasePaidStorageWalletParams.mockResolvedValue({

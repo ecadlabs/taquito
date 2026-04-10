@@ -1,5 +1,5 @@
 import { BlockResponse } from '@taquito/rpc';
-import { TestScheduler } from 'rxjs/testing';
+import { Subject } from 'rxjs';
 import { OriginationWalletOperation } from '../../src/wallet/origination-operation';
 import { OriginationOperationBuilder } from '../helpers';
 import { OriginationWalletOperationError } from '../../src/wallet/errors';
@@ -14,72 +14,74 @@ const createFakeBlock = (level: number, opHash?: string, contents: unknown[] = [
   }) as unknown as BlockResponse;
 
 describe('OriginationWalletOperation', () => {
-  let testScheduler: TestScheduler;
-
-  beforeEach(() => {
-    testScheduler = new TestScheduler(() => undefined);
-  });
-
   it('resolves the originated contract at the inclusion block', async () => {
     const wallet = {
-      at: jest.fn().mockResolvedValue('contract'),
+      at: vi.fn().mockResolvedValue('contract'),
     };
+    const operationHash = 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj';
+    const blockObservable = new Subject<BlockResponse>();
+    const includedBlock = createFakeBlock(200, operationHash, [
+      new OriginationOperationBuilder().withResult({ status: 'applied' }).build(),
+    ]);
 
-    testScheduler.run(async ({ cold, flush }) => {
-      const operationHash = 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj';
-      const blockObservable = cold<BlockResponse>('--a', {
-        a: createFakeBlock(200, operationHash, [
-          new OriginationOperationBuilder().withResult({ status: 'applied' }).build(),
-        ]),
-      });
+    const op = new OriginationWalletOperation(
+      operationHash,
+      {
+        wallet,
+        config: {
+          defaultConfirmationCount: 1,
+        },
+      } as any,
+      blockObservable
+    );
 
-      const op = new OriginationWalletOperation(
-        operationHash,
-        {
-          wallet,
-          config: {
-            defaultConfirmationCount: 1,
-          },
-        } as any,
-        blockObservable
-      );
+    const originationPromise = op.originationOperation();
 
-      flush();
+    blockObservable.next(includedBlock);
 
-      await expect(op.contract()).resolves.toBe('contract');
-      expect(wallet.at).toHaveBeenCalledWith(
-        'KT1UvU4PamD38HYWwG4UjgTKU2nHJ42DqVhX',
-        undefined,
-        200
-      );
+    await expect(originationPromise).resolves.toMatchObject({
+      metadata: {
+        operation_result: {
+          originated_contracts: ['KT1UvU4PamD38HYWwG4UjgTKU2nHJ42DqVhX'],
+        },
+      },
     });
+
+    const confirmationSpy = vi.spyOn(op, 'confirmation');
+    const contractPromise = op.contract();
+
+    await vi.waitFor(() => {
+      expect(confirmationSpy).toHaveBeenCalledTimes(1);
+    });
+    blockObservable.next(createFakeBlock(201));
+
+    await expect(contractPromise).resolves.toBe('contract');
+    expect(wallet.at).toHaveBeenCalledWith('KT1UvU4PamD38HYWwG4UjgTKU2nHJ42DqVhX', undefined, 200);
   });
 
   it('throws when no contract was originated', async () => {
-    testScheduler.run(async ({ cold, flush }) => {
-      const operationHash = 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj';
-      const blockObservable = cold<BlockResponse>('--a', {
-        a: createFakeBlock(200, operationHash, []),
-      });
+    const operationHash = 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj';
+    const blockObservable = new Subject<BlockResponse>();
 
-      const op = new OriginationWalletOperation(
-        operationHash,
-        {
-          wallet: {
-            at: jest.fn(),
-          },
-          config: {
-            defaultConfirmationCount: 1,
-          },
-        } as any,
-        blockObservable
-      );
+    const op = new OriginationWalletOperation(
+      operationHash,
+      {
+        wallet: {
+          at: vi.fn(),
+        },
+        config: {
+          defaultConfirmationCount: 1,
+        },
+      } as any,
+      blockObservable
+    );
 
-      flush();
+    const contractPromise = op.contract();
 
-      await expect(op.contract()).rejects.toEqual(
-        new OriginationWalletOperationError('No contract was originated in this operation')
-      );
-    });
+    blockObservable.next(createFakeBlock(200, operationHash, []));
+
+    await expect(contractPromise).rejects.toEqual(
+      new OriginationWalletOperationError('No contract was originated in this operation')
+    );
   });
 });

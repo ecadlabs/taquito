@@ -4,13 +4,13 @@ import BigNumber from 'bignumber.js';
 
 describe('Configurations for the PollingSubscribeProvider', () => {
   let mockReadProvider: {
-    getProtocolConstants: jest.Mock<any, any>;
+    getProtocolConstants: ReturnType<typeof vi.fn>;
   };
   let mockContext: any;
 
   beforeAll(() => {
     mockReadProvider = {
-      getProtocolConstants: jest.fn(),
+      getProtocolConstants: vi.fn(),
     };
 
     mockContext = {

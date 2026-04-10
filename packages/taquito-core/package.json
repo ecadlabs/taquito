@@ -44,7 +44,7 @@
     "version-stamp": "node ../taquito/version-stamping.js",
     "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts --bundleConfigAsCjs",
     "start": "rollup -c rollup.config.ts --bundleConfigAsCjs -w",
-    "test": "jest"
+    "test": "vitest run --config ./vitest.config.ts"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [
@@ -52,35 +52,15 @@
       "eslint --fix"
     ]
   },
-  "jest": {
-    "transform": {
-      ".(ts|tsx)": "ts-jest"
-    },
-    "transformIgnorePatterns": [
-      "node_modules/(?!(@scure/bip39|@noble/hashes|@scure/base)/)"
-    ],
-    "testEnvironment": "node",
-    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js"
-    ],
-    "coveragePathIgnorePatterns": [
-      "/node_modules/",
-      "/test/"
-    ],
-    "collectCoverageFrom": [
-      "src/**/*.{js,ts}"
-    ]
-  },
   "dependencies": {
     "json-stringify-safe": "^5.0.1"
   },
   "devDependencies": {
     "@types/json-stringify-safe": "^5.0.3",
-    "@types/node": "^20",
+    "@types/node": "^22.0.0",
+    "lodash.camelcase": "^4.3.0",
     "rollup": "^4.59.0",
+    "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-typescript2": "^0.36.0"
   }
 }

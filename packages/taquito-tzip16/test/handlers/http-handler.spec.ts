@@ -1,8 +1,9 @@
+import { vi, type Mock } from 'vitest';
 import { HttpHandler } from '../../src/handlers/http-handler';
 
 describe('Tzip16 http handler test', () => {
   let mockHttpBackend: {
-    createRequest: jest.Mock<any, any>;
+    createRequest: Mock;
   };
   const mockContractAbstraction: any = {};
   const mockContext: any = {};
@@ -11,7 +12,7 @@ describe('Tzip16 http handler test', () => {
 
   beforeEach(() => {
     mockHttpBackend = {
-      createRequest: jest.fn(),
+      createRequest: vi.fn(),
     };
 
     httpHandler['httpBackend'] = mockHttpBackend as any;

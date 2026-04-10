@@ -31,9 +31,7 @@ describe('Forge and parse operations default protocol', () => {
         name.includes('with proof spsig(tz2)') ||
         name.includes('with proof p2sig(tz3)')
       ) {
-        expect(async () => {
-          await localForger.forge(operation);
-        }).rejects.toThrow(ProhibitedActionError);
+        expect(() => localForger.forge(operation)).toThrow(ProhibitedActionError);
       } else {
         const result = await localForger.forge(operation);
         expect(await localForger.parse(result)).toEqual(expected || operation);

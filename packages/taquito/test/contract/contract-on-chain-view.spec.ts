@@ -10,18 +10,18 @@ import { InvalidViewParameterError } from '@taquito/core';
 describe('OnChainView test on K protocol', () => {
   let view: OnChainView;
   let mockRpcClient: {
-    getProtocols: jest.Mock<any, any>;
-    getChainId: jest.Mock<any, any>;
-    runScriptView: jest.Mock<any, any>;
-    getStorage: jest.Mock<any, any>;
+    getProtocols: ReturnType<typeof vi.fn>;
+    getChainId: ReturnType<typeof vi.fn>;
+    runScriptView: ReturnType<typeof vi.fn>;
+    getStorage: ReturnType<typeof vi.fn>;
   };
   let mockReadProvider: any;
   beforeEach(() => {
     mockRpcClient = {
-      getProtocols: jest.fn(),
-      getChainId: jest.fn(),
-      runScriptView: jest.fn(),
-      getStorage: jest.fn(),
+      getProtocols: vi.fn(),
+      getChainId: vi.fn(),
+      runScriptView: vi.fn(),
+      getStorage: vi.fn(),
     };
 
     mockRpcClient.getProtocols.mockResolvedValue({ protocol: Protocols.PtKathman });

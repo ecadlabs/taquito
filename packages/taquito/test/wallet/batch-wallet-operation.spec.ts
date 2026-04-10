@@ -179,7 +179,7 @@ describe('BatchWalletOperation', () => {
           'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
           {
             readProvider: {
-              getBlock: jest.fn().mockResolvedValue(createFakeBlock(1)),
+              getBlock: vi.fn().mockResolvedValue(createFakeBlock(1)),
             },
           } as any,
           blockObs
@@ -201,7 +201,7 @@ describe('BatchWalletOperation', () => {
           'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
           {
             readProvider: {
-              getBlock: jest.fn().mockResolvedValue(createFakeBlock(2)),
+              getBlock: vi.fn().mockResolvedValue(createFakeBlock(2)),
             },
           } as any,
           blockObs
@@ -226,7 +226,7 @@ describe('BatchWalletOperation', () => {
           blockObs
         );
 
-        jest.spyOn(op, 'operationResults').mockResolvedValue(resultSingleOrigination);
+        vi.spyOn(op, 'operationResults').mockResolvedValue(resultSingleOrigination);
 
         flush();
         const result = await op.operationResults();
@@ -251,7 +251,7 @@ describe('BatchWalletOperation', () => {
           blockObs
         );
 
-        jest.spyOn(op, 'operationResults').mockResolvedValue(resultOriginations);
+        vi.spyOn(op, 'operationResults').mockResolvedValue(resultOriginations);
 
         flush();
         const result = await op.operationResults();
@@ -276,7 +276,7 @@ describe('BatchWalletOperation', () => {
           blockObs
         );
 
-        jest.spyOn(op, 'operationResults').mockResolvedValue(resultWithoutOrigination);
+        vi.spyOn(op, 'operationResults').mockResolvedValue(resultWithoutOrigination);
 
         flush();
         const result = await op.operationResults();

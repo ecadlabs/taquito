@@ -8,8 +8,8 @@ describe('ReadWrapperContractsLibrary tests', () => {
 
   beforeEach(() => {
     mockReadProvider = {
-      getScript: jest.fn(),
-      getEntrypoints: jest.fn(),
+      getScript: vi.fn(),
+      getEntrypoints: vi.fn(),
     };
   });
 

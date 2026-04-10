@@ -10,7 +10,7 @@ describe('RpcTzProvider test', () => {
   describe('getBalance', () => {
     it('calls get balance from the rpc client', async () => {
       const mockRpcClient = {
-        getBalance: jest.fn(),
+        getBalance: vi.fn(),
       };
 
       mockRpcClient.getBalance.mockResolvedValue(new BigNumber('10000'));
@@ -28,7 +28,7 @@ describe('RpcTzProvider test', () => {
   describe('getSpendable', () => {
     it('calls get spendable from the rpc client', async () => {
       const mockRpcClient = {
-        getSpendable: jest.fn(),
+        getSpendable: vi.fn(),
       };
 
       mockRpcClient.getSpendable.mockResolvedValue(new BigNumber('10000'));
@@ -46,7 +46,7 @@ describe('RpcTzProvider test', () => {
   describe('getDelegate', () => {
     it('calls get delegate from the rpc client', async () => {
       const mockRpcClient = {
-        getDelegate: jest.fn(),
+        getDelegate: vi.fn(),
       };
 
       mockRpcClient.getDelegate.mockResolvedValue('KT1G393LjojNshvMdf68XQD24Hwjn7xarzNe');
@@ -62,24 +62,24 @@ describe('RpcTzProvider test', () => {
 
   describe('activate', () => {
     let mockSigner: {
-      publicKeyHash: jest.Mock<any, any>;
-      publicKey: jest.Mock<any, any>;
-      sign: jest.Mock<any, any>;
+      publicKeyHash: ReturnType<typeof vi.fn>;
+      publicKey: ReturnType<typeof vi.fn>;
+      sign: ReturnType<typeof vi.fn>;
     };
     it('should produce a activate_account operation', async () => {
       const mockRpcClient = {
-        getBlock: jest.fn(),
-        getScript: jest.fn(),
-        getManagerKey: jest.fn(),
-        getStorage: jest.fn(),
-        getBlockHeader: jest.fn(),
-        getProtocols: jest.fn(),
-        getContract: jest.fn(),
-        injectOperation: jest.fn(),
-        preapplyOperations: jest.fn(),
+        getBlock: vi.fn(),
+        getScript: vi.fn(),
+        getManagerKey: vi.fn(),
+        getStorage: vi.fn(),
+        getBlockHeader: vi.fn(),
+        getProtocols: vi.fn(),
+        getContract: vi.fn(),
+        injectOperation: vi.fn(),
+        preapplyOperations: vi.fn(),
       };
       const mockForger = {
-        forge: jest.fn(),
+        forge: vi.fn(),
       };
       // Required for operations confirmation polling
       mockRpcClient.getBlock.mockResolvedValue({
@@ -90,9 +90,9 @@ describe('RpcTzProvider test', () => {
       });
 
       mockSigner = {
-        publicKeyHash: jest.fn(),
-        publicKey: jest.fn(),
-        sign: jest.fn(),
+        publicKeyHash: vi.fn(),
+        publicKey: vi.fn(),
+        sign: vi.fn(),
       };
 
       mockRpcClient.getManagerKey.mockResolvedValue('test');

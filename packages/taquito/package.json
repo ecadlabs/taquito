@@ -42,9 +42,9 @@
     "node": ">=22"
   },
   "scripts": {
-    "test": "jest --coverage",
-    "test:watch": "jest --coverage --watch",
-    "test:prod": "npm run lint && npm run test -- --no-cache",
+    "test": "vitest run --config ./vitest.config.ts",
+    "test:watch": "vitest --config ./vitest.config.ts",
+    "test:prod": "npm run lint && npm run test",
     "lint": "eslint --ext .js,.ts .",
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
@@ -58,49 +58,6 @@
     "{src,test}/**/*.ts": [
       "prettier --write",
       "eslint --fix"
-    ]
-  },
-  "jest": {
-    "transform": {
-      "^.+\\.(ts|tsx|js|mjs)$": [
-        "ts-jest",
-        {
-          "useESM": true,
-          "tsconfig": {
-            "esModuleInterop": true,
-            "allowJs": true
-          }
-        }
-      ]
-    },
-    "transformIgnorePatterns": [
-      "node_modules/(?!(@scure/bip39|@noble/hashes|@scure/base)/)"
-    ],
-    "testEnvironment": "node",
-    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js"
-    ],
-    "moduleNameMapper": {
-      "^@taquito/rpc$": "<rootDir>/../taquito-rpc/src/taquito-rpc.ts",
-      "^@taquito/michelson-encoder$": "<rootDir>/../taquito-michelson-encoder/src/taquito-michelson-encoder.ts",
-      "^@taquito/michel-codec$": "<rootDir>/../taquito-michel-codec/src/taquito-michel-codec.ts",
-      "^@taquito/http-utils$": "<rootDir>/../taquito-http-utils/src/taquito-http-utils.ts",
-      "^@taquito/utils$": "<rootDir>/../taquito-utils/src/taquito-utils.ts",
-      "^@scure/bip39/wordlists/english.js$": "<rootDir>/../../node_modules/@scure/bip39/wordlists/english.js",
-      "^@noble/hashes/blake2$": "<rootDir>/../../node_modules/@noble/hashes/blake2.js",
-      "^@noble/hashes/hmac$": "<rootDir>/../../node_modules/@noble/hashes/hmac.js",
-      "^@noble/hashes/sha2$": "<rootDir>/../../node_modules/@noble/hashes/sha2.js",
-      "^@noble/hashes/pbkdf2$": "<rootDir>/../../node_modules/@noble/hashes/pbkdf2.js"
-    },
-    "coveragePathIgnorePatterns": [
-      "/node_modules/",
-      "/test/"
-    ],
-    "collectCoverageFrom": [
-      "src/**/*.{js,ts}"
     ]
   },
   "dependencies": {
@@ -119,8 +76,7 @@
     "@babel/types": "7.25.2",
     "@types/bluebird": "^3.5.42",
     "@types/estree": "^1.0.5",
-    "@types/jest": "^29.5.12",
-    "@types/node": "^20",
+    "@types/node": "^22.0.0",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "buffer": "^6.0.3",
@@ -128,8 +84,7 @@
     "coveralls": "^3.1.1",
     "cross-env": "^7.0.3",
     "eslint": "^8.57.0",
-    "jest": "^29.7.0",
-    "jest-config": "^29.7.0",
+    "fs-extra": "^11.3.2",
     "lint-staged": "^15.2.7",
     "lodash.camelcase": "^4.3.0",
     "os-browserify": "^0.3.0",
@@ -145,7 +100,6 @@
     "shelljs": "^0.8.5",
     "stream-browserify": "^3.0.0",
     "terser-webpack-plugin": "^5.3.10",
-    "ts-jest": "^29.2.3",
     "ts-node": "^10.9.2",
     "ts-toolbelt": "^9.6.0",
     "typescript": "^5.9.3",
@@ -154,5 +108,5 @@
     "webpack-cli": "^5.1.4",
     "webpack-subresource-integrity": "^5.1.0"
   },
-  "gitHead": "551e35aeff7d6dcde1c7228npm install4238c0ed3c3aae77e"
+  "gitHead": "551e35aeff7d6dcde1c72284238c0ed3c3aae77e"
 }

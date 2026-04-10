@@ -8,16 +8,16 @@ import { BigMapAbstraction } from '../../src/contract/big-map';
  */
 describe('BigMapAbstraction test', () => {
   let rpcContractProvider: {
-    getBigMapKeysByID: jest.Mock<any, any>;
-    getStorage: jest.Mock<any, any>;
-    getBigMapKeyByID: jest.Mock<any, any>;
+    getBigMapKeysByID: ReturnType<typeof vi.fn>;
+    getStorage: ReturnType<typeof vi.fn>;
+    getBigMapKeyByID: ReturnType<typeof vi.fn>;
   };
 
   beforeEach(() => {
     rpcContractProvider = {
-      getBigMapKeysByID: jest.fn(),
-      getStorage: jest.fn(),
-      getBigMapKeyByID: jest.fn(),
+      getBigMapKeysByID: vi.fn(),
+      getStorage: vi.fn(),
+      getBigMapKeyByID: vi.fn(),
     };
   });
 
