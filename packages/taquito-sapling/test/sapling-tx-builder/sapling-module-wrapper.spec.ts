@@ -3,9 +3,27 @@ import { SaplingWrapper } from '../../src/sapling-module-wrapper';
 describe('SaplingWrapper', () => {
   const saplingWrapper = new SaplingWrapper();
 
-  it('getRandomBytes', () => {
-    const bytes = saplingWrapper.getRandomBytes(24);
-    expect(bytes.length).toEqual(24);
+  it('getRandomBytes uses global crypto', () => {
+    const originalCrypto = globalThis.crypto;
+    const getRandomValues = vi.fn((bytes: Uint8Array) => bytes.fill(7));
+
+    Object.defineProperty(globalThis, 'crypto', {
+      value: { getRandomValues },
+      configurable: true,
+    });
+
+    try {
+      const bytes = saplingWrapper.getRandomBytes(24);
+      expect(getRandomValues).toHaveBeenCalledOnce();
+      expect(bytes).toBeInstanceOf(Uint8Array);
+      expect(bytes.length).toEqual(24);
+      expect(Array.from(bytes)).toEqual(new Array(24).fill(7));
+    } finally {
+      Object.defineProperty(globalThis, 'crypto', {
+        value: originalCrypto,
+        configurable: true,
+      });
+    }
   });
 
   it('randR', async () => {

@@ -215,4 +215,10 @@ describe('Metadata provider test', () => {
 
     expect(metadataProvider['extractProtocolInfo']('hello/world')).toBeUndefined();
   });
+
+  it('Should reject crafted invalid URIs without matching a protocol', () => {
+    const craftedUri = `sha256://0x${'sha256://0xa'.repeat(4000)}`;
+
+    expect(metadataProvider['extractProtocolInfo'](craftedUri)).toBeUndefined();
+  });
 });

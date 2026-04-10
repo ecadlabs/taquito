@@ -60,7 +60,6 @@
     "@noble/curves": "^1.9.7",
     "@scure/bip39": "^2.0.1",
     "@noble/hashes": "^2.0.1",
-    "@stablelib/blake2b": "^2.0.1",
     "@stablelib/nacl": "^1.0.4",
     "@taquito/core": "^24.2.0",
     "@taquito/utils": "^24.2.0",

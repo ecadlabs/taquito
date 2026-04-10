@@ -73,7 +73,6 @@
   "dependencies": {
     "@ecadlabs/beacon-dapp": "^4.8.1-ecad",
     "@ecadlabs/beacon-types": "^4.8.1-ecad",
-    "@stablelib/ed25519": "^2.0.2",
     "@taquito/core": "^24.2.0",
     "@taquito/taquito": "^24.2.0",
     "@taquito/utils": "^24.2.0",
