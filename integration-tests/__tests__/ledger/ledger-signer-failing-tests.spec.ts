@@ -1,4 +1,4 @@
-import { CONFIGS } from '../../config';
+import { CONFIGS, TEST_FUNDS_RECOVERY_ADDRESS } from '../../config';
 import { LedgerSigner, LedgerTransport, DerivationType } from '@taquito/ledger-signer';
 import TransportNodeHid from "@ledgerhq/hw-transport-node-hid";
 import { ligoSample } from "../../data/ligo-simple-contract";
@@ -63,7 +63,7 @@ CONFIGS().forEach(({ lib, setup }) => {
                     );
                     tezos.setSignerProvider(signer);
                     try {
-                        const op = await tezos.wallet.transfer({ to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.1 }).send()
+                        const op = await tezos.wallet.transfer({ to: TEST_FUNDS_RECOVERY_ADDRESS, amount: 0.1 }).send()
                         await op.confirmation()
                     }
                     catch (error: any) {

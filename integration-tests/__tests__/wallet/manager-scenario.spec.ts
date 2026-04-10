@@ -1,4 +1,4 @@
-import { CONFIGS, TAQUITO_MUTEZ } from '../../config';
+import { CONFIGS, TAQUITO_MUTEZ, TEST_FUNDS_RECOVERY_ADDRESS } from '../../config';
 import { managerCode } from '../../data/manager_code';
 import { DefaultWalletType, MANAGER_LAMBDA, OriginationWalletOperation } from '@taquito/taquito';
 
@@ -35,7 +35,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract }) => {
       // Transfer from contract (kt1_alice) to implicit account (tz1)
       // We pass a lambda function to the kt1_alice contracts `do` entrypoint. The lambda code causes the contract to transfer
       // the specified number (50) of mutez to the target address.
-      const op = await contract.methodsObject.do(MANAGER_LAMBDA.transferImplicit('tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh', 5)).send({ amount: 0 })
+      const op = await contract.methodsObject.do(MANAGER_LAMBDA.transferImplicit(TEST_FUNDS_RECOVERY_ADDRESS, 5)).send({ amount: 0 })
       await op.confirmation();
       expect(await op.status()).toBe('applied');
 
@@ -76,7 +76,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, knownContract }) => {
 
     it('should throw an error when trying to transfer amount higher than balance', async () => {
       try {
-        const op = await contract.methodsObject.do(MANAGER_LAMBDA.transferImplicit('tz1eY5Aqa1kXDFoiebL28emyXFoneAoVg1zh', 50 * 1000000)).send({ amount: 0 });
+        const op = await contract.methodsObject.do(MANAGER_LAMBDA.transferImplicit(TEST_FUNDS_RECOVERY_ADDRESS, 50 * 1000000)).send({ amount: 0 });
         await op.confirmation();
       } catch (ex: any) {
         expect(ex.message).toContain('tez.subtraction_underflow');

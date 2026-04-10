@@ -1,5 +1,5 @@
 import { OpKind } from '@taquito/taquito';
-import { CONFIGS, SignerType } from '../../../config';
+import { CONFIGS, SignerType, TEST_FUNDS_RECOVERY_ADDRESS } from '../../../config';
 import { TezosToolkit } from '@taquito/taquito';
 import { PrefixV2 } from '@taquito/utils';
 
@@ -25,7 +25,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, signerConfig, createAddress })
         const batchOpEstimate = await Bls.estimate
           .batch([
             { kind: OpKind.DELEGATION, source: await Bls.signer.publicKeyHash(), delegate: knownBaker },
-            { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 },
+            { kind: OpKind.TRANSACTION, to: TEST_FUNDS_RECOVERY_ADDRESS, amount: 0.02 },
           ])
         expect(batchOpEstimate.length).toEqual(3);
       } catch (ex: any) {
@@ -48,7 +48,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, signerConfig, createAddress })
         const batchOpEstimate = await Bls.estimate
           .batch([
             { kind: OpKind.DELEGATION, source: await Bls.signer.publicKeyHash(), delegate: knownBaker },
-            { kind: OpKind.TRANSACTION, to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu', amount: 0.02 },
+            { kind: OpKind.TRANSACTION, to: TEST_FUNDS_RECOVERY_ADDRESS, amount: 0.02 },
           ])
 
         expect(batchOpEstimate.length).toEqual(2);
