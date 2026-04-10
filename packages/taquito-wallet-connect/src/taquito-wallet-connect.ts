@@ -79,20 +79,26 @@ export class WalletConnect implements WalletProvider {
 
     this.signClient.on('session_delete', ({ topic }) => {
       if (this.session?.topic === topic) {
-        this.session = undefined;
+        this.clearState();
       }
     });
 
     this.signClient.on('session_expire', ({ topic }) => {
       if (this.session?.topic === topic) {
-        this.session = undefined;
+        this.clearState();
       }
     });
 
     this.signClient.on('session_update', ({ params, topic }) => {
       if (this.session?.topic === topic) {
-        this.session.namespaces = params.namespaces;
-        // TODO determine if we need validation on the namespace here
+        this.activateSession(
+          {
+            ...this.session,
+            namespaces: params.namespaces,
+          },
+          undefined,
+          false
+        );
       }
     });
 
@@ -143,12 +149,13 @@ export class WalletConnect implements WalletProvider {
     registryUrl?: string;
   }) {
     // TODO when Tezos wallets will officially support wallet connect, we need to provide a default value for registryUrl
+    let approvedSession: SessionTypes.Struct;
     try {
       const chains = connectParams.permissionScope.networks.map(
         (network) => `${TEZOS_PLACEHOLDER}:${network}`
       );
       const { uri, approval } = await this.signClient.connect({
-        requiredNamespaces: {
+        optionalNamespaces: {
           [TEZOS_PLACEHOLDER]: {
             chains,
             methods: connectParams.permissionScope.methods,
@@ -164,14 +171,13 @@ export class WalletConnect implements WalletProvider {
           chains,
         });
       }
-      this.session = await approval();
+      approvedSession = await approval();
     } catch (error) {
       throw new ConnectionFailed(error);
     } finally {
       this.walletConnectModal.closeModal();
     }
-    this.validateReceivedNamespace(connectParams.permissionScope, this.session.namespaces);
-    this.setDefaultAccountAndNetwork();
+    this.activateSession(approvedSession!, connectParams.permissionScope);
   }
 
   /**
@@ -199,8 +205,7 @@ export class WalletConnect implements WalletProvider {
     if (!sessions.includes(key)) {
       throw new InvalidSessionKey(key);
     }
-    this.session = this.signClient.session.get(key);
-    this.setDefaultAccountAndNetwork();
+    this.activateSession(this.signClient.session.get(key));
   }
 
   async disconnect() {
@@ -369,14 +374,33 @@ export class WalletConnect implements WalletProvider {
     return this.activeNetwork;
   }
 
-  private setDefaultAccountAndNetwork() {
-    const activeAccount = this.getAccounts();
-    if (activeAccount.length === 1) {
-      this.activeAccount = activeAccount[0];
+  private activateSession(
+    session: SessionTypes.Struct,
+    permissionScope?: PermissionScopeParam,
+    resetActiveState = true
+  ) {
+    this.session = session;
+    if (permissionScope) {
+      this.validateReceivedNamespace(permissionScope, session.namespaces);
+    } else {
+      this.validateRestoredNamespace(session.namespaces);
     }
-    const activeNetwork = this.getNetworks();
-    if (activeNetwork.length === 1) {
-      this.activeNetwork = activeNetwork[0];
+    if (resetActiveState) {
+      this.activeAccount = undefined;
+      this.activeNetwork = undefined;
+    }
+    this.reconcileActiveAccountAndNetwork();
+  }
+
+  private reconcileActiveAccountAndNetwork() {
+    const accounts = this.getAccounts();
+    if (!this.activeAccount || !accounts.includes(this.activeAccount)) {
+      this.activeAccount = accounts.length === 1 ? accounts[0] : undefined;
+    }
+
+    const networks = this.getNetworks();
+    if (!this.activeNetwork || !networks.includes(this.activeNetwork)) {
+      this.activeNetwork = networks.length === 1 ? networks[0] : undefined;
     }
   }
 
@@ -442,6 +466,19 @@ export class WalletConnect implements WalletProvider {
     }
   }
 
+  private validateRestoredNamespace(receivedNamespaces: Record<string, SessionTypes.Namespace>) {
+    const tezosNamespace = receivedNamespaces[TEZOS_PLACEHOLDER];
+    if (!tezosNamespace) {
+      this.clearState();
+      throw new InvalidSession('Tezos not found in namespaces');
+    }
+
+    this.validateAccounts(
+      this.getChainsFromAccounts(tezosNamespace.accounts),
+      tezosNamespace.accounts
+    );
+  }
+
   private validateEvents(requiredEvents: string[], receivedEvents: string[]) {
     const missingEvents: string[] = [];
     requiredEvents.forEach((method) => {
@@ -469,7 +506,6 @@ export class WalletConnect implements WalletProvider {
         'incomplete'
       );
     }
-    const receivedChains: string[] = [];
     const invalidChains: string[] = [];
     const missingChains: string[] = [];
     const invalidChainsNamespace: string[] = [];
@@ -481,10 +517,6 @@ export class WalletConnect implements WalletProvider {
       }
       if (accountId[0] !== TEZOS_PLACEHOLDER) {
         invalidChainsNamespace.push(chain);
-      }
-      const network = accountId[1];
-      if (!receivedChains.includes(network)) {
-        receivedChains.push(network);
       }
     });
 
@@ -507,6 +539,7 @@ export class WalletConnect implements WalletProvider {
         invalidChainsNamespace
       );
     }
+    const receivedChains = this.getChainsFromAccounts(receivedAccounts);
     requiredNetwork.forEach((network) => {
       if (!receivedChains.includes(network)) {
         missingChains.push(network);
@@ -535,18 +568,6 @@ export class WalletConnect implements WalletProvider {
     }
   }
 
-  private getTezosRequiredNamespace(): {
-    chains?: string[];
-    methods: string[];
-    events: string[];
-  } {
-    if (TEZOS_PLACEHOLDER in this.getSession().requiredNamespaces) {
-      return this.getSession().requiredNamespaces[TEZOS_PLACEHOLDER];
-    } else {
-      throw new InvalidSession('Tezos not found in requiredNamespaces');
-    }
-  }
-
   private validateNetworkAndAccount(network: string, account: string) {
     if (!this.getTezosNamespace().accounts.includes(`${TEZOS_PLACEHOLDER}:${network}:${account}`)) {
       throw new InvalidNetworkOrAccount(network, account);
@@ -554,11 +575,15 @@ export class WalletConnect implements WalletProvider {
   }
 
   private getPermittedMethods() {
-    return this.getTezosRequiredNamespace().methods;
+    return this.getTezosNamespace().methods;
   }
 
   private getPermittedNetwork() {
-    return this.getTezosRequiredNamespace().chains!.map((chain) => chain.split(':')[1]);
+    return this.getChainsFromAccounts(this.getTezosNamespace().accounts);
+  }
+
+  private getChainsFromAccounts(accounts: string[]) {
+    return [...new Set(accounts.map((account) => account.split(':')[1]))];
   }
 
   private formatParameters(
@@ -683,9 +708,11 @@ export class WalletConnect implements WalletProvider {
     );
   }
 
-  async mapRegisterGlobalConstantParamsToWalletParams(params: () => Promise<WalletRegisterGlobalConstantParams>) {
+  async mapRegisterGlobalConstantParamsToWalletParams(
+    params: () => Promise<WalletRegisterGlobalConstantParams>
+  ) {
     const walletParams: WalletRegisterGlobalConstantParams = await params();
-  
+
     return this.removeDefaultLimits(
       walletParams,
       await createRegisterGlobalConstantOperation(this.formatParameters(walletParams))
