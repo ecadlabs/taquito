@@ -1,3 +1,4 @@
+import { vi, type Mock } from 'vitest';
 import { LedgerSigner, DerivationType, HDPathTemplate } from '../src/taquito-ledger-signer';
 import { transformPathToBuffer } from '../src/utils';
 
@@ -6,16 +7,16 @@ import { transformPathToBuffer } from '../src/utils';
  */
 describe('LedgerSigner test', () => {
   let mockTransport: {
-    send: jest.Mock<any, any>;
-    decorateAppAPIMethods: jest.Mock<any, any>;
-    setScrambleKey: jest.Mock<any, any>;
+    send: Mock;
+    decorateAppAPIMethods: Mock;
+    setScrambleKey: Mock;
   };
 
   beforeEach(async () => {
     mockTransport = {
-      send: jest.fn(),
-      decorateAppAPIMethods: jest.fn(),
-      setScrambleKey: jest.fn(),
+      send: vi.fn(),
+      decorateAppAPIMethods: vi.fn(),
+      setScrambleKey: vi.fn(),
     };
   });
 
@@ -28,9 +29,7 @@ describe('LedgerSigner test', () => {
   it('Should throw exception if path is incorrect', () => {
     expect(() => {
       new LedgerSigner(mockTransport, "4'/1729'/0'/0'", true, DerivationType.SECP256K1);
-    }).toThrow(
-      `Invalid derivation path "4'/1729'/0'/0'"`
-    );
+    }).toThrow(`Invalid derivation path "4'/1729'/0'/0'"`);
   });
 
   it('Should get public key and public key hash for default path and tz1 curve', async () => {

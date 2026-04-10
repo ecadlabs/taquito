@@ -19,46 +19,46 @@ import { RpcClient } from '@taquito/rpc';
 describe('RpcReadAdapter test', () => {
   let readProvider: RpcReadAdapter;
   let mockRpcClient: {
-    getBalance: jest.Mock<any, any>;
-    getSpendable: jest.Mock<any, any>;
-    getDelegate: jest.Mock<any, any>;
-    getProtocols: jest.Mock<any, any>;
-    getConstants: jest.Mock<any, any>;
-    getNormalizedScript: jest.Mock<any, any>;
-    getStorage: jest.Mock<any, any>;
-    getBlockHeader: jest.Mock<any, any>;
-    getContract: jest.Mock<any, any>;
-    getBigMapExpr: jest.Mock<any, any>;
-    getSaplingDiffById: jest.Mock<any, any>;
-    getSaplingDiffByContract: jest.Mock<any, any>;
-    getEntrypoints: jest.Mock<any, any>;
-    getChainId: jest.Mock<any, any>;
-    getManagerKey: jest.Mock<any, any>;
-    getBlock: jest.Mock<any, any>;
-    getLiveBlocks: jest.Mock<any, any>;
-    getAdaptiveIssuanceLaunchCycle: jest.Mock<any, any>;
+    getBalance: ReturnType<typeof vi.fn>;
+    getSpendable: ReturnType<typeof vi.fn>;
+    getDelegate: ReturnType<typeof vi.fn>;
+    getProtocols: ReturnType<typeof vi.fn>;
+    getConstants: ReturnType<typeof vi.fn>;
+    getNormalizedScript: ReturnType<typeof vi.fn>;
+    getStorage: ReturnType<typeof vi.fn>;
+    getBlockHeader: ReturnType<typeof vi.fn>;
+    getContract: ReturnType<typeof vi.fn>;
+    getBigMapExpr: ReturnType<typeof vi.fn>;
+    getSaplingDiffById: ReturnType<typeof vi.fn>;
+    getSaplingDiffByContract: ReturnType<typeof vi.fn>;
+    getEntrypoints: ReturnType<typeof vi.fn>;
+    getChainId: ReturnType<typeof vi.fn>;
+    getManagerKey: ReturnType<typeof vi.fn>;
+    getBlock: ReturnType<typeof vi.fn>;
+    getLiveBlocks: ReturnType<typeof vi.fn>;
+    getAdaptiveIssuanceLaunchCycle: ReturnType<typeof vi.fn>;
   };
 
   beforeEach(() => {
     mockRpcClient = {
-      getBalance: jest.fn(),
-      getSpendable: jest.fn(),
-      getDelegate: jest.fn(),
-      getProtocols: jest.fn(),
-      getConstants: jest.fn(),
-      getNormalizedScript: jest.fn(),
-      getStorage: jest.fn(),
-      getBlockHeader: jest.fn(),
-      getContract: jest.fn(),
-      getBigMapExpr: jest.fn(),
-      getSaplingDiffById: jest.fn(),
-      getSaplingDiffByContract: jest.fn(),
-      getEntrypoints: jest.fn(),
-      getChainId: jest.fn(),
-      getManagerKey: jest.fn(),
-      getBlock: jest.fn(),
-      getLiveBlocks: jest.fn(),
-      getAdaptiveIssuanceLaunchCycle: jest.fn(),
+      getBalance: vi.fn(),
+      getSpendable: vi.fn(),
+      getDelegate: vi.fn(),
+      getProtocols: vi.fn(),
+      getConstants: vi.fn(),
+      getNormalizedScript: vi.fn(),
+      getStorage: vi.fn(),
+      getBlockHeader: vi.fn(),
+      getContract: vi.fn(),
+      getBigMapExpr: vi.fn(),
+      getSaplingDiffById: vi.fn(),
+      getSaplingDiffByContract: vi.fn(),
+      getEntrypoints: vi.fn(),
+      getChainId: vi.fn(),
+      getManagerKey: vi.fn(),
+      getBlock: vi.fn(),
+      getLiveBlocks: vi.fn(),
+      getAdaptiveIssuanceLaunchCycle: vi.fn(),
     };
     readProvider = new RpcReadAdapter(mockRpcClient as any);
   });

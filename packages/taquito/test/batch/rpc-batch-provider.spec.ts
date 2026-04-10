@@ -12,102 +12,102 @@ describe('OperationBatch test', () => {
   let context: Context;
   let operationBatch: OperationBatch;
   let mockRpcClient: {
-    getScript: jest.Mock<any, any>;
-    getStorage: jest.Mock<any, any>;
-    getBigMapExpr: jest.Mock<any, any>;
-    getBlockHeader: jest.Mock<any, any>;
-    getEntrypoints: jest.Mock<any, any>;
-    getManagerKey: jest.Mock<any, any>;
-    getBlock: jest.Mock<any, any>;
-    getContract: jest.Mock<any, any>;
-    getBlockMetadata: jest.Mock<any, any>;
-    injectOperation: jest.Mock<any, any>;
-    packData: jest.Mock<any, any>;
-    preapplyOperations: jest.Mock<any, any>;
-    getChainId: jest.Mock<any, any>;
-    getSaplingDiffById: jest.Mock<any, any>;
-    getProtocols: jest.Mock<any, any>;
+    getScript: ReturnType<typeof vi.fn>;
+    getStorage: ReturnType<typeof vi.fn>;
+    getBigMapExpr: ReturnType<typeof vi.fn>;
+    getBlockHeader: ReturnType<typeof vi.fn>;
+    getEntrypoints: ReturnType<typeof vi.fn>;
+    getManagerKey: ReturnType<typeof vi.fn>;
+    getBlock: ReturnType<typeof vi.fn>;
+    getContract: ReturnType<typeof vi.fn>;
+    getBlockMetadata: ReturnType<typeof vi.fn>;
+    injectOperation: ReturnType<typeof vi.fn>;
+    packData: ReturnType<typeof vi.fn>;
+    preapplyOperations: ReturnType<typeof vi.fn>;
+    getChainId: ReturnType<typeof vi.fn>;
+    getSaplingDiffById: ReturnType<typeof vi.fn>;
+    getProtocols: ReturnType<typeof vi.fn>;
   };
 
   let mockReadProvider: {
-    getBlockHash: jest.Mock<any, any>;
-    getNextProtocol: jest.Mock<any, any>;
-    getCounter: jest.Mock<any, any>;
-    getProtocolConstants: jest.Mock<any, any>;
-    getBalance: jest.Mock<any, any>;
-    getSpendable: jest.Mock<any, any>;
-    isAccountRevealed: jest.Mock<any, any>;
-    getChainId: jest.Mock<any, any>;
+    getBlockHash: ReturnType<typeof vi.fn>;
+    getNextProtocol: ReturnType<typeof vi.fn>;
+    getCounter: ReturnType<typeof vi.fn>;
+    getProtocolConstants: ReturnType<typeof vi.fn>;
+    getBalance: ReturnType<typeof vi.fn>;
+    getSpendable: ReturnType<typeof vi.fn>;
+    isAccountRevealed: ReturnType<typeof vi.fn>;
+    getChainId: ReturnType<typeof vi.fn>;
   };
 
   let mockSigner: {
-    publicKeyHash: jest.Mock<any, any>;
-    publicKey: jest.Mock<any, any>;
-    sign: jest.Mock<any, any>;
+    publicKeyHash: ReturnType<typeof vi.fn>;
+    publicKey: ReturnType<typeof vi.fn>;
+    sign: ReturnType<typeof vi.fn>;
   };
 
   let mockEstimate: {
-    originate: jest.Mock<any, any>;
-    transfer: jest.Mock<any, any>;
-    setDelegate: jest.Mock<any, any>;
-    registerDelegate: jest.Mock<any, any>;
-    batch: jest.Mock<any, any>;
-    reveal: jest.Mock<any, any>;
-    registerGlobalConstant: jest.Mock<any, any>;
+    originate: ReturnType<typeof vi.fn>;
+    transfer: ReturnType<typeof vi.fn>;
+    setDelegate: ReturnType<typeof vi.fn>;
+    registerDelegate: ReturnType<typeof vi.fn>;
+    batch: ReturnType<typeof vi.fn>;
+    reveal: ReturnType<typeof vi.fn>;
+    registerGlobalConstant: ReturnType<typeof vi.fn>;
   };
 
   let mockForger: {
-    forge: jest.Mock<any, any>;
+    forge: ReturnType<typeof vi.fn>;
   };
 
   beforeEach(() => {
     mockRpcClient = {
-      getBigMapExpr: jest.fn(),
-      getEntrypoints: jest.fn(),
-      getBlock: jest.fn(),
-      getScript: jest.fn(),
-      getManagerKey: jest.fn(),
-      getStorage: jest.fn(),
-      getBlockHeader: jest.fn(),
-      getBlockMetadata: jest.fn(),
-      getContract: jest.fn(),
-      injectOperation: jest.fn(),
-      packData: jest.fn(),
-      preapplyOperations: jest.fn(),
-      getChainId: jest.fn(),
-      getSaplingDiffById: jest.fn(),
-      getProtocols: jest.fn(),
+      getBigMapExpr: vi.fn(),
+      getEntrypoints: vi.fn(),
+      getBlock: vi.fn(),
+      getScript: vi.fn(),
+      getManagerKey: vi.fn(),
+      getStorage: vi.fn(),
+      getBlockHeader: vi.fn(),
+      getBlockMetadata: vi.fn(),
+      getContract: vi.fn(),
+      injectOperation: vi.fn(),
+      packData: vi.fn(),
+      preapplyOperations: vi.fn(),
+      getChainId: vi.fn(),
+      getSaplingDiffById: vi.fn(),
+      getProtocols: vi.fn(),
     };
 
     mockSigner = {
-      publicKeyHash: jest.fn(),
-      publicKey: jest.fn(),
-      sign: jest.fn(),
+      publicKeyHash: vi.fn(),
+      publicKey: vi.fn(),
+      sign: vi.fn(),
     };
 
     mockReadProvider = {
-      getBlockHash: jest.fn(),
-      getNextProtocol: jest.fn(),
-      getCounter: jest.fn(),
-      getProtocolConstants: jest.fn(),
-      getBalance: jest.fn(),
-      getSpendable: jest.fn(),
-      isAccountRevealed: jest.fn(),
-      getChainId: jest.fn(),
+      getBlockHash: vi.fn(),
+      getNextProtocol: vi.fn(),
+      getCounter: vi.fn(),
+      getProtocolConstants: vi.fn(),
+      getBalance: vi.fn(),
+      getSpendable: vi.fn(),
+      isAccountRevealed: vi.fn(),
+      getChainId: vi.fn(),
     };
 
     mockEstimate = {
-      originate: jest.fn(),
-      transfer: jest.fn(),
-      registerDelegate: jest.fn(),
-      setDelegate: jest.fn(),
-      batch: jest.fn(),
-      reveal: jest.fn(),
-      registerGlobalConstant: jest.fn(),
+      originate: vi.fn(),
+      transfer: vi.fn(),
+      registerDelegate: vi.fn(),
+      setDelegate: vi.fn(),
+      batch: vi.fn(),
+      reveal: vi.fn(),
+      registerGlobalConstant: vi.fn(),
     };
 
     mockForger = {
-      forge: jest.fn(),
+      forge: vi.fn(),
     };
 
     // Required for operations confirmation polling

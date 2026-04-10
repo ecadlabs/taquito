@@ -3,10 +3,10 @@ import { Context, MichelCodecParser, Protocols, InvalidCodeParameter } from '../
 
 describe('MichelCodec parser', () => {
   const mockRpcClient = {
-    getProtocols: jest.fn(),
+    getProtocols: vi.fn(),
   };
   const mockGlobalConstantsProvider = {
-    getGlobalConstantByHash: jest.fn(),
+    getGlobalConstantByHash: vi.fn(),
   };
 
   mockRpcClient.getProtocols.mockResolvedValue({

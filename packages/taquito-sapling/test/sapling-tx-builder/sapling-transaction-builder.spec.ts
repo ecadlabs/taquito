@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { vi, type Mock } from 'vitest';
 import {
   outputsUnshieldedTx,
   outputsShieldedTx,
@@ -13,19 +14,19 @@ describe('Sapling transactions builder', () => {
   let saplingTransactionBuilder: SaplingTransactionBuilder;
 
   let mockInMemorySpendingKey: {
-    prepareSpendDescription: jest.Mock<any, any>;
-    getSaplingViewingKeyProvider: jest.Mock<any, any>;
-    getSpendingKey: jest.Mock<any, any>;
-    signSpendDescription: jest.Mock<any, any>;
+    prepareSpendDescription: Mock;
+    getSaplingViewingKeyProvider: Mock;
+    getSpendingKey: Mock;
+    signSpendDescription: Mock;
   };
 
   let mockInMemoryViewingKey: {
-    getFullViewingKey: jest.Mock<any, any>;
-    getOutgoingViewingKey: jest.Mock<any, any>;
+    getFullViewingKey: Mock;
+    getOutgoingViewingKey: Mock;
   };
 
   let mockInMemoryProvingKey: {
-    prepareSpendDescription: jest.Mock<any, any>;
+    prepareSpendDescription: Mock;
   };
 
   const saplingForger = new SaplingForger();
@@ -36,60 +37,60 @@ describe('Sapling transactions builder', () => {
   };
 
   let mockSaplingWrapper: {
-    withProvingContext: jest.Mock<any, any>;
-    getRandomBytes: jest.Mock<any, any>;
-    randR: jest.Mock<any, any>;
-    getOutgoingViewingKey: jest.Mock<any, any>;
-    preparePartialOutputDescription: jest.Mock<any, any>;
-    getDiversifiedFromRawPaymentAddress: jest.Mock<any, any>;
-    deriveEphemeralPublicKey: jest.Mock<any, any>;
-    getPkdFromRawPaymentAddress: jest.Mock<any, any>;
-    keyAgreement: jest.Mock<any, any>;
-    getPaymentAddressFromViewingKey: jest.Mock<any, any>;
-    createBindingSignature: jest.Mock<any, any>;
-    initSaplingParameters: jest.Mock<any, any>;
+    withProvingContext: Mock;
+    getRandomBytes: Mock;
+    randR: Mock;
+    getOutgoingViewingKey: Mock;
+    preparePartialOutputDescription: Mock;
+    getDiversifiedFromRawPaymentAddress: Mock;
+    deriveEphemeralPublicKey: Mock;
+    getPkdFromRawPaymentAddress: Mock;
+    keyAgreement: Mock;
+    getPaymentAddressFromViewingKey: Mock;
+    createBindingSignature: Mock;
+    initSaplingParameters: Mock;
   };
 
   let mockReadProvider: {
-    getSaplingDiffById: jest.Mock<any, any>;
-    getChainId: jest.Mock<any, any>;
+    getSaplingDiffById: Mock;
+    getChainId: Mock;
   };
 
   beforeEach(() => {
     mockInMemorySpendingKey = {
-      prepareSpendDescription: jest.fn(),
-      getSaplingViewingKeyProvider: jest.fn(),
-      getSpendingKey: jest.fn(),
-      signSpendDescription: jest.fn(),
+      prepareSpendDescription: vi.fn(),
+      getSaplingViewingKeyProvider: vi.fn(),
+      getSpendingKey: vi.fn(),
+      signSpendDescription: vi.fn(),
     };
 
     mockInMemoryViewingKey = {
-      getFullViewingKey: jest.fn(),
-      getOutgoingViewingKey: jest.fn(),
+      getFullViewingKey: vi.fn(),
+      getOutgoingViewingKey: vi.fn(),
     };
 
     mockInMemoryProvingKey = {
-      prepareSpendDescription: jest.fn(),
+      prepareSpendDescription: vi.fn(),
     };
 
     mockSaplingWrapper = {
-      withProvingContext: jest.fn(),
-      getRandomBytes: jest.fn(),
-      randR: jest.fn(),
-      getOutgoingViewingKey: jest.fn(),
-      preparePartialOutputDescription: jest.fn(),
-      getDiversifiedFromRawPaymentAddress: jest.fn(),
-      deriveEphemeralPublicKey: jest.fn(),
-      getPkdFromRawPaymentAddress: jest.fn(),
-      keyAgreement: jest.fn(),
-      getPaymentAddressFromViewingKey: jest.fn(),
-      createBindingSignature: jest.fn(),
-      initSaplingParameters: jest.fn(),
+      withProvingContext: vi.fn(),
+      getRandomBytes: vi.fn(),
+      randR: vi.fn(),
+      getOutgoingViewingKey: vi.fn(),
+      preparePartialOutputDescription: vi.fn(),
+      getDiversifiedFromRawPaymentAddress: vi.fn(),
+      deriveEphemeralPublicKey: vi.fn(),
+      getPkdFromRawPaymentAddress: vi.fn(),
+      keyAgreement: vi.fn(),
+      getPaymentAddressFromViewingKey: vi.fn(),
+      createBindingSignature: vi.fn(),
+      initSaplingParameters: vi.fn(),
     };
 
     mockReadProvider = {
-      getSaplingDiffById: jest.fn(),
-      getChainId: jest.fn(),
+      getSaplingDiffById: vi.fn(),
+      getChainId: vi.fn(),
     };
 
     mockInMemorySpendingKey.getSaplingViewingKeyProvider.mockResolvedValue(mockInMemoryViewingKey);

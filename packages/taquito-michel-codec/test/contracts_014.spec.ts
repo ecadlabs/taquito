@@ -22,6 +22,10 @@ const protocol = Protocol.PtKathman;
 
 describe('PtKathmandu', () => {
   for (const [group, list] of Object.entries(contracts)) {
+    if (list.length === 0) {
+      continue;
+    }
+
     describe(group, () => {
       for (const contract of list) {
         it(contract, () => {

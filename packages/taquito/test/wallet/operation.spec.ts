@@ -128,12 +128,12 @@ describe('WalletOperation', () => {
 
   describe('confirmation handles skipped blocks', () => {
     let mockRpcClient: {
-      getBlock: jest.Mock<any, any>;
+      getBlock: ReturnType<typeof vi.fn>;
     };
 
     beforeEach(() => {
       mockRpcClient = {
-        getBlock: jest.fn(),
+        getBlock: vi.fn(),
       };
     });
 
@@ -371,7 +371,7 @@ describe('WalletOperation', () => {
           'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
           {
             readProvider: {
-              getBlock: jest.fn().mockResolvedValue(createFakeBlock(1)),
+              getBlock: vi.fn().mockResolvedValue(createFakeBlock(1)),
             },
           } as any,
           blockObservable
@@ -394,7 +394,7 @@ describe('WalletOperation', () => {
           'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj',
           {
             readProvider: {
-              getBlock: jest.fn().mockResolvedValue(createFakeBlock(2)),
+              getBlock: vi.fn().mockResolvedValue(createFakeBlock(2)),
             },
           } as any,
           blockObservable

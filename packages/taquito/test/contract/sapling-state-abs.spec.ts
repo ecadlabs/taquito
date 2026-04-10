@@ -6,12 +6,12 @@ import { SaplingStateAbstraction } from '../../src/contract/sapling-state-abstra
  */
 describe('SaplingStateAbstraction test', () => {
   let rpcContractProvider: {
-    getSaplingDiffByID: jest.Mock<any, any>;
+    getSaplingDiffByID: ReturnType<typeof vi.fn>;
   };
 
   beforeEach(() => {
     rpcContractProvider = {
-      getSaplingDiffByID: jest.fn(),
+      getSaplingDiffByID: vi.fn(),
     };
 
     rpcContractProvider.getSaplingDiffByID.mockResolvedValue({

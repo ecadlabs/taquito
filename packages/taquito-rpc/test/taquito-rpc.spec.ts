@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
+import { vi, type Mock } from 'vitest';
 import { OpKind, RpcClient } from '../src/taquito-rpc';
 import BigNumber from 'bignumber.js';
 import {
@@ -76,14 +77,14 @@ import {
 describe('RpcClient test', () => {
   let client: RpcClient;
   let httpBackend: {
-    createRequest: jest.Mock<any, any>;
+    createRequest: Mock;
   };
 
   const contractAddress = 'KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D';
 
   beforeEach(() => {
     httpBackend = {
-      createRequest: jest.fn(),
+      createRequest: vi.fn(),
     };
     client = new RpcClient('root', 'test', httpBackend as any);
   });

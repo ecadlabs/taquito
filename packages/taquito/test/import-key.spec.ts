@@ -26,19 +26,19 @@ describe('ImportKey', () => {
 
   beforeEach(() => {
     mockRpcClient = {
-      getBlock: jest.fn(),
-      getScript: jest.fn(),
-      getManagerKey: jest.fn(),
-      getStorage: jest.fn(),
-      getBlockHeader: jest.fn(),
-      getContract: jest.fn(),
-      injectOperation: jest.fn(),
-      preapplyOperations: jest.fn(),
-      getProtocols: jest.fn(),
+      getBlock: vi.fn(),
+      getScript: vi.fn(),
+      getManagerKey: vi.fn(),
+      getStorage: vi.fn(),
+      getBlockHeader: vi.fn(),
+      getContract: vi.fn(),
+      injectOperation: vi.fn(),
+      preapplyOperations: vi.fn(),
+      getProtocols: vi.fn(),
     };
 
     mockLocalForger = {
-      forge: jest.fn(),
+      forge: vi.fn(),
     };
 
     mockRpcClient.getContract.mockResolvedValue({ counter: 0 });

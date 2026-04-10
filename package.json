@@ -41,7 +41,7 @@
     "build-all": "nx run-many --target=build --exclude=@taquito/website",
     "build-website": "npm ci && npm run build && cd website && npm ci && npm run build",
     "rebuild": "npm run clean && npm install && npm run build",
-    "test": "nx run-many --target=test --exclude=integration-tests,@taquito/website --collectCoverage",
+    "test": "nx run-many --target=test --exclude=integration-tests,@taquito/website -- --coverage",
     "lint": "npm run --workspaces --if-present lint",
     "clean": "rimraf node_modules packages/*/node_modules packages/taquito-michel-codec/pack-test-tool/node_modules example/node_modules integration-tests/node_modules website/node_modules",
     "commit": "git-cz",
@@ -52,68 +52,18 @@
     "integration-tests": "npm -w integration-tests run originate-known-contracts && npm -w integration-tests run test:secret-key",
     "version-stamp": "npm run --workspaces --if-present version-stamp"
   },
-  "jest": {
-    "transform": {
-      ".(ts|tsx)": "ts-jest"
-    },
-    "testPathIgnorePatterns": [
-      "/node_modules/",
-      "/integration-tests/"
-    ],
-    "testEnvironment": "node",
-    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js"
-    ],
-    "moduleNameMapper": {
-      "^@taquito/core$": "<rootDir>/packages/taquito-core/src/taquito-core.ts",
-      "^pack-test-tool$": "<rootDir>/packages/taquito-michel-codec/pack-test-tool/src/pack-test-tool.js",
-      "^@taquito-beacon-wallet$": "<rootDir>/packages/taquito-beacon-wallet/src/taquito-beacon-wallet.ts",
-      "^@taquito/contracts-library$": "<rootDir>/packages/taquito-contracts-library/src/contracts-library.ts",
-      "^@taquito/http-utils$": "<rootDir>/packages/taquito-http-utils/src/taquito-http-utils.ts",
-      "^@taquito-ledger-signer$": "<rootDir>/packages/taquito-ledger-signer/src/taquito-ledger-signer.ts",
-      "^@taquito/local-forging$": "<rootDir>/packages/taquito-local-forging/src/taquito-local-forging.ts",
-      "^@taquito/michelson-encoder$": "<rootDir>/packages/taquito-michelson-encoder/src/taquito-michelson-encoder.ts",
-      "^@taquito/michel-codec$": "<rootDir>/packages/taquito-michel-codec/src/taquito-michel-codec.ts",
-      "^@taquito-remote-signer$": "<rootDir>/packages/taquito-remote-signer/src/taquito-remote-signer.ts",
-      "^@taquito/rpc$": "<rootDir>/packages/taquito-rpc/src/taquito-rpc.ts",
-      "^@taquito-sapling$": "<rootDir>/packages/taquito-sapling/taquito-sapling.ts",
-      "^@taquito/signer$": "<rootDir>/packages/taquito-signer/src/taquito-signer.ts",
-      "^@taquito/taquito$": "<rootDir>/packages/taquito/src/taquito.ts",
-      "^@taquito/timelock$": "<rootDir>/packages/taquito-timelock/src/taquito-timelock.ts",
-      "^@taquito/tzip12$": "<rootDir>/packages/taquito-tzip12/src/taquito-tzip12.ts",
-      "^@taquito/tzip16$": "<rootDir>/packages/taquito-tzip16/src/taquito-tzip16.ts",
-      "^@taquito/utils$": "<rootDir>/packages/taquito-utils/src/taquito-utils.ts",
-      "^@taquito/wallet-connect$": "<rootDir>/packages/taquito-wallet-connect/src/taquito-wallet-connect.ts"
-    },
-    "coveragePathIgnorePatterns": [
-      "/node_modules/",
-      "/test/"
-    ],
-    "collectCoverageFrom": [
-      "packages/**/src/**/*.{js,ts}"
-    ],
-    "watchPathIgnorePatterns": [
-      "/node_modules/",
-      "/integration-tests/",
-      "/example/"
-    ]
-  },
   "devDependencies": {
     "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^19.2.2",
-    "@nrwl/jest": "^19.5.3",
     "@nx/vite": "^22.5.4",
     "@types/bluebird": "^3.5.42",
     "@types/estree": "^1.0.5",
-    "@types/jest": "^29.5.12",
     "@types/mocha": "^10.0.7",
     "@types/node": "^22.0.0",
     "@types/typedarray-to-buffer": "^4.0.4",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
+    "@vitest/coverage-v8": "^4.1.4",
     "@vitest/ui": "^4.0.18",
     "colors": "^1.4.0",
     "commitizen": "^4.3.0",
@@ -125,8 +75,6 @@
     "eslint-plugin-prettier": "^5.2.1",
     "gh-pages": "^6.1.1",
     "husky": "^9.1.4",
-    "jest": "^29.7.0",
-    "jest-config": "^29.7.0",
     "lint-staged": "^15.2.7",
     "lodash.camelcase": "^4.3.0",
     "nx": "^22.5.3",
@@ -138,7 +86,6 @@
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-typescript2": "^0.36.0",
     "shelljs": "^0.8.5",
-    "ts-jest": "^29.2.3",
     "ts-node": "^10.9.2",
     "ts-toolbelt": "^9.6.0",
     "typedoc": "^0.28.17",

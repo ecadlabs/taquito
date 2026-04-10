@@ -3,7 +3,7 @@ import { Context, Protocols } from '../../src/taquito';
 
 describe('Taquito local forger', () => {
   const mockRpcClient = {
-    getProtocols: jest.fn(),
+    getProtocols: vi.fn(),
   };
 
   beforeEach(() => {

@@ -1,3 +1,4 @@
+import { vi, type Mock } from 'vitest';
 import { OpKind } from '@taquito/taquito';
 import {
   NetworkType,
@@ -9,11 +10,11 @@ import {
 } from '../src/taquito-wallet-connect';
 import { existingPairings, fakeCode, sessionExample, sessionMultipleChains } from './data';
 
-jest.mock('@walletconnect/modal', () => {
+vi.mock('@walletconnect/modal', () => {
   return {
     WalletConnectModal: {
-      openModal: jest.fn(),
-      closeModal: jest.fn(),
+      openModal: vi.fn(),
+      closeModal: vi.fn(),
     },
   };
 });
@@ -24,30 +25,30 @@ describe('Wallet connect tests', () => {
   let sessionUpdatedEvent: (eventParams: { topic: string; params: any }) => void;
   let walletConnect: WalletConnect;
   let mockModalClient: {
-    openModal: jest.Mock<any, any>;
-    closeModal: jest.Mock<any, any>;
+    openModal: Mock;
+    closeModal: Mock;
   };
   let mockSignClient: {
     on: any;
-    connect: jest.Mock<any, any>;
+    connect: Mock;
     pairing: {
-      getAll: jest.Mock<any, any>;
+      getAll: Mock;
     };
     session: {
       keys: string[];
-      get: jest.Mock<any, any>;
+      get: Mock;
     };
-    disconnect: jest.Mock<any, any>;
+    disconnect: Mock;
     peer: {
       metadata: any;
     };
-    request: jest.Mock<any, any>;
+    request: Mock;
   };
 
   beforeEach(() => {
     mockModalClient = {
-      openModal: jest.fn(),
-      closeModal: jest.fn(),
+      openModal: vi.fn(),
+      closeModal: vi.fn(),
     };
     mockSignClient = {
       on: (eventName: string, eventFct: any) => {
@@ -59,19 +60,19 @@ describe('Wallet connect tests', () => {
           sessionUpdatedEvent = eventFct;
         }
       },
-      connect: jest.fn(),
+      connect: vi.fn(),
       pairing: {
-        getAll: jest.fn(),
+        getAll: vi.fn(),
       },
       session: {
         keys: [sessionExample.topic, sessionMultipleChains.topic],
-        get: jest.fn(),
+        get: vi.fn(),
       },
-      disconnect: jest.fn(),
+      disconnect: vi.fn(),
       peer: {
         metadata: sessionExample.peer.metadata,
       },
-      request: jest.fn(),
+      request: vi.fn(),
     };
     mockSignClient.connect.mockReturnValue({ approval: async () => sessionExample });
     walletConnect = new WalletConnect(mockSignClient as any, mockModalClient as any);

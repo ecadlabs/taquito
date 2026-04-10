@@ -9,48 +9,48 @@ import { UnitValue } from '@taquito/michelson-encoder';
 describe('ContractView test', () => {
   let rpcContractProvider: RpcContractProvider;
   let mockRpcClient: {
-    getContract: jest.Mock<any, any>;
-    getStorage: jest.Mock<any, any>;
-    getEntrypoints: jest.Mock<any, any>;
-    getBlockHeader: jest.Mock<any, any>;
-    runView: jest.Mock<any, any>;
-    getChainId: jest.Mock<any, any>;
+    getContract: ReturnType<typeof vi.fn>;
+    getStorage: ReturnType<typeof vi.fn>;
+    getEntrypoints: ReturnType<typeof vi.fn>;
+    getBlockHeader: ReturnType<typeof vi.fn>;
+    runView: ReturnType<typeof vi.fn>;
+    getChainId: ReturnType<typeof vi.fn>;
   };
 
   let mockSigner: {
-    publicKeyHash: jest.Mock<any, any>;
-    publicKey: jest.Mock<any, any>;
-    sign: jest.Mock<any, any>;
+    publicKeyHash: ReturnType<typeof vi.fn>;
+    publicKey: ReturnType<typeof vi.fn>;
+    sign: ReturnType<typeof vi.fn>;
   };
 
   let mockEstimate: {
-    originate: jest.Mock<any, any>;
-    transfer: jest.Mock<any, any>;
-    setDelegate: jest.Mock<any, any>;
-    registerDelegate: jest.Mock<any, any>;
+    originate: ReturnType<typeof vi.fn>;
+    transfer: ReturnType<typeof vi.fn>;
+    setDelegate: ReturnType<typeof vi.fn>;
+    registerDelegate: ReturnType<typeof vi.fn>;
   };
 
   beforeEach(() => {
     mockRpcClient = {
-      getEntrypoints: jest.fn(),
-      getContract: jest.fn(),
-      getStorage: jest.fn(),
-      getBlockHeader: jest.fn(),
-      runView: jest.fn(),
-      getChainId: jest.fn(),
+      getEntrypoints: vi.fn(),
+      getContract: vi.fn(),
+      getStorage: vi.fn(),
+      getBlockHeader: vi.fn(),
+      runView: vi.fn(),
+      getChainId: vi.fn(),
     };
 
     mockSigner = {
-      publicKeyHash: jest.fn(),
-      publicKey: jest.fn(),
-      sign: jest.fn(),
+      publicKeyHash: vi.fn(),
+      publicKey: vi.fn(),
+      sign: vi.fn(),
     };
 
     mockEstimate = {
-      originate: jest.fn(),
-      transfer: jest.fn(),
-      registerDelegate: jest.fn(),
-      setDelegate: jest.fn(),
+      originate: vi.fn(),
+      transfer: vi.fn(),
+      registerDelegate: vi.fn(),
+      setDelegate: vi.fn(),
     };
 
     rpcContractProvider = new RpcContractProvider(

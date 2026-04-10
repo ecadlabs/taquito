@@ -1,5 +1,9 @@
 import { TestScheduler } from 'rxjs/testing';
-import { BlockResponse, OperationContentsAndResultRegisterGlobalConstant, OpKind } from '@taquito/rpc';
+import {
+  BlockResponse,
+  OperationContentsAndResultRegisterGlobalConstant,
+  OpKind,
+} from '@taquito/rpc';
 import { RegisterGlobalConstantWalletOperation } from '../../src/wallet/register-global-constant-operation';
 
 describe('RegisterGlobalConstantWalletOperation', () => {
@@ -30,10 +34,7 @@ describe('RegisterGlobalConstantWalletOperation', () => {
     storage_limit: '93',
     value: {
       prim: 'Pair',
-      args: [
-        { int: '999' },
-        { int: '999' },
-      ],
+      args: [{ int: '999' }, { int: '999' }],
     },
     metadata: {
       balance_updates: [],
@@ -54,7 +55,7 @@ describe('RegisterGlobalConstantWalletOperation', () => {
 
     fakeContext = {
       rpc: {
-        getBlock: jest.fn(),
+        getBlock: vi.fn(),
       },
       config: { confirmationPollingIntervalSecond: 10 },
     };
@@ -80,7 +81,7 @@ describe('RegisterGlobalConstantWalletOperation', () => {
         blockObservable
       );
 
-      jest.spyOn(op, 'operationResults').mockResolvedValue([successfulResult]);
+      vi.spyOn(op, 'operationResults').mockResolvedValue([successfulResult]);
 
       flush();
       const hash = await op.globalConstantHash();
@@ -102,7 +103,7 @@ describe('RegisterGlobalConstantWalletOperation', () => {
         blockObservable
       );
 
-      jest.spyOn(op, 'registerGlobalConstantOperation').mockResolvedValue(successfulResult);
+      vi.spyOn(op, 'registerGlobalConstantOperation').mockResolvedValue(successfulResult);
 
       flush();
       const status = await op.status();

@@ -2,18 +2,20 @@ import BigNumber from 'bignumber.js';
 import { rpcContractResponse as rpcContractResponse5, storage as storage5 } from '../data/sample5';
 import { Schema } from '../src/schema/storage';
 import { MichelsonMap } from '../src/michelson-map';
-import { expectMichelsonMap } from './utils';
+import { normalizeMichelsonValue } from './utils';
 
 describe('Schema test', () => {
   it('Should parse storage properly', () => {
     const schema = new Schema(storage5);
     const storage = schema.Execute(rpcContractResponse5.script.storage);
-    expect(storage).toEqual({
-      '0': expectMichelsonMap(),
-      totalSupply: new BigNumber('1000'),
-      approver: { Some: 'tz1g3oS1UPgWFFpxrc2pEn4sgV3ky1Z6Qaz2' },
-      centralBank: 'tz1g3oS1UPgWFFpxrc2pEn4sgV3ky1Z6Qaz2',
-    });
+    expect(normalizeMichelsonValue(storage)).toEqual(
+      normalizeMichelsonValue({
+        '0': {},
+        totalSupply: new BigNumber('1000'),
+        approver: { Some: 'tz1g3oS1UPgWFFpxrc2pEn4sgV3ky1Z6Qaz2' },
+        centralBank: 'tz1g3oS1UPgWFFpxrc2pEn4sgV3ky1Z6Qaz2',
+      })
+    );
   });
 
   it('Should encode storage properly', () => {

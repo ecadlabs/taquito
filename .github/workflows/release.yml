@@ -71,7 +71,7 @@ jobs:
         run: npm run -w @taquito/taquito build:release
 
       - name: Test
-        run: npm test -- --runInBand
+        run: npm test
 
       - name: Publish prerelease packages
         if: ${{ inputs.prerelease }}

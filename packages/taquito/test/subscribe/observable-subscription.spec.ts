@@ -13,7 +13,7 @@ describe('Observable subscription test', () => {
 
   it('the observable emits 3 data', async () => {
     testScheduler.run(({ cold, flush }) => {
-      const stub = jest.fn();
+      const stub = vi.fn();
       const observable$ = cold('a-b-c');
       const subscriber = new ObservableSubscription(observable$, true);
       subscriber.on('data', stub);
@@ -26,8 +26,8 @@ describe('Observable subscription test', () => {
 
   it('the observable retries on error when the property "shouldRetry" is set to true', async () => {
     testScheduler.run(({ cold, flush }) => {
-      const stub = jest.fn();
-      const errStub = jest.fn();
+      const stub = vi.fn();
+      const errStub = vi.fn();
       const value = ['a-#', 'b-#', 'c'];
       let i = 0;
       const observable$ = defer(() => {
@@ -46,8 +46,8 @@ describe('Observable subscription test', () => {
 
   it('the observable does not retry on error when the property "shouldRetry" is set to false', async () => {
     testScheduler.run(({ cold, flush }) => {
-      const stub = jest.fn();
-      const errStub = jest.fn();
+      const stub = vi.fn();
+      const errStub = vi.fn();
       const value = ['a-#', 'b-#', 'c'];
       let i = 0;
       const observable$ = defer(() => {

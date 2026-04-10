@@ -26,9 +26,9 @@ describe('Contract abstraction composer test', () => {
 
   beforeEach(() => {
     mockRpcClient = {
-      getContract: jest.fn(),
-      getEntrypoints: jest.fn(),
-      getChainId: jest.fn(),
+      getContract: vi.fn(),
+      getEntrypoints: vi.fn(),
+      getChainId: vi.fn(),
     };
 
     mockRpcClient.getContract.mockResolvedValue({ script });

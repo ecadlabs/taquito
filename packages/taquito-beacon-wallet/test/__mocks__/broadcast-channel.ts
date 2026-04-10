@@ -1,4 +1,6 @@
 // thanks to IsaccoSordo's contribution of https://github.com/ecadlabs/taquito/pull/3015
+import { vi } from 'vitest';
+
 interface MessageListener {
   (message: any): void;
 }
@@ -38,10 +40,10 @@ class BroadcastChannel {
 function createLeaderElection(_channel: BroadcastChannel) {
   // Mock implementation of createLeaderElection
   return {
-    awaitLeadership: jest.fn(),
-    hasLeader: jest.fn().mockReturnValue(true),
-    isLeader: jest.fn().mockReturnValue(true),
-    die: jest.fn(),
+    awaitLeadership: vi.fn(),
+    hasLeader: vi.fn().mockReturnValue(true),
+    isLeader: vi.fn().mockReturnValue(true),
+    die: vi.fn(),
   };
 }
 

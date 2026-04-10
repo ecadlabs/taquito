@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { RpcReadAdapter } from '@taquito/taquito';
 import { ForbiddenInstructionInViewCodeError, NoParameterExpectedError } from '../../src/errors';
 import { MichelsonStorageView } from '../../src/viewKind/michelson-storage-view';
@@ -9,12 +10,12 @@ describe('MichelsonStorageView test', () => {
 
   beforeEach(() => {
     mockRpcClient = {
-      getBlock: jest.fn(),
-      getBalance: jest.fn(),
-      getChainId: jest.fn(),
-      runCode: jest.fn(),
-      getStorage: jest.fn(),
-      getBlockHeader: jest.fn(),
+      getBlock: vi.fn(),
+      getBalance: vi.fn(),
+      getChainId: vi.fn(),
+      runCode: vi.fn(),
+      getStorage: vi.fn(),
+      getBlockHeader: vi.fn(),
     };
 
     mockContractAbstraction.address = 'KT1test';

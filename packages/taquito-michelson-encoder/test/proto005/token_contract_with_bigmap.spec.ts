@@ -5,8 +5,7 @@ import {
 } from '../../data/proto005/token_contract_with_bigmap';
 import { Schema } from '../../src/schema/storage';
 import BigNumber from 'bignumber.js';
-import { MichelsonMap } from '../../src/michelson-map';
-import { expectMichelsonMap } from '../utils';
+import { normalizeMichelsonValue } from '../utils';
 
 describe('Token contract with big map', () => {
   it('should extract schema properly', () => {
@@ -19,45 +18,45 @@ describe('Token contract with big map', () => {
           schema: {
             key: {
               __michelsonType: 'address',
-              schema: 'address'
+              schema: 'address',
             },
             value: {
               __michelsonType: 'pair',
               schema: {
                 '0': {
                   __michelsonType: 'nat',
-                  schema: 'nat'
+                  schema: 'nat',
                 },
                 '1': {
                   __michelsonType: 'map',
                   schema: {
                     key: {
                       __michelsonType: 'address',
-                      schema: 'address'
+                      schema: 'address',
                     },
                     value: {
                       __michelsonType: 'nat',
-                      schema: 'nat'
+                      schema: 'nat',
                     },
                   },
                 },
-              }
+              },
             },
           },
         },
         '1': {
           __michelsonType: 'address',
-          schema: 'address'
+          schema: 'address',
         },
         '2': {
           __michelsonType: 'bool',
-          schema: 'bool'
+          schema: 'bool',
         },
         '3': {
           __michelsonType: 'nat',
-          schema: 'nat'
+          schema: 'nat',
         },
-      }
+      },
     });
   });
 
@@ -85,13 +84,13 @@ describe('Token contract with big map', () => {
 
   it('should decode big map diff properly', () => {
     const schema = Schema.fromRPCResponse(rpcContractResponse as any);
-    expect(schema.ExecuteOnBigMapDiff(bigMapDiff)).toEqual(
-      expectMichelsonMap({
+    expect(normalizeMichelsonValue(schema.ExecuteOnBigMapDiff(bigMapDiff))).toEqual(
+      normalizeMichelsonValue({
         tz1Ra8yQVQN4Nd7LpPQ6UT6t3bsWWqHZ9wa6: {
           '0': new BigNumber('200'),
-          '1': MichelsonMap.fromLiteral({
+          '1': {
             tz1fPjyo55HwUAkd1xcL5vo6DGzJrkxAMpiD: new BigNumber('60'),
-          }),
+          },
         },
       })
     );
@@ -99,11 +98,13 @@ describe('Token contract with big map', () => {
 
   it('should decode big map value properly', () => {
     const schema = Schema.fromRPCResponse(rpcContractResponse as any);
-    expect(schema.ExecuteOnBigMapValue(bigMapValue)).toEqual({
-      '0': new BigNumber('200'),
-      '1': expectMichelsonMap({
-        tz1fPjyo55HwUAkd1xcL5vo6DGzJrkxAMpiD: new BigNumber('60'),
-      }),
-    });
+    expect(normalizeMichelsonValue(schema.ExecuteOnBigMapValue(bigMapValue))).toEqual(
+      normalizeMichelsonValue({
+        '0': new BigNumber('200'),
+        '1': {
+          tz1fPjyo55HwUAkd1xcL5vo6DGzJrkxAMpiD: new BigNumber('60'),
+        },
+      })
+    );
   });
 });

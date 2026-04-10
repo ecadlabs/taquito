@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import {
   HttpBackend,
   HttpRequestFailed,
@@ -5,7 +6,7 @@ import {
   HttpTimeoutError,
 } from '../src/taquito-http-utils';
 
-const mockFetch = jest.fn();
+const mockFetch = vi.fn();
 const originalFetch = globalThis.fetch;
 
 beforeAll(() => {
@@ -29,8 +30,8 @@ function mockResponse(opts: {
   return {
     status: opts.status ?? 200,
     statusText: opts.statusText ?? 'OK',
-    json: jest.fn().mockResolvedValue(opts.jsonBody ?? {}),
-    text: jest.fn().mockResolvedValue(opts.body ?? ''),
+    json: vi.fn().mockResolvedValue(opts.jsonBody ?? {}),
+    text: vi.fn().mockResolvedValue(opts.body ?? ''),
   };
 }
 
@@ -278,11 +279,11 @@ describe('HttpBackend', () => {
     describe('retry logic', () => {
       // Retry calls sleep() internally. Use fake timers to avoid real delays.
       beforeEach(() => {
-        jest.useFakeTimers();
+        vi.useFakeTimers();
       });
 
       afterEach(() => {
-        jest.useRealTimers();
+        vi.useRealTimers();
       });
 
       function econnreset() {
@@ -305,7 +306,7 @@ describe('HttpBackend', () => {
 
       async function drainRetries(promise: Promise<unknown>) {
         // Advance timers to flush any pending sleep() calls during retry
-        await jest.advanceTimersByTimeAsync(10_000);
+        await vi.advanceTimersByTimeAsync(10_000);
         return promise;
       }
 
@@ -458,7 +459,7 @@ describe('HttpBackend', () => {
         // Attach rejection handler BEFORE advancing timers to avoid unhandled rejection warning
         const assertion = expect(promise).rejects.toThrow(HttpRequestFailed);
         // Drain the sleep between retries
-        await jest.advanceTimersByTimeAsync(10_000);
+        await vi.advanceTimersByTimeAsync(10_000);
         await assertion;
         // Default retry count is 1, so 1 initial + 1 retry = 2 calls
         expect(mockFetch).toHaveBeenCalledTimes(2);
