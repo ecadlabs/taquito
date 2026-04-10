@@ -90,6 +90,7 @@ import { Provider } from '../provider';
 import { PrepareProvider } from '../prepare';
 import { FailingNoopOperation } from '../operations/failing-noop-operation';
 import { BlockIdentifier } from '../read-provider/interface';
+import { isNotFoundError, retryOnNotFound } from './not-found-retry';
 
 export class RpcContractProvider extends Provider implements ContractProvider, StorageProvider {
   constructor(
@@ -115,7 +116,9 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
     if (contractValidation !== ValidationResult.VALID) {
       throw new InvalidContractAddressError(contract, contractValidation);
     }
-    const script = await this.context.readProvider.getScript(contract, 'head');
+    const script = await retryOnNotFound(() =>
+      this.context.readProvider.getScript(contract, 'head')
+    );
     if (!schema) {
       schema = script;
     }
@@ -945,15 +948,12 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
     try {
       contractState = await loadContractState(block);
     } catch (error) {
-      // Some RPC deployments can transiently 404 a freshly originated contract on an exact
-      // block-pinned read before their recent contract indexes converge. Retry at head to
-      // preserve existing contract lookup behavior for callers that do not require exact pinning.
-      if (
-        block !== 'head' &&
-        error instanceof HttpResponseError &&
-        error.status === STATUS_CODE.NOT_FOUND
-      ) {
-        contractState = await loadContractState('head');
+      // Shadownet's rolling nodes occasionally 404 a just-originated contract at the exact
+      // inclusion level even after confirmation. Retry at head so the contract abstraction still
+      // resolves once the node's contract index catches up. The head index can lag briefly too,
+      // so give it a few bounded retries before surfacing the 404.
+      if (block !== 'head' && isNotFoundError(error)) {
+        contractState = await retryOnNotFound(() => loadContractState('head'));
       } else {
         throw error;
       }

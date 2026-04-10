@@ -262,6 +262,19 @@ export abstract class Provider {
     };
   }
 
+  private async signForgedBytes(forgedBytes: ForgedBytes): Promise<ForgedBytes> {
+    const signed = await this.signer.sign(forgedBytes.opbytes, new Uint8Array([3]));
+
+    return {
+      ...forgedBytes,
+      opbytes: signed.sbytes,
+      opOb: {
+        ...forgedBytes.opOb,
+        signature: signed.prefixSig,
+      },
+    };
+  }
+
   get rpc(): RpcClientInterface {
     return this.context.rpc;
   }
@@ -448,7 +461,6 @@ export abstract class Provider {
 
   protected async signAndInject(forgedBytes: ForgedBytes) {
     let signedForgedBytes = await this.signForgedBytes(forgedBytes);
-
     const opResponse: OperationContentsAndResult[] = [];
     let results;
 

@@ -441,6 +441,47 @@ describe('RpcContractProvider test', () => {
       );
       expect(mockReadProvider.getEntrypoints).not.toHaveBeenCalled();
     });
+
+    it('should keep retrying at head while the contract index catches up', async () => {
+      mockReadProvider.getScript
+        .mockRejectedValueOnce(
+          new HttpResponseError('fail', STATUS_CODE.NOT_FOUND, 'err', 'test', 'https://test.com')
+        )
+        .mockRejectedValueOnce(
+          new HttpResponseError('fail', STATUS_CODE.NOT_FOUND, 'err', 'test', 'https://test.com')
+        )
+        .mockRejectedValueOnce(
+          new HttpResponseError('fail', STATUS_CODE.NOT_FOUND, 'err', 'test', 'https://test.com')
+        )
+        .mockResolvedValueOnce({
+          code: [{ prim: 'parameter', args: [{ prim: 'unit' }] }, sample],
+          storage: sampleStorage,
+        });
+
+      await rpcContractProvider.at('KT1KjGmnNQ6iXWr8VHGM8n8b8EQXHc6eRsPD', undefined, 200);
+
+      expect(mockReadProvider.getScript).toHaveBeenNthCalledWith(
+        1,
+        'KT1KjGmnNQ6iXWr8VHGM8n8b8EQXHc6eRsPD',
+        200
+      );
+      expect(mockReadProvider.getScript).toHaveBeenNthCalledWith(
+        2,
+        'KT1KjGmnNQ6iXWr8VHGM8n8b8EQXHc6eRsPD',
+        'head'
+      );
+      expect(mockReadProvider.getScript).toHaveBeenNthCalledWith(
+        3,
+        'KT1KjGmnNQ6iXWr8VHGM8n8b8EQXHc6eRsPD',
+        'head'
+      );
+      expect(mockReadProvider.getScript).toHaveBeenNthCalledWith(
+        4,
+        'KT1KjGmnNQ6iXWr8VHGM8n8b8EQXHc6eRsPD',
+        'head'
+      );
+      expect(mockReadProvider.getEntrypoints).toHaveBeenCalledTimes(1);
+    });
   });
 
   describe('transfer', () => {
@@ -506,6 +547,54 @@ describe('RpcContractProvider test', () => {
         },
         opbytes: 'test',
       });
+    });
+
+    it('should retry preapply with RPC expected counters when validation is ahead of the contract index', async () => {
+      mockForger.forge
+        .mockResolvedValueOnce('forged-initial')
+        .mockResolvedValueOnce('forged-retry');
+      mockSigner.sign.mockImplementation(async (opbytes: string) => ({
+        sbytes: `signed:${opbytes}`,
+        prefixSig: `sig:${opbytes}`,
+      }));
+      mockRpcClient.preapplyOperations
+        .mockRejectedValueOnce(
+          new HttpResponseError(
+            'Http error response: (500) counter_in_the_past',
+            500 as any,
+            'Internal Server Error',
+            JSON.stringify([
+              {
+                kind: 'branch',
+                id: 'proto.024-PtTALLiN.contract.counter_in_the_past',
+                contract: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+                expected: '4',
+                found: '1',
+              },
+            ]),
+            'http://example.test/chains/main/blocks/head/helpers/preapply/operations'
+          )
+        )
+        .mockResolvedValueOnce([]);
+
+      const result = await rpcContractProvider.transfer({
+        to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
+        amount: 2,
+        fee: 10000,
+        gasLimit: 10600,
+        storageLimit: 300,
+      });
+
+      expect(mockRpcClient.preapplyOperations).toHaveBeenCalledTimes(2);
+      expect(mockRpcClient.preapplyOperations.mock.calls[0][0][0].contents[0].counter).toEqual('1');
+      expect(mockRpcClient.preapplyOperations.mock.calls[0][0][0].contents[1].counter).toEqual('2');
+      expect(mockRpcClient.preapplyOperations.mock.calls[1][0][0].contents[0].counter).toEqual('4');
+      expect(mockRpcClient.preapplyOperations.mock.calls[1][0][0].contents[1].counter).toEqual('5');
+      expect(mockRpcClient.injectOperation).toHaveBeenCalledWith('signed:forged-retry');
+      expect(result.raw.opbytes).toEqual('signed:forged-retry');
+      expect(result.raw.opOb.signature).toEqual('sig:forged-retry');
+      expect(result.raw.opOb.contents[0].counter).toEqual('4');
+      expect(result.raw.opOb.contents[1].counter).toEqual('5');
     });
 
     it('should omit reveal operation if manager is defined (BABY)', async () => {
