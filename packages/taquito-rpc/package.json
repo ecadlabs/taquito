@@ -60,7 +60,7 @@
     "@taquito/core": "^24.2.0",
     "@taquito/http-utils": "^24.2.0",
     "@taquito/utils": "^24.2.0",
-    "bignumber.js": "^10.0.2",
+    "bignumber.js": "^10.0.2"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.42",
