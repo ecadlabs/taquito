@@ -19,6 +19,8 @@ jobs:
     environment: release
     permissions:
       contents: write
+      # Required for npm trusted publishing. Official Taquito npm releases do not use
+      # a long-lived CI npm token secret.
       id-token: write
       pull-requests: write
     env:
@@ -78,10 +80,14 @@ jobs:
 
       - name: Publish prerelease packages
         if: ${{ inputs.prerelease }}
+        # npm publication relies on the GitHub Actions <-> npm trusted publishing
+        # connection plus provenance, not on a repo-held npm automation token.
         run: npm publish --workspaces --tag "${DIST_TAG}" --provenance --access public
 
       - name: Publish stable packages
         if: ${{ !inputs.prerelease }}
+        # npm publication relies on the GitHub Actions <-> npm trusted publishing
+        # connection plus provenance, not on a repo-held npm automation token.
         run: npm publish --workspaces --tag "${DIST_TAG}" --provenance --access public
 
       - name: Create GitHub Release
