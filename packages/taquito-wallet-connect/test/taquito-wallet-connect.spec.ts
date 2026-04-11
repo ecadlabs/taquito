@@ -1,4 +1,4 @@
-import { vi, type Mock } from 'vitest';
+import { expectTypeOf, vi, type Mock } from 'vitest';
 import { OpKind } from '@taquito/taquito';
 import {
   NetworkType,
@@ -183,6 +183,26 @@ describe('Wallet connect tests', () => {
       walletConnect.configureWithExistingSessionKey(sessionMultipleChains.topic);
 
       expect(mockSignClient.session.get).toHaveBeenCalledWith(sessionMultipleChains.topic);
+      expect(walletConnect.getSession().topic).toEqual(sessionMultipleChains.topic);
+    });
+
+    it('should support the synchronous consumer restore flow', () => {
+      expectTypeOf(walletConnect.getAllExistingSessionKeys()).toEqualTypeOf<string[]>();
+
+      mockSignClient.session.get.mockReturnValue(sessionMultipleChains);
+
+      const existingSessionKey = walletConnect.getAllExistingSessionKeys()[0];
+
+      if (!existingSessionKey) {
+        throw new Error('Expected an existing session key in the test fixture');
+      }
+
+      expectTypeOf(
+        walletConnect.configureWithExistingSessionKey(existingSessionKey)
+      ).toEqualTypeOf<void>();
+      walletConnect.configureWithExistingSessionKey(existingSessionKey);
+
+      expect(mockSignClient.session.get).toHaveBeenCalledWith(existingSessionKey);
       expect(walletConnect.getSession().topic).toEqual(sessionMultipleChains.topic);
     });
 
