@@ -1,4 +1,4 @@
-import * as sapling from '@airgap/sapling-wasm';
+import * as sapling from '@taquito/sapling-wasm';
 import { ParametersOutputProof } from './types';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const saplingOutputParams = require('../saplingOutputParams');

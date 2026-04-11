@@ -2,6 +2,7 @@
 import { vi, type Mock } from 'vitest';
 import { MichelCodecPacker } from '@taquito/taquito';
 import BigNumber from 'bignumber.js';
+import { b58DecodePublicKeyHash } from '@taquito/utils';
 import { SaplingForger } from '../src/sapling-forger/sapling-forger';
 import {
   InMemorySpendingKey,
@@ -656,5 +657,179 @@ describe('SaplingToolkit', () => {
         },
       ])
     ).rejects.toThrow('Unable to spend "10000000" mutez while the balance is only 8000000 mutez.');
+  });
+
+  it('should pass empty bound data through shielded transaction preparation', async () => {
+    const mockPacker = {
+      packData: vi.fn(),
+    };
+    const mockSaplingForger = {
+      forgeSaplingTransaction: vi.fn().mockReturnValue(Buffer.from('beef', 'hex')),
+    };
+    const shieldedToolkit = new SaplingToolkit(
+      { saplingSigner: inMemorySpendingKey },
+      {
+        contractAddress: 'KT1G2kvdfPoavgR6Fjdd68M2vaPk14qJ8bhC',
+        saplingId: '0',
+        memoSize: 8,
+      },
+      mockReadProvider as any,
+      mockPacker as any,
+      mockSaplingForger as any,
+      mockSaplingTxBuilder as any
+    );
+
+    mockSaplingTxBuilder.createShieldedTx.mockResolvedValue({
+      inputs: [],
+      outputs: [],
+      signature: Buffer.from('abcd', 'hex'),
+      balance: new BigNumber(-1000000),
+    });
+
+    const tx = await shieldedToolkit.prepareShieldedTransaction([
+      {
+        to: 'zet12mVvzJ4QJhnNQetGHzdwTMcLgNrdC4SFact6BB5jpeqGAefWip3iGgEjvDA9z7b9Y',
+        amount: 1,
+      },
+    ]);
+
+    expect(tx).toBe('beef');
+    expect(mockPacker.packData).not.toHaveBeenCalled();
+    expect(mockSaplingTxBuilder.createShieldedTx).toHaveBeenCalledTimes(1);
+    expect(mockSaplingTxBuilder.createShieldedTx.mock.calls[0][2]).toEqual(Buffer.alloc(0));
+    expect(mockSaplingForger.forgeSaplingTransaction).toHaveBeenCalledWith(
+      expect.objectContaining({
+        boundData: Buffer.alloc(0),
+      })
+    );
+  });
+
+  it('should pack the recipient key hash into bound data for unshielded transaction preparation', async () => {
+    const mockPacker = {
+      packData: vi.fn().mockResolvedValue({ packed: '050a1234' }),
+    };
+    const mockSaplingForger = {
+      forgeSaplingTransaction: vi.fn().mockReturnValue(Buffer.from('cafe', 'hex')),
+    };
+    const unshieldedToolkit = new SaplingToolkit(
+      { saplingSigner: inMemorySpendingKey },
+      {
+        contractAddress: 'KT1G2kvdfPoavgR6Fjdd68M2vaPk14qJ8bhC',
+        saplingId: '0',
+        memoSize: 8,
+      },
+      mockReadProvider as any,
+      mockPacker as any,
+      mockSaplingForger as any,
+      mockSaplingTxBuilder as any
+    );
+
+    vi.spyOn(unshieldedToolkit, 'getSaplingTransactionViewer').mockResolvedValue({
+      getIncomingAndOutgoingTransactionsRaw: vi.fn().mockResolvedValue({
+        incoming: [
+          {
+            value: Uint8Array.from(Buffer.from('0f4240', 'hex')),
+            memo: new Uint8Array(),
+            paymentAddress: new Uint8Array(),
+            randomCommitmentTrapdoor: new Uint8Array(),
+            isSpent: false,
+            position: 0,
+          },
+        ],
+        outgoing: [],
+      }),
+    } as any);
+
+    mockSaplingTxBuilder.createSaplingTx.mockResolvedValue({
+      inputs: [],
+      outputs: [],
+      signature: Buffer.from('abcd', 'hex'),
+      balance: new BigNumber(1000000),
+    });
+
+    const tx = await unshieldedToolkit.prepareUnshieldedTransaction({
+      to: 'tz1hDFKpVkT7jzYncaLma4vxh4Gg6JNqvdtB',
+      amount: 1,
+    });
+
+    const expectedBytes = b58DecodePublicKeyHash('tz1hDFKpVkT7jzYncaLma4vxh4Gg6JNqvdtB', 'hex');
+    const expectedBoundData = Buffer.from('050a1234', 'hex');
+
+    expect(tx).toBe('cafe');
+    expect(mockPacker.packData).toHaveBeenCalledWith({
+      data: { bytes: expectedBytes },
+      type: { prim: 'bytes' },
+    });
+    expect(mockSaplingTxBuilder.createSaplingTx).toHaveBeenCalledTimes(1);
+    expect(mockSaplingTxBuilder.createSaplingTx.mock.calls[0][2]).toEqual(expectedBoundData);
+    expect(mockSaplingTxBuilder.createSaplingTx.mock.calls[0][3].sumSelectedInputs.toString()).toBe(
+      '1000000'
+    );
+    expect(mockSaplingForger.forgeSaplingTransaction).toHaveBeenCalledWith(
+      expect.objectContaining({
+        boundData: expectedBoundData,
+      })
+    );
+  });
+
+  it('should pass empty bound data through sapling transfer preparation', async () => {
+    const mockPacker = {
+      packData: vi.fn(),
+    };
+    const mockSaplingForger = {
+      forgeSaplingTransaction: vi.fn().mockReturnValue(Buffer.from('feed', 'hex')),
+    };
+    const saplingTransferToolkit = new SaplingToolkit(
+      { saplingSigner: inMemorySpendingKey },
+      {
+        contractAddress: 'KT1G2kvdfPoavgR6Fjdd68M2vaPk14qJ8bhC',
+        saplingId: '0',
+        memoSize: 8,
+      },
+      mockReadProvider as any,
+      mockPacker as any,
+      mockSaplingForger as any,
+      mockSaplingTxBuilder as any
+    );
+
+    vi.spyOn(saplingTransferToolkit, 'getSaplingTransactionViewer').mockResolvedValue({
+      getIncomingAndOutgoingTransactionsRaw: vi.fn().mockResolvedValue({
+        incoming: [
+          {
+            value: Uint8Array.from(Buffer.from('0f4240', 'hex')),
+            memo: new Uint8Array(),
+            paymentAddress: new Uint8Array(),
+            randomCommitmentTrapdoor: new Uint8Array(),
+            isSpent: false,
+            position: 0,
+          },
+        ],
+        outgoing: [],
+      }),
+    } as any);
+
+    mockSaplingTxBuilder.createSaplingTx.mockResolvedValue({
+      inputs: [],
+      outputs: [],
+      signature: Buffer.from('abcd', 'hex'),
+      balance: new BigNumber(0),
+    });
+
+    const tx = await saplingTransferToolkit.prepareSaplingTransaction([
+      {
+        to: 'zet13KeFdzZ3tf8Aragg5iuMu3Ff8ZXXhzKhZF3mALYoL8spoPNvShf7THzo5tu4ynbJQ',
+        amount: 1,
+      },
+    ]);
+
+    expect(tx).toBe('feed');
+    expect(mockPacker.packData).not.toHaveBeenCalled();
+    expect(mockSaplingTxBuilder.createSaplingTx).toHaveBeenCalledTimes(1);
+    expect(mockSaplingTxBuilder.createSaplingTx.mock.calls[0][2]).toEqual(Buffer.alloc(0));
+    expect(mockSaplingForger.forgeSaplingTransaction).toHaveBeenCalledWith(
+      expect.objectContaining({
+        boundData: Buffer.alloc(0),
+      })
+    );
   });
 });

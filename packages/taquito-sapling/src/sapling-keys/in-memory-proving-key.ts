@@ -1,4 +1,4 @@
-import * as sapling from '@airgap/sapling-wasm';
+import * as sapling from '@taquito/sapling-wasm';
 import { ParametersSpendProof, SaplingSpendDescription } from '../types';
 import { decryptKey } from './helpers';
 

@@ -19,6 +19,7 @@ jobs:
     if: ${{ !github.event.pull_request.head.repo.fork && (github.event_name == 'pull_request' || github.ref == 'refs/heads/main') }}
     env:
       VERDACCIO_TOKEN: ${{ secrets.EDGE_VERDACCIO_TOKEN }}
+      EDGE_EXCLUDED_PACKAGES: "@taquito/sapling @taquito/sapling-spend-params"
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
@@ -33,18 +34,42 @@ jobs:
       - run: find packages/ -mindepth 1 -maxdepth 2 -name README.md | xargs sed -i '1s/^/# WARNING This build is produced from a feature branch and could contain unreviewed changes from the public. Use with caution, do not use in production\n\n/'
       - run: node scripts/sync-workspace-deps.js "${TARGET_VERSION}"
       - run: npm run version-stamp
+      - name: Select edge-published workspaces
+        run: |
+          set -euo pipefail
+          find packages/ -mindepth 1 -maxdepth 2 -name package.json \
+            | xargs -I{} node -pe "require('./{}')['name']" \
+            | grep -v -E '^@taquito/(sapling|sapling-spend-params)$' \
+            > .edge-workspaces
+
+          if [ ! -s .edge-workspaces ]; then
+            echo "No workspaces selected for edge publishing" >&2
+            exit 1
+          fi
+
+          echo "Skipping edge publish for: ${EDGE_EXCLUDED_PACKAGES}"
+          echo "Publishing edge workspaces:"
+          cat .edge-workspaces
       - run: npm run build
       - run: npm run -w @taquito/taquito build:release
       - run: echo ${VERDACCIO_TOKEN} >> ~/.npmrc
-      - run: npm publish --workspaces --tag edge --access public --registry https://npm.preview.tezostaquito.io/
+      - run: |
+          set -euo pipefail
+          while read -r workspace; do
+            npm publish --workspace "${workspace}" --tag edge --access public --registry https://npm.preview.tezostaquito.io/
+          done < .edge-workspaces
       - if: ${{ github.event_name == 'pull_request' }}
         run: |
           echo "COMMENT_BODY<<EOF"  >> $GITHUB_ENV
           echo "New packages have been deployed to the preview repository at https://npm.preview.tezostaquito.io/." >> $GITHUB_ENV
           echo "" >> $GITHUB_ENV
+          echo "Sapling preview packages are intentionally excluded because the preview registry rejects their current package size." >> $GITHUB_ENV
+          echo "" >> $GITHUB_ENV
           echo "### Published packages:" >> $GITHUB_ENV
           echo "\`\`\`" >> $GITHUB_ENV
-          find packages/ -mindepth 1 -maxdepth 2 -name package.json | xargs -I{} node -pe "require('./{}')['name']" | sed "s/^\(.*\)$/npm i \1@${TARGET_VERSION} --registry https:\/\/npm.preview.tezostaquito.io\//" >> $GITHUB_ENV
+          while read -r workspace; do
+            printf 'npm i %s@%s --registry https://npm.preview.tezostaquito.io/\n' "${workspace}" "${TARGET_VERSION}" >> $GITHUB_ENV
+          done < .edge-workspaces
           echo "\`\`\`" >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
       - if: ${{ github.event_name == 'pull_request' }}
