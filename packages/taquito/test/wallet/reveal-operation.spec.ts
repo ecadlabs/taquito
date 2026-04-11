@@ -45,7 +45,7 @@ describe('RevealWalletOperation', () => {
 
     fakeContext = {
       rpc: {
-        getBlock: jest.fn(),
+        getBlock: vi.fn(),
       },
       config: { confirmationPollingIntervalSecond: 10 },
     };
@@ -71,7 +71,7 @@ describe('RevealWalletOperation', () => {
         blockObservable
       );
 
-      jest.spyOn(op, 'operationResults').mockResolvedValue([successfulResult]);
+      vi.spyOn(op, 'operationResults').mockResolvedValue([successfulResult]);
 
       flush();
       const revealOp = await op.revealOperation();
@@ -95,7 +95,7 @@ describe('RevealWalletOperation', () => {
         blockObservable
       );
 
-      jest.spyOn(op, 'revealOperation').mockResolvedValue(successfulResult);
+      vi.spyOn(op, 'revealOperation').mockResolvedValue(successfulResult);
 
       flush();
       const status = await op.status();
