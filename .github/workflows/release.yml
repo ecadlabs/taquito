@@ -34,8 +34,6 @@ jobs:
           registry-url: https://registry.npmjs.org
           package-manager-cache: false
 
-      - run: npm ci
-
       - name: Resolve release mode
         run: |
           set -euo pipefail
@@ -62,6 +60,9 @@ jobs:
 
       - name: Set release version
         run: node scripts/sync-workspace-deps.js "${VERSION}"
+
+      - name: Install stamped dependency graph
+        run: npm ci
 
       - name: Version stamp
         run: npm run version-stamp
