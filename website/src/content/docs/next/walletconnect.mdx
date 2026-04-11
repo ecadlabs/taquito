@@ -48,7 +48,17 @@ It has an optional `pairingTopic` property, which allows connecting to an existi
 
 If no connection can be established with a wallet, the error `ConnectionFailed` will be thrown.
 
-Suppose there is a need to restore a session in the dApp rather than using the `requestPermissions` method, which would establish a new session. In that case, it is possible to configure the `WalletConnect` class with an existing session using the `configureWithExistingSessionKey` method. The session will be immediately restored without a prompt in the wallet to accept/decline it. The list of existing sessions can be retrieved with the `getAllExistingSessionKeys` method. An `InvalidSessionKey` error will be thrown if the provided session key doesn't exist. Restored sessions are also validated before activation, so invalid or stale non-Tezos session data may be rejected during restore.
+Suppose there is a need to restore a session in the dApp rather than using the `requestPermissions` method, which would establish a new session. In that case, it is possible to configure the `WalletConnect` class with an existing session using the `configureWithExistingSessionKey` method. The session will be immediately restored without a prompt in the wallet to accept or decline it. The list of existing sessions can be retrieved with the `getAllExistingSessionKeys` method. An `InvalidSessionKey` error will be thrown if the provided session key doesn't exist. Restored sessions are also validated before activation, so invalid or stale non-Tezos session data may be rejected during restore.
+
+```ts
+const existingSessionKey = walletConnect.getAllExistingSessionKeys()[0];
+
+if (existingSessionKey) {
+  walletConnect.configureWithExistingSessionKey(existingSessionKey);
+}
+```
+
+Both session restore helpers are synchronous.
 
 ## Send Tezos operation with `WalletConnect` and `TezosToolkit`
 

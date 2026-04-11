@@ -26,7 +26,11 @@ Create a wallet instance with defined option parameters and set the wallet provi
 
 ```ts
 import { TezosToolkit } from '@taquito/taquito';
-import { WalletConnect } from '@taquito/wallet-connect';
+import {
+  NetworkType,
+  PermissionScopeMethods,
+  WalletConnect,
+} from '@taquito/wallet-connect';
 
 const wallet = await WalletConnect.init({
   projectId: "YOUR_PROJECT_ID", // can get YOUR_PROJECT_ID from [Reown Cloud](https://cloud.reown.com)
@@ -55,6 +59,16 @@ Tezos.setWalletProvider(wallet);
 ```
 
 Existing sessions can be restored with `configureWithExistingSessionKey()`. Restored sessions are validated before activation, so invalid or stale non-Tezos session data may be rejected during restore.
+
+```ts
+const existingSessionKey = wallet.getAllExistingSessionKeys()[0];
+
+if (existingSessionKey) {
+  wallet.configureWithExistingSessionKey(existingSessionKey);
+}
+```
+
+Both session restore helpers are synchronous.
 
 ## Additional Info
 
