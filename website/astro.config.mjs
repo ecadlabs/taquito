@@ -84,7 +84,7 @@ export default defineConfig({
       polyfillShimsResolver(),
       tailwindcss(),
       nodePolyfills({
-        include: ['buffer', 'stream', 'crypto', 'path', 'http', 'https'],
+        include: ['buffer', 'stream', 'crypto', 'http', 'https'],
         globals: {
           Buffer: true,
           global: true,

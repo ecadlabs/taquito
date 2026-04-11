@@ -94,14 +94,14 @@
     ]
   },
   "overrides": {
-    "@airgap/beacon-dapp": "npm:@ecadlabs/beacon-dapp@4.8.1-ecad.4",
-    "@airgap/beacon-core": "npm:@ecadlabs/beacon-core@4.8.1-ecad.4",
-    "@airgap/beacon-types": "npm:@ecadlabs/beacon-types@4.8.1-ecad.4",
-    "@airgap/beacon-utils": "npm:@ecadlabs/beacon-utils@4.8.1-ecad.4",
-    "@airgap/beacon-ui": "npm:@ecadlabs/beacon-ui@4.8.1-ecad.4",
-    "@airgap/beacon-transport-matrix": "npm:@ecadlabs/beacon-transport-matrix@4.8.1-ecad.4",
-    "@airgap/beacon-transport-postmessage": "npm:@ecadlabs/beacon-transport-postmessage@4.8.1-ecad.4",
-    "@airgap/beacon-transport-walletconnect": "npm:@ecadlabs/beacon-transport-walletconnect@4.8.1-ecad.4",
+    "@airgap/beacon-dapp": "npm:@ecadlabs/beacon-dapp@4.8.1-ecad.6",
+    "@airgap/beacon-core": "npm:@ecadlabs/beacon-core@4.8.1-ecad.6",
+    "@airgap/beacon-types": "npm:@ecadlabs/beacon-types@4.8.1-ecad.6",
+    "@airgap/beacon-utils": "npm:@ecadlabs/beacon-utils@4.8.1-ecad.6",
+    "@airgap/beacon-ui": "npm:@ecadlabs/beacon-ui@4.8.1-ecad.6",
+    "@airgap/beacon-transport-matrix": "npm:@ecadlabs/beacon-transport-matrix@4.8.1-ecad.6",
+    "@airgap/beacon-transport-postmessage": "npm:@ecadlabs/beacon-transport-postmessage@4.8.1-ecad.6",
+    "@airgap/beacon-transport-walletconnect": "npm:@ecadlabs/beacon-transport-walletconnect@4.8.1-ecad.6",
     "axios": "1.15.0",
     "lodash": "4.18.1",
     "anymatch": {
