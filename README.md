@@ -170,10 +170,10 @@ After making your changes:
 ```bash
 npm run lint
 npm run test
-npm run commit
+git commit
 ```
 
-Use `npm run commit` for your final commit to automatically format it according to our conventions. A final lint/test cycle will run before the commit is applied.
+Use a conventional commit message for your final commit.
 
 ### Running the Website Locally
 

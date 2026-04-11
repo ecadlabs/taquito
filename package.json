@@ -44,7 +44,6 @@
     "test": "nx run-many --target=test --exclude=integration-tests,@taquito/website -- --coverage",
     "lint": "npm run --workspaces --if-present lint",
     "clean": "rimraf node_modules packages/*/node_modules packages/taquito-michel-codec/pack-test-tool/node_modules example/node_modules integration-tests/node_modules website/node_modules",
-    "commit": "git-cz",
     "precommit": "npm run --workspaces --if-present precommit",
     "example": "cd example && npm run example",
     "build-docs": "typedoc --tsconfig ./tsconfig.typedoc.json",
@@ -66,10 +65,7 @@
     "@vitest/coverage-v8": "^4.1.4",
     "@vitest/ui": "^4.1.4",
     "colors": "^1.4.0",
-    "commitizen": "^4.3.0",
-    "coveralls": "^3.1.1",
     "cross-env": "^7.0.3",
-    "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
@@ -91,11 +87,6 @@
     "typedoc": "^0.28.17",
     "typescript": "^5.9.3",
     "vitest": "^4.1.4"
-  },
-  "config": {
-    "commitizen": {
-      "path": "node_modules/cz-conventional-changelog"
-    }
   },
   "commitlint": {
     "extends": [

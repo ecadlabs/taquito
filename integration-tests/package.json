@@ -55,11 +55,6 @@
     "typescript": "^5.9.3",
     "vitest": "^4.1.4"
   },
-  "config": {
-    "commitizen": {
-      "path": "node_modules/cz-conventional-changelog"
-    }
-  },
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"

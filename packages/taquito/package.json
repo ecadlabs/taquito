@@ -80,7 +80,6 @@
     "@typescript-eslint/parser": "^6.21.0",
     "buffer": "^6.0.3",
     "colors": "^1.4.0",
-    "coveralls": "^3.1.1",
     "cross-env": "^7.0.3",
     "eslint": "^8.57.0",
     "fs-extra": "^11.3.2",
