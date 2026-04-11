@@ -15,8 +15,8 @@ See [LICENSE](LICENSE) in this directory for the full proprietary license terms.
 To run the website locally for development purposes:
 
 ```
-npm clean-install
-npm -w @taquito/website start
+npm ci
+npm -w @taquito/website dev
 ```
 
 ## Contact

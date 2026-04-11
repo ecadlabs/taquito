@@ -177,10 +177,10 @@ Use a conventional commit message for your final commit.
 
 ### Running the Website Locally
 
-The [Taquito website][4] is built with [Docusaurus][5]. To run it locally:
+The [Taquito website][4] is built with [Astro][5]. To run it locally:
 
 1. `npm ci`
-2. `npm -w @taquito/website start`
+2. `npm -w @taquito/website dev`
 
 ## Contributions / Reporting Issues
 
@@ -232,4 +232,4 @@ Special thanks to these libraries, which have been excellent references for Taqu
 [discord]: https://discord.com/channels/934567382700146739/939205889901092874
 [stackexchange]: https://tezos.stackexchange.com/questions/tagged/taquito
 [4]: https://taquito.io
-[5]: https://docusaurus.io/
+[5]: https://astro.build/
