@@ -1,0 +1,150 @@
+---
+import { createRequire } from 'node:module';
+import { fileURLToPath } from 'node:url';
+import MainLayout from '../layouts/MainLayout.astro';
+
+const require = createRequire(import.meta.url);
+const sharedCatalogPath = fileURLToPath(new URL('../../../scripts/package-catalog-data.js', import.meta.url));
+const { getWorkspacePackages, externalPackages } = require(sharedCatalogPath);
+
+const workspacePackages = getWorkspacePackages();
+const installSnippet = `npm install ${workspacePackages.map((pkg) => pkg.name).slice(0, 4).join(' ')}`;
+---
+
+<MainLayout
+  title="Packages"
+  description="Explore the official Taquito npm packages, with direct links to npm and source repositories."
+>
+  <section class="bg-background-primary px-6 py-16 md:px-14">
+    <div class="mx-auto max-w-6xl">
+      <div class="max-w-3xl">
+        <p class="mb-3 text-sm font-medium uppercase tracking-[0.25em] text-primary">Package Index</p>
+        <h1 class="mb-5 text-4xl font-bold text-gray-900 md:text-5xl">Official Taquito packages, one place.</h1>
+        <p class="mb-8 text-lg text-gray-700">
+          npm is the official distribution source. This page mirrors the package metadata in the repository so
+          users can discover packages without hunting across npm, docs, and source trees.
+        </p>
+      </div>
+
+      <div class="grid gap-4 md:grid-cols-3">
+        <div class="rounded-3xl border border-secondary bg-white p-6 shadow-sm">
+          <p class="text-sm uppercase tracking-[0.2em] text-gray-500">Workspace packages</p>
+          <p class="mt-2 text-4xl font-bold text-gray-900">{workspacePackages.length}</p>
+          <p class="mt-2 text-sm text-gray-600">Published from the Taquito monorepo.</p>
+        </div>
+        <div class="rounded-3xl border border-secondary bg-white p-6 shadow-sm">
+          <p class="text-sm uppercase tracking-[0.2em] text-gray-500">Related packages</p>
+          <p class="mt-2 text-4xl font-bold text-gray-900">{externalPackages.length}</p>
+          <p class="mt-2 text-sm text-gray-600">Official packages maintained in companion repositories.</p>
+        </div>
+        <div class="rounded-3xl border border-secondary bg-white p-6 shadow-sm">
+          <p class="text-sm uppercase tracking-[0.2em] text-gray-500">Install from npm</p>
+          <code class="mt-2 block overflow-x-auto rounded-2xl bg-gray-900 px-4 py-3 font-['JetBrains_Mono'] text-sm text-gray-100">
+            {installSnippet}
+          </code>
+          <p class="mt-2 text-sm text-gray-600">Install only the packages your app actually uses.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-white px-6 py-12 md:px-14">
+    <div class="mx-auto max-w-6xl">
+      <div class="mb-8 flex items-end justify-between gap-4">
+        <div>
+          <p class="text-sm uppercase tracking-[0.2em] text-gray-500">Main catalog</p>
+          <h2 class="text-3xl font-bold text-gray-900">Monorepo packages</h2>
+        </div>
+        <a
+          href="https://www.npmjs.com/search?q=%40taquito"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="rounded-full border border-secondary px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-primary/10"
+        >
+          Browse on npm
+        </a>
+      </div>
+
+      <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        {workspacePackages.map((pkg) => (
+          <article class="flex h-full flex-col rounded-3xl border border-secondary bg-background-primary p-6 shadow-sm">
+            <div class="mb-4 flex items-start justify-between gap-3">
+              <code class="break-all text-sm font-medium text-gray-900">{pkg.name}</code>
+              <span class="shrink-0 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium uppercase tracking-[0.15em] text-primary">
+                Workspace
+              </span>
+            </div>
+            <p class="mb-6 flex-1 text-sm leading-6 text-gray-700">{pkg.description}</p>
+            <div class="flex flex-wrap gap-3">
+              <a
+                href={pkg.npmUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="rounded-full bg-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary/90"
+              >
+                npm
+              </a>
+              <a
+                href={pkg.sourceUrl}
+                class="rounded-full border border-secondary px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-primary/10"
+              >
+                Source
+              </a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-background-primary px-6 py-12 md:px-14">
+    <div class="mx-auto max-w-6xl">
+      <div class="mb-8">
+        <p class="text-sm uppercase tracking-[0.2em] text-gray-500">Companion packages</p>
+        <h2 class="text-3xl font-bold text-gray-900">Official packages outside this repo</h2>
+      </div>
+
+      <div class="grid gap-4 md:grid-cols-2">
+        {externalPackages.map((pkg) => (
+          <article class="rounded-3xl border border-secondary bg-white p-6 shadow-sm">
+            <div class="mb-4 flex items-start justify-between gap-3">
+              <code class="break-all text-sm font-medium text-gray-900">{pkg.name}</code>
+              <span class="shrink-0 rounded-full bg-secondary/20 px-3 py-1 text-xs font-medium uppercase tracking-[0.15em] text-gray-700">
+                External repo
+              </span>
+            </div>
+            <p class="mb-3 text-sm leading-6 text-gray-700">{pkg.description}</p>
+            <p class="mb-6 text-sm leading-6 text-gray-600">{pkg.notes}</p>
+            <div class="flex flex-wrap gap-3">
+              <a
+                href={pkg.npmUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="rounded-full bg-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary/90"
+              >
+                npm
+              </a>
+              <a
+                href={pkg.sourceUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="rounded-full border border-secondary px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-primary/10"
+              >
+                Source
+              </a>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <div class="mt-10 rounded-3xl border border-secondary bg-white p-6 shadow-sm">
+        <p class="text-sm uppercase tracking-[0.2em] text-gray-500">Why this page exists</p>
+        <p class="mt-3 max-w-3xl text-sm leading-7 text-gray-700">
+          This index is generated from the same package metadata used for the repository README. That keeps the
+          package names, descriptions, and npm links aligned across both surfaces and avoids stale hand-maintained
+          lists.
+        </p>
+      </div>
+    </div>
+  </section>
+</MainLayout>
