@@ -46,6 +46,7 @@
     "vite-plugin-node-polyfills": "^0.24.0"
   },
   "overrides": {
+    "@stablelib/ed25519": "2.1.0",
     "axios": "1.15.0",
     "defu": "6.1.5",
     "devalue": "5.6.4",
