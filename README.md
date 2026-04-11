@@ -61,31 +61,38 @@ We are active and enthusiastic participants of the following community channels:
 
 ## Project Organization
 
-Taquito is a [monorepo](https://en.wikipedia.org/wiki/Monorepo), composed of several npm packages that are [published to npmjs.org](https://www.npmjs.com/package/@taquito/taquito) under the `@taquito` scope. Each package has its own README, found in its respective directory within `packages/`.
+Taquito is a [monorepo](https://en.wikipedia.org/wiki/Monorepo), composed of npm packages published under the `@taquito` scope. The package catalog below is generated from package metadata so the npm links and descriptions stay in sync with the codebase. To refresh it after package changes, run `npm run sync:package-catalog`.
 
-| High-Level Packages                                | Responsibility                                                                                          |
-| -------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| [@taquito/taquito](packages/taquito)               | A [Facade](https://en.wikipedia.org/wiki/Facade_pattern) to lower-level, package-specific functionality |
+<!-- package-catalog:start -->
+### Workspace Packages
 
-| Low-Level Packages                                               | Responsibility                                                                                        |
-| ---------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| [@taquito/local-forging](packages/taquito-local-forging)         | Local serialization (“forging”) of Tezos operations as bytes                                          |
-| [@taquito/michelson-encoder](packages/taquito-michelson-encoder) | Creates JS abstractions of Smart Contracts                                                            |
-| [@taquito/michel-codec](packages/taquito-michel-codec)           | Converts Michelson between forms, expands macros, etc                                                 |
-| [@taquito/remote-signer](packages/taquito-remote-signer)         | Provides the facility to use a remote signer, such as https://signatory.io                            |
-| [@taquito/rpc](packages/taquito-rpc)                             | RPC client library, with a method for each RPC endpoint                                               |
-| [@taquito/signer](packages/taquito-signer)                       | Provides functionality to sign data using Tezos keys                                                  |
-| [@taquito/utils](packages/taquito-utils)                         | Encoding/decoding utilities                                                                           |
-| [@taquito/tzip12](packages/taquito-tzip12)                       | TZIP-12 support (retrieving NFT/token metadata)                                                       |
-| [@taquito/tzip16](packages/taquito-tzip16)                       | TZIP-16 support (retrieving contract metadata and executing off-chain views)                          |
-| [@taquito/beacon-wallet](packages/taquito-beacon-wallet)         | TZIP-10 implementation of a Wallet API                                                                |
-| [@taquito/http-utils](packages/taquito-http-utils)               | Configure and customize HTTP requests                                                                 |
-| [@taquito/core](packages/taquito-core)                           | Provides parent/core types, classes, and interfaces for Taquito packages or external uses             |
-| [@taquito/sapling](packages/taquito-sapling)                     | Functions to prepare and read sapling transactions                                                   |
-| [@taquito/contracts-library](packages/taquito-contracts-library) | Provides functionality to specify static data related to contracts                                    |
-| [@taquito/ledger-signer](packages/taquito-ledger-signer)         | Provides functionality for a Ledger signer provider                                                   |
-| [@taquito/timelock](packages/taquito-timelock)                   | Functions to create and open timelocks                                                                |
-| [@taquito/wallet-connect](packages/taquito-wallet-connect)       | Enables WalletConnect integration with the TezosToolkit’s wallet API                                  |
+| Package | npm | Source | Description |
+| --- | --- | --- | --- |
+| `@taquito/beacon-wallet` | [npm](https://www.npmjs.com/package/@taquito/beacon-wallet) | [source](./packages/taquito-beacon-wallet) | TZIP-10 Beacon wallet integration for Taquito dapps built on the Beacon SDK DAppClient. |
+| `@taquito/contracts-library` | [npm](https://www.npmjs.com/package/@taquito/contracts-library) | [source](./packages/taquito-contracts-library) | Static Michelson scripts and entrypoints library for Taquito contract interactions. |
+| `@taquito/core` | [npm](https://www.npmjs.com/package/@taquito/core) | [source](./packages/taquito-core) | Shared types, interfaces, and primitives for Taquito packages. |
+| `@taquito/http-utils` | [npm](https://www.npmjs.com/package/@taquito/http-utils) | [source](./packages/taquito-http-utils) | HTTP transport utilities for Taquito RPC clients with retry, timeout, and error classification. |
+| `@taquito/ledger-signer` | [npm](https://www.npmjs.com/package/@taquito/ledger-signer) | [source](./packages/taquito-ledger-signer) | Ledger hardware wallet signer integration for Taquito. |
+| `@taquito/local-forging` | [npm](https://www.npmjs.com/package/@taquito/local-forging) | [source](./packages/taquito-local-forging) | Local Tezos operation forging for Taquito. |
+| `@taquito/michel-codec` | [npm](https://www.npmjs.com/package/@taquito/michel-codec) | [source](./packages/taquito-michel-codec) | Michelson parser, validator, and formatter for Taquito. |
+| `@taquito/michelson-encoder` | [npm](https://www.npmjs.com/package/@taquito/michelson-encoder) | [source](./packages/taquito-michelson-encoder) | Michelson encoding and decoding utilities for Taquito. |
+| `@taquito/remote-signer` | [npm](https://www.npmjs.com/package/@taquito/remote-signer) | [source](./packages/taquito-remote-signer) | Remote signer client for Taquito, designed to work with services such as Signatory. |
+| `@taquito/rpc` | [npm](https://www.npmjs.com/package/@taquito/rpc) | [source](./packages/taquito-rpc) | TypeScript client and types for the Tezos RPC used by Taquito. |
+| `@taquito/sapling` | [npm](https://www.npmjs.com/package/@taquito/sapling) | [source](./packages/taquito-sapling) | Sapling transaction building and viewing support for Taquito. |
+| `@taquito/signer` | [npm](https://www.npmjs.com/package/@taquito/signer) | [source](./packages/taquito-signer) | Software signer implementations and signing utilities for Taquito. |
+| `@taquito/taquito` | [npm](https://www.npmjs.com/package/@taquito/taquito) | [source](./packages/taquito) | TypeScript SDK for building wallets, dapps, and tooling on Tezos. |
+| `@taquito/timelock` | [npm](https://www.npmjs.com/package/@taquito/timelock) | [source](./packages/taquito-timelock) | Timelock cryptography support for Taquito and Tezos applications. |
+| `@taquito/tzip12` | [npm](https://www.npmjs.com/package/@taquito/tzip12) | [source](./packages/taquito-tzip12) | TZIP-12 token metadata support for Taquito. |
+| `@taquito/tzip16` | [npm](https://www.npmjs.com/package/@taquito/tzip16) | [source](./packages/taquito-tzip16) | TZIP-16 contract metadata support for Taquito. |
+| `@taquito/utils` | [npm](https://www.npmjs.com/package/@taquito/utils) | [source](./packages/taquito-utils) | Encoding, crypto, and utility helpers for Taquito. |
+| `@taquito/wallet-connect` | [npm](https://www.npmjs.com/package/@taquito/wallet-connect) | [source](./packages/taquito-wallet-connect) | WalletConnect integration for Taquito applications. |
+
+### Related Official Package
+
+| Package | npm | Source | Description | Notes |
+| --- | --- | --- | --- | --- |
+| `@taquito/sapling-wasm` | [npm](https://www.npmjs.com/package/@taquito/sapling-wasm) | [source](https://github.com/ecadlabs/sapling-wasm/tree/main/packages/sapling-wasm) | Sapling Wasm bindings for Taquito and compatible consumers. | Official Taquito package, published from the separate `ecadlabs/sapling-wasm` repository. |
+<!-- package-catalog:end -->
 
 ## API Documentation
 
