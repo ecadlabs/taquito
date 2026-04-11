@@ -11,7 +11,7 @@ const START_MARKER = '<!-- package-catalog:start -->';
 const END_MARKER = '<!-- package-catalog:end -->';
 
 function escapeCell(value) {
-  return value.replace(/\|/g, '\\|').replace(/\n/g, ' ');
+  return value.replace(/\\/g, '\\\\').replace(/\|/g, '\\|').replace(/\n/g, ' ');
 }
 
 function renderTable(packages, includeNotes = false) {
@@ -98,6 +98,7 @@ if (require.main === module) {
 }
 
 module.exports = {
+  escapeCell,
   externalPackages,
   getWorkspacePackages,
   renderCatalog,
