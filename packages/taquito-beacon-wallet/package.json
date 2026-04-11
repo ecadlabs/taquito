@@ -15,14 +15,14 @@
   "typings": "dist/types/taquito-beacon-wallet.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/types/taquito-beacon-wallet.d.ts",
       "import": "./dist/taquito-beacon-wallet.es6.js",
-      "require": "./dist/taquito-beacon-wallet.umd.js",
-      "types": "./dist/types/taquito-beacon-wallet.d.ts"
+      "require": "./dist/taquito-beacon-wallet.umd.js"
     },
     "./types": {
+      "types": "./dist/types/beacon-types.d.ts",
       "import": "./dist/beacon-types.es6.js",
-      "require": "./dist/beacon-types.umd.js",
-      "types": "./dist/types/beacon-types.d.ts"
+      "require": "./dist/beacon-types.umd.js"
     },
     "./package.json": "./package.json"
   },
