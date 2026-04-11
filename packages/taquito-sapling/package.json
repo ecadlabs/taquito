@@ -14,7 +14,6 @@
   "module": "dist/taquito-sapling.es6.js",
   "typings": "dist/types/taquito-sapling.d.ts",
   "files": [
-    "signature.json",
     "dist",
     "saplingOutputParams.js",
     "SAPLING_PARAMS_PROVENANCE.md"

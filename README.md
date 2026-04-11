@@ -38,16 +38,19 @@ Do you wish to contribute to Taquito? See [Contributors Getting Started](#contri
 
 Taquito currently supports the following versions of Node.js®:
 
-| Version          | Supported? |
-| ---------------- | ---------- |
-| v16 LTS/Gallium  |    ❌      |
-| v18 LTS/Hydrogen |    ❌      |
-| v20 LTS/Iron     |    ⭐️      |
-| v22 LTS/Jod      |    ✅      |
+| Version      | Supported? |
+| ------------ | ---------- |
+| v24 LTS      | ✅         |
+| v22 LTS      | ✅         |
+| < v22        | ❌         |
 
-Other versions may work, but the above are officially supported. YMMV!
+The repository currently targets Node.js `>=22`, and CI runs on Node.js 22 and 24.
 
-For example, we found node v22.14.0 and above in a linux machine when `npm ci` / `npm install` may run into issue with `libusb.h: No such file or directory` which can be resolved by manually install these dependencies. `sudo apt install -y libusb-1.0-0-dev libudev-dev pkg-config`
+On some GNU/Linux systems, native dependencies used by Ledger-related packages may require additional system libraries. If `npm ci` or `npm install` fails with errors such as `libusb.h: No such file or directory`, install the relevant packages first, for example on Debian or Ubuntu:
+
+```bash
+sudo apt install -y libusb-1.0-0-dev libudev-dev pkg-config
+```
 
 ## Community Support Channels
 
@@ -94,11 +97,11 @@ Taquito supports the *current* and *next* (beta) protocol versions of Tezos.
 
 We use [Semantic Versioning](https://semver.org) with a twist: the *Major* version typically tracks the latest version of Tezos, while *Minor* and *Patch* follow standard SemVer rules.
 
-For example, if the Tezos protocol is at `004-...`, and `005-...` is in the on-chain amendment process, Taquito might be at `v4.0.0` for the current protocol and `v5.0.0-beta.1` for the upcoming protocol.
+For example, a stable Taquito release line might be `v24.x`, while the next protocol release is prepared as `v25.0.0-beta.1`.
 
 ### Release Timing
 
-When the next protocol proposal is likely to be promoted, and Taquito has been updated and tested against it, we release the next version (e.g., `v5.0.0-beta.1`) *before* the chain switches. This gives DApp developers time to update and test their projects.
+When the next protocol proposal is likely to be promoted, and Taquito has been updated and tested against it, we release the next version (e.g., `v25.0.0-beta.1`) *before* the chain switches. This gives DApp developers time to update and test their projects.
 
 During these “Major” version updates, the Taquito public API *may* undergo breaking changes. We do our best to document these in release notes.
 
@@ -106,7 +109,9 @@ All prior Taquito releases remain *backwards compatible* with historical chain d
 
 ## Releases
 
-Releases are published to npmjs.org and appear on the GitHub Releases page. All official releases are signed by the Taquito maintainers. If you find an unsigned release or one signed by an unrecognized party, [please let us know](https://github.com/ecadlabs/taquito/issues) immediately.
+Releases are published to npmjs.org and appear on the GitHub Releases page.
+
+Official npm packages are published from the repository's GitHub Actions release workflow with npm provenance enabled. npm records signed provenance attestations for those publishes, which gives consumers a verifiable link between the published package, the source commit, and the build workflow used to produce it.
 
 ## Contributors Getting Started
 
@@ -122,19 +127,15 @@ Interested in contributing to Taquito? Wonderful! Read on to set up your environ
 
 2. **Install or use a compatible version of Node.js** (see [Supported Versions](#supported-versions-of-node)), for example:
     ```bash
-    nvm use lts/iron
-    ```
-
-3. **Install Lerna globally** (used by our Nx-based build system):
-    ```bash
-    npm install --global lerna
+    nvm install
+    nvm use
     ```
 
 ### Building Taquito
 
 Once prerequisites are installed, run:
 ```bash
-npm clean-install
+npm ci
 npm run build
 ```
 If everything goes well, run the unit tests:
@@ -146,7 +147,7 @@ All tests should pass successfully.
 ### Build Gotchas
 
 - **Do not delete `node_modules/` manually** – this confuses the build system. Use `npm run clean` instead.
-- **Use `npm ci` (or `npm clean-install`) rather than `npm install`** to ensure a deterministic installation that respects `package-lock.json`. It’s also faster!
+- **Prefer `npm ci` rather than `npm install`** to ensure a deterministic installation that respects `package-lock.json`.
 
 ### Useful npm Scripts
 
@@ -178,14 +179,18 @@ Use `npm run commit` for your final commit to automatically format it according 
 
 The [Taquito website][4] is built with [Docusaurus][5]. To run it locally:
 
-1. `npm clean-install`
+1. `npm ci`
 2. `npm -w @taquito/website start`
 
 ## Contributions / Reporting Issues
 
 ### Security Issues
 
-To report a security issue, please contact [security@ecadlabs.com](mailto:security@ecadlabs.com).
+Do not report security issues in public GitHub issues, discussions, or pull requests.
+
+Use GitHub private vulnerability reporting on the repository [Security page](https://github.com/ecadlabs/taquito/security), or email [security@ecadlabs.com](mailto:security@ecadlabs.com) if needed.
+
+See [SECURITY.md](SECURITY.md) for the current policy.
 
 ### Bugs or Feature Requests
 
