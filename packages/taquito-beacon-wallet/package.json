@@ -15,14 +15,14 @@
   "typings": "dist/types/taquito-beacon-wallet.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/types/taquito-beacon-wallet.d.ts",
       "import": "./dist/taquito-beacon-wallet.es6.js",
-      "require": "./dist/taquito-beacon-wallet.umd.js",
-      "types": "./dist/types/taquito-beacon-wallet.d.ts"
+      "require": "./dist/taquito-beacon-wallet.umd.js"
     },
     "./types": {
+      "types": "./dist/types/beacon-types.d.ts",
       "import": "./dist/beacon-types.es6.js",
-      "require": "./dist/beacon-types.umd.js",
-      "types": "./dist/types/beacon-types.d.ts"
+      "require": "./dist/beacon-types.umd.js"
     },
     "./package.json": "./package.json"
   },
@@ -70,8 +70,8 @@
     ]
   },
   "dependencies": {
-    "@ecadlabs/beacon-dapp": "^4.8.1-ecad",
-    "@ecadlabs/beacon-types": "^4.8.1-ecad",
+    "@ecadlabs/beacon-dapp": "4.8.1-ecad.4",
+    "@ecadlabs/beacon-types": "4.8.1-ecad.4",
     "@taquito/core": "^24.2.0",
     "@taquito/taquito": "^24.2.0",
     "@taquito/utils": "^24.2.0",
@@ -80,8 +80,8 @@
     "util": "^0.12.5"
   },
   "devDependencies": {
-    "@ecadlabs/beacon-transport-postmessage": "^4.8.1-ecad",
-    "@ecadlabs/beacon-ui": "^4.8.1-ecad",
+    "@ecadlabs/beacon-transport-postmessage": "4.8.1-ecad.4",
+    "@ecadlabs/beacon-ui": "4.8.1-ecad.4",
     "@types/bluebird": "^3.5.42",
     "@types/chrome": "0.1.40",
     "@types/node": "^22.0.0",
