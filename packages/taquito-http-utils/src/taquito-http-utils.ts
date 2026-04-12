@@ -9,14 +9,16 @@ if (typeof globalThis.fetch !== 'function') {
   );
 }
 
+const env = typeof process !== 'undefined' ? process.env : undefined;
+
 const httpTraceEnabled =
-  /^(1|true)$/i.test(process?.env?.TAQUITO_HTTP_TRACE ?? '') || process?.env?.RUNNER_DEBUG === '1';
-const parsedHttpRetryCount = Number(process?.env?.TAQUITO_HTTP_RETRY_COUNT ?? '1');
+  /^(1|true)$/i.test(env?.TAQUITO_HTTP_TRACE ?? '') || env?.RUNNER_DEBUG === '1';
+const parsedHttpRetryCount = Number(env?.TAQUITO_HTTP_RETRY_COUNT ?? '1');
 const httpRetryCount =
   Number.isFinite(parsedHttpRetryCount) && parsedHttpRetryCount >= 0
     ? Math.floor(parsedHttpRetryCount)
     : 1;
-const parsedHttpRetryBaseMs = Number(process?.env?.TAQUITO_HTTP_RETRY_BASE_MS ?? '100');
+const parsedHttpRetryBaseMs = Number(env?.TAQUITO_HTTP_RETRY_BASE_MS ?? '100');
 const httpRetryBaseMs =
   Number.isFinite(parsedHttpRetryBaseMs) && parsedHttpRetryBaseMs >= 0
     ? parsedHttpRetryBaseMs

@@ -24,9 +24,11 @@ import { createObservableFromSubscription } from '../subscribe/create-observable
 import { ConfirmationTimeoutError, InvalidConfirmationCountError } from '../errors';
 import { InvalidOperationHashError } from '@taquito/core';
 
-const opTraceEnabled = /^(1|true)$/i.test(process?.env?.TAQUITO_OP_TRACE ?? '');
-const opTraceVerbose = /^(1|true)$/i.test(process?.env?.TAQUITO_OP_TRACE_VERBOSE ?? '');
-const parsedOpTraceSlowMs = Number(process?.env?.TAQUITO_OP_TRACE_SLOW_MS ?? '60000');
+const env = typeof process !== 'undefined' ? process.env : undefined;
+
+const opTraceEnabled = /^(1|true)$/i.test(env?.TAQUITO_OP_TRACE ?? '');
+const opTraceVerbose = /^(1|true)$/i.test(env?.TAQUITO_OP_TRACE_VERBOSE ?? '');
+const parsedOpTraceSlowMs = Number(env?.TAQUITO_OP_TRACE_SLOW_MS ?? '60000');
 const opTraceSlowMs =
   Number.isFinite(parsedOpTraceSlowMs) && parsedOpTraceSlowMs >= 0 ? parsedOpTraceSlowMs : 60000;
 
