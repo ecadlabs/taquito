@@ -1,4 +1,5 @@
 import { BaseTokenSchema } from '../schema/types';
+import { buf2hex } from '@taquito/utils';
 import { SemanticEncoding, Token, TokenFactory, TokenValidationError } from './token';
 
 /**
@@ -7,7 +8,11 @@ import { SemanticEncoding, Token, TokenFactory, TokenValidationError } from './t
  */
 export class ChestValidationError extends TokenValidationError {
   name = 'ChestValidationError';
-  constructor(public value: any, public token: ChestToken, message: string) {
+  constructor(
+    public value: any,
+    public token: ChestToken,
+    message: string
+  ) {
     super(value, token, message);
   }
 }
@@ -33,7 +38,7 @@ export class ChestToken extends Token {
   }
 
   private convertUint8ArrayToHexString(val: any) {
-    return val.constructor === Uint8Array ? Buffer.from(val).toString('hex') : val;
+    return val.constructor === Uint8Array ? buf2hex(val) : val;
   }
 
   /**
@@ -63,7 +68,7 @@ export class ChestToken extends Token {
   Execute(val: any): string {
     return val.bytes;
   }
-  
+
   generateSchema(): BaseTokenSchema {
     return {
       __michelsonType: ChestToken.prim,

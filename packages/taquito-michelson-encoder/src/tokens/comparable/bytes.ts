@@ -6,7 +6,7 @@ import {
   Token,
   SemanticEncoding,
 } from '../token';
-import { stripHexPrefix } from '@taquito/utils';
+import { buf2hex, stripHexPrefix } from '@taquito/utils';
 
 /**
  *  @category Error
@@ -14,7 +14,11 @@ import { stripHexPrefix } from '@taquito/utils';
  */
 export class BytesValidationError extends TokenValidationError {
   name = 'BytesValidationError';
-  constructor(public value: any, public token: BytesToken, message: string) {
+  constructor(
+    public value: any,
+    public token: BytesToken,
+    message: string
+  ) {
     super(value, token, message);
   }
 }
@@ -48,7 +52,7 @@ export class BytesToken extends ComparableToken {
   }
 
   private convertUint8ArrayToHexString(val: any) {
-    return val.constructor === Uint8Array ? Buffer.from(val).toString('hex') : val;
+    return val.constructor === Uint8Array ? buf2hex(val) : val;
   }
 
   /**

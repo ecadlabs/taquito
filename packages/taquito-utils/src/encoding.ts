@@ -16,7 +16,6 @@ import bs58check from 'bs58check';
 import BigNumberJs from 'bignumber.js';
 type BigNumber = InstanceType<typeof BigNumberJs>;
 const BigNumber = BigNumberJs;
-import toBuffer from 'typedarray-to-buffer';
 import {
   InvalidAddressError,
   InvalidHexStringError,
@@ -336,7 +335,7 @@ export function b58Encode(value: string | Uint8Array, pre: PrefixV2): string {
   const n = new Uint8Array(p.length + data.length);
   n.set(p);
   n.set(data, p.length);
-  return bs58check.encode(toBuffer(n));
+  return bs58check.encode(Buffer.from(n.buffer, n.byteOffset, n.byteLength));
 }
 
 /**

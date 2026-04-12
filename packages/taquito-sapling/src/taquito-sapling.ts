@@ -3,6 +3,7 @@
  * @module @taquito/sapling
  */
 
+import { Buffer } from 'buffer';
 import BigNumberJs from 'bignumber.js';
 type BigNumber = InstanceType<typeof BigNumberJs>;
 const BigNumber = BigNumberJs;

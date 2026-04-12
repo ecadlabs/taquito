@@ -4,10 +4,12 @@
   "description": "Vendored Sapling spend proving parameters for Taquito.",
   "files": [
     "saplingSpendParams.js",
+    "saplingSpendParams.d.ts",
     "SAPLING_PARAMS_PROVENANCE.md",
     "README.md"
   ],
   "main": "saplingSpendParams.js",
+  "types": "saplingSpendParams.d.ts",
   "publishConfig": {
     "access": "public"
   },

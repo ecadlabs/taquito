@@ -28,17 +28,25 @@ const taquitoAliases = Object.fromEntries(
 export default defineConfig({
   root: join(browserTestsDir, 'smoke-app'),
   define: {
-    __RAW_HTTP_UTILS_URL__: JSON.stringify(
-      `/@fs/${join(repoRoot, 'packages/taquito-http-utils/dist/taquito-http-utils.es6.js')}`
-    ),
-    __RAW_TAQUITO_URL__: JSON.stringify(
-      `/@fs/${join(repoRoot, 'packages/taquito/dist/taquito.es6.js')}`
+    __RAW_PACKAGE_URLS__: JSON.stringify(
+      Object.fromEntries(
+        Object.entries(taquitoAliases).map(([packageName, packagePath]) => [
+          packageName,
+          `/@fs/${packagePath}`,
+        ])
+      )
     ),
   },
   resolve: {
     alias: taquitoAliases,
   },
+  optimizeDeps: {
+    entries: [join(browserTestsDir, 'smoke-app', 'src', 'prewarm-packages.ts')],
+  },
   server: {
+    fs: {
+      allow: [repoRoot],
+    },
     host: '127.0.0.1',
     port: 4173,
     strictPort: true,

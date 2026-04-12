@@ -1,5 +1,6 @@
+import { Buffer } from 'buffer';
 import { InMemoryViewingKey } from './in-memory-viewing-key';
-import * as sapling from '@taquito/sapling-wasm';
+import * as sapling from '../sapling-wasm';
 import { b58Encode, PrefixV2 } from '@taquito/utils';
 import * as bip39 from '@scure/bip39';
 import {

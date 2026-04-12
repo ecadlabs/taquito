@@ -1,4 +1,5 @@
 import { BaseTokenSchema } from '../schema/types';
+import { buf2hex } from '@taquito/utils';
 import { SemanticEncoding, Token, TokenFactory, TokenValidationError } from './token';
 
 /**
@@ -7,7 +8,11 @@ import { SemanticEncoding, Token, TokenFactory, TokenValidationError } from './t
  */
 export class Bls12381frValidationError extends TokenValidationError {
   name = 'Bls12381frValidationError';
-  constructor(public value: any, public token: Bls12381frToken, message: string) {
+  constructor(
+    public value: any,
+    public token: Bls12381frToken,
+    message: string
+  ) {
     super(value, token, message);
   }
 }
@@ -35,7 +40,7 @@ export class Bls12381frToken extends Token {
   }
 
   private convertUint8ArrayToHexString(val: any) {
-    return val.constructor === Uint8Array ? Buffer.from(val).toString('hex') : val;
+    return val.constructor === Uint8Array ? buf2hex(val) : val;
   }
 
   /**

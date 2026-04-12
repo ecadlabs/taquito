@@ -59,6 +59,7 @@
     "buffer": "^6.0.3"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^29.0.2",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@types/bluebird": "^3.5.42",
     "@types/node": "^22.0.0",

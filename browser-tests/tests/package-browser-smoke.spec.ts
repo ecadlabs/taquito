@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { packageScenarios } from '../scenario-manifest';
 
 type SmokeResult =
   | {
@@ -27,37 +28,44 @@ const runSmokePage = async (page: Page, pagePath: string) => {
   });
 
   await page.goto(pagePath);
-  await page.waitForFunction(() => {
-    return window.__smoke?.status === 'ok' || window.__smoke?.status === 'error';
-  });
+  const statusLocator = page.locator('#status');
+  await expect
+    .poll(
+      async () => {
+        const text = await statusLocator.textContent();
+        if (!text) {
+          return null;
+        }
 
-  const result = (await page.evaluate(() => window.__smoke)) as SmokeResult;
+        try {
+          const result = JSON.parse(text) as SmokeResult;
+          return result.status === 'ok' || result.status === 'error' ? text : null;
+        } catch {
+          return null;
+        }
+      },
+      {
+        timeout: 15_000,
+      }
+    )
+    .not.toBeNull();
+
+  const result = JSON.parse((await statusLocator.textContent()) ?? '{}') as SmokeResult;
 
   return { result, pageErrors, consoleErrors };
 };
 
-test('imports @taquito/http-utils in a real browser without module-eval failures', async ({ page }) => {
-  const { result, pageErrors, consoleErrors } = await runSmokePage(page, '/http-utils.html');
+for (const scenario of packageScenarios) {
+  test(`${scenario.packageName}: ${scenario.description}`, async ({ page }) => {
+    const pagePath = `/scenario.html?scenario=${scenario.id}`;
+    const { result, pageErrors, consoleErrors } = await runSmokePage(page, pagePath);
 
-  expect(pageErrors).toEqual([]);
-  expect(consoleErrors).toEqual([]);
-  expect(result.status).toBe('ok');
+    expect(pageErrors).toEqual([]);
+    expect(consoleErrors).toEqual([]);
+    expect(result.status).toBe('ok');
 
-  if (result.status === 'ok') {
-    expect(result.exports).toContain('HttpBackend');
-    expect(result.summary.backendTimeout).toBe(1234);
-  }
-});
-
-test('imports @taquito/taquito in a real browser without module-eval failures', async ({ page }) => {
-  const { result, pageErrors, consoleErrors } = await runSmokePage(page, '/taquito.html');
-
-  expect(pageErrors).toEqual([]);
-  expect(consoleErrors).toEqual([]);
-  expect(result.status).toBe('ok');
-
-  if (result.status === 'ok') {
-    expect(result.exports).toContain('TezosToolkit');
-    expect(result.summary.transactionKind).toBe('transaction');
-  }
-});
+    if (result.status === 'ok') {
+      expect(result.summary.scenarioId).toBe(scenario.id);
+    }
+  });
+}
