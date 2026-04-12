@@ -61,20 +61,20 @@
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.42",
-    "@types/node": "^22.0.0",
+    "@types/node": "^22.19.17",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "eslint": "^8.57.0",
     "lint-staged": "^15.2.7",
     "lodash.camelcase": "^4.3.0",
-    "prettier": "^3.3.3",
+    "prettier": "^3.8.2",
     "rimraf": "^6.0.1",
     "rollup": "^4.60.1",
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-typescript2": "^0.37.0",
     "ts-node": "^10.9.2",
     "ts-toolbelt": "^9.6.0",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.2"
   },
   "gitHead": "551e35aeff7d6dcde1c72284238c0ed3c3aae77e"
 }
