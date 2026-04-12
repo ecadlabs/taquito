@@ -14,8 +14,9 @@ export function remarkLiveCode() {
       // Get the language (default to 'javascript')
       const language = node.lang || 'javascript';
 
-      // Check if the code block has 'wallet' in its meta
+      // Check if the code block has 'wallet' or 'noConfig' in its meta
       const isWallet = node.meta.includes('wallet');
+      const noConfig = node.meta.includes('noConfig');
 
       // Use the code as-is - Astro will handle proper escaping for JSX attributes
       const escapedCode = node.value;
@@ -43,6 +44,14 @@ export function remarkLiveCode() {
         });
       }
 
+      if (noConfig) {
+        attributes.push({
+          type: 'mdxJsxAttribute',
+          name: 'noConfig',
+          value: null // boolean attribute (presence = true)
+        });
+      }
+
       const jsxNode = {
         type: 'mdxJsxFlowElement',
         name: 'SimpleCodeRunner',
@@ -55,4 +64,3 @@ export function remarkLiveCode() {
     });
   };
 }
-

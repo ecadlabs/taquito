@@ -8,14 +8,20 @@ interface Props {
   language?: string;
   title?: string;
   wallet?: boolean;
+  noConfig?: boolean;
 }
 
-const { code, language = 'javascript', title, wallet = false } = Astro.props;
+const { code, language = 'javascript', title, wallet = false, noConfig = false } = Astro.props;
 
 const html = Prism.highlight(code, Prism.languages[language] || Prism.languages.javascript, language);
 ---
 
-<live-code-runner data-code={code} data-wallet={wallet ? "true" : "false"} class="pre">
+<live-code-runner
+  data-code={code}
+  data-wallet={wallet ? "true" : "false"}
+  data-no-config={noConfig ? "true" : "false"}
+  class="pre"
+>
   <div class="mb-4">
       <pre class={`language-${language} m-0 p-4 overflow-x-auto code`} set:html={html} />
       <button class="run-button bg-green-600 text-white border-none py-2 px-4 rounded text-sm font-medium cursor-pointer transition-colors duration-200 hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed">
@@ -76,6 +82,7 @@ const html = Prism.highlight(code, Prism.languages[language] || Prism.languages.
       // Get code from data attribute
       const sourceCodeContent = this.getAttribute('data-code') || '';
       const isWalletMode = this.getAttribute('data-wallet') === 'true';
+      const shouldSkipConfig = this.getAttribute('data-no-config') === 'true';
 
       if (!sourceCodeContent) {
         outputContent.textContent = "Error: No code to execute";
@@ -120,7 +127,7 @@ const html = Prism.highlight(code, Prism.languages[language] || Prism.languages.
               console.error("Wallet connection failed:", error);
             }
           }
-        } else {
+        } else if (!shouldSkipConfig) {
           // Automatically configure signer if not already configured
           if (win.configureSigner && !win.__signerConfigured) {
             try {
