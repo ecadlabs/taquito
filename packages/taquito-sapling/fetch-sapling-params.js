@@ -24,14 +24,17 @@ const PARAMS = [
 
 function formatModule(moduleName, encoded) {
   return `(function (root, factory) {
-  if (typeof define === 'function' && define.amd) {
-    define([], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory();
-  } else {
-    root.returnExports = factory();
+  var value = factory();
+  if (root) {
+    root.__taquitoVendoredParams = root.__taquitoVendoredParams || {};
+    root.__taquitoVendoredParams["${moduleName}"] = value;
   }
-}(this, function () {
+  if (typeof define === 'function' && define.amd) {
+    define([], function () { return value; });
+  } else if (typeof module === 'object' && module.exports) {
+    module.exports = value;
+  }
+}(typeof globalThis !== 'undefined' ? globalThis : this, function () {
   return {
     "${moduleName}": "${encoded}"
   };
