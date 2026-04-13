@@ -294,7 +294,7 @@ You can then call the `.confirmation()` method and pass as a parameter the numbe
 ```js live wallet
 try {
   const op = await Tezos.wallet
-    .transfer({ to: 'KT1SwCVCPfcYaB3K8Xab4wAjrYSRAVqw9Bbg', amount: 0.2 })
+    .transfer({ to: '__FIXTURE_walletTransferContract__', amount: 0.2 })
     .send();
 
   console.log(`Waiting for ${op.opHash} to be confirmed...`);
@@ -330,7 +330,7 @@ Most of the time, the process is simple: you take the contract abstraction you c
 
 ```js live wallet
 try {
-  const contract = await Tezos.wallet.at('KT1EKkudANbs6M4WDCiqSxSWH4w9bVnzeqPF');
+  const contract = await Tezos.wallet.at('__FIXTURE_walletEntrypointsContract__');
   const op = await contract.methodsObject.areYouThere(true).send();
 
   console.log(`Hash: ${op.opHash}`);
@@ -353,7 +353,7 @@ In the case of multiple arguments (for example if the entrypoint expects a pair)
 
 ```js live wallet
 try {
-  const contract = await Tezos.wallet.at('KT1EKkudANbs6M4WDCiqSxSWH4w9bVnzeqPF');
+  const contract = await Tezos.wallet.at('__FIXTURE_walletEntrypointsContract__');
   const op = await contract.methodsObject.addName({0: 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb', 1: 'Alice'}).send();
 
   console.log(`Hash: ${op.opHash}`);

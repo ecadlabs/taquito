@@ -3,6 +3,8 @@ title: Quick Start
 author: [Simon Boissonneault-Robert, Maxwell Ward]
 ---
 
+import { docsLiveCodeFixtures as fixtures } from '../../../utils/live-code.mjs';
+
 ## Installing Taquito using npm
 
 > If you just want to get started quickly with a new project, you can use our boilerplate [Vue](https://github.com/ecadlabs/taquito-vue-template), [React](https://github.com/ecadlabs/taquito-react-template), or [Ionic](https://github.com/ecadlabs/taquito-ionic-template) templates.
@@ -160,7 +162,7 @@ try {
 
 Calling smart contract operations requires a configured signer, as it involves modifying data on the blockchain.
 
-Details about the smart contract used in this example can be found on tzkt.io [here](https://shadownet.tzkt.io/KT1RNPmCdU9EKRVquuXnVWAbCSQJPbJh2HXc/operations/). To learn more about JSLIGO - a language used to write smart contracts -, see [their documentation](https://ligolang.org/?lang=jsligo).
+Details about the smart contract used in this example can be found on tzkt.io <a href={`https://shadownet.tzkt.io/${fixtures.quickStartIncrementContract}/operations/`}>here</a>. To learn more about JSLIGO, a language used to write smart contracts, see [their documentation](https://ligolang.org/?lang=jsligo).
 
 <Tabs
 defaultValue="contractAPI"
@@ -172,7 +174,7 @@ values={[
 
 ```js live
 try {
-  const contract = await Tezos.contract.at('KT1RNPmCdU9EKRVquuXnVWAbCSQJPbJh2HXc');
+  const contract = await Tezos.contract.at('__FIXTURE_quickStartIncrementContract__');
 
   console.log(`Incrementing storage value by 7...`);
   const operation = await contract.methodsObject.increment(7).send();
@@ -197,7 +199,7 @@ Interacting with contracts using with the wallet API is very similar but with a 
 
 ```js live wallet
 try {
-  const contract = await Tezos.wallet.at('KT1RNPmCdU9EKRVquuXnVWAbCSQJPbJh2HXc');
+  const contract = await Tezos.wallet.at('__FIXTURE_quickStartIncrementContract__');
 
   console.log(`Incrementing storage value by 7...`);
   const operation = await contract.methodsObject.increment(7).send();

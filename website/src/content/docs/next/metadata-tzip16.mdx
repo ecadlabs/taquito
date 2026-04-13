@@ -98,7 +98,7 @@ values={[
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = 'KT1GvobHW6GNenkkD1se8uxbsfLLd5pz61br';
+const contractAddress = '__FIXTURE_tzip16TezosStorageContract__';
 
 try {
   const contract = await Tezos.contract.at(contractAddress, tzip16);
@@ -120,7 +120,7 @@ try {
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = 'KT1GvobHW6GNenkkD1se8uxbsfLLd5pz61br';
+const contractAddress = '__FIXTURE_tzip16TezosStorageContract__';
 
 try {
   const wallet = await Tezos.wallet.at(contractAddress, tzip16);
@@ -152,7 +152,7 @@ values={[
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = 'KT1KdNHzwjFV5EboJ19m9GqKFUd1dYrnnQp8';
+const contractAddress = '__FIXTURE_tzip16HttpsContract__';
 
 try {
   const contract = await Tezos.contract.at(contractAddress, tzip16);
@@ -173,7 +173,7 @@ try {
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = 'KT1KdNHzwjFV5EboJ19m9GqKFUd1dYrnnQp8';
+const contractAddress = '__FIXTURE_tzip16HttpsContract__';
 
 try {
   const wallet = await Tezos.wallet.at(contractAddress, tzip16);
@@ -204,7 +204,7 @@ values={[
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = 'KT1MvcC4Zfa5CXwXEdJHJ1RvKZVtPGPWYgvn';
+const contractAddress = '__FIXTURE_tzip16Sha256Contract__';
 
 try {
   const contract = await Tezos.contract.at(contractAddress, tzip16);
@@ -226,7 +226,7 @@ try {
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = 'KT1MvcC4Zfa5CXwXEdJHJ1RvKZVtPGPWYgvn';
+const contractAddress = '__FIXTURE_tzip16Sha256Contract__';
 
 try {
   const wallet = await Tezos.wallet.at(contractAddress, tzip16);
@@ -258,7 +258,7 @@ values={[
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = 'KT1EHmzkvqckFHdvuCAy8Agwix2CndQGtJ4A';
+const contractAddress = '__FIXTURE_tzip16IpfsContract__';
 
 try {
   const contract = await Tezos.contract.at(contractAddress, tzip16);
@@ -280,7 +280,7 @@ try {
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = 'KT1EHmzkvqckFHdvuCAy8Agwix2CndQGtJ4A';
+const contractAddress = '__FIXTURE_tzip16IpfsContract__';
 
 try {
   const wallet = await Tezos.wallet.at(contractAddress, tzip16);
@@ -299,7 +299,7 @@ try {
 
 A sequence diagram can be found [here](./tzip16-sequence-diagram#execute-a-view).
 
-In the next example, we will run a view named `someJson` that can be found in the metadata of the contract `KT1CmbBCygLX2PwbCympnFbpcv5LW1Y1XS98`. When we inspect those metadata, we can see that this view takes no parameter, has a returnType of bytes and has the following code:
+In the next example, we will run a view named `someJson` that can be found in the metadata of the demo off-chain-view contract. When we inspect those metadata, we can see that this view takes no parameter, has a returnType of bytes and has the following code:
 
 ```
 "code":
@@ -344,7 +344,7 @@ values={[
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = 'KT1CmbBCygLX2PwbCympnFbpcv5LW1Y1XS98';
+const contractAddress = '__FIXTURE_tzip16OffChainJsonContract__';
 
 try {
   const contract = await Tezos.contract.at(contractAddress, tzip16);
@@ -369,7 +369,7 @@ try {
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = 'KT1CmbBCygLX2PwbCympnFbpcv5LW1Y1XS98';
+const contractAddress = '__FIXTURE_tzip16OffChainJsonContract__';
 
 try {
   const wallet = await Tezos.wallet.at(contractAddress, tzip16);
@@ -387,7 +387,7 @@ try {
   </TabItem>
 </Tabs>
 
-In the next example, we will run a view named `multiply-the-nat-in-storage` that can be found in the metadata of the contract `KT1CmbBCygLX2PwbCympnFbpcv5LW1Y1XS98`. When we inspect those metadata, we can see that this view takes a `nat` has a parameter, has a returnType of `nat` and has the following instructions: `DUP, CDR, CAR, SWAP, CAR, MUL`.
+In the next example, we will run a view named `multiply-the-nat-in-storage` that can be found in the metadata of the demo off-chain-view contract. When we inspect those metadata, we can see that this view takes a `nat` parameter, has a returnType of `nat` and has the following instructions: `DUP, CDR, CAR, SWAP, CAR, MUL`.
 
 Try to run the view:
 
@@ -406,7 +406,7 @@ values={[
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = 'KT1CmbBCygLX2PwbCympnFbpcv5LW1Y1XS98';
+const contractAddress = '__FIXTURE_tzip16OffChainMultiplyContract__';
 
 try {
   const contract = await Tezos.contract.at(contractAddress, tzip16);
@@ -432,7 +432,7 @@ try {
 
 Tezos.addExtension(new Tzip16Module());
 
-const contractAddress = 'KT1CmbBCygLX2PwbCympnFbpcv5LW1Y1XS98';
+const contractAddress = '__FIXTURE_tzip16OffChainMultiplyContract__';
 
 try {
   const wallet = await Tezos.wallet.at(contractAddress, tzip16);
@@ -468,7 +468,7 @@ values={[
 // import { MichelsonStorageView } from "@taquito/tzip16";
 // const Tezos = new TezosToolkit('rpc_url');
 
-const contractAddress = 'KT1CmbBCygLX2PwbCympnFbpcv5LW1Y1XS98';
+const contractAddress = '__FIXTURE_tzip16OffChainMultiplyContract__';
 
 try {
   const contract = await Tezos.contract.at(contractAddress);
@@ -504,7 +504,7 @@ try {
 // import { MichelsonStorageView } from "@taquito/tzip16";
 // const Tezos = new TezosToolkit('rpc_url');
 
-const contractAddress = 'KT1CmbBCygLX2PwbCympnFbpcv5LW1Y1XS98';
+const contractAddress = '__FIXTURE_tzip16OffChainMultiplyContract__';
 
 try {
   const wallet = await Tezos.wallet.at(contractAddress);

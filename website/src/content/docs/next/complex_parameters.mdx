@@ -138,7 +138,7 @@ The way to write the parameter when calling the function of a contract with Taqu
 
 try {
   await importKey(Tezos, secretKey);
-  const myContract = await Tezos.contract.at('KT1XbU7axZzQ3pL8mJwEi5HAkW99YhXjaNQq');
+  const myContract = await Tezos.contract.at('__FIXTURE_complexParametersContract__');
 
   const dataMap = new MichelsonMap();
   dataMap.set("Hello World", { bool: true });
@@ -165,7 +165,7 @@ try {
 
 try {
   await importKey(Tezos, secretKey);
-  const myContract = await Tezos.contract.at('KT1XbU7axZzQ3pL8mJwEi5HAkW99YhXjaNQq');
+  const myContract = await Tezos.contract.at('__FIXTURE_complexParametersContract__');
 
   const dataMap = new MichelsonMap();
   dataMap.set("Hello World", { bool : true });
@@ -196,7 +196,7 @@ The `address %address` and the `nat %ttl` of the `set_child_record` function are
 
 try {
   await importKey(Tezos, secretKey);
-  const myContract = await Tezos.contract.at('KT1XbU7axZzQ3pL8mJwEi5HAkW99YhXjaNQq');
+  const myContract = await Tezos.contract.at('__FIXTURE_complexParametersContract__');
 
   const dataMap = new MichelsonMap();
   dataMap.set("Hello World", { nat : '3' });

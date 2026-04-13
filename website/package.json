@@ -10,7 +10,9 @@
     "astro": "astro",
     "docs:version": "node src/scripts/version-docs.mjs",
     "generate:llms": "node src/scripts/generate-llms-txt.mjs",
-    "generate:rpc": "node src/scripts/generate-rpc-table.js"
+    "generate:rpc": "node src/scripts/generate-rpc-table.js",
+    "originate:live-code-fixtures": "ts-node --compiler-options '{\"module\":\"commonjs\"}' scripts/originate-live-code-fixtures.ts",
+    "test:live-code:prod": "node scripts/prod-live-code-smoke.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.14",

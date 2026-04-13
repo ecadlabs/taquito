@@ -18,6 +18,11 @@ import {
 } from './contracts';
 
 declare global {
+  interface DemoSignerOptions {
+    fresh?: boolean;
+    minBalanceMutez?: number;
+  }
+
   interface Window {
     Tezos: any;
     TezosToolkit: any;
@@ -66,12 +71,13 @@ declare global {
     contractStorageWithAndWithoutAnnot: any;
     contractStorageWithoutAnnot: any;
     managerCode: any;
-    configureSigner: () => Promise<string | undefined>;
+    configureSigner: (options?: DemoSignerOptions) => Promise<string | undefined>;
     connectWallet: () => Promise<string | undefined>;
     __signerConfigured?: boolean;
     __walletConnected?: boolean;
     __taquitoReady?: Promise<void>;
     __taquitoError?: any;
+    __taquitoDemoSignerSecretKey__?: string;
     ensureLedgerSupport?: () => Promise<void>;
   }
 }
@@ -111,6 +117,70 @@ const installBrowserShims = async () => {
   if (!browserGlobal.Buffer) {
     const { Buffer } = await import('buffer');
     browserGlobal.Buffer = Buffer;
+  }
+};
+
+const KEYGEN_REQUEST_TIMEOUT_MS = 60_000;
+const DEFAULT_MIN_DEMO_BALANCE_MUTEZ = 5_000_000;
+const DEMO_SIGNER_LOCAL_STORAGE_KEY = 'taquito.docs.demoSignerSecretKey';
+
+const getInjectedDemoSignerKey = () => {
+  if (typeof window.__taquitoDemoSignerSecretKey__ === 'string') {
+    const injectedKey = window.__taquitoDemoSignerSecretKey__.trim();
+    if (injectedKey.length > 0) {
+      return injectedKey;
+    }
+  }
+
+  try {
+    const storedKey = window.localStorage.getItem(DEMO_SIGNER_LOCAL_STORAGE_KEY)?.trim();
+    if (storedKey) {
+      return storedKey;
+    }
+  } catch {
+    // Access to storage can fail in restricted browsing contexts.
+  }
+
+  return undefined;
+};
+
+const fetchFreshDemoSignerKey = async (minBalanceMutez = DEFAULT_MIN_DEMO_BALANCE_MUTEZ) => {
+  const injectedKey = getInjectedDemoSignerKey();
+  if (injectedKey) {
+    return injectedKey;
+  }
+
+  const controller = new AbortController();
+  const timeout = window.setTimeout(() => controller.abort(), KEYGEN_REQUEST_TIMEOUT_MS);
+
+  try {
+    const response = await fetch("https://keygen.ecadinfra.com/v2/shadownet", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer taquito-example",
+        "Accept": "application/json"
+      },
+      body: JSON.stringify({
+        key_prefixes: ['tz1'],
+        max_selection_attempts: 5,
+        min_balance_mutez: minBalanceMutez,
+      }),
+      signal: controller.signal,
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to generate key: ${response.status}`);
+    }
+
+    const payload = await response.json() as { secret_key?: string };
+    if (!payload.secret_key) {
+      throw new Error("No private key in response");
+    }
+
+    return payload.secret_key;
+  } finally {
+    window.clearTimeout(timeout);
   }
 };
 
@@ -213,39 +283,22 @@ async function init() {
 }
 
 // Make configureSigner available globally
-window.configureSigner = async function () {
+window.configureSigner = async function (options = {}) {
   if (!window.Tezos) {
     throw new Error("Tezos toolkit not initialized");
   }
 
+  const shouldUseFreshSigner = options.fresh === true;
+  const minBalanceMutez = options.minBalanceMutez ?? DEFAULT_MIN_DEMO_BALANCE_MUTEZ;
+
   // Check if already configured
-  if (window.__signerConfigured) {
+  if (!shouldUseFreshSigner && window.__signerConfigured) {
     console.log("Signer already configured");
     return await window.Tezos.signer.publicKeyHash();
   }
 
   try {
-    // Generate a key for demo purposes
-    const response = await fetch("https://keygen.ecadinfra.com/v2/shadownet", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer taquito-example",
-        "Accept": "application/json"
-      },
-      body: JSON.stringify({ key_prefixes: ['tz1'] }),
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to generate key: ${response.status}`);
-    }
-
-    const payload = await response.json() as { secret_key?: string };
-    const privateKey = payload.secret_key;
-
-    if (!privateKey) {
-      throw new Error("No private key in response");
-    }
+    const privateKey = await fetchFreshDemoSignerKey(minBalanceMutez);
 
     // Set up the InMemorySigner
     const signer = await window.InMemorySigner.fromSecretKey(privateKey);

@@ -94,7 +94,7 @@ The `contractCall()` member method can be used to estimate contract calls as suc
 
 ```js live
 try {
-  const contract = await Tezos.contract.at('KT1RNPmCdU9EKRVquuXnVWAbCSQJPbJh2HXc');
+  const contract = await Tezos.contract.at('__FIXTURE_quickStartIncrementContract__');
   const op = contract.methodsObject.increment(7);
 
   console.log(`Estimating the smart contract call: `);
@@ -118,7 +118,7 @@ usingBaseFeeMutez : ${estimate.usingBaseFeeMutez}`);
 
 ```js live wallet
 try {
-  const contract = await Tezos.wallet.at('KT1RNPmCdU9EKRVquuXnVWAbCSQJPbJh2HXc');
+  const contract = await Tezos.wallet.at('__FIXTURE_quickStartIncrementContract__');
   const op = contract.methodsObject.increment(7);
 
   console.log(`Estimating the smart contract call: `);
