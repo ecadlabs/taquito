@@ -1,4 +1,5 @@
-import * as sapling from '@taquito/sapling-wasm';
+import { Buffer } from 'buffer';
+import * as sapling from '../sapling-wasm';
 import { ParametersSpendProof, SaplingSpendDescription } from '../types';
 import { decryptKey } from './helpers';
 

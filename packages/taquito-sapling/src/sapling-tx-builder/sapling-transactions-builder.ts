@@ -1,3 +1,4 @@
+import { Buffer } from 'buffer';
 import blake from 'blakejs';
 import { secretBox } from '@stablelib/nacl';
 import { DEFAULT_MEMO, KDF_KEY, OCK_KEY } from '../constants';

@@ -1,3 +1,4 @@
+import { Buffer } from 'buffer';
 import { b58Encode, bytesToString, PrefixV2 } from '@taquito/utils';
 import BigNumber from 'bignumber.js';
 import { Input } from '../types';

@@ -1,9 +1,8 @@
-import * as sapling from '@taquito/sapling-wasm';
+import { Buffer } from 'buffer';
+import * as sapling from './sapling-wasm';
 import { ParametersOutputProof } from './types';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const saplingOutputParams = require('../saplingOutputParams');
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const saplingSpendParams = require('@taquito/sapling-spend-params');
+import saplingOutputParams from '../saplingOutputParams.js';
+import saplingSpendParams from '@taquito/sapling-spend-params';
 
 let cachedParams: { spend: Buffer; output: Buffer } | undefined;
 

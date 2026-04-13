@@ -4,9 +4,10 @@
  *
  */
 
+import { Buffer } from 'buffer';
 import { SaplingDiffResponse, SaplingTransactionCiphertext } from '@taquito/rpc';
 import { InvalidMerkleTreeError, TreeConstructionFailure } from '../errors';
-import { merkleHash } from '@taquito/sapling-wasm';
+import { merkleHash } from '../sapling-wasm';
 import { Lazy, pairNodes, changeEndianness } from './utils';
 import { hex2Bytes, num2PaddedHex } from '@taquito/utils';
 import BigNumberJs from 'bignumber.js';

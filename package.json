@@ -51,12 +51,18 @@
     "build-docs": "typedoc --tsconfig ./tsconfig.typedoc.json",
     "gh-pages": "gh-pages",
     "integration-tests": "npm -w integration-tests run originate-known-contracts && npm -w integration-tests run test:secret-key",
-    "version-stamp": "npm run --workspaces --if-present version-stamp"
+    "version-stamp": "npm run --workspaces --if-present version-stamp",
+    "test:browser:packages": "npm run build && playwright test --config browser-tests/playwright.config.ts --project=chromium",
+    "test:browser:packages:firefox": "npm run build && playwright test --config browser-tests/playwright.config.ts --project=firefox",
+    "test:browser:packages:webkit": "npm run build && playwright test --config browser-tests/playwright.config.ts --project=webkit",
+    "test:browser:packages:all": "npm run build && playwright test --config browser-tests/playwright.config.ts",
+    "test:browser:packages:ci": "npm run test:browser:packages"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
     "@nx/vite": "^22.5.4",
+    "@playwright/test": "^1.59.1",
     "@types/bluebird": "^3.5.42",
     "@types/estree": "^1.0.5",
     "@types/mocha": "^10.0.7",

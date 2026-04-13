@@ -1,5 +1,6 @@
+import { Buffer } from 'buffer';
 import { b58Encode, PrefixV2 } from '@taquito/utils';
-import * as sapling from '@taquito/sapling-wasm';
+import * as sapling from '../sapling-wasm';
 import { decryptKey } from './helpers';
 
 /**

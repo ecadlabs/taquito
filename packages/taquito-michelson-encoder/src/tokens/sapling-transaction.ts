@@ -1,4 +1,5 @@
 import { SaplingTransactionTokenSchema } from '../schema/types';
+import { buf2hex } from '@taquito/utils';
 import { SemanticEncoding, Token, TokenFactory, TokenValidationError } from './token';
 
 /**
@@ -7,7 +8,11 @@ import { SemanticEncoding, Token, TokenFactory, TokenValidationError } from './t
  */
 export class SaplingTransactionValidationError extends TokenValidationError {
   name = 'SaplingTransactionValidationError';
-  constructor(public value: any, public token: SaplingTransactionToken, message: string) {
+  constructor(
+    public value: any,
+    public token: SaplingTransactionToken,
+    message: string
+  ) {
     super(value, token, message);
   }
 }
@@ -51,7 +56,7 @@ export class SaplingTransactionToken extends Token {
   }
 
   private convertUint8ArrayToHexString(val: Uint8Array | string) {
-    return val.constructor === Uint8Array ? Buffer.from(val).toString('hex') : val;
+    return val.constructor === Uint8Array ? buf2hex(val) : val;
   }
 
   Encode(args: any[]): any {

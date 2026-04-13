@@ -1,4 +1,5 @@
-import * as sapling from '@taquito/sapling-wasm';
+import { Buffer } from 'buffer';
+import * as sapling from '../sapling-wasm';
 import BigNumberJs from 'bignumber.js';
 type BigNumber = InstanceType<typeof BigNumberJs>;
 const BigNumber = BigNumberJs;

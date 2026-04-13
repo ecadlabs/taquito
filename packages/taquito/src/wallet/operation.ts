@@ -24,9 +24,10 @@ import { InvalidOperationHashError } from '@taquito/core';
 export type OperationStatus = 'pending' | 'unknown' | OperationResultStatusEnum;
 
 const MAX_BRANCH_ANCESTORS = 60;
-const walletOpTraceEnabled = /^(1|true)$/i.test(process?.env?.TAQUITO_OP_TRACE ?? '');
-const walletOpTraceVerbose = /^(1|true)$/i.test(process?.env?.TAQUITO_OP_TRACE_VERBOSE ?? '');
-const parsedWalletOpTraceSlowMs = Number(process?.env?.TAQUITO_OP_TRACE_SLOW_MS ?? '60000');
+const env = typeof process !== 'undefined' ? process.env : undefined;
+const walletOpTraceEnabled = /^(1|true)$/i.test(env?.TAQUITO_OP_TRACE ?? '');
+const walletOpTraceVerbose = /^(1|true)$/i.test(env?.TAQUITO_OP_TRACE_VERBOSE ?? '');
+const parsedWalletOpTraceSlowMs = Number(env?.TAQUITO_OP_TRACE_SLOW_MS ?? '60000');
 const walletOpTraceSlowMs =
   Number.isFinite(parsedWalletOpTraceSlowMs) && parsedWalletOpTraceSlowMs >= 0
     ? parsedWalletOpTraceSlowMs

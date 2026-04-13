@@ -49,6 +49,18 @@ jobs:
       - run: npx nx build @taquito/http-utils
       - run: npx nx test @taquito/http-utils -- --coverage
 
+  browser-package-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npx -y npm@11 ci
+      - run: google-chrome --version
+      - run: npm run test:browser:packages
+
   integration-tests-keygen-preflight:
     needs: integration-tests-change-filter
     if: ${{ needs.integration-tests-change-filter.outputs.run_expensive == 'true' }}

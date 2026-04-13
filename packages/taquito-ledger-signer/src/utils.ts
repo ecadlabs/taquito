@@ -3,6 +3,7 @@
  * Copyright (c) 2018 Andrew Kishino
  */
 
+import { Buffer } from 'buffer';
 import { DerivationType } from './taquito-ledger-signer';
 
 const MAX_CHUNK_SIZE = 230;

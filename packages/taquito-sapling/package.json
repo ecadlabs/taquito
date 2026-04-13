@@ -16,6 +16,7 @@
   "files": [
     "dist",
     "saplingOutputParams.js",
+    "saplingOutputParams.d.ts",
     "SAPLING_PARAMS_PROVENANCE.md"
   ],
   "publishConfig": {
@@ -67,6 +68,7 @@
     "@taquito/sapling-spend-params": "^24.2.0",
     "@taquito/taquito": "^24.2.0",
     "@taquito/utils": "^24.2.0",
+    "buffer": "^6.0.3",
     "bignumber.js": "^10.0.2",
     "blakejs": "^1.2.1",
     "typedarray-to-buffer": "^4.0.0"
