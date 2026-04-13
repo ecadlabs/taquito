@@ -1,6 +1,6 @@
 import { CONFIGS, waitForRpcState } from '../../config';
 import { PrefixV2 } from '@taquito/utils';
-import { TezosToolkit, UnitValue } from '@taquito/taquito';
+import { OpKind, TezosToolkit, UnitValue } from '@taquito/taquito';
 import crypto from 'crypto';
 import { PvmKind } from '@taquito/rpc';
 
@@ -170,16 +170,24 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker, knownTicketCont
     it('verify that update_consensus_key fee and gas is sufficient', async () => {
       const consensusAcc = await createAddress(PrefixV2.BLS12_381SecretKey);
       const consensusPk = await consensusAcc.signer.publicKey();
-      let proof = (await consensusAcc.signer.provePossession!()).prefixSig;
-      const estimated = await Tz4.estimate.updateConsensusKey({ pk: consensusPk, proof });
-      expect(estimated?.suggestedFeeMutez).toBeGreaterThanOrEqual(745);
-      expect(estimated?.gasLimit).toBeGreaterThanOrEqual(3350);
-      expect(estimated?.storageLimit).toBe(0);
+      const proof = (await consensusAcc.signer.provePossession!()).prefixSig;
+      const source = await Tz4.signer.publicKeyHash();
+      const [delegationEstimate, updateEstimate] = await Tz4.estimate.batch([
+        { kind: OpKind.DELEGATION, source, delegate: source },
+        { kind: OpKind.UPDATE_CONSENSUS_KEY, pk: consensusPk, proof },
+      ]);
+      expect(delegationEstimate?.suggestedFeeMutez).toBeGreaterThanOrEqual(161);
+      expect(delegationEstimate?.gasLimit).toBeGreaterThanOrEqual(100);
+      expect(delegationEstimate?.storageLimit).toBe(0);
+      expect(updateEstimate?.suggestedFeeMutez).toBeGreaterThanOrEqual(458);
+      expect(updateEstimate?.gasLimit).toBeGreaterThanOrEqual(1772);
+      expect(updateEstimate?.storageLimit).toBe(0);
 
-      const updateConsensusKeyOp = await Tz4.contract.updateConsensusKey({
-        pk: consensusPk,
-        proof,
-      });
+      const updateConsensusKeyOp = await Tz4.contract
+        .batch()
+        .withDelegation({ source, delegate: source })
+        .withUpdateConsensusKey({ pk: consensusPk, proof })
+        .send();
       await updateConsensusKeyOp.confirmation();
       expect(updateConsensusKeyOp.status).toBe('applied');
     });
@@ -187,16 +195,24 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker, knownTicketCont
     it('verify that update_companion_key fee and gas is sufficient', async () => {
       const companionAcc = await createAddress(PrefixV2.BLS12_381SecretKey);
       const companionPk = await companionAcc.signer.publicKey();
-      let proof = (await companionAcc.signer.provePossession!()).prefixSig;
-      const estimated = await Tz4.estimate.updateCompanionKey({ pk: companionPk, proof });
-      expect(estimated?.suggestedFeeMutez).toBeGreaterThanOrEqual(745);
-      expect(estimated?.gasLimit).toBeGreaterThanOrEqual(3350);
-      expect(estimated?.storageLimit).toBe(0);
+      const proof = (await companionAcc.signer.provePossession!()).prefixSig;
+      const source = await Tz4.signer.publicKeyHash();
+      const [delegationEstimate, updateEstimate] = await Tz4.estimate.batch([
+        { kind: OpKind.DELEGATION, source, delegate: source },
+        { kind: OpKind.UPDATE_COMPANION_KEY, pk: companionPk, proof },
+      ]);
+      expect(delegationEstimate?.suggestedFeeMutez).toBeGreaterThanOrEqual(161);
+      expect(delegationEstimate?.gasLimit).toBeGreaterThanOrEqual(100);
+      expect(delegationEstimate?.storageLimit).toBe(0);
+      expect(updateEstimate?.suggestedFeeMutez).toBeGreaterThanOrEqual(458);
+      expect(updateEstimate?.gasLimit).toBeGreaterThanOrEqual(1772);
+      expect(updateEstimate?.storageLimit).toBe(0);
 
-      const updateCompanionKeyOp = await Tz4.contract.updateCompanionKey({
-        pk: companionPk,
-        proof,
-      });
+      const updateCompanionKeyOp = await Tz4.contract
+        .batch()
+        .withDelegation({ source, delegate: source })
+        .withUpdateCompanionKey({ pk: companionPk, proof })
+        .send();
       await updateCompanionKeyOp.confirmation();
       expect(updateCompanionKeyOp.status).toBe('applied');
     });
