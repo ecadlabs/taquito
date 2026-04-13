@@ -1,7 +1,7 @@
 import { Buffer } from 'buffer';
 import * as sapling from './sapling-wasm';
 import { ParametersOutputProof } from './types';
-import saplingOutputParams from '../saplingOutputParams.js';
+import saplingOutputParams from './sapling-output-params';
 import saplingSpendParams from '@taquito/sapling-spend-params';
 
 let cachedParams: { spend: Buffer; output: Buffer } | undefined;
