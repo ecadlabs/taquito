@@ -85,12 +85,14 @@ try {
     },
   });
 
+  console.log('Waiting for WalletConnect pairing approval...');
   await walletConnect.requestPermissions({
     permissionScope: {
       networks: [NetworkType.SHADOWNET],
       methods: [PermissionScopeMethods.TEZOS_SEND],
     },
   });
+  console.log('WalletConnect pairing approved, preparing transfer...');
 
   Tezos.setWalletProvider(walletConnect);
   const op = await Tezos.wallet

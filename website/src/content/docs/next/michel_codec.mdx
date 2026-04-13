@@ -42,7 +42,7 @@ const p = new Parser(parserOptions);
 const p = new Parser();
 
 try {
-  const contract = await Tezos.contract.at("KT1RNPmCdU9EKRVquuXnVWAbCSQJPbJh2HXc");
+  const contract = await Tezos.contract.at("__FIXTURE_quickStartIncrementContract__");
   const code = p.parseJSON(contract.script.code);
   console.log("Pretty print Michelson smart contract:");
   console.log(emitMicheline(code, {indent:" ", newline: "\n",}));

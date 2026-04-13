@@ -107,8 +107,8 @@ The `next` version contains the latest unreleased documentation.
 
 ### Testing
 - `testing_strategies` - Taquito Testing Strategies
-- `ledger_integration_test` - Ledger tests
-- `rpc_nodes_integration_test` - RPC tests
+- `ledger_integration_test` - Ledger Tests
+- `rpc_nodes_integration_test` - RPC Tests
 
 ### Dapp Development
 - `package_bundle` - Client-Side Environments

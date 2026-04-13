@@ -9,9 +9,19 @@ interface Props {
   title?: string;
   wallet?: boolean;
   noConfig?: boolean;
+  interactionMode?: 'standard' | 'beacon' | 'ledger' | 'walletconnect';
+  signerMode?: 'none' | 'fresh';
 }
 
-const { code, language = 'javascript', title, wallet = false, noConfig = false } = Astro.props;
+const {
+  code,
+  language = 'javascript',
+  title,
+  wallet = false,
+  noConfig = false,
+  interactionMode = 'standard',
+  signerMode = 'none',
+} = Astro.props;
 
 const html = Prism.highlight(code, Prism.languages[language] || Prism.languages.javascript, language);
 ---
@@ -20,6 +30,10 @@ const html = Prism.highlight(code, Prism.languages[language] || Prism.languages.
   data-code={code}
   data-wallet={wallet ? "true" : "false"}
   data-no-config={noConfig ? "true" : "false"}
+  data-live-code-runner="true"
+  data-interaction-mode={interactionMode}
+  data-signer-mode={signerMode}
+  data-run-state="idle"
   class="pre"
 >
   <div class="mb-4">
@@ -42,6 +56,10 @@ const html = Prism.highlight(code, Prism.languages[language] || Prism.languages.
       super();
       this.button = this.querySelector('.run-button');
       this.button?.addEventListener('click', () => this.runCode());
+    }
+
+    setRunState(state: string) {
+      this.setAttribute('data-run-state', state);
     }
 
     async waitForTaquito(timeoutMs = 15000): Promise<void> {
@@ -83,6 +101,8 @@ const html = Prism.highlight(code, Prism.languages[language] || Prism.languages.
       const sourceCodeContent = this.getAttribute('data-code') || '';
       const isWalletMode = this.getAttribute('data-wallet') === 'true';
       const shouldSkipConfig = this.getAttribute('data-no-config') === 'true';
+      const interactionMode = this.getAttribute('data-interaction-mode') ?? 'standard';
+      const signerMode = this.getAttribute('data-signer-mode') ?? 'none';
       const needsLedgerSupport =
         sourceCodeContent.includes('TransportWebHID') ||
         sourceCodeContent.includes('LedgerSigner') ||
@@ -96,6 +116,7 @@ const html = Prism.highlight(code, Prism.languages[language] || Prism.languages.
       }
 
       // Reset UI
+      this.setRunState('initializing');
       outputContent.textContent = "Initializing Taquito...";
       outputDiv.hidden = false;
 
@@ -107,6 +128,7 @@ const html = Prism.highlight(code, Prism.languages[language] || Prism.languages.
       try {
         // Wait for Taquito
         await this.waitForTaquito();
+        this.setRunState('ready');
         this.button.textContent = "Running...";
         outputContent.textContent = ""; // Clear loading message
         
@@ -116,6 +138,7 @@ const html = Prism.highlight(code, Prism.languages[language] || Prism.languages.
         }
 
         if (needsLedgerSupport && win.ensureLedgerSupport) {
+          this.setRunState('waiting-external');
           outputContent.textContent = "Loading Ledger support...";
           await win.ensureLedgerSupport();
           outputContent.textContent = "";
@@ -126,6 +149,7 @@ const html = Prism.highlight(code, Prism.languages[language] || Prism.languages.
           // Connect wallet for wallet API examples
           if (win.connectWallet && !win.__walletConnected) {
             try {
+              this.setRunState('waiting-external');
               outputContent.textContent = "Connecting wallet...";
               const address = await win.connectWallet();
               if (!address) {
@@ -138,12 +162,14 @@ const html = Prism.highlight(code, Prism.languages[language] || Prism.languages.
               console.error("Wallet connection failed:", error);
             }
           }
-        } else if (!shouldSkipConfig) {
+        } else if (!shouldSkipConfig && signerMode !== 'none') {
           // Automatically configure signer if not already configured
-          if (win.configureSigner && !win.__signerConfigured) {
+          const shouldConfigureFreshSigner = signerMode === 'fresh';
+          if (win.configureSigner && (shouldConfigureFreshSigner || !win.__signerConfigured)) {
             try {
+              this.setRunState('configuring-signer');
               outputContent.textContent = "Configuring signer...";
-              const address = await win.configureSigner();
+              const address = await win.configureSigner({ fresh: shouldConfigureFreshSigner });
               // Verify signer is actually configured by checking the flag
               if (!win.__signerConfigured) {
                 throw new Error("Signer configuration completed but __signerConfigured flag is not set");
@@ -205,6 +231,12 @@ const html = Prism.highlight(code, Prism.languages[language] || Prism.languages.
 
         // Execute code
         try {
+          if (interactionMode === 'ledger') {
+            this.setRunState('waiting-external');
+            outputContent.textContent = 'Waiting for Ledger device and WebHID permission...';
+          } else {
+            this.setRunState('running');
+          }
           // Create async function from string
           const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
 
@@ -274,6 +306,7 @@ const html = Prism.highlight(code, Prism.languages[language] || Prism.languages.
           if (logs.length === 0) {
              outputContent.textContent = "Code executed successfully (no output)";
           }
+          this.setRunState('success');
         } finally {
           console.log = originalLog;
           console.error = originalError;
@@ -284,11 +317,15 @@ const html = Prism.highlight(code, Prism.languages[language] || Prism.languages.
         console.error(error);
         const errorMessage = error instanceof Error ? error.message : String(error);
         outputContent.textContent += (outputContent.textContent ? '\n' : '') + `Error: ${errorMessage}`;
+        this.setRunState('error');
       } finally {
         // Re-enable ALL run buttons
         const allButtons = document.querySelectorAll<HTMLButtonElement>('.run-button');
         allButtons.forEach(btn => btn.disabled = false);
         this.button.textContent = "Run Code";
+        if (['initializing', 'ready', 'configuring-signer', 'running'].includes(this.getAttribute('data-run-state') ?? '')) {
+          this.setRunState('idle');
+        }
       }
     }
   }

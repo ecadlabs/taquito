@@ -1,4 +1,8 @@
 import { visit } from 'unist-util-visit';
+import {
+  inferLiveCodeRuntime,
+  replaceLiveCodeFixturePlaceholders,
+} from './live-code.mjs';
 
 /**
  * Remark plugin to transform code blocks with 'live' meta into SimpleCodeRunner components
@@ -18,8 +22,14 @@ export function remarkLiveCode() {
       const isWallet = node.meta.includes('wallet');
       const noConfig = node.meta.includes('noConfig');
 
-      // Use the code as-is - Astro will handle proper escaping for JSX attributes
-      const escapedCode = node.value;
+      const runtime = inferLiveCodeRuntime({
+        code: node.value,
+        isWallet,
+        noConfig,
+      });
+
+      // Replace fixture placeholders at build time so docs stay readable in source.
+      const escapedCode = replaceLiveCodeFixturePlaceholders(node.value);
 
       // Create a new MDX JSX node for SimpleCodeRunner
       const attributes = [
@@ -32,6 +42,16 @@ export function remarkLiveCode() {
           type: 'mdxJsxAttribute',
           name: 'language',
           value: language
+        },
+        {
+          type: 'mdxJsxAttribute',
+          name: 'interactionMode',
+          value: runtime.interactionMode
+        },
+        {
+          type: 'mdxJsxAttribute',
+          name: 'signerMode',
+          value: runtime.signerMode
         }
       ];
 
