@@ -83,6 +83,11 @@ const html = Prism.highlight(code, Prism.languages[language] || Prism.languages.
       const sourceCodeContent = this.getAttribute('data-code') || '';
       const isWalletMode = this.getAttribute('data-wallet') === 'true';
       const shouldSkipConfig = this.getAttribute('data-no-config') === 'true';
+      const needsLedgerSupport =
+        sourceCodeContent.includes('TransportWebHID') ||
+        sourceCodeContent.includes('LedgerSigner') ||
+        sourceCodeContent.includes('HDPathTemplate') ||
+        sourceCodeContent.includes('DerivationType');
 
       if (!sourceCodeContent) {
         outputContent.textContent = "Error: No code to execute";
@@ -108,6 +113,12 @@ const html = Prism.highlight(code, Prism.languages[language] || Prism.languages.
         const win = window as any;
         if (!win.Tezos) {
           throw new Error("Taquito failed to load.");
+        }
+
+        if (needsLedgerSupport && win.ensureLedgerSupport) {
+          outputContent.textContent = "Loading Ledger support...";
+          await win.ensureLedgerSupport();
+          outputContent.textContent = "";
         }
 
         // For wallet mode, connect wallet; otherwise configure signer

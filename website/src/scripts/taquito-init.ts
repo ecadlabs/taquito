@@ -72,8 +72,17 @@ declare global {
     __walletConnected?: boolean;
     __taquitoReady?: Promise<void>;
     __taquitoError?: any;
+    ensureLedgerSupport?: () => Promise<void>;
   }
 }
+
+type BrowserGlobalScope = typeof globalThis & {
+  Buffer?: typeof import('buffer').Buffer;
+  global?: typeof globalThis;
+  process?: {
+    env?: Record<string, string | undefined>;
+  };
+};
 
 // Initialize the ready promise immediately
 let resolveInit: () => void;
@@ -86,9 +95,53 @@ if (!window.__taquitoReady) {
   });
 }
 
+const installBrowserShims = async () => {
+  const browserGlobal = globalThis as BrowserGlobalScope;
+
+  if (!browserGlobal.global) {
+    browserGlobal.global = browserGlobal;
+  }
+
+  if (!browserGlobal.process) {
+    browserGlobal.process = { env: {} };
+  } else if (!browserGlobal.process.env) {
+    browserGlobal.process.env = {};
+  }
+
+  if (!browserGlobal.Buffer) {
+    const { Buffer } = await import('buffer');
+    browserGlobal.Buffer = Buffer;
+  }
+};
+
+let ledgerSupportPromise: Promise<void> | undefined;
+
+const ensureLedgerSupport = async () => {
+  await installBrowserShims();
+
+  if (!ledgerSupportPromise) {
+    ledgerSupportPromise = (async () => {
+      const TransportWebHID = (await import('@ledgerhq/hw-transport-webhid')).default;
+      const { LedgerSigner, DerivationType, HDPathTemplate } = await import(
+        '@taquito/ledger-signer'
+      );
+
+      window.TransportWebHID = TransportWebHID;
+      window.LedgerSigner = LedgerSigner;
+      window.DerivationType = DerivationType;
+      window.HDPathTemplate = HDPathTemplate;
+    })();
+  }
+
+  return ledgerSupportPromise;
+};
+
+window.ensureLedgerSupport = ensureLedgerSupport;
+
 async function init() {
   try {
     console.log("Initializing Taquito dynamically...");
+    await installBrowserShims();
 
     // Dynamic imports
     const { TezosToolkit, compose, MichelsonMap, UnitValue, RpcReadAdapter, getRevealFee, importKey } = await import('@taquito/taquito');
@@ -101,8 +154,6 @@ async function init() {
     const { SigningType } = await import('@taquito/beacon-wallet/types')
     const { Parser, packDataBytes, emitMicheline } = await import('@taquito/michel-codec');
     const { b58Encode, PrefixV2 } = await import('@taquito/utils');
-    const TransportWebHID = (await import('@ledgerhq/hw-transport-webhid')).default;
-    const { LedgerSigner, DerivationType, HDPathTemplate } = await import('@taquito/ledger-signer');
     const { WalletConnect, NetworkType, PermissionScopeMethods } = await import("@taquito/wallet-connect");
 
     const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
@@ -131,10 +182,6 @@ async function init() {
     window.PrefixV2 = PrefixV2;
     window.emitMicheline = emitMicheline;
     window.getRevealFee = getRevealFee;
-    window.TransportWebHID = TransportWebHID;
-    window.LedgerSigner = LedgerSigner;
-    window.DerivationType = DerivationType;
-    window.HDPathTemplate = HDPathTemplate;
     window.WalletConnect = WalletConnect;
     window.NetworkType = NetworkType;
     window.PermissionScopeMethods = PermissionScopeMethods;
