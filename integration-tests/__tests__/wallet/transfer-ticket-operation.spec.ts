@@ -1,4 +1,4 @@
-import { CONFIGS } from '../../config';
+import { CONFIGS, waitForRpcState } from '../../config';
 import { DefaultContractType, TezosToolkit } from '@taquito/taquito';
 import { RpcClient, TicketTokenParams } from '@taquito/rpc';
 import { ticketsSendTz } from '../../data/code_with_ticket_transfer';
@@ -11,11 +11,10 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownTicketContract }) => {
   let recipient: TezosToolkit;
   let sender: TezosToolkit;
   let recipientPkh: string;
-  let senderPkh: string
+  let senderPkh: string;
   let ticketToken: TicketTokenParams;
 
   describe(`Transfer tickets between implicit accounts using: ${rpc}`, () => {
-
     beforeAll(async () => {
       await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
       try {
@@ -28,15 +27,30 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownTicketContract }) => {
         const fundSender = await Tezos.contract.transfer({ to: senderPkh, amount: 5 });
         await fundSender.confirmation();
         expect(fundSender.status).toEqual('applied');
+        await waitForRpcState(
+          Tezos,
+          () => Tezos.rpc.getBalance(senderPkh),
+          (balance) => Number(balance.toString()) > 0,
+          { description: `sender funding for ${senderPkh}` }
+        );
 
         ticketSendContract = await Tezos.contract.at(knownTicketContract);
-        ticketToken = { ticketer: ticketSendContract.address, content_type: { prim: 'string' }, content: { string: 'Ticket' } };
+        ticketToken = {
+          ticketer: ticketSendContract.address,
+          content_type: { prim: 'string' },
+          content: { string: 'Ticket' },
+        };
 
         // Send 3 tickets from the originated contract to sender
-        const sendTickets = await ticketSendContract.methodsObject.default([senderPkh, '3']).send()
+        const sendTickets = await ticketSendContract.methodsObject.default([senderPkh, '3']).send();
         await sendTickets.confirmation();
         expect(sendTickets.status).toEqual('applied');
-
+        await waitForRpcState(
+          Tezos,
+          () => Tezos.rpc.getTicketBalance(senderPkh, ticketToken),
+          (balance) => balance === '3',
+          { description: `ticket funding for ${senderPkh}` }
+        );
       } catch (error) {
         console.log(error);
         throw error;
@@ -52,24 +66,36 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownTicketContract }) => {
       expect(senderBalanceBefore).toEqual('3');
 
       // Transfer 1 ticket from sender to recipient
-      const transferTicketOp = await sender.wallet.transferTicket({
-        ticketContents: { string: "Ticket" },
-        ticketTy: { prim: "string" },
-        ticketTicketer: ticketSendContract.address,
-        ticketAmount: 1,
-        destination: recipientPkh,
-        entrypoint: 'default',
-      }).send();
+      const transferTicketOp = await sender.wallet
+        .transferTicket({
+          ticketContents: { string: 'Ticket' },
+          ticketTy: { prim: 'string' },
+          ticketTicketer: ticketSendContract.address,
+          ticketAmount: 1,
+          destination: recipientPkh,
+          entrypoint: 'default',
+        })
+        .send();
 
       await transferTicketOp.confirmation();
 
       expect(await transferTicketOp.status()).toEqual('applied');
 
       // Check balances after transferring tickets
-      const balanceAfter = await client.getTicketBalance(recipientPkh, ticketToken);
+      const balanceAfter = await waitForRpcState(
+        Tezos,
+        () => Tezos.rpc.getTicketBalance(recipientPkh, ticketToken),
+        (balance) => balance === '1',
+        { description: `recipient ticket balance for ${recipientPkh}` }
+      );
       expect(balanceAfter).toEqual('1');
 
-      const senderBalanceAfter = await client.getTicketBalance(senderPkh, ticketToken);
+      const senderBalanceAfter = await waitForRpcState(
+        Tezos,
+        () => Tezos.rpc.getTicketBalance(senderPkh, ticketToken),
+        (balance) => balance === '2',
+        { description: `sender ticket balance for ${senderPkh}` }
+      );
       expect(senderBalanceAfter).toEqual('2');
     });
   });

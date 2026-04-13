@@ -1,4 +1,4 @@
-import { CONFIGS, TAQUITO_MUTEZ, sleep } from '../config';
+import { CONFIGS, TAQUITO_MUTEZ, sleep, waitForRpcState } from '../config';
 import { PollingSubscribeProvider, TezosToolkit } from '@taquito/taquito';
 import { rethrowInfrastructureRpcError } from '../test-helpers/rpc-error-assertions';
 
@@ -111,8 +111,18 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
       secondUser = await createAddress();
       const secondUserAddress = await secondUser.signer.publicKeyHash();
-      const transfer = await Tezos.contract.transfer({ to: secondUserAddress, amount: TAQUITO_MUTEZ, mutez: true });
+      const transfer = await Tezos.contract.transfer({
+        to: secondUserAddress,
+        amount: TAQUITO_MUTEZ,
+        mutez: true,
+      });
       await transfer.confirmation();
+      await waitForRpcState(
+        Tezos,
+        () => Tezos.rpc.getBalance(secondUserAddress),
+        (balance) => Number(balance.toString()) >= TAQUITO_MUTEZ,
+        { description: `funding ${secondUserAddress}` }
+      );
 
       Tezos.setStreamProvider(
         Tezos.getFactory(PollingSubscribeProvider)({
@@ -128,6 +138,12 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         });
         await calledContract.confirmation();
         calledContractAddress = calledContract.contractAddress!;
+        await waitForRpcState(
+          Tezos,
+          () => Tezos.rpc.getContract(calledContractAddress),
+          () => true,
+          { description: `called contract ${calledContractAddress}` }
+        );
 
         let mainContract = await Tezos.contract.originate({
           code: mainContractMichelson,
@@ -135,6 +151,12 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         });
         await mainContract.confirmation();
         mainContractAddress = mainContract.contractAddress!;
+        await waitForRpcState(
+          Tezos,
+          () => Tezos.rpc.getContract(mainContractAddress),
+          () => true,
+          { description: `main contract ${mainContractAddress}` }
+        );
       } catch (e) {
         console.log(e);
         throw e;
@@ -204,7 +226,6 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       expect(data[0].type).toBeDefined();
       expect(data[0].payload).toBeDefined();
       expect(data[0].result).toBeDefined();
-
     });
 
     it.skip('should include events from failed operations when filter does not exclude events from failed operations', async () => {
