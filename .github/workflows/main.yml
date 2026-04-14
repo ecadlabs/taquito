@@ -90,6 +90,8 @@ jobs:
           cache: npm
       - run: npx -y npm@11 ci
       - run: npm run build
+      - run: npm run test:scripts
+      - run: npm run test:dist:esm-imports
       - run: npm run lint
       - run: npm run build-docs
       - run: npm run test

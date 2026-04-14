@@ -4,7 +4,7 @@ import {
   OperationContentsReveal,
 } from '@taquito/rpc';
 import { ProhibitedActionError } from '@taquito/core';
-import { BigNumber as BigNumberJs } from 'bignumber.js';
+import BigNumberJs from 'bignumber.js';
 type BigNumber = InstanceType<typeof BigNumberJs>;
 const BigNumber = BigNumberJs;
 import { Context } from '../context';
