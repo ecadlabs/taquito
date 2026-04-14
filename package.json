@@ -44,6 +44,7 @@
     "check:package-catalog": "node ./scripts/package-catalog.js --check",
     "sync:package-catalog": "node ./scripts/package-catalog.js --write",
     "test": "nx run-many --target=test --exclude=integration-tests,@taquito/website -- --coverage",
+    "test:dist:esm-imports": "node ./scripts/check-esm-imports.js",
     "lint": "npm run check:package-catalog && npm run --workspaces --if-present lint",
     "clean": "rimraf node_modules packages/*/node_modules packages/taquito-michel-codec/pack-test-tool/node_modules example/node_modules integration-tests/node_modules website/node_modules",
     "precommit": "npm run --workspaces --if-present precommit",
@@ -52,10 +53,11 @@
     "gh-pages": "gh-pages",
     "integration-tests": "npm -w integration-tests run originate-known-contracts && npm -w integration-tests run test:secret-key",
     "version-stamp": "npm run --workspaces --if-present version-stamp",
-    "test:browser:packages": "npm run build && playwright test --config browser-tests/playwright.config.ts --project=chromium",
-    "test:browser:packages:firefox": "npm run build && playwright test --config browser-tests/playwright.config.ts --project=firefox",
-    "test:browser:packages:webkit": "npm run build && playwright test --config browser-tests/playwright.config.ts --project=webkit",
-    "test:browser:packages:all": "npm run build && playwright test --config browser-tests/playwright.config.ts",
+    "test:scripts": "node --test scripts/*.test.js",
+    "test:browser:packages": "npm run build && npm run test:dist:esm-imports && playwright test --config browser-tests/playwright.config.ts --project=chromium",
+    "test:browser:packages:firefox": "npm run build && npm run test:dist:esm-imports && playwright test --config browser-tests/playwright.config.ts --project=firefox",
+    "test:browser:packages:webkit": "npm run build && npm run test:dist:esm-imports && playwright test --config browser-tests/playwright.config.ts --project=webkit",
+    "test:browser:packages:all": "npm run build && npm run test:dist:esm-imports && playwright test --config browser-tests/playwright.config.ts",
     "test:browser:packages:ci": "npm run test:browser:packages"
   },
   "devDependencies": {

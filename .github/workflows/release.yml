@@ -75,6 +75,12 @@ jobs:
       - name: Build release artifacts
         run: npm run -w @taquito/taquito build:release
 
+      - name: Validate release helper scripts
+        run: npm run test:scripts
+
+      - name: Validate built ESM imports
+        run: npm run test:dist:esm-imports
+
       - name: Test
         run: npm test
 

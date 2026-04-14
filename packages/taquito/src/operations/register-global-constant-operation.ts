@@ -3,7 +3,7 @@ import {
   OperationContentsAndResultRegisterGlobalConstant,
   OperationContentsRegisterGlobalConstant,
 } from '@taquito/rpc';
-import { BigNumber as BigNumberJs } from 'bignumber.js';
+import BigNumberJs from 'bignumber.js';
 type BigNumber = InstanceType<typeof BigNumberJs>;
 const BigNumber = BigNumberJs;
 import { Context } from '../context';
