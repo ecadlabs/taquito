@@ -4,7 +4,8 @@
       "declarationDir": "dist/types",
       "outDir": "dist/lib",
       "jsx": "react",
-      "allowJs": true
+      "allowJs": true,
+      "resolveJsonModule": true
     },
     "include": ["src"]
   }

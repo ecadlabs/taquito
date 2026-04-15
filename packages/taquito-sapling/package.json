@@ -15,9 +15,8 @@
   "typings": "dist/types/taquito-sapling.d.ts",
   "files": [
     "dist",
-    "saplingOutputParams.js",
-    "saplingOutputParams.d.ts",
-    "SAPLING_PARAMS_PROVENANCE.md"
+    "SAPLING_PARAMS_PROVENANCE.md",
+    "src/sapling-params-manifest.json"
   ],
   "publishConfig": {
     "access": "public"
@@ -49,6 +48,7 @@
     "precommit": "lint-staged",
     "prebuild": "rimraf dist",
     "version-stamp": "node ../taquito/version-stamping.js",
+    "prepare:release-artifacts": "node ./prepare-sapling-release-artifacts.js",
     "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts --bundleConfigAsCjs",
     "start": "rollup -c rollup.config.ts --bundleConfigAsCjs -w"
   },
@@ -59,13 +59,12 @@
     ]
   },
   "dependencies": {
-    "@taquito/sapling-wasm": "0.1.1",
+    "@taquito/sapling-wasm": "0.2.0",
     "@scure/bip39": "^2.0.1",
     "@noble/hashes": "^2.0.1",
     "@stablelib/nacl": "^1.0.4",
     "@taquito/core": "^24.2.0",
     "@taquito/rpc": "^24.2.0",
-    "@taquito/sapling-spend-params": "^24.2.0",
     "@taquito/taquito": "^24.2.0",
     "@taquito/utils": "^24.2.0",
     "buffer": "^6.0.3",

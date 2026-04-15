@@ -10,6 +10,87 @@ Sapling was introduced to Tezos in the Edo protocol. Refer to the Tezos document
 >[!NOTE]
 > We use the term "shielded set" rather than "shielded pool" in our documentation. While both terms refer to the collection of shielded assets in a Sapling contract, "shielded set" more accurately reflects that assets are kept separately with only amounts and ownership identities being private on-chain, rather than being commingled together. This distinction is important for accurate understanding of how Sapling privacy works. See the [Tezos Agora discussion](https://forum.tezosagora.org/t/growing-the-shielded-set-on-tezos/6922) for more context.
 
+## Runtime setup
+
+Viewing-only Sapling flows do not need any parameter initialization. You can derive keys, addresses, inspect Sapling state, and read balances or history without calling any setup function.
+
+Proof-generating flows are different. Shielding, private transfers, and unshielding need the Sapling proving parameters, and Taquito now treats those parameters as runtime resources instead of bundle-time assets.
+
+Use `initSapling()` to select the parameter source policy up front:
+
+```ts
+import { initSapling } from '@taquito/sapling';
+
+await initSapling({
+  params: {
+    source: 'taquito',
+  },
+});
+```
+
+`initSapling()` does not eagerly download the proving parameters. It only fixes the source policy for the current process. The first proving flow lazy-loads the parameters on demand.
+
+If you want to hide first-use latency, call `preloadSaplingParams()` once after `initSapling()`:
+
+```ts
+import { initSapling, preloadSaplingParams } from '@taquito/sapling';
+
+await initSapling({
+  params: {
+    source: 'taquito',
+  },
+});
+
+await preloadSaplingParams();
+```
+
+## Parameter sources and integrity
+
+Taquito supports four parameter source modes:
+
+- `source: 'taquito'`, the default first-party mirror
+- `source: 'zcash'`, which uses the Zcash-hosted mirror
+- custom remote URLs with explicit SHA-256 digests
+- local filesystem paths for Node.js and CI
+
+Remote loading is always hash-verified before the parameters are used. The digest is the trust anchor, not the hostname.
+
+Custom remote mirrors must include explicit digests:
+
+```ts
+await initSapling({
+  params: {
+    spendParamsUrl: 'https://example.com/sapling-spend.params',
+    outputParamsUrl: 'https://example.com/sapling-output.params',
+    spendParamsSha256: '8e48ffd23abb3a5fd9c5589204f32d9c31285a04b78096ba40a79b75677efc13',
+    outputParamsSha256: '2f0ebbcbb9bb0bcffe95a397e7eba89c29eb4dde6191c339db88570e3f3fb0e4',
+  },
+});
+```
+
+For hermetic Node.js or CI environments, local paths are supported and digests are optional:
+
+```ts
+await initSapling({
+  params: {
+    spendParamsPath: '/absolute/path/to/sapling-spend.params',
+    outputParamsPath: '/absolute/path/to/sapling-output.params',
+  },
+});
+```
+
+If you provide local digests, Taquito verifies them. If you omit them, the trust boundary becomes the local filesystem or mounted artifact store.
+
+## Browser deployment
+
+The supported browser contract is:
+
+- `@taquito/sapling` stays ESM-first for application code.
+- `@taquito/sapling-wasm` ships the Wasm binary in npm.
+- proving parameters are fetched lazily at runtime instead of being embedded in the normal browser import path.
+
+This keeps initial Sapling page loads smaller and removes the need for third-party ESM rewriting or browser `require()` shims.
+
 ## Keys
 
 **Spending key**

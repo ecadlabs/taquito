@@ -63,6 +63,15 @@ jobs:
       - name: Set release version
         run: node scripts/sync-workspace-deps.js "${VERSION}"
 
+      - name: Verify Sapling release handoff
+        run: |
+          set -euo pipefail
+          sapling_wasm_version=$(node -p "require('./packages/taquito-sapling/package.json').dependencies['@taquito/sapling-wasm']")
+          if [ "${sapling_wasm_version}" = "0.1.1" ]; then
+            echo "@taquito/sapling still depends on @taquito/sapling-wasm@0.1.1. Publish sapling-wasm 0.2.0+ and bump packages/taquito-sapling/package.json before release publication." >&2
+            exit 1
+          fi
+
       - name: Install stamped dependency graph
         run: npm ci
 

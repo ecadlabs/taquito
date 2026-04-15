@@ -1,0 +1,15 @@
+{
+  "saplingParamsVersion": "groth16-mainnet-1",
+  "spendParams": {
+    "sha256": "8e48ffd23abb3a5fd9c5589204f32d9c31285a04b78096ba40a79b75677efc13",
+    "bytes": 47958396,
+    "taquitoUrl": "https://sapling.taquito.io/params/groth16-mainnet-1/spend.params",
+    "zcashUrl": "https://download.z.cash/downloads/sapling-spend.params"
+  },
+  "outputParams": {
+    "sha256": "2f0ebbcbb9bb0bcffe95a397e7eba89c29eb4dde6191c339db88570e3f3fb0e4",
+    "bytes": 3592860,
+    "taquitoUrl": "https://sapling.taquito.io/params/groth16-mainnet-1/output.params",
+    "zcashUrl": "https://download.z.cash/downloads/sapling-output.params"
+  }
+}

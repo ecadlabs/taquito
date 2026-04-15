@@ -1,10 +1,7 @@
 import { Buffer } from 'buffer';
 import * as sapling from './sapling-wasm';
 import { ParametersOutputProof } from './types';
-import saplingOutputParams from './sapling-output-params';
-import saplingSpendParams from '@taquito/sapling-spend-params';
-
-let cachedParams: { spend: Buffer; output: Buffer } | undefined;
+import { preloadSaplingParams } from './sapling-params-loader';
 
 type RandomValueSource = {
   getRandomValues<T extends ArrayBufferView | null>(array: T): T;
@@ -22,7 +19,7 @@ const getRandomValueSource = (): RandomValueSource => {
 
 export class SaplingWrapper {
   async withProvingContext<T>(action: (context: number) => Promise<T>) {
-    await this.initSaplingParameters();
+    await preloadSaplingParams();
     return sapling.withProvingContext(action);
   }
 
@@ -80,12 +77,6 @@ export class SaplingWrapper {
   }
 
   async initSaplingParameters() {
-    if (!cachedParams) {
-      cachedParams = {
-        spend: Buffer.from(saplingSpendParams.saplingSpendParams, 'base64'),
-        output: Buffer.from(saplingOutputParams.saplingOutputParams, 'base64'),
-      };
-    }
-    return sapling.initParameters(cachedParams.spend, cachedParams.output);
+    return preloadSaplingParams();
   }
 }

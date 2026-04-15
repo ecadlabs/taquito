@@ -298,10 +298,32 @@ const scenarios: Record<PackageScenarioId, SmokeScenario> = {
     const sapling = await importPackage<typeof import('@taquito/sapling')>('@taquito/sapling');
 
     return {
-      exports: ['SaplingToolkit', 'SaplingTransactionViewer'],
+      exports: ['SaplingToolkit', 'SaplingTransactionViewer', 'initSapling', 'preloadSaplingParams'],
       summary: {
         hasSaplingToolkit: typeof sapling.SaplingToolkit === 'function',
         hasTransactionViewer: typeof sapling.SaplingTransactionViewer === 'function',
+        hasInitSapling: typeof sapling.initSapling === 'function',
+        hasPreloadSaplingParams: typeof sapling.preloadSaplingParams === 'function',
+      },
+    };
+  },
+
+  'sapling-preload': async () => {
+    const sapling = await importPackage<typeof import('@taquito/sapling')>('@taquito/sapling');
+    const startedAt = performance.now();
+
+    await sapling.initSapling({
+      params: {
+        source: 'taquito',
+      },
+    });
+    await sapling.preloadSaplingParams();
+
+    return {
+      exports: ['initSapling', 'preloadSaplingParams'],
+      summary: {
+        preloadSucceeded: true,
+        elapsedMs: Math.round(performance.now() - startedAt),
       },
     };
   },

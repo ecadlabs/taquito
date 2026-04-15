@@ -22,8 +22,6 @@ export default {
         "@taquito/utils": "utils",
         "@taquito/core": "core",
         "@taquito/sapling-wasm": "sapling",
-        "../saplingOutputParams.js": "saplingOutputParams",
-        "@taquito/sapling-spend-params": "saplingSpendParams",
         "blakejs": "blake",
         "@stablelib/nacl": "nacl",
         "@stablelib/random": "random",
@@ -36,9 +34,6 @@ export default {
   external: [
     'typedarray-to-buffer',
     'blakejs',
-    '../saplingOutputParams',
-    '../saplingOutputParams.js',
-    '@taquito/sapling-spend-params',
     '@taquito/core',
     '@taquito/utils',
     'bignumber.js',
