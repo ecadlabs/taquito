@@ -3,7 +3,7 @@ const path = require('path');
 
 const repoRoot = path.resolve(__dirname, '..');
 const packagesDir = path.join(repoRoot, 'packages');
-const hiddenWorkspacePackages = new Set(['@taquito/sapling-spend-params']);
+const hiddenWorkspacePackages = new Set();
 
 const externalPackages = [
   {

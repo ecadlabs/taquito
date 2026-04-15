@@ -33,6 +33,8 @@ import { SaplingTransactionBuilder } from './sapling-tx-builder/sapling-transact
 import { DEFAULT_BOUND_DATA, DEFAULT_MEMO } from './constants';
 import { InMemoryProvingKey } from './sapling-keys/in-memory-proving-key';
 import { InvalidAddressError, InvalidKeyHashError } from '@taquito/core';
+export { initSapling, preloadSaplingParams, SaplingParamsError } from './sapling-params-loader';
+export type { SaplingInitOptions, SaplingParamsSource } from './types';
 
 export { SaplingTransactionViewer } from './sapling-tx-viewer/sapling-transaction-viewer';
 export { InMemoryViewingKey } from './sapling-keys/in-memory-viewing-key';

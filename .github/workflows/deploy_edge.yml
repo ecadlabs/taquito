@@ -19,7 +19,6 @@ jobs:
     if: ${{ !github.event.pull_request.head.repo.fork && (github.event_name == 'pull_request' || github.ref == 'refs/heads/main') }}
     env:
       VERDACCIO_TOKEN: ${{ secrets.EDGE_VERDACCIO_TOKEN }}
-      EDGE_EXCLUDED_PACKAGES: "@taquito/sapling @taquito/sapling-spend-params"
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
@@ -30,6 +29,14 @@ jobs:
       - run: echo "PACKAGE_VERSION=`node -p "require('./packages/taquito/package.json').version"`" >> $GITHUB_ENV
       - run: echo "BRANCH_NAME=$(echo "${GITHUB_HEAD_REF:-${GITHUB_REF_NAME}}" | sed 's/[^a-zA-Z0-9-]/-/g')" >> $GITHUB_ENV
       - run: echo "TARGET_VERSION=${PACKAGE_VERSION}-${SHORT_SHA}--${BRANCH_NAME}" >> $GITHUB_ENV
+      - name: Verify Sapling release handoff
+        run: |
+          set -euo pipefail
+          sapling_wasm_version=$(node -p "require('./packages/taquito-sapling/package.json').dependencies['@taquito/sapling-wasm']")
+          if [ "${sapling_wasm_version}" = "0.1.1" ]; then
+            echo "@taquito/sapling still depends on @taquito/sapling-wasm@0.1.1. Publish sapling-wasm 0.2.0+ and bump packages/taquito-sapling/package.json before preview publication." >&2
+            exit 1
+          fi
       - run: npm ci
       - run: find packages/ -mindepth 1 -maxdepth 2 -name README.md | xargs sed -i '1s/^/# WARNING This build is produced from a feature branch and could contain unreviewed changes from the public. Use with caution, do not use in production\n\n/'
       - run: node scripts/sync-workspace-deps.js "${TARGET_VERSION}"
@@ -39,7 +46,6 @@ jobs:
           set -euo pipefail
           find packages/ -mindepth 1 -maxdepth 2 -name package.json \
             | xargs -I{} node -pe "require('./{}')['name']" \
-            | grep -v -E '^@taquito/(sapling|sapling-spend-params)$' \
             > .edge-workspaces
 
           if [ ! -s .edge-workspaces ]; then
@@ -47,7 +53,6 @@ jobs:
             exit 1
           fi
 
-          echo "Skipping edge publish for: ${EDGE_EXCLUDED_PACKAGES}"
           echo "Publishing edge workspaces:"
           cat .edge-workspaces
       - run: npm run build
@@ -62,8 +67,6 @@ jobs:
         run: |
           echo "COMMENT_BODY<<EOF"  >> $GITHUB_ENV
           echo "New packages have been deployed to the preview repository at https://npm.preview.tezostaquito.io/." >> $GITHUB_ENV
-          echo "" >> $GITHUB_ENV
-          echo "Sapling preview packages are intentionally excluded because the preview registry rejects their current package size." >> $GITHUB_ENV
           echo "" >> $GITHUB_ENV
           echo "### Published packages:" >> $GITHUB_ENV
           echo "\`\`\`" >> $GITHUB_ENV

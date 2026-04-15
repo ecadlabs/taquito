@@ -15,7 +15,8 @@ export type PackageScenarioId =
   | 'beacon-wallet-import'
   | 'wallet-connect-import'
   | 'ledger-signer-behavior'
-  | 'sapling-import';
+  | 'sapling-import'
+  | 'sapling-preload';
 
 export type PackageScenario = {
   id: PackageScenarioId;
@@ -108,5 +109,10 @@ export const packageScenarios: readonly PackageScenario[] = [
     id: 'sapling-import',
     packageName: '@taquito/sapling',
     description: 'imports sapling in a browser',
+  },
+  {
+    id: 'sapling-preload',
+    packageName: '@taquito/sapling',
+    description: 'imports sapling and preloads hosted proving parameters in a browser',
   },
 ] as const;

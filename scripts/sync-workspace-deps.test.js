@@ -47,7 +47,7 @@ test('syncWorkspaceDeps only rewrites versions for workspace packages', () => {
       version: '24.2.0',
       dependencies: {
         '@taquito/core': '^24.2.0',
-        '@taquito/sapling-wasm': '0.1.1',
+        '@taquito/sapling-wasm': '0.2.0',
       },
     });
 
@@ -72,7 +72,7 @@ test('syncWorkspaceDeps only rewrites versions for workspace packages', () => {
     );
     assert.equal(
       readJson(join(root, 'packages', 'taquito-sapling', 'package.json')).dependencies['@taquito/sapling-wasm'],
-      '0.1.1'
+      '0.2.0'
     );
   } finally {
     rmSync(root, { recursive: true, force: true });

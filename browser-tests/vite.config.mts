@@ -6,7 +6,6 @@ import { fileURLToPath } from 'node:url';
 const browserTestsDir = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(browserTestsDir, '..');
 const packagesDir = join(repoRoot, 'packages');
-const browserTestShimsDir = join(browserTestsDir, 'smoke-app', 'src', 'shims');
 
 const taquitoAliases = Object.fromEntries(
   readdirSync(packagesDir, { withFileTypes: true })
@@ -41,8 +40,6 @@ export default defineConfig({
   resolve: {
     alias: {
       ...taquitoAliases,
-      '@taquito/sapling-spend-params': join(browserTestShimsDir, 'sapling-spend-params.ts'),
-      '../saplingOutputParams.js': join(browserTestShimsDir, 'sapling-output-params.ts'),
     },
   },
   optimizeDeps: {
