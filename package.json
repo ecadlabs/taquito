@@ -61,8 +61,6 @@
     "test:browser:packages:ci": "npm run test:browser:packages"
   },
   "devDependencies": {
-    "@commitlint/cli": "^19.8.1",
-    "@commitlint/config-conventional": "^19.8.1",
     "@nx/vite": "^22.5.4",
     "@playwright/test": "^1.59.1",
     "@types/bluebird": "^3.5.42",
@@ -97,11 +95,6 @@
     "typedoc": "^0.28.17",
     "typescript": "^5.9.3",
     "vitest": "^4.1.4"
-  },
-  "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ]
   },
   "overrides": {
     "@airgap/beacon-dapp": "npm:@ecadlabs/beacon-dapp@4.8.1-ecad.7",
