@@ -4,6 +4,153 @@ description: Release notes and version history for Taquito, the TypeScript libra
 author: Jev Bjorsell
 layout: ../layouts/MarkdownLayout.astro
 ---
+# Taquito v24.3.0
+
+## Network reliability, browser compatibility, and internal modernization
+
+**TL;DR:** Node 22 is the new minimum for dev and server-side use. Ghostnet has been retired, migrate to Shadownet. The Beacon `NetworkType` enum has been trimmed of 15 dead protocol testnets (breaking for anyone who imported them). Gas estimation now matches `octez-client` semantics on mainnet. `@taquito/sapling` no longer runs a `postinstall` network fetch. Beacon defaults now route through the Trilitech-operated `octez.io` relay nodes via our `@ecadlabs/beacon-*` fork. Several browser compatibility fixes for bundled dApps.
+
+---
+
+### Upgrade checklist
+
+Most of these are dependency bumps that require little or no code changes:
+
+- **Node.js >=22 is now required for development and server-side use.** Node 20 reaches EOL April 2026; Node 22 ships with native `globalThis.fetch`, which let us drop `node-fetch`. This affects build toolchains, CI pipelines, and applications that import Taquito server-side. Bundled browser applications are unaffected.
+- **TypeScript upgraded from 5.5.4 to 5.9.3.** Compilation target moved from `es6` to `es2020`, and `useUnknownInCatchVariables` is now enabled. If you import Taquito's types, check that your TS version is compatible.
+- **`bignumber.js` upgraded to v10.** Taquito normalizes at its own API boundary, so this is transparent for most consumers. If your code names `BigNumber` in its own type signatures, add a direct `bignumber.js@^10` dependency to avoid TypeScript treating the transitive copy as a different type. ([#3383](https://github.com/ecadlabs/taquito/pull/3383))
+- **Beacon `NetworkType` enum trimmed (breaking for some).** Fifteen long-retired Tezos protocol testnets (`DELPHINET`, `EDONET`, `FLORENCENET`, `GRANADANET`, `HANGZHOUNET`, `ITHACANET`, `JAKARTANET`, `KATHMANDUNET`, `LIMANET`, `MUMBAINET`, `NAIROBINET`, `OXFORDNET`, `PARISNET`, `QUEBECNET`, `RIONET`) have been removed from `NetworkType`. If your code imports any of these via `@taquito/beacon-wallet/types`, TypeScript will fail until you delete the references. `GHOSTNET` and `SEOULNET` are now `@deprecated` aliases, migrate to `SHADOWNET` and `TALLINNNET` respectively; both will be removed in a future release. New: `TEZOSX_PREVIEWNET` and `USHUAIANET`. See the Beacon SDK fork section below.
+- **`@taquito/sapling` no longer uses `postinstall`.** The install-time network fetch was a supply-chain risk: installs depended on external availability, and the fetched parameters were not integrity-checked. Proving parameters are now lazy-loaded at runtime via `initSapling()`, SHA-256 verified before use regardless of source, and served from a first-party mirror at `sapling.taquito.io` by default. Viewing-only flows (key derivation, balances, history) need no initialization. If you want to hide first-use latency, call `preloadSaplingParams()` after init. The wasm dependency moved from `@airgap/sapling-wasm` to `@taquito/sapling-wasm@0.2.0`. Four source modes are supported: `'taquito'` (default), `'zcash'`, custom remote URLs with SHA-256 digests, and local filesystem paths for Node.js/CI. If you don't use sapling, none of this affects you. Thanks to the [ShieldBridge](https://shieldbridge.xyz/) team for feedback on the sapling runtime changes.
+- **`@taquito/wallet-connect` and `WalletProvider` type surface tweaks.** `getAllExistingSessionKeys()` and `configureWithExistingSessionKey()` are now synchronous in the type surface, and `WalletProvider` requires the mapper methods used by Taquito's wallet pipeline. Runtime `await` still works; only typed consumers with custom wallet providers or local declaration shims need to update.
+- **Estimation gas/fee values may shift.** See the gas patching section below. This is a correctness fix, not an API change.
+
+### Upgrading with AI assistance
+
+If you use an AI coding assistant (Claude Code, Cursor, Copilot, etc.), you can paste the following prompt into your project to assist with the upgrade. It is scoped to the changes in this release. Review and test the changes before committing.
+
+> The latest release of Taquito is `24.3.0`. Update this project to use it.
+>
+> Start by reading `package.json` (and any lockfile) to understand which `@taquito/*` packages are currently installed, what version they're on, and whether `bignumber.js` appears as a direct dependency.
+>
+> Then update all `@taquito/*` dependency ranges to `^24.3.0` and run the package manager install.
+>
+> Check these areas, ordered by blast radius:
+>
+> 1. **Node.js version** -- The minimum is now Node 22. Check `engines` in `package.json`, `.nvmrc`, `Dockerfile`, and CI configs for version pins below 22. Update them. This gates everything else: if the project can't run on Node 22, the rest of this upgrade is wasted work.
+> 2. **TypeScript compatibility** -- Taquito now targets `es2020` and enables `useUnknownInCatchVariables`. Check that this project's `tsconfig.json` target and lib are compatible (es2020 or later). If catch blocks use untyped `e.message` patterns, they may need `unknown` narrowing.
+> 3. **`bignumber.js`** -- Taquito now depends on v10. Search the project for `BigNumber` in type positions (`: BigNumber`, `<BigNumber>`, `as BigNumber`). If any are found, add a direct `bignumber.js@^10` dependency to `package.json`. If `BigNumber` only appears as a runtime value consumed from Taquito without being annotated, no change is needed.
+> 4. **Beacon `NetworkType`** -- Fifteen dead protocol testnets were removed from the enum. Search the project (case-insensitive) for `NetworkType.DELPHINET`, `NetworkType.EDONET`, `NetworkType.FLORENCENET`, `NetworkType.GRANADANET`, `NetworkType.HANGZHOUNET`, `NetworkType.ITHACANET`, `NetworkType.JAKARTANET`, `NetworkType.KATHMANDUNET`, `NetworkType.LIMANET`, `NetworkType.MUMBAINET`, `NetworkType.NAIROBINET`, `NetworkType.OXFORDNET`, `NetworkType.PARISNET`, `NetworkType.QUEBECNET`, and `NetworkType.RIONET`. Delete any references. Also migrate `NetworkType.GHOSTNET` to `NetworkType.SHADOWNET` and `NetworkType.SEOULNET` to `NetworkType.TALLINNNET`; the old names still work but will be removed in a future release.
+> 5. **`@taquito/sapling`** -- If this project uses sapling, the wasm dependency moved from `@airgap/sapling-wasm` to `@taquito/sapling-wasm`. The `postinstall` fetch is gone; proving parameters are now lazy-loaded from a first-party CDN at runtime via `initSapling()`. Update imports and add an `initSapling()` call before any proof-generating flow. If sapling is not used, skip this.
+> 6. **`@taquito/wallet-connect`** -- If this project uses WalletConnect, `getAllExistingSessionKeys()` and `configureWithExistingSessionKey()` are now synchronous in the type surface. Runtime `await` on these calls still works and is not an error, do not remove it. Only update type declarations for custom `WalletProvider` implementations or local declaration shims that mirror the old async signatures.
+> 7. **Ghostnet references** -- Ghostnet has been retired. Search for `ghostnet` (case-insensitive) across the project. If this project references Ghostnet RPC URLs or network names, migrate them to Shadownet.
+> 8. **Beacon relay nodes** -- If this project hardcodes Matrix relay URLs containing `papers.tech` (e.g. `beacon-node-*.sky.papers.tech`), remove them. Taquito now defaults to Trilitech-operated relays on the `octez.io` domain via the `@ecadlabs/beacon-*` fork.
+>
+> Do not:
+> - Upgrade unrelated dependencies.
+> - Refactor code that is not affected by these changes.
+> - Remove existing `@airgap/beacon-*` overrides from `package.json` if they are present; those came from a prior migration and are independent of this upgrade.
+> - Push through if a step fails. Stop and summarize the failure instead.
+>
+> After making changes:
+> - Run the project's existing typecheck script (look in `package.json` scripts for `typecheck`, `type-check`, `tsc`, or similar). If none exists, run `npx tsc --noEmit`. Fix any type errors introduced by this upgrade.
+> - Run the project's existing test script (usually `npm test` or `pnpm test`). If tests fail, distinguish between pre-existing failures and regressions caused by this upgrade.
+> - List a summary of every change made and why.
+> - List anything that compiled fine but deserves manual review (e.g., custom gas/fee assertions that may need revalidation, custom `WalletProvider` implementations, or sapling usage patterns).
+
+### Estimation gas patching now aligns with protocol semantics
+
+Taquito's estimation gas patching was reworked to match protocol and `octez-client` behavior. For batch estimation, Taquito now patches only operations missing gas limits, subtracts explicitly provided gas first, reserves reveal gas when a reveal will be prepended, and divides remaining block gas across the rest. This also fixes implicit-reveal estimation on networks where per-operation and per-block gas limits are equal (mainnet and shadownet).
+
+This bug was historically masked because our long-running integration coverage ran against tallinnnet, which had `hard_gas_limit_per_block` (`1_386_666`) greater than `hard_gas_limit_per_operation` (`1_040_000`). Mainnet and shadownet use equal limits (`1_040_000`), so the faulty gas division would exceed limits there. Once CI moved to shadownet, the issue became visible.
+
+User impact: exact estimated gas and fee values may change, especially for mixed batches and unrevealed accounts. Applications that added custom workarounds or brittle assertions around previous estimate values should revalidate those flows after upgrading. Most users should see more reliable estimation on mainnet-like networks.
+
+Public references: [#3352](https://github.com/ecadlabs/taquito/issues/3352), [#3353](https://github.com/ecadlabs/taquito/pull/3353)
+
+### RPC read consistency semantics finalized
+
+The broader consistency hardening earlier in this series over-pinned ordinary contract handles, making `op.contract()` and `at(..., block)` behave like exact historical snapshots. This release settles the intended semantics:
+
+- **`atExactBlock(...)`** keeps persistent pinning and exact historical reads.
+- **`at(..., block)` and `op.contract()`** use the block only to bootstrap reliably, then return live head-tracking abstractions, preserving existing Taquito contract semantics.
+
+Exact read context is propagated through contract, big map, sapling, and TZIP-16 read paths. Shadownet secret-key integration runs have also been normalized to the same rolling RPC as the ephemeral shadownet config. ([#3381](https://github.com/ecadlabs/taquito/pull/3381))
+
+### Testnet updates
+
+Ghostnet has been retired. Shadownet succeeds it. Integration and CI coverage have shifted to Shadownet, with sharded runs, updated keygen flows, and hardening for live-state behavior on current testnets.
+
+### Beacon SDK fork (4.8.1-ecad.7)
+
+Taquito now depends on `@ecadlabs/beacon-*` `4.8.1-ecad.7`, published from our `taquito-patches` maintenance line. This package is effectively a fork of both the upstream Papers-maintained Beacon SDK and Trilitech's `octez.connect`, combining selected backports from `octez.connect` with ECAD-maintained fixes on top of the `4.8.1` base. For background on the ECAD-maintained Beacon package line, see the [`beacon-sdk-taquito-patches` README](https://github.com/ecadlabs/beacon-sdk-taquito-patches/blob/taquito-patches/README.md).
+
+**Tezos network surface cleanup (breaking).** `NetworkType` has been trimmed of 15 long-deactivated protocol testnets. If your dApp or wallet imports any of `DELPHINET`, `EDONET`, `FLORENCENET`, `GRANADANET`, `HANGZHOUNET`, `ITHACANET`, `JAKARTANET`, `KATHMANDUNET`, `LIMANET`, `MUMBAINET`, `NAIROBINET`, `OXFORDNET`, `PARISNET`, `QUEBECNET`, or `RIONET` from `@taquito/beacon-wallet/types`, the TypeScript compile will fail. Delete the references. `GHOSTNET` and `SEOULNET` are now `@deprecated`, migrate to `SHADOWNET` and `TALLINNNET` respectively. New: `TEZOSX_PREVIEWNET` (TzKT: `tzkt.previewnet.tezosx.nomadic-labs.com`) and `USHUAIANET` (TzKT: `ushuaianet.tzkt.io`). `BlockExplorer.rpcUrls` type changed from `{ [key in NetworkType]: string }` to `{ [key in NetworkType]?: string }` so custom subclasses no longer have to enumerate every network; `getLinkForNetwork` now throws a clear error when a network has no configured URL instead of returning `undefined`.
+
+**`axios` removed from the Beacon SDK fork.** The Matrix transport HTTP client, `WalletClient` push-notification oracle, and `DAppClient` notification send were rewritten on top of native `fetch` + `AbortController`. Public API contracts are preserved, and error semantics for callers that inspect Matrix `errcode` bodies on rejection are preserved. This closes [GHSA-r4q5-vmmm-2653](https://github.com/advisories/GHSA-r4q5-vmmm-2653) (`follow-redirects` leaks custom auth headers to cross-domain redirect targets) at the source, and drops nine packages from the lockfile transitive closure (`axios`, `follow-redirects`, `form-data`, `proxy-from-env`, plus helpers).
+
+**Silent-failure fixes.** Three concrete cases where Beacon was swallowing errors are now surfaced: `WalletConnectTransport.connect()` (per-peer `listen()` rejections during reconnect were discarded by an unawaited `.map(async ...)`), `MatrixClientStore.updateStorage()` (preserved-state write failures), and `getDAppClientInstance()` reset (dropped prior-instance `disconnect()`).
+
+Compared with `4.8.1-ecad.2`, the broader ecad.6/ecad.7 line also pulled in improved Matrix relay reliability and wallet extension detection from `octez.connect`, moved the default Beacon/Matrix relay network from the old `papers.tech` nodes to the Trilitech-operated `octez.io` nodes, and refreshed outdated dependencies.
+
+If dApps still see wallet connection failures at the relay layer after upgrading, those issues live downstream of Taquito and should be directed to [`octez.connect`](https://github.com/trilitech/octez.connect/issues).
+
+### Tezos X / Tezlink fee estimation
+
+Tezos X/Tezlink fee estimation was updated to use the live fee parameters exposed by `mempool/filter`, rather than relying on L1-style defaults. Tezos X pricing includes a higher per-byte data-availability cost and a congestion-sensitive gas price, so older L1-style assumptions can underprice operations. dApps targeting Tezos X or Tezlink should revalidate fee assertions after upgrading.
+
+### Reliability and correctness
+
+- Simulation retries and origination reads were hardened around RPC edge cases.
+- Wallet confirmation handling was fixed to avoid hanging indefinitely after a timeout.
+- Subscription polling was fixed to avoid canceling in-flight RPC requests.
+- The TZIP-16 metadata URI parser was rewritten to eliminate a CodeQL-flagged ReDoS pattern. ([#3385](https://github.com/ecadlabs/taquito/pull/3385))
+- `@taquito/beacon-wallet` package `exports` conditions were reordered to fix bundler resolution. ([#3390](https://github.com/ecadlabs/taquito/pull/3390))
+
+### Browser compatibility
+
+- `@taquito/michelson-encoder` no longer relies on Node.js `Buffer` for hex conversion. BLS12-381, chest, chest-key, bytes, and sapling-transaction token types now use `buf2hex` from `@taquito/utils`. ([#3400](https://github.com/ecadlabs/taquito/pull/3400))
+- `@taquito/utils` dropped `typedarray-to-buffer` in favor of `Buffer.from()` in `b58Encode`. ([#3400](https://github.com/ecadlabs/taquito/pull/3400))
+- `@taquito/sapling` now explicitly imports the `buffer` polyfill and re-exports `@taquito/sapling-wasm` through a shim that ensures `globalThis.Buffer` is available. ([#3400](https://github.com/ecadlabs/taquito/pull/3400))
+- `process.env` access in `@taquito/http-utils` and `@taquito/taquito` is now guarded behind `typeof process !== 'undefined'`, preventing crashes in browser environments that don't shim `process`. ([#3400](https://github.com/ecadlabs/taquito/pull/3400))
+- `crypto-browserify` was dropped from `@taquito/beacon-wallet` dependencies. ([#3394](https://github.com/ecadlabs/taquito/pull/3394))
+- Browser smoke coverage now includes a hosted Sapling parameter preload flow against `sapling.taquito.io`, and obsolete browser shim paths were removed.
+- A browser package smoke test suite now covers import and basic instantiation for all published packages under Vite/esbuild. ([#3400](https://github.com/ecadlabs/taquito/pull/3400))
+
+### Transport and dependency modernization
+
+- HTTP transport was migrated to native `fetch`, with exponential backoff, injection retries, and structured transport error classification.
+- Parts of the crypto stack were modernized toward `@noble/*` (`blake2b`, `ed25519`, `hmac`, `sha512`), and mnemonic handling moved from `bip39` to `@scure/bip39`.
+- Bundler and package compatibility improved, especially around Vite, esbuild, ESM resolution, and dependency declarations. The install-time Angular patch (a workaround for a legacy peer-dependency conflict) was removed, simplifying package installation.
+- The shipped-package toolchain was refreshed across Rollup, Vitest, Ledger transport, and related build helpers. Several unused transitive dependencies (`whatwg-url`, `request`, `tmp`, `lodash` paths) were dropped from the root lockfile, and legacy `signature.json` files were removed from published package manifests. ([#3379](https://github.com/ecadlabs/taquito/pull/3379), [#3386](https://github.com/ecadlabs/taquito/pull/3386), [#3387](https://github.com/ecadlabs/taquito/pull/3387))
+
+### Wallet integration improvements
+
+- `@taquito/wallet-connect` was updated to the current WalletConnect sign stack.
+- Session handling in `@taquito/wallet-connect` is now stricter and more resilient, especially around restored, updated, expired, and deleted sessions. Restored sessions are validated before being accepted, and local active-account and network state are reconciled more consistently as sessions change.
+- WalletConnect docs were refreshed to match the current runtime behavior and modal plan.
+
+### Tooling and docs
+
+- The repo is moving from Jest to Vitest.
+- TypeDoc upgraded from 0.26 to 0.28.
+- Release version-sync now only rewrites dependency ranges for actual workspace packages, preserving external scoped packages like `@taquito/sapling-wasm`. Release and rehearsal workflows install the stamped graph before version-stamp, build, test, and publish. ([#3391](https://github.com/ecadlabs/taquito/pull/3391))
+- Documentation and website content received a broad cleanup pass, including `SECURITY.md`, root `README.md`, and website doc drift. Security reporting now routes through GitHub private vulnerability reporting with email fallback. A repository CODEOWNERS file was added for `@ecadlabs/taquito-team`. ([#3386](https://github.com/ecadlabs/taquito/pull/3386), [#3388](https://github.com/ecadlabs/taquito/pull/3388))
+- Website live code examples and Ledger documentation were fixed for browser compatibility. ([#3404](https://github.com/ecadlabs/taquito/pull/3404), [#3405](https://github.com/ecadlabs/taquito/pull/3405))
+
+---
+
+### Sustaining Taquito
+
+Taquito is now funded entirely by ECAD Labs. Each release is the product of ongoing maintenance work that rarely shows up in a feature list: fork coordination (see the Beacon SDK fork section above), relay migrations, gas estimation investigations, hosting first-party Sapling parameters, browser compatibility regressions, toolchain and security updates, and responding to issues from teams integrating Taquito into production systems.
+
+If your project, product, or employer depends on Taquito and you'd like to help sustain it, or if you want a commercial support arrangement, reach out. Taquito will remain open source and freely usable. Sustained investment from the organizations that rely on it is what keeps releases like this one shipping.
+
+---
+
+Report bugs on [GitHub](https://github.com/ecadlabs/taquito/issues). Questions? Join [@tezostaquito](https://t.me/tezostaquito) on Telegram.
+
+---
+
 # Taquito v24.2.0
 
 ## Fixes wallet connection freezes, simplifies Beacon imports
