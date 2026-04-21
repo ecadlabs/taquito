@@ -112,7 +112,7 @@
     "@airgap/beacon-transport-matrix": "npm:@ecadlabs/beacon-transport-matrix@4.8.1-ecad.7",
     "@airgap/beacon-transport-postmessage": "npm:@ecadlabs/beacon-transport-postmessage@4.8.1-ecad.7",
     "@airgap/beacon-transport-walletconnect": "npm:@ecadlabs/beacon-transport-walletconnect@4.8.1-ecad.7",
-    "axios": "1.15.0",
+    "follow-redirects": "^1.16.0",
     "lodash": "4.18.1",
     "anymatch": {
       "picomatch": "2.3.2"
