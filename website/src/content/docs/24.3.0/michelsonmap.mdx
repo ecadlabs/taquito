@@ -1,0 +1,222 @@
+---
+title: MichelsonMap Class
+author: [Claude Barde, Maxwell Ward]
+---
+
+Michelson maps are hash tables that store key/value pairs. When you need to find a value, you search by its key. Maps can store complex data types, including pairs.
+
+Unlike big maps, all values in a map are deserialized, allowing you to access them all at once. While maps become more expensive as the number of entries increases, they are well-suited for smaller datasets because of the extra features that Michelson and Taquito provide (like mapping and folding).
+
+Taquito reads maps in contract storage and represents them as instances of the `MichelsonMap` class. The class provides methods in four categories:
+
+- **Instantiation**: three ways to create a new `MichelsonMap`
+- **General methods**: get information about the map (size, contents)
+- **Key/value methods**: access and iterate over keys and values
+- **Update methods**: modify the map (set, delete, clear)
+
+This tutorial uses a [smart contract deployed on shadownet](https://shadownet.tzkt.io/KT1WdjpRSsmC93iPkXqkm2XZcbv6CSwKeqpj/operations/) with a map containing addresses as keys and tez as values.
+
+## Loading the smart contract storage
+
+As a reminder, you can load the storage of a smart contract as such:
+
+```ts
+import { TezosToolkit, MichelsonMap } from '@taquito/taquito';
+import { BigNumber } from 'bignumber.js';
+
+const contractAddress: string = 'KT1WdjpRSsmC93iPkXqkm2XZcbv6CSwKeqpj';
+
+const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
+
+const contract = await Tezos.contract.at(contractAddress);
+const storage: MichelsonMap<string, BigNumber> = await contract.storage();
+```
+
+This code:
+
+1. Imports `TezosToolkit` and `MichelsonMap` from Taquito, plus `BigNumber` from `bignumber.js` (included with Taquito)
+2. Creates a `TezosToolkit` instance with the RPC URL
+3. Fetches the contract using `Tezos.contract.at()`
+4. Retrieves the storage, typed as `MichelsonMap<string, BigNumber>` (address keys, tez values)
+
+## Creating a `MichelsonMap` instance
+
+Taquito provides three different ways of creating a new Michelson map: we can use two of them to create an empty map, and the third one is used to create a map with default values.
+
+The simplest is to create the instance with no argument:
+
+```ts
+const newEmptyMapWithoutArg = new MichelsonMap();
+```
+
+If you prefer, you can also pass an argument to the `MichelsonMap` constructor to indicate the type you want for the keys and the values:
+
+```ts
+// this code creates the same map as in the storage of the contract
+
+const newEmptyMapWithArg = new MichelsonMap({
+  prim: 'map',
+  args: [{ prim: 'string' }, { prim: 'mutez' }],
+});
+```
+
+Finally, you can also pass some values you want to create the instance with and let Taquito figure out the types using the `fromLiteral` static method:
+
+```ts
+const newMapfromLiteral = MichelsonMap.fromLiteral({
+  tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb: new BigNumber(123),
+});
+```
+
+## The general properties and methods: `isMichelsonMap`, `size`, `has` and `get`
+
+The first thing you may want to check after fetching the data from contract storage is if the part of the storage you expect to be a map is indeed a map.
+
+You can achieve this by using the `isMichelsonMap` static method on the `MichelsonMap` class:
+
+```ts
+const isMap: boolean = MichelsonMap.isMichelsonMap(storage); // true or false
+```
+
+Once you're sure you're dealing with a map, you can check how many key/value pairs it holds with the `size` property:
+
+```ts
+const size: number = storage.size; // number of elements in the map
+```
+
+Sometimes, you don't want to do anything with the values in a map, but you want to verify whether a key appears in the map, you can then use the `has` method and pass it the key you are looking for:
+
+```ts
+const key: string = 'tz1MnmtP4uAcgMpeZN6JtyziXeFqqwQG6yn6';
+const existsInMap: boolean = storage.has(key); // true or false
+```
+
+After that, you can fetch the value associated with the key you are looking for with the `get` method:
+
+```ts
+const key: string = 'tz1MnmtP4uAcgMpeZN6JtyziXeFqqwQG6yn6';
+const valueInTez: BigNumber = storage.get(key); // value as a big number
+const value: number = valueInTez.toNumber(); // returns 789000000
+```
+
+## The key/value methods
+
+One of the main advantages of maps over big maps is that the key/value pairs are readily available in your dApp without any extra step.
+
+If you are looking for a simple solution to loop over all the pairs and get the key and the value, the `MichelsonMap` instance exposes a `forEach` method that allows you to get these values:
+
+```ts
+const pairs: { address: string; amount: number }[] = [];
+storage.forEach((val: BigNumber, key: string) => {
+  pairs.push({ address: key, amount: val.toNumber() / 10 ** 6 });
+});
+console.log(pairs);
+```
+
+The code above will output:
+
+```ts
+[
+  { address: 'tz1MnmtP4uAcgMpeZN6JtyziXeFqqwQG6yn6', amount: 789 },
+  { address: 'tz1R2oNqANNy2vZhnZBJc8iMEqW79t85Fv7L', amount: 912 },
+  { address: 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb', amount: 123 },
+  { address: 'tz1aSkwEot3L2kmUvcoxzjMomb9mvBNuzFK6', amount: 456 },
+];
+```
+
+The `MichelsonMap` instance exposes another method that will yield the same result, albeit in a different way. The `entries` method is a [generator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Iterators_and_Generators) function that you can use if you wish to. This is how it works:
+
+```ts
+const entriesPairs: { address: string; amount: number }[] = [];
+const entries = storage.entries();
+for (let entry of entries) {
+  entriesPairs.push({ address: entry[0], amount: entry[1].toNumber() / 10 ** 6 });
+}
+console.log('entries => ' + JSON.stringify(entriesPairs) + '\n');
+```
+
+This code will yield the same result as the one above. A generator may be preferable according to your use case.
+
+The same idea is available for keys and values, the `keys` and `values` methods are generators that will allow you to loop over the keys or the values of the map:
+
+```ts
+const mapKeys: string[] = [];
+const keys = storage.keys();
+for (let key of keys) {
+  mapKeys.push(key);
+}
+console.log('keys => ' + mapKeys + '\n');
+```
+
+This example will output the following array containing all the keys of the map:
+
+```ts
+[
+  'tz1MnmtP4uAcgMpeZN6JtyziXeFqqwQG6yn6',
+  'tz1R2oNqANNy2vZhnZBJc8iMEqW79t85Fv7L',
+  'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
+  'tz1aSkwEot3L2kmUvcoxzjMomb9mvBNuzFK6',
+];
+```
+
+Similarly, you can use `values` instead of `keys` to output some or all the values in the map:
+
+```ts
+const mapValues: number[] = [];
+const values = storage.values();
+for (let value of values) {
+  mapValues.push(value.toNumber());
+}
+console.log('values => ' + mapValues + '\n');
+```
+
+This command will output all the values of the map inside an array:
+
+```ts
+[789000000, 912000000, 123000000, 456000000];
+```
+
+## The update methods
+
+Although reading and organizing the keys or the values fetched from a Michelson map is an everyday use case, you may also want to modify a map, for example, before originating a new contract.
+
+Taquito provides methods to add or remove key/value pairs from a map.
+
+First, you can use the `set` method to add a new value to an instance of `MichelsonMap`:
+
+```ts
+console.log(`previous size => ${storage.size} elements`); // 4 elements
+
+storage.set('tz1TfRXkAxbQ2BFqKV2dF4kE17yZ5BmJqSAP', new BigNumber(345));
+
+console.log(`new size => ${storage.size} elements \n`); // 5 elements
+```
+
+This method adds a new entry in the map with the first argument's address and the BigNumber being the value.
+
+>[!NOTE]
+> It is essential to use `new BigNumber(345)` for the value and not merely `345` as TypeScript will throw a type error because earlier, we set the type argument of the `MichelsonMap` to `BigNumber.`
+
+You can also delete one of the entries of the map with the `delete` method:
+
+```ts
+console.log(`delete: previous size => ${storage.size} elements`); // 5 elements
+
+storage.delete('tz1MnmtP4uAcgMpeZN6JtyziXeFqqwQG6yn6');
+
+console.log(`delete: new size => ${storage.size} elements \n`); // 4 elements
+```
+
+>[!NOTE]
+> Deleting a key that doesn't exist doesn't throw an error; it will just not affect the map. You may want to add your own error-checking and validation in a production use-case.
+
+To finish, you can also delete all the entries in a Michelson map using the `clear` method:
+
+```ts
+storage.clear();
+console.log(`clear: new size => ${storage.size} element`); // 0 element
+```
+
+## Learn more
+
+If you want to know more about `MichelsonMap` and some advanced usages (for example, how to use pairs as the map keys), you can read the [Maps and BigMaps](./maps_bigmaps) page.

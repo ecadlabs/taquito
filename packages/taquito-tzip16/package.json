@@ -1,6 +1,6 @@
 {
   "name": "@taquito/tzip16",
-  "version": "24.2.0",
+  "version": "24.3.0",
   "description": "TZIP-16 contract metadata support for Taquito.",
   "keywords": [
     "taquito",
@@ -51,12 +51,12 @@
     ]
   },
   "dependencies": {
-    "@taquito/core": "^24.2.0",
-    "@taquito/http-utils": "^24.2.0",
-    "@taquito/michelson-encoder": "^24.2.0",
-    "@taquito/rpc": "^24.2.0",
-    "@taquito/taquito": "^24.2.0",
-    "@taquito/utils": "^24.2.0",
+    "@taquito/core": "^24.3.0",
+    "@taquito/http-utils": "^24.3.0",
+    "@taquito/michelson-encoder": "^24.3.0",
+    "@taquito/rpc": "^24.3.0",
+    "@taquito/taquito": "^24.3.0",
+    "@taquito/utils": "^24.3.0",
     "bignumber.js": "^10.0.2",
     "crypto-js": "^4.2.0"
   },

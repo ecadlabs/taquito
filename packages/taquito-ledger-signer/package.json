@@ -1,6 +1,6 @@
 {
   "name": "@taquito/ledger-signer",
-  "version": "24.2.0",
+  "version": "24.3.0",
   "description": "Ledger hardware wallet signer integration for Taquito.",
   "keywords": [
     "taquito",
@@ -52,9 +52,9 @@
   },
   "dependencies": {
     "@ledgerhq/hw-transport": "^6.34.1",
-    "@taquito/core": "^24.2.0",
-    "@taquito/taquito": "^24.2.0",
-    "@taquito/utils": "^24.2.0",
+    "@taquito/core": "^24.3.0",
+    "@taquito/taquito": "^24.3.0",
+    "@taquito/utils": "^24.3.0",
     "@noble/hashes": "^2.0.1",
     "buffer": "^6.0.3"
   },

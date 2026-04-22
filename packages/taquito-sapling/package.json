@@ -1,6 +1,6 @@
 {
   "name": "@taquito/sapling",
-  "version": "24.2.0",
+  "version": "24.3.0",
   "description": "Sapling transaction building and viewing support for Taquito.",
   "keywords": [
     "taquito",
@@ -63,10 +63,10 @@
     "@scure/bip39": "^2.0.1",
     "@noble/hashes": "^2.0.1",
     "@stablelib/nacl": "^1.0.4",
-    "@taquito/core": "^24.2.0",
-    "@taquito/rpc": "^24.2.0",
-    "@taquito/taquito": "^24.2.0",
-    "@taquito/utils": "^24.2.0",
+    "@taquito/core": "^24.3.0",
+    "@taquito/rpc": "^24.3.0",
+    "@taquito/taquito": "^24.3.0",
+    "@taquito/utils": "^24.3.0",
     "buffer": "^6.0.3",
     "bignumber.js": "^10.0.2",
     "blakejs": "^1.2.1",
