@@ -1,6 +1,6 @@
 {
   "name": "@taquito/taquito",
-  "version": "24.2.0",
+  "version": "24.3.0",
   "description": "TypeScript SDK for building wallets, dapps, and tooling on Tezos.",
   "keywords": [
     "taquito",
@@ -60,14 +60,14 @@
     ]
   },
   "dependencies": {
-    "@taquito/core": "^24.2.0",
-    "@taquito/http-utils": "^24.2.0",
-    "@taquito/local-forging": "^24.2.0",
-    "@taquito/michel-codec": "^24.2.0",
-    "@taquito/michelson-encoder": "^24.2.0",
-    "@taquito/rpc": "^24.2.0",
-    "@taquito/signer": "^24.2.0",
-    "@taquito/utils": "^24.2.0",
+    "@taquito/core": "^24.3.0",
+    "@taquito/http-utils": "^24.3.0",
+    "@taquito/local-forging": "^24.3.0",
+    "@taquito/michel-codec": "^24.3.0",
+    "@taquito/michelson-encoder": "^24.3.0",
+    "@taquito/rpc": "^24.3.0",
+    "@taquito/signer": "^24.3.0",
+    "@taquito/utils": "^24.3.0",
     "bignumber.js": "^10.0.2",
     "rxjs": "^7.8.2"
   },

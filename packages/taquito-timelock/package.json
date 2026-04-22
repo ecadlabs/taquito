@@ -1,6 +1,6 @@
 {
   "name": "@taquito/timelock",
-  "version": "24.2.0",
+  "version": "24.3.0",
   "description": "Timelock cryptography support for Taquito and Tezos applications.",
   "keywords": [
     "taquito",
@@ -61,9 +61,9 @@
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^16.0.3",
-    "@taquito/signer": "^24.2.0",
-    "@taquito/taquito": "^24.2.0",
-    "@taquito/utils": "^24.2.0",
+    "@taquito/signer": "^24.3.0",
+    "@taquito/taquito": "^24.3.0",
+    "@taquito/utils": "^24.3.0",
     "@types/node": "^22.0.0",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",

@@ -1,6 +1,6 @@
 {
   "name": "@taquito/contracts-library",
-  "version": "24.2.0",
+  "version": "24.3.0",
   "description": "Static Michelson scripts and entrypoints library for Taquito contract interactions.",
   "keywords": [
     "taquito",
@@ -54,10 +54,10 @@
     ]
   },
   "dependencies": {
-    "@taquito/core": "^24.2.0",
-    "@taquito/rpc": "^24.2.0",
-    "@taquito/taquito": "^24.2.0",
-    "@taquito/utils": "^24.2.0",
+    "@taquito/core": "^24.3.0",
+    "@taquito/rpc": "^24.3.0",
+    "@taquito/taquito": "^24.3.0",
+    "@taquito/utils": "^24.3.0",
     "bignumber.js": "^10.0.2"
   },
   "devDependencies": {

@@ -1,6 +1,6 @@
 {
   "name": "taquito-monorepo",
-  "version": "24.2.0",
+  "version": "24.3.0",
   "description": "Canonical monorepo for the Taquito TypeScript SDK for Tezos, maintained by ECAD Labs Inc.",
   "private": true,
   "author": "ECAD Labs Inc <info@ecadlabs.com>",
