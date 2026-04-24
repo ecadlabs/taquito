@@ -36,6 +36,7 @@
     "integration-tests"
   ],
   "scripts": {
+    "prepare": "./scripts/setup-hooks.sh",
     "build": "nx run-many --target=build --exclude=@taquito/website",
     "build-verbose": "nx run-many --target=build --exclude=@taquito/website --output-style=stream",
     "build-all": "nx run-many --target=build --exclude=@taquito/website",
@@ -78,7 +79,6 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
     "gh-pages": "^6.1.1",
-    "husky": "^9.1.4",
     "lint-staged": "^15.2.7",
     "lodash.camelcase": "^4.3.0",
     "nx": "^22.5.3",
