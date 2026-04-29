@@ -1,5 +1,5 @@
 import { Estimate } from '@taquito/taquito';
-import { CONFIGS } from '../../config';
+import { CONFIGS, waitForRpcState } from '../../config';
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
 
@@ -13,12 +13,17 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       const code = `parameter nat; storage nat; code { CAR ; NIL operation ; PAIR }`;
       op = await Tezos.contract.originate({
         code,
-        storage: 10
+        storage: 10,
       });
 
       await op.confirmation();
       contractAddress = op.contractAddress;
-
+      await waitForRpcState(
+        Tezos,
+        () => Tezos.rpc.getContract(contractAddress!),
+        () => true,
+        { description: `contract ${contractAddress}` }
+      );
     });
 
     it(`should be able to estimate a contract call`, async () => {
@@ -28,7 +33,6 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
       expect(estimate).toBeDefined();
       expect(estimate).toBeInstanceOf(Estimate);
-
     });
   });
 });

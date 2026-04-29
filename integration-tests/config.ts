@@ -665,6 +665,40 @@ export const clearRpcCache = (Tezos: TezosToolkit) => {
   }
 };
 
+export const waitForRpcState = async <T>(
+  Tezos: TezosToolkit,
+  read: () => Promise<T>,
+  predicate: (value: T) => boolean,
+  options?: {
+    timeoutMs?: number;
+    intervalMs?: number;
+    description?: string;
+  }
+) => {
+  const timeoutMs = options?.timeoutMs ?? 15_000;
+  const intervalMs = options?.intervalMs ?? 500;
+  const description = options?.description ?? 'RPC state';
+  const deadline = Date.now() + timeoutMs;
+  let lastError: unknown;
+
+  while (Date.now() <= deadline) {
+    clearRpcCache(Tezos);
+    try {
+      const value = await read();
+      if (predicate(value)) {
+        return value;
+      }
+    } catch (error) {
+      lastError = error;
+    }
+
+    await sleep(intervalMs);
+  }
+
+  const details = lastError ? ` Last error: ${toErrorMessage(lastError)}` : '';
+  throw new Error(`Timed out waiting for ${description}.${details}`);
+};
+
 export const CONFIGS = () => {
   return forgers.reduce((prev, forger: ForgerType) => {
     const configs = providers.map(
@@ -780,6 +814,7 @@ export const CONFIGS = () => {
               networkName,
               rpc,
             });
+            clearRpcCache(tezos);
 
             return tezos;
           },

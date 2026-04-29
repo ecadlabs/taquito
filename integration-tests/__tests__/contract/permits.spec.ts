@@ -1,78 +1,82 @@
-import { CONFIGS } from '../../config';
+import { CONFIGS, waitForRpcState } from '../../config';
 import { MichelsonMap, MichelCodecPacker, TezosToolkit } from '@taquito/taquito';
 import { permit_admin_42_expiry } from '../../data/permit_admin_42_expiry';
 import { permit_admin_42_set } from '../../data/permit_admin_42_set';
 import { permit_fa12_smartpy } from '../../data/permit_fa12_smartpy';
 import { buf2hex, stringToBytes, hex2buf } from '@taquito/utils';
 import { tzip16, Tzip16Module } from '@taquito/tzip16';
-import { packDataBytes } from "@taquito/michel-codec"
+import { packDataBytes } from '@taquito/michel-codec';
 
 const blake = require('blakejs');
 const bob_address = 'tz1Xk7HkSwHv6dTEgR7E2WC2yFj4cyyuj2Gh';
 
-const create_bytes_to_sign = async (Tezos: TezosToolkit, contractAddress: string, methodHash: string) => {
+const create_bytes_to_sign = async (
+  Tezos: TezosToolkit,
+  contractAddress: string,
+  methodHash: string
+) => {
   const chainId = await Tezos.rpc.getChainId();
 
-  const contract = await Tezos.contract.at(contractAddress)
+  const contract = await Tezos.contract.at(contractAddress);
   const contractStorage: any = await contract.storage();
   let counter = 0;
-  if (contractStorage.hasOwnProperty("counter")) {
+  if (contractStorage.hasOwnProperty('counter')) {
     counter = contractStorage.counter.toNumber();
   } else {
-    counter = contractStorage["1"].toNumber();
+    counter = contractStorage['1'].toNumber();
   }
   const sigParamData: any = {
-    prim: "Pair",
+    prim: 'Pair',
     args: [
       {
-        prim: "Pair",
+        prim: 'Pair',
         args: [
           {
-            string: chainId
+            string: chainId,
           },
           {
-            string: contractAddress
-          }
-        ]
+            string: contractAddress,
+          },
+        ],
       },
       {
-        prim: "Pair",
+        prim: 'Pair',
         args: [
           {
-            int: counter
+            int: counter,
           },
           {
-            bytes: methodHash
-          }
-        ]
-      }
-    ]
+            bytes: methodHash,
+          },
+        ],
+      },
+    ],
   };
   const sigParamType: any = {
-    prim: "pair",
+    prim: 'pair',
     args: [
       {
-        prim: "pair",
+        prim: 'pair',
         args: [
           {
-            prim: "chain_id"
+            prim: 'chain_id',
           },
-          { prim: "address" }
-        ]
+          { prim: 'address' },
+        ],
       },
       {
-        prim: "pair",
-        args: [{ prim: "nat" }, { prim: "bytes" }]
-      }
-    ]
+        prim: 'pair',
+        args: [{ prim: 'nat' }, { prim: 'bytes' }],
+      },
+    ],
   };
 
   const sigParamPacked = packDataBytes(sigParamData, sigParamType);
   // signs the hash
   const signature = await Tezos.signer.sign(sigParamPacked.bytes);
 
-  return signature.prefixSig
-}
+  return signature.prefixSig;
+};
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
   const Tezos = lib;
@@ -110,7 +114,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       const packed_param = raw_packed.packed;
       const param_hash = buf2hex(blake.blake2b(hex2buf(packed_param), null, 32));
 
-      const param_sig = await create_bytes_to_sign(Tezos, permit_contract.address, param_hash)
+      const param_sig = await create_bytes_to_sign(Tezos, permit_contract.address, param_hash);
 
       const permitMethodCall = await permit_contract.methodsObject
         .permit({ 0: signer_key, 1: param_sig, 2: param_hash })
@@ -210,13 +214,18 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       const setMintMethodCall = await fa12_contract.methodsObject
         .mint({
           address: await Tezos.signer.publicKeyHash(),
-          value: mint_amount
+          value: mint_amount,
         })
         .send();
       await setMintMethodCall.confirmation();
       expect(setMintMethodCall.hash).toBeDefined();
       expect(setMintMethodCall.status).toEqual('applied');
-      const storage: any = await fa12_contract.storage();
+      const storage: any = await waitForRpcState(
+        Tezos,
+        () => fa12_contract.storage(),
+        (contractStorage: any) => contractStorage['totalSupply']?.toString() === '42',
+        { description: `permit fa1.2 storage for ${contractAddress}` }
+      );
       expect(storage['totalSupply'].toString()).toEqual('42');
 
       Tezos.addExtension(new Tzip16Module());
@@ -235,7 +244,6 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
       const viewGetDefaultExpiryResult = await views.GetDefaultExpiry().executeView('Unit');
       expect(viewGetDefaultExpiryResult.toString()).toEqual('50000');
-
     });
 
     describe(`Verify contract having a permit for tzip-17: ${rpc}`, () => {
@@ -309,7 +317,9 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
         //Mint 10 tokens to bootstrap 2
         const mint_contract = await LocalTez1.contract.at(fa12_contract.address);
-        const mint = await mint_contract.methodsObject.mint({ address: bootstrap2_address, value: 10 }).send();
+        const mint = await mint_contract.methodsObject
+          .mint({ address: bootstrap2_address, value: 10 })
+          .send();
         await mint.confirmation();
         expect(mint.hash).toBeDefined();
         expect(mint.status).toEqual('applied');
@@ -318,11 +328,15 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         //Observe transfer by non bootstrap2 sender fails
         const fail_contract = await LocalTez4.contract.at(fa12_contract.address);
         try {
-          await fail_contract.methodsObject.transfer({ from_: bootstrap3_address, to_: bootstrap4_address, value: 1 }).send();
+          await fail_contract.methodsObject
+            .transfer({ from_: bootstrap3_address, to_: bootstrap4_address, value: 1 })
+            .send();
         } catch (errors) {
           let jsonStr: string = JSON.stringify(errors);
           let jsonObj = JSON.parse(jsonStr);
-          let error_code = JSON.stringify(jsonObj?.errors?.[0]?.with?.int || jsonObj?.errors?.[1]?.with?.int);
+          let error_code = JSON.stringify(
+            jsonObj?.errors?.[0]?.with?.int || jsonObj?.errors?.[1]?.with?.int
+          );
           expect((error_code = '26'));
         }
 
@@ -330,7 +344,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         const transfer_param: any = fa12_contract.methodsObject['transfer']({
           from_: bootstrap2_address,
           to_: bootstrap3_address,
-          value: 1
+          value: 1,
         }).toTransferParams().parameter?.value;
         const type = fa12_contract.entrypoints.entrypoints['transfer'];
         const TRANSFER_PARAM_PACKED = await Tezos.rpc.packData({
@@ -344,7 +358,11 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
         //Get Bootstrap2's public_key and capture it
         const PUB_KEY = await LocalTez2.signer.publicKey();
-        const SIGNATURE = await create_bytes_to_sign(LocalTez2, fa12_contract.address, TRANSFER_PARAM_HASHED)
+        const SIGNATURE = await create_bytes_to_sign(
+          LocalTez2,
+          fa12_contract.address,
+          TRANSFER_PARAM_HASHED
+        );
 
         //Anyone can submit permit start
         const signed_permit_contract = await LocalTez4.contract.at(fa12_contract.address);
@@ -362,7 +380,6 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         await successful_transfer.confirmation();
         expect(successful_transfer.hash).toBeDefined();
         expect(successful_transfer.status).toEqual('applied');
-
       });
     });
   });
