@@ -16,6 +16,7 @@ const __dirname = path.dirname(__filename);
 
 const jsonPath = path.join(__dirname, '../../public/rpc_nodes.json');
 const data = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
+const shutdownNoticeUrl = 'https://forum.tezosagora.org/t/public-rpc-service-shutdown-may-31-2026/7064';
 
 // Build a map of provider ID to provider name
 const providerMap = {};
@@ -33,6 +34,7 @@ for (const endpoint of data.rpc_endpoints) {
     provider: providerMap[endpoint.provider] || endpoint.provider,
     url: endpoint.url,
     net: endpoint.net,
+    shutdownDate: endpoint.shutdown_date,
   });
 }
 
@@ -44,7 +46,10 @@ function generateTable(network, endpoints) {
   lines.push(`| ---------------- | ------------------------------------- | ----- | -------- | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |`);
 
   for (const ep of endpoints) {
-    const providerPadded = ep.provider.padEnd(16);
+    const provider = ep.shutdownDate
+      ? `<s>${ep.provider}</s><br /><small><a href="${shutdownNoticeUrl}">Stops ${new Date(`${ep.shutdownDate}T00:00:00Z`).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</a></small>`
+      : ep.provider;
+    const providerPadded = provider.padEnd(16);
     const urlPadded = ep.url.padEnd(37);
     const blockComponent = `<BlockLevel network="${network}" rpcUrl="${ep.url}" />`;
     const protocolComponent = `<BlockProtocol network="${network}" rpcUrl="${ep.url}" />`;

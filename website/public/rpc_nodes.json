@@ -4,7 +4,8 @@
       "id": "ecadinfra",
       "name": "ECAD Infra",
       "website": "https://www.ecadinfra.com/",
-      "status_page": "https://tezos.status.ecadinfra.com"
+      "status_page": "https://status.ecadinfra.com/",
+      "notice": "ECAD Infra public RPC endpoints will stop serving traffic on May 31, 2026."
     },
     {
       "id": "smartpy",
@@ -29,17 +30,14 @@
     {
       "net": "mainnet",
       "url": "https://mainnet.tezos.ecadinfra.com",
-      "provider": "ecadinfra"
+      "provider": "ecadinfra",
+      "shutdown_date": "2026-05-31"
     },
     {
       "net": "shadownet",
       "url": "https://shadownet.tezos.ecadinfra.com",
-      "provider": "ecadinfra"
-    },
-    {
-      "net": "tallinnnet",
-      "url": "https://tallinnnet.tezos.ecadinfra.com",
-      "provider": "ecadinfra"
+      "provider": "ecadinfra",
+      "shutdown_date": "2026-05-31"
     },
     {
       "net": "mainnet",
@@ -57,8 +55,8 @@
       "provider": "tezosfoundation"
     },
     {
-      "net": "tallinnnet",
-      "url": "https://rpc.tallinnnet.teztnets.com",
+      "net": "ushuaianet",
+      "url": "https://rpc.ushuaianet.teztnets.com",
       "provider": "tezosfoundation"
     },
     {
@@ -69,11 +67,6 @@
     {
       "net": "shadownet",
       "url": "https://rpc.tzkt.io/shadownet",
-      "provider": "tzkt"
-    },
-    {
-      "net": "tallinnnet",
-      "url": "https://rpc.tzkt.io/tallinnnet",
       "provider": "tzkt"
     }
   ]
