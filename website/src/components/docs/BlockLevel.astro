@@ -79,6 +79,12 @@ const { network, rpcUrl } = Astro.props;
     });
   }
 
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAllLevels);
+  } else {
+    initAllLevels();
+  }
+
   document.addEventListener('astro:page-load', initAllLevels);
 
   const observer = new MutationObserver(() => {
