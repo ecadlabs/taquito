@@ -17,11 +17,14 @@ export interface ControllerState {
   data: BlockData | null;
   loading: boolean;
   error: boolean;
+  inFlight: boolean;
   subscribers: Set<() => void>;
   intervalId: number | null;
   visibleCount: number;
   network: string;
 }
+
+const REQUEST_TIMEOUT_MS = 3500;
 
 export interface Controller {
   state: ControllerState;
@@ -43,12 +46,12 @@ declare global {
 
 export function getPollingIntervalByNetwork(network: string): number {
   if (network === 'shadownet' || network === 'tallinnnet') {
-    return 4000;
+    return 15000;
   }
   if (network === 'mainnet') {
-    return 8000;
+    return 30000;
   }
-  return 8000;
+  return 30000;
 }
 
 export function getControllers(): Map<string, Controller> {
@@ -77,6 +80,7 @@ export function getController(rpcUrl: string, network: string): Controller {
     data: null,
     loading: true,
     error: false,
+    inFlight: false,
     subscribers: new Set(),
     intervalId: null,
     visibleCount: 0,
@@ -88,13 +92,21 @@ export function getController(rpcUrl: string, network: string): Controller {
   };
 
   const fetchLatestBlock = async () => {
+    if (state.inFlight) return;
+
+    state.inFlight = true;
+    const abortController = new AbortController();
+    const timeoutId = window.setTimeout(() => abortController.abort(), REQUEST_TIMEOUT_MS);
+
     try {
       if (state.data === null) {
         state.loading = true;
         state.error = false;
         notify();
       }
-      const response = await fetch(`${rpcUrl}/chains/main/blocks/head`);
+      const response = await fetch(`${rpcUrl}/chains/main/blocks/head`, {
+        signal: abortController.signal
+      });
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}`);
       }
@@ -110,6 +122,9 @@ export function getController(rpcUrl: string, network: string): Controller {
       state.loading = false;
       state.error = true;
       notify();
+    } finally {
+      window.clearTimeout(timeoutId);
+      state.inFlight = false;
     }
   };
 

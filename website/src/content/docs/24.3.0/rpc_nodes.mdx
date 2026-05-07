@@ -8,7 +8,9 @@ import BlockReceivedAgo from '@components/docs/BlockReceivedAgo.astro';
 import BlockLevel from '@components/docs/BlockLevel.astro';
 import BlockProtocol from '@components/docs/BlockProtocol.astro';
 
-An RPC (Remote Procedure Call) node is a server that provides an interface for interacting with the Tezos blockchain. It allows applications like Taquito to query blockchain data (such as account balances, contract storage, and block information) and broadcast transactions to the network. Rather than running your own Tezos node, you can connect to public or commercial RPC nodes to access the blockchain.
+An RPC (Remote Procedure Call) node is a server that provides an interface for interacting with the Tezos blockchain. It allows applications like Taquito to query blockchain data (such as account balances, contract storage, and block information) and broadcast transactions to the network. Rather than running your own Tezos node, you can connect to public RPC nodes to access the blockchain.
+
+**ECAD Infra public RPC shutdown:** ECAD Infra endpoints at `*.tezos.ecadinfra.com` will stop serving traffic on May 31, 2026. If your wallet, dApp, indexer, or tooling uses these endpoints, migrate to another RPC provider before that date. See the [public announcement](https://forum.tezosagora.org/t/public-rpc-service-shutdown-may-31-2026/7064).
 
 ## What to consider when choosing a node
 
@@ -20,7 +22,7 @@ An RPC (Remote Procedure Call) node is a server that provides an interface for i
 
 ### Community nodes
 
-<Tabs defaultValue="mainnet" values={[{"label": "Mainnet", "value": "mainnet"},{"label": "Shadownet", "value": "shadownet"},{"label": "Tallinnnet", "value": "tallinnnet"}]}>
+<Tabs defaultValue="mainnet" values={[{"label": "Mainnet", "value": "mainnet"},{"label": "Shadownet", "value": "shadownet"},{"label": "Ushuaianet", "value": "ushuaianet"}]}>
 
 <TabItem value="mainnet">
 
@@ -31,7 +33,7 @@ An RPC (Remote Procedure Call) node is a server that provides an interface for i
 
 | Provider         | URL                                   | Block | Protocol | Timestamp                                                                           | Received                                                                      |
 | ---------------- | ------------------------------------- | ----- | -------- | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
-| ECAD Infra       | https://mainnet.tezos.ecadinfra.com   | <BlockLevel network="mainnet" rpcUrl="https://mainnet.tezos.ecadinfra.com" /> | <BlockProtocol network="mainnet" rpcUrl="https://mainnet.tezos.ecadinfra.com" /> | <BlockTimestamp network="mainnet" rpcUrl="https://mainnet.tezos.ecadinfra.com" /> | <BlockReceivedAgo network="mainnet" rpcUrl="https://mainnet.tezos.ecadinfra.com" /> |
+| <s>ECAD Infra</s><br /><small><a href="https://forum.tezosagora.org/t/public-rpc-service-shutdown-may-31-2026/7064">Stops May 31, 2026</a></small> | https://mainnet.tezos.ecadinfra.com   | <BlockLevel network="mainnet" rpcUrl="https://mainnet.tezos.ecadinfra.com" /> | <BlockProtocol network="mainnet" rpcUrl="https://mainnet.tezos.ecadinfra.com" /> | <BlockTimestamp network="mainnet" rpcUrl="https://mainnet.tezos.ecadinfra.com" /> | <BlockReceivedAgo network="mainnet" rpcUrl="https://mainnet.tezos.ecadinfra.com" /> |
 | SmartPy          | https://mainnet.smartpy.io            | <BlockLevel network="mainnet" rpcUrl="https://mainnet.smartpy.io" /> | <BlockProtocol network="mainnet" rpcUrl="https://mainnet.smartpy.io" /> | <BlockTimestamp network="mainnet" rpcUrl="https://mainnet.smartpy.io" /> | <BlockReceivedAgo network="mainnet" rpcUrl="https://mainnet.smartpy.io" /> |
 | Tezos Foundation | https://rpc.tzbeta.net                | <BlockLevel network="mainnet" rpcUrl="https://rpc.tzbeta.net" /> | <BlockProtocol network="mainnet" rpcUrl="https://rpc.tzbeta.net" /> | <BlockTimestamp network="mainnet" rpcUrl="https://rpc.tzbeta.net" /> | <BlockReceivedAgo network="mainnet" rpcUrl="https://rpc.tzbeta.net" /> |
 | TzKT             | https://rpc.tzkt.io/mainnet           | <BlockLevel network="mainnet" rpcUrl="https://rpc.tzkt.io/mainnet" /> | <BlockProtocol network="mainnet" rpcUrl="https://rpc.tzkt.io/mainnet" /> | <BlockTimestamp network="mainnet" rpcUrl="https://rpc.tzkt.io/mainnet" /> | <BlockReceivedAgo network="mainnet" rpcUrl="https://rpc.tzkt.io/mainnet" /> |
@@ -51,7 +53,7 @@ An RPC (Remote Procedure Call) node is a server that provides an interface for i
 
 | Provider         | URL                                   | Block | Protocol | Timestamp                                                                           | Received                                                                      |
 | ---------------- | ------------------------------------- | ----- | -------- | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
-| ECAD Infra       | https://shadownet.tezos.ecadinfra.com | <BlockLevel network="shadownet" rpcUrl="https://shadownet.tezos.ecadinfra.com" /> | <BlockProtocol network="shadownet" rpcUrl="https://shadownet.tezos.ecadinfra.com" /> | <BlockTimestamp network="shadownet" rpcUrl="https://shadownet.tezos.ecadinfra.com" /> | <BlockReceivedAgo network="shadownet" rpcUrl="https://shadownet.tezos.ecadinfra.com" /> |
+| <s>ECAD Infra</s><br /><small><a href="https://forum.tezosagora.org/t/public-rpc-service-shutdown-may-31-2026/7064">Stops May 31, 2026</a></small> | https://shadownet.tezos.ecadinfra.com | <BlockLevel network="shadownet" rpcUrl="https://shadownet.tezos.ecadinfra.com" /> | <BlockProtocol network="shadownet" rpcUrl="https://shadownet.tezos.ecadinfra.com" /> | <BlockTimestamp network="shadownet" rpcUrl="https://shadownet.tezos.ecadinfra.com" /> | <BlockReceivedAgo network="shadownet" rpcUrl="https://shadownet.tezos.ecadinfra.com" /> |
 | Tezos Foundation | https://rpc.shadownet.teztnets.com    | <BlockLevel network="shadownet" rpcUrl="https://rpc.shadownet.teztnets.com" /> | <BlockProtocol network="shadownet" rpcUrl="https://rpc.shadownet.teztnets.com" /> | <BlockTimestamp network="shadownet" rpcUrl="https://rpc.shadownet.teztnets.com" /> | <BlockReceivedAgo network="shadownet" rpcUrl="https://rpc.shadownet.teztnets.com" /> |
 | TzKT             | https://rpc.tzkt.io/shadownet         | <BlockLevel network="shadownet" rpcUrl="https://rpc.tzkt.io/shadownet" /> | <BlockProtocol network="shadownet" rpcUrl="https://rpc.tzkt.io/shadownet" /> | <BlockTimestamp network="shadownet" rpcUrl="https://rpc.tzkt.io/shadownet" /> | <BlockReceivedAgo network="shadownet" rpcUrl="https://rpc.tzkt.io/shadownet" /> |
 
@@ -61,7 +63,7 @@ An RPC (Remote Procedure Call) node is a server that provides an interface for i
 
 </TabItem>
 
-<TabItem value="tallinnnet">
+<TabItem value="ushuaianet">
 
 <div style={{"overflowX":"auto","width":"100%","display":"block"}}>
 
@@ -70,9 +72,7 @@ An RPC (Remote Procedure Call) node is a server that provides an interface for i
 
 | Provider         | URL                                   | Block | Protocol | Timestamp                                                                           | Received                                                                      |
 | ---------------- | ------------------------------------- | ----- | -------- | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
-| ECAD Infra       | https://tallinnnet.tezos.ecadinfra.com | <BlockLevel network="tallinnnet" rpcUrl="https://tallinnnet.tezos.ecadinfra.com" /> | <BlockProtocol network="tallinnnet" rpcUrl="https://tallinnnet.tezos.ecadinfra.com" /> | <BlockTimestamp network="tallinnnet" rpcUrl="https://tallinnnet.tezos.ecadinfra.com" /> | <BlockReceivedAgo network="tallinnnet" rpcUrl="https://tallinnnet.tezos.ecadinfra.com" /> |
-| Tezos Foundation | https://rpc.tallinnnet.teztnets.com   | <BlockLevel network="tallinnnet" rpcUrl="https://rpc.tallinnnet.teztnets.com" /> | <BlockProtocol network="tallinnnet" rpcUrl="https://rpc.tallinnnet.teztnets.com" /> | <BlockTimestamp network="tallinnnet" rpcUrl="https://rpc.tallinnnet.teztnets.com" /> | <BlockReceivedAgo network="tallinnnet" rpcUrl="https://rpc.tallinnnet.teztnets.com" /> |
-| TzKT             | https://rpc.tzkt.io/tallinnnet        | <BlockLevel network="tallinnnet" rpcUrl="https://rpc.tzkt.io/tallinnnet" /> | <BlockProtocol network="tallinnnet" rpcUrl="https://rpc.tzkt.io/tallinnnet" /> | <BlockTimestamp network="tallinnnet" rpcUrl="https://rpc.tzkt.io/tallinnnet" /> | <BlockReceivedAgo network="tallinnnet" rpcUrl="https://rpc.tzkt.io/tallinnnet" /> |
+| Tezos Foundation | https://rpc.ushuaianet.teztnets.com   | <BlockLevel network="ushuaianet" rpcUrl="https://rpc.ushuaianet.teztnets.com" /> | <BlockProtocol network="ushuaianet" rpcUrl="https://rpc.ushuaianet.teztnets.com" /> | <BlockTimestamp network="ushuaianet" rpcUrl="https://rpc.ushuaianet.teztnets.com" /> | <BlockReceivedAgo network="ushuaianet" rpcUrl="https://rpc.ushuaianet.teztnets.com" /> |
 
 </div>
 
@@ -85,14 +85,6 @@ An RPC (Remote Procedure Call) node is a server that provides an interface for i
 You can find a machine readable list of RPC nodes in [rpc_nodes.json](/rpc_nodes.json).
 
 If you are aware of a public node missing from our list or our information is inaccurate, please let us know by submitting an issue or pull request on our [GitHub page](https://github.com/ecadlabs/taquito).
-
-### Commercial nodes
-
-| Provider | Values                 |
-| -------- | ----------------------- |
-| Exaion   | https://node.exaion.com |
-
-If you are aware of a commercial node missing from our list or our information is inaccurate, please let us know by submitting an issue or pull request on our [GitHub page](https://github.com/ecadlabs/taquito).
 
 ## How to run a node
 
