@@ -336,20 +336,19 @@ export class BeaconWallet implements WalletProvider {
   }
 
   /**
-   * Disconnect the wallet and remove all Beacon data from localStorage.
+   * Disconnect the wallet and clear the active Beacon session.
    *
    * This is the recommended way to end a user session (logout). It calls
-   * `client.destroy()` under the hood, which clears the active account,
-   * cached relay node (`beacon:matrix-selected-node`), peer data, and all
-   * other `beacon:*` localStorage keys.
+   * `client.disconnect()` under the hood, which notifies wallet peers, clears
+   * the active account, and tears down the active Beacon transports.
    *
-   * After calling this method, the BeaconWallet instance is no longer usable.
-   * You must instantiate a new BeaconWallet to reconnect.
+   * After calling this method, the BeaconWallet instance can be used to
+   * reconnect through a new permission request.
    *
    * For switching accounts without a full logout, use {@link clearActiveAccount} instead.
    */
   async disconnect() {
-    await this.client.destroy();
+    await this.client.disconnect();
   }
 
   /**
