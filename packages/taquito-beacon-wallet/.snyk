@@ -1,0 +1,8 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.25.0
+ignore:
+  SNYK-JS-ELLIPTIC-14908844:
+    - '*':
+        reason: 'WalletConnect is explicitly pinned to 2.18.0 for Beacon compatibility; elliptic has no fixed release as of 2026-05-18.'
+        expires: '2026-06-18T00:00:00.000Z'
+patch: {}
