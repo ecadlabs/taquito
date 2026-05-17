@@ -40,6 +40,7 @@ vi.mock('@ecadlabs/beacon-dapp', async () => {
       getActiveAccount: vi.fn(),
       showPrepare: vi.fn(),
       hideUI: vi.fn(),
+      disconnect: vi.fn().mockResolvedValue(undefined),
     })),
   };
 });
@@ -88,6 +89,7 @@ vi.mock('@ecadlabs/beacon-transport-postmessage', async () => {
 describe('Beacon Wallet tests', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    delete (window as any).beaconCreatedClientInstance;
   });
 
   it('Verify that BeaconWallet is instantiable', () => {
@@ -152,6 +154,15 @@ describe('Beacon Wallet tests', () => {
 
   it('Verify BeaconWallet permissions scopes not granted error', () => {
     expect(new MissingRequiredScopes([PermissionScope.OPERATION_REQUEST])).toBeInstanceOf(Error);
+  });
+
+  it('disconnects through the Beacon DAppClient logout path', async () => {
+    const wallet = new BeaconWallet({ name: 'testWallet' });
+
+    await wallet.disconnect();
+
+    const disconnect = wallet.client.disconnect as any;
+    expect(disconnect.mock.calls).toEqual([[]]);
   });
 
   it('Verify that permissions must be called before getPKH', async () => {

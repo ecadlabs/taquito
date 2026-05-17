@@ -29,3 +29,4 @@ apps/**/node_modules
 .ansible
 .claude
 test-results/
+local-tarballs/
