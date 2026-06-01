@@ -1,11 +1,10 @@
 {
   "providers": [
     {
-      "id": "ecadinfra",
-      "name": "ECAD Infra",
-      "website": "https://www.ecadinfra.com/",
-      "status_page": "https://status.ecadinfra.com/",
-      "notice": "ECAD Infra public RPC endpoints will stop serving traffic on May 31, 2026."
+      "id": "trilitech",
+      "name": "Trilitech",
+      "website": "https://www.trili.tech/",
+      "status_page": ""
     },
     {
       "id": "smartpy",
@@ -29,15 +28,13 @@
   "rpc_endpoints": [
     {
       "net": "mainnet",
-      "url": "https://mainnet.tezos.ecadinfra.com",
-      "provider": "ecadinfra",
-      "shutdown_date": "2026-05-31"
+      "url": "https://tezos-mainnet.octez.io",
+      "provider": "trilitech"
     },
     {
       "net": "shadownet",
-      "url": "https://shadownet.tezos.ecadinfra.com",
-      "provider": "ecadinfra",
-      "shutdown_date": "2026-05-31"
+      "url": "https://tezos-shadownet.octez.io",
+      "provider": "trilitech"
     },
     {
       "net": "mainnet",
