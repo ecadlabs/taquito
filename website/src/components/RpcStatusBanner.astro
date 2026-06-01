@@ -1,0 +1,116 @@
+---
+// Floats a banner when the public Shadownet RPC the docs' live examples depend on
+// cannot be reached. The endpoint is operated by Trilitech, not us, so a failed
+// check (including a CORS failure, which is also a node-side misconfiguration)
+// means their service is down, not ours.
+---
+
+<div
+  id="rpc-status-banner"
+  role="alert"
+  hidden
+  class="sticky top-0 z-50 w-full bg-red-50 border-b border-red-300">
+  <div class="max-w-5xl mx-auto px-4 py-3 flex items-start gap-3">
+    <svg
+      class="w-5 h-5 text-red-600 mt-0.5 shrink-0"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+      aria-hidden="true">
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+      />
+    </svg>
+    <p class="text-red-800 text-sm flex-1">
+      The public Shadownet RPC at <code class="font-mono">tezos-shadownet.octez.io</code>,
+      operated by <a
+        href="https://www.trili.tech/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="underline hover:text-red-900">Trilitech</a>, is currently
+      unreachable. Live code examples on this site rely on it, so they may fail to
+      run. Apologies for the disruption: this endpoint is outside our control. If it
+      stays down, please <a
+        href="https://forum.tezosagora.org/t/annoucing-new-public-rpc-nodes-for-tezos-community/7082"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="underline hover:text-red-900">report it to Trilitech</a>.
+    </p>
+    <button
+      id="rpc-status-banner-dismiss"
+      type="button"
+      aria-label="Dismiss"
+      class="shrink-0 text-red-600 hover:text-red-900 p-1 -m-1">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+  </div>
+</div>
+
+<script>
+  const RPC_BASE_URL = 'https://tezos-shadownet.octez.io';
+  const CHECK_PATH = '/version';
+  const TIMEOUT_MS = 5000;
+  const DISMISS_KEY = 'rpcStatusBannerDismissed';
+
+  // Resolves false on any failure to reach the node: network error, CORS rejection,
+  // timeout, or a non-2xx response. All of those are the operator's problem, not ours.
+  async function isShadownetReachable(): Promise<boolean> {
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), TIMEOUT_MS);
+    try {
+      const response = await fetch(`${RPC_BASE_URL}${CHECK_PATH}`, {
+        method: 'GET',
+        signal: controller.signal,
+      });
+      return response.ok;
+    } catch {
+      return false;
+    } finally {
+      window.clearTimeout(timeout);
+    }
+  }
+
+  function wasDismissed(): boolean {
+    try {
+      return window.sessionStorage.getItem(DISMISS_KEY) === '1';
+    } catch {
+      return false;
+    }
+  }
+
+  function rememberDismissal(): void {
+    try {
+      window.sessionStorage.setItem(DISMISS_KEY, '1');
+    } catch {
+      // sessionStorage can be unavailable in restricted contexts; nothing to do.
+    }
+  }
+
+  async function runCheck(): Promise<void> {
+    const banner = document.getElementById('rpc-status-banner');
+    if (!banner || wasDismissed()) return;
+
+    const dismissButton = document.getElementById('rpc-status-banner-dismiss');
+    dismissButton?.addEventListener('click', () => {
+      banner.hidden = true;
+      rememberDismissal();
+    }, { once: true });
+
+    const reachable = await isShadownetReachable();
+    if (!reachable && !wasDismissed()) {
+      banner.hidden = false;
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', runCheck);
+  } else {
+    runCheck();
+  }
+  document.addEventListener('astro:page-load', runCheck);
+</script>

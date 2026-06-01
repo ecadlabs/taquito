@@ -7,6 +7,7 @@ import Footer from '../components/Footer.astro';
 import DocsSidebar from '../components/DocsSidebar.astro';
 import FeedbackWidget from '../components/docs/FeedbackWidget.astro';
 import ChatKitWidget from '@components/ChatKitWidget.astro';
+import RpcStatusBanner from '@components/RpcStatusBanner.astro';
 import { DEFAULT_VERSION } from '../pages/api/search/[version].json.ts'
 
 interface Props {
@@ -117,6 +118,7 @@ const articleJsonLd = {
     <script src="../scripts/prism-highlight.ts"></script>
   </head>
   <body class="flex flex-col min-h-screen">
+    <RpcStatusBanner />
     <Header />
     <main class="w-full flex">
       {isDocsPage && <DocsSidebar currentSlug={currentSlug} version={version} />}

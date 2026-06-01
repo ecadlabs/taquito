@@ -2,6 +2,7 @@
 import '../../global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import RpcStatusBanner from '../components/RpcStatusBanner.astro';
 
 interface Props {
   title?: string;
@@ -67,6 +68,7 @@ const websiteJsonLd = {
     </noscript>
   </head>
   <body class="flex flex-col min-h-screen bg-background-primary">
+    <RpcStatusBanner />
     <Header />
 
     <main class="flex-1 text-text-secondary">

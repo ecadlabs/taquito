@@ -10,7 +10,7 @@ import { TezosToolkit } from "@taquito/taquito";
 import { BeaconWallet, BeaconEvent } from "@taquito/beacon-wallet";
 import { NetworkType } from "@taquito/beacon-wallet/types";
 
-const Tezos = new TezosToolkit("https://mainnet.tezos.ecadinfra.com");
+const Tezos = new TezosToolkit("https://tezos-mainnet.octez.io");
 
 const wallet = new BeaconWallet({
   name: "My Taquito Dapp",
@@ -33,7 +33,7 @@ Tezos.setWalletProvider(wallet);`
     code: `// Transfer NFTs with a single contract call
 import { TezosToolkit } from "@taquito/taquito";
 
-const Tezos = new TezosToolkit("https://mainnet.tezos.ecadinfra.com");
+const Tezos = new TezosToolkit("https://tezos-mainnet.octez.io");
 const contract = await Tezos.wallet.at(CONTRACT_ADDRESS);
 const op = await contract.methodsObject.transfer([
   {

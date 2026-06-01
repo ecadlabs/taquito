@@ -140,7 +140,7 @@ import { TezosToolkit, RpcReadAdapter } from '@taquito/taquito';
 import { SaplingToolkit } from '@taquito/sapling';
 import { RpcClient } from '@taquito/rpc';
 
-const tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com/');
+const tezos = new TezosToolkit('https://tezos-shadownet.octez.io/');
 const readProvider = new RpcReadAdapter(new RpcClient('https://YOUR_PREFERRED_RPC_URL'));
 const saplingContract = await tezos.contract.at('KT18iaRnYYNvEJpnk6e46NwBGKNJ8Dn19mtv');
 
@@ -173,7 +173,7 @@ const aliceSk = 'sask27SLmU9herddHz4qFJBLMjWYMbJF8RtS579w9ej9mfCYK7VUdyCJPHK8AzW
 
 const inMemorySpendingKey = new InMemorySpendingKey(aliceSk);
 
-const readProvider = new RpcReadAdapter(new RpcClient('https://shadownet.tezos.ecadinfra.com/'));
+const readProvider = new RpcReadAdapter(new RpcClient('https://tezos-shadownet.octez.io/'));
 
 const saplingToolkit = new SaplingToolkit(
     { saplingSigner: inMemorySpendingKey },
@@ -206,7 +206,7 @@ const aliceSk = 'sask27SLmU9herddHz4qFJBLMjWYMbJF8RtS579w9ej9mfCYK7VUdyCJPHK8AzW
 
 const inMemorySpendingKey = new InMemorySpendingKey(aliceSk);
 
-const readProvider = new RpcReadAdapter(new RpcClient('https://shadownet.tezos.ecadinfra.com/'));
+const readProvider = new RpcReadAdapter(new RpcClient('https://tezos-shadownet.octez.io/'));
 
 const saplingToolkit = new SaplingToolkit(
     { saplingSigner: inMemorySpendingKey },
@@ -243,7 +243,7 @@ Here is an example of how to prepare and inject a shielded transaction using Taq
 // import { RpcClient } from '@taquito/rpc';
 
 const saplingContractAddress = 'KT18iaRnYYNvEJpnk6e46NwBGKNJ8Dn19mtv'
-const rpcUrl = 'https://shadownet.tezos.ecadinfra.com/';
+const rpcUrl = 'https://tezos-shadownet.octez.io/';
 const readProvider = new RpcReadAdapter(new RpcClient(rpcUrl));
 // const Tezos = new TezosToolkit(rpcUrl);
 // Note: you need to set up your signer on the TezosToolkit as usual
@@ -314,7 +314,7 @@ Here is an example of how to prepare and inject a Sapling transaction using Taqu
 // import { RpcClient } from '@taquito/rpc';
 
 const saplingContractAddress = 'KT18iaRnYYNvEJpnk6e46NwBGKNJ8Dn19mtv'
-const rpcUrl = 'https://shadownet.tezos.ecadinfra.com/';
+const rpcUrl = 'https://tezos-shadownet.octez.io/';
 const readProvider = new RpcReadAdapter(new RpcClient(rpcUrl));
 // const Tezos = new TezosToolkit(rpcUrl);
 // Note: you need to set up your signer on the TezosToolkit as usual
@@ -372,7 +372,7 @@ Here is an example of how to prepare and inject an unshielded transaction using 
 // import { RpcClient } from '@taquito/rpc';
 
 const saplingContractAddress = 'KT18iaRnYYNvEJpnk6e46NwBGKNJ8Dn19mtv'
-const rpcUrl = 'https://shadownet.tezos.ecadinfra.com/';
+const rpcUrl = 'https://tezos-shadownet.octez.io/';
 const readProvider = new RpcReadAdapter(new RpcClient(rpcUrl));
 // const Tezos = new TezosToolkit(rpcUrl);
 // Note: you need to set up your signer on the TezosToolkit as usual
@@ -428,7 +428,7 @@ import { InMemoryViewingKey } from '@taquito/sapling';
 import { RpcClient } from '@taquito/rpc';
 
 const readProvider = new RpcReadAdapter(new RpcClient('https://YOUR_PREFERRED_RPC_URL'));
-const tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com/');
+const tezos = new TezosToolkit('https://tezos-shadownet.octez.io/');
 
 const saplingContract = await tezos.contract.at('KT18iaRnYYNvEJpnk6e46NwBGKNJ8Dn19mtv');
 
