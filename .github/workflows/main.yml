@@ -126,16 +126,6 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
-      - if: ${{ !github.event.pull_request.head.repo.fork }}
-        name: Tailscale
-        # Pinned to SHA to prevent supply-chain attacks via mutable tags.
-        # Verify before bumping: https://github.com/tailscale/github-action/releases
-        uses: tailscale/github-action@306e68a486fd2350f2bfc3b19fcd143891a4a2d8 # v4.1.2
-        with:
-          oauth-client-id: ${{ secrets.TAILSCALE_OAUTH_CLIENT_ID }}
-          oauth-secret: ${{ secrets.TAILSCALE_OAUTH_SECRET }}
-          tags: tag:github-runner
-          ping: ecad-tezos-shadownet-rolling-1.i.ecadinfra.com
       - name: Probe keygen before shadownet tests
         shell: bash
         run: |
@@ -243,16 +233,6 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
-      - if: ${{ !github.event.pull_request.head.repo.fork }}
-        name: Tailscale
-        # Pinned to SHA to prevent supply-chain attacks via mutable tags.
-        # Verify before bumping: https://github.com/tailscale/github-action/releases
-        uses: tailscale/github-action@306e68a486fd2350f2bfc3b19fcd143891a4a2d8 # v4.1.2
-        with:
-          oauth-client-id: ${{ secrets.TAILSCALE_OAUTH_CLIENT_ID }}
-          oauth-secret: ${{ secrets.TAILSCALE_OAUTH_SECRET }}
-          tags: tag:github-runner
-          ping: ecad-tezos-shadownet-rolling-1.i.ecadinfra.com
       - name: Probe keygen before sapling tests
         shell: bash
         run: |
@@ -334,6 +314,33 @@ jobs:
         with:
           name: itest-timing-sapling
           path: ci-metrics/itest-sapling.json
+          if-no-files-found: warn
+          retention-days: 30
+
+  rpc-health-monitor:
+    if: ${{ needs.integration-tests-change-filter.outputs.run_expensive == 'true' }}
+    name: rpc-health-monitor-shadownet
+    needs:
+      - integration-tests-change-filter
+    runs-on: ubuntu-latest
+    # Diagnostics only: this never gates a merge, it just records an RPC weather
+    # report over the test window so failures can be correlated with node health.
+    continue-on-error: true
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v6
+      - name: Poll shadownet RPC health
+        env:
+          RPC_URL: https://rpc.shadownet.teztnets.com
+          POLL_INTERVAL_SECONDS: '15'
+          POLL_MAX_DURATION_SECONDS: '1860'
+        run: bash .github/scripts/poll-rpc-health.sh
+      - name: Upload RPC health timeline
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: rpc-health-shadownet
+          path: ci-metrics/rpc-health.jsonl
           if-no-files-found: warn
           retention-days: 30
 

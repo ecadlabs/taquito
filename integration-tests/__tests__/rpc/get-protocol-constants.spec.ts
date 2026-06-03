@@ -10,7 +10,9 @@ CONFIGS().forEach(({ lib, rpc, networkType }) => {
   const tallinnnet = (networkType == NetworkType.TESTNET && rpc.includes('tallinn')) ? test : test.skip;
 
   describe('Test fetching constants for all protocols on Mainnet', () => {
-    const rpcUrl = 'https://mainnet.tezos.ecadinfra.com/';
+    // ecadinfra's public mainnet node is being decommissioned; use a live
+    // public mainnet RPC. Constants are network-wide, so any correct node matches.
+    const rpcUrl = 'https://rpc.tzkt.io/mainnet';
     Tezos.setRpcProvider(rpcUrl);
     it(`should successfully fetch Proto24(Tallinn) constants at head`, async () => {
       const constants: ConstantsResponseProto023 = await Tezos.rpc.getConstants();
