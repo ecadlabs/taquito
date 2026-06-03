@@ -420,7 +420,7 @@ const defaultConfig = ({
 const shadownetEphemeral: Config = defaultConfig({
   networkName: 'SHADOWNET',
   protocol: Protocols.PtTALLiNt,
-  defaultRpc: 'http://ecad-tezos-shadownet-rolling-1.i.ecadinfra.com/',
+  defaultRpc: 'https://rpc.shadownet.teztnets.com',
   knownContracts: knownContractsShadownet,
   signerConfig: defaultEphemeralConfig('shadownet'),
 });
