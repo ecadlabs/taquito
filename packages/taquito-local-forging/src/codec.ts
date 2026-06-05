@@ -66,6 +66,8 @@ export const publicKeyHashDecoder = (val: Uint8ArrayConsumer) => {
     return prefixDecoder(PrefixV2.P256PublicKeyHash)(val);
   } else if (prefix[0] === 0x03) {
     return prefixDecoder(PrefixV2.BLS12_381PublicKeyHash)(val);
+  } else if (prefix[0] === 0x04) {
+    return prefixDecoder(PrefixV2.MLDSA44PublicKeyHash)(val);
   }
 };
 
@@ -285,6 +287,8 @@ export const publicKeyDecoder = (val: Uint8ArrayConsumer) => {
       return prefixDecoder(PrefixV2.P256PublicKey)(val);
     case 0x03:
       return prefixDecoder(PrefixV2.BLS12_381PublicKey)(val);
+    case 0x04:
+      return prefixDecoder(PrefixV2.MLDSA44PublicKey)(val);
     default:
       throw new InvalidPublicKeyError(undefined, ValidationResult.NO_PREFIX_MATCHED);
   }
