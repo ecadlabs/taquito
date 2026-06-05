@@ -459,6 +459,17 @@ const tezlinkshadownetSecretKey: Config = defaultConfig({
   signerConfig: defaultSecretKey,
 });
 
+// U025 "Ushuaia" public testnet (runs octez-v25.0-rc1). Faucet: https://faucet.ushuaianet.teztnets.com
+// TODO: replace knownContractsWeeklynet with a dedicated known-contracts-ushuaianet.ts once the
+// standard known contracts are originated on ushuaianet.
+const ushuaianetSecretKey: Config = defaultConfig({
+  networkName: 'USHUAIANET',
+  protocol: Protocols.PsUshuai,
+  defaultRpc: 'https://rpc.ushuaianet.teztnets.com',
+  knownContracts: knownContractsWeeklynet,
+  signerConfig: defaultSecretKey,
+});
+
 const providers: Config[] = [];
 
 if (process.env['RUN_WITH_SECRET_KEY']) {
@@ -466,7 +477,8 @@ if (process.env['RUN_WITH_SECRET_KEY']) {
     shadownetSecretKey,
     tallinnnetSecretKey,
     weeklynetSecretKey,
-    tezlinkshadownetSecretKey
+    tezlinkshadownetSecretKey,
+    ushuaianetSecretKey
   );
 } else if (process.env['RUN_SHADOWNET_WITH_SECRET_KEY']) {
   providers.push(shadownetSecretKey);
@@ -476,6 +488,8 @@ if (process.env['RUN_WITH_SECRET_KEY']) {
   providers.push(weeklynetSecretKey);
 } else if (process.env['RUN_TEZLINKSHADOWNET_WITH_SECRET_KEY']) {
   providers.push(tezlinkshadownetSecretKey);
+} else if (process.env['RUN_USHUAIANET_WITH_SECRET_KEY']) {
+  providers.push(ushuaianetSecretKey);
 } else if (process.env['SHADOWNET']) {
   providers.push(shadownetEphemeral);
 } else if (process.env['TALLINNNET']) {
