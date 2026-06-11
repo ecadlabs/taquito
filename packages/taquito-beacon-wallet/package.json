@@ -1,7 +1,7 @@
 {
   "name": "@taquito/beacon-wallet",
   "version": "24.3.0",
-  "description": "TZIP-10 Beacon wallet integration for Taquito dapps built on the Beacon SDK DAppClient.",
+  "description": "TZIP-10 Beacon wallet integration for Taquito dapps built on the Octez Connect DAppClient.",
   "keywords": [
     "taquito",
     "tezos",
@@ -70,8 +70,8 @@
     ]
   },
   "dependencies": {
-    "@ecadlabs/beacon-dapp": "4.8.4-ecad-beta.1",
-    "@ecadlabs/beacon-types": "4.8.4-ecad-beta.1",
+    "@tezos-x/octez.connect-dapp": "4.8.5",
+    "@tezos-x/octez.connect-types": "4.8.5",
     "@taquito/core": "^24.3.0",
     "@taquito/taquito": "^24.3.0",
     "@taquito/utils": "^24.3.0",
@@ -79,8 +79,8 @@
     "util": "^0.12.5"
   },
   "devDependencies": {
-    "@ecadlabs/beacon-transport-postmessage": "4.8.4-ecad-beta.1",
-    "@ecadlabs/beacon-ui": "4.8.4-ecad-beta.1",
+    "@tezos-x/octez.connect-transport-postmessage": "4.8.5",
+    "@tezos-x/octez.connect-ui": "4.8.5",
     "@types/bluebird": "^3.5.42",
     "@types/chrome": "0.1.40",
     "@types/node": "^22.0.0",

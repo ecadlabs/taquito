@@ -16,9 +16,9 @@ const mainConfig = {
       format: 'umd',
       sourcemap: true,
       globals: {
-        '@ecadlabs/beacon-sdk': 'beacon',
+        '@tezos-x/octez.connect-sdk': 'beacon',
         '@taquito/core': 'taquitoCore',
-        '@ecadlabs/beacon-dapp': 'beaconDapp',
+        '@tezos-x/octez.connect-dapp': 'beaconDapp',
         'typedarray-to-buffer': 'typedarrayToBuffer',
         '@taquito/taquito': 'taquito',
         '@taquito/utils': 'taquitoUtils',
@@ -30,8 +30,8 @@ const mainConfig = {
     include: 'src/**',
   },
   external: [
-    '@ecadlabs/beacon-sdk',
-    '@ecadlabs/beacon-dapp',
+    '@tezos-x/octez.connect-sdk',
+    '@tezos-x/octez.connect-dapp',
     '@taquito/core',
     'typedarray-to-buffer',
     '@taquito/taquito',
@@ -53,12 +53,12 @@ const beaconTypesConfig = {
       format: 'umd',
       sourcemap: true,
       globals: {
-        '@ecadlabs/beacon-types': 'beaconTypes',
+        '@tezos-x/octez.connect-types': 'beaconTypes',
       },
     },
     { file: 'dist/beacon-types.es6.js', format: 'es', sourcemap: true },
   ],
-  external: ['@ecadlabs/beacon-types'],
+  external: ['@tezos-x/octez.connect-types'],
   plugins: [
     json(),
     typescript({ tsconfig: './tsconfig.prod.json', useTsconfigDeclarationDir: true }),

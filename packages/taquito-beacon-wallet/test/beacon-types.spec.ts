@@ -15,7 +15,7 @@ import type {
 } from '../src/beacon-types';
 
 // BeaconEvent and DAppClientOptions live on the main entry point (not ./types)
-// because they require @ecadlabs/beacon-dapp which has side effects.
+// because they require @tezos-x/octez.connect-dapp which has side effects.
 import { BeaconEvent } from '../src/taquito-beacon-wallet';
 import type { DAppClientOptions } from '../src/taquito-beacon-wallet';
 
