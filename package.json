@@ -97,15 +97,7 @@
     "vitest": "^4.1.6"
   },
   "overrides": {
-    "@airgap/beacon-dapp": "npm:@ecadlabs/beacon-dapp@4.8.4-ecad-beta.1",
-    "@airgap/beacon-core": "npm:@ecadlabs/beacon-core@4.8.4-ecad-beta.1",
-    "@airgap/beacon-types": "npm:@ecadlabs/beacon-types@4.8.4-ecad-beta.1",
-    "@airgap/beacon-utils": "npm:@ecadlabs/beacon-utils@4.8.4-ecad-beta.1",
-    "@airgap/beacon-ui": "npm:@ecadlabs/beacon-ui@4.8.4-ecad-beta.1",
-    "@airgap/beacon-transport-matrix": "npm:@ecadlabs/beacon-transport-matrix@4.8.4-ecad-beta.1",
-    "@airgap/beacon-transport-postmessage": "npm:@ecadlabs/beacon-transport-postmessage@4.8.4-ecad-beta.1",
-    "@airgap/beacon-transport-walletconnect": "npm:@ecadlabs/beacon-transport-walletconnect@4.8.4-ecad-beta.1",
-    "@ecadlabs/beacon-transport-walletconnect": {
+    "@tezos-x/octez.connect-transport-walletconnect": {
       "@walletconnect/core": "2.18.0",
       "@walletconnect/sign-client": "2.18.0",
       "@walletconnect/types": "2.18.0",
