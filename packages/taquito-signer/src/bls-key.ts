@@ -18,6 +18,13 @@ export class BLSKey implements SigningKeyWithProofOfPossession {
   #key: Uint8Array;
   #publicKey: Uint8Array;
 
+  /**
+   * Signature prefix (tag 255 marker) for BLS signatures appended to operation
+   * bytes. `0xff 0x03` identifies the BLS scheme.
+   * ref: https://octez.tezos.com/docs/shell/p2p_api.html#signature-prefix-tag-255
+   */
+  signaturePrefix = new Uint8Array([255, 3]);
+
   constructor(key: string, decrypt?: (k: Uint8Array) => Uint8Array) {
     const tmp = b58DecodeAndCheckPrefix(key, [
       PrefixV2.BLS12_381EncryptedSecretKey,
