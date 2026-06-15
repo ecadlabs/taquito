@@ -70,6 +70,7 @@ export enum PrefixV2 {
   MLDSA44PublicKeyHash = 'tz5',
   MLDSA44PublicKey = 'mdpk',
   MLDSA44SecretKey = 'mdsk',
+  MLDSA44EncryptedSecretKey = 'mdesk',
   MLDSA44Signature = 'mdsig',
 }
 
@@ -142,6 +143,7 @@ export const prefixV2: { [key in PrefixV2]: Uint8Array } = {
   [PrefixV2.MLDSA44PublicKeyHash]: new Uint8Array([6, 161, 169]),
   [PrefixV2.MLDSA44PublicKey]: new Uint8Array([13, 7, 237, 67]),
   [PrefixV2.MLDSA44SecretKey]: new Uint8Array([9, 57, 116, 57]),
+  [PrefixV2.MLDSA44EncryptedSecretKey]: new Uint8Array([5, 49, 133, 39, 172]),
   [PrefixV2.MLDSA44Signature]: new Uint8Array([1, 156, 45, 210, 3]),
 };
 
@@ -215,5 +217,7 @@ export const payloadLength: { [key in PrefixV2]: number } = {
   [PrefixV2.MLDSA44PublicKeyHash]: 20,
   [PrefixV2.MLDSA44PublicKey]: 1312,
   [PrefixV2.MLDSA44SecretKey]: 3872,
+  // encrypted secret key adds an 8-byte salt + 16-byte secretbox MAC (+24)
+  [PrefixV2.MLDSA44EncryptedSecretKey]: 3896,
   [PrefixV2.MLDSA44Signature]: 2420,
 };

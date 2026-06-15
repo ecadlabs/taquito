@@ -24,6 +24,7 @@ import {
 } from '@taquito/core';
 import { SigningKey, isPOP, PublicKey } from './key-interface';
 import { BLSKey, BLSPublicKey } from './bls-key';
+import { MLDsaKey, MLDsaPublicKey } from './mldsa-key';
 import { sha512 } from '@noble/hashes/sha2.js';
 
 export interface FromMnemonicParams {
@@ -42,7 +43,9 @@ type KeyPrefix =
   | PrefixV2.P256EncryptedSecretKey
   | PrefixV2.P256SecretKey
   | PrefixV2.BLS12_381EncryptedSecretKey
-  | PrefixV2.BLS12_381SecretKey;
+  | PrefixV2.BLS12_381SecretKey
+  | PrefixV2.MLDSA44EncryptedSecretKey
+  | PrefixV2.MLDSA44SecretKey;
 
 /**
  * A local implementation of the signer. Will represent a Tezos account and be able to produce signature in its behalf
@@ -107,6 +110,8 @@ export class InMemorySigner implements Signer {
       PrefixV2.P256SecretKey,
       PrefixV2.BLS12_381EncryptedSecretKey,
       PrefixV2.BLS12_381SecretKey,
+      PrefixV2.MLDSA44EncryptedSecretKey,
+      PrefixV2.MLDSA44SecretKey,
     ];
     const pre = (() => {
       try {
@@ -123,7 +128,8 @@ export class InMemorySigner implements Signer {
       pre === PrefixV2.Ed25519EncryptedSeed ||
       pre === PrefixV2.Secp256k1EncryptedSecretKey ||
       pre === PrefixV2.P256EncryptedSecretKey ||
-      pre === PrefixV2.BLS12_381EncryptedSecretKey;
+      pre === PrefixV2.BLS12_381EncryptedSecretKey ||
+      pre === PrefixV2.MLDSA44EncryptedSecretKey;
 
     let decrypt: ((k: Uint8Array) => Uint8Array) | undefined;
     if (encrypted) {
@@ -169,6 +175,11 @@ export class InMemorySigner implements Signer {
       case PrefixV2.BLS12_381SecretKey:
         this.#key = new BLSKey(key, decrypt);
         break;
+
+      case PrefixV2.MLDSA44EncryptedSecretKey:
+      case PrefixV2.MLDSA44SecretKey:
+        this.#key = new MLDsaKey(key, decrypt);
+        break;
     }
   }
 
@@ -192,8 +203,12 @@ export class InMemorySigner implements Signer {
       sbytes: buf2hex(
         mergebuf(
           msg,
-          // bls only Signature_prefix ff03 ref:https://octez.tezos.com/docs/shell/p2p_api.html#signature-prefix-tag-255 & https://octez.tezos.com/docs/shell/p2p_api.html#bls-prefix-tag-3
-          isPOP(this.#key) ? mergebuf(new Uint8Array([255, 3]), rawSignature) : rawSignature
+          // Schemes whose signatures are not the legacy 64-byte form are tagged
+          // with a signature prefix (tag 255): BLS uses ff03, ML-DSA-44 ff04.
+          // ref: https://octez.tezos.com/docs/shell/p2p_api.html#signature-prefix-tag-255
+          this.#key.signaturePrefix !== undefined
+            ? mergebuf(this.#key.signaturePrefix, rawSignature)
+            : rawSignature
         )
       ),
     };
@@ -239,6 +254,7 @@ export function publicKeyFromString(src: string): PublicKey {
     PrefixV2.Secp256k1PublicKey,
     PrefixV2.P256PublicKey,
     PrefixV2.BLS12_381PublicKey,
+    PrefixV2.MLDSA44PublicKey,
   ]);
 
   switch (pre) {
@@ -250,5 +266,7 @@ export function publicKeyFromString(src: string): PublicKey {
       return new ECPublicKey(keyData, 'p256');
     case PrefixV2.BLS12_381PublicKey:
       return new BLSPublicKey(keyData);
+    case PrefixV2.MLDSA44PublicKey:
+      return new MLDsaPublicKey(keyData);
   }
 }
