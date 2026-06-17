@@ -416,10 +416,11 @@ export enum Protocol {
   PsRiotuma = 'PsRiotumaAMotcRoDWW1bysEhQy2n1M5fy8JgRp8jjRfHGmfeA7',
   PtSeouLou = 'PtSeouLouXkxhg39oWzjxDWaCydNfR3RxCUrNe4Q9Ro8BTehcbh',
   PtTALLiNt = 'PtTALLiNtPec7mE7yY4m3k26J8Qukef3E3ehzhfXgFZKGtDdAXu',
+  PsUshuai9 = 'PsUshuai9QapM5TGj1JpuVGkdxz5GykdnEvS6Rh8SUVrARvZLCY',
   ProtoALpha = 'ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK', // temporary protocol hash
 }
 
-export const DefaultProtocol = Protocol.PtTALLiNt;
+export const DefaultProtocol = Protocol.PsUshuai9;
 
 export type ProtocolID = `${Protocol}`;
 
@@ -455,7 +456,8 @@ const protoLevel: Record<ProtocolID, number> = {
   PsRiotumaAMotcRoDWW1bysEhQy2n1M5fy8JgRp8jjRfHGmfeA7: 22,
   PtSeouLouXkxhg39oWzjxDWaCydNfR3RxCUrNe4Q9Ro8BTehcbh: 23,
   PtTALLiNtPec7mE7yY4m3k26J8Qukef3E3ehzhfXgFZKGtDdAXu: 24,
-  ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK: 25,
+  PsUshuai9QapM5TGj1JpuVGkdxz5GykdnEvS6Rh8SUVrARvZLCY: 25,
+  ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK: 26,
 };
 
 export function ProtoGreaterOrEqual(a: ProtocolID, b: ProtocolID): boolean {
