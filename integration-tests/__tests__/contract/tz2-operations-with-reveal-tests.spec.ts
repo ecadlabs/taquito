@@ -268,7 +268,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, createAddress, knownTicketCont
       });
       expect(estimated?.suggestedFeeMutez).toBeGreaterThanOrEqual(357);
       expect(estimated?.gasLimit).toBeGreaterThanOrEqual(1325);
-      expect(estimated?.storageLimit).toBe(0);
+      expect(rpc.includes('ushuaia') ? [0, 86] : [0]).toContain(estimated?.storageLimit);
 
       const transferTicketOp = await Tz2.contract.transferTicket({
         ticketContents: ticket.content,

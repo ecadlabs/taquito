@@ -7,6 +7,11 @@ class BufferedEntry<T> {
       this.readyAt = Date.now();
       return value;
     });
+    // Background prefetch entries may never be consumed. Attach a rejection
+    // handler now so a failed unused prefetch does not become an unhandled
+    // rejection; callers that do consume this entry still observe the original
+    // rejection when awaiting this.promise.
+    void this.promise.catch(() => undefined);
   }
 }
 

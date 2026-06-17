@@ -18,6 +18,7 @@ import { knownContractsShadownet } from './known-contracts-shadownet';
 import { knownContractsTallinnnet } from './known-contracts-tallinnnet';
 import { knownContractsWeeklynet } from './known-contracts-weeklynet';
 import { knownContractsTezlinkshadownet } from './known-contracts-tezlinkshadownet';
+import { knownContractsUshuaianet } from './known-contracts-ushuaianet';
 
 const nodeCrypto = require('crypto');
 const integrationDiagnosticsEnabled = /^(1|true)$/i.test(
@@ -443,6 +444,19 @@ const tallinnnetSecretKey: Config = {
   ...{ signerConfig: defaultSecretKey, rpc: 'https://rpc.tallinnnet.teztnets.com' },
 };
 
+const ushuaianetEphemeral: Config = defaultConfig({
+  networkName: 'USHUAIANET',
+  protocol: Protocols.PsUshuai9,
+  defaultRpc: 'https://rpc.ushuaianet.teztnets.com',
+  knownContracts: knownContractsUshuaianet,
+  signerConfig: defaultEphemeralConfig('ushuaianet'),
+});
+
+const ushuaianetSecretKey: Config = {
+  ...ushuaianetEphemeral,
+  signerConfig: defaultSecretKey,
+};
+
 const weeklynetSecretKey: Config = defaultConfig({
   networkName: 'WEEKLYNET',
   protocol: Protocols.ProtoALpha,
@@ -472,6 +486,8 @@ if (process.env['RUN_WITH_SECRET_KEY']) {
   providers.push(shadownetSecretKey);
 } else if (process.env['RUN_TALLINNNET_WITH_SECRET_KEY']) {
   providers.push(tallinnnetSecretKey);
+} else if (process.env['RUN_USHUAIANET_WITH_SECRET_KEY']) {
+  providers.push(ushuaianetSecretKey);
 } else if (process.env['RUN_WEEKLYNET_WITH_SECRET_KEY']) {
   providers.push(weeklynetSecretKey);
 } else if (process.env['RUN_TEZLINKSHADOWNET_WITH_SECRET_KEY']) {
@@ -480,6 +496,8 @@ if (process.env['RUN_WITH_SECRET_KEY']) {
   providers.push(shadownetEphemeral);
 } else if (process.env['TALLINNNET']) {
   providers.push(tallinnnetEphemeral);
+} else if (process.env['USHUAIANET']) {
+  providers.push(ushuaianetEphemeral);
 } else {
   providers.push(shadownetEphemeral, tallinnnetEphemeral);
 }
