@@ -21,6 +21,11 @@ connect_timeout_seconds="${POLL_CONNECT_TIMEOUT_SECONDS:-5}"
 max_time_seconds="${POLL_MAX_TIME_SECONDS:-15}"
 out_dir="${POLL_OUTPUT_DIR:-ci-metrics}"
 out_file="${POLL_OUTPUT_FILE:-${out_dir}/rpc-health.jsonl}"
+stop_when_run_jobs_complete="${POLL_STOP_WHEN_RUN_JOBS_COMPLETE:-false}"
+stop_check_after_seconds="${POLL_STOP_CHECK_AFTER_SECONDS:-120}"
+monitor_job_name_prefix="${POLL_MONITOR_JOB_NAME_PREFIX:-rpc-health-monitor-}"
+github_api_url="${GITHUB_API_URL:-https://api.github.com}"
+run_jobs_api_url="${POLL_RUN_JOBS_API_URL:-}"
 
 mkdir -p "$(dirname "$out_file")"
 : > "$out_file"
@@ -101,6 +106,67 @@ summarize() {
 }
 trap summarize EXIT
 
+run_jobs_url() {
+  if [ -n "$run_jobs_api_url" ]; then
+    printf '%s' "$run_jobs_api_url"
+    return 0
+  fi
+  if [ -z "${GITHUB_REPOSITORY:-}" ] || [ -z "${GITHUB_RUN_ID:-}" ]; then
+    return 1
+  fi
+  printf '%s/repos/%s/actions/runs/%s/jobs?per_page=100' \
+    "$github_api_url" "$GITHUB_REPOSITORY" "$GITHUB_RUN_ID"
+}
+
+should_stop_for_completed_run_jobs() {
+  [ "$stop_when_run_jobs_complete" = 'true' ] || return 1
+  [ "$(( $(date +%s) - start_epoch ))" -ge "$stop_check_after_seconds" ] || return 1
+  [ -n "${GITHUB_TOKEN:-}" ] || return 1
+
+  local base_url
+  base_url="$(run_jobs_url)" || return 1
+
+  local page=1
+  local non_monitor_seen=0
+  local incomplete_non_monitor_seen=0
+  while :; do
+    local response
+    response="$(
+      curl -fsS \
+        -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+        -H 'Accept: application/vnd.github+json' \
+        -H 'X-GitHub-Api-Version: 2022-11-28' \
+        "${base_url}&page=${page}" 2>/dev/null || true
+    )"
+    [ -n "$response" ] || return 1
+
+    local page_jobs page_non_monitor page_incomplete_non_monitor
+    page_jobs="$(jq -r '.jobs | length' <<<"$response")"
+    page_non_monitor="$(
+      jq -r --arg prefix "$monitor_job_name_prefix" \
+        '[.jobs[] | select((.name | startswith($prefix)) | not)] | length' \
+        <<<"$response"
+    )"
+    page_incomplete_non_monitor="$(
+      jq -r --arg prefix "$monitor_job_name_prefix" \
+        '[.jobs[] | select(((.name | startswith($prefix)) | not) and .status != "completed")] | length' \
+        <<<"$response"
+    )"
+
+    non_monitor_seen="$((non_monitor_seen + page_non_monitor))"
+    incomplete_non_monitor_seen="$((incomplete_non_monitor_seen + page_incomplete_non_monitor))"
+
+    [ "$page_jobs" -lt 100 ] && break
+    page="$((page + 1))"
+  done
+
+  [ "$non_monitor_seen" -gt 0 ] || return 1
+  [ "$incomplete_non_monitor_seen" -eq 0 ] || return 1
+
+  echo "RPC health monitor: all non-monitor jobs completed; stopping early."
+  return 0
+}
+
 while :; do
   now="$(date +%s)"
   [ "$now" -ge "$deadline" ] && break
@@ -157,6 +223,8 @@ while :; do
   echo "$line"
 
   rm -f "$body_file"
+
+  should_stop_for_completed_run_jobs && break
 
   # Stop sleeping if the next interval would run past the deadline anyway.
   [ "$(( $(date +%s) + interval_seconds ))" -ge "$deadline" ] && break
