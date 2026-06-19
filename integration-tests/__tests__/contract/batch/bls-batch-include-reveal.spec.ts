@@ -1,5 +1,5 @@
 import { OpKind } from '@taquito/taquito';
-import { CONFIGS, SignerType, TEST_FUNDS_RECOVERY_ADDRESS } from '../../../config';
+import { CONFIGS, SignerType, TEST_FUNDS_RECOVERY_ADDRESS, waitForRpcState } from '../../../config';
 import { TezosToolkit } from '@taquito/taquito';
 import { PrefixV2 } from '@taquito/utils';
 
@@ -12,8 +12,15 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, signerConfig, createAddress })
       await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
       try {
         Bls = await createAddress(PrefixV2.BLS12_381SecretKey)
-        let transferOp = await Tezos.contract.transfer({ to: await Bls.signer.publicKeyHash(), amount: 2 })
+        const blsPkh = await Bls.signer.publicKeyHash()
+        const transferOp = await Tezos.contract.transfer({ to: blsPkh, amount: 2 })
         await transferOp.confirmation()
+        await waitForRpcState(
+          Tezos,
+          () => Tezos.rpc.getBalance(blsPkh),
+          (balance) => Number(balance.toString()) > 0,
+          { description: `funding ${blsPkh}` }
+        )
       } catch (e) {
         console.log('beforeAll transferOp error', e)
         throw e;
@@ -41,23 +48,16 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker, signerConfig, createAddress })
 
     it('Verify the estimate.batch does not include an estimation of a tz4 reveal operation when the signer is already revealed.', async () => {
 
-      try {
-        // do a reveal operation first
-        const revealOp = await Bls.contract.reveal({});
-        await revealOp.confirmation();
-        const batchOpEstimate = await Bls.estimate
-          .batch([
-            { kind: OpKind.DELEGATION, source: await Bls.signer.publicKeyHash(), delegate: knownBaker },
-            { kind: OpKind.TRANSACTION, to: TEST_FUNDS_RECOVERY_ADDRESS, amount: 0.02 },
-          ])
+      // do a reveal operation first
+      const revealOp = await Bls.contract.reveal({});
+      await revealOp.confirmation();
+      const batchOpEstimate = await Bls.estimate
+        .batch([
+          { kind: OpKind.DELEGATION, source: await Bls.signer.publicKeyHash(), delegate: knownBaker },
+          { kind: OpKind.TRANSACTION, to: TEST_FUNDS_RECOVERY_ADDRESS, amount: 0.02 },
+        ])
 
-        expect(batchOpEstimate.length).toEqual(2);
-
-      } catch (ex: any) {
-
-        throw ex
-
-      }
+      expect(batchOpEstimate.length).toEqual(2);
     });
   });
 });
