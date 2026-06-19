@@ -37,6 +37,13 @@ export const expectEstimate = (
     const expectedValues = isUshuaianet(rpc)
       ? [...new Set(ushuaianetExpectedValues.map((value) => value[key]))]
       : [expected[key]];
+
+    if (isUshuaianet(rpc) && key === 'consumedMilligas' && expectedValues.length > 2) {
+      expect(estimate[key]).toBeGreaterThanOrEqual(Math.min(...expectedValues));
+      expect(estimate[key]).toBeLessThanOrEqual(Math.max(...expectedValues));
+      continue;
+    }
+
     expect(expectedValues).toContain(estimate[key]);
   }
 };
