@@ -13,6 +13,7 @@ concurrency:
   cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull/') }}
 
 permissions:
+  actions: read
   contents: read
 
 jobs:
@@ -355,6 +356,8 @@ jobs:
           RPC_URL: ${{ matrix.network.rpc_url }}
           POLL_INTERVAL_SECONDS: '15'
           POLL_MAX_DURATION_SECONDS: '1860'
+          POLL_STOP_WHEN_RUN_JOBS_COMPLETE: 'true'
+          GITHUB_TOKEN: ${{ github.token }}
         run: bash .github/scripts/poll-rpc-health.sh
       - name: Upload RPC health timeline
         if: always()
