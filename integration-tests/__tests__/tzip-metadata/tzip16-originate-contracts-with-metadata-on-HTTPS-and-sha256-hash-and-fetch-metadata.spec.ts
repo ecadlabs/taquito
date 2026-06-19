@@ -1,4 +1,4 @@
-import { CONFIGS } from "../../config";
+import { CONFIGS, waitForRpcState } from "../../config";
 import { tzip16, Tzip16Module } from '@taquito/tzip16';
 import { stringToBytes } from '@taquito/utils';
 import { tacoContractTzip16 } from "../../data/modified-taco-contract"
@@ -21,7 +21,15 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         });
         await op.confirmation();
 
-        return op.contract();
+        const contract = await op.contract();
+        await waitForRpcState(
+            Tezos,
+            () => Tezos.rpc.getContract(contract.address),
+            () => true,
+            { description: `contract ${contract.address}` }
+        );
+
+        return contract;
     };
 
     describe(`Test contract origination having a sha256 hash in URI through contract api using: ${rpc}`, () => {

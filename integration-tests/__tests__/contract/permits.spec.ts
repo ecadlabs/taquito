@@ -1,4 +1,4 @@
-import { CONFIGS } from '../../config';
+import { CONFIGS, waitForRpcState } from '../../config';
 import { MichelsonMap, MichelCodecPacker, TezosToolkit } from '@taquito/taquito';
 import { permit_admin_42_expiry } from '../../data/permit_admin_42_expiry';
 import { permit_admin_42_set } from '../../data/permit_admin_42_set';
@@ -216,8 +216,15 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       await setMintMethodCall.confirmation();
       expect(setMintMethodCall.hash).toBeDefined();
       expect(setMintMethodCall.status).toEqual('applied');
-      const storage: any = await fa12_contract.storage();
-      expect(storage['totalSupply'].toString()).toEqual('42');
+      type PermitFa12Storage = { totalSupply: { toString: () => string } };
+      const readStorage = () => fa12_contract.storage() as Promise<PermitFa12Storage>;
+      const storage = await waitForRpcState(
+        Tezos,
+        readStorage,
+        (storage) => storage.totalSupply.toString() === String(mint_amount),
+        { description: `permit fa1.2 storage for ${contractAddress}` }
+      );
+      expect(storage.totalSupply.toString()).toEqual('42');
 
       Tezos.addExtension(new Tzip16Module());
 

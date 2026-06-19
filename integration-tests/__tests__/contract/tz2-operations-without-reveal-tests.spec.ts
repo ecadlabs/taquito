@@ -1,7 +1,7 @@
-import { CONFIGS } from "../../config";
+import { CONFIGS, waitForRpcState } from "../../config";
 import { TezosToolkit } from "@taquito/taquito";
 import { PrefixV2 } from "@taquito/utils";
-import { UnitValue } from "@taquito/taquito";
+import { OpKind, UnitValue } from "@taquito/taquito";
 import crypto from 'crypto';
 import { PvmKind } from "@taquito/rpc";
 
@@ -11,7 +11,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker, knownTicketCont
     let contractAddress = ''
     let Tz2: TezosToolkit;
 
-    beforeAll(async () => {
+    beforeEach(async () => {
       await setup({
         preferFreshKey: true,
         minBalanceMutez: 9000000,
@@ -19,12 +19,25 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker, knownTicketCont
       })
       Tz2 = await createAddress(PrefixV2.Secp256k1SecretKey)
       try {
-        const fundOp = await Tezos.contract.transfer({ to: await Tz2.signer.publicKeyHash(), amount: 9 })
+        const pkh = await Tz2.signer.publicKeyHash()
+        const fundOp = await Tezos.contract.transfer({ to: pkh, amount: 9 })
         await fundOp.confirmation()
         expect(fundOp.status).toBe('applied')
+        await waitForRpcState(
+          Tezos,
+          () => Tezos.rpc.getBalance(pkh),
+          (balance) => Number(balance.toString()) >= 9_000_000,
+          { description: `funding ${pkh}` }
+        )
         const revealOp = await Tz2.contract.reveal({})
         await revealOp.confirmation()
         expect(revealOp.status).toBe('applied')
+        await waitForRpcState(
+          Tz2,
+          () => Tz2.rpc.getManagerKey(pkh),
+          (managerKey) => managerKey !== null,
+          { description: `reveal for ${pkh}` }
+        )
       } catch (e) {
         console.log('beforeAll error', e)
         throw e;
@@ -63,6 +76,12 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker, knownTicketCont
       const originateOp = await Tz2.contract.originate({ code: "parameter unit; storage unit; code {CDR; NIL operation; PAIR};", storage: "unit" })
       await originateOp.confirmation()
       contractAddress = originateOp.contractAddress!
+      await waitForRpcState(
+        Tz2,
+        () => Tz2.rpc.getContract(contractAddress),
+        () => true,
+        { description: `contract ${contractAddress}` }
+      )
       expect(originateOp.status).toBe('applied')
     })
 
@@ -138,12 +157,23 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker, knownTicketCont
     it('verify that update_consensus_key fee and gas is sufficient', async () => {
       const consensusAcc = await createAddress(PrefixV2.Ed25519Seed)
       const consensusPk = await consensusAcc.signer.publicKey()
-      const estimated = await Tz2.estimate.updateConsensusKey({ pk: consensusPk })
-      expect(estimated?.suggestedFeeMutez).toBeGreaterThanOrEqual(287)
-      expect(estimated?.gasLimit).toBeGreaterThanOrEqual(255)
-      expect(estimated?.storageLimit).toBe(0)
+      const source = await Tz2.signer.publicKeyHash()
+      const [delegationEstimate, updateEstimate] = await Tz2.estimate.batch([
+        { kind: OpKind.DELEGATION, source, delegate: source },
+        { kind: OpKind.UPDATE_CONSENSUS_KEY, pk: consensusPk },
+      ])
+      expect(delegationEstimate?.suggestedFeeMutez).toBeGreaterThanOrEqual(161)
+      expect(delegationEstimate?.gasLimit).toBeGreaterThanOrEqual(100)
+      expect(delegationEstimate?.storageLimit).toBe(0)
+      expect(updateEstimate?.suggestedFeeMutez).toBeGreaterThanOrEqual(185)
+      expect(updateEstimate?.gasLimit).toBeGreaterThanOrEqual(200)
+      expect(updateEstimate?.storageLimit).toBe(0)
 
-      const updateConsensusKeyOp = await Tz2.contract.updateConsensusKey({ pk: consensusPk })
+      const updateConsensusKeyOp = await Tz2.contract
+        .batch()
+        .withDelegation({ source, delegate: source })
+        .withUpdateConsensusKey({ pk: consensusPk })
+        .send()
       await updateConsensusKeyOp.confirmation()
       expect(updateConsensusKeyOp.status).toBe('applied')
     })
@@ -151,13 +181,24 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker, knownTicketCont
     it('verify that update_companion_key fee and gas is sufficient', async () => {
       const companionAcc = await createAddress(PrefixV2.BLS12_381SecretKey)
       const companionPk = await companionAcc.signer.publicKey()
+      const companionProof = (await companionAcc.signer.provePossession!()).prefixSig
+      const source = await Tz2.signer.publicKeyHash()
+      const [delegationEstimate, updateEstimate] = await Tz2.estimate.batch([
+        { kind: OpKind.DELEGATION, source, delegate: source },
+        { kind: OpKind.UPDATE_COMPANION_KEY, pk: companionPk, proof: companionProof },
+      ])
+      expect(delegationEstimate?.suggestedFeeMutez).toBeGreaterThanOrEqual(161)
+      expect(delegationEstimate?.gasLimit).toBeGreaterThanOrEqual(100)
+      expect(delegationEstimate?.storageLimit).toBe(0)
+      expect(updateEstimate?.suggestedFeeMutez).toBeGreaterThanOrEqual(458)
+      expect(updateEstimate?.gasLimit).toBeGreaterThanOrEqual(1772)
+      expect(updateEstimate?.storageLimit).toBe(0)
 
-      const estimated = await Tz2.estimate.updateCompanionKey({ pk: companionPk, proof: (await companionAcc.signer.provePossession!()).prefixSig })
-      expect(estimated?.suggestedFeeMutez).toBeGreaterThanOrEqual(560)
-      expect(estimated?.gasLimit).toBeGreaterThanOrEqual(1831)
-      expect(estimated?.storageLimit).toBe(0)
-
-      const updateCompanionKeyOp = await Tz2.contract.updateCompanionKey({ pk: companionPk, proof: (await companionAcc.signer.provePossession!()).prefixSig })
+      const updateCompanionKeyOp = await Tz2.contract
+        .batch()
+        .withDelegation({ source, delegate: source })
+        .withUpdateCompanionKey({ pk: companionPk, proof: companionProof })
+        .send()
       await updateCompanionKeyOp.confirmation()
       expect(updateCompanionKeyOp.status).toBe('applied')
     })

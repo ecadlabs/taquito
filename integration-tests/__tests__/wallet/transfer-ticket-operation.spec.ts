@@ -1,7 +1,6 @@
-import { CONFIGS } from '../../config';
+import { CONFIGS, waitForRpcState } from '../../config';
 import { DefaultContractType, TezosToolkit } from '@taquito/taquito';
 import { RpcClient, TicketTokenParams } from '@taquito/rpc';
-import { ticketsSendTz } from '../../data/code_with_ticket_transfer';
 
 CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownTicketContract }) => {
   const Tezos = lib;
@@ -28,6 +27,12 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownTicketContract }) => {
         const fundSender = await Tezos.contract.transfer({ to: senderPkh, amount: 5 });
         await fundSender.confirmation();
         expect(fundSender.status).toEqual('applied');
+        await waitForRpcState(
+          Tezos,
+          () => Tezos.rpc.getBalance(senderPkh),
+          (balance) => Number(balance.toString()) > 0,
+          { description: `sender funding for ${senderPkh}` }
+        );
 
         ticketSendContract = await Tezos.contract.at(knownTicketContract);
         ticketToken = { ticketer: ticketSendContract.address, content_type: { prim: 'string' }, content: { string: 'Ticket' } };
@@ -36,6 +41,12 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownTicketContract }) => {
         const sendTickets = await ticketSendContract.methodsObject.default([senderPkh, '3']).send()
         await sendTickets.confirmation();
         expect(sendTickets.status).toEqual('applied');
+        await waitForRpcState(
+          Tezos,
+          () => Tezos.rpc.getTicketBalance(senderPkh, ticketToken),
+          (balance) => balance === '3',
+          { description: `ticket funding for ${senderPkh}` }
+        );
 
       } catch (error) {
         console.log(error);
@@ -66,10 +77,20 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownTicketContract }) => {
       expect(await transferTicketOp.status()).toEqual('applied');
 
       // Check balances after transferring tickets
-      const balanceAfter = await client.getTicketBalance(recipientPkh, ticketToken);
+      const balanceAfter = await waitForRpcState(
+        Tezos,
+        () => Tezos.rpc.getTicketBalance(recipientPkh, ticketToken),
+        (balance) => balance === '1',
+        { description: `recipient ticket balance for ${recipientPkh}` }
+      );
       expect(balanceAfter).toEqual('1');
 
-      const senderBalanceAfter = await client.getTicketBalance(senderPkh, ticketToken);
+      const senderBalanceAfter = await waitForRpcState(
+        Tezos,
+        () => Tezos.rpc.getTicketBalance(senderPkh, ticketToken),
+        (balance) => balance === '2',
+        { description: `sender ticket balance for ${senderPkh}` }
+      );
       expect(senderBalanceAfter).toEqual('2');
     });
   });

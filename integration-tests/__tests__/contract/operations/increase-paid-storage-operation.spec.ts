@@ -1,4 +1,4 @@
-import { CONFIGS } from '../../../config';
+import { CONFIGS, waitForRpcState } from '../../../config';
 import { ParameterValidationError } from '@taquito/core';
 import { OpKind } from '@taquito/taquito';
 import { ligoSample } from '../../../data/ligo-simple-contract';
@@ -27,6 +27,12 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         await op.confirmation();
 
         simpleContractAddress = op.contractAddress!;
+        await waitForRpcState(
+          Tezos,
+          () => Tezos.rpc.getContract(simpleContractAddress),
+          () => true,
+          { description: `contract ${simpleContractAddress}` }
+        );
       } catch (e) {
         console.log(`Error when trying to originate the contract for the test: \n`, JSON.stringify(e));
         throw e;
@@ -35,6 +41,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
     it(`should be able to increase the paid storage of a contract successfully: ${rpc}`, async () => {
       const paidSpaceBefore = await Tezos.rpc.getStoragePaidSpace(simpleContractAddress);
+      const expectedPaidSpace = parseInt(paidSpaceBefore) + 1;
 
       const op = await Tezos.contract.increasePaidStorage({
         amount: 1,
@@ -45,13 +52,19 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       expect(op.hash).toBeDefined();
       expect(op.status).toEqual('applied');
 
-      const paidSpaceAfter = await Tezos.rpc.getStoragePaidSpace(simpleContractAddress);
+      const paidSpaceAfter = await waitForRpcState(
+        Tezos,
+        () => Tezos.rpc.getStoragePaidSpace(simpleContractAddress),
+        (paidSpace) => parseInt(paidSpace) === expectedPaidSpace,
+        { description: `paid storage for ${simpleContractAddress}` }
+      );
 
-      expect(parseInt(paidSpaceAfter)).toEqual(parseInt(paidSpaceBefore) + 1);
+      expect(parseInt(paidSpaceAfter)).toEqual(expectedPaidSpace);
     });
 
     it(`should be able to include increasePaidStorage operation in a batch (different batch syntax): ${rpc}`, async () => {
       const paidSpaceBefore = await Tezos.rpc.getStoragePaidSpace(simpleContractAddress);
+      const expectedPaidSpace = parseInt(paidSpaceBefore) + 1;
 
       const op = await Tezos.contract.batch([
         {
@@ -71,9 +84,14 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       await op.confirmation();
       expect(op.status).toEqual('applied');
 
-      const paidSpaceAfter = await Tezos.rpc.getStoragePaidSpace(simpleContractAddress);
+      const paidSpaceAfter = await waitForRpcState(
+        Tezos,
+        () => Tezos.rpc.getStoragePaidSpace(simpleContractAddress),
+        (paidSpace) => parseInt(paidSpace) === expectedPaidSpace,
+        { description: `paid storage for ${simpleContractAddress}` }
+      );
 
-      expect(parseInt(paidSpaceAfter)).toEqual(parseInt(paidSpaceBefore) + 1);
+      expect(parseInt(paidSpaceAfter)).toEqual(expectedPaidSpace);
     });
 
     it('should return error when destination contract address is invalid', async () => {
