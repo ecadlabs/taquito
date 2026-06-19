@@ -11,21 +11,18 @@ interface EstimateLike {
 
 type EstimateSnapshot = EstimateLike;
 
-const isUshuainet = (rpc: string) => rpc.includes('ushuaia');
+const isUshuaianet = (rpc: string) => rpc.includes('ushuaia');
 
 export const expectEstimate = (
   estimate: EstimateLike,
   rpc: string,
   expected: EstimateSnapshot,
-  ushuaianetExpected: EstimateSnapshot = expected
+  ...ushuaianetExpected: EstimateSnapshot[]
 ) => {
-  const estimateExpected = isUshuainet(rpc) ? ushuaianetExpected : expected;
-
-  expect(estimate.gasLimit).toEqual(estimateExpected.gasLimit);
-  expect(estimate.storageLimit).toEqual(estimateExpected.storageLimit);
-  expect(estimate.burnFeeMutez).toEqual(estimateExpected.burnFeeMutez);
-
-  const variableKeys: (keyof EstimateSnapshot)[] = [
+  const estimateKeys: (keyof EstimateSnapshot)[] = [
+    'gasLimit',
+    'storageLimit',
+    'burnFeeMutez',
     'consumedMilligas',
     'suggestedFeeMutez',
     'minimalFeeMutez',
@@ -33,9 +30,12 @@ export const expectEstimate = (
     'usingBaseFeeMutez',
   ];
 
-  for (const key of variableKeys) {
-    const expectedValues = isUshuainet(rpc)
-      ? [...new Set([expected[key], ushuaianetExpected[key]])]
+  const ushuaianetExpectedValues =
+    ushuaianetExpected.length > 0 ? [expected, ...ushuaianetExpected] : [expected];
+
+  for (const key of estimateKeys) {
+    const expectedValues = isUshuaianet(rpc)
+      ? [...new Set(ushuaianetExpectedValues.map((value) => value[key]))]
       : [expected[key]];
     expect(expectedValues).toContain(estimate[key]);
   }
