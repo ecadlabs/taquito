@@ -161,6 +161,15 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
         totalCost: 574,
         usingBaseFeeMutez: 574,
         consumedMilligas: 3457129,
+      }, {
+        gasLimit: 3458,
+        storageLimit: 0,
+        suggestedFeeMutez: 594,
+        burnFeeMutez: 0,
+        minimalFeeMutez: 574,
+        totalCost: 574,
+        usingBaseFeeMutez: 574,
+        consumedMilligas: 3457258,
       });
     });
 
@@ -189,6 +198,15 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
         totalCost: 134345,
         usingBaseFeeMutez: 845,
         consumedMilligas: 5571658,
+      }, {
+        gasLimit: 5572,
+        storageLimit: 534,
+        suggestedFeeMutez: 865,
+        burnFeeMutez: 133500,
+        minimalFeeMutez: 845,
+        totalCost: 134345,
+        usingBaseFeeMutez: 845,
+        consumedMilligas: 5571787,
       });
     });
 
@@ -213,6 +231,15 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
         totalCost: 84671,
         usingBaseFeeMutez: 421,
         consumedMilligas: 1867753,
+      }, {
+        gasLimit: 1868,
+        storageLimit: 337,
+        suggestedFeeMutez: 441,
+        burnFeeMutez: 84250,
+        minimalFeeMutez: 421,
+        totalCost: 84671,
+        usingBaseFeeMutez: 421,
+        consumedMilligas: 1867882,
       });
     });
 
@@ -237,6 +264,15 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
         totalCost: 164039,
         usingBaseFeeMutez: 539,
         consumedMilligas: 2392906,
+      }, {
+        gasLimit: 2394,
+        storageLimit: 654,
+        suggestedFeeMutez: 559,
+        burnFeeMutez: 163500,
+        minimalFeeMutez: 539,
+        totalCost: 164039,
+        usingBaseFeeMutez: 539,
+        consumedMilligas: 2393035,
       });
       // Do the actual operation
       const op2 = await contract.methodsObject.do(originate2()).send();
