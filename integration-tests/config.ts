@@ -738,7 +738,7 @@ export const CONFIGS = () => {
       }) => {
         const Tezos = configureRpcCache(rpc, rpcCacheMilliseconds);
 
-        Tezos.setProvider({ config: { confirmationPollingTimeoutSecond: 320 } });
+        Tezos.setProvider({ config: { confirmationPollingTimeoutSecond: 320 }, protocol });
 
         setupForger(Tezos, forger);
 
@@ -765,7 +765,7 @@ export const CONFIGS = () => {
 
             // Reset mutable runtime settings to a deterministic baseline so per-test overrides
             // (e.g. custom stream polling intervals) do not leak across tests.
-            Tezos.setProvider({ config: { confirmationPollingTimeoutSecond: 320 } });
+            Tezos.setProvider({ config: { confirmationPollingTimeoutSecond: 320 }, protocol });
             configurePollingInterval(Tezos, pollingIntervalMilliseconds);
             clearRpcCache(Tezos);
 
@@ -819,6 +819,7 @@ export const CONFIGS = () => {
           },
           createAddress: async (prefix: PrefixV2 = PrefixV2.P256SecretKey) => {
             const tezos = configureRpcCache(rpc, rpcCacheMilliseconds);
+            tezos.setProvider({ protocol });
             setupForger(tezos, forger);
             configurePollingInterval(tezos, pollingIntervalMilliseconds);
 
