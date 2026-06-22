@@ -55,7 +55,7 @@
     ]
   },
   "dependencies": {
-    "@noble/hashes": "^2.0.1",
+    "@noble/hashes": "^2.2.0",
     "@stablelib/nacl": "^1.0.4",
     "big-integer": "^1.6.52"
   },
@@ -64,7 +64,7 @@
     "@taquito/signer": "^24.3.0",
     "@taquito/taquito": "^24.3.0",
     "@taquito/utils": "^24.3.0",
-    "@types/node": "^22.0.0",
+    "@types/node": "^22.20.0",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "eslint": "^8.57.0",
@@ -74,13 +74,13 @@
     "eslint-plugin-promise": "^6.6.0",
     "lint-staged": "^15.2.7",
     "lodash.camelcase": "^4.3.0",
-    "prettier": "^3.3.3",
+    "prettier": "^3.8.4",
     "rimraf": "^6.0.1",
-    "rollup": "^4.60.1",
+    "rollup": "^4.62.2",
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-polyfill-node": "^0.13.0",
     "rollup-plugin-typescript2": "^0.37.0",
-    "ts-loader": "^9.5.7",
+    "ts-loader": "^9.6.2",
     "ts-node": "^10.9.2",
     "ts-toolbelt": "^9.6.0",
     "typescript": "^5.9.3"
