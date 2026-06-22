@@ -56,9 +56,9 @@
   },
   "devDependencies": {
     "@types/json-stringify-safe": "^5.0.3",
-    "@types/node": "^22.0.0",
+    "@types/node": "^22.20.0",
     "lodash.camelcase": "^4.3.0",
-    "rollup": "^4.60.1",
+    "rollup": "^4.62.2",
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-typescript2": "^0.37.0"
   }
