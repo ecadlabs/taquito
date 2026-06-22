@@ -5,6 +5,13 @@ export interface SigningKey {
   publicKey(): PublicKey;
   secretKey(): string;
   provePossession?: () => RawSignResult;
+  /**
+   * Signature prefix bytes (tag 255 marker) prepended to the raw signature when
+   * building the signed operation bytes, for schemes whose signatures are not
+   * the legacy 64-byte form. BLS uses `0xff 0x03` and ML-DSA-44 uses `0xff 0x04`.
+   * Undefined for Ed25519/Secp256k1/P256, whose signatures are appended raw.
+   */
+  signaturePrefix?: Uint8Array;
 }
 
 export interface SigningKeyWithProofOfPossession extends SigningKey {

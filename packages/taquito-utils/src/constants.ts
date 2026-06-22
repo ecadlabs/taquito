@@ -65,6 +65,13 @@ export enum PrefixV2 {
   BLS12_381Signature = 'BLsig',
   BLS12_381PublicKey = 'BLpk',
   SlotHeader = 'sh',
+  // ML-DSA-44 (signature V3 / tz5) — introduced in protocol U025 "Ushuaia".
+  // Prefixes verified against src/lib_crypto/base58.ml.
+  MLDSA44PublicKeyHash = 'tz5',
+  MLDSA44PublicKey = 'mdpk',
+  MLDSA44SecretKey = 'mdsk',
+  MLDSA44EncryptedSecretKey = 'mdesk',
+  MLDSA44Signature = 'mdsig',
 }
 
 /**
@@ -132,6 +139,12 @@ export const prefixV2: { [key in PrefixV2]: Uint8Array } = {
   [PrefixV2.BLS12_381Signature]: new Uint8Array([40, 171, 64, 207]),
   [PrefixV2.BLS12_381PublicKey]: new Uint8Array([6, 149, 135, 204]),
   [PrefixV2.SlotHeader]: new Uint8Array([2, 116, 180]),
+  // ML-DSA-44 / tz5 (U025) — bytes verified against src/lib_crypto/base58.ml
+  [PrefixV2.MLDSA44PublicKeyHash]: new Uint8Array([6, 161, 169]),
+  [PrefixV2.MLDSA44PublicKey]: new Uint8Array([13, 7, 237, 67]),
+  [PrefixV2.MLDSA44SecretKey]: new Uint8Array([9, 57, 116, 57]),
+  [PrefixV2.MLDSA44EncryptedSecretKey]: new Uint8Array([5, 49, 133, 39, 172]),
+  [PrefixV2.MLDSA44Signature]: new Uint8Array([1, 156, 45, 210, 3]),
 };
 
 /**
@@ -199,4 +212,12 @@ export const payloadLength: { [key in PrefixV2]: number } = {
   [PrefixV2.BLS12_381Signature]: 96,
   [PrefixV2.BLS12_381PublicKey]: 48,
   [PrefixV2.SlotHeader]: 48,
+  // ML-DSA-44 / tz5 (U025): pkh 20 (Blake2b-160); pk 1312, sig 2420 (FIPS-204);
+  // sk 3872 = signing-key(2560) + verification-key(1312) as stored by Octez.
+  [PrefixV2.MLDSA44PublicKeyHash]: 20,
+  [PrefixV2.MLDSA44PublicKey]: 1312,
+  [PrefixV2.MLDSA44SecretKey]: 3872,
+  // encrypted secret key adds an 8-byte salt + 16-byte secretbox MAC (+24)
+  [PrefixV2.MLDSA44EncryptedSecretKey]: 3896,
+  [PrefixV2.MLDSA44Signature]: 2420,
 };

@@ -57,6 +57,7 @@
   },
   "dependencies": {
     "@noble/curves": "^1.9.7",
+    "@noble/post-quantum": "^0.6.1",
     "@scure/bip39": "^2.0.1",
     "@noble/hashes": "^2.0.1",
     "@stablelib/nacl": "^1.0.4",

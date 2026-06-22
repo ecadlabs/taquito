@@ -11,7 +11,7 @@ import {
   SigningType,
   getDAppClientInstance,
   Regions,
-} from '@ecadlabs/beacon-dapp';
+} from '@tezos-x/octez.connect-dapp';
 import { indexedDB } from 'fake-indexeddb';
 
 global.localStorage = new LocalStorageMock();
@@ -29,9 +29,11 @@ vi.mock('@stablelib/random', () => ({
   })),
 }));
 
-vi.mock('@ecadlabs/beacon-dapp', async () => {
+vi.mock('@tezos-x/octez.connect-dapp', async () => {
   const originalModule =
-    await vi.importActual<typeof import('@ecadlabs/beacon-dapp')>('@ecadlabs/beacon-dapp');
+    await vi.importActual<typeof import('@tezos-x/octez.connect-dapp')>(
+      '@tezos-x/octez.connect-dapp'
+    );
 
   return {
     ...originalModule,
@@ -45,7 +47,7 @@ vi.mock('@ecadlabs/beacon-dapp', async () => {
   };
 });
 
-vi.mock('@ecadlabs/beacon-ui', () => {
+vi.mock('@tezos-x/octez.connect-ui', () => {
   return {
     AlertButton: vi.fn(),
     closeToast: vi.fn(),
@@ -67,10 +69,10 @@ vi.mock('@ecadlabs/beacon-ui', () => {
   };
 });
 // thanks to IsaccoSordo's contribution of https://github.com/ecadlabs/taquito/pull/3015
-vi.mock('@ecadlabs/beacon-transport-postmessage', async () => {
+vi.mock('@tezos-x/octez.connect-transport-postmessage', async () => {
   const originalModule = await vi.importActual<
-    typeof import('@ecadlabs/beacon-transport-postmessage')
-  >('@ecadlabs/beacon-transport-postmessage');
+    typeof import('@tezos-x/octez.connect-transport-postmessage')
+  >('@tezos-x/octez.connect-transport-postmessage');
 
   return {
     ...originalModule,

@@ -4,6 +4,26 @@ description: Release notes and version history for Taquito, the TypeScript libra
 author: Jev Bjorsell
 layout: ../layouts/MarkdownLayout.astro
 ---
+# Taquito (unreleased)
+
+## Wallet SDK migrated to Octez Connect
+
+**TL;DR:** `@taquito/beacon-wallet` now depends on the renamed **Octez Connect** packages (`@tezos-x/octez.connect-*`) at `4.8.5` instead of the `@ecadlabs/beacon-*` fork. This is the upstream rename of the Beacon SDK (see the [migration guide](https://docs.tezos.com/dApps/migrating-from-beacon)). The public API of `@taquito/beacon-wallet` is unchanged — the `BeaconWallet` class and the re-exported `BeaconEvent`, `NetworkType`, `PermissionScope`, `SigningType`, etc. keep the same names and import paths — so **most dApps need no code changes** beyond reinstalling.
+
+### Upgrade checklist
+
+- If you import wallet SDK symbols **through `@taquito/beacon-wallet`** (recommended — e.g. `import { NetworkType, BeaconEvent } from '@taquito/beacon-wallet'`), no change is needed.
+- If you depended on `@ecadlabs/beacon-*` (or the original `@airgap/beacon-*`) packages **directly**, replace them with the corresponding `@tezos-x/octez.connect-*` package at `4.8.5`:
+
+  ```diff
+  -import { NetworkType } from '@ecadlabs/beacon-dapp';
+  +import { NetworkType } from '@tezos-x/octez.connect-dapp';
+  ```
+
+- **Remove any `@airgap/beacon-*` (or `@ecadlabs/beacon-*`) `overrides` from your `package.json`** — they are no longer needed. This supersedes the guidance in the v24.3.0 entry below, which said to keep the `@airgap/beacon-*` overrides; with this release those overrides should be deleted.
+- If your bundler config (Vite, webpack, etc.) references the SDK packages by name in `manualChunks`, `externals`, or chunk splitting, update those references from `@ecadlabs/beacon-*` / `@airgap/beacon-*` to `@tezos-x/octez.connect-*`.
+
+---
 # Taquito v24.3.0
 
 ## Network reliability, browser compatibility, and internal modernization

@@ -74,6 +74,10 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
     expect(tz3).toEqual('026fde46af0356a0476dae4e4600172dc9309b3aa4');
     const tz4 = publicKeyHashEncoder('tz4HQ8VeXAyrZMhES1qLMJAc9uAVXjbMpS8u');
     expect(tz4).toEqual('035c14a7a05c10fc8b402fbcdd48dc8136236bf3c1');
+    // tz5 (ML-DSA-44, U025/Ushuaia) encodes with leading tag byte 0x04.
+    const tz5 = publicKeyHashEncoder('tz5VQwSyR37Pwz9XrGubMFcyyG41JZgyy7uf');
+    expect(tz5).toEqual('045c14a7a05c10fc8b402fbcdd48dc8136236bf3c1');
+    // A malformed tz5 string (bad checksum/prefix) is still rejected.
     expect(() => publicKeyHashEncoder('tz5WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5')).toThrow(
       InvalidKeyHashError
     );
@@ -188,7 +192,7 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
     expect(() =>
       publicKeyDecoder(
         Uint8ArrayConsumer.fromHexString(
-          '045c8244b8de7d57795962c1bfc855d0813f8c61eddf3795f804ccdea3e4c82ae9'
+          '055c8244b8de7d57795962c1bfc855d0813f8c61eddf3795f804ccdea3e4c82ae9'
         )
       )
     ).toThrow(InvalidPublicKeyError);
@@ -196,7 +200,7 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
     expect(() =>
       publicKeyDecoder(
         Uint8ArrayConsumer.fromHexString(
-          '045c8244b8de7d57795962c1bfc855d0813f8c61eddf3795f804ccdea3e4c82ae9'
+          '055c8244b8de7d57795962c1bfc855d0813f8c61eddf3795f804ccdea3e4c82ae9'
         )
       )
     ).toThrow(InvalidPublicKeyError);

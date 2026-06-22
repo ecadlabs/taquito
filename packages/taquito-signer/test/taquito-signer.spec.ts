@@ -1,6 +1,14 @@
 import { InvalidCurveError, InvalidMnemonicError, ToBeImplemented } from '../src/errors';
 import { InMemorySigner } from '../src/taquito-signer';
 import { InvalidDerivationPathError, InvalidKeyError } from '@taquito/core';
+import { verifySignature } from '@taquito/utils';
+import {
+  mldsaSecretKey,
+  mldsaPublicKey,
+  mldsaPublicKeyHash,
+  octezSignedBytesHex,
+  octezSignature,
+} from './mldsa-fixture';
 
 const serialize = (value: unknown): string => {
   try {
@@ -273,6 +281,35 @@ describe('inmemory-signer', () => {
     expect((await signer.provePossession())?.prefixSig).toEqual(
       'BLsigAp94rBWCJU7yM7X5F4zSw15AKkW1JZ5dwkqa2Xjdo1y4jhcQKVf6Sh7GFV261MUEx3WbfStUkP83tmKRpAucD4NEo1bLCB3s1TM4ByDUYZ1vUV5qsAWFLagvbnHfn61DnouoxmTij'
     );
+  });
+
+  // Vectors below were produced by the official Octez client (octez-client
+  // 25.0~rc1, protocol U025) and confirmed interoperable in both directions:
+  // octez signed bytes that Taquito verifies here, and Taquito-produced
+  // signatures pass `octez-client check that bytes ... were signed by ...`.
+  it('Tz5 (ML-DSA-44): imports an octez key and derives the same tz5 / mdpk', async () => {
+    const signer = new InMemorySigner(mldsaSecretKey);
+    expect(await signer.publicKey()).toEqual(mldsaPublicKey);
+    expect(await signer.publicKeyHash()).toEqual(mldsaPublicKeyHash);
+    expect(await signer.secretKey()).toEqual(mldsaSecretKey);
+    expect(signer.canProvePossession).toBe(false);
+  });
+
+  it('Tz5 (ML-DSA-44): verifies a signature produced by octez (octez -> Taquito)', () => {
+    expect(verifySignature(octezSignedBytesHex, mldsaPublicKey, octezSignature)).toBe(true);
+    // wrong message must not verify
+    expect(verifySignature('00', mldsaPublicKey, octezSignature)).toBe(false);
+  });
+
+  it('Tz5 (ML-DSA-44): signs and produces a verifiable signature (Taquito -> verify)', async () => {
+    const signer = new InMemorySigner(mldsaSecretKey);
+    const result = await signer.sign(octezSignedBytesHex);
+    // ML-DSA signing is randomized, so verify against the public key rather
+    // than asserting a fixed value
+    expect(result.prefixSig.startsWith('mdsig')).toBe(true);
+    expect(verifySignature(octezSignedBytesHex, mldsaPublicKey, result.prefixSig)).toBe(true);
+    // signed bytes carry the ff04 ML-DSA signature prefix after the message
+    expect(result.sbytes.startsWith(`${octezSignedBytesHex}ff04`)).toBe(true);
   });
 
   it('Should instantiate tz1 from mnemonic from in memory signer', async () => {

@@ -22,6 +22,8 @@ describe('validateAddress', () => {
       ValidationResult.VALID
     );
     expect(validateAddress('tz4EECtMxAuJ9UDLaiMZH7G1GCFYUWsj8HZn')).toEqual(ValidationResult.VALID);
+    // tz5 (ML-DSA-44, U025/Ushuaia)
+    expect(validateAddress('tz5VQwSyR37Pwz9XrGubMFcyyG41JZgyy7uf')).toEqual(ValidationResult.VALID);
 
     // Invalid checksum
     expect(validateAddress('tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hm')).toEqual(

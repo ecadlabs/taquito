@@ -480,7 +480,8 @@ if (process.env['RUN_WITH_SECRET_KEY']) {
     shadownetSecretKey,
     tallinnnetSecretKey,
     weeklynetSecretKey,
-    tezlinkshadownetSecretKey
+    tezlinkshadownetSecretKey,
+    ushuaianetSecretKey
   );
 } else if (process.env['RUN_SHADOWNET_WITH_SECRET_KEY']) {
   providers.push(shadownetSecretKey);
