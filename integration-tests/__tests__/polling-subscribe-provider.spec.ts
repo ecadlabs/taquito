@@ -1,4 +1,4 @@
-import { CONFIGS, TAQUITO_MUTEZ, sleep } from '../config';
+import { CONFIGS, TAQUITO_MUTEZ, sleep, waitForRpcState } from '../config';
 import { PollingSubscribeProvider, TezosToolkit } from '@taquito/taquito';
 import { rethrowInfrastructureRpcError } from '../test-helpers/rpc-error-assertions';
 
@@ -113,6 +113,12 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
       const secondUserAddress = await secondUser.signer.publicKeyHash();
       const transfer = await Tezos.contract.transfer({ to: secondUserAddress, amount: TAQUITO_MUTEZ, mutez: true });
       await transfer.confirmation();
+      await waitForRpcState(
+        Tezos,
+        () => Tezos.rpc.getBalance(secondUserAddress),
+        (balance) => Number(balance.toString()) >= TAQUITO_MUTEZ,
+        { description: `funding ${secondUserAddress}` }
+      );
 
       Tezos.setStreamProvider(
         Tezos.getFactory(PollingSubscribeProvider)({
@@ -128,13 +134,25 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
         });
         await calledContract.confirmation();
         calledContractAddress = calledContract.contractAddress!;
+        await waitForRpcState(
+          Tezos,
+          () => Tezos.rpc.getContract(calledContractAddress),
+          () => true,
+          { description: `contract ${calledContractAddress}` }
+        );
 
-        let mainContract = await Tezos.contract.originate({
+        const mainContract = await Tezos.contract.originate({
           code: mainContractMichelson,
           storage: 0,
         });
         await mainContract.confirmation();
         mainContractAddress = mainContract.contractAddress!;
+        await waitForRpcState(
+          Tezos,
+          () => Tezos.rpc.getContract(mainContractAddress),
+          () => true,
+          { description: `contract ${mainContractAddress}` }
+        );
       } catch (e) {
         console.log(e);
         throw e;

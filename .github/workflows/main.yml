@@ -13,6 +13,7 @@ concurrency:
   cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull/') }}
 
 permissions:
+  actions: read
   contents: read
 
 jobs:
@@ -68,6 +69,8 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - name: Keygen preflight
+        env:
+          TAQUITO_KEYGEN_NETWORKS: shadownet ushuaianet
         run: bash .github/scripts/check-keygen-health.sh
 
   lint-and-test:
@@ -106,7 +109,7 @@ jobs:
 
   integration-tests-testnet:
     if: ${{ needs.integration-tests-change-filter.outputs.run_expensive == 'true' }}
-    name: integration-tests-shadownet
+    name: integration-tests-${{ matrix.network.name }}
     needs:
       - integration-tests-change-filter
       - integration-tests-keygen-preflight
@@ -114,9 +117,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        network:
+          - name: shadownet
+            npm_script: test:shadownet:shard
+            keygen_path: shadownet
+          - name: ushuaianet
+            npm_script: test:ushuaianet:shard
+            keygen_path: ushuaianet
         shard: [1, 2, 3, 4]
     concurrency:
-      group: shadownet-itest-testnet-shard-${{ matrix.shard }}
+      group: ${{ matrix.network.name }}-itest-testnet-shard-${{ matrix.shard }}
       cancel-in-progress: false
     steps:
       - uses: actions/checkout@v6
@@ -126,23 +136,13 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
-      - if: ${{ !github.event.pull_request.head.repo.fork }}
-        name: Tailscale
-        # Pinned to SHA to prevent supply-chain attacks via mutable tags.
-        # Verify before bumping: https://github.com/tailscale/github-action/releases
-        uses: tailscale/github-action@306e68a486fd2350f2bfc3b19fcd143891a4a2d8 # v4.1.2
-        with:
-          oauth-client-id: ${{ secrets.TAILSCALE_OAUTH_CLIENT_ID }}
-          oauth-secret: ${{ secrets.TAILSCALE_OAUTH_SECRET }}
-          tags: tag:github-runner
-          ping: ecad-tezos-shadownet-rolling-1.i.ecadinfra.com
-      - name: Probe keygen before shadownet tests
+      - name: Probe keygen before ${{ matrix.network.name }} tests
         shell: bash
         run: |
           set -euo pipefail
-          keygen_url='http://keygen-direct.ecadinfra.com/v2/shadownet'
+          keygen_url='http://keygen-direct.ecadinfra.com/v2/${{ matrix.network.keygen_path }}'
           payload='{"require_unrevealed":false,"key_prefixes":["tz1"],"max_selection_attempts":5,"min_balance_mutez":5000000}'
-          echo "### Keygen probe before shadownet tests" >> "$GITHUB_STEP_SUMMARY"
+          echo "### Keygen probe before ${{ matrix.network.name }} tests" >> "$GITHUB_STEP_SUMMARY"
           for i in 1 2 3 4 5; do
             line="$(
               curl -sS -o /dev/null \
@@ -164,8 +164,8 @@ jobs:
           start_iso="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
 
           set +e
-          npm -w integration-tests run test:shadownet:shard -- \
-            --shard=$SHARD_INDEX/$SHARD_TOTAL \
+          npm -w integration-tests run "$NPM_SCRIPT" -- \
+            --shard="$SHARD_INDEX/$SHARD_TOTAL" \
             --exclude='**/sapling/**' \
             --exclude='**/ledger/**'
           test_exit_code="$?"
@@ -176,11 +176,12 @@ jobs:
           elapsed_seconds="$((end_epoch - start_epoch))"
 
           mkdir -p ci-metrics
-          cat > "ci-metrics/itest-shadownet-${SHARD_INDEX}.json" <<EOF
-          {"suite":"shadownet","shard":"${SHARD_INDEX}/${SHARD_TOTAL}","status":"$([ "$test_exit_code" -eq 0 ] && echo pass || echo fail)","exit_code":$test_exit_code,"elapsed_seconds":$elapsed_seconds,"started_at":"$start_iso","completed_at":"$end_iso","run_id":"${RUN_ID}","run_attempt":"${RUN_ATTEMPT}","sha":"${COMMIT_SHA}"}
+          cat > "ci-metrics/itest-${NETWORK_NAME}-${SHARD_INDEX}.json" <<EOF
+          {"suite":"${NETWORK_NAME}","shard":"${SHARD_INDEX}/${SHARD_TOTAL}","status":"$([ "$test_exit_code" -eq 0 ] && echo pass || echo fail)","exit_code":$test_exit_code,"elapsed_seconds":$elapsed_seconds,"started_at":"$start_iso","completed_at":"$end_iso","run_id":"${RUN_ID}","run_attempt":"${RUN_ATTEMPT}","sha":"${COMMIT_SHA}"}
           EOF
 
-          echo "### Integration timing: shadownet shard ${SHARD_INDEX}/${SHARD_TOTAL}" >> "$GITHUB_STEP_SUMMARY"
+          # shellcheck disable=SC2129
+          echo "### Integration timing: ${NETWORK_NAME} shard ${SHARD_INDEX}/${SHARD_TOTAL}" >> "$GITHUB_STEP_SUMMARY"
           echo "- status: $([ "$test_exit_code" -eq 0 ] && echo pass || echo fail)" >> "$GITHUB_STEP_SUMMARY"
           echo "- exit_code: $test_exit_code" >> "$GITHUB_STEP_SUMMARY"
           echo "- elapsed_seconds: $elapsed_seconds" >> "$GITHUB_STEP_SUMMARY"
@@ -189,20 +190,22 @@ jobs:
         env:
           SHARD_INDEX: ${{ matrix.shard }}
           SHARD_TOTAL: '4'
+          NETWORK_NAME: ${{ matrix.network.name }}
+          NPM_SCRIPT: ${{ matrix.network.npm_script }}
           RUN_ID: ${{ github.run_id }}
           RUN_ATTEMPT: ${{ github.run_attempt }}
           COMMIT_SHA: ${{ github.sha }}
           TAQUITO_ITEST_DIAGNOSTICS: 'true'
           TAQUITO_DIAG_BALANCE_WARN_MUTEZ: '9000000'
           TAQUITO_FRESH_KEY_PREFETCH: '4'
-      - name: Probe keygen after shadownet tests
+      - name: Probe keygen after ${{ matrix.network.name }} tests
         if: always()
         shell: bash
         run: |
           set -euo pipefail
-          keygen_url='http://keygen-direct.ecadinfra.com/v2/shadownet'
+          keygen_url='http://keygen-direct.ecadinfra.com/v2/${{ matrix.network.keygen_path }}'
           payload='{"require_unrevealed":false,"key_prefixes":["tz1"],"max_selection_attempts":5,"min_balance_mutez":5000000}'
-          echo "### Keygen probe after shadownet tests" >> "$GITHUB_STEP_SUMMARY"
+          echo "### Keygen probe after ${{ matrix.network.name }} tests" >> "$GITHUB_STEP_SUMMARY"
           for i in 1 2 3 4 5; do
             line="$(
               curl -sS -o /dev/null \
@@ -220,8 +223,8 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: itest-timing-shadownet-${{ matrix.shard }}
-          path: ci-metrics/itest-shadownet-${{ matrix.shard }}.json
+          name: itest-timing-${{ matrix.network.name }}-${{ matrix.shard }}
+          path: ci-metrics/itest-${{ matrix.network.name }}-${{ matrix.shard }}.json
           if-no-files-found: warn
           retention-days: 30
 
@@ -243,16 +246,6 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
-      - if: ${{ !github.event.pull_request.head.repo.fork }}
-        name: Tailscale
-        # Pinned to SHA to prevent supply-chain attacks via mutable tags.
-        # Verify before bumping: https://github.com/tailscale/github-action/releases
-        uses: tailscale/github-action@306e68a486fd2350f2bfc3b19fcd143891a4a2d8 # v4.1.2
-        with:
-          oauth-client-id: ${{ secrets.TAILSCALE_OAUTH_CLIENT_ID }}
-          oauth-secret: ${{ secrets.TAILSCALE_OAUTH_SECRET }}
-          tags: tag:github-runner
-          ping: ecad-tezos-shadownet-rolling-1.i.ecadinfra.com
       - name: Probe keygen before sapling tests
         shell: bash
         run: |
@@ -294,6 +287,7 @@ jobs:
           {"suite":"sapling","shard":"1/1","status":"$([ "$test_exit_code" -eq 0 ] && echo pass || echo fail)","exit_code":$test_exit_code,"elapsed_seconds":$elapsed_seconds,"started_at":"$start_iso","completed_at":"$end_iso","run_id":"${RUN_ID}","run_attempt":"${RUN_ATTEMPT}","sha":"${COMMIT_SHA}"}
           EOF
 
+          # shellcheck disable=SC2129
           echo "### Integration timing: sapling" >> "$GITHUB_STEP_SUMMARY"
           echo "- status: $([ "$test_exit_code" -eq 0 ] && echo pass || echo fail)" >> "$GITHUB_STEP_SUMMARY"
           echo "- exit_code: $test_exit_code" >> "$GITHUB_STEP_SUMMARY"
@@ -337,6 +331,43 @@ jobs:
           if-no-files-found: warn
           retention-days: 30
 
+  rpc-health-monitor:
+    if: ${{ needs.integration-tests-change-filter.outputs.run_expensive == 'true' }}
+    name: rpc-health-monitor-${{ matrix.network.name }}
+    needs:
+      - integration-tests-change-filter
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        network:
+          - name: shadownet
+            rpc_url: https://rpc.shadownet.teztnets.com
+          - name: ushuaianet
+            rpc_url: https://rpc.ushuaianet.teztnets.com
+    # Diagnostics only: this never gates a merge, it just records an RPC weather
+    # report over the test window so failures can be correlated with node health.
+    continue-on-error: true
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v6
+      - name: Poll ${{ matrix.network.name }} RPC health
+        env:
+          RPC_URL: ${{ matrix.network.rpc_url }}
+          POLL_INTERVAL_SECONDS: '15'
+          POLL_MAX_DURATION_SECONDS: '1860'
+          POLL_STOP_WHEN_RUN_JOBS_COMPLETE: 'true'
+          GITHUB_TOKEN: ${{ github.token }}
+        run: bash .github/scripts/poll-rpc-health.sh
+      - name: Upload RPC health timeline
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: rpc-health-${{ matrix.network.name }}
+          path: ci-metrics/rpc-health.jsonl
+          if-no-files-found: warn
+          retention-days: 30
+
   integration-tests-timing-summary:
     needs:
       - integration-tests-change-filter
@@ -365,6 +396,7 @@ jobs:
             exit 0
           fi
 
+          # shellcheck disable=SC2129
           echo "| suite | shard | status | elapsed_seconds | exit_code | started_at | completed_at |" >> "$GITHUB_STEP_SUMMARY"
           echo "|---|---:|---|---:|---:|---|---|" >> "$GITHUB_STEP_SUMMARY"
           jq -s -r '

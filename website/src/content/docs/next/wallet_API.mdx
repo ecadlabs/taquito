@@ -43,7 +43,7 @@ To start, let's import the Tezos Toolkit from Taquito and create a new instance 
 ```js
 import { TezosToolkit } from '@taquito/taquito';
 
-const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com/');
+const Tezos = new TezosToolkit('https://tezos-shadownet.octez.io/');
 ```
 
 This object exposes different methods we are going to use to set up our wallet. TZIP-10 has become the official standard of communication and interaction between wallets and dApps, so let's start with the `@taquito/beacon-wallet` package that implements this standard.

@@ -606,6 +606,7 @@ export interface OperationContentsDalEntrapmentEvidence {
   attestation: InlinedAttestation;
   consensus_slot: number;
   slot_index: number;
+  lag_index?: number;
   shard_with_proof: { shard: (number | string[])[]; proof: string };
 }
 
@@ -1256,6 +1257,7 @@ export interface OperationContentsAndResultDalEntrapmentEvidence {
   attestation: InlinedAttestation;
   consensus_slot: number;
   slot_index: number;
+  lag_index?: number;
   shard_with_proof: { shard: (number | string[])[]; proof: string };
   metadata: OperationContentsAndResultMetadataDalEntrapmentEvidence;
 }
@@ -2106,15 +2108,32 @@ export interface ConstantsResponseCommon {
 
 export type Ratio = { numerator: number; denominator: number };
 
-// U025 "Ushuaia" — new feature-flag and cache constants. All optional: they are
-// absent on pre-U025 protocols and default-off on U025 mainnet. Field names verified
-// against a live ushuaianet node (rpc.ushuaianet.teztnets.com).
-export interface ConstantsResponseProto025 extends ConstantsResponseProto024 {
-  tz5_account_enable?: boolean;
-  native_contracts_enable?: boolean;
-  swrr_new_baker_lottery_enable?: boolean;
-  cache_stake_info_cycles?: number;
-  cache_swrr_selected_distribution_cycles?: number;
+export interface ConstantsResponseProto025 extends Omit<
+  ConstantsResponseProto024,
+  'dal_parametric'
+> {
+  cache_stake_info_cycles: number;
+  cache_swrr_selected_distribution_cycles: number;
+  native_contracts_enable: boolean;
+  smart_rollup_canonical_rollup_address?: string;
+  swrr_new_baker_lottery_enable: boolean;
+  tz5_account_enable: boolean;
+  dal_parametric: {
+    attestation_lag: number;
+    attestation_lags: number[];
+    attestation_threshold: number;
+    dynamic_lag_enable: boolean;
+    feature_enable: boolean;
+    incentives_enable: boolean;
+    minimal_participation_ratio: Ratio;
+    number_of_shards: number;
+    number_of_slots: number;
+    page_size: number;
+    redundancy_factor: number;
+    rewards_ratio: Ratio;
+    slot_size: number;
+    traps_fraction: Ratio;
+  };
 }
 
 export interface ConstantsResponseProto024 extends Omit<

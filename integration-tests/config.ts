@@ -12,14 +12,15 @@ import { HttpBackend } from '@taquito/http-utils';
 import { b58Encode, PrefixV2 } from '@taquito/utils';
 import { InMemorySigner } from '@taquito/signer';
 import { RpcClient, RpcClientCache } from '@taquito/rpc';
+import * as nodeCrypto from 'crypto';
 import { AsyncPrefetchBuffer } from './async-prefetch-buffer';
 import { KnownContracts } from './known-contracts';
 import { knownContractsShadownet } from './known-contracts-shadownet';
 import { knownContractsTallinnnet } from './known-contracts-tallinnnet';
 import { knownContractsWeeklynet } from './known-contracts-weeklynet';
 import { knownContractsTezlinkshadownet } from './known-contracts-tezlinkshadownet';
+import { knownContractsUshuaianet } from './known-contracts-ushuaianet';
 
-const nodeCrypto = require('crypto');
 const integrationDiagnosticsEnabled = /^(1|true)$/i.test(
   process.env['TAQUITO_ITEST_DIAGNOSTICS'] ?? ''
 );
@@ -420,7 +421,7 @@ const defaultConfig = ({
 const shadownetEphemeral: Config = defaultConfig({
   networkName: 'SHADOWNET',
   protocol: Protocols.PtTALLiNt,
-  defaultRpc: 'http://ecad-tezos-shadownet-rolling-1.i.ecadinfra.com/',
+  defaultRpc: 'https://rpc.shadownet.teztnets.com',
   knownContracts: knownContractsShadownet,
   signerConfig: defaultEphemeralConfig('shadownet'),
 });
@@ -443,6 +444,19 @@ const tallinnnetSecretKey: Config = {
   ...{ signerConfig: defaultSecretKey, rpc: 'https://rpc.tallinnnet.teztnets.com' },
 };
 
+const ushuaianetEphemeral: Config = defaultConfig({
+  networkName: 'USHUAIANET',
+  protocol: Protocols.PsUshuai9,
+  defaultRpc: 'https://rpc.ushuaianet.teztnets.com',
+  knownContracts: knownContractsUshuaianet,
+  signerConfig: defaultEphemeralConfig('ushuaianet'),
+});
+
+const ushuaianetSecretKey: Config = {
+  ...ushuaianetEphemeral,
+  signerConfig: defaultSecretKey,
+};
+
 const weeklynetSecretKey: Config = defaultConfig({
   networkName: 'WEEKLYNET',
   protocol: Protocols.ProtoALpha,
@@ -456,17 +470,6 @@ const tezlinkshadownetSecretKey: Config = defaultConfig({
   protocol: Protocols.PtSeouLou,
   defaultRpc: 'https://rpc.shadownet.tezlink.nomadic-labs.com/',
   knownContracts: knownContractsTezlinkshadownet,
-  signerConfig: defaultSecretKey,
-});
-
-// U025 "Ushuaia" public testnet (runs octez-v25.0-rc1). Faucet: https://faucet.ushuaianet.teztnets.com
-// TODO: replace knownContractsWeeklynet with a dedicated known-contracts-ushuaianet.ts once the
-// standard known contracts are originated on ushuaianet.
-const ushuaianetSecretKey: Config = defaultConfig({
-  networkName: 'USHUAIANET',
-  protocol: Protocols.PsUshuai,
-  defaultRpc: 'https://rpc.ushuaianet.teztnets.com',
-  knownContracts: knownContractsWeeklynet,
   signerConfig: defaultSecretKey,
 });
 
@@ -484,16 +487,18 @@ if (process.env['RUN_WITH_SECRET_KEY']) {
   providers.push(shadownetSecretKey);
 } else if (process.env['RUN_TALLINNNET_WITH_SECRET_KEY']) {
   providers.push(tallinnnetSecretKey);
+} else if (process.env['RUN_USHUAIANET_WITH_SECRET_KEY']) {
+  providers.push(ushuaianetSecretKey);
 } else if (process.env['RUN_WEEKLYNET_WITH_SECRET_KEY']) {
   providers.push(weeklynetSecretKey);
 } else if (process.env['RUN_TEZLINKSHADOWNET_WITH_SECRET_KEY']) {
   providers.push(tezlinkshadownetSecretKey);
-} else if (process.env['RUN_USHUAIANET_WITH_SECRET_KEY']) {
-  providers.push(ushuaianetSecretKey);
 } else if (process.env['SHADOWNET']) {
   providers.push(shadownetEphemeral);
 } else if (process.env['TALLINNNET']) {
   providers.push(tallinnnetEphemeral);
+} else if (process.env['USHUAIANET']) {
+  providers.push(ushuaianetEphemeral);
 } else {
   providers.push(shadownetEphemeral, tallinnnetEphemeral);
 }
@@ -679,6 +684,40 @@ export const clearRpcCache = (Tezos: TezosToolkit) => {
   }
 };
 
+export const waitForRpcState = async <T>(
+  Tezos: TezosToolkit,
+  read: () => Promise<T>,
+  predicate: (value: T) => boolean,
+  options?: {
+    timeoutMs?: number;
+    intervalMs?: number;
+    description?: string;
+  }
+) => {
+  const timeoutMs = options?.timeoutMs ?? 15_000;
+  const intervalMs = options?.intervalMs ?? 500;
+  const description = options?.description ?? 'RPC state';
+  const deadline = Date.now() + timeoutMs;
+  let lastError: unknown;
+
+  while (Date.now() <= deadline) {
+    clearRpcCache(Tezos);
+    try {
+      const value = await read();
+      if (predicate(value)) {
+        return value;
+      }
+    } catch (error) {
+      lastError = error;
+    }
+
+    await sleep(intervalMs);
+  }
+
+  const details = lastError ? ` Last error: ${toErrorMessage(lastError)}` : '';
+  throw new Error(`Timed out waiting for ${description}.${details}`);
+};
+
 export const CONFIGS = () => {
   return forgers.reduce((prev, forger: ForgerType) => {
     const configs = providers.map(
@@ -700,7 +739,7 @@ export const CONFIGS = () => {
       }) => {
         const Tezos = configureRpcCache(rpc, rpcCacheMilliseconds);
 
-        Tezos.setProvider({ config: { confirmationPollingTimeoutSecond: 320 } });
+        Tezos.setProvider({ config: { confirmationPollingTimeoutSecond: 320 }, protocol });
 
         setupForger(Tezos, forger);
 
@@ -727,7 +766,7 @@ export const CONFIGS = () => {
 
             // Reset mutable runtime settings to a deterministic baseline so per-test overrides
             // (e.g. custom stream polling intervals) do not leak across tests.
-            Tezos.setProvider({ config: { confirmationPollingTimeoutSecond: 320 } });
+            Tezos.setProvider({ config: { confirmationPollingTimeoutSecond: 320 }, protocol });
             configurePollingInterval(Tezos, pollingIntervalMilliseconds);
             clearRpcCache(Tezos);
 
@@ -781,6 +820,7 @@ export const CONFIGS = () => {
           },
           createAddress: async (prefix: PrefixV2 = PrefixV2.P256SecretKey) => {
             const tezos = configureRpcCache(rpc, rpcCacheMilliseconds);
+            tezos.setProvider({ protocol });
             setupForger(tezos, forger);
             configurePollingInterval(tezos, pollingIntervalMilliseconds);
 
@@ -794,6 +834,7 @@ export const CONFIGS = () => {
               networkName,
               rpc,
             });
+            clearRpcCache(tezos);
 
             return tezos;
           },

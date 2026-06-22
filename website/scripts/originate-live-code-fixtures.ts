@@ -19,7 +19,7 @@ import { tzip7Contract } from '../../integration-tests/data/tzip_7_contract';
 
 type FixtureMap = Record<string, string>;
 
-const DEFAULT_RPC_URL = process.env.TAQUITO_DOCS_FIXTURE_RPC_URL ?? 'https://shadownet.tezos.ecadinfra.com/';
+const DEFAULT_RPC_URL = process.env.TAQUITO_DOCS_FIXTURE_RPC_URL ?? 'https://tezos-shadownet.octez.io/';
 const DEFAULT_KEYGEN_URL = process.env.TAQUITO_DOCS_FIXTURE_KEYGEN_URL ?? 'https://keygen.ecadinfra.com/v2/shadownet';
 const DEFAULT_KEYGEN_TOKEN = process.env.TAQUITO_DOCS_FIXTURE_KEYGEN_TOKEN ?? 'taquito-example';
 const DEFAULT_MIN_BALANCE_MUTEZ = Number.parseInt(

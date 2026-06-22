@@ -26,7 +26,7 @@ import { BigNumber } from 'bignumber.js';
 
 const contractAddress: string = 'KT1WdjpRSsmC93iPkXqkm2XZcbv6CSwKeqpj';
 
-const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
+const Tezos = new TezosToolkit('https://tezos-shadownet.octez.io');
 
 const contract = await Tezos.contract.at(contractAddress);
 const storage: MichelsonMap<string, BigNumber> = await contract.storage();

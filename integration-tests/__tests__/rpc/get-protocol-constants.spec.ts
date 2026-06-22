@@ -1,6 +1,6 @@
 import { CONFIGS, NetworkType } from '../../config';
 import BigNumber from 'bignumber.js';
-import { ConstantsResponseProto023, ConstantsResponseProto024 } from '@taquito/rpc';
+import { ConstantsResponseProto023, ConstantsResponseProto024, ConstantsResponseProto025 } from '@taquito/rpc';
 
 CONFIGS().forEach(({ lib, rpc, networkType }) => {
   const Tezos = lib;
@@ -8,9 +8,12 @@ CONFIGS().forEach(({ lib, rpc, networkType }) => {
   const shadownet = (networkType == NetworkType.TESTNET && rpc.includes('shadow')) ? test : test.skip;
   const ghostnet = (networkType == NetworkType.TESTNET && rpc.includes('ghost')) ? test : test.skip;
   const tallinnnet = (networkType == NetworkType.TESTNET && rpc.includes('tallinn')) ? test : test.skip;
+  const ushuaianet = (networkType == NetworkType.TESTNET && rpc.includes('ushuaia')) ? test : test.skip;
 
   describe('Test fetching constants for all protocols on Mainnet', () => {
-    const rpcUrl = 'https://mainnet.tezos.ecadinfra.com/';
+    // ecadinfra's public mainnet node is being decommissioned; use a live
+    // public mainnet RPC. Constants are network-wide, so any correct node matches.
+    const rpcUrl = 'https://rpc.tzkt.io/mainnet';
     Tezos.setRpcProvider(rpcUrl);
     it(`should successfully fetch Proto24(Tallinn) constants at head`, async () => {
       const constants: ConstantsResponseProto023 = await Tezos.rpc.getConstants();
@@ -142,6 +145,19 @@ CONFIGS().forEach(({ lib, rpc, networkType }) => {
   });
 
   describe(`Fetch constants for testnet`, () => {
+    ushuaianet(`should successfully fetch U025 constants for Ushuainet
+      using ${rpc}`, async () => {
+      Tezos.setRpcProvider(rpc);
+      const constants: ConstantsResponseProto025 = await Tezos.rpc.getConstants();
+      expect(constants.cache_stake_info_cycles).toEqual(expect.any(Number));
+      expect(constants.cache_swrr_selected_distribution_cycles).toEqual(expect.any(Number));
+      expect(constants.native_contracts_enable).toEqual(expect.any(Boolean));
+      expect(constants.swrr_new_baker_lottery_enable).toEqual(expect.any(Boolean));
+      expect(constants.tz5_account_enable).toEqual(expect.any(Boolean));
+      expect(constants.dal_parametric.dynamic_lag_enable).toEqual(expect.any(Boolean));
+      expect(constants.dal_parametric.attestation_lags).toEqual(expect.arrayContaining([1, 2, 3, 4, 5]));
+    });
+
     tallinnnet(`should successfully fetch all constants for Tallinnnet
       using ${rpc}`, async () => {
       Tezos.setRpcProvider(rpc);

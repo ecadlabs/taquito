@@ -226,7 +226,7 @@ async function init() {
     const { b58Encode, PrefixV2 } = await import('@taquito/utils');
     const { WalletConnect, NetworkType, PermissionScopeMethods } = await import("@taquito/wallet-connect");
 
-    const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
+    const Tezos = new TezosToolkit('https://tezos-shadownet.octez.io');
     window.Tezos = Tezos;
     window.TezosToolkit = TezosToolkit;
     window.InMemorySigner = InMemorySigner;

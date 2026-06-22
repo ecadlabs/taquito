@@ -1,4 +1,4 @@
-import { CONFIGS } from '../../config';
+import { CONFIGS, waitForRpcState } from '../../config';
 import { compose, MichelsonMap, ViewSimulationError } from '@taquito/taquito';
 import { tzip16, Tzip16Module } from '@taquito/tzip16';
 import { stringToBytes } from '@taquito/utils';
@@ -98,6 +98,12 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
 			// Set the variables for the following tests
 			contractAddress = (await op.contract()).address;
+			await waitForRpcState(
+				Tezos,
+				() => Tezos.rpc.getStorage(contractAddress),
+				() => true,
+				{ description: `fa2 bigmap contract ${contractAddress}` }
+			);
 
 			expect(op.hash).toBeDefined();
 			expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);
@@ -234,6 +240,12 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
 			// Set the variables for the following tests
 			contractAddress2 = (await op.contract()).address;
+			await waitForRpcState(
+				Tezos,
+				() => Tezos.rpc.getStorage(contractAddress2),
+				() => true,
+				{ description: `fa2 metadata-view contract ${contractAddress2}` }
+			);
 
 			expect(op.hash).toBeDefined();
 			expect(op.includedInBlock).toBeLessThan(Number.POSITIVE_INFINITY);

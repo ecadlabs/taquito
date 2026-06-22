@@ -34,7 +34,7 @@ This requires a signer to be configured, ie:
 ```
 import { importKey } from '@taquito/signer';
 import { TezosToolkit } from '@taquito/taquito';
-const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
+const Tezos = new TezosToolkit('https://tezos-shadownet.octez.io');
 importKey(Tezos, "p2sk2obfVMEuPUnadAConLWk7Tf4Dt3n4svSgJwrgpamRqJXvaYcg1")
 ```
 
@@ -44,7 +44,7 @@ importKey(Tezos, "p2sk2obfVMEuPUnadAConLWk7Tf4Dt3n4svSgJwrgpamRqJXvaYcg1")
 ```
 import {  BeaconWallet } from '@taquito/beacon-wallet';
 import { TezosToolkit } from '@taquito/taquito';
-const Tezos = new TezosToolkit('https://shadownet.tezos.ecadinfra.com');
+const Tezos = new TezosToolkit('https://tezos-shadownet.octez.io');
 const option = { name: "nameOfWallet", network: { type: 'shadownet' }, enableMetrics: true};
 const wallet = new BeaconWallet(option);
 

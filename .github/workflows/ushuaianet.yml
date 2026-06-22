@@ -1,0 +1,30 @@
+name: Ad Hoc Ushuaianet Integration Tests
+
+on:
+  push:
+    branches:
+      - 'ci/**ushuaia**'
+      - 'ci/**ushuaianet**'
+      - 'ci/**u025**'
+
+permissions:
+  contents: read
+
+jobs:
+  integration-tests-ushuaianet:
+    name: integration-tests-ushuaianet-push
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - if: always()
+        id: integration-tests-ushuaianet
+        run: npm -w integration-tests run test:ushuaianet -- --maxWorkers=4 --exclude='**/sapling/**' --exclude='**/ledger/**'
+        env:
+          TAQUITO_FRESH_KEY_PREFETCH: '4'
