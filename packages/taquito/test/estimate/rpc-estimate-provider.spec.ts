@@ -1072,8 +1072,9 @@ describe('RPCEstimateProvider test signer', () => {
           { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
         ])
       ).rejects.toMatchObject({
-        name: 'TezosOperationError',
-        id: 'proto.024-PtTALLiN.gas_exhausted.operation',
+        name: 'BatchGasLimitExceededError',
+        requiredGasLimit: 1040001,
+        hardGasLimitPerBlock: 1040000,
       });
 
       expect(mockRpcClient.simulateOperation).toHaveBeenCalledWith(
@@ -1980,6 +1981,383 @@ describe('RPCEstimateProvider test wallet', () => {
       expect(secondCallContents.map((content: { gas_limit: string }) => content.gas_limit)).toEqual(
         ['1000', '299500', '299500']
       );
+    });
+
+    it('rebalances auto-patched batch gas after a resolved operation-level gas exhaustion', async () => {
+      const transactionResult = (consumedMilligas: string) => ({
+        kind: 'transaction',
+        source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+        fee: '0',
+        metadata: {
+          operation_result: {
+            status: 'applied',
+            consumed_milligas: consumedMilligas,
+          },
+        },
+      });
+
+      mockRpcClient.getConstants.mockResolvedValue({
+        hard_gas_limit_per_operation: new BigNumber(1040000),
+        hard_storage_limit_per_operation: new BigNumber(60000),
+        hard_gas_limit_per_block: new BigNumber(1040000),
+        cost_per_byte: new BigNumber(1000),
+      });
+      mockForger.forge.mockResolvedValue(new Array(149).fill('aa').join(''));
+      mockRpcClient.simulateOperation
+        .mockResolvedValueOnce({
+          contents: [
+            transactionResult('1000000'),
+            transactionResult('1000000'),
+            transactionResult('1000000'),
+            transactionResult('1000000'),
+            transactionResult('1000000'),
+            transactionResult('1000000'),
+            {
+              kind: 'transaction',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              fee: '0',
+              metadata: {
+                operation_result: {
+                  status: 'failed',
+                  errors: [
+                    {
+                      kind: 'temporary',
+                      id: 'proto.024-PtTALLiN.gas_exhausted.operation',
+                    },
+                  ],
+                },
+              },
+            },
+          ],
+        })
+        .mockResolvedValueOnce({
+          contents: [
+            transactionResult('1000000'),
+            transactionResult('1000000'),
+            transactionResult('1000000'),
+            transactionResult('1000000'),
+            transactionResult('1000000'),
+            transactionResult('1000000'),
+            transactionResult('281240000'),
+          ],
+        });
+
+      const estimates = await estimateProvider.batch([
+        { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
+        { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
+        { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
+        { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
+        { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
+        { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
+        { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
+      ]);
+
+      expect(estimates).toHaveLength(7);
+      expect(mockRpcClient.simulateOperation).toHaveBeenCalledTimes(2);
+
+      const firstCallContents = mockRpcClient.simulateOperation.mock.calls[0][0].operation.contents;
+      const secondCallContents =
+        mockRpcClient.simulateOperation.mock.calls[1][0].operation.contents;
+
+      expect(firstCallContents.map((content: { gas_limit: string }) => content.gas_limit)).toEqual([
+        '148571',
+        '148571',
+        '148571',
+        '148571',
+        '148571',
+        '148571',
+        '148571',
+      ]);
+      expect(secondCallContents.map((content: { gas_limit: string }) => content.gas_limit)).toEqual(
+        ['1000', '1000', '1000', '1000', '1000', '1000', '1034000']
+      );
+    });
+
+    it('gives the starved operation the remaining block budget when later operations were skipped', async () => {
+      const appliedTransaction = {
+        kind: 'transaction',
+        source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+        fee: '0',
+        metadata: {
+          operation_result: {
+            status: 'applied',
+            consumed_milligas: '1000000',
+          },
+        },
+      };
+      const skippedTransaction = {
+        kind: 'transaction',
+        source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+        fee: '0',
+        metadata: {
+          operation_result: {
+            status: 'skipped',
+          },
+        },
+      };
+
+      mockRpcClient.getConstants.mockResolvedValue({
+        hard_gas_limit_per_operation: new BigNumber(1040000),
+        hard_storage_limit_per_operation: new BigNumber(60000),
+        hard_gas_limit_per_block: new BigNumber(1040000),
+        cost_per_byte: new BigNumber(1000),
+      });
+      mockForger.forge.mockResolvedValue(new Array(149).fill('aa').join(''));
+      mockRpcClient.simulateOperation
+        .mockResolvedValueOnce({
+          contents: [
+            {
+              kind: 'transaction',
+              source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+              fee: '0',
+              metadata: {
+                operation_result: {
+                  status: 'failed',
+                  errors: [
+                    {
+                      kind: 'temporary',
+                      id: 'proto.024-PtTALLiN.gas_exhausted.operation',
+                    },
+                  ],
+                },
+              },
+            },
+            skippedTransaction,
+            skippedTransaction,
+            skippedTransaction,
+            skippedTransaction,
+            skippedTransaction,
+            skippedTransaction,
+          ],
+        })
+        .mockResolvedValueOnce({
+          contents: [
+            {
+              ...appliedTransaction,
+              metadata: {
+                operation_result: {
+                  status: 'applied',
+                  consumed_milligas: '650000000',
+                },
+              },
+            },
+            appliedTransaction,
+            appliedTransaction,
+            appliedTransaction,
+            appliedTransaction,
+            appliedTransaction,
+            appliedTransaction,
+          ],
+        });
+
+      const estimates = await estimateProvider.batch([
+        { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
+        { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
+        { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
+        { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
+        { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
+        { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
+        { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
+      ]);
+
+      expect(estimates).toHaveLength(7);
+      expect(mockRpcClient.simulateOperation).toHaveBeenCalledTimes(2);
+
+      const secondCallContents =
+        mockRpcClient.simulateOperation.mock.calls[1][0].operation.contents;
+      expect(secondCallContents.map((content: { gas_limit: string }) => content.gas_limit)).toEqual(
+        ['1034000', '1000', '1000', '1000', '1000', '1000', '1000']
+      );
+    });
+
+    it('continues rebalancing past eight simulations when unknown operations need more than the floor', async () => {
+      const appliedTransaction = (consumedMilligas: string) => ({
+        kind: 'transaction',
+        source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+        fee: '0',
+        metadata: {
+          operation_result: {
+            status: 'applied',
+            consumed_milligas: consumedMilligas,
+          },
+        },
+      });
+      const failedTransaction = {
+        kind: 'transaction',
+        source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+        fee: '0',
+        metadata: {
+          operation_result: {
+            status: 'failed',
+            errors: [
+              {
+                kind: 'temporary',
+                id: 'proto.024-PtTALLiN.gas_exhausted.operation',
+              },
+            ],
+          },
+        },
+      };
+      const skippedTransaction = {
+        kind: 'transaction',
+        source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+        fee: '0',
+        metadata: {
+          operation_result: {
+            status: 'skipped',
+          },
+        },
+      };
+
+      mockRpcClient.getConstants.mockResolvedValue({
+        hard_gas_limit_per_operation: new BigNumber(1040000),
+        hard_storage_limit_per_operation: new BigNumber(60000),
+        hard_gas_limit_per_block: new BigNumber(1040000),
+        cost_per_byte: new BigNumber(1000),
+      });
+      mockForger.forge.mockResolvedValue(new Array(149).fill('aa').join(''));
+
+      mockRpcClient.simulateOperation.mockResolvedValueOnce({
+        contents: [failedTransaction, ...Array.from({ length: 9 }, () => skippedTransaction)],
+      });
+
+      for (let starvedIndex = 1; starvedIndex < 10; starvedIndex++) {
+        mockRpcClient.simulateOperation.mockResolvedValueOnce({
+          contents: [
+            appliedTransaction('600000000'),
+            ...Array.from({ length: starvedIndex - 1 }, () => appliedTransaction('2000000')),
+            failedTransaction,
+            ...Array.from({ length: 9 - starvedIndex }, () => skippedTransaction),
+          ],
+        });
+      }
+
+      mockRpcClient.simulateOperation.mockResolvedValueOnce({
+        contents: [
+          appliedTransaction('600000000'),
+          ...Array.from({ length: 9 }, () => appliedTransaction('2000000')),
+        ],
+      });
+
+      const estimates = await estimateProvider.batch(
+        Array.from({ length: 10 }, () => ({
+          kind: OpKind.TRANSACTION,
+          to: 'test',
+          amount: 2,
+        }))
+      );
+
+      expect(estimates).toHaveLength(10);
+      expect(mockRpcClient.simulateOperation).toHaveBeenCalledTimes(11);
+    });
+
+    it('does not rebalance gas limits explicitly provided by the caller', async () => {
+      mockRpcClient.getConstants.mockResolvedValue({
+        hard_gas_limit_per_operation: new BigNumber(1040000),
+        hard_storage_limit_per_operation: new BigNumber(60000),
+        hard_gas_limit_per_block: new BigNumber(1040000),
+        cost_per_byte: new BigNumber(1000),
+      });
+      mockForger.forge.mockResolvedValue(new Array(149).fill('aa').join(''));
+      mockRpcClient.simulateOperation.mockResolvedValue({
+        contents: [
+          {
+            kind: 'transaction',
+            source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+            fee: '0',
+            metadata: {
+              operation_result: {
+                status: 'failed',
+                errors: [
+                  {
+                    kind: 'temporary',
+                    id: 'proto.024-PtTALLiN.gas_exhausted.operation',
+                  },
+                ],
+              },
+            },
+          },
+          {
+            kind: 'transaction',
+            source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+            fee: '0',
+            metadata: {
+              operation_result: {
+                status: 'skipped',
+              },
+            },
+          },
+        ],
+      });
+
+      await expect(
+        estimateProvider.batch([
+          { kind: OpKind.TRANSACTION, to: 'test', amount: 2, gasLimit: 148571 },
+          { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
+        ])
+      ).rejects.toMatchObject({
+        name: 'TezosOperationError',
+        id: 'proto.024-PtTALLiN.gas_exhausted.operation',
+      });
+
+      expect(mockRpcClient.simulateOperation).toHaveBeenCalledTimes(1);
+    });
+
+    it('throws an actionable error when measured gas already exceeds the block limit', async () => {
+      const appliedTransaction = (consumedMilligas: string) => ({
+        kind: 'transaction',
+        source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+        fee: '0',
+        metadata: {
+          operation_result: {
+            status: 'applied',
+            consumed_milligas: consumedMilligas,
+          },
+        },
+      });
+
+      mockRpcClient.getConstants.mockResolvedValue({
+        hard_gas_limit_per_operation: new BigNumber(1040000),
+        hard_storage_limit_per_operation: new BigNumber(60000),
+        hard_gas_limit_per_block: new BigNumber(1040000),
+        cost_per_byte: new BigNumber(1000),
+      });
+      mockForger.forge.mockResolvedValue(new Array(149).fill('aa').join(''));
+      mockRpcClient.simulateOperation.mockResolvedValue({
+        contents: [
+          appliedTransaction('600000000'),
+          appliedTransaction('500000000'),
+          {
+            kind: 'transaction',
+            source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+            fee: '0',
+            metadata: {
+              operation_result: {
+                status: 'failed',
+                errors: [
+                  {
+                    kind: 'temporary',
+                    id: 'proto.024-PtTALLiN.gas_exhausted.operation',
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      });
+
+      await expect(
+        estimateProvider.batch([
+          { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
+          { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
+          { kind: OpKind.TRANSACTION, to: 'test', amount: 2 },
+        ])
+      ).rejects.toMatchObject({
+        name: 'BatchGasLimitExceededError',
+        requiredGasLimit: 1100000,
+        hardGasLimitPerBlock: 1040000,
+      });
+      expect(mockRpcClient.simulateOperation).toHaveBeenCalledTimes(1);
     });
   });
 
