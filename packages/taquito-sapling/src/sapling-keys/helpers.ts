@@ -27,8 +27,9 @@ export function decryptKey(spendingKey: string, password?: string) {
       throw new InvalidSpendingKey('no password provided to decrypt');
     }
 
-    const salt = toBuffer(keyArr.slice(0, 8));
-    const encryptedSk = toBuffer(keyArr.slice(8));
+    // Noble rejects Buffer salts under jsdom/SSR realm boundaries. Normalize into this realm.
+    const salt = Uint8Array.from(keyArr.subarray(0, 8));
+    const encryptedSk = keyArr.subarray(8);
 
     const encryptionKey = pbkdf2(sha512, password, salt, { c: 32768, dkLen: 32 });
     // Zero nonce is safe: fresh random salt per encryption produces unique PBKDF2-derived key.

@@ -1,6 +1,7 @@
 import { InvalidCurveError, InvalidMnemonicError, ToBeImplemented } from '../src/errors';
 import { InMemorySigner } from '../src/taquito-signer';
 import { InvalidDerivationPathError, InvalidKeyError } from '@taquito/core';
+import { runInNewContext } from 'node:vm';
 
 const serialize = (value: unknown): string => {
   try {
@@ -236,6 +237,29 @@ describe('inmemory-signer', () => {
 
     expect((await signer.sign('1234', new Uint8Array([3]))).sig).toEqual(
       'sigZiUh7khZmjP1kGSSNe3LQdZC5GMpWHuyFkqcR37pwiGUJrpKaatUxWcRPBE5sHwqfydUsPM4JvK14dBMoHbCxC7VHdMZC'
+    );
+  }, 15000);
+
+  it('Tz3 Encrypted works when Uint8Array comes from another realm', async () => {
+    const originalUint8Array = globalThis.Uint8Array;
+    let signer!: InMemorySigner;
+
+    // This mimics jsdom/SSR realm boundaries where Buffer no longer passes
+    // instanceof checks against the active Uint8Array constructor.
+    const foreignUint8Array: Uint8ArrayConstructor = runInNewContext('Uint8Array');
+    globalThis.Uint8Array = foreignUint8Array;
+    try {
+      signer = new InMemorySigner(
+        'p2esk2TFqgNcoT4u99ut5doGTUFNwo9x4nNvkpM6YMLqXrt4SbFdQnqLM3hoAXLMB2uZYazj6LZGvcoYzk16H6Et',
+        'test1234'
+      );
+    } finally {
+      globalThis.Uint8Array = originalUint8Array;
+    }
+
+    expect(await signer.publicKeyHash()).toEqual('tz3hFR7NZtjT2QtzgMQnWb4xMuD6yt2YzXUt');
+    expect(await signer.secretKey()).toEqual(
+      'p2sk2mJNRYqs3UXJzzF44Ym6jk38RVDPVSuLCfNd5ShE5zyVdu8Au9'
     );
   }, 15000);
 

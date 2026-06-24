@@ -7,7 +7,6 @@ import {
   b58DecodeAndCheckPrefix,
   b58Encode,
 } from '@taquito/utils';
-import toBuffer from 'typedarray-to-buffer';
 import { EdKey, EdPublicKey } from './ed-key';
 import { ECKey, ECPublicKey } from './ec-key';
 import * as bip39 from '@scure/bip39';
@@ -131,8 +130,9 @@ export class InMemorySigner implements Signer {
         throw new InvalidPassphraseError('No passphrase provided to decrypt encrypted key');
       }
       decrypt = (data: Uint8Array) => {
-        const salt = toBuffer(data.slice(0, 8));
-        const encryptedSk = data.slice(8);
+        // Noble rejects Buffer salts under jsdom/SSR realm boundaries. Normalize into this realm.
+        const salt = Uint8Array.from(data.subarray(0, 8));
+        const encryptedSk = data.subarray(8);
         const encryptionKey = pbkdf2(sha512, passphrase, salt, { c: 32768, dkLen: 32 });
 
         // Zero nonce is safe here: Tezos encrypted key format uses a fresh random salt per
