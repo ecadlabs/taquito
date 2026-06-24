@@ -3,6 +3,7 @@ import {
   ConstantsResponse,
   RPCSimulateOperationParam,
   OperationContentsAndResultWithFee,
+  OperationContents,
 } from '@taquito/rpc';
 import BigNumberJs from 'bignumber.js';
 type BigNumber = InstanceType<typeof BigNumberJs>;
@@ -46,7 +47,7 @@ import {
   ValidationResult,
   payloadLength as sigSize,
 } from '@taquito/utils';
-import { RevealEstimateError } from './errors';
+import { BatchGasLimitExceededError, RevealEstimateError } from './errors';
 import { ContractMethodObject, ContractProvider } from '../contract';
 import { Provider } from '../provider';
 import { PrepareProvider } from '../prepare/prepare-provider';
@@ -63,6 +64,25 @@ import {
 const STUB_SIGNATURE =
   'edsigtkpiSSschcaCt9pUVrpNPf7TTcgvgDEDD6NCEHMy8NNQJCGnMfLZzYoQj74yLjo9wx6MPVV29CvVzgi7qEcEUok3k7AuMg';
 
+type OperationResultLike = {
+  status?: string;
+  consumed_milligas?: string | number;
+  errors?: Array<{ id?: string }>;
+};
+
+type SimulatedOperationContent = PreapplyResponse['contents'][number] & {
+  gas_limit?: unknown;
+  destination?: string;
+  metadata?: {
+    operation_result?: OperationResultLike;
+    internal_operation_results?: Array<{ result?: OperationResultLike }>;
+  };
+};
+
+type SimulatedOperationPayloadContent = OperationContents & {
+  gas_limit?: unknown;
+};
+
 /**
  * Estimates gas, storage, and fees by simulating operations against the node RPC.
  *
@@ -76,6 +96,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
   private readonly REVEAL_LENGTH_TZ4 = 622; // injecting size tz4=620
   private readonly MILLIGAS_BUFFER = 100 * 1000; // 100 buffer depends on operation kind
   private readonly STORAGE_BUFFER = 20; // according to octez-client
+  private readonly UNKNOWN_GAS_LIMIT_PER_OPERATION = 1000;
 
   private prepare = new PrepareProvider(this.context);
 
@@ -143,9 +164,205 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
     }
   }
 
+  private hasOperationGasExhausted(errors: { id: string }[]) {
+    return errors.some((error) => error.id.endsWith('gas_exhausted.operation'));
+  }
+
+  private getOperationResult(content: SimulatedOperationContent) {
+    return content?.metadata?.operation_result;
+  }
+
+  private getInternalOperationResults(content: SimulatedOperationContent) {
+    const internalResults = content?.metadata?.internal_operation_results;
+    return Array.isArray(internalResults) ? internalResults : [];
+  }
+
+  private operationResultHasGasExhausted(result?: OperationResultLike) {
+    return Array.isArray(result?.errors)
+      ? result.errors.some((error) => error.id?.endsWith('gas_exhausted.operation'))
+      : false;
+  }
+
+  private findGasExhaustedContentIndex(contents: SimulatedOperationContent[]) {
+    const directFailureIndex = contents.findIndex((content) =>
+      this.operationResultHasGasExhausted(this.getOperationResult(content))
+    );
+
+    if (directFailureIndex !== -1) {
+      return directFailureIndex;
+    }
+
+    const internalFailureIndex = contents.findIndex((content) =>
+      this.getInternalOperationResults(content).some((internalResult) =>
+        this.operationResultHasGasExhausted(internalResult.result)
+      )
+    );
+
+    if (internalFailureIndex !== -1) {
+      return internalFailureIndex;
+    }
+
+    const firstSkippedIndex = contents.findIndex(
+      (content) => this.getOperationResult(content)?.status === 'skipped'
+    );
+
+    return firstSkippedIndex > 0 ? firstSkippedIndex - 1 : -1;
+  }
+
+  private getContentGasLimit(content: { gas_limit?: unknown }) {
+    const gasLimit = Number(content?.gas_limit);
+    return Number.isFinite(gasLimit) && gasLimit >= 0 ? gasLimit : 0;
+  }
+
+  private getMeasuredGasLimit(
+    content: SimulatedOperationContent,
+    hardGasLimitPerOperation: number
+  ) {
+    const operationResults = flattenOperationResult({ contents: [content] });
+    const consumedMilligas = operationResults.reduce(
+      (total, result) => total + (Number(result.consumed_milligas) || 0),
+      0
+    );
+
+    if (consumedMilligas <= 0) {
+      return;
+    }
+
+    const safetyGas = isOpWithGasBuffer(content) ? this.MILLIGAS_BUFFER / 1000 : 0;
+    return Math.min(Math.ceil(consumedMilligas / 1000) + safetyGas, hardGasLimitPerOperation);
+  }
+
+  private rebalanceGasLimits(
+    op: RPCSimulateOperationParam,
+    opResponse: PreapplyResponse,
+    preparedOperation: PreparedOperation,
+    constants: Pick<ConstantsResponse, 'hard_gas_limit_per_operation' | 'hard_gas_limit_per_block'>
+  ) {
+    const hardGasLimitPerOperation = Number(constants.hard_gas_limit_per_operation);
+    const hardGasLimitPerBlock = Number(constants.hard_gas_limit_per_block);
+    const patchableIndexes = preparedOperation.simulation?.gasLimitPatchableIndexes?.filter(
+      (index) => index >= 0 && index < opResponse.contents.length
+    );
+
+    if (
+      !Array.isArray(op.operation.contents) ||
+      !patchableIndexes?.length ||
+      !Number.isFinite(hardGasLimitPerOperation) ||
+      !Number.isFinite(hardGasLimitPerBlock)
+    ) {
+      return;
+    }
+
+    const responseContents = opResponse.contents as SimulatedOperationContent[];
+    const starvedIndex = this.findGasExhaustedContentIndex(responseContents);
+
+    if (starvedIndex === -1 || !patchableIndexes.includes(starvedIndex)) {
+      return;
+    }
+
+    const patchableIndexSet = new Set(patchableIndexes);
+    const contents = (op.operation.contents as SimulatedOperationPayloadContent[]).map(
+      (content) => ({
+        ...content,
+      })
+    );
+    const patchedGasLimits = new Map<number, number>();
+    let fixedGasTotal = 0;
+    let measuredGasTotal = 0;
+    const unknownPatchableIndexes: number[] = [];
+
+    for (const [index, content] of responseContents.entries()) {
+      if (!patchableIndexSet.has(index)) {
+        fixedGasTotal += this.getContentGasLimit(contents[index]);
+        continue;
+      }
+
+      if (index === starvedIndex) {
+        continue;
+      }
+
+      const status = this.getOperationResult(content)?.status;
+      const measuredGasLimit =
+        status === 'applied' || status === 'backtracked'
+          ? this.getMeasuredGasLimit(content, hardGasLimitPerOperation)
+          : undefined;
+
+      if (typeof measuredGasLimit === 'number') {
+        patchedGasLimits.set(index, measuredGasLimit);
+        measuredGasTotal += measuredGasLimit;
+      } else {
+        unknownPatchableIndexes.push(index);
+      }
+    }
+
+    const requiredKnownGas = fixedGasTotal + measuredGasTotal;
+    if (requiredKnownGas > hardGasLimitPerBlock) {
+      throw new BatchGasLimitExceededError(requiredKnownGas, hardGasLimitPerBlock);
+    }
+
+    const gasAvailableAfterKnown = hardGasLimitPerBlock - requiredKnownGas;
+    const minimumUnknownGas = unknownPatchableIndexes.length + 1;
+    if (gasAvailableAfterKnown < minimumUnknownGas) {
+      throw new BatchGasLimitExceededError(
+        requiredKnownGas + minimumUnknownGas,
+        hardGasLimitPerBlock
+      );
+    }
+
+    const unknownGasLimit =
+      unknownPatchableIndexes.length > 0
+        ? Math.min(
+            this.UNKNOWN_GAS_LIMIT_PER_OPERATION,
+            Math.floor((gasAvailableAfterKnown - 1) / unknownPatchableIndexes.length)
+          )
+        : 0;
+    const gasReservedForUnknown = unknownGasLimit * unknownPatchableIndexes.length;
+    const starvedGasLimit = Math.min(
+      hardGasLimitPerOperation,
+      gasAvailableAfterKnown - gasReservedForUnknown
+    );
+
+    if (starvedGasLimit <= 0) {
+      return;
+    }
+
+    patchedGasLimits.set(starvedIndex, starvedGasLimit);
+    for (const index of unknownPatchableIndexes) {
+      patchedGasLimits.set(index, unknownGasLimit);
+    }
+
+    let patched = false;
+    for (const [index, gasLimit] of patchedGasLimits.entries()) {
+      if (this.getContentGasLimit(contents[index]) === gasLimit) {
+        continue;
+      }
+
+      (contents[index] as { gas_limit: string }).gas_limit = gasLimit.toString();
+      patched = true;
+    }
+
+    if (!patched) {
+      return;
+    }
+
+    return {
+      ...op,
+      operation: {
+        ...op.operation,
+        contents: contents as OperationContents[],
+      },
+    };
+  }
+
   private async calculateEstimates(
     op: PreparedOperation,
-    constants: Pick<ConstantsResponse, 'cost_per_byte' | 'origination_size'>
+    constants: Pick<
+      ConstantsResponse,
+      | 'cost_per_byte'
+      | 'origination_size'
+      | 'hard_gas_limit_per_operation'
+      | 'hard_gas_limit_per_block'
+    >
   ) {
     let feeParams: FeeParams = DEFAULT_FEE_PARAMS;
     try {
@@ -160,38 +377,93 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
       // Fall back to L1 defaults when the endpoint is missing or unavailable.
     }
 
+    const forgedOperation = await this.forge(op);
     const {
-      opbytes,
+      opbytes: initialOpBytes,
       opOb: { branch, contents },
-    } = await this.forge(op);
+    } = forgedOperation;
     const operation: RPCSimulateOperationParam = {
       operation: { branch, contents, signature: STUB_SIGNATURE },
       chain_id: await this.context.readProvider.getChainId(),
     };
 
-    const { opResponse } = await this.simulate(operation, op);
-    const { cost_per_byte, origination_size } = constants;
-    const errors = [...flattenErrors(opResponse, 'backtracked'), ...flattenErrors(opResponse)];
+    let currentOperation = operation;
+    let opResponse: PreapplyResponse | undefined;
+    let simulatedOperation: RPCSimulateOperationParam | undefined;
+    let opbytes = initialOpBytes;
+    let lastError: TezosOperationError | undefined;
+    const maxRebalanceAttempts = (op.simulation?.gasLimitPatchableIndexes?.length ?? 0) + 1;
 
-    // Fail early in case of errors
-    if (errors.length) {
-      throw new TezosOperationError(
+    for (let attempt = 0; attempt <= maxRebalanceAttempts; attempt++) {
+      // Keep PreparedOperation on attempt 0 for provider-level block/counter recovery. Rebalance
+      // retries intentionally omit it so patchSimulationGasLimits cannot restore the even split.
+      const simulated = await this.simulate(currentOperation, attempt === 0 ? op : undefined);
+      opResponse = simulated.opResponse;
+      simulatedOperation = simulated.op;
+      currentOperation = simulated.op;
+
+      const errors = [...flattenErrors(opResponse, 'backtracked'), ...flattenErrors(opResponse)];
+
+      if (errors.length === 0) {
+        break;
+      }
+
+      lastError = new TezosOperationError(
         errors,
         'Error occurred during estimation',
         opResponse.contents
       );
+
+      if (!this.hasOperationGasExhausted(errors)) {
+        throw lastError;
+      }
+
+      const rebalancedOperation = this.rebalanceGasLimits(
+        currentOperation,
+        opResponse,
+        op,
+        constants
+      );
+
+      if (!rebalancedOperation || attempt === maxRebalanceAttempts) {
+        throw lastError;
+      }
+
+      currentOperation = rebalancedOperation;
+      opResponse = undefined;
+      simulatedOperation = undefined;
     }
+
+    if (!opResponse || !simulatedOperation) {
+      throw lastError ?? new Error('Unable to simulate operation for estimation');
+    }
+
+    if (simulatedOperation !== operation) {
+      if (!simulatedOperation.operation.branch) {
+        throw new Error('Unable to reforge simulated operation without a branch');
+      }
+
+      opbytes = await this.context.forger.forge({
+        branch: simulatedOperation.operation.branch,
+        contents: simulatedOperation.operation.contents as OperationContents[],
+      });
+    }
+
+    const { cost_per_byte, origination_size } = constants;
 
     let numberOfOps = 1;
-    if (Array.isArray(op.opOb.contents) && op.opOb.contents.length > 1) {
+    if (
+      Array.isArray(simulatedOperation.operation.contents) &&
+      simulatedOperation.operation.contents.length > 1
+    ) {
       numberOfOps =
         opResponse.contents[0].kind === 'reveal'
-          ? op.opOb.contents.length - 1
-          : op.opOb.contents.length;
+          ? simulatedOperation.operation.contents.length - 1
+          : simulatedOperation.operation.contents.length;
     }
 
-    return opResponse.contents.map((x: any) => {
-      const content: OperationContentsAndResultWithFee = x;
+    return opResponse.contents.map((x) => {
+      const content = x as OperationContentsAndResultWithFee;
       content.source = content.source || '';
       let revealSize, eachOpSize;
       if (content.source.startsWith(PrefixV2.BLS12_381PublicKeyHash)) {

@@ -1,6 +1,32 @@
-import { OpKind, TezosToolkit } from '@taquito/taquito';
+import { OpKind, TezosToolkit, UnitValue } from '@taquito/taquito';
 import { CONFIGS } from '../../config';
 import { ligoSample } from '../../data/ligo-simple-contract';
+
+const gasBurnerMichelson = `
+{ parameter nat ;
+  storage unit ;
+  code {
+    UNPAIR ;
+    DUP ;
+    PUSH nat 0 ;
+    COMPARE ;
+    LT ;
+    LOOP {
+      PUSH nat 1 ;
+      SWAP ;
+      SUB ;
+      ISNAT ;
+      IF_NONE { PUSH nat 0 } {} ;
+      DUP ;
+      PUSH nat 0 ;
+      COMPARE ;
+      LT
+    } ;
+    DROP ;
+    NIL operation ;
+    PAIR
+  } }
+`;
 
 const hasEqualManagerGasLimits = async (Tezos: TezosToolkit) => {
   const constants = await Tezos.rpc.getConstants();
@@ -128,6 +154,70 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
       expect(estimates[0].gasLimit).toBeGreaterThan(0);
       expect(estimates[1].gasLimit).toBeGreaterThan(0);
       expect(estimates[2].gasLimit).toBeGreaterThan(0);
+    });
+
+    it('estimates a heavy-first mixed batch whose heavy operation needs more than the equal split', async () => {
+      await setup({
+        preferFreshKey: true,
+        minBalanceMutez: 5_000_000,
+        maxAttempts: 8,
+      });
+
+      const pkh = await Tezos.signer.publicKeyHash();
+      if (!(await Tezos.rpc.getManagerKey(pkh))) {
+        const revealOp = await Tezos.contract.reveal({});
+        await revealOp.confirmation();
+      }
+
+      const originateOp = await Tezos.contract.originate({
+        balance: '0',
+        code: gasBurnerMichelson,
+        storage: UnitValue,
+      });
+      await originateOp.confirmation();
+      const contract = await originateOp.contract();
+
+      const constants = await Tezos.rpc.getConstants();
+      const operationCount = 7;
+      const equalSplit = constants.hard_gas_limit_per_block
+        .div(operationCount)
+        .integerValue()
+        .toNumber();
+
+      const makeHeavy = (parameter: number) => ({
+        kind: OpKind.TRANSACTION,
+        ...contract.methodsObject.default(parameter).toTransferParams(),
+      });
+
+      let heavyParameter = 800_000;
+      let heavy = makeHeavy(heavyParameter);
+      let heavyEstimate = await Tezos.estimate.batch([heavy]);
+
+      for (let attempt = 0; heavyEstimate[0].gasLimit <= equalSplit && attempt < 5; attempt++) {
+        heavyParameter = Math.ceil(heavyParameter * 1.5);
+        heavy = makeHeavy(heavyParameter);
+        heavyEstimate = await Tezos.estimate.batch([heavy]);
+      }
+
+      expect(heavyEstimate[0].gasLimit).toBeGreaterThan(equalSplit);
+      expect(heavyEstimate[0].gasLimit).toBeLessThan(constants.hard_gas_limit_per_block.toNumber());
+
+      const light = { kind: OpKind.TRANSACTION, to: pkh, amount: 1, mutez: true };
+      const estimates = await Tezos.estimate.batch([
+        heavy,
+        light,
+        light,
+        light,
+        light,
+        light,
+        light,
+      ]);
+
+      expect(estimates).toHaveLength(operationCount);
+      expect(estimates[0].gasLimit).toBeGreaterThan(equalSplit);
+      for (const estimate of estimates.slice(1)) {
+        expect(estimate.gasLimit).toBeGreaterThan(0);
+      }
     });
   });
 });
