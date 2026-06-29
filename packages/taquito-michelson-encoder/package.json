@@ -1,6 +1,6 @@
 {
   "name": "@taquito/michelson-encoder",
-  "version": "24.3.0",
+  "version": "25.0.0",
   "description": "Michelson encoding and decoding utilities for Taquito.",
   "keywords": [
     "taquito",
@@ -56,10 +56,10 @@
     ]
   },
   "dependencies": {
-    "@taquito/core": "^24.3.0",
-    "@taquito/rpc": "^24.3.0",
-    "@taquito/signer": "^24.3.0",
-    "@taquito/utils": "^24.3.0",
+    "@taquito/core": "^25.0.0",
+    "@taquito/rpc": "^25.0.0",
+    "@taquito/signer": "^25.0.0",
+    "@taquito/utils": "^25.0.0",
     "bignumber.js": "^10.0.2",
     "fast-json-stable-stringify": "^2.1.0"
   },

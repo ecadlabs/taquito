@@ -1,6 +1,6 @@
 {
   "name": "@taquito/core",
-  "version": "24.3.0",
+  "version": "25.0.0",
   "description": "Shared types, interfaces, and primitives for Taquito packages.",
   "keywords": [
     "taquito",

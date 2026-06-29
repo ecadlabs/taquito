@@ -1,6 +1,6 @@
 {
   "name": "@taquito/beacon-wallet",
-  "version": "24.3.0",
+  "version": "25.0.0",
   "description": "TZIP-10 Beacon wallet integration for Taquito dapps built on the Beacon SDK DAppClient.",
   "keywords": [
     "taquito",
@@ -72,9 +72,9 @@
   "dependencies": {
     "@ecadlabs/beacon-dapp": "4.8.4-ecad",
     "@ecadlabs/beacon-types": "4.8.4-ecad",
-    "@taquito/core": "^24.3.0",
-    "@taquito/taquito": "^24.3.0",
-    "@taquito/utils": "^24.3.0",
+    "@taquito/core": "^25.0.0",
+    "@taquito/taquito": "^25.0.0",
+    "@taquito/utils": "^25.0.0",
     "typedarray-to-buffer": "^4.0.0",
     "util": "^0.12.5"
   },

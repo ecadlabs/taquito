@@ -1,0 +1,465 @@
+---
+title: A First Look at TezosToolkit
+author: Peter McDonald
+---
+
+TezosToolkit is the top-level facade for interacting with Tezos via Taquito. It surfaces all of Taquito's capabilities to a DApp developer. Think of it as a top-level controller.
+
+## Instantiating a Tezos Toolkit
+
+The constructor of the TezosToolkit class requires a string that represents an RPC URL or an instance of RpcClient as a parameter.
+
+**RPC URL:** If the TezosToolkit is instantiated with an RPC URL, it creates a default instance of the RpcClient class using the specified URL. (The RpcClient is the class that allows interaction with the Tezos network through an RPC node.)
+
+```typescript
+const tezos = new TezosToolkit('https://mainnet.api.tez.ie/');
+```
+
+**RpcClient:** This option gives more flexibility to the user. A user can pass a personalized class that implements the RpcClient to the TezosToolkit based on its needs.
+
+```typescript
+const customRpcClient = new customRpcClient('https://mainnet.api.tez.ie/');
+const tezos = new TezosToolkit(customRpcClient);
+```
+
+The RpcClient can act as another point of personalization for users. The RpcClient ships with a default instance of the HttpBackend which is responsible for issuing http requests. The constructor of the RpcClient takes an optional HttpBackend instance as a parameter, making it possible for a user to inject its own HttpBackend instance if needed (i.e., if a user wants to hook in for custom behaviour in requests).
+
+```typescript
+const customHttpBackend = new CustomHttpBackend();
+const rpcClient = new RpcClient('https://mainnet.api.tez.ie/', 'main', customHttpBackend);
+const tezos = new TezosToolkit(rpcClient);
+```
+
+### Binding Providers
+
+**Required step:** After instantiating a TezosToolkit the user needs to set a signer or a wallet on the TezosToolkit instance.
+
+**Signer:** The TezosToolkit ships with a NoopSigner which does nothing. A signer is required if the user intends to inject operations into the Tezos blockchain using the contract API. A user can set his own signer on the TezosToolkit, which needs to implement the Signer interface. Otherwise, Taquito provides the following signers:
+- [InMemorySigner](inmemory_signer) (development purpose)
+- [RemoteSigner](signing) (can be used in conjunction with an HSM remote signer such as Signatory)
+- [LedgerSigner](ledger_signer)
+
+```typescript
+const signer = new InMemorySigner(key);
+Tezos.setSignerProvider(signer);
+//or
+Tezos.setProvider({signer:key});
+```
+
+**WalletProvider:**
+By default, the TezosToolkit ships with an instance of LegacyWalletProvider. This wallet requires a signer configured on the TezosToolkit. In order to use the Wallet API with a wallet other than the LegacyWallet, the user needs to set a wallet on the TezosToolkit. Taquito provides the following wallets:
+- [BeaconWallet](wallets) (Built on the DAppClient from the Beacon SDK which handles all the logic related to connecting to beacon-compatible wallets and sending requests. The BeaconWallet provides developers a way to connect a dapp built with Taquito to a wallet giving the freedom to the users of the dapp to choose the wallet they want. Common Beacon types like `NetworkType` can be imported from `@taquito/beacon-wallet/types`, and `BeaconEvent` from `@taquito/beacon-wallet`.)
+
+A user can set any wallet on the TezosToolkit as long as it implements the WalletProvider interface.
+
+```typescript
+import { TezosToolkit } from '@taquito/taquito';
+import { BeaconWallet } from '@taquito/beacon-wallet';
+
+const options = {
+  name: 'MyAwesomeDapp',
+};
+const wallet = new BeaconWallet(options);
+
+// The Beacon wallet requires an extra step to set up the network to connect to and the permissions:
+await wallet.requestPermissions({
+  network: {
+    type: 'chosen_network',
+  },
+});
+
+const Tezos = new TezosToolkit('rpc');
+Tezos.setWalletProvider(wallet);
+// or
+Tezos.setProvider({wallet});
+```
+
+**Forger:** A forger is responsible to encode a JSON object representing an operation into its binary representation. An operation is forged, then the forged bytes are signed, and then the signed bytes are injected to the blockchain.
+
+By default, the TezosToolkit ships with an instance of RpcForger. Having access to the Context class and thus to the RpcClient instance, the RpcForger uses the RPC to forge the operations. No configuration is needed if the user wants the default forger. The @taquito/local-forging package provides developers with local forging functionality. A user can set an instance of the [LocalForger](forger) on the TezosToolkit (if he has any trust concerns about the node for example).
+
+```typescript
+import { LocalForger } from "@taquito/local-forging";
+const tezos = new TezosToolkit('rpc');
+
+tezos.setProvider({forger: new LocalForger()});
+// or
+tezos.setForgerProvider(new LocalForger());
+```
+
+A user can set any other Forger on the TezosToolkit as long as it implements the Forger interface.
+
+**SubscribeProvider:** The TezosToolkit ships by default with an instance of PollingSubscribeProvider allowing subscribing to particular operations from the blockchain. This provider is not internally used by Taquito unlike the forger, parser and signer/wallet.
+
+**Packer:** A packer serializes data to its optimized binary representation, identical to the one used by the PACK Michelson instructions. When fetching big map values, the RPC expects to be called with a "packed" key. As for the forger, data can be packed using the RPC or locally.
+
+By default, the TezosToolkit ships with an instance of RpcPacker. Having access to the Context class and thus to the RpcClient instance, the RpcPacker uses the RPC to pack the data. No configuration is needed if the user wants the default packer. The [@taquito/michel-codec](michel_codec) package provides developers with local packing functionality. A user can set an instance of the MichelCodecPacker on the TezosToolkit (allowing for security-conscious off-line operations and faster dapps because of fewer RPC requests).
+
+```typescript
+import { MichelCodecPacker } from '@taquito/taquito';
+Tezos.setPackerProvider(new MichelCodecPacker());
+```
+
+A user can set any other Packer that implements the Packer interface.
+
+### Setting Configuration Data
+
+Configurations for the confirmation method for both the contract and wallet API:
+- **confirmationPollingIntervalSecond:** the default value is calculated based on the RPC constant "time_between_blocks". It indicates the time interval to query the head block.
+- **confirmationPollingTimeoutSecond:** default is 180 seconds. If no operation is found in a block after 180 seconds, a timeout error is thrown.
+- **defaultConfirmationCount:** default is 1. Number of blocks after the operation has been seen in a block.
+
+Configuration for the SubscribeProvider (streamer):
+- **streamerPollingIntervalMilliseconds:** default is 20000 milliseconds
+- **shouldObservableSubscriptionRetry:** default is false. Indicate if we want to retry on error.
+- **observableSubscriptionRetryFunction:** default is retry(). Indicates what strategy to use on error.
+
+```typescript
+Tezos.setProvider({
+  config: {
+    confirmationPollingIntervalSecond: 2,
+    confirmationPollingTimeoutSecond: 300,
+    defaultConfirmationCount: 5,
+    streamerPollingIntervalMilliseconds: 10000,
+    shouldObservableSubscriptionRetry: true,
+    observableSubscriptionRetryFunction: retryWhen(error =>
+      error.pipe(
+        scan((acc, error) => {
+          if (acc > 2) throw error;
+          console.log("attempt " + acc);
+          return acc + 1;
+        }, 1),
+        delay(3),
+        tap(() => console.log("Retrying ..."))
+      )
+    )
+  }
+});
+```
+
+## Transacting Tezos Operations
+
+### Contract API
+
+#### Transfers
+
+Transfer tz from implicit account to implicit or originated account:
+
+The transfer method needs an object of type TransferParams as a parameter.
+
+```typescript
+interface TransferParams {
+  to: string; // address that receive the tz
+  amount: number;
+  source?: string;
+  fee?: number;
+  parameter?: TransactionOperationParameter;
+  gasLimit?: number;
+  storageLimit?: number;
+  mutez?: boolean; // false by default, meaning the amount to send is in tez, if set to true, amount is in mutez
+}
+```
+
+Example (transfer 2 tezos from the configured signer to the address tz1...):
+
+```typescript
+const op = await Tezos.contract.transfer({to: 'tz1...', amount: 2});
+await op.confirmation();
+```
+
+In the example above, op is an instance of TransactionOperation, which contains information about the operation (status, operationResults, amount, destination, fee, gasLimit, storageLimit, consumedGas, storageDiff, storageSize, errors).
+
+#### Contract Origination
+
+The originate method needs an object of type OriginateParams as a parameter:
+
+```typescript
+export type OriginateParams = OriginateParamsBase &
+  (
+    | {
+        init?: never;
+        /** JS representation of a storage object */
+        storage: any;
+      }
+    | {
+        /** Initial storage object value. Either Micheline or JSON encoded */
+        init: string | object;
+        storage?: never;
+      }
+  );
+
+// Init OR storage is required; init is in Michelson, storage in a javascript object
+// (that will be transformed to Michelson by the michelson-encoder package)
+
+export type OriginateParamsBase = {
+  balance?: string;
+  code: string | object[];
+  delegate?: string;
+  fee?: number;
+  gasLimit?: number;
+  storageLimit?: number;
+  mutez?: boolean;
+};
+```
+
+Example:
+
+```typescript
+const op = await Tezos.contract.originate({
+  code: `parameter int;
+storage   (pair
+              int
+              address
+        );
+code {...`,
+  storage: {
+    0: '0',
+    1: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn'
+  }
+});
+
+await op.confirmation();
+```
+
+#### Delegation Operation
+
+The setDelegate method needs an object of type DelegateParams as a parameter:
+
+```typescript
+interface DelegateParams {
+  source: string;
+  delegate?: string; // delegate is optional to support withdrawal of delegate
+  fee?: number;
+  gasLimit?: number;
+  storageLimit?: number;
+}
+```
+
+Example to delegate:
+
+```typescript
+const op = await Tezos.contract.setDelegate({
+  delegate,
+  source: pkh,
+});
+await op.confirmation();
+```
+
+Example to un-delegate:
+
+```typescript
+const op = await Tezos.contract.setDelegate({
+  source: pkh,
+});
+await op.confirmation();
+```
+
+#### Register as a Delegate
+
+The registerDelegate method needs an object of type RegisterDelegateParams as a parameter where all properties are optional:
+
+```typescript
+interface RegisterDelegateParams {
+  fee?: number;
+  gasLimit?: number;
+  storageLimit?: number;
+}
+```
+
+Example:
+
+```typescript
+const op = await Tezos.contract.registerDelegate({});
+await op.confirmation();
+```
+
+#### Reveal Operation
+
+The reveal method reveals the current account and needs an object of type RevealParams as a parameter where all properties are optional:
+
+```typescript
+interface RevealParams {
+  fee?: number;
+  gasLimit?: number;
+  storageLimit?: number;
+}
+```
+
+Example:
+
+```typescript
+const revealOp = await Tezos.contract.reveal({});
+await revealOp.confirmation();
+```
+
+#### Batch: Batch a Group of Operations Together
+
+There are 2 possible syntaxes (using the "with" methods or passing an array of operations to the batch method, they can be mixed together).
+
+Example "with" methods:
+
+```typescript
+const batch = Tezos.contract
+  .batch()
+  .withActivation({
+    pkh: 'tz1...',
+    secret: 'edsk...'
+  })
+  .withDelegation({
+    source: 'tz1...',
+    delegate: 'tz1...',
+    fee: 0,
+    gasLimit: 0,
+    storageLimit: 0
+  })
+  .withContractCall(contract.methods.default(params))
+  .withTransfer({
+    to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
+    amount: 2,
+    fee: 0,
+    gasLimit: 0,
+    storageLimit: 0,
+    mutez: false,
+    parameter: {
+      entrypoint: '',
+      value: {}
+    },
+    source: 'tz1...'
+  })
+  .withOrigination({
+    code: ligoSampleMichelson,
+    storage: 0,
+    balance: '1000000',
+    delegate: 'tz1...',
+    fee: 0,
+    gasLimit: 0,
+    storageLimit: 0,
+    mutez: true,
+  });
+
+const op = await batch.send();
+```
+
+Equivalent example passing an array of operations as a parameter:
+
+```typescript
+const op = await Tezos.contract.batch([
+  {
+    kind: OpKind.ACTIVATION,
+    pkh: 'tz1...',
+    secret: 'edsk...',
+  },
+  {
+    kind: OpKind.DELEGATION,
+    source: 'tz1...',
+    delegate: 'tz1...',
+    fee: 0,
+    gasLimit: 0,
+    storageLimit: 0
+  },
+  {
+    kind: OpKind.TRANSACTION,
+    to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
+    amount: 2,
+    fee: 0,
+    gasLimit: 0,
+    storageLimit: 0,
+    mutez: false,
+    parameter: {
+      entrypoint: '',
+      value: {}
+    },
+    source: 'tz1...'
+  },
+  {
+    // calling a contract entrypoint is less intuitive than when using
+    // the withContractCall method above
+    kind: OpKind.TRANSACTION,
+    to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
+    amount: 2,
+    fee: 0,
+    gasLimit: 0,
+    storageLimit: 0,
+    mutez: false,
+    parameter: contract.methods.default(params).toTransferParams().parameter,
+    source: 'tz1...'
+  },
+  {
+    kind: OpKind.ORIGINATION,
+    code: ligoSampleMichelson,
+    storage: 0,
+    balance: '1000000',
+    delegate: 'tz1...',
+    fee: 0,
+    gasLimit: 0,
+    storageLimit: 0,
+    mutez: true,
+  }
+]).send();
+```
+
+### Smart Contracts
+
+First step is to create an instance of ContractAbstraction using the "at" method. Taquito dynamically creates methods that correspond to the Smart Contracts entrypoints and offers the user to call the Smart Contract methods as if they were native TS/JS methods. The 'at' method takes a contract address as a parameter and optionally a "contractAbstractionComposer" (see tzip16 example).
+
+```typescript
+const contractAbs = await Tezos.contract.at(contract.address);
+const operation = await contractAbs.methods.default(value).send();
+```
+
+In the above example, "default" is dynamically created based on the contract entrypoint. The expected parameter of the "default" method depends on the contract type. The [Schema and ParameterSchema](michelson_encoder) classes of the MichelsonEncoder can be used to inspect parameters signature.
+
+The ContractAbstraction class has a storage method which returns a friendly representation of the smart contract storage:
+
+```typescript
+const contractAbs = await Tezos.contract.at(contract.address);
+const storage = await contractAbs.storage();
+```
+
+### Wallet API
+
+Parameters signatures are the same, but need to call the send method:
+
+```typescript
+const op = await Tezos.wallet.originate({
+  code: ticketCode,
+  init: ticketStorage
+}).send();
+```
+
+### Reading Storage Big Map
+
+The ContractAbstraction class has a storage method which returns a friendly representation of the smart contract storage:
+
+```typescript
+const contractAbs = await Tezos.contract.at(contract.address);
+const storage = await contractAbs.storage();
+```
+
+If the storage contains bigmap, Taquito provides a [BigMapAbstraction](maps_bigmaps) allowing to fetch values associated with one or multiple keys (without the abstraction the storage only shows the bigmap id. The BigMapAbstraction packs the key using the packer set on the TezosToolkit and fetches the value from the RPC):
+
+```typescript
+const storage: BigMapAbstraction = await contractAbs.storage();
+const value = await storage.get({ 'test': 'test2', 'test2': 'test3' });
+```
+
+### Interacting with Contract Metadata (Tzip-16)
+
+A user can add an instance of the [Tzip16Module](metadata-tzip16) as an extension to the TezosToolkit to extend the contractAbstraction class with the tzip16 functionalities.
+
+```typescript
+import { TezosToolkit } from '@taquito/taquito';
+import { Tzip16Module } from '@taquito/tzip16';
+
+const Tezos = new TezosToolkit('rpcUrl');
+Tezos.addExtension(new Tzip16Module());
+const contract = await Tezos.contract.at("contractAddress", tzip16);
+const metadata = await contract.tzip16().getMetadata();
+const views = await contract.tzip16().metadataViews();
+```
+
+The constructor of the Tzip16Module takes an optional MetadataProvider as a parameter. When none is passed, the default MetadataProvider of Taquito is instantiated and the default handlers (HttpHandler, IpfsHandler, and TezosStorageHandler) are used. A user might want to customize one of the handlers. For example, he might want to use a custom Ipfs Handler in order to use a different ipfs gateway. The default one is 'gateway.ipfs.io'.
+
+### Interacting with Token Metadata ([Tzip-12](tzip12))
+
+Same as Tzip-16.
