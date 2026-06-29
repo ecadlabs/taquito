@@ -1,0 +1,210 @@
+---
+title: Michelson Encoder Internals
+author: Peter McDonald
+---
+
+## Context: Michelson
+
+### References
+
+- [Michelson Reference](https://tezos.gitlab.io/michelson-reference/)
+- [Michelson: the language of Smart Contracts in Tezos](https://octez.tezos.com/docs/active/michelson.html) (authoritative language reference)
+- [Micheline](https://octez.tezos.com/docs/shell/micheline.html)
+- [Tutorial | OpenTezos](https://opentezos.com/michelson/tutorial/)
+- [Michelson Encoder | Taquito](michelson_encoder)
+
+Micheline is the concrete syntax of the Michelson language. Micheline Node syntax is defined in R3. The main primitive data types are integer, character string, byte sequence.
+
+Micheline nodes can be converted to JSON formatted Michelson. The conversion is defined in R3. JSON Michelson is used to interact with a Tezos node using RPCs.
+
+### Michelson: Salient Points
+
+- Stack based
+- Turing-complete
+- Strongly typed
+- Verifiable (declarative, functional programming)
+- Primitives to:
+  - Define data types (i.e. structure the data of storage and entry point parameters)
+  - Operate on stack based data (i.e. manipulate the data)
+- Smart contracts are made of three parts:
+  - Parameter type, i.e. entrypoint parameter data type
+  - Storage type, persistent storage data type
+  - Code, instructions invoked via entry points
+
+Pair is the basic primitive for grouping heterogeneously typed data elements. A Pair has a left element and a right element. We can think of nested pairs as nested javascript objects. On a depth-first traversal, any left element of a pair that is also a pair marks the start of a new embedded object. Right elements of pairs just add new property values to the current object (i.e. one or more). At a glance, this kind of conversion seems to be reversible.
+
+A Michelson program takes in a 1-level-deep stack with a pair of a parameter and storage, and outputs a 1-level-deep stack with a pair of an operation list and modified storage.
+
+Michelson supports annotation:
+- Type Annotations
+- Variable Annotations
+- Field and Constructor Annotations
+
+## Taquito's Token and Schema Abstractions
+
+A Taquito Token represents a Michelson primitive, e.g. nat, list, pair etc.
+
+A Taquito Schema represents a Michelson data type (e.g. smart contract storage data type). It references a root Token.
+
+Tezos RPCs use JSON Michelson to represent:
+- Michelson data types, e.g. storage data type
+- Michelson data, e.g. storage data
+
+A Taquito Schema encapsulates a Michelson data type represented in JSON Michelson. A Schema is typically used to hold a Smart Contract's data type. Rather than construct the JSON Michelson data type from scratch, the user can instantiate a Schema based on a JSON Michelson Script object obtained through an RPC call for a particular Smart Contract.
+
+At this point, the user can use JS Michelson to view the schema as well as to formulate data that conforms to this schema, or to interpret data that conforms to this schema.
+
+JS Michelson is an alternate representation of Michelson data types and data. It is easier than JSON Michelson to interpret and reason with.
+
+Schema supports:
+- **ExtractSchema** - enables the encapsulated JSON Michelson data type to be viewed as a JS Michelson data type.
+- **Encode** - converts JS Michelson data conforming to the encapsulated JSON Michelson data type, to JSON Michelson form.
+- **Execute** - converts JSON Michelson data conforming to the encapsulated JSON Michelson data type, to JS Michelson form. Optional semantics parameter maps from a JSON Michelson prim to a function that can transform associated prim values into a more understandable form. This effectively enables meaningful dynamic behaviour to be associated with returned values. This mechanism is used to transform bigmap ids returned from storage to [BigMapAbstractions](maps_bigmaps).
+
+In effect, we can hide JSON Michelson from users:
+- Instantiate Storage Schema from result of getScript RPC call
+- Inspect Storage Data Type via ExtractSchema
+- Originate Contract with Storage data via Encode
+- Interpret Storage data via Execute
+
+## The Token Abstraction
+
+### Context
+
+The Michelson Encoder utilizes the Token abstraction to transform between data expressed as JSON encoded Micheline and an equivalent representation in JavaScript (JS). Here we document the mapping rules independent of its Taquito implementation.
+
+The current focus is on the generic (aka core) Micheline data types since these naturally map to data types of generic languages such as JS. For completeness, this document will subsequently include a treatment of domain-specific data types.
+
+### Micheline
+
+Micheline is a strongly typed language.
+
+Micheline includes atomic types declared by a characteristic Micheline primitive:
+
+| Primitive | Description |
+|---|---|
+| `nat` | a natural number |
+| `string` | a string of characters |
+| `int` | an integer |
+| `bytes` | a sequence of bytes |
+| `bool` | a boolean |
+| `unit` | a type whose only value is Unit |
+| `never` | the empty type |
+
+Micheline includes complex types declared by a characteristic Micheline primitive, which takes other Micheline types as arguments:
+
+| Primitive | Description |
+|---|---|
+| `list typ` | a homogeneous linked list whose elements are of type typ |
+| `pair typ1 typ2` | a pair of values of type typ1, typ2 |
+| `option typ` | an optional value of type typ |
+| `or typ1 typ2` | a value of type typ1 or typ2 |
+| `set typ` | a set of comparable values of type typ |
+| `map kty vty` | a map from kty to vty |
+
+Micheline type declarations may have annotations. A Micheline field annotation is prefaced by "%".
+
+### Token
+
+A Token is a Taquito abstraction representing a Micheline type. A Token can interpret its Micheline Type as an expressively equivalent JS Type. As such, it can take a conformant Micheline value and transform it to its equivalent JS value. Similarly, it can take a conformant JS value and transform it to its equivalent Micheline value.
+
+*Fig 1: A Token is a Taquito abstraction representing a Micheline type.*
+
+We see from Fig 1 that a Token naturally forms a tree structure. A root Token is one that does not have parents. Complex Tokens recursively reference child Tokens. Atomic Tokens have no children.
+
+A Token has a couple of attributes:
+- **annots** - represents an array of Micheline annotations.
+- **idx** - a number used to establish unique default object keys for any mapped-to JS object type. Token processing involves recursively traversing Tokens by way of mapping to their equivalent JS Types. In general JS Types include objects with properties. Micheline Types are optionally annotated. A Token's idx value provides a default property name, should it map to a JS object property, used if and only if the Token itself is not annotated. Root Tokens have an idx value of zero. During a depth-first traversal, each parent Token is responsible for updating the idx value of its children to ensure that idx values are unique within each mapped-to object type namespace.
+
+An **Atomic Token** is a type of Token representing an atomic Micheline type. There is a type of Atomic Token for each atomic Micheline Type.
+
+A **Complex Token** is a type of Token representing a complex Micheline type. There is a type of Complex Token for each complex Micheline Type.
+
+In this document we deviate in minor ways from the Taquito implementation-level version of the Token abstraction. The intent here is not to cover implementation detail but to provide domain context for presenting the actual JSON Micheline to JS mapping rules independent of the Taquito implementation.
+
+## Execute
+
+Token.Execute takes a conformant JSON encoded Micheline value (val) and maps it to its equivalent JS value.
+
+Each type of Token has its own mapping rules. The mapping rules of Complex Tokens recursively invoke the Execution methods of their children. Recursion terminates with Atomic Tokens.
+
+### Atomic Tokens
+
+**NatToken**
+
+A JSON encoded nat val has the form: `{int: <natural number in decimal notation> }`. NatToken accesses val.int and returns it as a JS BigNumber.
+
+**StringToken**
+
+A JSON encoded string val has the form: `{string: <character string>}`. StringToken accesses and returns val.string.
+
+**IntToken**
+
+A JSON encoded int val has the form: `{int: <integer in decimal notation>}`. IntToken accesses val.int and returns it as a JS BigNumber.
+
+**BytesToken**
+
+A JSON encoded bytes val has the form: `{bytes: <byte sequence in hexadecimal notation>}`. BytesToken accesses and returns val.bytes.
+
+**BoolToken**
+
+A JSON encoded bool val has the form: `{prim: "True"|"False"}`. BoolToken accesses val.prim and maps it to a JS boolean.
+
+**UnitToken**
+
+A JSON encoded unit val has the form: `{prim: "Unit"}`. UnitToken returns a Symbol().
+
+**NeverToken**
+
+There are no literal values for this type.
+
+### Complex Tokens
+
+**ListToken**
+
+A JSON encoded val of the Micheline type `list typ annots` has the form:
+`[ val1, val2... ]` where val1, val2 ... are JSON encoded values of type typ.
+
+ListToken accesses its child Token typ and returns the array `[typ.Execute(val1), typ.Execute(val2)...]`.
+
+**PairToken**
+
+A JSON encoded val of the Micheline type `pair typ1 typ2 annots` has the form:
+`{prim: "Pair", args: [val1, val2]}`
+
+Where val1 and val2 are JSON encoded values of type typ1 and typ2 respectively.
+
+Micheline pairs are a kind of record structure. As such they are mapped to JS objects. In the case where an unannotated pair is referenced by a parent pair, the nesting is abstracted away in the mapping of a Micheline Pair to a JS object. In the case where an annotated pair is referenced by a parent pair, the nesting is preserved in the mapping of a Micheline Pair to a JS object; a new JS object is nested in the parent object with the Micheline pair annotation serving as the parent object key.
+
+Pseudo code for PairToken.Execute(val):
+
+```
+keyCount = 1;
+typ1.idx = idx;
+
+If typ1 is a PairToken with no annotations then        // abstract away unannotated pair nesting
+    leftValue = typ1.Execute(val1);
+    keyCount = Object.keys(leftValue).length;           // count leftValue keys
+else
+    leftValue = {[typ1.annot()]: typ1.Execute(val1)};   // wrap leftValue with its annotation
+endif;
+
+typ2.idx = idx + keyCount;
+If typ2 is a PairToken with no annotations then          // abstract away unannotated pair nesting
+    rightValue = typ2.Execute(val2);
+else
+    rightValue = {[typ2.annot()]: typ2.Execute(val2)};   // wrap rightValue with its annotation
+endif;
+
+return { ...leftValue, ...rightValue};                    // merge left, right values into a single object
+```
+
+PairToken idx management ensures that mapped-to objects have their own default property namespace. This corresponds naturally with the notion of object property namespaces in JS.
+
+## Encode
+
+Token.Encode takes a conformant JS value and maps it to its equivalent JSON encoded Micheline value. Each type of Token has its own mapping rules.
+
+## GenerateSchema
+
+Token.generateSchema interprets its Micheline Type as an expressively equivalent JS Type, referred to as a TokenSchema.

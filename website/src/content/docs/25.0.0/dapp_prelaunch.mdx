@@ -1,0 +1,61 @@
+---
+title: dApp Pre-launch Checklist
+author: [Claude Barde, Maxwell Ward]
+---
+
+Below are considerations for building your Tezos dApp or before publishing it. These pointers help prevent bugs and improve your users' experience.
+
+## Infrastructure
+
+### Use a reliable RPC node
+
+Running your own RPC node is often the best choice, especially if you anticipate significant traffic. Using a paid hosted node is also a great option. See the [list of public Tezos nodes](./rpc_nodes).
+
+### Specify fees and storage limits
+
+Hard-coding fees and storage limits for smart contract calls has two advantages:
+- Your dApp makes fewer calls to the RPC node, making it faster
+- Fine-tuned gas and storage values reduce the likelihood of backtracked operations
+
+## Performance
+
+### Enable local pack
+
+Local Pack reduces bigmap search time by 50%. Enable it by providing a `MichelCodecPacker` instance to the `setPackerProvider` method of `TezosToolkit`.
+
+### Optimize HTTP requests
+
+JavaScript frameworks provide lifecycle hooks for DOM updates (React `useEffect`, Vue `beforeUpdate`, Svelte `afterUpdate`). If these trigger calls to Tezos nodes or indexers, optimize them carefully. Unnecessary HTTP requests increase server traffic and slow down your dApp.
+
+### Handle big numbers
+
+Michelson uses arbitrary-precision numbers that can become very long. JavaScript switches to scientific notation for large numbers, which can confuse users. Use `bignumber.js` to handle potentially long numbers from the blockchain.
+
+## Wallet integration
+
+### Test with popular wallets
+
+Testing with Kukai and Temple wallets is essential. Testing with all wallets is recommended.
+
+### Create a single BeaconWallet instance
+
+Reuse one `BeaconWallet` instance throughout your dApp. JavaScript frameworks offer solutions to share data between components:
+- React: Context API
+- Vue: Pinia (Third-party)
+- Svelte: Stores
+
+Creating multiple `BeaconWallet` instances may cause errors when forging transactions.
+
+## User experience
+
+### Confirm operations and check results
+
+Wait for operation confirmation and check whether it succeeded or failed. This information is crucial for users to know if their transaction went through.
+
+### Display user-friendly error messages
+
+Inform users about skipped, backtracked, and failed transactions. A lack of visual feedback when transactions fail can be confusing.
+
+### Enable error reporting
+
+An error reporting tool like [BugSnag](https://www.bugsnag.com/platforms/javascript) helps you understand issues your users face.

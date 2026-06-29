@@ -1,6 +1,6 @@
 {
   "name": "@taquito/rpc",
-  "version": "24.3.0",
+  "version": "25.0.0",
   "description": "TypeScript client and types for the Tezos RPC used by Taquito.",
   "keywords": [
     "taquito",
@@ -56,9 +56,9 @@
     ]
   },
   "dependencies": {
-    "@taquito/core": "^24.3.0",
-    "@taquito/http-utils": "^24.3.0",
-    "@taquito/utils": "^24.3.0",
+    "@taquito/core": "^25.0.0",
+    "@taquito/http-utils": "^25.0.0",
+    "@taquito/utils": "^25.0.0",
     "bignumber.js": "^10.0.2"
   },
   "devDependencies": {
