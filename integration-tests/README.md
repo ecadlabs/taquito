@@ -19,14 +19,14 @@ To run tests in this environment, make sure you have:
 - Successfully compiled Taquito (see the top-level README)
 
 
-### Running all tests against all pre-configured testnets
+### Running all tests against the default testnet
 
 
 From the `taquito/integration-tests` directory, run the following:
 
 
 ```
-npm run test # This runs all tests against all pre-configured testnets
+npm run test # Default provider is shadownet (matches CI)
 ```
 
 
@@ -37,7 +37,7 @@ Depending on the current Tezos upgrade cycle, multiple testnet networks may be c
 
 
 ```
-TALLINNNET=true npm run test
+SHADOWNET=true npm run test
 ```
 
 ## Configuration
@@ -60,7 +60,7 @@ If different testnets are configured in the `config.ts` file, you can run tests 
 
 
 ```
-npm run test:tallinnnet contract-with-bigmap-init.spec.ts
+npm run test:shadownet contract-with-bigmap-init.spec.ts
 ```
 
 
@@ -68,7 +68,7 @@ Or for a specific test within a test file:
 
 
 ```
-npm run test:tallinnnet -- -t "Verify contract.originate for a contract and call deposit method with unit param"
+npm run test:shadownet -- -t "Verify contract.originate for a contract and call deposit method with unit param"
 ```
 
 
@@ -78,7 +78,7 @@ npm run test:tallinnnet -- -t "Verify contract.originate for a contract and call
 To run tests against a node that is not pre-configured in Taquito, use:
 
 
-`export TEZOS_RPC_TALLINNNET='http://localhost:8732'`.
+`export TEZOS_RPC_SHADOWNET='http://localhost:8732'`.
 
 ## Using a Secret Key Instead of the Keygen API
 
@@ -87,7 +87,7 @@ By default, the integration tests use an ephemeral key managed by the Keygen API
 
 
 ```
-npm run test:tallinnnet-secret-key contract-with-bigmap-init.spec.ts
+npm run test:shadownet-secret-key contract-with-bigmap-init.spec.ts
 ```
 
 

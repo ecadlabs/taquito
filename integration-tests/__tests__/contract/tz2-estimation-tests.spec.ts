@@ -1,4 +1,4 @@
-import { MANAGER_LAMBDA, TezosToolkit, getRevealFee } from '@taquito/taquito';
+import { MANAGER_LAMBDA, Protocols, TezosToolkit, getRevealFee } from '@taquito/taquito';
 import { Contract } from '@taquito/taquito';
 import { CONFIGS } from '../../config';
 import { originate, originate2, transferImplicit2 } from '../../data/lambda';
@@ -6,12 +6,13 @@ import { ligoSample } from '../../data/ligo-simple-contract';
 import { managerCode } from '../../data/manager_code';
 import { InvalidAmountError } from '@taquito/core';
 import { PrefixV2 } from '@taquito/utils';
-import { expectEstimate } from './estimation-test-helpers';
+import { expectEstimate, resolveProtocol } from './estimation-test-helpers';
 import { waitForContractAt } from './contract-test-helpers';
 
 CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
   const Tezos = lib;
   let pkh: string;
+  let protocol: Protocols;
   describe(`Test estimate scenarios using: ${rpc}`, () => {
     let LowAmountTez: TezosToolkit;
     let contract: Contract;
@@ -20,6 +21,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
     beforeAll(async () => {
       try {
         await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
+        protocol = resolveProtocol(await Tezos.rpc.getProtocols());
         LowAmountTez = await createAddress(PrefixV2.Secp256k1SecretKey);
         pkh = await LowAmountTez.signer.publicKeyHash();
         amt += getRevealFee(pkh);
@@ -42,7 +44,8 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
 
     it('Verify .estimate.transfer with allocated destination', async () => {
       const estimate = await LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), amount: 0.019 });
-      expectEstimate(estimate, rpc, {
+      expectEstimate(estimate, protocol, {
+      [Protocols.PsUshuai9]: [ {
         gasLimit: 2101,
         storageLimit: 0,
         suggestedFeeMutez: 390,
@@ -60,12 +63,14 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
         totalCost: 368,
         usingBaseFeeMutez: 368,
         consumedMilligas: 2100040,
-      });
+      }],
+    });
     });
 
     it('Verify .estimate.transfer with unallocated destination', async () => {
       const estimate = await LowAmountTez.estimate.transfer({ to: await (await createAddress()).signer.publicKeyHash(), amount: 0.017 });
-      expectEstimate(estimate, rpc, {
+      expectEstimate(estimate, protocol, {
+      [Protocols.PsUshuai9]: [ {
         gasLimit: 2101,
         storageLimit: 277,
         suggestedFeeMutez: 390,
@@ -83,7 +88,8 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
         totalCost: 69618,
         usingBaseFeeMutez: 368,
         consumedMilligas: 2100040,
-      });
+      }],
+    });
     });
 
     it('Verify .estimate.originate simple contract', async () => {
@@ -92,7 +98,8 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
         code: ligoSample,
         storage: 0,
       });
-      expectEstimate(estimate, rpc, {
+      expectEstimate(estimate, protocol, {
+      [Protocols.PsUshuai9]: [ {
         gasLimit: 677,
         storageLimit: 591,
         suggestedFeeMutez: 539,
@@ -110,7 +117,8 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
         totalCost: 148267,
         usingBaseFeeMutez: 517,
         consumedMilligas: 676402,
-      });
+      }],
+    });
     });
 
     it('Verify .estimate.setDelegate result', async () => {
@@ -118,7 +126,8 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
         delegate: knownBaker,
         source: pkh,
       });
-      expectEstimate(estimate, rpc, {
+      expectEstimate(estimate, protocol, {
+      [Protocols.PsUshuai9]: [ {
         gasLimit: 100,
         storageLimit: 0,
         suggestedFeeMutez: 185,
@@ -136,13 +145,15 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
         totalCost: 163,
         usingBaseFeeMutez: 163,
         consumedMilligas: 100000,
-      });
+      }],
+    });
     });
 
     it('Verify .estimate.transfer for internal transfer to allocated implicit', async () => {
       const tx = contract.methodsObject.do(MANAGER_LAMBDA.transferImplicit(knownBaker, 5)).toTransferParams();
       const estimate = await LowAmountTez.estimate.transfer(tx);
-      expectEstimate(estimate, rpc, {
+      expectEstimate(estimate, protocol, {
+      [Protocols.PsUshuai9]: [ {
         gasLimit: 3458,
         storageLimit: 0,
         suggestedFeeMutez: 598,
@@ -169,7 +180,8 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
         totalCost: 576,
         usingBaseFeeMutez: 576,
         consumedMilligas: 3457258,
-      });
+      }],
+    });
     });
 
     it('Verify .estimate.transfer for multiple internal transfers to unallocated account', async () => {
@@ -179,7 +191,8 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
         50)
       ).toTransferParams();
       const estimate = await LowAmountTez.estimate.transfer(tx);
-      expectEstimate(estimate, rpc, {
+      expectEstimate(estimate, protocol, {
+      [Protocols.PsUshuai9]: [ {
         gasLimit: 5573,
         storageLimit: 534,
         suggestedFeeMutez: 869,
@@ -206,13 +219,15 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
         totalCost: 134347,
         usingBaseFeeMutez: 847,
         consumedMilligas: 5571787,
-      });
+      }],
+    });
     });
 
     it('Verify .estimate.transfer for internal origination', async () => {
       const tx = contract.methodsObject.do(originate()).toTransferParams();
       const estimate = await LowAmountTez.estimate.transfer(tx);
-      expectEstimate(estimate, rpc, {
+      expectEstimate(estimate, protocol, {
+      [Protocols.PsUshuai9]: [ {
         gasLimit: 1869,
         storageLimit: 337,
         suggestedFeeMutez: 445,
@@ -239,13 +254,15 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
         totalCost: 84673,
         usingBaseFeeMutez: 423,
         consumedMilligas: 1867882,
-      });
+      }],
+    });
     });
 
     it('Verify .estimate.transfer for multiple internal originations', async () => {
       const tx = contract.methodsObject.do(originate2()).toTransferParams();
       const estimate = await LowAmountTez.estimate.transfer(tx);
-      expectEstimate(estimate, rpc, {
+      expectEstimate(estimate, protocol, {
+      [Protocols.PsUshuai9]: [ {
         gasLimit: 2394,
         storageLimit: 654,
         suggestedFeeMutez: 563,
@@ -272,7 +289,8 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
         totalCost: 164041,
         usingBaseFeeMutez: 541,
         consumedMilligas: 2393035,
-      });
+      }],
+    });
       // Do the actual operation
       const op2 = await contract.methodsObject.do(originate2()).send();
       await op2.confirmation();
@@ -292,6 +310,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
 
     beforeAll(async () => {
       await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
+      protocol = resolveProtocol(await Tezos.rpc.getProtocols());
       LowAmountTez = await createAddress(PrefixV2.Secp256k1SecretKey);
       const pkh = await LowAmountTez.signer.publicKeyHash();
       amt += getRevealFee(pkh);
@@ -301,7 +320,8 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
 
     it('Verify .estimate.transfer to regular address', async () => {
       let estimate = await LowAmountTez.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + getRevealFee(pkh)) });
-      expectEstimate(estimate, rpc, {
+      expectEstimate(estimate, protocol, {
+      [Protocols.PsUshuai9]: [ {
         gasLimit: 2101,
         storageLimit: 0,
         suggestedFeeMutez: 389,
@@ -319,7 +339,8 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
         totalCost: 367,
         usingBaseFeeMutez: 367,
         consumedMilligas: 2100040,
-      });
+      }],
+    });
     });
 
     it('Estimate transfer to regular address with a fixed fee', async () => {

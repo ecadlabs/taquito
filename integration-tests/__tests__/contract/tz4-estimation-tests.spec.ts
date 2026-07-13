@@ -1,4 +1,4 @@
-import { MANAGER_LAMBDA, TezosToolkit, getRevealFee } from '@taquito/taquito';
+import { MANAGER_LAMBDA, Protocols, TezosToolkit, getRevealFee } from '@taquito/taquito';
 import { Contract } from '@taquito/taquito';
 import { CONFIGS } from '../../config';
 import { originate, originate2, transferImplicit2 } from '../../data/lambda';
@@ -6,13 +6,14 @@ import { ligoSample } from '../../data/ligo-simple-contract';
 import { managerCode } from '../../data/manager_code';
 import { InvalidAmountError } from '@taquito/core';
 import { PrefixV2 } from '@taquito/utils';
-import { expectEstimate } from './estimation-test-helpers';
+import { expectEstimate, resolveProtocol } from './estimation-test-helpers';
 import { waitForContractAt } from './contract-test-helpers';
 
 CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
 
   const Tezos = lib;
   let pkh: string;
+  let protocol: Protocols;
   describe(`Test estimate scenarios using: ${rpc}`, () => {
     let Tz4: TezosToolkit;
     let contract: Contract;
@@ -21,6 +22,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
     beforeAll(async () => {
       try {
         await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
+        protocol = resolveProtocol(await Tezos.rpc.getProtocols());
         Tz4 = await createAddress(PrefixV2.BLS12_381SecretKey);
         pkh = await Tz4.signer.publicKeyHash();
         amt += getRevealFee(pkh);
@@ -43,7 +45,8 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
 
     it('Verify .estimate.transfer with allocated destination', async () => {
       const estimate = await Tz4.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), amount: 0.019 });
-      expectEstimate(estimate, rpc, {
+      expectEstimate(estimate, protocol, {
+      [Protocols.PsUshuai9]: [ {
         gasLimit: 2101,
         storageLimit: 0,
         suggestedFeeMutez: 388,
@@ -61,12 +64,14 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
         totalCost: 366,
         usingBaseFeeMutez: 366,
         consumedMilligas: 2100040,
-      });
+      }],
+    });
     });
 
     it('Verify .estimate.transfer with unallocated destination', async () => {
       const estimate = await Tz4.estimate.transfer({ to: await (await createAddress()).signer.publicKeyHash(), amount: 0.017 });
-      expectEstimate(estimate, rpc, {
+      expectEstimate(estimate, protocol, {
+      [Protocols.PsUshuai9]: [ {
         gasLimit: 2101,
         storageLimit: 277,
         suggestedFeeMutez: 388,
@@ -84,7 +89,8 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
         totalCost: 69616,
         usingBaseFeeMutez: 366,
         consumedMilligas: 2100040,
-      });
+      }],
+    });
     });
 
     it('Verify .estimate.originate simple contract', async () => {
@@ -93,7 +99,8 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
         code: ligoSample,
         storage: 0,
       });
-      expectEstimate(estimate, rpc, {
+      expectEstimate(estimate, protocol, {
+      [Protocols.PsUshuai9]: [ {
         gasLimit: 677,
         storageLimit: 591,
         suggestedFeeMutez: 537,
@@ -111,7 +118,8 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
         totalCost: 148265,
         usingBaseFeeMutez: 515,
         consumedMilligas: 676402,
-      });
+      }],
+    });
     });
 
     it('Verify .estimate.setDelegate result', async () => {
@@ -119,7 +127,8 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
         delegate: knownBaker,
         source: pkh,
       });
-      expectEstimate(estimate, rpc, {
+      expectEstimate(estimate, protocol, {
+      [Protocols.PsUshuai9]: [ {
         gasLimit: 100,
         storageLimit: 0,
         suggestedFeeMutez: 183,
@@ -137,13 +146,15 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
         totalCost: 161,
         usingBaseFeeMutez: 161,
         consumedMilligas: 100000,
-      });
+      }],
+    });
     });
 
     it('Verify .estimate.transfer for internal transfer to allocated implicit', async () => {
       const tx = contract.methodsObject.do(MANAGER_LAMBDA.transferImplicit(knownBaker, 5)).toTransferParams();
       const estimate = await Tz4.estimate.transfer(tx);
-      expectEstimate(estimate, rpc, {
+      expectEstimate(estimate, protocol, {
+      [Protocols.PsUshuai9]: [ {
         gasLimit: 3458,
         storageLimit: 0,
         suggestedFeeMutez: 596,
@@ -170,7 +181,8 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
         totalCost: 574,
         usingBaseFeeMutez: 574,
         consumedMilligas: 3457258,
-      });
+      }],
+    });
     });
 
     it('Verify .estimate.transfer for multiple internal transfers to unallocated account', async () => {
@@ -180,7 +192,8 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
         50)
       ).toTransferParams();
       const estimate = await Tz4.estimate.transfer(tx);
-      expectEstimate(estimate, rpc, {
+      expectEstimate(estimate, protocol, {
+      [Protocols.PsUshuai9]: [ {
         gasLimit: 5573,
         storageLimit: 534,
         suggestedFeeMutez: 867,
@@ -207,13 +220,15 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
         totalCost: 134345,
         usingBaseFeeMutez: 845,
         consumedMilligas: 5571787,
-      });
+      }],
+    });
     });
 
     it('Verify .estimate.transfer for internal origination', async () => {
       const tx = contract.methodsObject.do(originate()).toTransferParams();
       const estimate = await Tz4.estimate.transfer(tx);
-      expectEstimate(estimate, rpc, {
+      expectEstimate(estimate, protocol, {
+      [Protocols.PsUshuai9]: [ {
         gasLimit: 1869,
         storageLimit: 337,
         suggestedFeeMutez: 443,
@@ -240,13 +255,15 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
         totalCost: 84671,
         usingBaseFeeMutez: 421,
         consumedMilligas: 1867882,
-      });
+      }],
+    });
     });
 
     it('Verify .estimate.transfer for multiple internal originations', async () => {
       const tx = contract.methodsObject.do(originate2()).toTransferParams();
       const estimate = await Tz4.estimate.transfer(tx);
-      expectEstimate(estimate, rpc, {
+      expectEstimate(estimate, protocol, {
+      [Protocols.PsUshuai9]: [ {
         gasLimit: 2394,
         storageLimit: 654,
         suggestedFeeMutez: 561,
@@ -273,7 +290,8 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
         totalCost: 164039,
         usingBaseFeeMutez: 539,
         consumedMilligas: 2393035,
-      });
+      }],
+    });
       // Do the actual operation
       const op2 = await contract.methodsObject.do(originate2()).send();
       await op2.confirmation();
@@ -293,6 +311,7 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
 
     beforeAll(async () => {
       await setup({ preferFreshKey: true, minBalanceMutez: 5_000_000 });
+      protocol = resolveProtocol(await Tezos.rpc.getProtocols());
       LowAmountTz4 = await createAddress(PrefixV2.BLS12_381SecretKey);
       const pkh = await LowAmountTz4.signer.publicKeyHash();
       amt += getRevealFee(pkh);
@@ -302,7 +321,8 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
 
     it('Verify .estimate.transfer to regular address', async () => {
       let estimate = await LowAmountTz4.estimate.transfer({ to: await Tezos.signer.publicKeyHash(), mutez: true, amount: amt - (1382 + getRevealFee(pkh)) });
-      expectEstimate(estimate, rpc, {
+      expectEstimate(estimate, protocol, {
+      [Protocols.PsUshuai9]: [ {
         gasLimit: 2101,
         storageLimit: 0,
         suggestedFeeMutez: 387,
@@ -320,7 +340,8 @@ CONFIGS().forEach(({ lib, setup, knownBaker, createAddress, rpc }) => {
         totalCost: 365,
         usingBaseFeeMutez: 365,
         consumedMilligas: 2100040,
-      });
+      }],
+    });
     });
 
     it('Estimate transfer to regular address with a fixed fee', async () => {

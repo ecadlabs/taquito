@@ -70,7 +70,7 @@ jobs:
       - uses: actions/checkout@v6
       - name: Keygen preflight
         env:
-          TAQUITO_KEYGEN_NETWORKS: shadownet ushuaianet
+          TAQUITO_KEYGEN_NETWORKS: shadownet
         run: bash .github/scripts/check-keygen-health.sh
 
   lint-and-test:
@@ -121,9 +121,6 @@ jobs:
           - name: shadownet
             npm_script: test:shadownet:shard
             keygen_path: shadownet
-          - name: ushuaianet
-            npm_script: test:ushuaianet:shard
-            keygen_path: ushuaianet
         shard: [1, 2, 3, 4]
     concurrency:
       group: ${{ matrix.network.name }}-itest-testnet-shard-${{ matrix.shard }}
@@ -343,8 +340,6 @@ jobs:
         network:
           - name: shadownet
             rpc_url: https://rpc.shadownet.teztnets.com
-          - name: ushuaianet
-            rpc_url: https://rpc.ushuaianet.teztnets.com
     # Diagnostics only: this never gates a merge, it just records an RPC weather
     # report over the test window so failures can be correlated with node health.
     continue-on-error: true

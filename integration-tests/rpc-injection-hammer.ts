@@ -244,7 +244,7 @@ function buildConfig(flags: CliFlags): HammerConfig {
   const rpcUrl =
     getFlagString(flags, 'rpc') ??
     process.env.HAMMER_RPC_URL ??
-    process.env.TEZOS_RPC_TALLINNNET ??
+    process.env.TEZOS_RPC_SHADOWNET ??
     DEFAULT_RPC;
   const secretKeyCsv =
     getFlagString(flags, 'keys') ?? process.env.HAMMER_SECRET_KEYS ?? process.env.SECRET_KEY;

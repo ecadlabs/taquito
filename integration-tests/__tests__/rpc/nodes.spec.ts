@@ -22,10 +22,13 @@ CONFIGS().forEach(
   }) => {
     const Tezos = lib;
     const isUnrestricted = rpc.includes("teztnets.com") || rpc.includes("net-rolling-1.i.ecadinfra.com") ? true : false;
-    const isTallinnnetAndAlpha = protocol === Protocols.PtTALLiNt || protocol === Protocols.ProtoALpha ? true : false;
+    // Destination-index / attestation-rights shapes introduced around Tallinn;
+    // tallinnnet is gone, so gate on live Ushuaia + alpha.
+    const isCurrentOrAlpha =
+      protocol === Protocols.PsUshuai9 || protocol === Protocols.ProtoALpha;
     const unrestrictedNode = isUnrestricted ? test : test.skip;
-    const unrestrictedTallinnnetAndAlpha = isTallinnnetAndAlpha && isUnrestricted ? test : test.skip;
-    const tallinnnetAndAlpha = isTallinnnetAndAlpha ? test : test.skip;
+    const unrestrictedCurrentOrAlpha = isCurrentOrAlpha && isUnrestricted ? test : test.skip;
+    const currentOrAlpha = isCurrentOrAlpha ? test : test.skip;
     let ticketContract: DefaultContractType;
     let freshAddress: string;
 
@@ -211,12 +214,12 @@ CONFIGS().forEach(
           }
         });
 
-        tallinnnetAndAlpha('Verify that rpcClient.getDestinationIndex returns null when the address is not indexed', async () => {
+        currentOrAlpha('Verify that rpcClient.getDestinationIndex returns null when the address is not indexed', async () => {
           const destinationIndex = await rpcClient.getDestinationIndex(freshAddress);
           expect(destinationIndex).toBeNull();
         });
 
-        tallinnnetAndAlpha('Verify that rpcClient.getDestinationIndex returns the index of the destination with a custom block', async () => {
+        currentOrAlpha('Verify that rpcClient.getDestinationIndex returns the index of the destination with a custom block', async () => {
           // Originate a contract that uses INDEX_ADDRESS
           const originateIndexAddress = await Tezos.contract.originate({
             code: indexAddressCode,
@@ -263,7 +266,7 @@ CONFIGS().forEach(
           expect(bakingRights[0].round).toBeDefined();
         });
 
-        unrestrictedTallinnnetAndAlpha('Verify that rpcClient.getAttestationRights retrieves the list of delegates allowed to attest a block', async () => {
+        unrestrictedCurrentOrAlpha('Verify that rpcClient.getAttestationRights retrieves the list of delegates allowed to attest a block', async () => {
           const attestationRights = await rpcClient.getAttestationRights();
           expect(attestationRights).toBeDefined();
           expect(attestationRights[0].delegates).toBeDefined();

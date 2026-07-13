@@ -16,10 +16,8 @@ import * as nodeCrypto from 'crypto';
 import { AsyncPrefetchBuffer } from './async-prefetch-buffer';
 import { KnownContracts } from './known-contracts';
 import { knownContractsShadownet } from './known-contracts-shadownet';
-import { knownContractsTallinnnet } from './known-contracts-tallinnnet';
 import { knownContractsWeeklynet } from './known-contracts-weeklynet';
 import { knownContractsTezlinkshadownet } from './known-contracts-tezlinkshadownet';
-import { knownContractsUshuaianet } from './known-contracts-ushuaianet';
 
 const integrationDiagnosticsEnabled = /^(1|true)$/i.test(
   process.env['TAQUITO_ITEST_DIAGNOSTICS'] ?? ''
@@ -79,7 +77,7 @@ const forgers: ForgerType[] = [ForgerType.COMPOSITE];
 
 // user running integration test can pass environment variable TEZOS_NETWORK_TYPE=sandbox to specify which network to run against
 export enum NetworkType {
-  TESTNET, // corresponds shadownet, tallinnnet and weeklynet etc.
+  TESTNET, // corresponds shadownet, weeklynet, etc.
   SANDBOX, // corresponds to flextesa local chain
 }
 
@@ -420,7 +418,11 @@ const defaultConfig = ({
 
 const shadownetEphemeral: Config = defaultConfig({
   networkName: 'SHADOWNET',
-  protocol: Protocols.PtTALLiNt,
+  // Shadownet shadows whichever proposal is currently under test, so this value
+  // goes stale on every migration. Tests that care about the running protocol
+  // (e.g. gas estimation) read it live from the RPC via resolveProtocol(); keep
+  // this roughly current for operation building.
+  protocol: Protocols.PsUshuai9,
   defaultRpc: 'https://rpc.shadownet.teztnets.com',
   knownContracts: knownContractsShadownet,
   signerConfig: defaultEphemeralConfig('shadownet'),
@@ -431,31 +433,18 @@ const shadownetSecretKey: Config = {
   signerConfig: defaultSecretKey,
 };
 
-const tallinnnetEphemeral: Config = defaultConfig({
-  networkName: 'TALLINNNET',
-  protocol: Protocols.PtTALLiNt,
-  defaultRpc: 'http://ecad-tezos-tallinnnet-rolling-1.i.ecadinfra.com/',
-  knownContracts: knownContractsTallinnnet,
-  signerConfig: defaultEphemeralConfig('tallinnnet'),
-});
-
-const tallinnnetSecretKey: Config = {
-  ...tallinnnetEphemeral,
-  ...{ signerConfig: defaultSecretKey, rpc: 'https://rpc.tallinnnet.teztnets.com' },
-};
-
-const ushuaianetEphemeral: Config = defaultConfig({
-  networkName: 'USHUAIANET',
-  protocol: Protocols.PsUshuai9,
-  defaultRpc: 'https://rpc.ushuaianet.teztnets.com',
-  knownContracts: knownContractsUshuaianet,
-  signerConfig: defaultEphemeralConfig('ushuaianet'),
-});
-
-const ushuaianetSecretKey: Config = {
-  ...ushuaianetEphemeral,
-  signerConfig: defaultSecretKey,
-};
+// --- Featurenet placeholder -------------------------------------------------
+// When protocol V lands on a *dedicated* teztnet (not yet shadowed into
+// shadownet), wire it up here:
+//   1. <name>Ephemeral + <name>SecretKey via defaultConfig({ protocol, defaultRpc, knownContracts, ... })
+//   2. known-contracts-<name>.ts (+ originate-known-contracts entry if needed)
+//   3. package.json scripts: test:<name>, test:<name>:shard, test:<name>-secret-key
+//   4. main.yml integration-tests matrix entry + keygen path
+//   5. Estimation baselines: add [Protocols.P…]: [...] maps in
+//      __tests__/contract/tz*-estimation-tests.spec.ts (fail-loud if missing)
+// Prefer resolveProtocol() over Config.protocol for gas/constants-sensitive
+// tests; Config.protocol is only a hint for operation building.
+// ----------------------------------------------------------------------------
 
 const weeklynetSecretKey: Config = defaultConfig({
   networkName: 'WEEKLYNET',
@@ -476,30 +465,18 @@ const tezlinkshadownetSecretKey: Config = defaultConfig({
 const providers: Config[] = [];
 
 if (process.env['RUN_WITH_SECRET_KEY']) {
-  providers.push(
-    shadownetSecretKey,
-    tallinnnetSecretKey,
-    weeklynetSecretKey,
-    tezlinkshadownetSecretKey
-  );
+  providers.push(shadownetSecretKey, weeklynetSecretKey, tezlinkshadownetSecretKey);
 } else if (process.env['RUN_SHADOWNET_WITH_SECRET_KEY']) {
   providers.push(shadownetSecretKey);
-} else if (process.env['RUN_TALLINNNET_WITH_SECRET_KEY']) {
-  providers.push(tallinnnetSecretKey);
-} else if (process.env['RUN_USHUAIANET_WITH_SECRET_KEY']) {
-  providers.push(ushuaianetSecretKey);
 } else if (process.env['RUN_WEEKLYNET_WITH_SECRET_KEY']) {
   providers.push(weeklynetSecretKey);
 } else if (process.env['RUN_TEZLINKSHADOWNET_WITH_SECRET_KEY']) {
   providers.push(tezlinkshadownetSecretKey);
 } else if (process.env['SHADOWNET']) {
   providers.push(shadownetEphemeral);
-} else if (process.env['TALLINNNET']) {
-  providers.push(tallinnnetEphemeral);
-} else if (process.env['USHUAIANET']) {
-  providers.push(ushuaianetEphemeral);
 } else {
-  providers.push(shadownetEphemeral, tallinnnetEphemeral);
+  // Default: shadownet only (matches CI). Explicit env vars above select other nets.
+  providers.push(shadownetEphemeral);
 }
 
 const setupForger = (Tezos: TezosToolkit, forger: ForgerType): void => {

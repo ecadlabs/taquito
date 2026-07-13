@@ -269,7 +269,9 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker, knownTicketCont
       });
       expect(estimated?.suggestedFeeMutez).toBeGreaterThanOrEqual(355);
       expect(estimated?.gasLimit).toBeGreaterThanOrEqual(1545);
-      expect(rpc.includes('ushuaia') ? [0, 86] : [0]).toContain(estimated?.storageLimit);
+      // storageLimit is 0 or 86 depending on whether the ticket destination
+      // already holds a balance for this ticket (allocation jitter, not protocol).
+      expect([0, 86]).toContain(estimated?.storageLimit);
 
       const transferTicketOp = await Tz4.contract.transferTicket({
         ticketContents: ticket.content,
