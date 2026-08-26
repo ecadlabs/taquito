@@ -1,4 +1,6 @@
 import { OptionTokenSchema } from '../schema/types';
+import { ListToken } from './list';
+import { SetToken } from './set';
 import { Token, TokenFactory, Semantic, ComparableToken, SemanticEncoding } from './token';
 
 export class OptionToken extends ComparableToken {
@@ -48,7 +50,16 @@ export class OptionToken extends ComparableToken {
       return { prim: 'None' };
     }
     value = typeof value === 'object' && 'Some' in value ? value['Some'] : value;
-    if (Array.isArray(value) && value.length === 1) {
+    // A one-element array can mean two different things. For a nested option it wraps the
+    // value, so it must be unwrapped. For a sequence type the array *is* the value, so
+    // unwrapping it hands a bare element to the inner token, which then rejects it.
+    const innerPrim = this.val.args?.[0]?.prim;
+    if (
+      Array.isArray(value) &&
+      value.length === 1 &&
+      innerPrim !== ListToken.prim &&
+      innerPrim !== SetToken.prim
+    ) {
       value = value[0];
     }
     return { prim: 'Some', args: [this.schema().EncodeObject(value, semantic)] };

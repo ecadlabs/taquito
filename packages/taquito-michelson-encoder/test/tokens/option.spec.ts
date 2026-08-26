@@ -7,6 +7,8 @@ describe('Option token', () => {
   let token: OptionToken;
   let unitToken: OptionToken;
   let nestedToken: OptionToken;
+  let listToken: OptionToken;
+  let setToken: OptionToken;
   beforeEach(() => {
     token = createToken({ prim: 'option', args: [{ prim: 'int' }], annots: [] }, 0) as OptionToken;
     unitToken = createToken(
@@ -15,6 +17,14 @@ describe('Option token', () => {
     ) as OptionToken;
     nestedToken = createToken(
       { prim: 'option', args: [{ prim: 'option', args: [{ prim: 'int' }] }], annots: [] },
+      0
+    ) as OptionToken;
+    listToken = createToken(
+      { prim: 'option', args: [{ prim: 'list', args: [{ prim: 'int' }] }], annots: [] },
+      0
+    ) as OptionToken;
+    setToken = createToken(
+      { prim: 'option', args: [{ prim: 'set', args: [{ prim: 'int' }] }], annots: [] },
       0
     ) as OptionToken;
   });
@@ -48,6 +58,32 @@ describe('Option token', () => {
       expect(token.EncodeObject(undefined)).toEqual({ prim: 'None' });
       expect(unitToken.EncodeObject(undefined)).toEqual({ prim: 'None' });
       expect(nestedToken.EncodeObject(undefined)).toEqual({ prim: 'None' });
+    });
+
+    it('Should encode a one-element list without unwrapping it', () => {
+      expect(listToken.EncodeObject([10])).toEqual({
+        prim: 'Some',
+        args: [[{ int: '10' }]],
+      });
+      expect(listToken.EncodeObject([10, 20])).toEqual({
+        prim: 'Some',
+        args: [[{ int: '10' }, { int: '20' }]],
+      });
+      expect(listToken.EncodeObject({ Some: [10] })).toEqual({
+        prim: 'Some',
+        args: [[{ int: '10' }]],
+      });
+    });
+
+    it('Should encode a one-element set without unwrapping it', () => {
+      expect(setToken.EncodeObject([10])).toEqual({
+        prim: 'Some',
+        args: [[{ int: '10' }]],
+      });
+      expect(setToken.EncodeObject([10, 20])).toEqual({
+        prim: 'Some',
+        args: [[{ int: '10' }, { int: '20' }]],
+      });
     });
 
     it('Should encode to Some(None) when { Some: null }', () => {
