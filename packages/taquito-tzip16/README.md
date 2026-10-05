@@ -22,6 +22,11 @@ npm i --save @taquito/taquito
 
 ## Usage
 
+**For production applications that retrieve IPFS metadata, configure a reliable gateway.**
+The shared public default, `ipfs.filebase.io`, is provided for convenience and may be
+rate-limited or unavailable. Use a dedicated or application-controlled gateway that
+can retrieve your content and supports CORS for browser applications.
+
 **Create an instance of the `Tzip16Module` and add it as an extension to the `TezosToolkit`**
 
 The constructor of the `Tzip16Module` takes an optional `MetadataProvider` as a parameter. When none is passed, the default `MetadataProvider` of Taquito is instantiated, and the default handlers (`HttpHandler`, `IpfsHandler`, and `TezosStorageHandler`) are used. 
@@ -40,6 +45,29 @@ Tezos.addExtension(new Tzip16Module());
 const contract = await Tezos.contract.at("contractAddress", tzip16)
 ```
 
+### Configure an IPFS gateway
+
+Pass the gateway hostname without `https://` or `/ipfs/`. Copying `DEFAULT_HANDLERS`
+retains the HTTP, HTTPS, and Tezos storage handlers:
+
+```ts
+import { TezosToolkit } from '@taquito/taquito';
+import { DEFAULT_HANDLERS, IpfsHttpHandler, MetadataProvider, Tzip16Module } from '@taquito/tzip16';
+
+const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
+const handlers = new Map(DEFAULT_HANDLERS);
+handlers.set('ipfs', new IpfsHttpHandler('ipfs.example.com')); // Your gateway hostname
+Tezos.addExtension(new Tzip16Module(new MetadataProvider(handlers)));
+```
+
+An override changes retrieval of `ipfs://` metadata. It does not rewrite HTTP URLs
+stored in contracts or URLs inside the returned metadata. Taquito does not
+automatically switch gateways when a request fails, or retry HTTP 429/5xx responses.
+Applications should catch metadata retrieval failures and let users retry or display
+that metadata is temporarily unavailable.
+
+See the [metadata documentation](https://taquito.io/docs/metadata-tzip16/) for more details.
+
 ### Get the contract metadata
 
 ```ts
@@ -47,6 +75,18 @@ const metadata = await contract.tzip16().getMetadata();
 ```
 
 The `getMetadata` method returns an object which contains the URI, the metadata in JSON format, an optional SHA256 hash of the metadata, and an optional integrity check result.
+
+On failure, catch `HttpResponseError`, `HttpRequestFailed`, or `HttpTimeoutError`
+from `@taquito/http-utils`. IPFS failures include gateway context and configuration
+guidance in the message; the existing status, URL, timeout, cause, and transport
+classification fields remain available on their respective error types.
+
+If a response cannot be parsed as JSON, `InvalidContractMetadataError` from
+`@taquito/tzip16` includes the metadata URI in its message and retains the response
+text in `invalidMetadata`. For IPFS this URI is the original `ipfs://` address.
+A gateway may have returned an HTML page instead of metadata. Prefer error types
+and diagnostic fields over matching message text. TZIP-12 retains its existing
+contract-metadata fallback behavior.
 
 ### Execute off-chain views
 
