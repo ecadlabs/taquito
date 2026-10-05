@@ -23,6 +23,7 @@ import { validateOperation, ValidationResult } from '@taquito/utils';
 import { createObservableFromSubscription } from '../subscribe/create-observable-from-subscription';
 import { ConfirmationTimeoutError, InvalidConfirmationCountError } from '../errors';
 import { InvalidOperationHashError } from '@taquito/core';
+import { isBlockHashIdentifier } from '../read-provider/interface';
 
 const env = typeof process !== 'undefined' ? process.env : undefined;
 
@@ -121,17 +122,31 @@ export class Operation {
       return defer(() =>
         createObservableFromSubscription(this.context.stream.subscribeBlock('head'))
       ).pipe(
-        switchMap((newHead) => {
-          const prevHead = this.lastHead?.header.level ?? newHead.header.level - 1;
-          return range(prevHead + 1, newHead.header.level - prevHead - 1).pipe(
-            concatMap((level) => this.context.readProvider.getBlock(level)),
-            endWith(newHead)
-          );
-        }),
+        // Finish each backfill before handling another head, even when reads take longer than a block.
+        concatMap((newHead) =>
+          defer(async () => {
+            if (this.lastHead) {
+              return this.lastHead.header.level;
+            }
+
+            // Inclusion must follow the forged branch, which predates injection and observation.
+            const branch = this.raw.opOb?.branch;
+            return branch && isBlockHashIdentifier(branch)
+              ? this.context.readProvider.getBlockLevel(branch)
+              : newHead.header.level - 1;
+          }).pipe(
+            concatMap((prevHead) =>
+              range(prevHead + 1, Math.max(0, newHead.header.level - prevHead - 1)).pipe(
+                concatMap((level) => this.context.readProvider.getBlock(level)),
+                endWith(newHead)
+              )
+            )
+          )
+        ),
         tap((newHead) => (this.lastHead = newHead))
       );
     }),
-    shareReplay({ refCount: true })
+    shareReplay({ bufferSize: 1, refCount: true })
   );
 
   // Observable that emit once operation is seen in a block
