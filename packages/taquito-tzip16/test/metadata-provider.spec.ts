@@ -216,6 +216,22 @@ describe('Metadata provider test', () => {
     expect(metadataProvider['extractProtocolInfo']('hello/world')).toBeUndefined();
   });
 
+  it('identifies the metadata URI when an HTTP response is not JSON', async () => {
+    const uri = 'https://metadata.example.com/contract.json';
+    const body = '<html>Service unavailable</html>';
+    mockHttpHandler.getMetadata.mockResolvedValue(body);
+    const result = metadataProvider.provideMetadata(mockContractAbstraction, uri, mockContext);
+
+    await expect(result).rejects.toBeInstanceOf(InvalidContractMetadataError);
+    await expect(result).rejects.toHaveProperty('invalidMetadata', body);
+    await expect(result).rejects.toHaveProperty('message', expect.stringContaining(uri));
+    await expect(result).rejects.toHaveProperty('message', expect.stringContaining('JSON'));
+    await expect(result).rejects.toHaveProperty(
+      'message',
+      expect.not.stringMatching(/non.?complian|not compliant/i)
+    );
+  });
+
   it('Should reject crafted invalid URIs without matching a protocol', () => {
     const craftedUri = `sha256://0x${'sha256://0xa'.repeat(4000)}`;
 

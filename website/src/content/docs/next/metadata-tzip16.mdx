@@ -9,6 +9,10 @@ The `@taquito/tzip16` package allows retrieving metadata associated with a smart
 
 The package can be used as an extension to the well known Taquito contract abstraction.
 
+**For production applications that retrieve IPFS metadata, configure a reliable gateway.** The shared public default, `ipfs.filebase.io`, is provided for convenience and may be rate-limited or unavailable. Its [public gateway](https://filebase.com/docs/ipfs/concepts/what-is-an-ipfs-gateway) is intended for testing and light usage, with a limit of 200 requests per minute. Use a dedicated or application-controlled gateway that can retrieve your content and supports CORS for browser applications. See the custom metadata provider example below.
+
+A gateway override changes how Taquito retrieves `ipfs://` metadata. It does not rewrite `https://ipfs.io/...` URIs stored in contracts or URLs inside the returned metadata.
+
 1. Create an instance of `Tzip16Module` and add it as an extension to our `TezosToolkit`
 
 <Tabs
@@ -34,20 +38,19 @@ Tezos.addExtension(new Tzip16Module());
 
 In some cases, we may want to use a customized metadata provider. The constructor of the `Tzip16Module` class takes an optional metadata provider as a parameter. This allows you to inject a custom metadata provider with custom protocol handlers if desired. 
 
-This is useful for example if we want to use a different IPFS gateway than the default one, which is `ipfs.io`, or if we want to use a different HTTP handler to support authentication or custom headers. Here is an example:
+The former default, `ipfs.io`, and `dweb.link` are [transitioning to service-worker gateways](https://blog.ipfs.tech/2026-08-beyond-sponsored-gateways/). They can reject plain HTTP metadata requests with rate-limit responses. Taquito's HTTP handler cannot execute a service-worker bootstrap. If your application explicitly configures either gateway, update that override as well.
+
+To override the default, pass your gateway hostname to `IpfsHttpHandler`, without `https://` or `/ipfs/`. Taquito constructs `https://<hostname>/ipfs/<content-path>/`. Existing explicit gateway overrides are preserved. The following example replaces the IPFS handler while retaining the default HTTP, HTTPS, and Tezos storage handlers:
 
 ```js
-import { Handler, IpfsHttpHandler, TezosStorageHandler, MetadataProvider, Tzip16Module, tzip16 } from '@taquito/tzip16';
+import { TezosToolkit } from '@taquito/taquito';
+import { DEFAULT_HANDLERS, IpfsHttpHandler, MetadataProvider, Tzip16Module, tzip16 } from '@taquito/tzip16';
 
 const Tezos = new TezosToolkit('rpcUrl');
 
 // The constructor of the `MetadataProvider` class takes a `Map<string, Handler>` as a parameter.
-const customHandler = new Map<string, Handler>([
-  ['ipfs', new IpfsHttpHandler('dweb.link')], // Constructor of IpfsHttpHandler takes an optional gateway
-  ['http', 'customHttpHandler'], // Custom HTTP(S) handler
-  ['https', 'customHttpHandler'],
-  ['tezos-storage', new TezosStorageHandler()],
-]);
+const customHandler = new Map(DEFAULT_HANDLERS);
+customHandler.set('ipfs', new IpfsHttpHandler('ipfs.example.com')); // Replace with your gateway hostname
 
 const customMetadataProvider = new MetadataProvider(customHandler);
 Tezos.addExtension(new Tzip16Module(customMetadataProvider));
@@ -80,6 +83,23 @@ All other methods of the `ContractAbstraction` class can be called as usual on t
 The `getMetadata` method returns an object which contains the URI, the metadata in JSON format, an optional SHA256 hash of the metadata and an optional integrity check result.
 
 A sequence diagram can be found [here](./tzip16-sequence-diagram#get-the-metadata).
+
+### Metadata retrieval failures
+
+Catch rejections from `contract.tzip16().getMetadata()` and let users retry or display that metadata is unavailable. The built-in IPFS handler adds gateway context and configuration guidance while retaining the HTTP error types and diagnostic fields:
+
+| Error | Diagnostic fields |
+| --- | --- |
+| `HttpResponseError` | `status`, `statusText`, `body`, and gateway `url` |
+| `HttpRequestFailed` | HTTP `method`, gateway `url`, original `cause`, and `transportError` when available |
+| `HttpTimeoutError` | `timeout` in milliseconds and gateway `url` |
+| `InvalidContractMetadataError` | Original response text in `invalidMetadata`; the metadata URI is included in the message |
+
+HTTP errors are exported by `@taquito/http-utils`; `InvalidContractMetadataError` is exported by `@taquito/tzip16`. Prefer error types and diagnostic fields over matching message text.
+
+A non-JSON response can be malformed metadata or an HTML page returned by a gateway. For IPFS parse failures, the message identifies the original `ipfs://` URI, not the HTTP gateway URL. JSON parsing happens in `MetadataProvider`; calling `IpfsHttpHandler.getMetadata()` directly still returns raw text.
+
+Taquito does not automatically switch gateways or retry HTTP 429/5xx responses. A 404 may mean that content is unavailable; changing gateways does not ensure that the content exists or remains pinned. TZIP-12 retains its existing contract-metadata fallback behavior.
 
 #### Tezos-storage example
 

@@ -69,7 +69,14 @@ export class MetadataProvider implements MetadataProviderInterface {
     try {
       metadataJSON = JSON.parse(metadata);
     } catch (ex) {
-      throw new InvalidContractMetadataError(metadata);
+      const error = new InvalidContractMetadataError(metadata);
+      error.message = `Unable to parse metadata from ${uri} as JSON.`;
+      if (uriInfo.protocol === 'ipfs') {
+        error.message +=
+          ' The IPFS gateway may have returned an HTML error or service-worker page.' +
+          " Configure a reliable gateway with IpfsHttpHandler('your-gateway-hostname').";
+      }
+      throw error;
     }
 
     return {

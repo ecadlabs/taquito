@@ -458,7 +458,7 @@ const metadata = await contract.tzip16().getMetadata();
 const views = await contract.tzip16().metadataViews();
 ```
 
-The constructor of the Tzip16Module takes an optional MetadataProvider as a parameter. When none is passed, the default MetadataProvider of Taquito is instantiated and the default handlers (HttpHandler, IpfsHandler, and TezosStorageHandler) are used. A user might want to customize one of the handlers. For example, he might want to use a custom Ipfs Handler in order to use a different ipfs gateway. The default one is 'gateway.ipfs.io'.
+The constructor of the Tzip16Module takes an optional MetadataProvider as a parameter. When none is passed, the default MetadataProvider of Taquito is instantiated and the default handlers (HttpHandler, IpfsHandler, and TezosStorageHandler) are used. A user might want to customize one of the handlers. For example, he might want to use a custom Ipfs Handler in order to use a different ipfs gateway. The default gateway is `ipfs.filebase.io`. For production traffic, [configure a dedicated IPFS gateway](./metadata-tzip16#how-to-use-the-tzip16-package).
 
 ### Interacting with Token Metadata ([Tzip-12](tzip12))
 
