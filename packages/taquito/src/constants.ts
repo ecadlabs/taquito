@@ -105,6 +105,9 @@ export enum ChainIds {
 export const getRevealGasLimit = (address: string) =>
   Math.round((getRevealGasLimitInternal(address) * 37) / 10);
 
+/** Signed standalone reveal size allowance used when allocating estimated operation bytes. */
+export const getRevealOperationSize = (address: string) => (address.startsWith('tz4') ? 311 : 162);
+
 const getRevealGasLimitInternal = (address: string) => {
   switch (address.substring(0, 3)) {
     case 'tz1':

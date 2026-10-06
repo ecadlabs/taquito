@@ -842,6 +842,8 @@ describe('RPCEstimateProvider test signer', () => {
         { kind: OpKind.TRANSACTION, to: 'tz3hRZUScFCcEVhdDjXWoyekbgd1Gatga6mp', amount: 2 },
       ]);
       expect(estimate.length).toEqual(4);
+      // Allocate the signed group's 288 bytes once across reveal and other contents.
+      expect(estimate.reduce((size, item) => size + Number(item.opSize), 0)).toEqual(288);
 
       expect(estimate[0]).toMatchObject({
         gasLimit: 1000,
@@ -851,20 +853,20 @@ describe('RPCEstimateProvider test signer', () => {
       expect(estimate[1]).toMatchObject({
         gasLimit: 1330,
         storageLimit: 93,
-        suggestedFeeMutez: 349,
+        suggestedFeeMutez: 295,
       });
-      expect(estimate[2].suggestedFeeMutez).toEqual(316);
-      expect(estimate[3].suggestedFeeMutez).toEqual(316);
+      expect(estimate[2].suggestedFeeMutez).toEqual(262);
+      expect(estimate[3].suggestedFeeMutez).toEqual(262);
 
       expect(estimate[2]).toMatchObject({
         gasLimit: 1000,
         storageLimit: 0,
-        suggestedFeeMutez: 316,
+        suggestedFeeMutez: 262,
       });
       expect(estimate[3]).toMatchObject({
         gasLimit: 1000,
         storageLimit: 0,
-        suggestedFeeMutez: 316,
+        suggestedFeeMutez: 262,
       });
     });
 
