@@ -4,6 +4,7 @@ import {
   VotingPeriodBlockResult,
   PreapplyParams,
   ConstantsResponse,
+  MempoolFilterResponse,
 } from '@taquito/rpc';
 import {
   DelegateParams,
@@ -34,7 +35,13 @@ import {
   FinalizeUnstakeParams,
 } from '../operations/types';
 import { PreparationProvider, PreparedOperation } from './interface';
-import { REVEAL_STORAGE_LIMIT, Protocols, getRevealFee, getRevealGasLimit } from '../constants';
+import {
+  REVEAL_STORAGE_LIMIT,
+  Protocols,
+  getRevealFee,
+  getRevealGasLimit,
+  getRevealOperationSize,
+} from '../constants';
 import { RPCResponseError } from '../errors';
 import {
   PublicKeyNotFoundError,
@@ -67,7 +74,7 @@ import {
   createRegisterDelegateOperation,
   createActivationOperation,
 } from '../contract';
-import { Estimate } from '../estimate';
+import { DEFAULT_FEE_PARAMS, Estimate, feeParamsFromMempoolFilter } from '../estimate/estimate';
 import { ForgeParams } from '@taquito/local-forging';
 import { Provider } from '../provider';
 import BigNumberJs from 'bignumber.js';
@@ -214,6 +221,40 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     return { source: typeof op.source === 'undefined' ? source || pkh : op.source };
   }
 
+  private async getAutomaticRevealFee(pkh: string) {
+    let filter: MempoolFilterResponse;
+    try {
+      filter = await this.rpc.getMempoolFilter({ include_default: true });
+    } catch {
+      // Preserve the historical fallback for nodes without a usable filter endpoint.
+      return getRevealFee(pkh);
+    }
+
+    if (!filter) {
+      return getRevealFee(pkh);
+    }
+
+    const feeParams = feeParamsFromMempoolFilter(filter);
+    if (
+      feeParams.minimalFeeMutez === DEFAULT_FEE_PARAMS.minimalFeeMutez &&
+      feeParams.feePerGasMutez === DEFAULT_FEE_PARAMS.feePerGasMutez &&
+      feeParams.feePerByteMutez === DEFAULT_FEE_PARAMS.feePerByteMutez
+    ) {
+      // Default-L1 callers use getRevealFee to reserve the exact fee when draining an account.
+      return getRevealFee(pkh);
+    }
+
+    // Price the gas budget we will actually send, rather than a separately simulated limit.
+    return new Estimate(
+      getRevealGasLimit(pkh) * 1000,
+      REVEAL_STORAGE_LIMIT,
+      getRevealOperationSize(pkh),
+      0,
+      undefined,
+      feeParams
+    ).suggestedFeeMutez;
+  }
+
   private async addRevealOperationIfNeeded(operation: RPCOperation, publicKeyHash: string) {
     if (isOpRequireReveal(operation)) {
       const ops: RPCOperation[] = [operation];
@@ -226,7 +267,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
         ops.unshift(
           await createRevealOperation(
             {
-              fee: getRevealFee(pkh),
+              fee: await this.getAutomaticRevealFee(pkh),
               storageLimit: REVEAL_STORAGE_LIMIT,
               gasLimit: getRevealGasLimit(pkh),
               proof:
@@ -1478,7 +1519,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       ops.unshift(
         await createRevealOperation(
           {
-            fee: getRevealFee(pkh),
+            fee: await this.getAutomaticRevealFee(pkh),
             storageLimit: REVEAL_STORAGE_LIMIT,
             gasLimit: getRevealGasLimit(pkh),
             proof:

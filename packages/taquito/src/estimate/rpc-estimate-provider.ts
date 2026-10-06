@@ -51,6 +51,7 @@ import { BatchGasLimitExceededError, RevealEstimateError } from './errors';
 import { ContractMethodObject, ContractProvider } from '../contract';
 import { Provider } from '../provider';
 import { PrepareProvider } from '../prepare/prepare-provider';
+import { getRevealOperationSize } from '../constants';
 import { PreparedOperation } from '../prepare';
 import {
   InvalidAddressError,
@@ -92,8 +93,6 @@ type SimulatedOperationPayloadContent = OperationContents & {
  * significantly higher or dynamic, so this provider reads them from RPC before computing fees.
  */
 export class RPCEstimateProvider extends Provider implements EstimationProvider {
-  private readonly REVEAL_LENGTH = 324; // injecting size tz1=320, tz2=322, tz3=322
-  private readonly REVEAL_LENGTH_TZ4 = 622; // injecting size tz4=620
   private readonly MILLIGAS_BUFFER = 100 * 1000; // 100 buffer depends on operation kind
   private readonly STORAGE_BUFFER = 20; // according to octez-client
   private readonly UNKNOWN_GAS_LIMIT_PER_OPERATION = 1000;
@@ -465,12 +464,11 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
     return opResponse.contents.map((x) => {
       const content = x as OperationContentsAndResultWithFee;
       content.source = content.source || '';
-      let revealSize, eachOpSize;
+      const revealSize = getRevealOperationSize(content.source);
+      let eachOpSize;
       if (content.source.startsWith(PrefixV2.BLS12_381PublicKeyHash)) {
-        revealSize = this.REVEAL_LENGTH_TZ4 / 2;
         eachOpSize = (opbytes.length / 2 + sigSize[PrefixV2.BLS12_381Signature]) / numberOfOps;
       } else {
-        revealSize = this.REVEAL_LENGTH / 2;
         eachOpSize = (opbytes.length / 2 + sigSize[PrefixV2.Ed25519Signature]) / numberOfOps;
       }
       return {
@@ -501,11 +499,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
     const estimateProperties = await this.calculateEstimates(preparedOperation, protocolConstants);
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
-      const revealSize = preparedOperation.opOb.contents[0].source.startsWith(
-        PrefixV2.BLS12_381PublicKeyHash
-      )
-        ? this.REVEAL_LENGTH_TZ4 / 2
-        : this.REVEAL_LENGTH / 2;
+      const revealSize = getRevealOperationSize(preparedOperation.opOb.contents[0].source);
       estimateProperties.shift();
       estimateProperties[0].opSize -= revealSize;
     }
@@ -542,11 +536,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
     const estimateProperties = await this.calculateEstimates(preparedOperation, protocolConstants);
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
-      const revealSize = preparedOperation.opOb.contents[0].source.startsWith(
-        PrefixV2.BLS12_381PublicKeyHash
-      )
-        ? this.REVEAL_LENGTH_TZ4 / 2
-        : this.REVEAL_LENGTH / 2;
+      const revealSize = getRevealOperationSize(preparedOperation.opOb.contents[0].source);
       estimateProperties.shift();
       estimateProperties[0].opSize -= revealSize;
     }
@@ -588,11 +578,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
-      const revealSize = preparedOperation.opOb.contents[0].source.startsWith(
-        PrefixV2.BLS12_381PublicKeyHash
-      )
-        ? this.REVEAL_LENGTH_TZ4 / 2
-        : this.REVEAL_LENGTH / 2;
+      const revealSize = getRevealOperationSize(preparedOperation.opOb.contents[0].source);
       estimateProperties[0].opSize -= revealSize;
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
@@ -633,11 +619,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
-      const revealSize = preparedOperation.opOb.contents[0].source.startsWith(
-        PrefixV2.BLS12_381PublicKeyHash
-      )
-        ? this.REVEAL_LENGTH_TZ4 / 2
-        : this.REVEAL_LENGTH / 2;
+      const revealSize = getRevealOperationSize(preparedOperation.opOb.contents[0].source);
       estimateProperties[0].opSize -= revealSize;
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
@@ -679,11 +661,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
-      const revealSize = preparedOperation.opOb.contents[0].source.startsWith(
-        PrefixV2.BLS12_381PublicKeyHash
-      )
-        ? this.REVEAL_LENGTH_TZ4 / 2
-        : this.REVEAL_LENGTH / 2;
+      const revealSize = getRevealOperationSize(preparedOperation.opOb.contents[0].source);
       estimateProperties[0].opSize -= revealSize;
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
@@ -718,11 +696,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
-      const revealSize = preparedOperation.opOb.contents[0].source.startsWith(
-        PrefixV2.BLS12_381PublicKeyHash
-      )
-        ? this.REVEAL_LENGTH_TZ4 / 2
-        : this.REVEAL_LENGTH / 2;
+      const revealSize = getRevealOperationSize(preparedOperation.opOb.contents[0].source);
       estimateProperties[0].opSize -= revealSize;
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
@@ -756,11 +730,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
-      const revealSize = preparedOperation.opOb.contents[0].source.startsWith(
-        PrefixV2.BLS12_381PublicKeyHash
-      )
-        ? this.REVEAL_LENGTH_TZ4 / 2
-        : this.REVEAL_LENGTH / 2;
+      const revealSize = getRevealOperationSize(preparedOperation.opOb.contents[0].source);
       estimateProperties[0].opSize -= revealSize;
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
@@ -777,6 +747,15 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
     const preparedOperations = await this.prepare.batch(params);
 
     const estimateProperties = await this.calculateEstimates(preparedOperations, protocolConstants);
+
+    if (preparedOperations.opOb.contents[0]?.kind === 'reveal' && estimateProperties.length > 1) {
+      // The reveal estimate already owns its signed-size allowance. Allocate the
+      // remaining bytes across the other contents so the batch pays for them once.
+      const revealShare = estimateProperties[0].opSize / (estimateProperties.length - 1);
+      for (const estimate of estimateProperties.slice(1)) {
+        estimate.opSize -= revealShare;
+      }
+    }
 
     return Estimate.createArrayEstimateInstancesFromProperties(estimateProperties);
   }
@@ -804,11 +783,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
-      const revealSize = preparedOperation.opOb.contents[0].source.startsWith(
-        PrefixV2.BLS12_381PublicKeyHash
-      )
-        ? this.REVEAL_LENGTH_TZ4 / 2
-        : this.REVEAL_LENGTH / 2;
+      const revealSize = getRevealOperationSize(preparedOperation.opOb.contents[0].source);
       estimateProperties[0].opSize -= revealSize;
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
@@ -879,11 +854,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
-      const revealSize = preparedOperation.opOb.contents[0].source.startsWith(
-        PrefixV2.BLS12_381PublicKeyHash
-      )
-        ? this.REVEAL_LENGTH_TZ4 / 2
-        : this.REVEAL_LENGTH / 2;
+      const revealSize = getRevealOperationSize(preparedOperation.opOb.contents[0].source);
       estimateProperties[0].opSize -= revealSize;
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
@@ -913,11 +884,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
-      const revealSize = preparedOperation.opOb.contents[0].source.startsWith(
-        PrefixV2.BLS12_381PublicKeyHash
-      )
-        ? this.REVEAL_LENGTH_TZ4 / 2
-        : this.REVEAL_LENGTH / 2;
+      const revealSize = getRevealOperationSize(preparedOperation.opOb.contents[0].source);
       estimateProperties[0].opSize -= revealSize;
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
@@ -948,11 +915,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
     const estimateProperties = await this.calculateEstimates(preparedOperation, protocolConstants);
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
-      const revealSize = preparedOperation.opOb.contents[0].source.startsWith(
-        PrefixV2.BLS12_381PublicKeyHash
-      )
-        ? this.REVEAL_LENGTH_TZ4 / 2
-        : this.REVEAL_LENGTH / 2;
+      const revealSize = getRevealOperationSize(preparedOperation.opOb.contents[0].source);
       estimateProperties[0].opSize -= revealSize;
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
@@ -978,11 +941,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
     const estimateProperties = await this.calculateEstimates(preparedOperation, protocolConstants);
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
-      const revealSize = preparedOperation.opOb.contents[0].source.startsWith(
-        PrefixV2.BLS12_381PublicKeyHash
-      )
-        ? this.REVEAL_LENGTH_TZ4 / 2
-        : this.REVEAL_LENGTH / 2;
+      const revealSize = getRevealOperationSize(preparedOperation.opOb.contents[0].source);
       estimateProperties[0].opSize -= revealSize;
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
@@ -1004,11 +963,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
-      const revealSize = preparedOperation.opOb.contents[0].source.startsWith(
-        PrefixV2.BLS12_381PublicKeyHash
-      )
-        ? this.REVEAL_LENGTH_TZ4 / 2
-        : this.REVEAL_LENGTH / 2;
+      const revealSize = getRevealOperationSize(preparedOperation.opOb.contents[0].source);
       estimateProperties[0].opSize -= revealSize;
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
@@ -1028,11 +983,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
     const estimateProperties = await this.calculateEstimates(preparedOperation, protocolConstants);
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
-      const revealSize = preparedOperation.opOb.contents[0].source.startsWith(
-        PrefixV2.BLS12_381PublicKeyHash
-      )
-        ? this.REVEAL_LENGTH_TZ4 / 2
-        : this.REVEAL_LENGTH / 2;
+      const revealSize = getRevealOperationSize(preparedOperation.opOb.contents[0].source);
       estimateProperties[0].opSize -= revealSize;
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
@@ -1074,11 +1025,7 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
 
     if (preparedOperation.opOb.contents[0].kind === 'reveal') {
       estimateProperties.shift();
-      const revealSize = preparedOperation.opOb.contents[0].source.startsWith(
-        PrefixV2.BLS12_381PublicKeyHash
-      )
-        ? this.REVEAL_LENGTH_TZ4 / 2
-        : this.REVEAL_LENGTH / 2;
+      const revealSize = getRevealOperationSize(preparedOperation.opOb.contents[0].source);
       estimateProperties[0].opSize -= revealSize;
     }
     return Estimate.createEstimateInstanceFromProperties(estimateProperties);
