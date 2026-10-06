@@ -3,6 +3,7 @@ import {
   BehaviorSubject,
   concat,
   defer,
+  EMPTY,
   from,
   Observable,
   of,
@@ -93,7 +94,17 @@ export class OperationFactory {
     const observableSequence: Observable<BlockResponse>[] = [];
 
     if (blockIdentifier) {
-      observableSequence.push(this.createPastBlockWalker(blockIdentifier));
+      let started = false;
+      observableSequence.push(
+        defer(() => {
+          // A later confirmation subscription must resume polling, not replay the reference block.
+          if (started) {
+            return EMPTY;
+          }
+          started = true;
+          return this.createPastBlockWalker(blockIdentifier);
+        })
+      );
     }
 
     observableSequence.push(await this.createNewHeadObservable());

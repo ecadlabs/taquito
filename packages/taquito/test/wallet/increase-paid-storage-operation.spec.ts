@@ -71,6 +71,9 @@ describe('WalletOperation', () => {
 
   beforeAll(() => {
     mockContext = {
+      readProvider: {
+        getBlockLevel: vi.fn().mockResolvedValue(100),
+      },
       operationFactory: {
         createIncreasePaidStorageOperation: vi.fn(),
       },

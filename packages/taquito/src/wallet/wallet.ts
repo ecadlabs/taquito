@@ -42,6 +42,13 @@ export type WalletParamsWithKind =
   | withKind<WalletTransferTicketParams, OpKind.TRANSFER_TICKET>
   | withKind<WalletRegisterGlobalConstantParams, OpKind.REGISTER_GLOBAL_CONSTANT>;
 
+async function sendOperations(context: Context, walletProvider: WalletProvider, params: unknown[]) {
+  // The wallet can return its hash after inclusion, so anchor monitoring before submission.
+  const level = await context.readProvider.getBlockLevel('head');
+  const opHash = await walletProvider.sendOperations(params);
+  return { opHash, blockIdentifier: String(level) };
+}
+
 export class WalletOperationBatch {
   private operations: WalletParamsWithKind[] = [];
 
@@ -198,9 +205,13 @@ export class WalletOperationBatch {
       ops.push(await this.mapOperation(op));
     }
 
-    const opHash = await this.walletProvider.sendOperations(ops);
+    const { opHash, blockIdentifier } = await sendOperations(
+      this.context,
+      this.walletProvider,
+      ops
+    );
 
-    return this.context.operationFactory.createBatchOperation(opHash);
+    return this.context.operationFactory.createBatchOperation(opHash, { blockIdentifier });
   }
 }
 
@@ -258,10 +269,12 @@ export class Wallet {
           ...(params as WalletOriginateParams),
         })
       );
-      const opHash = await this.walletProvider.sendOperations([mappedParams]);
-      return this.context.operationFactory.createOriginationOperation(opHash) as Promise<
-        OriginationWalletOperation<TWallet>
-      >;
+      const { opHash, blockIdentifier } = await sendOperations(this.context, this.walletProvider, [
+        mappedParams,
+      ]);
+      return this.context.operationFactory.createOriginationOperation(opHash, {
+        blockIdentifier,
+      }) as Promise<OriginationWalletOperation<TWallet>>;
     });
   }
 
@@ -279,8 +292,10 @@ export class Wallet {
       const mappedParams = await this.walletProvider.mapDelegateParamsToWalletParams(
         async () => params
       );
-      const opHash = await this.walletProvider.sendOperations([mappedParams]);
-      return this.context.operationFactory.createDelegationOperation(opHash);
+      const { opHash, blockIdentifier } = await sendOperations(this.context, this.walletProvider, [
+        mappedParams,
+      ]);
+      return this.context.operationFactory.createDelegationOperation(opHash, { blockIdentifier });
     });
   }
 
@@ -325,8 +340,10 @@ export class Wallet {
         const delegate = await this.pkh();
         return { delegate };
       });
-      const opHash = await this.walletProvider.sendOperations([mappedParams]);
-      return this.context.operationFactory.createDelegationOperation(opHash);
+      const { opHash, blockIdentifier } = await sendOperations(this.context, this.walletProvider, [
+        mappedParams,
+      ]);
+      return this.context.operationFactory.createDelegationOperation(opHash, { blockIdentifier });
     });
   }
 
@@ -344,8 +361,10 @@ export class Wallet {
       const mappedParams = await this.walletProvider.mapTransferParamsToWalletParams(
         async () => params
       );
-      const opHash = await this.walletProvider.sendOperations([mappedParams]);
-      return this.context.operationFactory.createTransactionOperation(opHash);
+      const { opHash, blockIdentifier } = await sendOperations(this.context, this.walletProvider, [
+        mappedParams,
+      ]);
+      return this.context.operationFactory.createTransactionOperation(opHash, { blockIdentifier });
     });
   }
 
@@ -364,8 +383,12 @@ export class Wallet {
         async () => params
       );
 
-      const opHash = await this.walletProvider.sendOperations([mappedParams]);
-      return this.context.operationFactory.createTransferTicketOperation(opHash);
+      const { opHash, blockIdentifier } = await sendOperations(this.context, this.walletProvider, [
+        mappedParams,
+      ]);
+      return this.context.operationFactory.createTransferTicketOperation(opHash, {
+        blockIdentifier,
+      });
     });
   }
 
@@ -387,8 +410,10 @@ export class Wallet {
         params.parameter = { entrypoint: 'stake', value: { prim: 'Unit' } };
         return params;
       });
-      const opHash = await this.walletProvider.sendOperations([mappedParams]);
-      return this.context.operationFactory.createTransactionOperation(opHash);
+      const { opHash, blockIdentifier } = await sendOperations(this.context, this.walletProvider, [
+        mappedParams,
+      ]);
+      return this.context.operationFactory.createTransactionOperation(opHash, { blockIdentifier });
     });
   }
 
@@ -412,8 +437,12 @@ export class Wallet {
         params.parameter = { entrypoint: 'unstake', value: { prim: 'Unit' } };
         return params;
       });
-      const opHash = await this.walletProvider.sendOperations([mappedParams]);
-      return await this.context.operationFactory.createTransactionOperation(opHash);
+      const { opHash, blockIdentifier } = await sendOperations(this.context, this.walletProvider, [
+        mappedParams,
+      ]);
+      return await this.context.operationFactory.createTransactionOperation(opHash, {
+        blockIdentifier,
+      });
     });
   }
 
@@ -440,8 +469,12 @@ export class Wallet {
           return params;
         }
       );
-      const opHash = await this.walletProvider.sendOperations([mappedParams]);
-      return await this.context.operationFactory.createTransactionOperation(opHash);
+      const { opHash, blockIdentifier } = await sendOperations(this.context, this.walletProvider, [
+        mappedParams,
+      ]);
+      return await this.context.operationFactory.createTransactionOperation(opHash, {
+        blockIdentifier,
+      });
     });
   }
 
@@ -459,8 +492,12 @@ export class Wallet {
       const mappedParams = await this.walletProvider.mapIncreasePaidStorageWalletParams(
         async () => params
       );
-      const opHash = await this.walletProvider.sendOperations([mappedParams]);
-      return this.context.operationFactory.createIncreasePaidStorageOperation(opHash);
+      const { opHash, blockIdentifier } = await sendOperations(this.context, this.walletProvider, [
+        mappedParams,
+      ]);
+      return this.context.operationFactory.createIncreasePaidStorageOperation(opHash, {
+        blockIdentifier,
+      });
     });
   }
 
@@ -474,8 +511,12 @@ export class Wallet {
       const mappedParams = await this.walletProvider.mapRegisterGlobalConstantParamsToWalletParams(
         async () => params
       );
-      const opHash = await this.walletProvider.sendOperations([mappedParams]);
-      return this.context.operationFactory.createRegisterGlobalConstantOperation(opHash);
+      const { opHash, blockIdentifier } = await sendOperations(this.context, this.walletProvider, [
+        mappedParams,
+      ]);
+      return this.context.operationFactory.createRegisterGlobalConstantOperation(opHash, {
+        blockIdentifier,
+      });
     });
   }
 
