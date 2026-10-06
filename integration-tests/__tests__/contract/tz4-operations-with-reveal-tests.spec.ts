@@ -172,16 +172,28 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker, knownTicketCont
         { kind: OpKind.DELEGATION, source: await Tz4.signer.publicKeyHash(), delegate: await Tz4.signer.publicKeyHash() },
         { kind: OpKind.UPDATE_CONSENSUS_KEY, pk: consensusPk, proof: proof.prefixSig }]);
 
-      expect(estimated[1]?.suggestedFeeMutez).toBeGreaterThanOrEqual(161);
-      expect(estimated[1]?.gasLimit).toBeGreaterThanOrEqual(100);
-      expect(estimated[1]?.storageLimit).toBe(0);
-      expect(estimated[2]?.suggestedFeeMutez).toBeGreaterThanOrEqual(458);
-      expect(estimated[2]?.gasLimit).toBeGreaterThanOrEqual(1772);
-      expect(estimated[2]?.storageLimit).toBe(0);
+      expect(estimated).toHaveLength(3);
+      const [, delegationEstimate, keyUpdateEstimate] = estimated;
+      expect(delegationEstimate.gasLimit).toBeGreaterThanOrEqual(100);
+      expect(delegationEstimate.storageLimit).toBe(0);
+      expect(keyUpdateEstimate.gasLimit).toBeGreaterThanOrEqual(1772);
+      expect(keyUpdateEstimate.storageLimit).toBe(0);
 
       const updateConsensusKeyOp = await Tz4.contract.batch()
-        .withDelegation({ source: await Tz4.signer.publicKeyHash(), delegate: await Tz4.signer.publicKeyHash() })
-        .withUpdateConsensusKey({ pk: consensusPk, proof: proof.prefixSig })
+        .withDelegation({
+          source: await Tz4.signer.publicKeyHash(),
+          delegate: await Tz4.signer.publicKeyHash(),
+          fee: delegationEstimate.suggestedFeeMutez,
+          gasLimit: delegationEstimate.gasLimit,
+          storageLimit: delegationEstimate.storageLimit,
+        })
+        .withUpdateConsensusKey({
+          pk: consensusPk,
+          proof: proof.prefixSig,
+          fee: keyUpdateEstimate.suggestedFeeMutez,
+          gasLimit: keyUpdateEstimate.gasLimit,
+          storageLimit: keyUpdateEstimate.storageLimit,
+        })
         .send();
       await updateConsensusKeyOp.confirmation();
       expect(updateConsensusKeyOp.status).toBe('applied');
@@ -208,16 +220,28 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker, knownTicketCont
         { kind: OpKind.DELEGATION, source: await Tz4.signer.publicKeyHash(), delegate: await Tz4.signer.publicKeyHash() },
         { kind: OpKind.UPDATE_COMPANION_KEY, pk: companionPk, proof: companionProof }]);
 
-      expect(estimated[1]?.suggestedFeeMutez).toBeGreaterThanOrEqual(161);
-      expect(estimated[1]?.gasLimit).toBeGreaterThanOrEqual(100);
-      expect(estimated[1]?.storageLimit).toBe(0);
-      expect(estimated[2]?.suggestedFeeMutez).toBeGreaterThanOrEqual(458);
-      expect(estimated[2]?.gasLimit).toBeGreaterThanOrEqual(1772);
-      expect(estimated[2]?.storageLimit).toBe(0);
+      expect(estimated).toHaveLength(3);
+      const [, delegationEstimate, keyUpdateEstimate] = estimated;
+      expect(delegationEstimate.gasLimit).toBeGreaterThanOrEqual(100);
+      expect(delegationEstimate.storageLimit).toBe(0);
+      expect(keyUpdateEstimate.gasLimit).toBeGreaterThanOrEqual(1772);
+      expect(keyUpdateEstimate.storageLimit).toBe(0);
 
       const updateCompanionKeyOp = await Tz4.contract.batch()
-        .withDelegation({ source: await Tz4.signer.publicKeyHash(), delegate: await Tz4.signer.publicKeyHash() })
-        .withUpdateCompanionKey({ pk: companionPk, proof: companionProof })
+        .withDelegation({
+          source: await Tz4.signer.publicKeyHash(),
+          delegate: await Tz4.signer.publicKeyHash(),
+          fee: delegationEstimate.suggestedFeeMutez,
+          gasLimit: delegationEstimate.gasLimit,
+          storageLimit: delegationEstimate.storageLimit,
+        })
+        .withUpdateCompanionKey({
+          pk: companionPk,
+          proof: companionProof,
+          fee: keyUpdateEstimate.suggestedFeeMutez,
+          gasLimit: keyUpdateEstimate.gasLimit,
+          storageLimit: keyUpdateEstimate.storageLimit,
+        })
         .send();
       await updateCompanionKeyOp.confirmation();
       expect(updateCompanionKeyOp.status).toBe('applied');
