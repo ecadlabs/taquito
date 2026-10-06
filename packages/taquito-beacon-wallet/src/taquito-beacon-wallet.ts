@@ -4,16 +4,27 @@
  */
 
 import {
+  AccountInfo,
   DAppClient,
   DAppClientOptions,
+  Network,
+  NetworkType,
   RequestPermissionInput,
   PermissionScope,
   getDAppClientInstance,
+  isValidTezosCaip2,
+  normalizeTezosCaip2,
+  tezosCaip2FromNetworkType,
   SigningType,
   NodeDistributions,
   Regions,
-} from '@ecadlabs/beacon-dapp';
-import { BeaconWalletNotInitialized, MissingRequiredScopes } from './errors';
+} from '@tezos-x/octez.connect-dapp';
+import {
+  BeaconWalletNotInitialized,
+  MissingRequiredScopes,
+  NetworkNotGrantedError,
+  UnmappedNetworkError,
+} from './errors';
 import toBuffer from 'typedarray-to-buffer';
 import {
   createIncreasePaidStorageOperation,
@@ -38,14 +49,32 @@ import { buf2hex, hex2buf, mergebuf } from '@taquito/utils';
 import { UnsupportedActionError } from '@taquito/core';
 
 export { VERSION } from './version';
-export { BeaconWalletNotInitialized, MissingRequiredScopes } from './errors';
+export {
+  BeaconWalletNotInitialized,
+  MissingRequiredScopes,
+  NetworkNotGrantedError,
+  UnmappedNetworkError,
+} from './errors';
 
-// Re-exported from @ecadlabs/beacon-dapp for consumers who need these without
-// a direct beacon-dapp dependency. These types live only in beacon-dapp (not in
-// beacon-types), so they come with beacon-dapp's side effects. For side-effect-free
-// beacon types (NetworkType, SigningType, etc.), use '@taquito/beacon-wallet/types'.
-export { BeaconEvent } from '@ecadlabs/beacon-dapp';
-export type { DAppClientOptions } from '@ecadlabs/beacon-dapp';
+// Re-exported from @tezos-x/octez.connect-dapp for consumers who need these
+// without a direct octez.connect-dapp dependency. These types live only in
+// octez.connect-dapp (not in octez.connect-types), so they come with its side
+// effects. For side-effect-free beacon types (NetworkType, SigningType, etc.),
+// use '@taquito/beacon-wallet/types'.
+export { BeaconEvent } from '@tezos-x/octez.connect-dapp';
+export type { DAppClientOptions } from '@tezos-x/octez.connect-dapp';
+
+// Multi-network helpers, re-exported so dApps can translate between Taquito's
+// named-network vocabulary (NetworkType) and the CAIP-2 chain ids the
+// multi-network protocol routes on, without a direct octez.connect dependency.
+export {
+  TEZOS_NETWORK_GENESIS_IDS,
+  isValidTezosCaip2,
+  networkTypeFromTezosCaip2,
+  normalizeTezosCaip2,
+  tezosCaip2FromNetworkType,
+} from '@tezos-x/octez.connect-dapp';
+export type { AccountInfo, Network } from '@tezos-x/octez.connect-dapp';
 
 /**
  * Default matrix relay nodes curated by Taquito.
@@ -120,8 +149,135 @@ export class BeaconWallet implements WalletProvider {
     }
   }
 
+  /**
+   * Request permissions from the wallet.
+   *
+   * Pass `networks` to request accounts on several chains in a single pairing
+   * (multi-network). Each entry is addressed by its CAIP-2 chain id, which
+   * {@link tezosCaip2FromNetworkType} derives from a `NetworkType`:
+   *
+   * ```ts
+   * await wallet.requestPermissions({
+   *   networks: [
+   *     { chainId: tezosCaip2FromNetworkType(NetworkType.MAINNET)! },
+   *     { chainId: tezosCaip2FromNetworkType(NetworkType.GHOSTNET)! },
+   *   ],
+   * });
+   * ```
+   *
+   * The wallet then grants one account per network, and {@link setActiveNetwork}
+   * selects which one subsequent operations and signatures go to.
+   *
+   * Wallets that predate multi-network ignore `networks` and grant a single
+   * account on their own configured network. Pass
+   * `requiredMinimumVersion: '4'` to the `BeaconWallet` constructor to reject
+   * such wallets instead of silently degrading.
+   */
   async requestPermissions(request?: RequestPermissionInput) {
     await this.client.requestPermissions(request);
+  }
+
+  /**
+   * All accounts the wallet granted in the current session.
+   *
+   * A multi-network session holds one account per granted network, each carrying
+   * its own `network.chainId`. A single-network session holds one account.
+   */
+  async getAccounts(): Promise<AccountInfo[]> {
+    return this.client.getAccounts();
+  }
+
+  /**
+   * CAIP-2 chain ids the wallet granted an account for in the current session.
+   *
+   * Empty when connected to a wallet that predates multi-network — those
+   * sessions carry no chain id, and the network is the one the `BeaconWallet`
+   * was constructed with.
+   */
+  async getGrantedNetworks(): Promise<string[]> {
+    return this.chainIdsOf(await this.getAccounts());
+  }
+
+  /**
+   * The network of the active account, or `undefined` when no account is active.
+   *
+   * On a multi-network session `chainId` is set and identifies the chain that
+   * {@link sendOperations} targets; `rpcUrl` is populated only when the wallet
+   * supplied one.
+   */
+  async getActiveNetwork(): Promise<Network | undefined> {
+    const account = await this.client.getActiveAccount();
+
+    return account?.network;
+  }
+
+  /**
+   * Select which granted network subsequent operations and signatures target.
+   *
+   * Accepts a CAIP-2 chain id (`'tezos:NetXdQprcVkpaWU'`), a bare chain id
+   * (`'NetXdQprcVkpaWU'`), or a `NetworkType` for networks with a statically
+   * known genesis block. Switching networks does **not** re-pair the wallet.
+   *
+   * The `TezosToolkit` RPC is not part of the Beacon session, so point it at the
+   * new network yourself:
+   *
+   * ```ts
+   * await wallet.setActiveNetwork(NetworkType.GHOSTNET);
+   * Tezos.setRpcProvider('https://rpc.ghostnet.teztnets.com');
+   * ```
+   *
+   * @throws {NetworkNotGrantedError} if the wallet granted no account on that network
+   * @throws {UnmappedNetworkError} if the network cannot be resolved to a CAIP-2 chain id
+   */
+  async setActiveNetwork(network: string | NetworkType): Promise<AccountInfo> {
+    const chainId = this.toChainId(network);
+    const accounts = await this.getAccounts();
+    const account = accounts.find(
+      (candidate) =>
+        candidate.network?.chainId && normalizeTezosCaip2(candidate.network.chainId) === chainId
+    );
+
+    if (!account) {
+      throw new NetworkNotGrantedError(chainId, this.chainIdsOf(accounts));
+    }
+
+    await this.client.setActiveAccount(account);
+    return account;
+  }
+
+  /**
+   * Distinct CAIP-2 chain ids carried by the given accounts. Accounts of a
+   * session with a wallet that predates multi-network carry none.
+   */
+  private chainIdsOf(accounts: AccountInfo[]): string[] {
+    const chainIds = accounts
+      .map((account) => account.network?.chainId)
+      .filter((chainId): chainId is string => typeof chainId === 'string' && chainId.length > 0)
+      .map(normalizeTezosCaip2);
+
+    return Array.from(new Set(chainIds));
+  }
+
+  /**
+   * Resolve a network reference to a CAIP-2 chain id. `NetworkType` values are
+   * looked up in the SDK genesis table; strings are taken as chain ids and only
+   * normalized (a dApp can address a network the table does not cover).
+   */
+  private toChainId(network: string | NetworkType): string {
+    if ((Object.values(NetworkType) as string[]).includes(network)) {
+      const mapped = tezosCaip2FromNetworkType(network as NetworkType);
+      if (!mapped) {
+        throw new UnmappedNetworkError(network);
+      }
+      return mapped;
+    }
+
+    const chainId = normalizeTezosCaip2(network);
+    if (!isValidTezosCaip2(chainId)) {
+      throw new UnmappedNetworkError(network);
+    }
+
+    return chainId;
   }
 
   async getPKH() {
@@ -331,7 +487,16 @@ export class BeaconWallet implements WalletProvider {
     const permissions = account.scopes;
     this.validateRequiredScopesOrFail(permissions, [PermissionScope.OPERATION_REQUEST]);
 
-    const { transactionHash } = await this.client.requestOperation({ operationDetails: params });
+    // On a multi-network session the wallet cannot infer which chain an operation
+    // targets, so route it to the active account's network. Sessions with a
+    // wallet that predates multi-network carry no chain id; there the network is
+    // left out and the wallet uses the single network of the session, as before.
+    const chainId = account.network?.chainId;
+
+    const { transactionHash } = await this.client.requestOperation({
+      operationDetails: params,
+      ...(chainId ? { network: normalizeTezosCaip2(chainId) } : {}),
+    });
     return transactionHash;
   }
 

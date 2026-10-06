@@ -68,7 +68,7 @@ Taquito is a [monorepo](https://en.wikipedia.org/wiki/Monorepo), composed of npm
 
 | Package | npm | Source | Description |
 | --- | --- | --- | --- |
-| `@taquito/beacon-wallet` | [npm](https://www.npmjs.com/package/@taquito/beacon-wallet) | [source](./packages/taquito-beacon-wallet) | TZIP-10 Beacon wallet integration for Taquito dapps built on the Beacon SDK DAppClient. |
+| `@taquito/beacon-wallet` | [npm](https://www.npmjs.com/package/@taquito/beacon-wallet) | [source](./packages/taquito-beacon-wallet) | TZIP-10 Beacon wallet integration for Taquito dapps built on the Octez Connect DAppClient. |
 | `@taquito/contracts-library` | [npm](https://www.npmjs.com/package/@taquito/contracts-library) | [source](./packages/taquito-contracts-library) | Static Michelson scripts and entrypoints library for Taquito contract interactions. |
 | `@taquito/core` | [npm](https://www.npmjs.com/package/@taquito/core) | [source](./packages/taquito-core) | Shared types, interfaces, and primitives for Taquito packages. |
 | `@taquito/http-utils` | [npm](https://www.npmjs.com/package/@taquito/http-utils) | [source](./packages/taquito-http-utils) | HTTP transport utilities for Taquito RPC clients with retry, timeout, and error classification. |

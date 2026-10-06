@@ -73,7 +73,7 @@ console.log(wallet);
 
 The necessary bare minimum to instantiate the wallet is an object with a `name` property that contains the name of your dApp and the network you want it to point to. In this case, we choose to point it to `shadownet`.
 
-Beacon wallet allows you to customize your dApp responses to different events. In the example above, instead of getting the default Beacon pop-up after the user connects the wallet, it will display the available data in the console. You can use whatever solution you prefer for feedback. You can find a list of all the default handlers [in the beacon-sdk Github repo](https://github.com/airgap-it/beacon-sdk/blob/master/packages/beacon-dapp/src/events.ts).
+Beacon wallet allows you to customize your dApp responses to different events. In the example above, instead of getting the default Beacon pop-up after the user connects the wallet, it will display the available data in the console. You can use whatever solution you prefer for feedback. The full set of events is described by the `BeaconEvent` enum re-exported from `@taquito/beacon-wallet` (backed by the [Octez Connect](https://docs.tezos.com/dApps/migrating-from-beacon) SDK, formerly Beacon SDK).
 
 The `enableMetrics` property is an optional parameter that allows you to enable or disable the collection of metrics. It also allows the user to report bugs via a link in the wallet pop-up.
 
@@ -125,6 +125,55 @@ try {
   console.log(`Error: ${error}`);
 }
 ```
+
+### Connecting to several networks at once
+
+A single pairing can grant your dApp accounts on more than one network — for example mainnet and ghostnet — so users pair the wallet once and switch networks inside your UI without re-scanning a QR code.
+
+Networks are addressed by their [CAIP-2](https://github.com/ChainAgnostic/CAIPs/blob/main/CAIPs/caip-2.md) chain id (`tezos:<genesis block hash>`). Taquito re-exports `tezosCaip2FromNetworkType` to derive it from a `NetworkType`:
+
+```ts
+import { BeaconWallet, tezosCaip2FromNetworkType } from '@taquito/beacon-wallet';
+import { NetworkType } from '@taquito/beacon-wallet/types';
+
+const wallet = new BeaconWallet({
+  name: 'MyAwesomeDapp',
+  network: { type: NetworkType.MAINNET },
+});
+
+await wallet.requestPermissions({
+  networks: [
+    { chainId: tezosCaip2FromNetworkType(NetworkType.MAINNET)! },
+    { chainId: tezosCaip2FromNetworkType(NetworkType.GHOSTNET)! },
+  ],
+});
+```
+
+`tezosCaip2FromNetworkType` returns `undefined` for networks whose genesis block is not statically known (`weeklynet`, `dailynet`, `custom`, and networks without a public RPC) — those must be requested by their chain id directly.
+
+The wallet grants one account per network. `getGrantedNetworks()` lists what it actually granted, and `setActiveNetwork()` chooses which of those accounts signs and sends subsequent operations:
+
+```ts
+await wallet.getGrantedNetworks();
+// ['tezos:NetXdQprcVkpaWU', 'tezos:NetXnHfVqm9iesp']
+
+await wallet.setActiveNetwork(NetworkType.GHOSTNET);
+await wallet.getPKH(); // the address the wallet granted on ghostnet
+```
+
+`setActiveNetwork()` also accepts a chain id directly (`'tezos:NetXnHfVqm9iesp'`), which is how you reach a network that has no `NetworkType` mapping. It does not re-pair the wallet, and it throws `NetworkNotGrantedError` if the wallet granted no account on that network.
+
+The RPC node your `TezosToolkit` talks to is not part of the wallet session, so switch it yourself when the active network changes:
+
+```ts
+await wallet.setActiveNetwork(NetworkType.GHOSTNET);
+Tezos.setRpcProvider('https://rpc.ghostnet.teztnets.com');
+```
+
+Other accounts remain available for inspection through `getAccounts()`, and `getActiveNetwork()` returns the network of the active one.
+
+>[!NOTE]
+> Multi-network requires a wallet built on Octez Connect v5 or later. Older wallets ignore the `networks` list and grant a single account on their own configured network, which keeps working exactly as before. If your dApp cannot function that way, pass `requiredMinimumVersion: '4'` when constructing the `BeaconWallet` — incompatible wallets are then rejected with a `VersionUnsupportedBeaconError` instead of silently degrading to one network.
 
 ### Subscribing to events
 

@@ -4,6 +4,63 @@ description: Release notes and version history for Taquito, the TypeScript libra
 author: Jev Bjorsell
 layout: ../layouts/MarkdownLayout.astro
 ---
+# Taquito (unreleased)
+
+## Multi-network wallet sessions
+
+**TL;DR:** `@taquito/beacon-wallet` now runs on Octez Connect `5.0.2`, so one pairing can grant your dApp accounts on several networks at once and switch between them without re-pairing. Nothing changes for dApps that use a single network.
+
+Request the networks you need, then pick which one signs:
+
+```ts
+import { BeaconWallet, tezosCaip2FromNetworkType } from '@taquito/beacon-wallet';
+import { NetworkType } from '@taquito/beacon-wallet/types';
+
+await wallet.requestPermissions({
+  networks: [
+    { chainId: tezosCaip2FromNetworkType(NetworkType.MAINNET)! },
+    { chainId: tezosCaip2FromNetworkType(NetworkType.GHOSTNET)! },
+  ],
+});
+
+await wallet.setActiveNetwork(NetworkType.GHOSTNET);
+Tezos.setRpcProvider('https://rpc.ghostnet.teztnets.com');
+```
+
+### New on `BeaconWallet`
+
+- `requestPermissions({ networks })` — request accounts on several networks in one pairing. Networks are addressed by CAIP-2 chain id (`tezos:<genesis>`).
+- `setActiveNetwork(network)` — select which granted account signs and sends operations. Accepts a `NetworkType` or a chain id. Throws `NetworkNotGrantedError` if the wallet granted no account there, and `UnmappedNetworkError` if the `NetworkType` has no statically known chain id.
+- `getGrantedNetworks()` / `getActiveNetwork()` / `getAccounts()` — inspect what the wallet granted and which network is active.
+- `tezosCaip2FromNetworkType`, `networkTypeFromTezosCaip2`, `normalizeTezosCaip2`, `isValidTezosCaip2`, `TEZOS_NETWORK_GENESIS_IDS` are re-exported for translating between `NetworkType` and chain ids.
+
+Operations are routed to the active account's network automatically — `Tezos.wallet` needs no change. See [Connecting to several networks at once](/docs/wallet_API#connecting-to-several-networks-at-once).
+
+### Upgrade notes
+
+- **Wallets that predate multi-network keep working**: they ignore the `networks` list and grant a single account, as before. Pass `requiredMinimumVersion: '4'` to the `BeaconWallet` constructor if your dApp must reject them instead.
+- **WalletConnect is now opt-in in the SDK.** If your dApp offers WalletConnect wallets, pass `walletConnectOptions: { projectId: '<your-id>' }` to the `BeaconWallet` constructor; without it, WalletConnect pairing is no longer offered.
+- **`disclaimerText` and `requestTimeoutMs` were removed** from the constructor options: use `termsAndConditionsUrl` (and the new `privacyPolicyUrl`), and wrap calls in your own timeout if you relied on the built-in one.
+- **If you pinned `@walletconnect/*` to `2.18.0`** through `overrides`, remove that pin — Octez Connect v5 ships WalletConnect `2.23.x`, which multi-network requires. Taquito dropped the same pin from its own `overrides` in this release.
+
+## Wallet SDK migrated to Octez Connect
+
+**TL;DR:** `@taquito/beacon-wallet` now depends on the renamed **Octez Connect** packages (`@tezos-x/octez.connect-*`) instead of the `@ecadlabs/beacon-*` fork. This is the upstream rename of the Beacon SDK (see the [migration guide](https://docs.tezos.com/dApps/migrating-from-beacon)). The public API of `@taquito/beacon-wallet` is unchanged — the `BeaconWallet` class and the re-exported `BeaconEvent`, `NetworkType`, `PermissionScope`, `SigningType`, etc. keep the same names and import paths — so **most dApps need no code changes** beyond reinstalling.
+
+### Upgrade checklist
+
+- If you import wallet SDK symbols **through `@taquito/beacon-wallet`** (recommended — e.g. `import { NetworkType, BeaconEvent } from '@taquito/beacon-wallet'`), no change is needed.
+- If you depended on `@ecadlabs/beacon-*` (or the original `@airgap/beacon-*`) packages **directly**, replace them with the corresponding `@tezos-x/octez.connect-*` package at `5.0.2`:
+
+  ```diff
+  -import { NetworkType } from '@ecadlabs/beacon-dapp';
+  +import { NetworkType } from '@tezos-x/octez.connect-dapp';
+  ```
+
+- **Remove any `@airgap/beacon-*` (or `@ecadlabs/beacon-*`) `overrides` from your `package.json`** — they are no longer needed. This supersedes the guidance in the v24.3.0 entry below, which said to keep the `@airgap/beacon-*` overrides; with this release those overrides should be deleted.
+- If your bundler config (Vite, webpack, etc.) references the SDK packages by name in `manualChunks`, `externals`, or chunk splitting, update those references from `@ecadlabs/beacon-*` / `@airgap/beacon-*` to `@tezos-x/octez.connect-*`.
+
+---
 # Taquito v24.3.0
 
 ## Network reliability, browser compatibility, and internal modernization
