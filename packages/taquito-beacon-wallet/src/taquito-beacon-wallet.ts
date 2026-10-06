@@ -12,7 +12,7 @@ import {
   SigningType,
   NodeDistributions,
   Regions,
-} from '@ecadlabs/beacon-dapp';
+} from '@tezos-x/octez.connect-dapp';
 import { BeaconWalletNotInitialized, MissingRequiredScopes } from './errors';
 import toBuffer from 'typedarray-to-buffer';
 import {
@@ -40,12 +40,13 @@ import { UnsupportedActionError } from '@taquito/core';
 export { VERSION } from './version';
 export { BeaconWalletNotInitialized, MissingRequiredScopes } from './errors';
 
-// Re-exported from @ecadlabs/beacon-dapp for consumers who need these without
-// a direct beacon-dapp dependency. These types live only in beacon-dapp (not in
-// beacon-types), so they come with beacon-dapp's side effects. For side-effect-free
-// beacon types (NetworkType, SigningType, etc.), use '@taquito/beacon-wallet/types'.
-export { BeaconEvent } from '@ecadlabs/beacon-dapp';
-export type { DAppClientOptions } from '@ecadlabs/beacon-dapp';
+// Re-exported from @tezos-x/octez.connect-dapp for consumers who need these
+// without a direct octez.connect-dapp dependency. These types live only in
+// octez.connect-dapp (not in octez.connect-types), so they come with its side
+// effects. For side-effect-free beacon types (NetworkType, SigningType, etc.),
+// use '@taquito/beacon-wallet/types'.
+export { BeaconEvent } from '@tezos-x/octez.connect-dapp';
+export type { DAppClientOptions } from '@tezos-x/octez.connect-dapp';
 
 /**
  * Default matrix relay nodes curated by Taquito.
