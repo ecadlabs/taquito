@@ -95,7 +95,9 @@ export abstract class Provider {
               id.endsWith('contract.counter_in_the_future')) &&
             typeof contract === 'string' &&
             typeof expected === 'string' &&
-            typeof found === 'string'
+            /^\d+$/.test(expected) &&
+            typeof found === 'string' &&
+            /^\d+$/.test(found)
           );
         }
       )
@@ -262,6 +264,72 @@ export abstract class Provider {
     };
   }
 
+  private async refreshSimulationCounters(
+    op: RPCSimulateOperationParam,
+    error: unknown
+  ): Promise<RPCSimulateOperationParam | undefined> {
+    if (
+      !(error instanceof HttpResponseError) ||
+      error.status < 500 ||
+      error.status >= 600 ||
+      !Array.isArray(op.operation.contents)
+    ) {
+      return;
+    }
+
+    const firstCounters = new Map<string, bigint>();
+    for (const content of op.operation.contents) {
+      if ('source' in content && 'counter' in content) {
+        if (typeof content.counter !== 'string' || !/^\d+$/.test(content.counter)) {
+          return;
+        }
+        if (!firstCounters.has(content.source)) {
+          firstCounters.set(content.source, BigInt(content.counter));
+        }
+      }
+    }
+
+    if (firstCounters.size === 0) {
+      return;
+    }
+
+    try {
+      // A cached head counter may be the reason simulation failed in the first place.
+      this.clearRpcCache();
+      const deltas = new Map<string, bigint>();
+      for (const [source, firstCounter] of firstCounters) {
+        const storedCounter = await this.context.readProvider.getCounter(source, 'head');
+        if (typeof storedCounter !== 'string' || !/^\d+$/.test(storedCounter)) {
+          return;
+        }
+        const delta = BigInt(storedCounter) + BigInt(1) - firstCounter;
+        if (delta !== BigInt(0)) {
+          deltas.set(source, delta);
+        }
+      }
+
+      if (deltas.size === 0) {
+        return;
+      }
+
+      const contents = op.operation.contents.map((content) => {
+        if ('source' in content && 'counter' in content) {
+          const delta = deltas.get(content.source);
+          if (delta !== undefined) {
+            // Shift the whole sequence, including a reveal, without repairing batch gaps.
+            return { ...content, counter: (BigInt(content.counter) + delta).toString() };
+          }
+        }
+        return content;
+      });
+
+      return { ...op, operation: { ...op.operation, contents } };
+    } catch {
+      // A failed refresh must not hide the simulation error that triggered it.
+      return;
+    }
+  }
+
   get rpc(): RpcClientInterface {
     return this.context.rpc;
   }
@@ -376,53 +444,56 @@ export abstract class Provider {
 
   protected async simulate(op: RPCSimulateOperationParam, preparedOperation?: PreparedOperation) {
     const gasLimitPatchableIndexes = preparedOperation?.simulation?.gasLimitPatchableIndexes;
-    try {
-      return {
-        opResponse: await this.rpc.simulateOperation(op),
-        op,
-        context: this.context.clone(),
-      };
-    } catch (error) {
-      const adjustments = this.parseCounterAdjustments(error);
-      const patchedOp = this.patchSimulationCounters(op, adjustments);
+    let currentOp = op;
+    let counterCorrectionAttempted = false;
+    let gasLimitsPatched = false;
+    let counterRefreshAttempted = false;
 
-      if (patchedOp) {
-        try {
-          return {
-            opResponse: await this.rpc.simulateOperation(patchedOp),
-            op: patchedOp,
-            context: this.context.clone(),
-          };
-        } catch (counterRetryError) {
-          const gasPatchedOp = await this.patchSimulationGasLimits(
-            patchedOp,
-            counterRetryError,
+    // Each recovery can retry once. A new counter race after a refresh is left to the caller.
+    for (;;) {
+      try {
+        return {
+          opResponse: await this.rpc.simulateOperation(currentOp),
+          op: currentOp,
+          context: this.context.clone(),
+        };
+      } catch (error) {
+        if (!counterCorrectionAttempted) {
+          counterCorrectionAttempted = true;
+          const patchedOp = this.patchSimulationCounters(
+            currentOp,
+            this.parseCounterAdjustments(error)
+          );
+          if (patchedOp) {
+            currentOp = patchedOp;
+            continue;
+          }
+        }
+
+        if (!gasLimitsPatched) {
+          const patchedOp = await this.patchSimulationGasLimits(
+            currentOp,
+            error,
             gasLimitPatchableIndexes
           );
-
-          if (!gasPatchedOp) {
-            throw counterRetryError;
+          if (patchedOp) {
+            gasLimitsPatched = true;
+            currentOp = patchedOp;
+            continue;
           }
-
-          return {
-            opResponse: await this.rpc.simulateOperation(gasPatchedOp),
-            op: gasPatchedOp,
-            context: this.context.clone(),
-          };
         }
-      }
 
-      const gasPatchedOp = await this.patchSimulationGasLimits(op, error, gasLimitPatchableIndexes);
+        if (!counterRefreshAttempted) {
+          counterRefreshAttempted = true;
+          const patchedOp = await this.refreshSimulationCounters(currentOp, error);
+          if (patchedOp) {
+            currentOp = patchedOp;
+            continue;
+          }
+        }
 
-      if (!gasPatchedOp) {
         throw error;
       }
-
-      return {
-        opResponse: await this.rpc.simulateOperation(gasPatchedOp),
-        op: gasPatchedOp,
-        context: this.context.clone(),
-      };
     }
   }
 
