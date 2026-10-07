@@ -33,6 +33,7 @@ export const addressPrefixes = [
   PrefixV2.Secp256k1PublicKeyHash,
   PrefixV2.Ed25519PublicKeyHash,
   PrefixV2.BLS12_381PublicKeyHash,
+  PrefixV2.MLDSA44PublicKeyHash,
   PrefixV2.ContractHash,
   PrefixV2.SmartRollupHash,
   // PrefixV2.ZkRollupHash,
@@ -46,6 +47,7 @@ export const publicKeyPrefixes = [
   PrefixV2.Secp256k1PublicKey,
   PrefixV2.Ed25519PublicKey,
   PrefixV2.BLS12_381PublicKey,
+  PrefixV2.MLDSA44PublicKey,
 ];
 
 /**
@@ -56,6 +58,7 @@ export const publicKeyHashPrefixes = [
   PrefixV2.Secp256k1PublicKeyHash,
   PrefixV2.Ed25519PublicKeyHash,
   PrefixV2.BLS12_381PublicKeyHash,
+  PrefixV2.MLDSA44PublicKeyHash,
 ];
 
 /**
@@ -66,6 +69,7 @@ export const signaturePrefixes = [
   PrefixV2.Secp256k1Signature,
   PrefixV2.Ed25519Signature,
   PrefixV2.BLS12_381Signature,
+  PrefixV2.MLDSA44Signature,
   PrefixV2.GenericSignature,
 ];
 
@@ -158,6 +162,9 @@ export function b58DecodePublicKey(value: string, fmt?: 'hex' | 'array'): Uint8A
     case PrefixV2.BLS12_381PublicKey:
       tag = 3;
       break;
+    case PrefixV2.MLDSA44PublicKey:
+      tag = 4;
+      break;
     default:
       throw new InvalidKeyError(ValidationResult.NO_PREFIX_MATCHED);
   }
@@ -196,6 +203,9 @@ export function b58DecodePublicKeyHash(value: string, fmt?: 'hex' | 'array'): Ui
       break;
     case PrefixV2.BLS12_381PublicKeyHash:
       tag = 3;
+      break;
+    case PrefixV2.MLDSA44PublicKeyHash:
+      tag = 4;
       break;
     default:
       throw new InvalidAddressError(value, ValidationResult.NO_PREFIX_MATCHED);
@@ -280,6 +290,9 @@ export function b58DecodeAddress(value: string, fmt?: 'hex' | 'array'): Uint8Arr
       case PrefixV2.BLS12_381PublicKeyHash:
         tag = 3;
         break;
+      case PrefixV2.MLDSA44PublicKeyHash:
+        tag = 4;
+        break;
       default:
         throw new InvalidAddressError(value, ValidationResult.NO_PREFIX_MATCHED);
     }
@@ -315,6 +328,9 @@ export function getPkhfromPk(publicKey: string): string {
       break;
     case PrefixV2.BLS12_381PublicKey:
       pkhPre = PrefixV2.BLS12_381PublicKeyHash;
+      break;
+    case PrefixV2.MLDSA44PublicKey:
+      pkhPre = PrefixV2.MLDSA44PublicKeyHash;
       break;
     default:
       throw new InvalidPublicKeyError(publicKey, ValidationResult.NO_PREFIX_MATCHED);
@@ -366,6 +382,9 @@ export function encodeKey(value: string | Uint8Array): string {
     case 3:
       pre = PrefixV2.BLS12_381PublicKey;
       break;
+    case 4:
+      pre = PrefixV2.MLDSA44PublicKey;
+      break;
     default:
       throw new Error('invalid address format');
   }
@@ -399,6 +418,9 @@ export function encodeKeyHash(value: string | Uint8Array): string {
       break;
     case 3:
       pre = PrefixV2.BLS12_381PublicKeyHash;
+      break;
+    case 4:
+      pre = PrefixV2.MLDSA44PublicKeyHash;
       break;
     default:
       throw new Error('invalid address format');

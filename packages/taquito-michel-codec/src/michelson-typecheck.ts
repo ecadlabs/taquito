@@ -374,7 +374,8 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
           d.string,
           'ED25519PublicKeyHash',
           'SECP256K1PublicKeyHash',
-          'P256PublicKeyHash'
+          'P256PublicKeyHash',
+          'MLDSA44PublicKeyHash'
         ) !== null
       ) {
         return;
@@ -408,6 +409,7 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
             'ED25519PublicKeyHash',
             'SECP256K1PublicKeyHash',
             'P256PublicKeyHash',
+            'MLDSA44PublicKeyHash',
             'ContractHash',
             'RollupAddress'
           ) !== null
@@ -427,8 +429,13 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
     case 'key':
       if (
         'string' in d &&
-        checkDecodeTezosID(d.string, 'ED25519PublicKey', 'SECP256K1PublicKey', 'P256PublicKey') !==
-        null
+        checkDecodeTezosID(
+          d.string,
+          'ED25519PublicKey',
+          'SECP256K1PublicKey',
+          'P256PublicKey',
+          'MLDSA44PublicKey'
+        ) !== null
       ) {
         return;
       } else if ('bytes' in d) {
@@ -447,21 +454,25 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
       }
       throw new MichelsonTypeError(t, `unit value expected: ${JSON.stringify(d)}`, d);
 
-    case 'signature':
+    case 'signature': {
+      const bytes = 'bytes' in d ? parseBytes(d.bytes) : null;
       if (
-        'bytes' in d ||
+        (bytes !== null && [64, 96, 2420].includes(bytes.length)) ||
         ('string' in d &&
           checkDecodeTezosID(
             d.string,
             'ED25519Signature',
             'SECP256K1Signature',
             'P256Signature',
+            'BLS12_381Signature',
+            'MLDSA44Signature',
             'GenericSignature'
           ) !== null)
       ) {
         return;
       }
       throw new MichelsonTypeError(t, `signature expected: ${JSON.stringify(d)}`, d);
+    }
 
     case 'chain_id':
       if ('bytes' in d || 'string' in d) {

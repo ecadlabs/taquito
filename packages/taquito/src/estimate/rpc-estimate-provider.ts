@@ -466,7 +466,10 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
       content.source = content.source || '';
       const revealSize = getRevealOperationSize(content.source);
       let eachOpSize;
-      if (content.source.startsWith(PrefixV2.BLS12_381PublicKeyHash)) {
+      if (content.source.startsWith(PrefixV2.MLDSA44PublicKeyHash)) {
+        // Octez's operation envelope includes ff04 before the complete signature.
+        eachOpSize = (opbytes.length / 2 + 2 + sigSize[PrefixV2.MLDSA44Signature]) / numberOfOps;
+      } else if (content.source.startsWith(PrefixV2.BLS12_381PublicKeyHash)) {
         eachOpSize = (opbytes.length / 2 + sigSize[PrefixV2.BLS12_381Signature]) / numberOfOps;
       } else {
         eachOpSize = (opbytes.length / 2 + sigSize[PrefixV2.Ed25519Signature]) / numberOfOps;

@@ -62,6 +62,23 @@ jobs:
       - run: google-chrome --version
       - run: npm run test:browser:packages
 
+  tz5-local-octez:
+    needs: integration-tests-change-filter
+    if: ${{ needs.integration-tests-change-filter.outputs.run_expensive == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npx -y npm@11 ci
+      # Keep this digest in sync with integration-tests/tz5/sandbox.ts.
+      - name: Cache pinned Octez 25.2 image
+        run: docker pull tezos/tezos@sha256:409124c53d848413eb83a5d1b19164fec5afe56117073534b657042d04173d07
+      - run: npm run test:tz5:local
+
   integration-tests-keygen-preflight:
     needs: integration-tests-change-filter
     if: ${{ needs.integration-tests-change-filter.outputs.run_expensive == 'true' }}

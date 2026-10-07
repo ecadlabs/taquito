@@ -10,7 +10,7 @@
   ],
   "compilerOptions": {
     "moduleResolution": "node",
-    "target": "es6",
+    "target": "es2020",
     "module": "es2020",
     "lib": [
       "es2015",

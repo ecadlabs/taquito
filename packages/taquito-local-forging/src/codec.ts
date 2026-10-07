@@ -49,6 +49,9 @@ export const prefixEncoder = (prefix: PrefixV2) => (str: string) => {
 };
 
 export const prefixDecoder = (pre: PrefixV2) => (str: Uint8ArrayConsumer) => {
+  if (str.length() < payloadLength[pre]) {
+    throw new Error(`Truncated ${pre} payload: expected ${payloadLength[pre]} bytes`);
+  }
   const val = str.consume(payloadLength[pre]);
   return b58Encode(val, pre);
 };
@@ -66,6 +69,8 @@ export const publicKeyHashDecoder = (val: Uint8ArrayConsumer) => {
     return prefixDecoder(PrefixV2.P256PublicKeyHash)(val);
   } else if (prefix[0] === 0x03) {
     return prefixDecoder(PrefixV2.BLS12_381PublicKeyHash)(val);
+  } else if (prefix[0] === 0x04) {
+    return prefixDecoder(PrefixV2.MLDSA44PublicKeyHash)(val);
   }
 };
 
@@ -276,18 +281,20 @@ export const smartContractAddressEncoder = (val: string): string => b58DecodeAdd
 
 export const publicKeyDecoder = (val: Uint8ArrayConsumer) => {
   const preamble = val.consume(1);
-  switch (preamble[0]) {
-    case 0x00:
-      return prefixDecoder(PrefixV2.Ed25519PublicKey)(val);
-    case 0x01:
-      return prefixDecoder(PrefixV2.Secp256k1PublicKey)(val);
-    case 0x02:
-      return prefixDecoder(PrefixV2.P256PublicKey)(val);
-    case 0x03:
-      return prefixDecoder(PrefixV2.BLS12_381PublicKey)(val);
-    default:
-      throw new InvalidPublicKeyError(undefined, ValidationResult.NO_PREFIX_MATCHED);
+  const prefix = [
+    PrefixV2.Ed25519PublicKey,
+    PrefixV2.Secp256k1PublicKey,
+    PrefixV2.P256PublicKey,
+    PrefixV2.BLS12_381PublicKey,
+    PrefixV2.MLDSA44PublicKey,
+  ][preamble[0]];
+  if (prefix === undefined) {
+    throw new InvalidPublicKeyError(undefined, ValidationResult.NO_PREFIX_MATCHED);
   }
+  if (val.length() < payloadLength[prefix]) {
+    throw new InvalidPublicKeyError(undefined, ValidationResult.INVALID_LENGTH);
+  }
+  return prefixDecoder(prefix)(val);
 };
 
 export const smartRollupCommitmentHashEncoder = (val: string): string => {

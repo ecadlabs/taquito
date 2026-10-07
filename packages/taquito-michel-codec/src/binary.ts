@@ -361,12 +361,14 @@ enum PublicKeyHashID {
   ED25519 = 0,
   SECP256K1 = 1,
   P256 = 2,
+  MLDSA44 = 4,
 }
 
 type AddressType =
   | 'ED25519PublicKeyHash'
   | 'SECP256K1PublicKeyHash'
   | 'P256PublicKeyHash'
+  | 'MLDSA44PublicKeyHash'
   | 'ContractHash';
 
 export interface Address {
@@ -387,6 +389,9 @@ function readPublicKeyHash(rd: Reader): Address {
       break;
     case PublicKeyHashID.P256:
       type = 'P256PublicKeyHash';
+      break;
+    case PublicKeyHashID.MLDSA44:
+      type = 'MLDSA44PublicKeyHash';
       break;
     default:
       throw new Error(`unknown public key hash tag: ${tag}`);
@@ -434,6 +439,9 @@ function writePublicKeyHash(a: Address, w: Writer): void {
     case 'P256PublicKeyHash':
       tag = PublicKeyHashID.P256;
       break;
+    case 'MLDSA44PublicKeyHash':
+      tag = PublicKeyHashID.MLDSA44;
+      break;
     default:
       throw new Error(`unexpected address type: ${a.type}`);
   }
@@ -462,9 +470,14 @@ enum PublicKeyID {
   ED25519 = 0,
   SECP256K1 = 1,
   P256 = 2,
+  MLDSA44 = 4,
 }
 
-export type PublicKeyType = 'ED25519PublicKey' | 'SECP256K1PublicKey' | 'P256PublicKey';
+export type PublicKeyType =
+  | 'ED25519PublicKey'
+  | 'SECP256K1PublicKey'
+  | 'P256PublicKey'
+  | 'MLDSA44PublicKey';
 export interface PublicKey {
   type: PublicKeyType;
   publicKey: number[] | Uint8Array;
@@ -487,6 +500,10 @@ function readPublicKey(rd: Reader): PublicKey {
       type = 'P256PublicKey';
       ln = 33;
       break;
+    case PublicKeyID.MLDSA44:
+      type = 'MLDSA44PublicKey';
+      ln = 1312;
+      break;
     default:
       throw new Error(`unknown public key tag: ${tag}`);
   }
@@ -504,6 +521,9 @@ function writePublicKey(pk: PublicKey, w: Writer): void {
       break;
     case 'P256PublicKey':
       tag = PublicKeyID.P256;
+      break;
+    case 'MLDSA44PublicKey':
+      tag = PublicKeyID.MLDSA44;
       break;
     default:
       throw new Error(`unexpected public key type: ${pk.type}`);
@@ -885,6 +905,8 @@ const getWriteTransformFunc = (t: MichelsonType): WriteTransformFunc => {
             'ED25519Signature',
             'SECP256K1Signature',
             'P256Signature',
+            'BLS12_381Signature',
+            'MLDSA44Signature',
             'GenericSignature'
           );
           if (sig === null) {
@@ -908,7 +930,8 @@ const getWriteTransformFunc = (t: MichelsonType): WriteTransformFunc => {
             d.string,
             'ED25519PublicKeyHash',
             'SECP256K1PublicKeyHash',
-            'P256PublicKeyHash'
+            'P256PublicKeyHash',
+            'MLDSA44PublicKeyHash'
           );
           if (pkh === null) {
             throw new MichelsonTypeError(t, `key hash base58 expected: ${d.string}`, d);
@@ -933,7 +956,8 @@ const getWriteTransformFunc = (t: MichelsonType): WriteTransformFunc => {
             d.string,
             'ED25519PublicKey',
             'SECP256K1PublicKey',
-            'P256PublicKey'
+            'P256PublicKey',
+            'MLDSA44PublicKey'
           );
           if (key === null) {
             throw new MichelsonTypeError(t, `public key base58 expected: ${d.string}`, d);
@@ -960,6 +984,7 @@ const getWriteTransformFunc = (t: MichelsonType): WriteTransformFunc => {
             'ED25519PublicKeyHash',
             'SECP256K1PublicKeyHash',
             'P256PublicKeyHash',
+            'MLDSA44PublicKeyHash',
             'ContractHash'
           );
           if (address === null) {
@@ -1223,7 +1248,13 @@ const getReadTransformFuncs = (t: MichelsonType): ReadTransformFuncs => {
           if (bytes === null) {
             throw new MichelsonTypeError(t, `can't parse bytes: ${d.bytes}`, d);
           }
-          return { string: encodeTezosID('GenericSignature', bytes) };
+          const type =
+            bytes.length === 2420
+              ? 'MLDSA44Signature'
+              : bytes.length === 96
+                ? 'BLS12_381Signature'
+                : 'GenericSignature';
+          return { string: encodeTezosID(type, bytes) };
         },
       ];
 

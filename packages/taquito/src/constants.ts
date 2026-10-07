@@ -1,9 +1,11 @@
-// value is based on octez-client reveal operation gasLimit of each address type in Tallinn Protocol
+// Octez-client reveal gas budgets: Tallinn for tz1 to tz4, Ushuaia for tz5.
 const REVEAL_GAS_LIMIT = {
   TZ1: 171,
   TZ2: 157,
   TZ3: 447,
   TZ4: 3252,
+  // Octez 25.2, Ushuaia sandbox: 211.313 gas consumed by a standalone tz5 reveal.
+  TZ5: 212,
 };
 // value is based on octez-client reveal operation fee of each address type in Tallinn Protocol
 const REVEAL_FEE = {
@@ -106,7 +108,14 @@ export const getRevealGasLimit = (address: string) =>
   Math.round((getRevealGasLimitInternal(address) * 37) / 10);
 
 /** Signed standalone reveal size allowance used when allocating estimated operation bytes. */
-export const getRevealOperationSize = (address: string) => (address.startsWith('tz4') ? 311 : 162);
+export const getRevealOperationSize = (address: string) => {
+  if (address.startsWith('tz5')) {
+    // Branch + manager fields + 1313-byte tagged key + proof option + 2422-byte
+    // tagged signature, with room for the variable-width fee, counter and limits.
+    return 3808;
+  }
+  return address.startsWith('tz4') ? 311 : 162;
+};
 
 const getRevealGasLimitInternal = (address: string) => {
   switch (address.substring(0, 3)) {
@@ -118,13 +127,18 @@ const getRevealGasLimitInternal = (address: string) => {
       return REVEAL_GAS_LIMIT.TZ3;
     case 'tz4':
       return REVEAL_GAS_LIMIT.TZ4;
+    case 'tz5':
+      return REVEAL_GAS_LIMIT.TZ5;
     default:
       throw new Error(`Cannot estimate reveal gas limit for ${address}`);
   }
 };
 
-export const getRevealFee = (address: string) =>
-  Math.round((getRevealFeeInternal(address) * 12) / 10);
+export const getRevealFee = (address: string) => {
+  const fee = getRevealFeeInternal(address);
+  // Keep a fixed buffer for tz5 instead of a percentage on its large byte fee.
+  return address.startsWith('tz5') ? fee + 20 : Math.round((fee * 12) / 10);
+};
 
 export const getRevealFeeInternal = (address: string) => {
   switch (address.substring(0, 3)) {
@@ -136,6 +150,9 @@ export const getRevealFeeInternal = (address: string) => {
       return REVEAL_FEE.TZ3;
     case 'tz4':
       return REVEAL_FEE.TZ4 * 1.7;
+    case 'tz5':
+      // Default node prices: 1 mutez/byte, 0.1 mutez/gas, 100 mutez base fee.
+      return Math.ceil(getRevealOperationSize(address) + getRevealGasLimit(address) / 10 + 100);
     default:
       throw new Error(`Cannot estimate reveal fee for ${address}`);
   }
