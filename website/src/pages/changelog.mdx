@@ -4,6 +4,15 @@ description: Release notes and version history for Taquito, the TypeScript libra
 author: Jev Bjorsell
 layout: ../layouts/MarkdownLayout.astro
 ---
+# Unreleased
+
+### tz5 and ML-DSA-44
+
+- Added tz5 address, key, signature, Michelson, and operation codecs. `InMemorySigner` imports Octez `mdsk` and encrypted `mdesk` keys and produces `mdsig` signatures with the complete `ff04` operation envelope. Sending operations requires a protocol with `tz5_account_enable` enabled.
+- Fee estimation counts the 2422-byte operation signature once per group. Automatic tz5 reveals use a fixed fee buffer and the node's byte and gas prices.
+- Michelson signature validation now rejects malformed hexadecimal and byte lengths other than 64, 96, or 2420. Typed unpacking also supports 96-byte BLS signatures as `BLsig`.
+- Local-forging decoders now reject truncated fixed-length payloads instead of returning malformed Base58 values.
+
 # Taquito v24.3.0
 
 ## Network reliability, browser compatibility, and internal modernization

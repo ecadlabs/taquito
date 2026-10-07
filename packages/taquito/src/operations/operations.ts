@@ -152,7 +152,7 @@ export class Operation {
   // Observable that emit once operation is seen in a block
   private confirmed$ = this.currentHead$.pipe(
     map((head) => {
-      for (let i = 3; i >= 0; i--) {
+      for (let i = head.operations.length - 1; i >= 0; i--) {
         for (const op of head.operations[i]) {
           if (op.hash === this.hash) {
             this._foundAt = head.header.level;

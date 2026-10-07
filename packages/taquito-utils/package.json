@@ -57,6 +57,7 @@
   "dependencies": {
     "@noble/curves": "^1.9.7",
     "@noble/hashes": "^2.2.0",
+    "@noble/post-quantum": "0.7.1",
     "@taquito/core": "^25.0.0",
     "@types/bs58check": "^2.1.2",
     "bignumber.js": "^10.0.2",

@@ -18,6 +18,7 @@ import {
   ParameterValidationError,
 } from '@taquito/core';
 import { bls12_381 } from '@noble/curves/bls12-381';
+import { ml_dsa44 } from '@noble/post-quantum/ml-dsa.js';
 
 export const BLS12_381_DST = 'BLS_SIG_BLS12381G2_XMD:SHA-256_SSWU_RO_POP_';
 export const POP_DST = 'BLS_POP_BLS12381G2_XMD:SHA-256_SSWU_RO_POP_';
@@ -98,9 +99,19 @@ export function verifySignature(
         return verifySpSignature(sig, msg, pk);
       case PrefixV2.Ed25519PublicKey:
         return verifyEdSignature(sig, msg, pk);
+      case PrefixV2.MLDSA44PublicKey:
+        return verifyMLDSASignature(sig, msg, pk);
       default:
         return verifyBLSSignature(sig, msg, pk);
     }
+  }
+}
+
+function verifyMLDSASignature(sig: Uint8Array, msg: Uint8Array, publicKey: Uint8Array): boolean {
+  try {
+    return ml_dsa44.verify(sig, blake2b(msg, { dkLen: 32 }), publicKey);
+  } catch {
+    return false;
   }
 }
 

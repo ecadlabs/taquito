@@ -17,7 +17,7 @@ export function isPOP(k: SigningKey): k is SigningKeyWithProofOfPossession {
 
 export interface PublicKey {
   /**
-   * Compare two public keys of the same elliptic curve
+   * Compare two public keys of the same signature scheme
    * @param other the other PublicKey class to compare to
    * @returns -1 if this public key is less than the other, 0 if they are equal, 1 if this public key is greater than the other
    * @throws InvalidPublicKeyError
@@ -25,7 +25,7 @@ export interface PublicKey {
   compare(other: PublicKey): number;
 
   /**
-   * Hash of the public key (tz1, tz2, tz3, tz4 addresses)
+   * Hash of the public key (tz1, tz2, tz3, tz4, tz5 addresses)
    * @returns the hash of the public key
    */
   hash(): string;

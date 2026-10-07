@@ -1,6 +1,7 @@
 # Taquito Signer package
-*Documentation can be found [here](https://taquito.io/docs/inmemory_signer)*
-*TypeDoc style documentation is available on-line [here](https://taquito.io/typedoc/modules/_taquito_signer.html)*
+
+_Documentation can be found [here](https://taquito.io/docs/inmemory_signer)_
+_TypeDoc style documentation is available on-line [here](https://taquito.io/typedoc/modules/_taquito_signer.html)_
 
 `@taquito/signer` is an npm package that provides developers with signing functionality for Taquito.
 
@@ -14,12 +15,14 @@ This signer implementation is for development workflows.
 production use-cases! Use the InMemorySigner appropriately given your risk profile.**
 
 ## Install
+
 ```
 npm i --save @taquito/taquito
 npm i --save @taquito/signer
 ```
 
 ## Usage
+
 ### Loading an unencrypted private key
 
 ```js
@@ -46,6 +49,20 @@ Tezos.setProvider({
 ```
 
 The following link can be used to fund an address on the different testnets: https://teztnets.com/.
+
+### ML-DSA-44 (tz5)
+
+`InMemorySigner.fromSecretKey` accepts Octez `mdsk` secret keys and `mdesk`
+encrypted secret keys. It exposes the corresponding `mdpk` public key and `tz5`
+address. Key generation from mnemonics and HD derivation do not support ML-DSA.
+
+For this scheme, both `SignResult.sig` and `SignResult.prefixSig` use `mdsig`.
+`SignResult.sbytes` includes Octez's `ff04` marker and the full 2420-byte signature.
+Watermarks follow the existing signer API; proof of possession remains BLS-only.
+
+Sending operations requires a protocol with `tz5_account_enable` enabled. This
+support is validated against an isolated Octez 25.2 Ushuaia sandbox, and does not
+imply activation on mainnet. See the [local conformance suite](../../integration-tests/tz5/README.md).
 
 ## Additional info
 

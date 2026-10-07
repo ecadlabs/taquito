@@ -44,6 +44,7 @@
     "check:package-catalog": "node ./scripts/package-catalog.js --check",
     "sync:package-catalog": "node ./scripts/package-catalog.js --write",
     "test": "nx run-many --target=test --exclude=integration-tests,@taquito/website -- --coverage",
+    "test:tz5:local": "vitest run --config integration-tests/tz5/vitest.config.ts",
     "test:dist:esm-imports": "node ./scripts/check-esm-imports.js",
     "lint": "npm run check:package-catalog && npm run --workspaces --if-present lint",
     "clean": "rimraf node_modules packages/*/node_modules packages/taquito-michel-codec/pack-test-tool/node_modules example/node_modules integration-tests/node_modules website/node_modules",
