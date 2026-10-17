@@ -1,4 +1,5 @@
 import { OptionTokenSchema } from '../schema/types';
+import { LambdaToken } from './lambda';
 import { ListToken } from './list';
 import { SetToken } from './set';
 import { Token, TokenFactory, Semantic, ComparableToken, SemanticEncoding } from './token';
@@ -52,13 +53,14 @@ export class OptionToken extends ComparableToken {
     value = typeof value === 'object' && 'Some' in value ? value['Some'] : value;
     // A one-element array can mean two different things. For a nested option it wraps the
     // value, so it must be unwrapped. For a sequence type the array *is* the value, so
-    // unwrapping it hands a bare element to the inner token, which then rejects it.
+    // unwrapping it changes the value passed to the inner token.
     const innerPrim = this.val.args?.[0]?.prim;
     if (
       Array.isArray(value) &&
       value.length === 1 &&
       innerPrim !== ListToken.prim &&
-      innerPrim !== SetToken.prim
+      innerPrim !== SetToken.prim &&
+      innerPrim !== LambdaToken.prim
     ) {
       value = value[0];
     }
