@@ -15,12 +15,12 @@
   "version": "25.0.0",
   "optionalDependencies": {
     "@ledgerhq/devices": "^8.8.0",
-    "@ledgerhq/hw-transport": "^6.34.1",
+    "@ledgerhq/hw-transport": "^6.36.0",
     "@ledgerhq/hw-transport-node-hid": "6.30.0",
     "@ledgerhq/hw-transport-node-hid-noevents": "6.31.0"
   },
   "dependencies": {
-    "@scure/bip39": "^2.0.1",
+    "@scure/bip39": "2.2.0",
     "@taquito/contracts-library": "^25.0.0",
     "@taquito/core": "^25.0.0",
     "@taquito/http-utils": "^25.0.0",
@@ -43,13 +43,13 @@
   },
   "private": true,
   "devDependencies": {
-    "@types/node": "^22.0.0",
+    "@types/node": "^22.20.5",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "eslint": "^8.57.0",
     "lint-staged": "^15.2.7",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
-    "vitest": "^4.1.4"
+    "vitest": "^4.1.12"
   }
 }
