@@ -155,6 +155,8 @@ export function classifyTransportError(err: unknown): ClassifiedTransportError |
     err instanceof TypeError &&
     (msg.includes('fetch failed') ||
       msg.includes('failed to fetch') ||
+      msg === 'load failed' || // WebKit native fetch
+      msg === 'networkerror when attempting to fetch resource.' || // Firefox native fetch
       msg.includes('network error') ||
       msg.includes('error sending request') ||
       msg === 'terminated')

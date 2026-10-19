@@ -60,7 +60,9 @@ jobs:
           cache: npm
       - run: npx -y npm@11 ci
       - run: google-chrome --version
+      - run: npx playwright install --with-deps firefox webkit
       - run: npm run test:browser:packages
+      - run: npx playwright test --config browser-tests/playwright.config.ts browser-tests/tests/http-backend.spec.ts --project=firefox --project=webkit
 
   tz5-local-octez:
     needs: integration-tests-change-filter

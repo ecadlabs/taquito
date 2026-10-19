@@ -323,3 +323,30 @@ describe('classifyTransportError', () => {
     });
   });
 });
+
+describe('native browser fetch failures', () => {
+  it.each(['Load failed', 'NetworkError when attempting to fetch resource.'])(
+    'classifies TypeError %s as a network failure',
+    (message) => {
+      const error = new TypeError(message);
+      expect(classifyTransportError(error)).toEqual({
+        kind: 'network',
+        mayHaveReachedServer: true,
+        original: error,
+      });
+    }
+  );
+
+  it.each([
+    'load failed for configuration',
+    'network unavailable',
+    'NetworkError in application code',
+  ])('does not classify unrelated TypeError %s', (message) =>
+    expect(classifyTransportError(new TypeError(message))).toBeUndefined()
+  );
+
+  it.each(['Load failed', 'NetworkError when attempting to fetch resource.'])(
+    'does not classify an ordinary Error with message %s',
+    (message) => expect(classifyTransportError(new Error(message))).toBeUndefined()
+  );
+});
