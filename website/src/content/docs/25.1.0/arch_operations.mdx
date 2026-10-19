@@ -1,0 +1,83 @@
+---
+title: Operations and Injection Model
+author: Peter McDonald
+---
+
+## Introduction
+
+The Tezos OperationContentAndResults[] data structure plays an important role in Taquito with regard to an Injection, i.e. a set of Operations injected to a Tezos chain.
+- It is returned by the RPC run_operation and is interpreted by Taquito's [RPCEstimateProvider](estimate) to derive gas and storage consumption estimates for an Injection
+- It is returned by the RPC preapply/operations and is used by the [Contract API](operation_flow) to dry run an Injection before actually Injecting it.
+- It is embedded in Tezos Blocks as an after-baking representation of an Injection. The [Wallet API](wallet_API) looks for this representation in a new Block to uncover the baked outcome.
+
+As a representation of an Injection embedded in a Tezos blockchain, we can view this data structure as a database schema. This document takes this approach and presents an Information Model of Blocks, Injections and Operations.
+
+In the spirit of highlighting semantics and vocabulary, we represent this schema in Entity/Relationship (E/R) form (using UML as a notation). In an E/R model, the entity types are chosen to highlight "important" semantic distinctions found in the domain of interest. To that end we have made some adjustments to the data types found in Tezos, to clarify the semantics of the data contained in the Tezos database. A mapping between vocabularies is presented. Although the vocabulary is different, the information content is equivalent.
+
+One of the challenges of this exercise results from the fact that Taquito entry points interpret only a subset of the attributes making up the encountered Tezos data structures. OperationContentAndResults[] is returned intact to dApp developers to understand and interpret, along with some Taquito interpretations. Taking this as a constraint, Taquito code was used to reconstruct the semantics of attributes "understood" by Taquito. The semantics of attributes that are not "understood" by Taquito is left undefined.
+
+## Information Model
+
+### Injections
+
+#### Entities and Relationships
+
+*Figure 1: Blocks and Injections*
+
+An Operation represents an action submitted to the Tezos platform for updating the Context.
+
+A Core Operation is an Operation, which directly acts on Implicit and/or Originated Accounts. Core Operations are associated with a cost incurred by the source account, which submits it. A Core Operation, when executed, may spawn other Core Operations. A Core Operation that is directly submitted to Tezos for execution is referred to as an External Operation. A Core Operation that is spawned by an External Operation is referred to as an Internal Operation. The spawned relationship of Figure 1 is not recursive. An External Operation references Internal Operations that it has directly or indirectly spawned.
+
+An Activation is an Operation, which activates an implicit Account, making it an active part of the Tezos Context. Tezos supports other non-core Operations, but Activation is one that Taquito directly supports.
+
+A Block is a Block in the Tezos blockchain. Each newly baked Block references its predecessor and has a level greater than its predecessor by one.
+
+An Injection represents a set of External Operations submitted from an implicit Account for incorporation into a new Tezos Block.
+
+An Injection Entry is an element of an Injection referencing a single Operation and its associated Governance Detail.
+
+A Governance Detail is a set of properties used to govern the execution of an Injection Entry. For example, Governance Detail includes a gas limit, which limits the amount of computation that may be used to execute an Injection Entry. Only Injection Entries associated with a Core Operation have a Governance Detail.
+
+For clarity, we have altered our vocabulary and associated data types from those inherited from Tezos.
+
+#### Attributes
+
+For Block and Injection attributes, we focus on only those attributes that are important in this context.
+
+For Injection Entries and associated entities, all attributes are relevant since Taquito returns the full set of Injection Entries, including associated Operations, for an Injection.
+
+### Core Operations
+
+#### Entities and Relationships
+
+*Figure 2: Core Operation*
+
+A Transaction is a Core Operation whose action is to transfer Tez from a source Account to a destination Account. If the destination Account is an Originated Account, an entry point associated with the Originated Account is invoked.
+
+An Origination is a Core Operation whose action is to establish a new Origination Account.
+
+A Register Global Constant is a Core Operation whose action is to establish a new Global Constant for a Michelson expression.
+
+A Delegation is a Core Operation whose action is to either establish a delegate for a source Account, or to register a source Account as an (implicit) Account that may act as a delegate for other Accounts.
+
+A Reveal is a Core Operation whose action is to register the public key for an Implicit Account so that it may act as the source for subsequent External Operations.
+
+A Core Operation Result is a set of properties describing the result of executing a Core Operation.
+
+A Transaction Result is a Core Operation Result for a Transaction.
+
+An Origination Result is a Core Operation Result for an Origination.
+
+A Register Global Constant Result is a Core Operation Result for a Register Global Constant.
+
+A Delegation Result is a Core Operation Result for a Delegation.
+
+A Reveal Result is a Core Operation Result for a Reveal.
+
+For clarity, we have altered our vocabulary and associated data types from those inherited from Tezos.
+
+#### Operation Attributes
+
+Of the Operation Attributes, the "source" attribute deserves special mention. As with other Operation attributes, it plays a role in defining the action of an operation. A Transaction from a source account to a destination account involves a transfer of Tezos from the source account to the destination account. In the case of an External Operation, it also plays a governance role. For an External Operation, the public key of its source account must match the signature of its associated Injection. The implication is that the "source" value of all External Operations for an Injection must equal the account which signed the Injection.
+
+Whereas the source of External Operation is directly constrained by an Injection signature, the source of an Internal Operation is not. Consider a Transaction Operation to a destination smart contract entry point. The Transaction Operation has a source attribute that helps to define the meaning of the operation. The source of a directly injected Transaction Operation must be consistent with the Injection's signature. However, a Transaction Operation executed indirectly as the result of a directly invoked smart contract entry point, is not subject to this constraint. Its source value represents the smart contract, which initiated it, rather than the source account for the Injection. This arrangement enables a source account to invoke smart contract entry points, which invoke other smart contract entry points, each with a localized runtime context.

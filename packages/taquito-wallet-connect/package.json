@@ -1,6 +1,6 @@
 {
   "name": "@taquito/wallet-connect",
-  "version": "25.0.0",
+  "version": "25.1.0",
   "description": "WalletConnect integration for Taquito applications.",
   "keywords": [
     "taquito",
@@ -55,7 +55,7 @@
     ]
   },
   "dependencies": {
-    "@taquito/taquito": "^25.0.0",
+    "@taquito/taquito": "^25.1.0",
     "@walletconnect/modal": "^2.7.0",
     "@walletconnect/sign-client": "^2.26.0",
     "@walletconnect/types": "^2.26.0",
