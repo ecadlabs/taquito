@@ -1,3 +1,4 @@
+import { createHash, webcrypto } from 'node:crypto';
 import { mkdtemp, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -143,6 +144,149 @@ describe('Sapling params loader', () => {
     expect(globalThis.fetch).not.toHaveBeenCalled();
     expect(initParameters).toHaveBeenCalledTimes(1);
     expect(initParameters).toHaveBeenCalledWith(spendParams, outputParams);
+  });
+
+  it.each(['spend', 'output'] as const)(
+    'reports a failed %s response body as a fetch error',
+    async (label) => {
+      const cause = new Error('connection closed while reading params');
+      const fetchMock = vi
+        .fn()
+        .mockImplementation(async (url: string) =>
+          url.endsWith(`/${label}.params`)
+            ? new Response(new ReadableStream({ start: (controller) => controller.error(cause) }))
+            : new Response(Uint8Array.from([1, 2, 3]))
+        );
+      Object.defineProperty(globalThis, 'fetch', { value: fetchMock, configurable: true });
+      Object.defineProperty(globalThis, 'crypto', {
+        value: {
+          subtle: {
+            digest: vi
+              .fn()
+              .mockResolvedValue(hexToArrayBuffer(label === 'spend' ? outputDigest : spendDigest)),
+          },
+        },
+        configurable: true,
+      });
+      const { preloadSaplingParams, SaplingParamsError } = await import('../src/taquito-sapling');
+
+      const error = await preloadSaplingParams().catch((error: unknown) => error);
+
+      expect(error).toBeInstanceOf(SaplingParamsError);
+      expect(error).toMatchObject({
+        code: 'SAPLING_PARAMS_FETCH_FAILED',
+        source: 'taquito',
+        cause,
+      });
+      expect((error as { cause?: unknown }).cause).toBe(cause);
+      expect((error as Error).message).toContain(`Sapling ${label} params`);
+      expect((error as Error).message).toContain(
+        `https://sapling.taquito.io/params/groth16-mainnet-1/${label}.params`
+      );
+      expect(initParameters).not.toHaveBeenCalled();
+    }
+  );
+
+  it('shares a body failure and retries with a new source while the old sibling finishes', async () => {
+    const cause = new Error('interrupted spend download');
+    const oldOutput = Buffer.from('old-output');
+    const newSpend = Buffer.from('new-spend');
+    const newOutput = Buffer.from('new-output');
+    let releaseOldBody!: (body: ArrayBuffer) => void;
+    const oldBody = new Promise<ArrayBuffer>((resolve) => {
+      releaseOldBody = resolve;
+    });
+    let oldDigestFinished = false;
+    const oldResponse = new Response();
+    oldResponse.arrayBuffer = () => oldBody;
+    const fetchMock = vi.fn().mockImplementation(async (url: string) => {
+      if (url === 'https://old.test/spend.params') {
+        return new Response(new ReadableStream({ start: (controller) => controller.error(cause) }));
+      }
+      if (url === 'https://old.test/output.params') return oldResponse;
+      if (url === 'https://new.test/spend.params') return new Response(newSpend);
+      if (url === 'https://new.test/output.params') return new Response(newOutput);
+      throw new Error(`Unexpected URL ${url}`);
+    });
+    Object.defineProperty(globalThis, 'fetch', { value: fetchMock, configurable: true });
+    Object.defineProperty(globalThis, 'crypto', {
+      value: {
+        subtle: {
+          digest: async (algorithm: string, bytes: Uint8Array) => {
+            const result = await webcrypto.subtle.digest(algorithm, Uint8Array.from(bytes));
+            if (Buffer.from(bytes).equals(oldOutput)) oldDigestFinished = true;
+            return result;
+          },
+        },
+      },
+      configurable: true,
+    });
+    const { initSapling, preloadSaplingParams } = await import('../src/taquito-sapling');
+    const source = (host: string, spend: Buffer, output: Buffer) => ({
+      params: {
+        spendParamsUrl: `https://${host}/spend.params`,
+        outputParamsUrl: `https://${host}/output.params`,
+        spendParamsSha256: createHash('sha256').update(spend).digest('hex'),
+        outputParamsSha256: createHash('sha256').update(output).digest('hex'),
+      },
+    });
+
+    try {
+      await initSapling(source('old.test', Buffer.from('old-spend'), oldOutput));
+      const failures = await Promise.all([
+        preloadSaplingParams().catch((error: unknown) => error),
+        preloadSaplingParams().catch((error: unknown) => error),
+      ]);
+      expect(failures[0]).toMatchObject({ code: 'SAPLING_PARAMS_FETCH_FAILED', cause });
+      expect(failures[1]).toBe(failures[0]);
+      expect(fetchMock).toHaveBeenCalledTimes(2);
+      expect(initParameters).not.toHaveBeenCalled();
+
+      await initSapling(source('new.test', newSpend, newOutput));
+      await Promise.all([preloadSaplingParams(), preloadSaplingParams()]);
+      expect(fetchMock).toHaveBeenCalledTimes(4);
+      expect(initParameters).toHaveBeenCalledTimes(1);
+      expect(initParameters).toHaveBeenCalledWith(newSpend, newOutput);
+    } finally {
+      releaseOldBody(Uint8Array.from(oldOutput).buffer);
+    }
+
+    await vi.waitFor(() => expect(oldDigestFinished).toBe(true));
+    await preloadSaplingParams();
+    expect(fetchMock).toHaveBeenCalledTimes(4);
+    expect(initParameters).toHaveBeenCalledTimes(1);
+    expect(initParameters).toHaveBeenCalledWith(newSpend, newOutput);
+  });
+
+  it('preserves a digest rejection after reading the response body', async () => {
+    const cause = new Error('digest unavailable');
+    Object.defineProperty(globalThis, 'fetch', {
+      value: vi.fn().mockImplementation(async () => new Response(Uint8Array.from([1]))),
+      configurable: true,
+    });
+    Object.defineProperty(globalThis, 'crypto', {
+      value: { subtle: { digest: vi.fn().mockRejectedValue(cause) } },
+      configurable: true,
+    });
+    const { preloadSaplingParams } = await import('../src/taquito-sapling');
+
+    await expect(preloadSaplingParams()).rejects.toBe(cause);
+    expect(initParameters).not.toHaveBeenCalled();
+  });
+
+  it('reports an unsupported runtime when remote parameter verification has no crypto', async () => {
+    Object.defineProperty(globalThis, 'fetch', {
+      value: vi.fn().mockImplementation(async () => new Response(Uint8Array.from([1]))),
+      configurable: true,
+    });
+    Object.defineProperty(globalThis, 'crypto', { value: undefined, configurable: true });
+    const { preloadSaplingParams } = await import('../src/taquito-sapling');
+
+    await expect(preloadSaplingParams()).rejects.toMatchObject({
+      code: 'SAPLING_PARAMS_UNSUPPORTED_RUNTIME',
+      source: 'taquito',
+    });
+    expect(initParameters).not.toHaveBeenCalled();
   });
 
   it('rejects custom remote URLs without explicit digests', async () => {
