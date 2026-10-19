@@ -1,4 +1,5 @@
 import { OptionTokenSchema } from '../schema/types';
+import { LambdaToken } from './lambda';
 import { ListToken } from './list';
 import { SetToken } from './set';
 import { Token, TokenFactory, Semantic, ComparableToken, SemanticEncoding } from './token';
@@ -50,9 +51,7 @@ export class OptionToken extends ComparableToken {
       return { prim: 'None' };
     }
     value = typeof value === 'object' && 'Some' in value ? value['Some'] : value;
-    // A one-element array can mean two different things. For a nested option it wraps the
-    // value, so it must be unwrapped. For a sequence type the array *is* the value, so
-    // unwrapping it hands a bare element to the inner token, which then rejects it.
+    // Keep sequence values intact while accepting legacy singleton option wrappers.
     const innerPrim = this.val.args?.[0]?.prim;
     if (
       Array.isArray(value) &&
@@ -60,7 +59,22 @@ export class OptionToken extends ComparableToken {
       innerPrim !== ListToken.prim &&
       innerPrim !== SetToken.prim
     ) {
-      value = value[0];
+      let innerToken = this.schema();
+      while (innerToken instanceof OptionToken) {
+        innerToken = innerToken.schema();
+      }
+      // An instruction is still part of a lambda sequence through nested options.
+      // Lambda_rec is a value constructor, so its legacy wrapper is still unwrapped.
+      // Other singleton values, including [null] for Some None, remain wrappers.
+      const isLambdaInstruction =
+        innerToken instanceof LambdaToken &&
+        typeof value[0] === 'object' &&
+        value[0] !== null &&
+        'prim' in value[0] &&
+        value[0].prim !== 'Lambda_rec';
+      if (!isLambdaInstruction) {
+        value = value[0];
+      }
     }
     return { prim: 'Some', args: [this.schema().EncodeObject(value, semantic)] };
   }
