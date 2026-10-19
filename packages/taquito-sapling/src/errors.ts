@@ -1,3 +1,4 @@
+import { stringToBytes } from '@taquito/utils';
 import { ParameterValidationError, TaquitoError } from '@taquito/core';
 
 /**
@@ -51,10 +52,13 @@ export class TreeConstructionFailure extends TaquitoError {
  *  Error indicates the memo is invalid
  */
 export class InvalidMemo extends ParameterValidationError {
-  constructor(public readonly memo: string, public readonly errorDetails: string) {
+  constructor(
+    public readonly memo: string,
+    public readonly errorDetails: string
+  ) {
     super();
     this.name = 'InvalidMemo';
-    this.message = `Invalid memo "${memo}" with length ${memo.length} ${errorDetails}`;
+    this.message = `Invalid memo "${memo}" with UTF-8 byte length ${stringToBytes(memo).length / 2} ${errorDetails}`;
   }
 }
 
