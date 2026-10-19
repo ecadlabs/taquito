@@ -88,4 +88,27 @@ describe('RpcClientCache timer lifecycle', () => {
     expect(await cache.getBlockHash()).toBe('third');
     expect(getBlockHash).toHaveBeenCalledTimes(3);
   });
+
+  it('cancels the previous timer when put overwrites an existing key', async () => {
+    const getBlockHash = vi
+      .spyOn(client, 'getBlockHash')
+      .mockResolvedValueOnce('first')
+      .mockResolvedValueOnce('third');
+
+    expect(await cache.getBlockHash()).toBe('first');
+    expect(vi.getTimerCount()).toBe(1);
+
+    const [key] = Object.keys(cache.getAllCachedData());
+    vi.advanceTimersByTime(400);
+    Reflect.apply(Reflect.get(cache, 'put'), cache, [key, Promise.resolve('second')]);
+    expect(vi.getTimerCount()).toBe(1);
+
+    vi.advanceTimersByTime(600);
+    expect(await cache.getBlockHash()).toBe('second');
+    expect(getBlockHash).toHaveBeenCalledTimes(1);
+
+    vi.advanceTimersByTime(400);
+    expect(await cache.getBlockHash()).toBe('third');
+    expect(getBlockHash).toHaveBeenCalledTimes(2);
+  });
 });

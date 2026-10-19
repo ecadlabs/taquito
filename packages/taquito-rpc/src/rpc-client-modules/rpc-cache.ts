@@ -144,11 +144,12 @@ export class RpcClientCache implements RpcClientInterface {
   }
 
   private put<T>(key: string, response: Promise<T>) {
+    this.remove(key);
     const handle = setTimeout(() => {
       return this.remove(key);
     }, this.ttl);
 
-    Object.assign(this._cache, { [key]: { handle, response } });
+    this._cache[key] = { handle, response };
   }
 
   private remove(key: string) {
