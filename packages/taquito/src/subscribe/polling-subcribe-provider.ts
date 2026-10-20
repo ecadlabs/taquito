@@ -100,6 +100,12 @@ export class PollingSubscribeProvider implements SubscribeProvider {
   ) {
     this._config$ = new BehaviorSubject({
       ...defaultConfigStreamer,
+      observableSubscriptionRetryFunction: retry({
+        delay: () =>
+          from(this.getConfirmationPollingInterval()).pipe(
+            switchMap((interval) => timer(interval))
+          ),
+      }),
       ...config,
     });
     this.timer$ = this._config$.pipe(
@@ -120,7 +126,7 @@ export class PollingSubscribeProvider implements SubscribeProvider {
       exhaustMap(() => getLastBlock(this.context)),
       distinctUntilKeyChanged('hash'),
       share({
-        resetOnError: false,
+        resetOnError: true,
         resetOnComplete: false,
         resetOnRefCountZero: true,
       })

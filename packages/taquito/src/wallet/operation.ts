@@ -1,5 +1,15 @@
 import { BlockResponse, OperationContentsAndResult, OperationResultStatusEnum } from '@taquito/rpc';
-import { combineLatest, from, Observable, of, range, ReplaySubject } from 'rxjs';
+import {
+  combineLatest,
+  defer,
+  firstValueFrom,
+  from,
+  lastValueFrom,
+  Observable,
+  of,
+  range,
+  ReplaySubject,
+} from 'rxjs';
 import {
   catchError,
   concatMap,
@@ -91,7 +101,7 @@ export class WalletOperation {
     tap((newHead) => (this.lastHead = newHead)),
     share({
       connector: () => new ReplaySubject(1),
-      resetOnError: false,
+      resetOnError: true,
       resetOnComplete: false,
       resetOnRefCountZero: true,
     })
@@ -119,18 +129,20 @@ export class WalletOperation {
     first(),
     share({
       connector: () => new ReplaySubject(1),
-      resetOnError: false,
+      resetOnError: true,
       resetOnComplete: false,
       resetOnRefCountZero: true,
     })
   );
 
   async operationResults() {
-    return this._operationResult.pipe(first()).toPromise();
+    return firstValueFrom(this._operationResult.pipe(first()), { defaultValue: undefined });
   }
 
   protected async getInclusionBlock() {
-    const inclusionBlock = await this._includedInBlock.pipe(first()).toPromise();
+    const inclusionBlock = await firstValueFrom(this._includedInBlock.pipe(first()), {
+      defaultValue: undefined,
+    });
     if (!inclusionBlock) {
       throw new ObservableError('Inclusion block is undefined');
     }
@@ -184,14 +196,15 @@ export class WalletOperation {
       return 0;
     }
 
-    return combineLatest([this._includedInBlock, from(this.context.readProvider.getBlock('head'))])
-      .pipe(
+    return firstValueFrom(
+      combineLatest([this._includedInBlock, from(this.context.readProvider.getBlock('head'))]).pipe(
         map(([foundAtBlock, head]) => {
           return head.header.level - foundAtBlock.header.level + 1;
         }),
         first()
-      )
-      .toPromise();
+      ),
+      { defaultValue: undefined }
+    );
   }
 
   async isInCurrentBranch(tipBlockIdentifier: BlockIdentifier = 'head') {
@@ -231,7 +244,10 @@ export class WalletOperation {
       throw new ConfirmationUndefinedError();
     }
 
-    return combineLatest([this._includedInBlock, this.newHead$]).pipe(
+    return combineLatest([
+      defer(() => (this._included ? this._includedInBlock : this.confirmed$)),
+      this.newHead$,
+    ]).pipe(
       distinctUntilChanged(([, previousHead], [, newHead]) => {
         return previousHead.hash === newHead.hash;
       }),
@@ -257,7 +273,9 @@ export class WalletOperation {
     const expectedConfirmation = confirmations ?? this.context.config.defaultConfirmationCount;
 
     try {
-      const confirmationResult = await this.confirmationObservable(confirmations).toPromise();
+      const confirmationResult = await lastValueFrom(this.confirmationObservable(confirmations), {
+        defaultValue: undefined,
+      });
       const operationResults = await this.getOperationResultsIfIncluded();
       const summary = summarizeWalletOperationResults(operationResults);
       const nonAppliedStatuses = summary

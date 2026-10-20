@@ -12,7 +12,7 @@ import {
   SchedulerLike,
   throwError,
 } from 'rxjs';
-import { concatMap, mergeMap, share, startWith, switchMap, timeout } from 'rxjs/operators';
+import { concatMap, mergeMap, share, startWith, switchMap, tap, timeout } from 'rxjs/operators';
 import { Context } from '../context';
 import { BlockIdentifier } from '../read-provider/interface';
 import { createObservableFromSubscription } from '../subscribe/create-observable-from-subscription';
@@ -48,7 +48,7 @@ export const createNewPollingBasedHeadObservable = (
     timeoutAfter(context.config.confirmationPollingTimeoutSecond * 1000),
     share({
       connector: () => new ReplaySubject(1),
-      resetOnError: false,
+      resetOnError: true,
       resetOnComplete: false,
       resetOnRefCountZero: true,
     })
@@ -101,8 +101,16 @@ export class OperationFactory {
           if (started) {
             return EMPTY;
           }
-          started = true;
-          return this.createPastBlockWalker(blockIdentifier);
+          return this.createPastBlockWalker(blockIdentifier).pipe(
+            timeout({
+              each: this.context.config.confirmationPollingTimeoutSecond * 1000,
+              with: () =>
+                throwError(() => new ConfirmationTimeoutError(`Confirmation polling timed out`)),
+            }),
+            tap(() => {
+              started = true;
+            })
+          );
         })
       );
     }
