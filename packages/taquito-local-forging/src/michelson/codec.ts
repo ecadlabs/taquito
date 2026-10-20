@@ -109,12 +109,8 @@ export const stripLengthPrefixFromBytes = (
   bytesLength = 4
 ): Uint8Array[] => {
   const ret: Uint8Array[] = [];
-  let values = value;
-  while (values.length()) {
-    const len = values.consume(bytesLength);
-    const valueLen = parseInt(Buffer.from(len).toString('hex'), 16);
-    ret.push(values.consume(valueLen));
-    values = values.slice(valueLen + bytesLength);
+  while (value.length()) {
+    ret.push(extractRequiredLen(value, bytesLength));
   }
   return ret;
 };
@@ -248,7 +244,7 @@ export const primDecoder = (value: Uint8ArrayConsumer, preamble: Uint8Array) => 
     prim: opMapping[op],
   };
 
-  if (opMapping[op] === 'LAMBDA' || opMapping[op] === 'LAMBDA_REC') {
+  if ((opMapping[op] === 'LAMBDA' || opMapping[op] === 'LAMBDA_REC') && argsCount) {
     value.consume(4);
   }
 
@@ -270,7 +266,7 @@ export const primDecoder = (value: Uint8ArrayConsumer, preamble: Uint8Array) => 
 
   const args = new Array(argsCount).fill(0).map(() => valueDecoder(value));
 
-  if (opMapping[op] === 'LAMBDA' || opMapping[op] === 'LAMBDA_REC') {
+  if ((opMapping[op] === 'LAMBDA' || opMapping[op] === 'LAMBDA_REC') && argsCount) {
     value.consume(4);
   }
 
