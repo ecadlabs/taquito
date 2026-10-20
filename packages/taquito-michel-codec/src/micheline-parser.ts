@@ -389,8 +389,8 @@ export class Parser {
    * @param src An object containing JSON-encoded Michelson, usually returned by `JSON.parse()`
    */
   parseJSON(src: object): Expr {
-    if (typeof src !== 'object') {
-      throw new TypeError(`object type was expected, got ${typeof src} instead`);
+    if (src === null || typeof src !== 'object') {
+      throw new TypeError(`object type was expected, got ${src === null ? 'null' : typeof src} instead`);
     }
 
     if (Array.isArray(src)) {

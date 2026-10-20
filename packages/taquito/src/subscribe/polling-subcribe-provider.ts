@@ -65,7 +65,7 @@ const applyEventFilter = (filter?: EventFilter) =>
         for (const op of ops) {
           for (const content of op.contents) {
             const tx = content as OperationContentsAndResultTransaction;
-            const internalOpResults = tx.metadata.internal_operation_results;
+            const internalOpResults = tx.metadata?.internal_operation_results;
             if (internalOpResults) {
               for (const event of internalOpResults) {
                 if (
