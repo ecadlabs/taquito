@@ -176,7 +176,19 @@ async function loadRemoteParam(
     );
   }
 
-  const bytes = Buffer.from(await response.arrayBuffer());
+  let body: ArrayBuffer;
+  try {
+    body = await response.arrayBuffer();
+  } catch (error) {
+    throw new SaplingParamsError(
+      'SAPLING_PARAMS_FETCH_FAILED',
+      `Failed to read Sapling ${label} params from ${url}`,
+      source,
+      error
+    );
+  }
+
+  const bytes = Buffer.from(body);
   await assertSha256(bytes, expectedSha256, label, source, url);
 
   return bytes;
