@@ -185,7 +185,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
         .toNumber();
 
       const makeHeavy = (parameter: number) => ({
-        kind: OpKind.TRANSACTION,
+        kind: OpKind.TRANSACTION as const,
         ...contract.methodsObject.default(parameter).toTransferParams(),
       });
 
@@ -202,7 +202,7 @@ CONFIGS().forEach(({ lib, rpc, setup, knownBaker }) => {
       expect(heavyEstimate[0].gasLimit).toBeGreaterThan(equalSplit);
       expect(heavyEstimate[0].gasLimit).toBeLessThan(constants.hard_gas_limit_per_block.toNumber());
 
-      const light = { kind: OpKind.TRANSACTION, to: pkh, amount: 1, mutez: true };
+      const light = { kind: OpKind.TRANSACTION as const, to: pkh, amount: 1, mutez: true };
       const estimates = await Tezos.estimate.batch([
         heavy,
         light,

@@ -9,7 +9,7 @@
     "example/**"
   ],
   "compilerOptions": {
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "target": "es2020",
     "module": "es2020",
     "lib": [
@@ -18,6 +18,7 @@
       "es2017",
       "dom"
     ],
+    "types": ["node"],
     "strict": true,
     "sourceMap": true,
     "declaration": true,
@@ -25,7 +26,6 @@
     "resolveJsonModule": true,
     "noUnusedParameters": true,
     "noImplicitAny": true,
-    "downlevelIteration": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "jsx": "react",
