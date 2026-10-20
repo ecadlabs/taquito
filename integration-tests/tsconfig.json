@@ -2,12 +2,13 @@
 
   "extends": "../tsconfig.base.json",
   "compilerOptions": {
-    "types": ["vitest/globals"],
+    "types": ["node", "vitest/globals"],
     "skipLibCheck": true,
     "declarationDir": "./dist/types",
+    "rootDir": "..",
     "outDir": "./dist/lib",
     "allowJs": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "target": "es6",
     "module": "commonjs",
     "lib": [

@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "target": "es6",
     "module": "commonjs",
     "lib": [
@@ -9,6 +9,7 @@
       "es2017",
       "dom"
     ],
+    "types": ["node"],
     "strict": true,
     "sourceMap": true,
     "declaration": true,
@@ -17,6 +18,7 @@
     "emitDecoratorMetadata": true,
     "noImplicitAny": false,
     "declarationDir": "dist/types",
+    "rootDir": "..",
     "outDir": "dist/lib"
   },
   "include": [
