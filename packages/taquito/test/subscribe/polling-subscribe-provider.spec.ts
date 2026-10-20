@@ -1,4 +1,5 @@
 import { retry } from 'rxjs/operators';
+import { Context } from '../../src/context';
 import { PollingSubscribeProvider } from '../../src/subscribe/polling-subcribe-provider';
 import BigNumber from 'bignumber.js';
 
@@ -85,5 +86,84 @@ describe('Configurations for the PollingSubscribeProvider', () => {
     expect(pollingSubscribeProvider.config.observableSubscriptionRetryFunction.prototype).toEqual(
       retry().prototype
     );
+  });
+
+  it('should not throw in subscribeEvent when a block contains operation contents without metadata', async () => {
+    const blockWithMissingMetadata = {
+      hash: 'BLockHashEvent1',
+      protocol: 'proto1',
+      chain_id: 'NetXdQprcVkpaWU',
+      header: { level: 42 },
+      metadata: {},
+      operations: [
+        [
+          {
+            hash: 'opWithoutMetadata',
+            contents: [{ kind: 'endorsement', slot: 0 }],
+          },
+          {
+            hash: 'opWithEvent',
+            contents: [
+              {
+                kind: 'transaction',
+                metadata: {
+                  internal_operation_results: [
+                    {
+                      kind: 'event',
+                      source: 'KT1TezoooozzSmartPyzzSTATiCzzzwwBFA1',
+                      nonce: 0,
+                      type: { prim: 'int' },
+                      tag: 'my_tag',
+                      payload: { int: '1' },
+                      result: { status: 'applied' },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+        ],
+      ],
+    };
+
+    const provider = new PollingSubscribeProvider(
+      {
+        rpc: {
+          getBlock: vi.fn().mockResolvedValue(blockWithMissingMetadata),
+        },
+        readProvider: mockReadProvider,
+      } as unknown as Context,
+      { pollingIntervalMilliseconds: 50 }
+    );
+
+    const receivedEvents: unknown[] = [];
+    const errors: unknown[] = [];
+
+    await new Promise<void>((resolve, reject) => {
+      const sub = provider.subscribeEvent({
+        address: 'KT1TezoooozzSmartPyzzSTATiCzzzwwBFA1',
+      });
+      sub.on('data', (ev) => {
+        receivedEvents.push(ev);
+        sub.close();
+        resolve();
+      });
+      sub.on('error', (err) => {
+        errors.push(err);
+        sub.close();
+        reject(err);
+      });
+    });
+
+    expect(errors).toEqual([]);
+    expect(receivedEvents).toHaveLength(1);
+    expect(receivedEvents[0]).toMatchObject({
+      opHash: 'opWithEvent',
+      blockHash: 'BLockHashEvent1',
+      level: 42,
+      kind: 'event',
+      source: 'KT1TezoooozzSmartPyzzSTATiCzzzwwBFA1',
+      tag: 'my_tag',
+    });
   });
 });

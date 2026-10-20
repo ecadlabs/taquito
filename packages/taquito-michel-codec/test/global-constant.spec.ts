@@ -90,4 +90,10 @@ describe('Expand global constants', () => {
       )
     ).toEqual(JSON.stringify(scriptJSON(registeredIntExprJSON, registeredDropExprJSON)));
   });
+
+  it('Should throw a TypeError when parseJSON is called with null', () => {
+    expect(() => p.parseJSON(null as unknown as object)).toThrow(
+      new TypeError('object type was expected, got null instead')
+    );
+  });
 });
