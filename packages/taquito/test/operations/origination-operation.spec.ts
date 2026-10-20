@@ -85,6 +85,12 @@ describe('Origination operation', () => {
         level: 200,
       },
     });
+    fakeContext.readProvider = {
+      getBlockHash: vi
+        .fn()
+        .mockResolvedValue('BLJjnzaPtSsxykZ9pLTFLSfsKuiN3z7SjSPDPWwbE4Q68u5EpBw'),
+      getBlock: fakeContext.rpc.getBlock,
+    };
     fakeContext.getConfirmationPollingInterval.mockResolvedValue(10);
   });
 

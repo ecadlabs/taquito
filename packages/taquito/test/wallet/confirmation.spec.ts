@@ -128,6 +128,9 @@ describe('Wallet confirmation', () => {
     vi.spyOn(rpc, 'getBlock').mockImplementation(async ({ block } = { block: 'head' }) =>
       getBlock(block)
     );
+    vi.spyOn(rpc, 'getBlockHash').mockImplementation(
+      async ({ block } = {}) => getBlock(block).hash
+    );
     context = new Context(rpc);
     vi.spyOn(context.readProvider, 'getBlockLevel').mockImplementation(
       async (identifier) => getBlock(String(identifier)).header.level
@@ -389,7 +392,7 @@ describe('Wallet confirmation', () => {
     const baseGetBlock = vi.mocked(rpc.getBlock).getMockImplementation()!;
     let failHead = false;
     vi.spyOn(rpc, 'getBlock').mockImplementation(async (args = { block: 'head' }) => {
-      if (args.block === 'head' && failHead) {
+      if ((args.block === 'head' || args.block === head.hash) && failHead) {
         throw streamError;
       }
       return baseGetBlock(args);
