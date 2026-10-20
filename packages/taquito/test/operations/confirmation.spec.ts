@@ -229,6 +229,34 @@ describe('Operation.confirmation', () => {
     expect(resolved).not.toHaveBeenCalled();
   });
 
+  it('allows retrying confirmation on the same Operation after a transient branch lookup failure', async () => {
+    const error = new Error('Branch header temporarily unavailable');
+    const getBlockLevel = context.readProvider.getBlockLevel.bind(context.readProvider);
+    let shouldFail = true;
+    vi.spyOn(context.readProvider, 'getBlockLevel').mockImplementation(async (block) => {
+      if (shouldFail) {
+        throw error;
+      }
+      return getBlockLevel(block);
+    });
+    head = blocks[2];
+    const operation = createOperation();
+    const firstRejected = vi.fn();
+    void operation.confirmation(1).then(vi.fn(), firstRejected);
+    await vi.advanceTimersByTimeAsync(100);
+    expect(firstRejected).toHaveBeenCalledWith(error);
+
+    shouldFail = false;
+    const secondResolved = vi.fn();
+    const secondRejected = vi.fn();
+    void operation.confirmation(1).then(secondResolved, secondRejected);
+    await vi.advanceTimersByTimeAsync(100);
+
+    expect(secondRejected).not.toHaveBeenCalled();
+    expect(secondResolved).toHaveBeenCalledWith(101);
+    expect(operation.includedInBlock).toBe(101);
+  });
+
   it('confirms inclusion in the first observed head', async () => {
     const operation = createOperation();
     head = blocks[1];

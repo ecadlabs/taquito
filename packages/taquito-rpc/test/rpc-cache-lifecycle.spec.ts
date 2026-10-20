@@ -111,4 +111,47 @@ describe('RpcClientCache timer lifecycle', () => {
     expect(await cache.getBlockHash()).toBe('third');
     expect(getBlockHash).toHaveBeenCalledTimes(2);
   });
+
+  it('evicts a rejected promise immediately so retries within the TTL hit the RPC client', async () => {
+    const rpcError = new Error('temporary 503');
+    const getBlockHash = vi
+      .spyOn(client, 'getBlockHash')
+      .mockRejectedValueOnce(rpcError)
+      .mockResolvedValueOnce('recovered-hash');
+
+    await expect(cache.getBlockHash()).rejects.toBe(rpcError);
+    expect(getBlockHash).toHaveBeenCalledTimes(1);
+    expect(vi.getTimerCount()).toBe(0);
+
+    // Retry well within the 1000ms TTL window
+    vi.advanceTimersByTime(50);
+    expect(await cache.getBlockHash()).toBe('recovered-hash');
+    expect(getBlockHash).toHaveBeenCalledTimes(2);
+  });
+
+  it('does not evict a newer replacement entry when an older pending promise rejects after clear', async () => {
+    let rejectFirst!: (err: Error) => void;
+    const firstResponse = new Promise<string>((_resolve, reject) => {
+      rejectFirst = reject;
+    });
+    const getBlockHash = vi
+      .spyOn(client, 'getBlockHash')
+      .mockReturnValueOnce(firstResponse)
+      .mockResolvedValueOnce('replacement-hash')
+      .mockResolvedValueOnce('third-hash');
+
+    const firstCaller = cache.getBlockHash();
+    cache.deleteAllCachedData();
+    expect(await cache.getBlockHash()).toBe('replacement-hash');
+    expect(vi.getTimerCount()).toBe(1);
+
+    const staleError = new Error('stale request failed');
+    rejectFirst(staleError);
+    await expect(firstCaller).rejects.toBe(staleError);
+
+    // Replacement entry should still be cached and its timer intact
+    expect(vi.getTimerCount()).toBe(1);
+    expect(await cache.getBlockHash()).toBe('replacement-hash');
+    expect(getBlockHash).toHaveBeenCalledTimes(2);
+  });
 });

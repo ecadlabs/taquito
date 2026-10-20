@@ -4,7 +4,16 @@ import {
   OperationContentsAndResultReveal,
   OperationResult,
 } from '@taquito/rpc';
-import { BehaviorSubject, defer, EMPTY, of, range, ReplaySubject, throwError } from 'rxjs';
+import {
+  BehaviorSubject,
+  defer,
+  EMPTY,
+  firstValueFrom,
+  of,
+  range,
+  ReplaySubject,
+  throwError,
+} from 'rxjs';
 import {
   catchError,
   concatMap,
@@ -177,7 +186,9 @@ export class Operation {
   }
 
   protected async getInclusionBlock() {
-    const inclusionBlock = await this._includedInBlock.pipe(first()).toPromise();
+    const inclusionBlock = await firstValueFrom(this._includedInBlock.pipe(first()), {
+      defaultValue: undefined,
+    });
     if (!inclusionBlock) {
       throw new Error('Inclusion block is undefined');
     }

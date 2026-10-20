@@ -150,6 +150,11 @@ export class RpcClientCache implements RpcClientInterface {
     }, this.ttl);
 
     this._cache[key] = { handle, response };
+    Promise.resolve(response).catch(() => {
+      if (this._cache[key]?.response === response) {
+        this.remove(key);
+      }
+    });
   }
 
   private remove(key: string) {

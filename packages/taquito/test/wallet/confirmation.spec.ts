@@ -327,4 +327,114 @@ describe('Wallet confirmation', () => {
 
     expect(rejected).toHaveBeenCalledWith(error);
   });
+
+  it('allows retrying confirmation on the same WalletOperation after a transient historical read failure', async () => {
+    const error = new Error('Historical block temporarily unavailable');
+    const getBlock = context.readProvider.getBlock.bind(context.readProvider);
+    let failBlock101 = true;
+    vi.spyOn(context.readProvider, 'getBlock').mockImplementation(async (identifier) => {
+      if (identifier === 101 && failBlock101) {
+        throw error;
+      }
+      return getBlock(identifier);
+    });
+
+    const operation = await context.wallet.transfer({ to: address, amount: 1 }).send();
+    const firstRejected = vi.fn();
+    void operation.confirmation(1).then(vi.fn(), firstRejected);
+    await vi.advanceTimersByTimeAsync(100);
+    expect(firstRejected).toHaveBeenCalledWith(error);
+
+    // Now the RPC recovers; a second confirmation(1) call should re-subscribe and succeed
+    failBlock101 = false;
+    const secondResolved = vi.fn();
+    const secondRejected = vi.fn();
+    void operation.confirmation(1).then(secondResolved, secondRejected);
+    await vi.advanceTimersByTimeAsync(100);
+
+    expect(secondRejected).not.toHaveBeenCalled();
+    expect(secondResolved).toHaveBeenCalledWith(expect.objectContaining({ completed: true }));
+  });
+
+  it('allows retrying confirmation on the same WalletOperation after reference block lookup fails', async () => {
+    const error = new Error('Reference block 100 temporarily unavailable');
+    const getBlock = context.readProvider.getBlock.bind(context.readProvider);
+    let failReferenceBlock = true;
+    vi.spyOn(context.readProvider, 'getBlock').mockImplementation(async (identifier) => {
+      if (String(identifier) === '100' && failReferenceBlock) {
+        throw error;
+      }
+      return getBlock(identifier);
+    });
+
+    const operation = await context.wallet.transfer({ to: address, amount: 1 }).send();
+    const firstRejected = vi.fn();
+    void operation.confirmation(1).then(vi.fn(), firstRejected);
+    await vi.advanceTimersByTimeAsync(100);
+    expect(firstRejected).toHaveBeenCalledWith(error);
+
+    // Reference block 100 recovers; second confirmation(1) must re-run the past block walker and succeed
+    failReferenceBlock = false;
+    const secondResolved = vi.fn();
+    const secondRejected = vi.fn();
+    void operation.confirmation(1).then(secondResolved, secondRejected);
+    await vi.advanceTimersByTimeAsync(100);
+
+    expect(secondRejected).not.toHaveBeenCalled();
+    expect(secondResolved).toHaveBeenCalledWith(expect.objectContaining({ completed: true }));
+  });
+
+  it('allows retrying confirmation on the same WalletOperation after a live head stream error', async () => {
+    const streamError = new Error('Live head RPC failed');
+    const baseGetBlock = vi.mocked(rpc.getBlock).getMockImplementation()!;
+    let failHead = false;
+    vi.spyOn(rpc, 'getBlock').mockImplementation(async (args = { block: 'head' }) => {
+      if (args.block === 'head' && failHead) {
+        throw streamError;
+      }
+      return baseGetBlock(args);
+    });
+
+    // Inclusion happens in block 102 after send() when head advances
+    blocks = Array.from({ length: 6 }, (_, offset) => makeBlock(100 + offset, offset === 2));
+    head = blocks[0];
+    vi.mocked(context.walletProvider.sendOperations).mockImplementation(async () => {
+      return operationHash;
+    });
+
+    const operation = await context.wallet.transfer({ to: address, amount: 1 }).send();
+    failHead = true;
+    const firstRejected = vi.fn();
+    void operation.confirmation(1).then(vi.fn(), firstRejected);
+    await vi.advanceTimersByTimeAsync(100);
+    expect(firstRejected).toHaveBeenCalledWith(streamError);
+
+    // Live head recovers and advances to block 102 (which includes the operation)
+    failHead = false;
+    head = blocks[2];
+    const secondResolved = vi.fn();
+    const secondRejected = vi.fn();
+    void operation.confirmation(1).then(secondResolved, secondRejected);
+    await vi.advanceTimersByTimeAsync(100);
+
+    expect(secondRejected).not.toHaveBeenCalled();
+    expect(secondResolved).toHaveBeenCalledWith(expect.objectContaining({ completed: true }));
+  });
+
+  it('times out with ConfirmationTimeoutError when the initial reference block lookup hangs', async () => {
+    const getBlock = context.readProvider.getBlock.bind(context.readProvider);
+    vi.spyOn(context.readProvider, 'getBlock').mockImplementation((identifier) => {
+      if (String(identifier) === '100') {
+        return new Promise<BlockResponse>(() => {});
+      }
+      return getBlock(identifier);
+    });
+
+    const operation = await context.wallet.transfer({ to: address, amount: 1 }).send();
+    const rejected = vi.fn();
+    void operation.confirmation(1).then(vi.fn(), rejected);
+    await vi.advanceTimersByTimeAsync(confirmationTimeoutSeconds * 1000);
+
+    expect(rejected).toHaveBeenCalledWith(expect.any(ConfirmationTimeoutError));
+  });
 });

@@ -182,4 +182,174 @@ describe('PollingSubscribeProvider: exhaustMap behavior', () => {
 
     sub.close();
   });
+
+  it('should recover on subsequent subscriptions after an RPC error instead of poisoning newBlock$', async () => {
+    const rpcError = new Error('transient RPC failure');
+    const block2 = makeBlock('BLockAfterError', 2);
+
+    const mockRpc = {
+      getBlock: vi
+        .fn()
+        .mockRejectedValueOnce(rpcError)
+        .mockResolvedValueOnce(block2),
+    };
+
+    const mockContext = {
+      rpc: mockRpc,
+      readProvider: {
+        getProtocolConstants: vi.fn(),
+      },
+    } as any;
+
+    const provider = new PollingSubscribeProvider(mockContext, {
+      pollingIntervalMilliseconds: 100,
+    });
+
+    const errSpy1 = vi.fn();
+    const sub1 = provider.subscribeBlock('head');
+    sub1.on('error', errSpy1);
+
+    // First subscription triggers getBlock, which rejects
+    await vi.advanceTimersByTimeAsync(1);
+    expect(errSpy1).toHaveBeenCalledTimes(1);
+    expect(errSpy1).toHaveBeenCalledWith(rpcError);
+    sub1.close();
+
+    // Second subscription should start a fresh poll and receive block2,
+    // NOT replay the stale error from share({ resetOnError: false })
+    const dataSpy2 = vi.fn();
+    const errSpy2 = vi.fn();
+    const sub2 = provider.subscribeBlock('head');
+    sub2.on('data', dataSpy2);
+    sub2.on('error', errSpy2);
+
+    await vi.advanceTimersByTimeAsync(1);
+
+    expect(errSpy2).not.toHaveBeenCalled();
+    expect(mockRpc.getBlock).toHaveBeenCalledTimes(2);
+    expect(dataSpy2).toHaveBeenCalledTimes(1);
+    expect(dataSpy2).toHaveBeenCalledWith(expect.objectContaining({ hash: 'BLockAfterError' }));
+
+    sub2.close();
+  });
+
+  it('should retry cleanly when shouldObservableSubscriptionRetry is true without stack overflow', async () => {
+    const rpcError = new Error('transient network error');
+    const block1 = makeBlock('BLockRecovered', 1);
+
+    const mockRpc = {
+      getBlock: vi
+        .fn()
+        .mockRejectedValueOnce(rpcError)
+        .mockResolvedValue(block1),
+    };
+
+    const mockContext = {
+      rpc: mockRpc,
+      readProvider: {
+        getProtocolConstants: vi.fn(),
+      },
+    } as any;
+
+    const provider = new PollingSubscribeProvider(mockContext, {
+      pollingIntervalMilliseconds: 100,
+      shouldObservableSubscriptionRetry: true,
+    });
+
+    const dataSpy = vi.fn();
+    const errSpy = vi.fn();
+    const sub = provider.subscribeBlock('head');
+    sub.on('data', dataSpy);
+    sub.on('error', errSpy);
+
+    // First timer tick rejects, retry() re-subscribes to newBlock$, which resets on error
+    // and schedules the retry after pollingIntervalMilliseconds (100ms).
+    await vi.advanceTimersByTimeAsync(110);
+
+    expect(errSpy).toHaveBeenCalledTimes(1);
+    expect(errSpy).toHaveBeenCalledWith(rpcError);
+    expect(dataSpy).toHaveBeenCalledTimes(1);
+    expect(dataSpy).toHaveBeenCalledWith(expect.objectContaining({ hash: 'BLockRecovered' }));
+
+    sub.close();
+  });
+
+  it('should stop polling and retrying when close() is called inside an error callback', async () => {
+    const rpcError = new Error('RPC failure');
+    const block1 = makeBlock('BLockAfterClose', 1);
+
+    const mockRpc = {
+      getBlock: vi
+        .fn()
+        .mockRejectedValueOnce(rpcError)
+        .mockResolvedValue(block1),
+    };
+
+    const mockContext = {
+      rpc: mockRpc,
+      readProvider: {
+        getProtocolConstants: vi.fn(),
+      },
+    } as any;
+
+    const provider = new PollingSubscribeProvider(mockContext, {
+      pollingIntervalMilliseconds: 100,
+      shouldObservableSubscriptionRetry: true,
+    });
+
+    const dataSpy = vi.fn();
+    const errSpy = vi.fn();
+    const sub = provider.subscribeBlock('head');
+    sub.on('data', dataSpy);
+    sub.on('error', (err) => {
+      errSpy(err);
+      sub.close();
+    });
+
+    await vi.advanceTimersByTimeAsync(500);
+
+    expect(errSpy).toHaveBeenCalledTimes(1);
+    expect(mockRpc.getBlock).toHaveBeenCalledTimes(1);
+    expect(dataSpy).not.toHaveBeenCalled();
+  });
+
+  it('should wait pollingIntervalMilliseconds between retry attempts on persistent RPC failure', async () => {
+    const rpcError = new Error('persistent RPC outage');
+
+    const mockRpc = {
+      getBlock: vi.fn().mockRejectedValue(rpcError),
+    };
+
+    const mockContext = {
+      rpc: mockRpc,
+      readProvider: {
+        getProtocolConstants: vi.fn(),
+      },
+    } as any;
+
+    const provider = new PollingSubscribeProvider(mockContext, {
+      pollingIntervalMilliseconds: 100,
+      shouldObservableSubscriptionRetry: true,
+    });
+
+    const errSpy = vi.fn();
+    const sub = provider.subscribeBlock('head');
+    sub.on('error', errSpy);
+
+    // At t=1ms: only the initial poll should have executed (1 call), NOT a tight 0ms retry loop
+    await vi.advanceTimersByTimeAsync(1);
+    expect(mockRpc.getBlock).toHaveBeenCalledTimes(1);
+    expect(errSpy).toHaveBeenCalledTimes(1);
+
+    // At t=50ms: still waiting for the 100ms polling interval before retrying
+    await vi.advanceTimersByTimeAsync(49);
+    expect(mockRpc.getBlock).toHaveBeenCalledTimes(1);
+
+    // At t=105ms: second attempt fires
+    await vi.advanceTimersByTimeAsync(55);
+    expect(mockRpc.getBlock).toHaveBeenCalledTimes(2);
+    expect(errSpy).toHaveBeenCalledTimes(2);
+
+    sub.close();
+  });
 });

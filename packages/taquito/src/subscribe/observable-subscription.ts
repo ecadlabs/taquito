@@ -1,5 +1,5 @@
 /* eslint-disable no-dupe-class-members */
-import { Observable, Subject, NEVER, OperatorFunction } from 'rxjs';
+import { Observable, ReplaySubject, EMPTY, OperatorFunction } from 'rxjs';
 import { Subscription } from './interface';
 import { takeUntil, tap, catchError, retry } from 'rxjs/operators';
 import { UnsupportedEventError } from './errors';
@@ -10,7 +10,7 @@ export class ObservableSubscription<T> implements Subscription<T> {
   private errorListeners: Array<(error: Error) => void> = [];
   private messageListeners: Array<(data: T) => void> = [];
   private closeListeners: Array<() => void> = [];
-  private completed$ = new Subject<void>();
+  private completed$ = new ReplaySubject<void>(1);
 
   constructor(
     obs: Observable<T>,
@@ -20,19 +20,22 @@ export class ObservableSubscription<T> implements Subscription<T> {
     obs
       .pipe(
         takeUntil(this.completed$),
-        tap(
-          (data: T) => {
+        tap({
+          next: (data: T) => {
             this.call(this.messageListeners, data);
           },
-          (error) => {
+          error: (error) => {
             this.call(this.errorListeners, error);
           },
-          () => {
-            this.call(this.closeListeners);
-          }
-        ),
+        }),
         this.shouldRetry ? operatorFunction : tap(),
-        catchError(() => NEVER)
+        takeUntil(this.completed$),
+        tap({
+          complete: () => {
+            this.call(this.closeListeners);
+          },
+        }),
+        catchError(() => EMPTY)
       )
       .subscribe();
   }
@@ -97,5 +100,6 @@ export class ObservableSubscription<T> implements Subscription<T> {
 
   public close() {
     this.completed$.next();
+    this.completed$.complete();
   }
 }
