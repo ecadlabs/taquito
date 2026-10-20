@@ -3,18 +3,28 @@ import {
   InternalOperationResult,
   OperationContentsAndResultTransaction,
 } from '@taquito/rpc';
-import { BehaviorSubject, from, Observable, ObservableInput, OperatorFunction, timer } from 'rxjs';
+import {
+  BehaviorSubject,
+  defer,
+  EMPTY,
+  from,
+  Observable,
+  ObservableInput,
+  OperatorFunction,
+  timer,
+} from 'rxjs';
 import {
   concatMap,
-  distinctUntilKeyChanged,
+  distinctUntilChanged,
   exhaustMap,
-  first,
+  tap,
   map,
   share,
   retry,
   switchMap,
 } from 'rxjs/operators';
 import { Context } from '../context';
+import { BlockIdentifier } from '../read-provider/interface';
 import { evaluateFilter, eventFilter } from './filters';
 import {
   Filter,
@@ -36,10 +46,6 @@ export interface PollingSubscribeProviderConfig {
 export const defaultConfigStreamer: PollingSubscribeProviderConfig = {
   shouldObservableSubscriptionRetry: false,
   observableSubscriptionRetryFunction: retry(),
-};
-
-const getLastBlock = (context: Context) => {
-  return from(context.rpc.getBlock()).pipe(first());
 };
 
 const applyFilter = (filter: Filter) =>
@@ -93,6 +99,7 @@ export class PollingSubscribeProvider implements SubscribeProvider {
   private timer$: Observable<number>;
 
   private newBlock$: Observable<BlockResponse>;
+  private newBlockHash$: Observable<string>;
 
   constructor(
     private context: Context,
@@ -122,15 +129,30 @@ export class PollingSubscribeProvider implements SubscribeProvider {
         }
       })
     );
-    this.newBlock$ = this.timer$.pipe(
-      exhaustMap(() => getLastBlock(this.context)),
-      distinctUntilKeyChanged('hash'),
-      share({
-        resetOnError: true,
-        resetOnComplete: false,
-        resetOnRefCountZero: true,
-      })
+    // Keep repeated observations here so full reads can recover at the same head
+    // after a failure or after a slow request skipped a polling tick.
+    const polledBlockHash$ = this.timer$.pipe(
+      exhaustMap(() => this.context.readProvider.getBlockHash('head')),
+      share({ resetOnError: true, resetOnComplete: false, resetOnRefCountZero: true })
     );
+    this.newBlockHash$ = polledBlockHash$.pipe(
+      distinctUntilChanged(),
+      share({ resetOnError: true, resetOnComplete: false, resetOnRefCountZero: true })
+    );
+    this.newBlock$ = defer(() => {
+      let lastSuccessfulHash: string | undefined;
+      return polledBlockHash$.pipe(
+        exhaustMap((hash) =>
+          hash === lastSuccessfulHash
+            ? EMPTY
+            : from(this.context.readProvider.getBlock(hash as BlockIdentifier)).pipe(
+                tap(() => {
+                  lastSuccessfulHash = hash;
+                })
+              )
+        )
+      );
+    }).pipe(share({ resetOnError: true, resetOnComplete: false, resetOnRefCountZero: true }));
   }
 
   get config() {
@@ -169,7 +191,7 @@ export class PollingSubscribeProvider implements SubscribeProvider {
 
   subscribe(_filter: 'head'): Subscription<string> {
     return new ObservableSubscription(
-      this.newBlock$.pipe(map((x) => x?.hash)),
+      this.newBlockHash$,
       this.config.shouldObservableSubscriptionRetry,
       this.config.observableSubscriptionRetryFunction
     );
