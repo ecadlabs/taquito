@@ -9,6 +9,7 @@ import {
   SaplingToolkit,
   SaplingTransactionViewer,
 } from '../src/taquito-sapling';
+import { InvalidMemo } from '../src/errors';
 import { saplingState } from './sapling-tx-builder/single-sapling-state-diff';
 
 describe('SaplingToolkit', () => {
@@ -76,6 +77,112 @@ describe('SaplingToolkit', () => {
       new SaplingForger(),
       mockSaplingTxBuilder as any
     );
+  });
+
+  it('rejects a memo that exceeds the UTF-8 byte limit', async () => {
+    await expect(
+      saplingToolkit.prepareShieldedTransaction([
+        {
+          to: 'zet12mVvzJ4QJhnNQetGHzdwTMcLgNrdC4SFact6BB5jpeqGAefWip3iGgEjvDA9z7b9Y',
+          amount: 1,
+          memo: '\u00e9\u00e9\u00e9\u00e9\u00e9',
+        },
+      ])
+    ).rejects.toMatchObject({
+      name: 'InvalidMemo',
+      message:
+        'Invalid memo "\u00e9\u00e9\u00e9\u00e9\u00e9" with UTF-8 byte length 10 expecting at most 8 bytes',
+    });
+  });
+
+  describe.each(['prepareShieldedTransaction', 'prepareSaplingTransaction'] as const)(
+    '%s memo byte limits',
+    (method) => {
+      it.each([
+        '\u00e9\u00e9\u00e9\u00e9\u00e9',
+        '😀😀a',
+        'e\u0301e\u0301e\u0301',
+        '123456789',
+        '\ud800\ud800\ud800',
+      ])('rejects an oversized memo %j before reading chain state', async (memo) => {
+        await expect(
+          saplingToolkit[method]([
+            {
+              to: 'zet12mVvzJ4QJhnNQetGHzdwTMcLgNrdC4SFact6BB5jpeqGAefWip3iGgEjvDA9z7b9Y',
+              amount: 0,
+              memo: '',
+            },
+            {
+              to: 'zet12mVvzJ4QJhnNQetGHzdwTMcLgNrdC4SFact6BB5jpeqGAefWip3iGgEjvDA9z7b9Y',
+              amount: 0,
+              memo,
+            },
+          ])
+        ).rejects.toBeInstanceOf(InvalidMemo);
+        expect(mockReadProvider.getSaplingDiffById).not.toHaveBeenCalled();
+      });
+
+      it.each([
+        '\u00e9\u00e9\u00e9\u00e9',
+        '😀😀',
+        'e\u0301e\u0301ab',
+        '12345678',
+        '\ud800\ud800ab',
+        '',
+        undefined,
+      ])('accepts a memo within eight UTF-8 bytes: %j', async (memo) => {
+        mockReadProvider.getSaplingDiffById.mockResolvedValue({
+          root: '00'.repeat(32),
+          commitments_and_ciphertexts: [],
+          nullifiers: [],
+        });
+        const prepared = {
+          inputs: [],
+          outputs: [],
+          signature: Buffer.alloc(64),
+          balance: new BigNumber(0),
+        };
+        mockSaplingTxBuilder.createShieldedTx.mockResolvedValue(prepared);
+        mockSaplingTxBuilder.createSaplingTx.mockResolvedValue(prepared);
+        await expect(
+          saplingToolkit[method]([
+            {
+              to: 'zet12mVvzJ4QJhnNQetGHzdwTMcLgNrdC4SFact6BB5jpeqGAefWip3iGgEjvDA9z7b9Y',
+              amount: 0,
+              memo,
+            },
+          ])
+        ).resolves.toBe('00'.repeat(116));
+      });
+    }
+  );
+
+  it('accepts an empty memo and rejects a nonempty memo when memoSize is zero', async () => {
+    const toolkit = new SaplingToolkit(
+      { saplingSigner: inMemorySpendingKey },
+      { contractAddress: 'KT1G2kvdfPoavgR6Fjdd68M2vaPk14qJ8bhC', saplingId: '0', memoSize: 0 },
+      mockReadProvider as any,
+      new MichelCodecPacker(),
+      new SaplingForger(),
+      mockSaplingTxBuilder as any
+    );
+    mockReadProvider.getSaplingDiffById.mockResolvedValue({ root: '00'.repeat(32) });
+    mockSaplingTxBuilder.createShieldedTx.mockResolvedValue({
+      inputs: [],
+      outputs: [],
+      signature: Buffer.alloc(64),
+      balance: new BigNumber(0),
+    });
+    const params = {
+      to: 'zet12mVvzJ4QJhnNQetGHzdwTMcLgNrdC4SFact6BB5jpeqGAefWip3iGgEjvDA9z7b9Y',
+      amount: 0,
+    };
+    await expect(toolkit.prepareShieldedTransaction([{ ...params, memo: '' }])).resolves.toBe(
+      '00'.repeat(116)
+    );
+    await expect(
+      toolkit.prepareShieldedTransaction([{ ...params, memo: 'a' }])
+    ).rejects.toBeInstanceOf(InvalidMemo);
   });
 
   it('should be instantiable', async () => {
@@ -272,7 +379,7 @@ describe('SaplingToolkit', () => {
         },
       ])
     ).rejects.toThrow(
-      `Invalid memo "Taquitoooo" with length 10 expecting length to be less than 8`
+      `Invalid memo "Taquitoooo" with UTF-8 byte length 10 expecting at most 8 bytes`
     );
   });
 
@@ -643,7 +750,7 @@ describe('SaplingToolkit', () => {
         },
       ])
     ).rejects.toThrow(
-      `Invalid memo "test1234566789" with length 14 expecting length to be less than 8`
+      `Invalid memo "test1234566789" with UTF-8 byte length 14 expecting at most 8 bytes`
     );
   });
 

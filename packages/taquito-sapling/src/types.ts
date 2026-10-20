@@ -59,6 +59,7 @@ export interface SaplingTransactionOutput {
 export interface ParametersSaplingTransaction {
   to: string;
   amount: number;
+  /** Optional memo. Its UTF-8 byte length must not exceed the contract memo size. */
   memo?: string;
   mutez?: boolean;
 }
@@ -162,6 +163,7 @@ export interface SaplingTransactionParams {
 export interface SaplingContractDetails {
   contractAddress: string;
   saplingId?: string;
+  /** Maximum memo size in UTF-8 bytes. */
   memoSize: number;
 }
 

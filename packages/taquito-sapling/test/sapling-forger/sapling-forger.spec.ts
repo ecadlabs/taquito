@@ -9,6 +9,18 @@ import {
 describe('Sapling Forger tests', () => {
   const forger = new SaplingForger();
 
+  it.each([
+    ['\ud800\ud800ab', 'efbfbdefbfbd6162', '\ufffd\ufffdab'],
+    ['😀😀', 'f09f9880f09f9880', '😀😀'],
+    ['\u00e9', 'c3a9000000000000', '\u00e9\0\0\0\0\0\0'],
+    ['e\u0301e\u0301ab', '65cc8165cc816162', 'e\u0301e\u0301ab'],
+  ])('preserves UTF-8 memo bytes and padding for %j', (memo, expectedHex, decoded) => {
+    const forged = forger.forgeTransactionPlaintext({ ...txPlainText, memoSize: 16, memo });
+    expect(forged.length).toBe(63);
+    expect(forged.subarray(55).toString('hex')).toBe(expectedHex);
+    expect(forged.subarray(55).toString('utf8')).toBe(decoded);
+  });
+
   it('should be able to forge spendDescriptions', () => {
     const forged = forger.forgeSpendDescriptions(spendDescription);
 

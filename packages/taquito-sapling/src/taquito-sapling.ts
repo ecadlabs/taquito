@@ -14,6 +14,7 @@ import {
   format,
   PrefixV2,
   validateKeyHash,
+  stringToBytes,
   ValidationResult,
 } from '@taquito/utils';
 import { InsufficientBalance, InvalidMemo } from './errors';
@@ -122,7 +123,7 @@ export class SaplingToolkit {
    * @param shieldedTxParams `to` is the payment address that will receive the shielded tokens (zet).
    * `amount` is the amount of shielded tokens in tez by default.
    * `mutez` needs to be set to true if the amount of shielded tokens is in mutez.
-   * `memo` is an empty string by default.
+   * `memo` is an empty string by default. Its UTF-8 byte length must not exceed the contract memo size.
    * @returns a string representing the sapling transaction
    */
   async prepareShieldedTransaction(shieldedTxParams: ParametersSaplingTransaction[]) {
@@ -192,7 +193,7 @@ export class SaplingToolkit {
    * @param saplingTxParams `to` is the payment address that will receive the shielded tokens (zet).
    * `amount` is the amount of unshielded tokens in tez by default.
    * `mutez` needs to be set to true if the amount of unshielded tokens is in mutez.
-   * `memo` is an empty string by default.
+   * `memo` is an empty string by default. Its UTF-8 byte length must not exceed the contract memo size.
    * @returns a string representing the sapling transaction.
    */
   async prepareSaplingTransaction(saplingTxParams: ParametersSaplingTransaction[]) {
@@ -241,8 +242,8 @@ export class SaplingToolkit {
         : format('tz', 'mutez', param.amount).toString();
       totalAmount = totalAmount.plus(new BigNumber(amountMutez));
       const memo = param.memo ?? DEFAULT_MEMO;
-      if (memo.length > this.#memoSize) {
-        throw new InvalidMemo(memo, `expecting length to be less than ${this.#memoSize}`);
+      if (stringToBytes(memo).length / 2 > this.#memoSize) {
+        throw new InvalidMemo(memo, `expecting at most ${this.#memoSize} bytes`);
       }
 
       formatedParams.push({ to: param.to, amount: amountMutez, memo });
