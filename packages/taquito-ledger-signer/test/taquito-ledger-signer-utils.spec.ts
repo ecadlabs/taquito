@@ -1,11 +1,15 @@
-import { 
-  transformPathToBuffer, 
-  compressPublicKey, 
-  appendWatermark, 
-  chunkOperation, 
+import {
+  transformPathToBuffer,
+  compressPublicKey,
+  appendWatermark,
+  chunkOperation,
   validateResponse,
-  extractValue 
-} from '../src/utils';
+  extractValue,
+  InvalidLedgerResponseError,
+  PublicKeyRetrievalError,
+  PublicKeyHashRetrievalError,
+  InvalidDerivationTypeError,
+} from '../src/taquito-ledger-signer';
 
 /**
  * LedgerSigner utils test
@@ -139,6 +143,13 @@ describe('Utils functions', () => {
     const responseBuff = Buffer.from(response, 'hex');
     const value = extractValue(3, responseBuff)
     expect(value.buffer).toEqual(Buffer.from('7e1bbf244cc6aedfca39c7acf1a838d13602a70248289bdecfa342c8907df5a1', 'hex'));
+  });
+
+  it('Should export all Ledger error classes from the public entrypoint', () => {
+    expect(new InvalidLedgerResponseError('bad response')).toBeInstanceOf(Error);
+    expect(new PublicKeyRetrievalError(new Error('transport error'))).toBeInstanceOf(Error);
+    expect(new PublicKeyHashRetrievalError()).toBeInstanceOf(Error);
+    expect(new InvalidDerivationTypeError('99')).toBeInstanceOf(Error);
   });
 
 });

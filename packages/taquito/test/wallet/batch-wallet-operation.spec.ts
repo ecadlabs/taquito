@@ -1,7 +1,7 @@
 import { BlockResponse } from '@taquito/rpc';
 import { TestScheduler } from 'rxjs/testing';
 import { Context } from '../../src/context';
-import { BatchWalletOperation } from '../../src/wallet/batch-operation';
+import { BatchWalletOperation } from '../../src/wallet';
 import {
   resultOriginations,
   resultWithoutOrigination,

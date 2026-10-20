@@ -15,8 +15,6 @@
     "allowSyntheticDefaultImports": true,
     "noUnusedParameters": true,
     "noImplicitAny": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
     "jsx": "react"
   }
 }
