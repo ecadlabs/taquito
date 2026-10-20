@@ -15,8 +15,6 @@
     "declaration": true,
     "allowSyntheticDefaultImports": true,
     "noUnusedParameters": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
     "jsx": "react",
     "paths": {
       "@taquito/core": [

@@ -1,10 +1,22 @@
 import {
+  BytesValue,
   extractRequiredLen,
+  IntValue,
+  isBytes,
+  isInt,
+  isPrim,
+  isString,
+  MichelsonValue,
+  OperationDecodingError,
+  PrimValue,
+  scriptDecoder,
+  scriptEncoder,
   stripLengthPrefixFromBytes,
+  StringValue,
+  Uint8ArrayConsumer,
   valueDecoder,
   valueEncoder,
-} from '../../src/michelson/codec';
-import { OperationDecodingError, Uint8ArrayConsumer } from '../../src/taquito-local-forging';
+} from '../../src/taquito-local-forging';
 
 describe('unint8arrayconsumer', () => {
   it('should not stall ', () => {
@@ -72,5 +84,37 @@ describe('unint8arrayconsumer', () => {
       expect(valueDecoder(seqConsumer)).toEqual(withSibling);
       expect(seqConsumer.length()).toBe(0);
     }
+  });
+
+  it('exposes Michelson value codec and type guards from the public @taquito/local-forging entrypoint', () => {
+    const primVal: PrimValue = {
+      prim: 'Pair',
+      args: [{ string: 'Tezos Signed Message: example.com 2026-10-20T00:00:00Z Hello' }, { int: '42' }],
+    };
+    const bytesVal: BytesValue = { bytes: 'deadbeef' };
+    const stringVal: StringValue = { string: 'hello' };
+    const intVal: IntValue = { int: '123' };
+    const expr: MichelsonValue = [primVal, bytesVal, stringVal, intVal];
+
+    expect(isPrim(primVal)).toBe(true);
+    expect(isBytes(bytesVal)).toBe(true);
+    expect(isString(stringVal)).toBe(true);
+    expect(isInt(intVal)).toBe(true);
+
+    // Kukai packed expression flow: prefix '05' + valueEncoder(expr), decoded via valueDecoder(Uint8ArrayConsumer.fromHexString(payload.slice(2)))
+    const packedPayload = `05${valueEncoder(expr)}`;
+    const consumer = Uint8ArrayConsumer.fromHexString(packedPayload.slice(2));
+    expect(valueDecoder(consumer)).toEqual(expr);
+    expect(consumer.length()).toBe(0);
+
+    // Script codec round-trip
+    const script = {
+      code: [{ prim: 'parameter', args: [{ prim: 'unit' }] }],
+      storage: { prim: 'Unit' },
+    };
+    const encodedScript = scriptEncoder(script);
+    const scriptConsumer = Uint8ArrayConsumer.fromHexString(encodedScript);
+    expect(scriptDecoder(scriptConsumer)).toEqual(script);
+    expect(scriptConsumer.length()).toBe(0);
   });
 });

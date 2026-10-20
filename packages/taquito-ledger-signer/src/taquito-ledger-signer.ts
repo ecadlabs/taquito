@@ -35,7 +35,8 @@ export enum DerivationType {
   BIP32_ED25519 = 0x03, // tz1 BIP32
 }
 
-export { InvalidDerivationTypeError } from './errors';
+export * from './errors';
+export * from './utils';
 
 export const HDPathTemplate = (account: number) => {
   return `44'/1729'/${account}'/0'`;

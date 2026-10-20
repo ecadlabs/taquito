@@ -2,8 +2,7 @@ import { BlockResponse } from '@taquito/rpc';
 import { TestScheduler } from 'rxjs/testing';
 import { Context } from '../../src/context';
 import { createIncreasePaidStorageOperation } from '../../src/contract';
-import { Wallet } from '../../src/wallet';
-import { IncreasePaidStorageWalletOperation } from '../../src/wallet/increase-paid-storage-operation';
+import { Wallet, IncreasePaidStorageWalletOperation } from '../../src/wallet';
 
 describe('WalletOperation', () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
