@@ -14,6 +14,8 @@ env:
 jobs:
   publish-website:
     name: Publish taquito.io to Cloudflare Pages
+    # Fork pull requests cannot access the deployment secrets.
+    if: ${{ github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository }}
     permissions:
       contents: read
       deployments: write
