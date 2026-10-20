@@ -1,4 +1,5 @@
 import { InvalidHexStringError } from '@taquito/core';
+import { OperationDecodingError } from './errors';
 
 export class Uint8ArrayConsumer {
   static fromHexString(hex: string) {
@@ -13,9 +14,23 @@ export class Uint8ArrayConsumer {
     }
   }
 
-  constructor(private readonly arr: Uint8Array, private offset: number = 0) {}
+  constructor(private readonly arr: Uint8Array, private offset: number = 0) {
+    if (!Number.isInteger(offset) || offset < 0 || offset > arr.length) {
+      throw new OperationDecodingError(
+        `Invalid offset ${offset} for buffer of length ${arr.length}`
+      );
+    }
+  }
 
   public consume(count: number): Uint8Array {
+    if (!Number.isInteger(count) || count < 0) {
+      throw new OperationDecodingError(`Invalid byte count to consume: ${count}`);
+    }
+    if (this.offset + count > this.arr.length) {
+      throw new OperationDecodingError(
+        `Cannot consume ${count} bytes from offset ${this.offset} (available: ${this.length()})`
+      );
+    }
     const subArr = this.arr.subarray(this.offset, this.offset + count);
     this.offset += count;
     return subArr;
@@ -30,6 +45,6 @@ export class Uint8ArrayConsumer {
   }
 
   public slice(start: number, end?: number) {
-    return new Uint8ArrayConsumer(this.arr.slice(start, end));
+    return new Uint8ArrayConsumer(this.arr.subarray(this.offset).slice(start, end));
   }
 }

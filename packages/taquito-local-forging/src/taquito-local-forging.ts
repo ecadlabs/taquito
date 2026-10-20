@@ -24,6 +24,7 @@ import { InvalidBlockHashError, InvalidOperationKindError } from '@taquito/core'
 export { CODEC, opMapping, opMappingReverse } from './constants';
 export * from './decoder';
 export * from './encoder';
+export * from './errors';
 export * from './uint8array-consumer';
 export * from './interface';
 export { VERSION } from './version';

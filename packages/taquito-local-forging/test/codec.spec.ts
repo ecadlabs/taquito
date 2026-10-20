@@ -7,8 +7,16 @@ import {
   pvmKindDecoder,
   paddedBytesEncoder,
   paddedBytesDecoder,
+  prefixDecoder,
+  int16Decoder,
+  int32Decoder,
+  zarithDecoder,
 } from '../src/codec';
-import { Uint8ArrayConsumer } from '../src/uint8array-consumer';
+import {
+  localForger,
+  OperationDecodingError,
+  Uint8ArrayConsumer,
+} from '../src/taquito-local-forging';
 import {
   publicKeyHashEncoder,
   publicKeyHashesEncoder,
@@ -23,8 +31,15 @@ import {
   OversizedEntryPointError,
   UnsupportedPvmKindError,
 } from '../src/errors';
-import { bytesEncoder } from '../src/michelson/codec';
-import { InvalidHexStringError, InvalidPublicKeyError, InvalidKeyHashError } from '@taquito/core';
+import { bytesEncoder, extractRequiredLen } from '../src/michelson/codec';
+import {
+  InvalidHexStringError,
+  InvalidPublicKeyError,
+  InvalidKeyHashError,
+  ParameterValidationError,
+  TaquitoError,
+} from '@taquito/core';
+import { PrefixV2 } from '@taquito/utils';
 
 describe('Tests for Entrypoint functions and for encode and decoder error messages', () => {
   test('Entrypoint encoder', () => {
@@ -279,7 +294,7 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
     expect(() =>
       entrypointDecoder(
         Uint8ArrayConsumer.fromHexString(
-          '0a5c8244b8de7d57795962c1bfc855d0813f8c61eddf3795f804ccdea3e4c82ae95c8244b8de7d57795962c1bfc855d0813f8c61eddf3795f804ccdea3e4c82ae9'
+          '0a3f8244b8de7d57795962c1bfc855d0813f8c61eddf3795f804ccdea3e4c82ae95c8244b8de7d57795962c1bfc855d0813f8c61eddf3795f804ccdea3e4c82ae9'
         )
       )
     ).toThrow(OversizedEntryPointError);
@@ -287,7 +302,7 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
     expect(() =>
       entrypointDecoder(
         Uint8ArrayConsumer.fromHexString(
-          '0a5c8244b8de7d57795962c1bfc855d0813f8c61eddf3795f804ccdea3e4c82ae95c8244b8de7d57795962c1bfc855d0813f8c61eddf3795f804ccdea3e4c82ae9'
+          '0a3f8244b8de7d57795962c1bfc855d0813f8c61eddf3795f804ccdea3e4c82ae95c8244b8de7d57795962c1bfc855d0813f8c61eddf3795f804ccdea3e4c82ae9'
         )
       )
     ).toThrow(
@@ -296,6 +311,14 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
         name: expect.stringMatching('OversizedEntryPointError'),
       })
     );
+
+    expect(() =>
+      entrypointDecoder(
+        Uint8ArrayConsumer.fromHexString(
+          '0a5c8244b8de7d57795962c1bfc855d0813f8c61eddf3795f804ccdea3e4c82ae95c8244b8de7d57795962c1bfc855d0813f8c61eddf3795f804ccdea3e4c82ae9'
+        )
+      )
+    ).toThrow(OperationDecodingError);
   });
 
   test('Verify that pvmKindEncoder functions correctly and returns UnsupportedPvmKindError on unknown case', () => {
@@ -334,5 +357,142 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
     ).toEqual(
       '0300020c4a316fa1079bfc23dac5ecc609ab10e26490e378a81e774c51176040bea18030fab8a3adde4b553c4d391e9cd19ee13b17941c1f49c040d621bbfbea964993810764757261626c658108726561646f6e6c79d00b749948da9186d29aed2f9327b46793f18b1e6499c40f0ddbf0bf785e85e2e9'
     );
+  });
+
+  describe('Uint8ArrayConsumer bounds checking and slicing', () => {
+    test('validates offset in constructor', () => {
+      const arr = new Uint8Array([1, 2, 3]);
+      expect(new Uint8ArrayConsumer(arr, 0).length()).toBe(3);
+      expect(new Uint8ArrayConsumer(arr, 2).consume(1)).toEqual(new Uint8Array([3]));
+      expect(new Uint8ArrayConsumer(arr, 3).length()).toBe(0);
+
+      for (const invalidOffset of [-1, -100, 4, 1.5, NaN, Infinity, -Infinity]) {
+        expect(() => new Uint8ArrayConsumer(arr, invalidOffset)).toThrow(OperationDecodingError);
+      }
+    });
+
+    test('allows consuming 0 bytes and exact remaining length', () => {
+      const consumer = Uint8ArrayConsumer.fromHexString('01020304');
+      expect(consumer.consume(0)).toEqual(new Uint8Array([]));
+      expect(consumer.length()).toBe(4);
+      expect(consumer.consume(4)).toEqual(new Uint8Array([1, 2, 3, 4]));
+      expect(consumer.length()).toBe(0);
+      expect(consumer.consume(0)).toEqual(new Uint8Array([]));
+    });
+
+    test('throws OperationDecodingError (subclass of TaquitoError) without advancing offset when consuming past buffer end', () => {
+      const consumer = Uint8ArrayConsumer.fromHexString('01020304');
+      expect(() => consumer.consume(5)).toThrow(OperationDecodingError);
+      expect(() => consumer.consume(5)).toThrow(ParameterValidationError);
+      expect(() => consumer.consume(5)).toThrow(TaquitoError);
+      expect(consumer.length()).toBe(4);
+
+      expect(consumer.consume(2)).toEqual(new Uint8Array([1, 2]));
+      expect(consumer.length()).toBe(2);
+
+      expect(() => consumer.consume(3)).toThrow(OperationDecodingError);
+      expect(consumer.length()).toBe(2);
+      expect(consumer.consume(2)).toEqual(new Uint8Array([3, 4]));
+      expect(consumer.length()).toBe(0);
+
+      expect(() => consumer.consume(1)).toThrow(OperationDecodingError);
+    });
+
+    test('throws OperationDecodingError on negative or non-integer counts without advancing offset', () => {
+      const consumer = Uint8ArrayConsumer.fromHexString('0102');
+      for (const invalidCount of [-1, -100, 1.5, NaN, Infinity, -Infinity]) {
+        expect(() => consumer.consume(invalidCount)).toThrow(OperationDecodingError);
+        expect(consumer.length()).toBe(2);
+      }
+    });
+
+    test('slice() slices relative to remaining view including negative indices without mutating original consumer', () => {
+      const consumer = Uint8ArrayConsumer.fromHexString('0102030405');
+      expect(consumer.consume(2)).toEqual(new Uint8Array([1, 2]));
+
+      const slicedFromOne = consumer.slice(1);
+      expect(slicedFromOne.length()).toBe(2);
+      expect(slicedFromOne.consume(2)).toEqual(new Uint8Array([4, 5]));
+
+      const slicedRange = consumer.slice(0, 2);
+      expect(slicedRange.length()).toBe(2);
+      expect(slicedRange.consume(2)).toEqual(new Uint8Array([3, 4]));
+
+      const slicedLast = consumer.slice(-1);
+      expect(slicedLast.length()).toBe(1);
+      expect(slicedLast.consume(1)).toEqual(new Uint8Array([5]));
+
+      const slicedDropLast = consumer.slice(0, -1);
+      expect(slicedDropLast.length()).toBe(2);
+      expect(slicedDropLast.consume(2)).toEqual(new Uint8Array([3, 4]));
+
+      const slicedClampedNegative = consumer.slice(-100);
+      expect(slicedClampedNegative.length()).toBe(3);
+      expect(slicedClampedNegative.consume(3)).toEqual(new Uint8Array([3, 4, 5]));
+
+      expect(consumer.length()).toBe(3);
+    });
+
+    test('extractRequiredLen handles zero-length, exact-length, partial header, and oversized length prefixes', () => {
+      const emptyPayload = Uint8ArrayConsumer.fromHexString('00000000ff');
+      expect(extractRequiredLen(emptyPayload)).toEqual(new Uint8Array([]));
+      expect(emptyPayload.length()).toBe(1);
+
+      const exactPayload = Uint8ArrayConsumer.fromHexString('00000002aabb');
+      expect(extractRequiredLen(exactPayload)).toEqual(new Uint8Array([0xaa, 0xbb]));
+      expect(exactPayload.length()).toBe(0);
+
+      expect(() => extractRequiredLen(Uint8ArrayConsumer.fromHexString('0001'))).toThrow(
+        OperationDecodingError
+      );
+      expect(() => extractRequiredLen(Uint8ArrayConsumer.fromHexString('000000050102'))).toThrow(
+        OperationDecodingError
+      );
+      expect(() => extractRequiredLen(Uint8ArrayConsumer.fromHexString('ffffffff0102'))).toThrow(
+        OperationDecodingError
+      );
+    });
+
+    test('decoders and localForger.parse reject truncated inputs with OperationDecodingError', async () => {
+      expect(() => int32Decoder(Uint8ArrayConsumer.fromHexString('0102'))).toThrow(
+        OperationDecodingError
+      );
+      expect(() => int16Decoder(Uint8ArrayConsumer.fromHexString('01'))).toThrow(
+        OperationDecodingError
+      );
+      expect(() =>
+        prefixDecoder(PrefixV2.Ed25519PublicKeyHash)(Uint8ArrayConsumer.fromHexString('0102'))
+      ).toThrow(OperationDecodingError);
+
+      // Valid 32-byte branch + 0x6c (transaction tag) + truncated source PKH
+      const truncatedOpHex =
+        '1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef6c000102';
+      expect(() => localForger.parse(truncatedOpHex)).toThrow(OperationDecodingError);
+    });
+
+    test('zarithDecoder consumes exact number bytes and preserves offset on empty or unterminated inputs', () => {
+      // 0x80 0x01 = 128, followed by 0x01 = 1
+      const seq = Uint8ArrayConsumer.fromHexString('800101');
+      expect(zarithDecoder(seq)).toBe('128');
+      expect(seq.length()).toBe(1);
+      expect(zarithDecoder(seq)).toBe('1');
+      expect(seq.length()).toBe(0);
+
+      // Empty consumer
+      const empty = Uint8ArrayConsumer.fromHexString('');
+      expect(() => zarithDecoder(empty)).toThrow(OperationDecodingError);
+      expect(empty.length()).toBe(0);
+
+      // Unterminated Zarith after advancing offset
+      const unterminatedSingle = Uint8ArrayConsumer.fromHexString('ff80');
+      expect(unterminatedSingle.consume(1)).toEqual(new Uint8Array([0xff]));
+      expect(() => zarithDecoder(unterminatedSingle)).toThrow(OperationDecodingError);
+      expect(unterminatedSingle.length()).toBe(1);
+
+      const unterminatedMulti = Uint8ArrayConsumer.fromHexString('ff8080');
+      expect(unterminatedMulti.consume(1)).toEqual(new Uint8Array([0xff]));
+      expect(() => zarithDecoder(unterminatedMulti)).toThrow(OperationDecodingError);
+      expect(unterminatedMulti.length()).toBe(2);
+    });
   });
 });

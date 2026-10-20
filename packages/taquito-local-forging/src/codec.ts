@@ -49,9 +49,6 @@ export const prefixEncoder = (prefix: PrefixV2) => (str: string) => {
 };
 
 export const prefixDecoder = (pre: PrefixV2) => (str: Uint8ArrayConsumer) => {
-  if (str.length() < payloadLength[pre]) {
-    throw new Error(`Truncated ${pre} payload: expected ${payloadLength[pre]} bytes`);
-  }
   const val = str.consume(payloadLength[pre]);
   return b58Encode(val, pre);
 };
@@ -371,14 +368,14 @@ export const zarithDecoder = (n: Uint8ArrayConsumer): string => {
     mostSignificantByte += 1;
   }
 
+  const bytes = n.consume(mostSignificantByte + 1);
   let num = new BigNumber(0);
   for (let i = mostSignificantByte; i >= 0; i -= 1) {
-    const tmp = n.get(i) & 0x7f;
+    const tmp = bytes[i] & 0x7f;
     num = num.multipliedBy(128);
     num = num.plus(tmp);
   }
 
-  n.consume(mostSignificantByte + 1);
   return new BigNumber(num).toString();
 };
 
