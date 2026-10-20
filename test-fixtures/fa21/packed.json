@@ -1,0 +1,12 @@
+{
+  "approveIncrease": {
+    "entrypoint": "approve",
+    "michelson": "{ Pair \"tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx\" \"tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN\" 0 (Left 5) }",
+    "packed": "05020000004207070a00000016000002298c03ed7d454a101eb7022bc95f7e5f41ac7807070a000000160000e7670f32038107a59a2b9cfefae36ea21f5aa63c0707000005050005"
+  },
+  "approveDecrease": {
+    "entrypoint": "approve",
+    "michelson": "{ Pair \"tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx\" \"tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN\" 0 (Right 10) }",
+    "packed": "05020000004207070a00000016000002298c03ed7d454a101eb7022bc95f7e5f41ac7807070a000000160000e7670f32038107a59a2b9cfefae36ea21f5aa63c070700000508000a"
+  }
+}
