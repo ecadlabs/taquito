@@ -12,7 +12,8 @@ import { ECKey, ECPublicKey } from './ec-key';
 import * as bip39 from '@scure/bip39';
 import { wordlist } from '@scure/bip39/wordlists/english.js';
 import { pbkdf2 } from '@noble/hashes/pbkdf2.js';
-import { Curves, generateSecretKey } from './helpers';
+import { deriveMnemonicSecretKey, type FromMnemonicParams } from './mnemonic';
+export type { FromMnemonicParams } from './mnemonic';
 import { InvalidMnemonicError, InvalidPassphraseError } from './errors';
 import {
   InvalidKeyError,
@@ -25,13 +26,6 @@ import { SigningKey, isPOP, PublicKey } from './key-interface';
 import { BLSKey, BLSPublicKey } from './bls-key';
 import { MLDSAKey, MLDSAPublicKey } from './mldsa-key';
 import { sha512 } from '@noble/hashes/sha2.js';
-
-export interface FromMnemonicParams {
-  mnemonic: string;
-  password?: string;
-  derivationPath?: string;
-  curve?: Curves;
-}
 
 type KeyPrefix =
   | PrefixV2.Ed25519EncryptedSeed
@@ -74,23 +68,11 @@ export class InMemorySigner implements Signer {
    * @returns InMemorySigner
    * @throws InvalidMnemonicError
    */
-  static fromMnemonic({
-    mnemonic,
-    password = '',
-    derivationPath = "44'/1729'/0'/0'",
-    curve = 'ed25519',
-  }: FromMnemonicParams) {
-    // check if curve is defined if not default tz1
-    if (!bip39.validateMnemonic(mnemonic, wordlist)) {
-      // avoiding exposing mnemonic again in case of mistake making invalid
-      throw new InvalidMnemonicError();
-    }
-    const seed = bip39.mnemonicToSeedSync(mnemonic, password);
-
-    const sk = generateSecretKey(seed, derivationPath, curve);
-
-    return new InMemorySigner(sk);
+  static fromMnemonic(params: FromMnemonicParams) {
+    const { secretKey } = deriveMnemonicSecretKey(params);
+    return new InMemorySigner(secretKey);
   }
+
   /**
    *
    * @param key Encoded private key
