@@ -17,3 +17,6 @@ export { verifySignature, BLS12_381_DST, POP_DST } from './verify-signature';
 export * from './errors';
 // Re-export format
 export { format } from './format';
+
+/** Descriptive alias of getPkhfromPk. Keeps the same supported keys and errors. */
+export { getPkhfromPk as getPublicKeyHashFromPublicKey } from './encoding';
