@@ -31,7 +31,16 @@ export function entropyToMnemonic(entropy: Uint8Array | string): string {
       parseInt(entropy.slice(index * 2, index * 2 + 2), 16)
     );
   } else {
-    bytes = entropy;
+    if (
+      !(entropy instanceof Uint8Array) &&
+      !(
+        ArrayBuffer.isView(entropy) &&
+        Object.prototype.toString.call(entropy) === '[object Uint8Array]'
+      )
+    ) {
+      throw new TypeError('Entropy must be a Uint8Array');
+    }
+    bytes = new Uint8Array(entropy);
   }
   return bip39.entropyToMnemonic(bytes, wordlist);
 }
