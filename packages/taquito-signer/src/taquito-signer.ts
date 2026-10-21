@@ -8,3 +8,7 @@ export * from './derivation-tools';
 export * from './helpers';
 export { InvalidPassphraseError } from './errors';
 export { PublicKey } from './key-interface';
+
+export { mnemonicToEntropy } from './mnemonic';
+export { entropyToMnemonic } from './mnemonic';
+export { generateMnemonic } from './mnemonic';
