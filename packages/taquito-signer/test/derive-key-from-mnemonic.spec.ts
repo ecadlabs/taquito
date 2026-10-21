@@ -10,7 +10,9 @@ import vectors from '../../../test-fixtures/mnemonic-keys.json';
 
 describe('deriveKeyFromMnemonic', () => {
   it('returns the independent default key tuple', () => {
-    expect(deriveKeyFromMnemonic(vectors[0].params)).toEqual(vectors[0].expected);
+    expect(deriveKeyFromMnemonic({ mnemonic: vectors[0].params.mnemonic })).toEqual(
+      vectors[0].expected
+    );
   });
 });
 
