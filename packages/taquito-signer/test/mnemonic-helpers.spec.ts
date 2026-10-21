@@ -73,3 +73,23 @@ describe('generateMnemonic', () => {
     expect(() => signer.generateMnemonic(strength)).toThrow();
   });
 });
+
+describe('mnemonic error privacy', () => {
+  it('does not expose a distinctive invalid word through any own error property', () => {
+    const invalidWord = 'private-invalid-word-marker';
+    const mnemonic = Array(11).fill('abandon').concat(invalidWord).join(' ');
+    expect(() => signer.mnemonicToEntropy(mnemonic)).toThrow(InvalidMnemonicError);
+    try {
+      signer.mnemonicToEntropy(mnemonic);
+    } catch (error) {
+      const properties = Object.getOwnPropertyNames(error).flatMap((key) => {
+        const value = (error as Record<string, unknown>)[key];
+        return [String(value), JSON.stringify(value)];
+      });
+      for (const text of [String(error), JSON.stringify(error), ...properties]) {
+        expect(text).not.toContain(invalidWord);
+        expect(text).not.toContain(mnemonic);
+      }
+    }
+  });
+});
