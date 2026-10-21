@@ -53,6 +53,13 @@ Refer to the `taquito/integration-tests/config.ts` file for details on test conf
 - `TAQUITO_ITEST_DIAGNOSTICS=true`: enables structured setup/key selection diagnostics in test logs
 
 
+Fresh-key selection retries HTTP 502, 503 and 504 while selection attempts remain.
+A failed consumed prefetch entry uses the same retry policy. Other HTTP errors
+and invalid successful responses still fail immediately. The configured delay
+applies before the next selection attempt. Prefetch can start background requests
+before that delay, so the selection budget does not cap all network requests.
+
+
 ## CLI Options
 
 
