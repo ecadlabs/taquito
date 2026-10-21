@@ -238,3 +238,35 @@ export function validateSpendingKey(value: string): ValidationResult {
 export function validateSmartRollupAddress(value: string): ValidationResult {
   return validatePrefixedValue(value, [PrefixV2.SmartRollupHash]);
 }
+
+/**
+ * Returns whether the input is an address under the existing validateAddress rules.
+ * Nonstrings return false. See {@link validateAddress} for validation details.
+ */
+export function isValidAddress(value: unknown): boolean {
+  return typeof value === 'string' && validateAddress(value) === ValidationResult.VALID;
+}
+
+/**
+ * Returns whether the input is an originated contract address under the existing validateContractAddress rules.
+ * Nonstrings return false. See {@link validateContractAddress} for validation details.
+ */
+export function isValidContractAddress(value: unknown): boolean {
+  return typeof value === 'string' && validateContractAddress(value) === ValidationResult.VALID;
+}
+
+/**
+ * Returns whether the input is a public key under the existing validatePublicKey rules.
+ * Nonstrings return false. See {@link validatePublicKey} for validation details.
+ */
+export function isValidPublicKey(value: unknown): boolean {
+  return typeof value === 'string' && validatePublicKey(value) === ValidationResult.VALID;
+}
+
+/**
+ * Returns whether the input is an operation hash under the existing validateOperation rules.
+ * Nonstrings return false. See {@link validateOperation} for validation details.
+ */
+export function isValidOperationHash(value: unknown): boolean {
+  return typeof value === 'string' && validateOperation(value) === ValidationResult.VALID;
+}
