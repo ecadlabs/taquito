@@ -207,6 +207,10 @@ console.log(restoredMnemonic === mnemonic); // true
 prefix. Leading zero bytes are preserved. An invalid mnemonic throws an
 `InvalidMnemonicError` without including the phrase in the error.
 
+Byte input must be a `Uint8Array`, such as a Node.js `Buffer` or a subarray view.
+The helper uses only the bytes in that view and leaves the input unchanged.
+Plain number arrays and other typed-array kinds are not accepted.
+
 ### Derive keys without a signer
 
 Use `deriveKeyFromMnemonic` to obtain account details without constructing an

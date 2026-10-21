@@ -91,6 +91,10 @@ entropyToMnemonic accepts 16, 20, 24, 28 or 32 bytes, or an unprefixed, even-len
 hexadecimal string. Invalid phrases throw InvalidMnemonicError without including
 the phrase in the error.
 
+Byte input must be a Uint8Array, such as a Node.js Buffer or a subarray view.
+The helper uses only the bytes in that view and leaves the input unchanged.
+Plain number arrays and other typed-array kinds are not accepted.
+
 deriveKeyFromMnemonic is synchronous and constructs no InMemorySigner. It returns
 publicKey, publicKeyHash and secretKey. The secret key is unencrypted, so avoid
 logging or sharing the result. Ed25519 returns the expanded secret-key form used
