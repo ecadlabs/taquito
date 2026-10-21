@@ -1,3 +1,4 @@
+import { runInNewContext } from 'node:vm';
 import * as signer from '../src/taquito-signer';
 import { InvalidMnemonicError } from '../src/errors';
 
@@ -27,6 +28,36 @@ describe('mnemonicToEntropy', () => {
 });
 
 describe('entropyToMnemonic', () => {
+  it('accepts a Uint8Array subclass from another realm', () => {
+    const entropy: Uint8Array = runInNewContext('new (class Entropy extends Uint8Array {})(16)');
+    expect(signer.entropyToMnemonic(entropy)).toBe(phrase);
+    expect(Array.from(entropy)).toEqual(Array(16).fill(0));
+  });
+  describe('byte input compatibility', () => {
+    it('copies the actual bytes rather than a custom iterator', () => {
+      const entropy = new Uint8Array(16);
+      entropy[Symbol.iterator] = () => new Uint8Array(16).fill(255).values();
+      expect(signer.entropyToMnemonic(entropy)).toBe(phrase);
+    });
+    it.each([
+      new Uint8Array(16),
+      Buffer.alloc(16),
+      Object.defineProperty(new Uint8Array(16), Symbol.toStringTag, { value: 'Entropy' }),
+      new Uint8Array(18).fill(255).fill(0, 1, 17).subarray(1, 17),
+      runInNewContext('new Uint8Array(16)') as Uint8Array,
+    ])('retains accepted byte input %#', (entropy) => {
+      expect(signer.entropyToMnemonic(entropy)).toBe(phrase);
+    });
+    it.each([
+      Array(16).fill(0),
+      new Int8Array(16),
+      new Uint16Array(16),
+      new Uint8ClampedArray(16),
+      new DataView(new ArrayBuffer(16)),
+    ])('continues to reject non-Uint8Array input %#', (entropy) => {
+      expect(() => signer.entropyToMnemonic(entropy as unknown as Uint8Array)).toThrow();
+    });
+  });
   it('encodes the fixed zero-entropy vector from bytes and hex', () => {
     expect(signer.entropyToMnemonic(new Uint8Array(16))).toBe(phrase);
     expect(signer.entropyToMnemonic(entropyHex)).toBe(phrase);
