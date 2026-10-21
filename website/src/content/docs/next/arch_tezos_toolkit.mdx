@@ -102,6 +102,27 @@ Tezos.setPackerProvider(new MichelCodecPacker());
 
 A user can set any other Packer that implements the Packer interface.
 
+### Polling subscriptions
+
+`PollingSubscribeProvider` first reads the head hash with
+`readProvider.getBlockHash('head')`. A hash subscription created with
+`Tezos.stream.subscribe('head')` emits consecutive distinct hashes and does not
+need full block contents.
+
+Block, operation, and event subscriptions fetch the full block by the observed
+hash. After a successful read, later polls of the same hash do not fetch the full
+block again. This reduces repeated full-block requests while the head is unchanged.
+
+Both reads use the configured read provider. `RpcReadAdapter` uses the RPC block
+hash endpoint for the first read. A custom `TzReadProvider` must implement
+`getBlockHash` and accept the returned hash in `getBlock`. Polling does not switch
+to a separate RPC client for these reads.
+
+Errors follow `shouldObservableSubscriptionRetry` and
+`observableSubscriptionRetryFunction`. A failed full-block read does not mark the
+hash as successfully fetched, so a retry can read that block again. Two-step
+polling does not enable retries by itself.
+
 ### Setting Configuration Data
 
 Configurations for the confirmation method for both the contract and wallet API:
