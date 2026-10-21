@@ -44,9 +44,12 @@ tezos.setRpcProvider('https://YOUR_SECOND_RPC_URL');
 ```
 
 If you install a custom read provider with `setReadProvider`, that provider
-remains in use when you change the RPC. `setProvider({ rpc })` follows the same
-rule. To restore default RPC-backed reads, call `setReadProvider()` without an
-argument:
+remains in use when you call `setRpcProvider`. The combined `setProvider` method
+restores default RPC-backed reads when you omit `readProvider`. To keep a custom
+read provider with that method, pass it as `setProvider({ rpc, readProvider })`.
+
+To restore default RPC-backed reads explicitly, call `setReadProvider()` without
+an argument:
 
 ```js
 tezos.setReadProvider();
