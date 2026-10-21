@@ -59,6 +59,25 @@ and invalid successful responses still fail immediately. The configured delay
 applies before the next selection attempt. Prefetch can start background requests
 before that delay, so the selection budget does not cap all network requests.
 
+This retry policy applies only to fresh-key acquisition. Invalid signer keys
+still fail immediately. Signer-state RPC errors keep their existing behavior:
+failed balance reads produce a null balance. With no minimum balance, selection
+can succeed. With a positive minimum balance, an unavailable balance fails the
+constraint and consumes a selection attempt.
+
+### Check fresh-key setup locally
+
+Run the controlled setup checks from the `integration-tests` directory:
+
+```sh
+npx vitest run __tests__/fresh-key-setup.spec.ts
+```
+
+The checks use local HTTP key-service and RPC fixtures. They do not request real
+keys or send operations to a Tezos network. They cover transient retry and the
+existing error and key-selection behavior. They do not verify recovery from a
+real key-service outage.
+
 
 ## CLI Options
 
