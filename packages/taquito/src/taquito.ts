@@ -105,6 +105,7 @@ export class TezosToolkit {
   private _rpcClient: RpcClientInterface;
   private _wallet: Wallet;
   private _context: Context;
+  private _defaultReadProvider?: RpcReadAdapter;
 
   public readonly format = format;
 
@@ -179,7 +180,8 @@ export class TezosToolkit {
   }
 
   /**
-   * Sets rpc provider on the Tezos Taquito instance
+   * Sets rpc provider on the Tezos Taquito instance.
+   * Updates the toolkit-created default read provider. Explicit read providers remain unchanged.
    *
    * @param rpc rpc url or rpcClient to use to interact with the Tezos network
    *
@@ -196,6 +198,13 @@ export class TezosToolkit {
     }
     this._options.rpc = this._rpcClient;
     this._context.rpc = this._rpcClient;
+    if (
+      rpc !== undefined &&
+      this._defaultReadProvider !== undefined &&
+      this._context.readProvider === this._defaultReadProvider
+    ) {
+      this.setReadProvider();
+    }
   }
 
   /**
@@ -310,15 +319,22 @@ export class TezosToolkit {
 
   /**
    * Sets read provider on the Tezos Taquito instance
-   * By default reads are done from the RPC usign the RpcReadAdapter class, this can be overridden to read from an indexer that implements the TzReadProvider interface
+   * By default reads use the current RPC through RpcReadAdapter. An explicit provider can read from an indexer.
+   * Calling this method without a provider restores default reads that follow subsequent RPC changes.
    *
    * @param readProvider TzReadProvider to use to interact with the Tezos network
    *
    */
   setReadProvider(readProvider?: SetProviderOptions['readProvider']) {
-    const readP = readProvider ? readProvider : new RpcReadAdapter(this._context.rpc);
-    this._options.readProvider = readP;
-    this._context.readProvider = readP;
+    if (readProvider) {
+      this._defaultReadProvider = undefined;
+    } else {
+      const defaultReadProvider = new RpcReadAdapter(this._context.rpc);
+      this._defaultReadProvider = defaultReadProvider;
+      readProvider = defaultReadProvider;
+    }
+    this._options.readProvider = readProvider;
+    this._context.readProvider = readProvider;
   }
 
   /**
