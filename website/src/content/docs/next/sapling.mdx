@@ -81,6 +81,44 @@ await initSapling({
 
 If you provide local digests, Taquito verifies them. If you omit them, the trust boundary becomes the local filesystem or mounted artifact store.
 
+## Handle parameter loading errors
+
+Catch `SaplingParamsError` to identify a remote parameter loading failure. Its
+`code` describes the failure, and `source` identifies the configured source as
+`taquito`, `zcash`, or `custom`.
+
+```js
+import {
+  initSapling,
+  preloadSaplingParams,
+  SaplingParamsError,
+} from '@taquito/sapling';
+
+await initSapling({ params: { source: 'taquito' } });
+
+try {
+  await preloadSaplingParams();
+} catch (error) {
+  if (error instanceof SaplingParamsError) {
+    console.error(error.code, error.source);
+  }
+  throw error;
+}
+```
+
+Remote request failures, unsuccessful HTTP responses, and response-body read
+failures use `SAPLING_PARAMS_FETCH_FAILED`. Request and body-read failures retain
+the original error in `cause`. An unsuccessful HTTP response does not necessarily
+have a `cause`.
+
+`SAPLING_PARAMS_HASH_MISMATCH` means that the downloaded bytes do not match the
+configured digest. Check the parameter source and expected digest before trying
+again. Keep integrity verification enabled.
+
+Parameter loading does not retry automatically. After a failed load, a later call
+to `preloadSaplingParams()` can try again. Local filesystem errors can use other
+error types, so handle errors outside `SaplingParamsError` as well.
+
 ## Browser deployment
 
 The supported browser contract is:
