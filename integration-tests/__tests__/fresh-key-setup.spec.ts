@@ -8,8 +8,9 @@ const pkh = 'tz2RqxsYQyFuP9amsmrr25x9bUcBMWXGvjuD';
 describe('fresh-key setup with local HTTP fixtures', () => {
   let server: Server;
   let base: string;
-  let replies: Array<number | 'malformed'>;
+  let replies: Array<number | 'malformed' | 'invalid-key'>;
   let balance: string;
+  let rpcStatus: number;
   let revealed: boolean;
   let requests: Array<{ method: string; path: string; body: unknown }>;
   let keyRequests: number;
@@ -35,6 +36,8 @@ describe('fresh-key setup with local HTTP fixtures', () => {
         const reply = replies.shift() ?? 200;
         if (reply === 'malformed') {
           response.end(JSON.stringify({ pkh }));
+        } else if (reply === 'invalid-key') {
+          response.end(JSON.stringify({ secret_key: 'invalid-key', pkh }));
         } else if (reply !== 200) {
           response.writeHead(reply).end(JSON.stringify({ error: 'fixture service unavailable' }));
         } else {
@@ -42,10 +45,10 @@ describe('fresh-key setup with local HTTP fixtures', () => {
         }
       } else if (request.method === 'GET' && request.url?.endsWith('/manager_key')) {
         rpcRequests++;
-        response.end(JSON.stringify(revealed ? 'fixture-revealed-key' : null));
+        response.writeHead(rpcStatus).end(JSON.stringify(revealed ? 'fixture-revealed-key' : null));
       } else if (request.method === 'GET' && request.url?.endsWith('/balance')) {
         rpcRequests++;
-        response.end(JSON.stringify(balance));
+        response.writeHead(rpcStatus).end(JSON.stringify(balance));
       } else {
         response.writeHead(404).end('{}');
       }
@@ -57,6 +60,7 @@ describe('fresh-key setup with local HTTP fixtures', () => {
     base = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
     replies = [];
     balance = '15000000';
+    rpcStatus = 200;
     revealed = false;
     requests = [];
     keyRequests = 0;
@@ -162,6 +166,43 @@ describe('fresh-key setup with local HTTP fixtures', () => {
   });
 
   describe('previously valid behavior', () => {
+    it('does not retry signer construction failures', async () => {
+      replies = ['invalid-key', 200];
+      const selected = await config();
+      await expect(selected.setup({ preferFreshKey: true, maxAttempts: 3 })).rejects.toThrow();
+      expect(keyRequests).toBe(1);
+      expect(rpcRequests).toBe(0);
+    });
+
+    it('retains null RPC state when no balance threshold is required', async () => {
+      rpcStatus = 503;
+      const selected = await config();
+      await selected.setup({ preferFreshKey: true, maxAttempts: 3 });
+      expect(await selected.lib.signer.publicKeyHash()).toBe(pkh);
+      expect(keyRequests).toBe(1);
+      expect(rpcRequests).toBe(2);
+      expect(
+        log.mock.calls.some(([message]) => String(message).includes('fresh-key-request-retry'))
+      ).toBe(false);
+    });
+
+    it('retains constraint retries when RPC balance is unavailable', async () => {
+      rpcStatus = 503;
+      const selected = await config();
+      await expect(
+        selected.setup({
+          preferFreshKey: true,
+          minBalanceMutez: 5000000,
+          maxAttempts: 2,
+        })
+      ).rejects.toThrow('balance_below_5000000');
+      expect(keyRequests).toBe(2);
+      expect(rpcRequests).toBe(4);
+      expect(
+        log.mock.calls.some(([message]) => String(message).includes('fresh-key-request-retry'))
+      ).toBe(false);
+    });
+
     it('selects a successful key on the first request', async () => {
       const selected = await config();
       await selected.setup({ preferFreshKey: true, maxAttempts: 3 });
