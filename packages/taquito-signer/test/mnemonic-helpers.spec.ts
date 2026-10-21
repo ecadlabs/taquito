@@ -84,7 +84,7 @@ describe('mnemonic error privacy', () => {
     } catch (error) {
       const properties = Object.getOwnPropertyNames(error).flatMap((key) => {
         const value = (error as Record<string, unknown>)[key];
-        return [String(value), JSON.stringify(value)];
+        return [String(value), JSON.stringify(value) ?? String(value)];
       });
       for (const text of [String(error), JSON.stringify(error), ...properties]) {
         expect(text).not.toContain(invalidWord);
