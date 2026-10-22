@@ -44,6 +44,13 @@ export const defaultConfigConfirmation: ConfigConfirmation = {
  * Encapsulate common service used throughout different part of the library
  */
 export class Context {
+  private defaultForger?: Forger;
+  private defaultInjector?: Injector;
+  private defaultPacker?: Packer;
+  private defaultWalletProvider?: WalletProvider;
+  private defaultParser?: ParserProvider;
+  private defaultReadProvider?: TzReadProvider;
+  private defaultStream?: SubscribeProvider;
   private _rpcClient: RpcClientInterface;
   private _forger: Forger;
   private _parser: ParserProvider;
@@ -94,6 +101,13 @@ export class Context {
       : new NoopGlobalConstantsProvider();
     this._readProvider = readProvider ? readProvider : new RpcReadAdapter(this._rpcClient);
     this._stream = stream ? stream : new PollingSubscribeProvider(this);
+    if (stream === undefined) this.defaultStream = this._stream;
+    if (readProvider === undefined) this.defaultReadProvider = this._readProvider;
+    if (parser === undefined) this.defaultParser = this._parser;
+    if (wallet === undefined) this.defaultWalletProvider = this._walletProvider;
+    if (packer === undefined) this.defaultPacker = this._packer;
+    if (injector === undefined) this.defaultInjector = this._injector;
+    if (forger === undefined) this.defaultForger = this._forger;
   }
 
   get config(): ConfigConfirmation {
@@ -126,6 +140,7 @@ export class Context {
   }
 
   set injector(value: Injector) {
+    this.defaultInjector = undefined;
     this._injector = value;
   }
 
@@ -134,6 +149,7 @@ export class Context {
   }
 
   set forger(value: Forger) {
+    this.defaultForger = undefined;
     this._forger = value;
   }
 
@@ -150,6 +166,7 @@ export class Context {
   }
 
   set walletProvider(value: WalletProvider) {
+    this.defaultWalletProvider = undefined;
     this._walletProvider = value;
   }
 
@@ -166,6 +183,7 @@ export class Context {
   }
 
   set parser(value: ParserProvider) {
+    this.defaultParser = undefined;
     this._parser = value;
   }
 
@@ -174,6 +192,7 @@ export class Context {
   }
 
   set packer(value: Packer) {
+    this.defaultPacker = undefined;
     this._packer = value;
   }
 
@@ -190,6 +209,7 @@ export class Context {
   }
 
   set readProvider(value: TzReadProvider) {
+    this.defaultReadProvider = undefined;
     this._readProvider = value;
   }
 
@@ -198,7 +218,50 @@ export class Context {
   }
 
   set stream(value: SubscribeProvider) {
+    this.defaultStream = undefined;
     this._stream = value;
+  }
+
+  /** @internal Records an SDK-created default without classifying custom instances. */
+  setDefaultForger(value: Forger) {
+    this._forger = value;
+    this.defaultForger = value;
+  }
+
+  /** @internal Records an SDK-created default without classifying custom instances. */
+  setDefaultInjector(value: Injector) {
+    this._injector = value;
+    this.defaultInjector = value;
+  }
+
+  /** @internal Records an SDK-created default without classifying custom instances. */
+  setDefaultPacker(value: Packer) {
+    this._packer = value;
+    this.defaultPacker = value;
+  }
+
+  /** @internal Records an SDK-created default without classifying custom instances. */
+  setDefaultWalletProvider(value: WalletProvider) {
+    this._walletProvider = value;
+    this.defaultWalletProvider = value;
+  }
+
+  /** @internal Records an SDK-created default without classifying custom instances. */
+  setDefaultParser(value: ParserProvider) {
+    this._parser = value;
+    this.defaultParser = value;
+  }
+
+  /** @internal Records an SDK-created default without classifying custom instances. */
+  setDefaultReadProvider(value: TzReadProvider) {
+    this._readProvider = value;
+    this.defaultReadProvider = value;
+  }
+
+  /** @internal Records an SDK-created default without classifying custom instances. */
+  setDefaultStream(value: SubscribeProvider) {
+    this._stream = value;
+    this.defaultStream = value;
   }
 
   async isAnyProtocolActive(protocol: string[] = []) {
@@ -217,6 +280,24 @@ export class Context {
   /**
    * Create a copy of the current context. Useful when you have long running operation and you do not want a context change to affect the operation
    */
+  /** @internal Capture SDK defaults for a detached operation workflow. */
+  createDetachedContext(): Context {
+    return new Context(
+      this.rpc,
+      this.signer,
+      this.proto,
+      new BehaviorSubject(Object.freeze({ ...this.config })),
+      this._forger === this.defaultForger ? undefined : this._forger,
+      this._injector === this.defaultInjector ? undefined : this._injector,
+      this._packer === this.defaultPacker ? undefined : this._packer,
+      this._walletProvider === this.defaultWalletProvider ? undefined : this._walletProvider,
+      this._parser === this.defaultParser ? undefined : this._parser,
+      this.globalConstantsProvider,
+      this._readProvider === this.defaultReadProvider ? undefined : this._readProvider,
+      this._stream === this.defaultStream ? undefined : this._stream
+    );
+  }
+
   clone(): Context {
     return new Context(
       this.rpc,

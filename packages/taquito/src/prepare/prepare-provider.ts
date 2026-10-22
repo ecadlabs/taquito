@@ -1,3 +1,5 @@
+import { Context } from '../context';
+import { DetachedIdentity, detachedProof } from './detached-identity';
 import {
   OperationContents,
   OpKind,
@@ -113,6 +115,19 @@ const mergeLimits = (
  * PrepareProvider is a utility class to output the prepared format of an operation
  */
 export class PrepareProvider extends Provider implements PreparationProvider {
+  constructor(
+    context: Context,
+    private readonly identity?: Readonly<DetachedIdentity>
+  ) {
+    super(context);
+  }
+
+  private async revealProof(): Promise<string> {
+    return this.identity
+      ? detachedProof(this.identity)
+      : (await this.signer.provePossession!()).prefixSig;
+  }
+
   private async getBlockHash(block?: BlockIdentifier) {
     return this.context.readProvider.getBlockHash(block ?? 'head~2');
   }
@@ -259,7 +274,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
               gasLimit: getRevealGasLimit(pkh),
               proof:
                 pkhPrefix === PrefixV2.BLS12_381PublicKeyHash
-                  ? (await this.signer.provePossession!()).prefixSig
+                  ? await this.revealProof()
                   : undefined,
             },
             publicKeyHash,
@@ -276,6 +291,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     pkh: string;
     publicKey?: string;
   }> {
+    if (this.identity) return this.identity;
     const isSignerConfigured = this.context.isAnySignerConfigured();
     return {
       pkh: isSignerConfigured ? await this.signer.publicKeyHash() : await this.context.wallet.pkh(),
@@ -461,8 +477,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
       if (proof) {
         b58DecodeAndCheckPrefix(proof, [PrefixV2.BLS12_381Signature]); // validate proof to be a bls signature
       } else {
-        const { prefixSig } = await this.signer.provePossession!();
-        proof = prefixSig;
+        proof = await this.revealProof();
       }
     } else {
       if (proof) {
@@ -1492,9 +1507,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
             storageLimit: REVEAL_STORAGE_LIMIT,
             gasLimit: getRevealGasLimit(pkh),
             proof:
-              pkhPrefix === PrefixV2.BLS12_381PublicKeyHash
-                ? (await this.signer.provePossession!()).prefixSig
-                : undefined,
+              pkhPrefix === PrefixV2.BLS12_381PublicKeyHash ? await this.revealProof() : undefined,
           },
           pkh,
           publicKey
