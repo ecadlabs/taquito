@@ -1,11 +1,11 @@
 import { InMemorySigner, type FromMnemonicParams } from '../src/taquito-signer';
 import { InvalidCurveError, InvalidMnemonicError, ToBeImplemented } from '../src/errors';
 import { InvalidDerivationPathError } from '@taquito/core';
-import vectors from '../../../test-fixtures/mnemonic-keys.json';
+import vectors from './fixtures/mnemonic-vectors';
 
 describe('existing mnemonic signer compatibility', () => {
   it.each(vectors)('preserves the complete key tuple for $label', async ({ params, expected }) => {
-    const signer = InMemorySigner.fromMnemonic(params as FromMnemonicParams);
+    const signer = InMemorySigner.fromMnemonic(params);
     expect({
       publicKey: await signer.publicKey(),
       publicKeyHash: await signer.publicKeyHash(),
