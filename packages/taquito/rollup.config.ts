@@ -1,3 +1,4 @@
+import resolve from '@rollup/plugin-node-resolve';
 import camelCase from 'lodash.camelcase';
 import typescript from 'rollup-plugin-typescript2';
 import json from 'rollup-plugin-json';
@@ -19,15 +20,15 @@ export default {
         '@taquito/rpc': 'rpc',
         '@taquito/http-utils': 'httpUtils',
         '@taquito/core': 'core',
-        'rxjs': 'rxjs',
+        rxjs: 'rxjs',
         'rxjs/operators': 'operators',
         '@taquito/michelson-encoder': 'michelsonEncoder',
         '@taquito/utils': 'utils',
         'bignumber.js': 'BigNumber',
         '@taquito/michel-codec': 'michelCodec',
         '@taquito/local-forging': 'localForging',
-        '@taquito/signer': 'taquitoSigner'
-      }
+        '@taquito/signer': 'taquitoSigner',
+      },
     },
     { file: pkg.module, format: 'es', sourcemap: true },
   ],
@@ -43,12 +44,13 @@ export default {
     '@taquito/signer',
     'rxjs',
     'rxjs/operators',
-    'bignumber.js'
+    'bignumber.js',
   ],
   watch: {
     include: 'src/**',
   },
   plugins: [
+    resolve(),
     // Allow json resolution
     json(),
     // Compile TypeScript files
