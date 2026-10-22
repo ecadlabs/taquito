@@ -30,6 +30,36 @@ const rpcClient = new RpcClient('https://mainnet.api.tez.ie/', 'main', customHtt
 const tezos = new TezosToolkit(rpcClient);
 ```
 
+### Change the RPC and read provider
+
+The default read provider uses the toolkit's current RPC. When you change the RPC
+with `setRpcProvider`, the default read provider follows that change.
+
+```js
+import { TezosToolkit } from '@taquito/taquito';
+
+const tezos = new TezosToolkit('https://YOUR_FIRST_RPC_URL');
+tezos.setRpcProvider('https://YOUR_SECOND_RPC_URL');
+// Default reads now use the second RPC.
+```
+
+If you install a custom read provider with `setReadProvider`, that provider
+remains in use when you call `setRpcProvider`. The combined `setProvider` method
+restores default RPC-backed reads when you omit `readProvider`. To keep a custom
+read provider with that method, pass it as `setProvider({ rpc, readProvider })`.
+
+To restore default RPC-backed reads explicitly, call `setReadProvider()` without
+an argument:
+
+```js
+tezos.setReadProvider();
+// Default reads use the toolkit's current RPC and follow later RPC changes.
+```
+
+Calling `setRpcProvider()` without an argument leaves the current RPC unchanged.
+These setters configure later reads. Create new contract abstractions after a
+provider change when you want those abstractions to use the new configuration.
+
 ### Binding Providers
 
 **Required step:** After instantiating a TezosToolkit the user needs to set a signer or a wallet on the TezosToolkit instance.
