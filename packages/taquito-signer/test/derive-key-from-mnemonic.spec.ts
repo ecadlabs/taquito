@@ -6,7 +6,7 @@ import {
 import { InvalidCurveError, InvalidMnemonicError, ToBeImplemented } from '../src/errors';
 import { InvalidDerivationPathError } from '@taquito/core';
 import { verifySignature } from '@taquito/utils';
-import vectors from '../../../test-fixtures/mnemonic-keys.json';
+import vectors from './fixtures/mnemonic-vectors';
 
 describe('deriveKeyFromMnemonic', () => {
   it('returns the independent default key tuple', () => {
@@ -20,10 +20,9 @@ describe('derived mnemonic key compatibility', () => {
   it.each(vectors)(
     'matches independent and existing signer values for $label',
     async ({ params, expected }) => {
-      const options = params as FromMnemonicParams;
-      const result = deriveKeyFromMnemonic(options);
+      const result = deriveKeyFromMnemonic(params);
       expect(result).toEqual(expected);
-      const signer = InMemorySigner.fromMnemonic(options);
+      const signer = InMemorySigner.fromMnemonic(params);
       expect(result).toEqual({
         publicKey: await signer.publicKey(),
         publicKeyHash: await signer.publicKeyHash(),
