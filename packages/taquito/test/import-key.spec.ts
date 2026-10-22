@@ -31,6 +31,7 @@ describe('ImportKey', () => {
       getManagerKey: vi.fn(),
       getStorage: vi.fn(),
       getBlockHeader: vi.fn(),
+      getBlockHash: vi.fn(),
       getContract: vi.fn(),
       injectOperation: vi.fn(),
       preapplyOperations: vi.fn(),
@@ -43,6 +44,7 @@ describe('ImportKey', () => {
 
     mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
     mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
+    mockRpcClient.getBlockHash.mockResolvedValue('test');
     mockRpcClient.preapplyOperations.mockResolvedValue([]);
     mockRpcClient.getProtocols.mockResolvedValue({
       protocol: 'test_proto',

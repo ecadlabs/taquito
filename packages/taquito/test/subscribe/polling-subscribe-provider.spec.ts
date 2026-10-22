@@ -131,7 +131,11 @@ describe('Configurations for the PollingSubscribeProvider', () => {
         rpc: {
           getBlock: vi.fn().mockResolvedValue(blockWithMissingMetadata),
         },
-        readProvider: mockReadProvider,
+        readProvider: {
+          ...mockReadProvider,
+          getBlockHash: vi.fn().mockResolvedValue(blockWithMissingMetadata.hash),
+          getBlock: vi.fn().mockResolvedValue(blockWithMissingMetadata),
+        },
       } as unknown as Context,
       { pollingIntervalMilliseconds: 50 }
     );

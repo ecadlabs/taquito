@@ -75,6 +75,9 @@ describe('Operation.confirmation', () => {
       chain_id: getBlock(block).chain_id,
     }));
 
+    vi.spyOn(rpc, 'getBlockHash').mockImplementation(
+      async ({ block } = {}) => getBlock(block).hash
+    );
     context = new Context(rpc);
     context.config = {
       ...context.config,
