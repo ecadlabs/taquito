@@ -396,14 +396,14 @@ export class TezosToolkit {
     return this._context.contract;
   }
 
+  /** Create an identity-bound workflow for external operation signing. */
+  prepareFor(identity: DetachedIdentity): DetachedSigningWorkflow {
+    return new DetachedSigningWorkflow(this._context, identity);
+  }
+
   /**
    * Provide access to tezos operation preparation utilities
    */
-  /** Create an identity-bound workflow for external operation signing. */
-  prepareFor(identity: DetachedIdentity): DetachedSigningWorkflow {
-    return new DetachedSigningWorkflow(this._context.createDetachedContext(), identity);
-  }
-
   get prepare(): PreparationProvider {
     return this._context.prepare;
   }

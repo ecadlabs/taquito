@@ -1,3 +1,6 @@
+import { Protocols } from '../../src/constants';
+import { Context } from '../../src/context';
+import { DetachedSigningWorkflow } from '../../src/prepare/detached-signing';
 import { RpcInjector } from '../../src/injector/rpc-injector';
 import { RpcClient, RpcClientCache } from '@taquito/rpc';
 import { LocalForger } from '@taquito/local-forging';
@@ -42,7 +45,11 @@ describe('detached submission', () => {
     try {
       const tezos = new TezosToolkit(server.url);
       const workflow = tezos.prepareFor(vector);
-      tezos.setProvider({ rpc: other.url, config: { defaultConfirmationCount: 9 } });
+      tezos.setProvider({
+        rpc: other.url,
+        protocol: Protocols.PsBabyM1,
+        config: { defaultConfirmationCount: 9 },
+      });
       const signed = workflow.attachSignature(
         await workflow.toSignable(prepared()),
         vector.signature
@@ -212,5 +219,35 @@ describe('detached submission', () => {
       { ...vector.operation, protocol: vector.protocol, signature: vector.signature },
     ]);
     expect(operation.raw.opOb.contents).toEqual(vector.operation.contents);
+  });
+
+  it('captures defaults when constructed directly with a public Context', async () => {
+    const other = await fixtureServer();
+    try {
+      const context = new Context(server.url);
+      const workflow = new DetachedSigningWorkflow(context, vector);
+      context.rpc = new RpcClient(other.url);
+      context.setPartialConfig({ defaultConfirmationCount: 9 });
+      const signed = workflow.attachSignature(
+        await workflow.toSignable(prepared()),
+        vector.signature
+      );
+      const operation = await workflow.inject(signed);
+      await operation.confirmation(1);
+      expect(other.requests).toHaveLength(0);
+      expect(server.requests.some((request) => request.path.startsWith('/injection/'))).toBe(true);
+    } finally {
+      await other.close();
+    }
+  });
+
+  it('preserves a default forger explicitly reselected as a custom instance', async () => {
+    const context = new Context(server.url);
+    const selected = context.forger;
+    const forge = vi.spyOn(selected, 'forge');
+    context.forger = selected;
+    const workflow = new DetachedSigningWorkflow(context, vector);
+    expect((await workflow.toSignable(prepared())).unsignedBytes).toBe(vector.unsignedBytes);
+    expect(forge).toHaveBeenCalledOnce();
   });
 });

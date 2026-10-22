@@ -59,17 +59,16 @@ export class DetachedSigningWorkflow {
   readonly #signables = new WeakMap<DetachedSignableOperation, PreparedOperation>();
   readonly #submissions = new WeakMap<DetachedSignedOperation, Promise<Operation>>();
   readonly #signed = new WeakMap<DetachedSignedOperation, PreparedOperation>();
+  private readonly context: Context;
   private readonly identity: Readonly<DetachedIdentity>;
   readonly prepare;
   readonly estimate;
 
-  constructor(
-    private readonly context: Context,
-    identity: DetachedIdentity
-  ) {
+  constructor(context: Context, identity: DetachedIdentity) {
     this.identity = validateDetachedIdentity(identity);
-    const prepare = new PrepareProvider(context, this.identity);
-    const estimate = new RPCEstimateProvider(context, this.identity);
+    this.context = context.createDetachedContext();
+    const prepare = new PrepareProvider(this.context, this.identity);
+    const estimate = new RPCEstimateProvider(this.context, this.identity);
     this.prepare = Object.freeze({
       transaction: (params: Parameters<PrepareProvider['transaction']>[0]) =>
         prepare.transaction(this.source(params)),
