@@ -308,10 +308,14 @@ export function b58DecodeAddress(value: string, fmt?: 'hex' | 'array'): Uint8Arr
 }
 
 /**
- *  Gets Tezos address (PKH) from Public Key
- *  @param publicKey Base58 Public Key
- *  @returns A string of the Tezos address (PKH) that was derived from the given Public Key
- *  @example getPkhfromPk('edpkuNjKKT48xBoT5asPrWdmuM1Yw8D93MwgFgVvtca8jb5pstzaCh') // return 'tz2MVED1t9Jery77Bwm1m5YhUx8Wp5KWWRQe'
+ * Derives an implicit Tezos address from a Base58Check public key.
+ * Supports Ed25519, secp256k1, P-256, BLS12-381 and ML-DSA-44 keys.
+ * Also exported as getPublicKeyHashFromPublicKey.
+ * @param publicKey Base58Check-encoded public key
+ * @returns The corresponding tz1, tz2, tz3, tz4 or tz5 address
+ * @example
+ * getPkhfromPk('edpku61nGAwkeoA7PQJEFWmrVP1eWrSTVoHgCaF2isjWqDeGdux37k')
+ * // 'tz1ipB38oB5F76HnbTRqWPLEnVtCgj6yf2nB'
  */
 export function getPkhfromPk(publicKey: string): string {
   const [key, pre] = b58DecodeAndCheckPrefix(publicKey);

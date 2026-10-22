@@ -142,7 +142,7 @@ try {
 
 The `fromMnemonic` method takes the mnemonic, password, derivationPath, and curve as parameters. Here is an example of an instantiation of an `InMemorySigner.fromMnemonic`
 
-derivation path MUST start with `"44'/1729'/"`
+The default derivation path is `"44'/1729'/0'/0'"`. Select a path for the account you want to derive.
 
 With ed25519 default derivation path (must be hardened with either `h` or `'`)
 
@@ -182,6 +182,63 @@ try {
   console.log(error);
 }
 ```
+
+### Generate and restore a mnemonic
+
+The `generateMnemonic` function creates an English BIP39 mnemonic. Its default
+strength is 128 bits, which produces 12 words. You can also select 160, 192, 224,
+or 256 bits.
+
+```js
+import {
+  generateMnemonic,
+  mnemonicToEntropy,
+  entropyToMnemonic,
+} from '@taquito/signer';
+
+const mnemonic = generateMnemonic();
+const entropy = mnemonicToEntropy(mnemonic);
+const restoredMnemonic = entropyToMnemonic(entropy);
+console.log(restoredMnemonic === mnemonic); // true
+```
+
+`mnemonicToEntropy` returns a `Uint8Array`. `entropyToMnemonic` accepts 16, 20, 24,
+28, or 32 bytes. It also accepts an even-length hexadecimal string without a `0x`
+prefix. Leading zero bytes are preserved. An invalid mnemonic throws an
+`InvalidMnemonicError` without including the phrase in the error.
+
+Byte input must be a `Uint8Array`, such as a Node.js `Buffer` or a subarray view.
+The helper uses only the bytes in that view and leaves the input unchanged.
+Plain number arrays and other typed-array kinds are not accepted.
+
+### Derive keys without a signer
+
+Use `deriveKeyFromMnemonic` to obtain account details without constructing an
+`InMemorySigner`. The function is synchronous and returns `publicKey`,
+`publicKeyHash`, and `secretKey`.
+
+```js
+import { generateMnemonic, deriveKeyFromMnemonic } from '@taquito/signer';
+
+const mnemonic = generateMnemonic();
+const account = deriveKeyFromMnemonic({
+  mnemonic,
+  password: '',
+  derivationPath: "44'/1729'/1'/0'",
+  curve: 'ed25519',
+});
+console.log(account.publicKeyHash);
+```
+
+The options match `InMemorySigner.fromMnemonic`. The defaults are an empty
+`password`, the path `"44'/1729'/0'/0'"`, and the `ed25519` curve. `password` is
+the BIP39 passphrase. Supported curves are `ed25519`, `secp256k1`, and `p256`.
+Ed25519 paths must be hardened. BLS and ML-DSA mnemonic derivation are not supported.
+
+The returned `secretKey` is unencrypted. Avoid logging or sharing the account
+object. Ed25519 uses the expanded secret-key form returned by
+`InMemorySigner.secretKey()`. The helper can throw low-level key validation
+errors that `InMemorySigner.fromMnemonic` translates through its constructor.
 
 ### A simple factory multiple keys/wallets
 
