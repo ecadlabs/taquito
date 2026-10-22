@@ -101,3 +101,56 @@ const view = await client.runView({
 ## Full documentation
 
 Typedoc information is available [here](https://taquito.io/typedoc/classes/_taquito_rpc.RpcClient).
+
+
+## BLS operations
+
+The BLS methods call the node's root `/bls` endpoints. They do not require a chain
+or block path, a signer, or an operation. Use an Octez node that exposes these
+endpoints.
+
+| Method | POST endpoint | Result |
+| --- | --- | --- |
+| `aggregatePublicKeys` | `/bls/aggregate_public_keys` | An object with `public_key` and `public_key_hash`, or `null` |
+| `checkProof` | `/bls/check_proof` | A boolean |
+| `aggregateSignatures` | `/bls/aggregate_signatures` | A signature string, or `null` |
+| `thresholdSignatures` | `/bls/threshold_signatures` | A signature string, or `null` |
+
+`checkProof` takes a public key and its proof of possession. `aggregatePublicKeys`
+takes an array of those objects. Keys, proofs, and signatures use Base58Check
+encoding. The following example uses fixed public test values:
+
+```js
+import { RpcClient } from '@taquito/rpc';
+
+const client = new RpcClient('https://rpc.shadownet.teztnets.com');
+const key = {
+  public_key: 'BLpk1wMU34nS7N96D2owyejLxQtwZwLARLg6tdTFMP5N8fz6yCiLogfFXkYo9ZHnZ95Kba3D3cvt',
+  proof: 'BLsig9cW2ffM82s8cZWNDQTmecxHPHmJcTUh5DF2dVP7GV7oUmmptd4JpxBvSyE1VDeLtGyV68KaTuaEM1qiSUELMqkdwCLJFDQYGL6ZZLZDEUAfyu3Vu3ivs66jhV8ANwt3tKg6qABoqx',
+};
+
+const valid = await client.checkProof(key);
+console.log(valid); // true
+
+const aggregate = await client.aggregatePublicKeys([key]);
+if (aggregate !== null) {
+  console.log(aggregate.public_key_hash); // 'tz4AQcKaQU1sUzsmPTX43qnK4ddkCeeknJnf'
+}
+```
+
+`aggregateSignatures` takes an object with `public_key`, `message`, and
+`signature_shares`. The message is hexadecimal without a `0x` prefix. Its
+`signature_shares` value is an array of signature strings.
+
+`thresholdSignatures` takes the same fields, but each signature share is an
+object with `id` and `signature`. The node validates share IDs as signed 8-bit
+integers, from -128 through 127.
+
+A failed proof check can return `false`, and failed aggregation can return
+`null`. HTTP and transport failures still reject the promise. Malformed input can
+also cause an HTTP error. Handle these rejections separately from `false` and
+`null` results.
+
+`RpcClientCache` forwards these four methods without caching their results.
+If you implement `RpcClientInterface` yourself, add all four required methods.
+Existing RPC methods and cache policies are unchanged.

@@ -2,6 +2,11 @@ import BigNumberJs from 'bignumber.js';
 type BigNumber = InstanceType<typeof BigNumberJs>;
 const BigNumber = BigNumberJs;
 import {
+  BlsPublicKeyWithProof,
+  BlsAggregatePublicKeysResponse,
+  BlsAggregateSignaturesParams,
+  BlsSignatureResponse,
+  BlsThresholdSignaturesParams,
   BakingRightsQueryArguments,
   BakingRightsResponse,
   BalanceResponse,
@@ -66,6 +71,10 @@ export const defaultChain = 'main';
 export const defaultRPCOptions: RPCOptions = { block: 'head' };
 
 export interface RpcClientInterface {
+  thresholdSignatures(params: BlsThresholdSignaturesParams): Promise<BlsSignatureResponse>;
+  aggregateSignatures(params: BlsAggregateSignaturesParams): Promise<BlsSignatureResponse>;
+  checkProof(key: BlsPublicKeyWithProof): Promise<boolean>;
+  aggregatePublicKeys(keys: BlsPublicKeyWithProof[]): Promise<BlsAggregatePublicKeysResponse>;
   getBlockHash(options?: RPCOptions): Promise<string>;
   getLiveBlocks(options?: RPCOptions): Promise<string[]>;
   getBalance(address: string, options?: RPCOptions): Promise<BalanceResponse>;

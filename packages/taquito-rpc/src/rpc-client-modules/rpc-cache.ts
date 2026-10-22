@@ -4,6 +4,11 @@ type BigNumber = InstanceType<typeof BigNumberJs>;
 const BigNumber = BigNumberJs;
 import { defaultRPCOptions, RpcClientInterface, RPCOptions } from '../rpc-client-interface';
 import {
+  BlsPublicKeyWithProof,
+  BlsAggregatePublicKeysResponse,
+  BlsAggregateSignaturesParams,
+  BlsSignatureResponse,
+  BlsThresholdSignaturesParams,
   BakingRightsQueryArguments,
   BakingRightsResponse,
   BalanceResponse,
@@ -1450,5 +1455,36 @@ export class RpcClientCache implements RpcClientInterface {
       this.put(key, response);
       return response;
     }
+  }
+  /** Aggregate BLS public keys after checking their proofs of possession.
+   * @param keys Base58Check-encoded public keys and proofs.
+   * @returns The aggregate key and hash, or null if aggregation or proof verification fails.
+   * @see https://octez.tezos.com/docs/_static/rpc-openapi.html
+   */
+  async aggregatePublicKeys(
+    keys: BlsPublicKeyWithProof[]
+  ): Promise<BlsAggregatePublicKeysResponse> {
+    return this.rpcClient.aggregatePublicKeys(keys);
+  }
+
+  /** Check a Base58Check-encoded BLS proof of possession. Returns false for an invalid proof.
+   * @see https://octez.tezos.com/docs/_static/rpc-openapi.html
+   */
+  async checkProof(key: BlsPublicKeyWithProof): Promise<boolean> {
+    return this.rpcClient.checkProof(key);
+  }
+
+  /** Aggregate BLS signatures. Returns null if aggregation or signature verification fails.
+   * @see https://octez.tezos.com/docs/_static/rpc-openapi.html
+   */
+  async aggregateSignatures(params: BlsAggregateSignaturesParams): Promise<BlsSignatureResponse> {
+    return this.rpcClient.aggregateSignatures(params);
+  }
+
+  /** Reconstruct a BLS threshold signature. Returns null if reconstruction or verification fails.
+   * @see https://octez.tezos.com/docs/_static/rpc-openapi.html
+   */
+  async thresholdSignatures(params: BlsThresholdSignaturesParams): Promise<BlsSignatureResponse> {
+    return this.rpcClient.thresholdSignatures(params);
   }
 }
