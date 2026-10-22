@@ -277,9 +277,6 @@ export class Context {
     return !(this.signer instanceof NoopSigner);
   }
 
-  /**
-   * Create a copy of the current context. Useful when you have long running operation and you do not want a context change to affect the operation
-   */
   /** @internal Capture SDK defaults for a detached operation workflow. */
   createDetachedContext(): Context {
     return new Context(
@@ -298,6 +295,9 @@ export class Context {
     );
   }
 
+  /**
+   * Create a copy of the current context. Useful when you have long running operation and you do not want a context change to affect the operation
+   */
   clone(): Context {
     return new Context(
       this.rpc,

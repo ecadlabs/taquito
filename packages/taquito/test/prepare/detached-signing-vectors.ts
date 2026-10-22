@@ -1,0 +1,176 @@
+import { OpKind } from '@taquito/rpc';
+import { ForgeParams } from '@taquito/local-forging';
+
+interface OperationVector {
+  scheme: string;
+  operationKind?: string;
+  protocol: string;
+  pkh: string;
+  publicKey: string;
+  proof?: string;
+  operation: ForgeParams;
+  unsignedBytes: string;
+  watermarkedBytes: string;
+  blake2bDigest: string;
+  signature: string;
+  signedBytes: string;
+}
+
+export default {
+  octezVersion: 'e5d8a6b8 (2026-10-15 09:10:29 +0200) (Octez 25.3 (build: 0))',
+  provenance:
+    'Generated and signature-checked with local Octez. Full signed bytes come from forge/signed_operations. Blake2b digest uses Python hashlib. These are generated fixture keys, not funded accounts.',
+  vectors: [
+    {
+      scheme: 'ed25519',
+      protocol: 'PrihK96nBAFSxVL1GLJTVhu9YnzkMFiBeuJRPA8NwuZVZCE1L6i',
+      pkh: 'tz1YbCKz3yLhMbwtzPeu2UhriXnKXyYaPqLN',
+      publicKey: 'edpkug8HJ7NdAphuSrUfyZHvj626NFpoeBq4tZQkq69jnZzK56aLiJ',
+      operation: {
+        branch: 'BLockGenesisGenesisGenesisGenesisGenesisCCCCCeZiLHU',
+        contents: [
+          {
+            kind: OpKind.TRANSACTION,
+            source: 'tz1YbCKz3yLhMbwtzPeu2UhriXnKXyYaPqLN',
+            fee: '1000',
+            counter: '1',
+            gas_limit: '1040',
+            storage_limit: '0',
+            amount: '1',
+            destination: 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
+          },
+        ],
+      },
+      unsignedBytes:
+        '8fcf233671b6a04fcf679d2a381c2544ea6c1ea29ba6157776ed842426e5cab86c008e106e42a268986ead8977debebcf7b8e920abede807019008000100006b82198cb179e8306c1bedd08f12dc863f32888600',
+      watermarkedBytes:
+        '038fcf233671b6a04fcf679d2a381c2544ea6c1ea29ba6157776ed842426e5cab86c008e106e42a268986ead8977debebcf7b8e920abede807019008000100006b82198cb179e8306c1bedd08f12dc863f32888600',
+      blake2bDigest: 'f6cefd7e0ea794a15a16c95cd7fc5b367ee79bebed6dd5c0538c8688caf8bc98',
+      signature:
+        'edsigtaPEtwMnTELf4aihz8mBca2jFDoU3fY431bYWQfZnF9hrMn7EUczmtoVP7ZbfeoiwHxWM7BSPTfyvKruwt7BaN5DAfDQbh',
+      signedBytes:
+        '8fcf233671b6a04fcf679d2a381c2544ea6c1ea29ba6157776ed842426e5cab86c008e106e42a268986ead8977debebcf7b8e920abede807019008000100006b82198cb179e8306c1bedd08f12dc863f3288860013b2f920901b1df83ad1388b71dd41c849f79185aee60cc1f3345aa86cb847e5b43dde77f0ff1adeb0e38997498025237d5d95739530714d24c97819ad7b4f05',
+    },
+    {
+      scheme: 'secp256k1',
+      protocol: 'PrihK96nBAFSxVL1GLJTVhu9YnzkMFiBeuJRPA8NwuZVZCE1L6i',
+      pkh: 'tz2GS5YR1mztLGwiG1PK4ej2Bq4EpHhdESE3',
+      publicKey: 'sppk7dB3JGXsF7uLYnSeHRkk5bZNyAShiFwn9EtiAqmWtvaVyiSqw5c',
+      operation: {
+        branch: 'BLockGenesisGenesisGenesisGenesisGenesisCCCCCeZiLHU',
+        contents: [
+          {
+            kind: OpKind.TRANSACTION,
+            source: 'tz2GS5YR1mztLGwiG1PK4ej2Bq4EpHhdESE3',
+            fee: '1000',
+            counter: '1',
+            gas_limit: '1040',
+            storage_limit: '0',
+            amount: '1',
+            destination: 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
+          },
+        ],
+      },
+      unsignedBytes:
+        '8fcf233671b6a04fcf679d2a381c2544ea6c1ea29ba6157776ed842426e5cab86c01590c4e396ea478c94c4ece068934aa2c8e746db2e807019008000100006b82198cb179e8306c1bedd08f12dc863f32888600',
+      watermarkedBytes:
+        '038fcf233671b6a04fcf679d2a381c2544ea6c1ea29ba6157776ed842426e5cab86c01590c4e396ea478c94c4ece068934aa2c8e746db2e807019008000100006b82198cb179e8306c1bedd08f12dc863f32888600',
+      blake2bDigest: '870277cb6b4f9c5d3513a7eb01d6c8f39a09c29c8f5266f641429ac6e3096baf',
+      signature:
+        'spsig197EehMLyGsMCghFPkUj4EDEKEESRmur8EbDVyH9EcVZWdEKX5wBFgZGfArVDR1iRPsh49WdENx3K2GTkrX3bDbnM1yJ6L',
+      signedBytes:
+        '8fcf233671b6a04fcf679d2a381c2544ea6c1ea29ba6157776ed842426e5cab86c01590c4e396ea478c94c4ece068934aa2c8e746db2e807019008000100006b82198cb179e8306c1bedd08f12dc863f328886001934b1c24aa6b46622212fdb7683f1908dd180e9381c722f3b60ea9695d4d5b273f96f2c0add34fedff1e7a5d6d10c85698f52405cb2f6e8be744e3a7152f82c',
+    },
+    {
+      scheme: 'p256',
+      protocol: 'PrihK96nBAFSxVL1GLJTVhu9YnzkMFiBeuJRPA8NwuZVZCE1L6i',
+      pkh: 'tz3UT3Hy1r8okudq9A457ZMn8E9zkj5dfbyc',
+      publicKey: 'p2pk654y3UEQy8tukvdG4THDv4AUDfAMWYRmW92urv32pLA5MXoGBB6',
+      operation: {
+        branch: 'BLockGenesisGenesisGenesisGenesisGenesisCCCCCeZiLHU',
+        contents: [
+          {
+            kind: OpKind.TRANSACTION,
+            source: 'tz3UT3Hy1r8okudq9A457ZMn8E9zkj5dfbyc',
+            fee: '1000',
+            counter: '1',
+            gas_limit: '1040',
+            storage_limit: '0',
+            amount: '1',
+            destination: 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
+          },
+        ],
+      },
+      unsignedBytes:
+        '8fcf233671b6a04fcf679d2a381c2544ea6c1ea29ba6157776ed842426e5cab86c025913a6203c96d7632797c6c2f03d9e99bd5f5afae807019008000100006b82198cb179e8306c1bedd08f12dc863f32888600',
+      watermarkedBytes:
+        '038fcf233671b6a04fcf679d2a381c2544ea6c1ea29ba6157776ed842426e5cab86c025913a6203c96d7632797c6c2f03d9e99bd5f5afae807019008000100006b82198cb179e8306c1bedd08f12dc863f32888600',
+      blake2bDigest: '0c862d9ccfd5b7e4bd133dbc385bcb20165a2a0082f83b1c59c3a3f0180a2314',
+      signature:
+        'p2sigrEGnAGLH2uLoWcuRUQMjvZroBobhWMrdZYYfdcdkH32FBj3WFP3bQrfFYH2KsU1qFMDPVyLmH3YfR4cpFQbfGnHTXm3Xt',
+      signedBytes:
+        '8fcf233671b6a04fcf679d2a381c2544ea6c1ea29ba6157776ed842426e5cab86c025913a6203c96d7632797c6c2f03d9e99bd5f5afae807019008000100006b82198cb179e8306c1bedd08f12dc863f32888600dd1ae49db163db8dcb21791f1ed1b2f8d1d267aaff5cfba834938d45961b5ffec67a4ef1bea721e728f9f457ee25a9a6b2e790c24f75c972daaa44b3306ac01c',
+    },
+    {
+      scheme: 'bls',
+      protocol: 'PrihK96nBAFSxVL1GLJTVhu9YnzkMFiBeuJRPA8NwuZVZCE1L6i',
+      pkh: 'tz4AAofyJLNcBHvhRbPBRirsHfsJ25gqsGR4',
+      publicKey: 'BLpk1naa78og8F9JZGanryXBpqCXAy7uqTRvNV2n1gw4ut3iaxLoEjMb7QnAnjouZqN1HgA5wsAQ',
+      operation: {
+        branch: 'BLockGenesisGenesisGenesisGenesisGenesisCCCCCeZiLHU',
+        contents: [
+          {
+            kind: OpKind.TRANSACTION,
+            source: 'tz4AAofyJLNcBHvhRbPBRirsHfsJ25gqsGR4',
+            fee: '1000',
+            counter: '1',
+            gas_limit: '1040',
+            storage_limit: '0',
+            amount: '1',
+            destination: 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
+          },
+        ],
+      },
+      unsignedBytes:
+        '8fcf233671b6a04fcf679d2a381c2544ea6c1ea29ba6157776ed842426e5cab86c030cc6a7acfbcac9590663b7858e94ec839ec34fc3e807019008000100006b82198cb179e8306c1bedd08f12dc863f32888600',
+      watermarkedBytes:
+        '038fcf233671b6a04fcf679d2a381c2544ea6c1ea29ba6157776ed842426e5cab86c030cc6a7acfbcac9590663b7858e94ec839ec34fc3e807019008000100006b82198cb179e8306c1bedd08f12dc863f32888600',
+      blake2bDigest: '2305f37e1995e3f198b4d2fdeef0682603de818e98580c924979ce0af81f5064',
+      signature:
+        'BLsigA9WPTHm7ZY6yT5FMPfayENxMb5PGTDit4mfNPqoc89UhBbdwy75nTF1KQr9oT3hYyf8qgCgDen3smY9h8hG4V6RTBmtU4X5Mfv7oRZ74rkf4HH8vgsLn3yCTXtYGP97yobGcLDTKW',
+      signedBytes:
+        '8fcf233671b6a04fcf679d2a381c2544ea6c1ea29ba6157776ed842426e5cab86c030cc6a7acfbcac9590663b7858e94ec839ec34fc3e807019008000100006b82198cb179e8306c1bedd08f12dc863f32888600ff03908065f09c1425b562e5544effdf7c140098843a4e30ecc19646925dad4812967cc407270a42fd913420428e888c918f02b3b5f54318c8d680d95936c13873875f40decbee8bfe43489cf245d7161527a034c8ce7d586982088fd0fee9cc7bd6',
+    },
+    {
+      scheme: 'mldsa44',
+      protocol: 'PrihK96nBAFSxVL1GLJTVhu9YnzkMFiBeuJRPA8NwuZVZCE1L6i',
+      pkh: 'tz5NqNScHMBSPrtdGg4X5ngqFne5xkjsRqwJ',
+      publicKey:
+        'mdpk2so933hV26V3ruBGCu2sYN8oHod6gPBCemPpT4A16YiBVZPLeZHJuiJ9NQnqskXLabydwVEjjJyc2WSWbYQGwwVTucqfGeT5XnpNjjNhFLGSuHgqFPPeBQ7tiJjvtr8wY5uqcnCjhQhVTfEBEEJARNyBDRUsGudv5eKT2Z886VxubtyiD5BJ3WQ3oPagEqVKEwpYUTrULP1MHPza5SXeXeioYxKrapQHD3U7DZcg9CoJ1buqp3rpJ3YLXn3qMH3Uo8cDdHoHyR5TM9SXaz5yTwyZ4xC4QnCsoxs1mHgmvst5j7236qcL8iqs8U4aCRsn3dfxEptCs92YerWripueKGpBapnMXpka8Vc1ByhEqx8KHG9mjcz64U73TppFWoVUciBKzdM7a4QrqRYLbyafYdXru8MJBuobyuHfRTJcN16DL8CL6JFPdRWDuBFCM3VEmqAbKrSkvhYfd6qH8Qbk989Hji2eHAcVGJkpFDMbtsqJjqHEqhfEGFijRx2Nv7rYoaCcDp8PhSt3hU4ThLwffouGXzpMeBbBVuwmR3R9UoZr43PYNLZkvrnLJE6ZQwyNNZ6kz5Pq2gtve4x6bQbABgfR7KHnmv6RW1XkR6TyAH3noGztxea7nSVTjpV4dapWZ3krVYvhC2G1MwminaywSmCLAsscRsbr3y5QkLQA7cogKcvvMKee6fm7tpscB4GcBkVLqi9aUMCBMv6i24PmAakoHuYorsHbCSDzzQ51mdpuceqJeVqipWsqj3ozTgpwrqpW4ADKimHqYYKmt622MxsFRDn4cfPvTUvvquy1W8YsSnuxWocG4f3MREZPgNNVzkXCqiXK81kjfEA96uvuWvMrvJmjAqso8mKGnTe1Vhh6szetTpL5YjCkVuYceWiGa5EUCfR81pVJVf653mnuv5b1JmeyQU1sxUnJuBzZM8ym2PX4YbnWSs5wZUdzjeNc6YSCFFu52ULL4SzPesiBp1Pmmdp6s9P4E2nWMWM7xUrkEvwatjCXShaoTYFCgARnuEQhGpz75vU39vXV7uZ4Fr5ea33gwoV3LYzmdQuUnWyMkKaSE2SqJ65mFhKrcnHWBg2Tf9d4szoeRfxLgdWHUERCVC9FFSZMsZpwTVXeHEXQqNxE21FNxMRgo7vDd7HapGhCQNJSUPL3BTWEpa5NEruugUJcFsXZBvr8ds5TysnJAgxEVxSKDbEsQKtpT3Xowa8MfVT1cCyRoGYHJykrDEZj62a9UAZSZ9kP4MYDSNtQPSNWMyrRWRxY3g9iq67yYARxKoyEtd3TZgjzi4iA1KENKSVAwRaD8MJhJc8zS17LXTucdh7ATnSXXqSuxngqPiksUQxe3nZXy3YJ8tHVTQYeZp17xFTvEkcbavGxcB6d72LK5eoCdEgqEVof5XRxKigj8PTeZ2ddLgGRWS8nYpje6HZD4sxNDSvLRwjb46422Tvtxgw54qiECPCLRfdthihQcA41y9QZBbxhgTawCnige1ZaYHWScM6wPGNueovp6421veatdLpF5GMdAPJVAuhbCTw9gVxtXisYPifxvpRgMbVcRgyY35BwmMDzwinixCWCYJswZucsZqrdnC4FFpCj4TGBNjiY8Qz2Za9Y2MpaX7m3Nq9tTjY5w9MxxKXXUSQ7mKWNBonNEPfrv9vUDw6Vamu9FWorF5Ay1yXXKuWq3jEoq9kZMmTwskEKBskkTsQ4jYpwLt9SdK9y8N2JCCAmDVBs8EDFWZtJydfNjxT8CSLuJwaqmpwnBFFLH47bJuvxe4wWX3Wpd1HwedGwD8zWLB',
+      operation: {
+        branch: 'BLockGenesisGenesisGenesisGenesisGenesisCCCCCeZiLHU',
+        contents: [
+          {
+            kind: OpKind.TRANSACTION,
+            source: 'tz5NqNScHMBSPrtdGg4X5ngqFne5xkjsRqwJ',
+            fee: '1000',
+            counter: '1',
+            gas_limit: '1040',
+            storage_limit: '0',
+            amount: '1',
+            destination: 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
+          },
+        ],
+      },
+      unsignedBytes:
+        '8fcf233671b6a04fcf679d2a381c2544ea6c1ea29ba6157776ed842426e5cab86c0413ea9effe70b36b8545a57856c3c8b56a8180289e807019008000100006b82198cb179e8306c1bedd08f12dc863f32888600',
+      watermarkedBytes:
+        '038fcf233671b6a04fcf679d2a381c2544ea6c1ea29ba6157776ed842426e5cab86c0413ea9effe70b36b8545a57856c3c8b56a8180289e807019008000100006b82198cb179e8306c1bedd08f12dc863f32888600',
+      blake2bDigest: '7499ced5da0162dade50487addc00fa5f2e2365a29217c4b08d3437a484556bd',
+      signature:
+        'mdsig5B8qoaQygtJbjoge87DALvPtGA4t3D6DUjXkDWSmdR1F19ovptBtcKXrB1g7Gcs7QHu77kLUyJYW2iyF4fNZvMZiVFGMEV5su4xRtmkYpD24r7RA1xBV3gcBHZ37uW2fhhDwR7M8csKfMthgeoen2Hco7XQbrvgVCHD4ehXXZDaNcMFBKjBW8V8JU8rs5c1ZaBJyJu4f3EwLUAJJ1GmAhMV7zLtWK2iVyhaFHzAH7Y1eEFboRGBAFjnULhZssocJUVEEupAzuzCTU7U78wQsPQGTSWSMxsDApvVKprJCiyD8zRzTMDFnu6QewtcXEmGxisquxUHoUGgHRZ977prrTxfsDfsrEFMkw1aRxRw8jLS2F7nr76Gxjz1bxu23uVjdWQsTPaVvhcKcqUXHasxM356dCS6JXmAQHCr1Bh7Fhrqm5Fg4gwm3BL3QUtPvcJv41NxEFa3ucj7V1JjJtFcqN7j2rUVEe37ZnjXfrFcGLb59iE8JHF3hpHdvaKdyYegHJwUvduSu1nuJxTgFW4PApZ4v9kUnJWcoktJ9Qktf9ch4ag3XrHZcMjYc1oc37vX5HB4rbq4XzChUrbxUQwnK2Xq9vs1JYSPdeqLD7oAyYy3KrsWwgk4zBCfMeUBBf2u9ZBGDHx14h5JSmum6vpxSKmgRGGh2JjKQ9m7FTj8UGWmdU7D1tdpFiAou3tMNUiH85JWUuhpVj2uz3RedHEGdBchpbRj7VmXa9z3eyavpZjrcMJAAH4qT8UAxsEZ3jQY5TeNP6K9HyZSmzs1yxLJHSTTvW5utNHWNxnuJyAJdnFepw9JPyMLQ2ieU5ypLCw9YtzGv2x5aQWbo3kSkqBnXeY5np2g6sfktzMUjFzBssCsv3V3R2RiPDxUJVQcosYNnWHYPVi2WYPRkB8M11bAyQQSZ7kMsJt1C5wTW8dzJjFp6gMPToFYQNccFsjs52sNnxXEKkqydbAfTiKo74SAtFKuQiW9YhhfsaBdjns5RFDxme8CVY86rnYGoCPcrWBP8tczc4CLPSbVpWWaToyjAJir9Y4V3U7sEqfC8fjHHvsCqYY1zXetvULgrY5RSE4fQbG7GBHYG4Rv4yH2kAQCSfPGdhbWv5GkQbVLefiN72hjn1JpRPokR7Yzr5EA5d346fRGeYeL5hp9395GdN6z6W1L6eVCma8z3KPEq2iy118gqy1tbkkqYPDiGuQaM85b4Z6PdF1wf3zJFzZM4tKUvrwahacWrBDRJCSs2NEMjhWCV8ZfQDr4HeLZU4kHCqqxEfHAEFVNK9Tux1pZoEYv5XNyveB6Eg2yPpJHhR83dnJyrGMDdzniDftDSTrebuPmsV92UAjGYxQ3ewqUZCtmAntpqAjw6nJeuXHvbCAL4T8s8Z2h4DqrmYFwGED88mFTZui8hTYsbWpiPoLPWkFN6YR9PCvWfdzsoisNQe2s5ZedyA174M6EqcChQHu9HjQfmfmTSNW8VabLa4J8124LxSu7jakd39UMtwXZvV73eX4uLEBsMxsqMAGzHjFM6u1hGQvFTaRcZKAYdhcMhdZNZeKw1DFvhnXNWp7csNQYMKw8zZE9dpCFsAur25zNARSqUfBpkYN7t9aE1RR1bqeShi4iSiRjtAcbibrhRWDMMpvrgXqUdGHZv8DM9kqNuWYTfnCWroMvYArxhGV65LSBEx4k1acxYk9zqp7YPByFT1CCNBfj36r25QzxnLvUxBrpwhMuRgmkRApv5zVHAHYmcwRhEw5iUTEVfU4RxQ4imtRG89C27g82c38StTM71Nxh39jZCYiqiTi51Ei8PnC9YFhtYxe7hC4muSBfebNRTydnfFuYTrKctqccBafpp5v9b237vwjytDqVgnVZsWWqdU3ZWLP5zcjDX7jkH4KWvePEJPruEFGpDEYRi29a6LJwGVsudmqjnAeXHy2xUfmeVqNjYXEYAXuFhvZaLC5dfkjFkfdjeiifVfjEFdvv4pjzEAkcifNuaDcck16KXJchp6F87ZggRq2NtWmHuGpYJ5JuEnrxwEGFd3hCJ2DDYN2w4TeKjjvkRnk4UPMNbaWhTonJSCKxJr2vsHfu48Xqtjp9rfxuMYthUuPpFGfbRTAyMqxYHUbrGWHWxUBg3iXd5PWFw11dGeUyfNAhBADT8yRtdbTe94cZXTosNzq6gWEdVr4EsQYhknkaJTy47BYQ5W27NvWa6Njw4bAMPwBKLbDk1bRcmMj9UTM4gqbQAZ5SJdCg6DrgvkfWBqefMfLPKJTer3gpbNYhcpK2CyuuUYKFj9YLnxvbrfyS2XvcV4C4g5RGorqUtyExUtggfagLDDQUPqTSPjtrPwAvdHKmw4NvsYXLV5k1dpLLTMouBxh4JNR4Dc55QLcN3FK9KVeFXG4b6fWJfs8EVKTj2UsPUocqPrACCqCwDwKeSEbPbZr1Frnjc2xFvZTKCrQRKL4oEwnvqdFjMmGpNBa46Bdfj2WidsPsGaqK48oxnf652hLKnQMrfhsuyzqsiZYPXREkwMyFexvwtWM2hnS2SU9jPhKGkKvdzf2y7cQjGPvNuaFnJpUXwmrwKXCqG6bCQNwySsYjEN8o4cGMB8KTXjMjDpxWZ42GpVVEyCszA3eGAWcaEmSxKUDNwzwusdbLcb9xzz4vMP4541vSxvxTe4FkThw6yyReEEEDRknBpWQp1ae56rYH6SWLZsJ5VY2yeNYdv7YZiK5BvnTmgrXAAF5L9gW56YPeitbJXxvuYKCmq6ZmdBBmwES8TGJmJZT8VGoTbMhT8K6SCXNv6h2XkNf76AHDVGNFU6HtFcEBWbBsPkWDGstUSM1y7xn4JYj5P3A8XC69zqnyKHkFRcre5kBWZejnqrUSfCqQYv8GoSYXzRXc1ebdi9tuLJhvYoA1He2UjJH6G3zmJCife7Bk8Y1crTmjWAoAuznmhVN5UbLzxpQAzTcNsYjN4GEDHYx4ezFLpzi8Uys7rNxy6rz2KmrgRz7AoD9YSUL4oyMRgyTRApgpfrzkKD7yifgWibzQhFx9Q4LM5mdGmydG1rSsCzRgWGnqd7sUXJq46CHGJwhD5uK6WZsZDsLw2FWU7gUNjEMhu1odSs11F6buZ66Ti8Y3fT8VaMzG8RhX63zUxh8kddvpZcgFB4cD84o3sR9KzRev8bLXf9WdGWsEZwTrZ9n2Wrj7ZgGnPVLu32RRHuhUbivdU5sC8yKQuhpxEgLvTSdupTjUCpAdV4knvSKydFRGHZfNb73zGDseFbiQ2K4DVpdY8tssBxQ6KYwmLYYWHrQgxd2EcLAtHjHJiBLeL6PT3M4FYdWc',
+      signedBytes:
+        '8fcf233671b6a04fcf679d2a381c2544ea6c1ea29ba6157776ed842426e5cab86c0413ea9effe70b36b8545a57856c3c8b56a8180289e807019008000100006b82198cb179e8306c1bedd08f12dc863f32888600ff04d530df8478dc96fa4f63e780c77c855517ad47c97af0240a45aa20738090031cb0f18938497a2f33d4c5f50601e56f345e1948bc2f0a89ad1f77e9875f6a86d26c969e5a4b9cd4ffbd5c25ad897a7f3a1862be5a22d17aa1319f18b489ef991a58caa86673343a342c15dcb247b152e72eeae1a62543914f20c0a1351b659207395d23d0840fc3e2412d9106238fa2f893f82adc1a8d59553505686c8bb09b2c939f84154dd51e9c8232ef195f5e8ce92080c783ca196a3157b069bf23c7777c12b761e71a79ca080043d9e205f201a35755c35dcadc88fd3ee6dd49523eaa4e205292710a6141758dbe1a23d6f574219dc4a6f2784ec0b043095b0787f59ca94ab0a6b42fc4ac0214c6d33fd9416dc2ffa9a6b4d48e29343ff430285387ed356ef5aaec328dee2ecd486242530c2add77cc6761b0659b3470492531260ad25a8b85b15b969a16021ac70d1cd882785fabbd402095ce1023be61593cbc79de69c2296b905df2338b9a2610ad94bf42ca532f32c7e5be5f886be7d230b6071a97002be78b930a9d90ca74f17b213c053a1a5c0f578c76d2f327d8ad186404befe4bd67999f0d059fb28eea2778d4ca9a6a184a1ff4138b7fead39edc49017b56b9d61dc0f60daa8b8c95bbe0c74c31749109aa4d0afab965f17b4e9365d7e6c75cc65955f58d8c1b28eb263e4c8bde398cf63fc4db2564a454b078147e57d900c2bd08dee877c03ce3cf0c8ef6e7e9b016b1b4927d512d67fba8aed87b14ccd5a58cf49071633445bbd7a6c6abf0f44286cd402ad52f9f8a2eeaa8f5b33dd2190160f4e93bc0bdc96795b98a0d62e2969f7777cf6b43c705634f3235b6ff153dda1d657cca2af7205145b46b9bf73b4fb47e4e1680364e17906c659a1f3ac7a9578a8af9088ce494301dcad29f8e0032cb8fa2a69f69cebd873d0ce275e978dede4276454495850d7bb085b2ec2e9f7806eea24a13977386983ae70d2ea83fb409b36c33d50589b59698ed3add095c106f4686d51a9bf89ce8249d8a1596b2e85d4e37f5aea26d581e7e2efa586f13dccd5762390c9185ca9fd5a0db3f17f13b6169fed1f683a31bc6597525917f834cc074150d83aa4b6b7f09a439fcf81db6c7b3f9a0a560458a849497598661485c048bc5578c32d20d908da405bd6905f1ff4e1d0eb1bcf64ac1247611a138c1c0da4d1052563bfb0a8756a67518fcf85319213bc2dca031da38e233cf688d84e592ae20eca053a16fa0beb32239aa4cc44527246bc3e2997e56280d7fac1546c5fb9110c4dec5a7b6c85f1e565764107be74ef380f665dc1856bf21055e0a984d0cbc8eb8f6fe81555bc8d24b7dee3a4a6414285f730438ad96c561240177b91d33349ce6bab54ae6c0ac89760e9e8036662d8ab7d1f7577b3443afea99f4974ed2ab7a799a2dda17473b7ef0725b3b1d85afdda47c42e04975ffe743162ba6d7bd78e751b9fdf1bfe53a9e6406228dfe33c2b1f2766d51012e48a9e0b3ae7f050eebf4d3f06700b2596775124691a2bbd18640bdea2c29514eb5a9041efef7b660e4ef92ce65553fefd973aab3813026f5bdb14fb1b9a7cdccbf0e67328c2281caca73b80694eaa728718efd82418f125b050ebcf9b10e8f722f49050dc09f7d0823f94783a9bbc63fb7847980242d9661c5e53aace763ed1c3f11c494dc28de3f5019c607c2bf7bf43ead36463ef8096465ffad174d47abf9819e2ff6c5e2ff225418785f3a3cb4b1663d0898e5f508dd94bb4f804188df0c1239a40786c0da62ee0e5d88e84b0f03669e00a9fc018326bf1928fc70d056a96b421a84b72723f60f9d0895d571a52172c5552d2bc56b0d9fe2683c9e2e1979bcb6f83b1fe674bb29d43490bff106c15fbf82bd5f8fe29c32402c769ad9feba4e8dd3e079aabde9471005626b40000a61cbf3df3978d5cb3d9fde7c2415cae40cba91a012ea3f4e249987b3175ef8e96c6e1f03bf95bca8fc3c0b21c2359e2732fdcd793e72550152e4fd14f9ad658509d3afc01675547ce4d34abf5503c8b51952193c0f2268da8c0a8263182ef85a78454d811425c920c3ec734bc1d5a65f643881373657837cfb2e18c2ee9916d265aec5ccdfce35e48b11a663d25bad5c6b1316e0315e5571c1d9f601a5e005ecde363ea928116a389e84f4b410c75d5d5b9abce6a9143f6a4dbd4944739ed26b31de1890d2ac4b07fafccd9454cb1db97e284c76bb155c571fca3a17f5c11b6276baf18850b22482cec86920d0ff059494297c4d9faeac770ca2ceb98627d7a0d8d88c82aca110b4c8df7774a03773d6a998fd5c15d3677ec81cc9a90dae15c16fbf099a3d7507398d84198dbfade103ee8ae9c7c3360d2ee8e892d325cc6fdd0debda7746645ea39d5d08627def2692a68ac2600d4796c14b1f275749b821f209015c1b8f68f743deb2030bbc1841b49462e3fdc1a0d26156f738e09a20887500c07cb9dbc7dbfb860303e0922cac41fe3d98094f83e3230269e318f065dac0082b6cc7f9c30a430406d722d0b6352d39ca45c689d1b2bc98b8d68eeea9970ce1df8a8c3060ce8699f817a93eb02fc61f5b1f9c5aa9345529d15c86f56e67d3b808d32da8f24b21648907a58299afc71208fdc9bcfc45feebb00ca9b72c436447e0ef32ebbe203d6896027dfb38abec6be9664f1631ffb8b393e96b42d3cb8281ad4ce8ba9cc2b09b62bde2c5f86249b1969569f845d303d82ce537e7ed530dd2ec88ee0f5f3f62098aff0dde34054b2746fa8071732f19cc88001016e6d503233df4bbe115c0d70d775028f23065768e5fb7a50189569312914651ce9f30b4832e135f70586757da0bb944c75fbaa1feb2ba2a206241159eecd13d22f6549617f163e546df4dafb0d170e39ff7b8d6ec38d5c0d6656eab886cb383864d9b641bc24bf4f9e15af35b45cc67102c9128927f4316e7b9de6ed5414a28c49c7b4807d9caccf8efa12c120a0ac8aa5362affef37c2faf635663506f2d3cacec3f73a3d5c08badbe4cf0690923412a057a1e1bd1ba19e5eee8306bbeea3d99a7d0b3bb1c55a533a37b8ec6755082dac180c7ce0ac5e6d2b9c193a8b3109c0eda9680df82583ce737fe46449d397a2e30b7bfd059f19794b794335b812124a2d9926f48fc5b9346fa8eac24acfcd3399fac1b81ee01e13b3e568af3ef7430c5297721d4ce2182ecdc631b441ea503bb891806b5c5378989798a387ec4cbf555afe53d4440ff91549fe732b1c30f174f80648a9632f50b390ec94e0009cfa1656d07cca0c450724250eed1321383f404147494a575b616b7678797c9296b6cce0eff6f9232e6670808ab0e1e5e7e9f6f8f90811141f202e333941577a8693b8c5d2d9ee021d3b3e4e597194a1a4afcad9f2f4fa0000000000000019273949',
+    },
+  ],
+} satisfies { octezVersion: string; provenance: string; vectors: OperationVector[] };

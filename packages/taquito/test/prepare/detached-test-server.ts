@@ -1,9 +1,13 @@
+import { encodeOpHash } from '@taquito/utils';
 import { createServer } from 'node:http';
-import vectors from './detached-signing-vectors.json';
+import vectors from './detached-signing-vectors';
 
 export async function fixtureServer() {
   const requests: { path: string; body: unknown }[] = [];
   let revealed = true;
+  let preapplyResult: unknown;
+  let preapplyStatus = 200;
+  let injectedHash: string | undefined;
   const vector = vectors.vectors[0];
   const server = createServer(async (req, res) => {
     let body = '';
@@ -11,7 +15,36 @@ export async function fixtureServer() {
     const path = req.url ?? '';
     requests.push({ path, body: body ? JSON.parse(body) : undefined });
     let value: unknown;
-    if (path.endsWith('/constants'))
+    if (path.endsWith('/simulate_operation')) {
+      const operation = JSON.parse(body).operation;
+      value = {
+        ...operation,
+        contents: operation.contents.map((content: object) => ({
+          ...content,
+          metadata: { operation_result: { status: 'applied', consumed_milligas: '1000000' } },
+        })),
+      };
+    } else if (path.includes('/helpers/preapply/operations')) {
+      res.statusCode = preapplyStatus;
+      value =
+        preapplyResult ??
+        JSON.parse(body).map((operation: { contents: object[] }) => ({
+          ...operation,
+          contents: operation.contents.map((content) => ({
+            ...content,
+            metadata: { operation_result: { status: 'applied', consumed_milligas: '1000000' } },
+          })),
+        }));
+    } else if (path.startsWith('/injection/operation')) {
+      injectedHash = encodeOpHash(JSON.parse(body));
+      value = injectedHash;
+    } else if (/\/blocks\/[^/]+$/.test(path)) {
+      value = {
+        hash: vector.operation.branch,
+        header: { level: 1, predecessor: vector.operation.branch },
+        operations: [[], [], [], injectedHash ? [{ hash: injectedHash, contents: [] }] : []],
+      };
+    } else if (path.endsWith('/constants'))
       value = {
         hard_gas_limit_per_operation: '1040000',
         hard_gas_limit_per_block: '5200000',
@@ -41,6 +74,10 @@ export async function fixtureServer() {
   return {
     url: `http://127.0.0.1:${address.port}`,
     requests,
+    setPreapplyResult(value: unknown, status = 200) {
+      preapplyResult = value;
+      preapplyStatus = status;
+    },
     setRevealed(value: boolean) {
       revealed = value;
     },

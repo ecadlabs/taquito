@@ -1,5 +1,8 @@
+import operationVectors from './detached-operation-vectors';
+import { ContractMethodObject } from '../../src/contract/contract-methods/contract-method-object-param';
+import { ParameterSchema } from '@taquito/michelson-encoder';
 import { TezosToolkit } from '../../src/taquito';
-import vectors from './detached-signing-vectors.json';
+import vectors from './detached-signing-vectors';
 import { fixtureServer } from './detached-test-server';
 
 describe('detached signing', () => {
@@ -90,5 +93,42 @@ describe('detached signing', () => {
     } finally {
       await other.close();
     }
+  });
+
+  it('prepares and estimates a public contract method', async () => {
+    const tezos = new TezosToolkit(server.url);
+    const workflow = tezos.prepareFor(vector);
+    const method = new ContractMethodObject(
+      tezos.contract,
+      'KT1AiWmfuCGSttuMBKbDUqZG6SzKQNrySFei',
+      new ParameterSchema({ prim: 'nat' }),
+      'default',
+      7,
+      false
+    );
+    const prepared = await workflow.prepare.contractCall(method);
+    expect(prepared.opOb.contents[0]).toMatchObject({
+      kind: 'transaction',
+      source: vector.pkh,
+      amount: '0',
+      parameters: { entrypoint: 'default', value: { int: '7' } },
+    });
+    expect((await workflow.estimate.contractCall(method)).suggestedFeeMutez).toBeGreaterThan(0);
+  });
+  it('uses the validated BLS proof for automatic reveal and rejects missing proof', async () => {
+    const bls = operationVectors.vectors.find((item) => item.scheme === 'bls');
+    if (!bls || !('proof' in bls)) throw new Error('Missing BLS fixture');
+    server.setRevealed(false);
+    const tezos = new TezosToolkit(server.url);
+    const withoutProof = tezos.prepareFor({ pkh: bls.pkh, publicKey: bls.publicKey });
+    await expect(withoutProof.prepare.transaction(params)).rejects.toThrow('proof');
+    const workflow = tezos.prepareFor(bls);
+    expect((await workflow.prepare.transaction(params)).opOb.contents[0]).toMatchObject({
+      kind: 'reveal',
+      proof: bls.proof,
+      public_key: bls.publicKey,
+    });
+    expect((await workflow.prepare.reveal()).opOb.contents[0]).toMatchObject({ proof: bls.proof });
+    expect(await workflow.estimate.reveal()).toBeDefined();
   });
 });

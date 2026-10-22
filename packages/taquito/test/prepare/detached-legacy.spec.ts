@@ -1,5 +1,5 @@
 import { TezosToolkit, OpKind } from '../../src/taquito';
-import vectors from './detached-signing-vectors.json';
+import vectors from './detached-signing-vectors';
 import { fixtureServer } from './detached-test-server';
 
 describe('existing preparation compatibility', () => {

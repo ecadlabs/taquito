@@ -1,3 +1,4 @@
+import { detachedSignatureEncoding } from '../prepare/detached-envelope';
 import { Context } from '../context';
 import { DetachedIdentity, detachedProof } from '../prepare/detached-identity';
 import {
@@ -483,7 +484,10 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
         eachOpSize = (opbytes.length / 2 + 2 + sigSize[PrefixV2.MLDSA44Signature]) / numberOfOps;
       } else if (content.source.startsWith(PrefixV2.BLS12_381PublicKeyHash)) {
         eachOpSize =
-          (opbytes.length / 2 + (this.identity ? 2 : 0) + sigSize[PrefixV2.BLS12_381Signature]) /
+          (opbytes.length / 2 +
+            (this.identity
+              ? detachedSignatureEncoding(this.identity.pkh).size
+              : sigSize[PrefixV2.BLS12_381Signature])) /
           numberOfOps;
       } else {
         eachOpSize = (opbytes.length / 2 + sigSize[PrefixV2.Ed25519Signature]) / numberOfOps;

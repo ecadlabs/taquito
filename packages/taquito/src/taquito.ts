@@ -481,4 +481,9 @@ export class TezosToolkit {
 }
 
 export { DetachedIdentity } from './prepare/detached-identity';
-export { DetachedSigningWorkflow } from './prepare/detached-signing';
+export {
+  DetachedSigningWorkflow,
+  DetachedSignableOperation,
+  DetachedSignedOperation,
+  DetachedBatchParams,
+} from './prepare/detached-signing';
