@@ -49,6 +49,16 @@ jobs:
       - run: npx -y npm@11 ci
       - run: npx nx build @taquito/http-utils
       - run: npx nx test @taquito/http-utils -- --coverage
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:packages:consumers
+        env:
+          TAQUITO_PACKAGE_REPORT_DIR: ${{ runner.temp }}/package-consumer-report
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: package-consumer-provenance-node-${{ matrix.node }}
+          path: ${{ runner.temp }}/package-consumer-report
+          if-no-files-found: ignore
 
   browser-package-smoke:
     runs-on: ubuntu-latest
