@@ -9,9 +9,13 @@ Run on Linux or WSL, as in the Ubuntu CI jobs. From the repository root:
 ```sh
 npm ci
 npx nx build @taquito/http-utils
-npx playwright install chromium
+npx playwright install --with-deps chromium
 npm run test:packages:consumers
 ```
+
+The Playwright installation also installs required Linux browser libraries and may
+request administrator access. Rebuild the packages after changing their sources
+or package manifests, then rerun the consumer command.
 
 The HTTP build includes core. The command packs the built packages and installs
 both tarballs in a temporary directory outside the workspace. It checks that HTTP

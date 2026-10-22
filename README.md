@@ -155,6 +155,13 @@ Refer to the top-level `package.json` for available scripts. Common commands:
 - `npx nx build <package-name>`: Builds a single package (e.g., `npx nx build @taquito/taquito`)
 - `npx nx test <package-name>`: Runs unit tests for a single package (e.g., `npx nx test @taquito/taquito`)
 
+### Testing packed packages
+
+Before changing package entrypoints or published files, run the
+[packed package consumer checks](package-tests/README.md). They test installed
+`@taquito/core` and `@taquito/http-utils` tarballs on Linux or WSL. The guide lists
+the build and browser prerequisites for `npm run test:packages:consumers`.
+
 ### Running Integration Tests
 
 See [`integration-tests/README.md`](./integration-tests/README.md) for instructions on configuring and running integration tests.
