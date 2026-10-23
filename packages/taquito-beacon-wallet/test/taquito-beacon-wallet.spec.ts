@@ -11,6 +11,9 @@ import {
   SigningType,
   getDAppClientInstance,
   Regions,
+  NetworkType,
+  Origin,
+  AccountInfo,
 } from '@tezos-x/octez.connect-dapp';
 import { indexedDB } from 'fake-indexeddb';
 
@@ -30,8 +33,9 @@ vi.mock('@stablelib/random', () => ({
 }));
 
 vi.mock('@tezos-x/octez.connect-dapp', async () => {
-  const originalModule =
-    await vi.importActual<typeof import('@tezos-x/octez.connect-dapp')>('@tezos-x/octez.connect-dapp');
+  const originalModule = await vi.importActual<typeof import('@tezos-x/octez.connect-dapp')>(
+    '@tezos-x/octez.connect-dapp'
+  );
 
   return {
     ...originalModule,
@@ -306,5 +310,235 @@ describe('Beacon Wallet tests', () => {
     void wallet.requestPermissions();
     await wallet.disconnect();
     expect(wallet.client.disconnect).toHaveBeenCalledExactlyOnceWith();
+  });
+  it('routes operations to the active account chain without changing the request contents', async () => {
+    const wallet = new BeaconWallet({ name: 'networks' });
+    wallet.client.getActiveAccount = vi.fn().mockResolvedValue({
+      scopes: [PermissionScope.OPERATION_REQUEST],
+      network: { chainId: 'tezos:NetXsqzbfFenSTS' },
+    });
+    wallet.client.requestOperation = vi.fn().mockResolvedValue({ transactionHash: 'hash' });
+    const operations = [{ kind: 'transaction', amount: '1', destination: 'tz1recipient' }];
+    await wallet.sendOperations(operations);
+    expect(wallet.client.requestOperation).toHaveBeenCalledExactlyOnceWith({
+      operationDetails: operations,
+      network: 'tezos:NetXsqzbfFenSTS',
+    });
+  });
+
+  function account(chainId: string, overrides: Partial<AccountInfo> = {}): AccountInfo {
+    return {
+      accountIdentifier: chainId,
+      address: 'tz1account',
+      publicKey: 'public-key',
+      network: { type: NetworkType.CUSTOM, chainId },
+      senderId: 'peer-a',
+      origin: { type: Origin.EXTENSION, id: 'extension-a' },
+      scopes: [PermissionScope.OPERATION_REQUEST],
+      connectedAt: 1,
+      walletType: 'implicit',
+      ...overrides,
+    };
+  }
+  const main = account('tezos:NetXdQprcVkpaWU');
+  const shadow = account('tezos:NetXsqzbfFenSTS');
+  function networkWallet(accounts = [main, shadow]) {
+    const wallet = new BeaconWallet({ name: 'network-tests' });
+    let active: AccountInfo | undefined = main;
+    wallet.client.getActiveAccount = vi.fn(async () => active);
+    wallet.client.getAccounts = vi.fn(async () => accounts);
+    wallet.client.setActiveAccount = vi.fn(async (next?: AccountInfo) => {
+      active = next;
+    });
+    wallet.client.requestOperation = vi.fn().mockResolvedValue({ transactionHash: 'hash' });
+    wallet.client.requestSignPayload = vi.fn().mockResolvedValue({ signature: 'signature' });
+    return wallet;
+  }
+  function gate<T>() {
+    let resolve: (value: T) => void = () => {
+      throw new Error('Gate not initialized');
+    };
+    let reject: (reason: unknown) => void = () => {
+      throw new Error('Gate not initialized');
+    };
+    const promise = new Promise<T>((yes, no) => {
+      resolve = yes;
+      reject = no;
+    });
+    return { promise, resolve, reject };
+  }
+  it.each([NetworkType.SHADOWNET, 'NetXsqzbfFenSTS', 'tezos:NetXsqzbfFenSTS'])(
+    'selects a current-peer network using %s',
+    async (network) => {
+      const wallet = networkWallet();
+      await wallet.setActiveNetwork(network);
+      expect(wallet.client.setActiveAccount).toHaveBeenCalledExactlyOnceWith(shadow);
+      expect(await wallet.getActiveNetwork()).toEqual(shadow.network);
+      expect(await wallet.getPKH()).toBe(shadow.address);
+    }
+  );
+  it('returns stored accounts but limits known networks to the active peer and deduplicates IDs', async () => {
+    const otherPeer = account('tezos:OtherChain', { senderId: 'peer-b' });
+    const otherOrigin = account('tezos:OtherOrigin', {
+      origin: { type: Origin.P2P, id: 'extension-a' },
+    });
+    const oldGrant = account('tezos:OldGrant', { connectedAt: 0 });
+    const accounts = [main, shadow, account('NetXsqzbfFenSTS'), otherPeer, otherOrigin, oldGrant];
+    const wallet = networkWallet(accounts);
+    expect(await wallet.getAccounts()).toEqual(accounts);
+    expect(await wallet.getGrantedNetworks()).toEqual([
+      'tezos:NetXdQprcVkpaWU',
+      'tezos:NetXsqzbfFenSTS',
+      'tezos:OldGrant',
+    ]);
+    await expect(wallet.setActiveNetwork('OtherChain')).rejects.toThrow('No stored account');
+    expect(wallet.client.setActiveAccount).not.toHaveBeenCalled();
+  });
+  it('rejects ambiguous accounts but preserves an already selected account', async () => {
+    const duplicate = { ...shadow, accountIdentifier: 'second-address', address: 'tz1second' };
+    const wallet = networkWallet([main, shadow, duplicate]);
+    await expect(wallet.setActiveNetwork(NetworkType.SHADOWNET)).rejects.toThrow(
+      'Several accounts'
+    );
+    expect(wallet.client.setActiveAccount).not.toHaveBeenCalled();
+    await wallet.setActiveNetwork(NetworkType.MAINNET);
+    expect(wallet.client.setActiveAccount).not.toHaveBeenCalled();
+  });
+  it.each(['', 'other:NetXsqzbfFenSTS', 'tezos:', 'not a chain', NetworkType.WEEKLYNET])(
+    'rejects unmappable network %s without account changes',
+    async (network) => {
+      const wallet = networkWallet();
+      await expect(wallet.setActiveNetwork(network)).rejects.toThrow('Cannot resolve');
+      expect(wallet.client.setActiveAccount).not.toHaveBeenCalled();
+    }
+  );
+  it('handles a missing active account without selecting another stored peer', async () => {
+    const wallet = networkWallet();
+    await wallet.clearActiveAccount();
+    expect(await wallet.getGrantedNetworks()).toEqual([]);
+    expect(await wallet.getActiveNetwork()).toBeUndefined();
+    await expect(wallet.setActiveNetwork(NetworkType.SHADOWNET)).rejects.toBeInstanceOf(
+      BeaconWalletNotInitialized
+    );
+  });
+  it('forwards permission networks and preserves SDK rejection identity', async () => {
+    const wallet = networkWallet();
+    const request = { networks: [{ chainId: 'tezos:NetXsqzbfFenSTS' }] };
+    await wallet.requestPermissions(request);
+    expect(wallet.client.requestPermissions).toHaveBeenCalledExactlyOnceWith(request);
+    const error = new Error('Version unsupported');
+    wallet.client.requestPermissions = vi.fn().mockRejectedValue(error);
+    await expect(wallet.requestPermissions(request)).rejects.toBe(error);
+    await wallet.setActiveNetwork(NetworkType.SHADOWNET);
+  });
+  it('coordinates two wrappers sharing a client and releases after rejection', async () => {
+    const wallet = networkWallet();
+    const other = networkWallet();
+    other.client = wallet.client;
+    const pending = gate<{ transactionHash: string }>();
+    wallet.client.requestOperation = vi.fn().mockReturnValue(pending.promise);
+    const sending = wallet.sendOperations([]);
+    await expect(other.setActiveNetwork(NetworkType.SHADOWNET)).rejects.toThrow('already pending');
+    await expect(other.sign('1234', new Uint8Array([3]))).rejects.toThrow('already pending');
+    const error = new Error('User rejected');
+    pending.reject(error);
+    await expect(sending).rejects.toBe(error);
+    await other.setActiveNetwork(NetworkType.SHADOWNET);
+  });
+  it('captures the client before an asynchronous account read', async () => {
+    const wallet = networkWallet();
+    const original = wallet.client;
+    const read = gate<AccountInfo>();
+    original.getActiveAccount = vi.fn().mockReturnValue(read.promise);
+    const sending = wallet.sendOperations([]);
+    wallet.client = networkWallet().client;
+    read.resolve(main);
+    await sending;
+    expect(original.requestOperation).toHaveBeenCalledOnce();
+    expect(wallet.client.requestOperation).not.toHaveBeenCalled();
+  });
+  it('interrupts a pending permission without blocking logout and keeps a new lease owned', async () => {
+    const wallet = networkWallet();
+    const old = gate<never>();
+    wallet.client.requestPermissions = vi.fn().mockReturnValue(old.promise);
+    const oldRequest = wallet.requestPermissions();
+    await wallet.disconnect();
+    const next = gate<never>();
+    wallet.client.requestPermissions = vi.fn().mockReturnValue(next.promise);
+    const nextRequest = wallet.requestPermissions();
+    old.reject(new Error('Old wallet rejection'));
+    await expect(oldRequest).rejects.toThrow('Old wallet rejection');
+    await expect(wallet.setActiveNetwork(NetworkType.SHADOWNET)).rejects.toThrow('already pending');
+    next.reject(new Error('New rejection'));
+    await expect(nextRequest).rejects.toThrow('New rejection');
+    await wallet.setActiveNetwork(NetworkType.SHADOWNET);
+  });
+  it('retains a dispatched operation hash after clearing without releasing a newer lease', async () => {
+    const wallet = networkWallet();
+    const pending = gate<{ transactionHash: string }>();
+    wallet.client.requestOperation = vi.fn().mockReturnValue(pending.promise);
+    const sending = wallet.sendOperations([]);
+    await vi.waitFor(() => expect(wallet.client.requestOperation).toHaveBeenCalledOnce());
+    await wallet.clearActiveAccount();
+    const next = gate<never>();
+    wallet.client.requestPermissions = vi.fn().mockReturnValue(next.promise);
+    const nextRequest = wallet.requestPermissions();
+    pending.resolve({ transactionHash: 'old-hash' });
+    await expect(sending).resolves.toBe('old-hash');
+    await expect(wallet.sign('1234', new Uint8Array([3]))).rejects.toThrow('already pending');
+    next.reject(new Error('New permission rejected'));
+    await expect(nextRequest).rejects.toThrow('New permission rejected');
+  });
+  it('blocks new requests and overlapping teardown until teardown settles, then permits retry on failure', async () => {
+    const wallet = networkWallet();
+    const pending = gate<void>();
+    wallet.client.disconnect = vi.fn().mockReturnValue(pending.promise);
+    const disconnecting = wallet.disconnect();
+    await expect(wallet.clearActiveAccount()).rejects.toThrow('already pending');
+    await expect(wallet.disconnect()).rejects.toThrow('already pending');
+    await expect(wallet.requestPermissions()).rejects.toThrow('already pending');
+    const error = new Error('Transport failed');
+    pending.reject(error);
+    await expect(disconnecting).rejects.toBe(error);
+    wallet.client.disconnect = vi.fn().mockResolvedValue(undefined);
+    await wallet.disconnect();
+  });
+  it('does not dispatch an operation after teardown interrupts its account read', async () => {
+    const wallet = networkWallet();
+    const read = gate<AccountInfo>();
+    wallet.client.getActiveAccount = vi.fn().mockReturnValue(read.promise);
+    const sending = wallet.sendOperations([]);
+    await wallet.disconnect();
+    read.resolve(main);
+    await expect(sending).rejects.toThrow('interrupted');
+    expect(wallet.client.requestOperation).not.toHaveBeenCalled();
+  });
+  it('preserves a dispatched signature after logout without allowing a concurrent network switch', async () => {
+    const wallet = networkWallet();
+    const pending = gate<{ signature: string }>();
+    wallet.client.requestSignPayload = vi.fn().mockReturnValue(pending.promise);
+    const signing = wallet.sign('1234', new Uint8Array([3]));
+    await expect(wallet.setActiveNetwork(NetworkType.SHADOWNET)).rejects.toThrow('already pending');
+    await wallet.disconnect();
+    pending.resolve({ signature: 'signed-before-logout' });
+    expect(await signing).toBe('signed-before-logout');
+  });
+  it('reports a late selection as interrupted and leaves SDK state ownership explicit', async () => {
+    const wallet = networkWallet();
+    const pending = gate<void>();
+    wallet.client.setActiveAccount = vi.fn().mockReturnValue(pending.promise);
+    const selecting = wallet.setActiveNetwork(NetworkType.SHADOWNET);
+    await vi.waitFor(() => expect(wallet.client.setActiveAccount).toHaveBeenCalledOnce());
+    await wallet.disconnect();
+    pending.resolve();
+    await expect(selecting).rejects.toThrow('interrupted');
+    // No compensating SDK account write or fabricated cancellation occurs.
+    expect(wallet.client.setActiveAccount).toHaveBeenCalledExactlyOnceWith(shadow);
+  });
+  it('does not dispatch on a selected account without operation permission', async () => {
+    const wallet = networkWallet([main, { ...shadow, scopes: [] }]);
+    await wallet.setActiveNetwork(NetworkType.SHADOWNET);
+    await expect(wallet.sendOperations([])).rejects.toBeInstanceOf(MissingRequiredScopes);
+    expect(wallet.client.requestOperation).not.toHaveBeenCalled();
   });
 });

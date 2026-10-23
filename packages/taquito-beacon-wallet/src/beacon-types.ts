@@ -7,6 +7,9 @@
 // which has unavoidable side effects.
 export { NetworkType, PermissionScope, SigningType, Regions } from '@tezos-x/octez.connect-types';
 export type {
+  AccountInfo,
+  Network,
+  RequestPermissionNetwork,
   RequestPermissionInput,
   RequestSignPayloadInput,
   NodeDistributions,

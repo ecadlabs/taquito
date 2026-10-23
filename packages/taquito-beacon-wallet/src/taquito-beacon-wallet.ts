@@ -12,8 +12,20 @@ import {
   SigningType,
   NodeDistributions,
   Regions,
+  AccountInfo,
+  NetworkType,
+  normalizeTezosCaip2,
+  isValidTezosCaip2,
+  tezosCaip2FromNetworkType,
 } from '@tezos-x/octez.connect-dapp';
-import { BeaconWalletNotInitialized, MissingRequiredScopes } from './errors';
+import {
+  BeaconWalletNotInitialized,
+  MissingRequiredScopes,
+  InvalidBeaconNetworkError,
+  NetworkNotGrantedError,
+  AmbiguousBeaconNetworkError,
+} from './errors';
+import { withWalletLease } from './wallet-lifecycle';
 import toBuffer from 'typedarray-to-buffer';
 import {
   createIncreasePaidStorageOperation,
@@ -38,7 +50,21 @@ import { buf2hex, hex2buf, mergebuf } from '@taquito/utils';
 import { UnsupportedActionError } from '@taquito/core';
 
 export { VERSION } from './version';
-export { BeaconWalletNotInitialized, MissingRequiredScopes } from './errors';
+export {
+  BeaconWalletNotInitialized,
+  MissingRequiredScopes,
+  BeaconWalletBusyError,
+  BeaconWalletRequestInterruptedError,
+  InvalidBeaconNetworkError,
+  NetworkNotGrantedError,
+  AmbiguousBeaconNetworkError,
+} from './errors';
+export {
+  normalizeTezosCaip2,
+  isValidTezosCaip2,
+  tezosCaip2FromNetworkType,
+  networkTypeFromTezosCaip2,
+} from '@tezos-x/octez.connect-dapp';
 
 // Re-exported from @tezos-x/octez.connect-dapp for consumers who need these without
 // a direct beacon-dapp dependency. These types live only in beacon-dapp (not in
@@ -121,7 +147,11 @@ export class BeaconWallet implements WalletProvider {
   }
 
   async requestPermissions(request?: RequestPermissionInput) {
-    await this.client.requestPermissions(request);
+    const client = this.client;
+    await withWalletLease(client, false, async (assertCurrent) => {
+      await client.requestPermissions(request);
+      assertCurrent();
+    });
   }
 
   async getPKH() {
@@ -323,16 +353,94 @@ export class BeaconWallet implements WalletProvider {
     return operatedParams;
   }
 
-  async sendOperations(params: any[]) {
-    const account = await this.client.getActiveAccount();
-    if (!account) {
-      throw new BeaconWalletNotInitialized();
-    }
-    const permissions = account.scopes;
-    this.validateRequiredScopesOrFail(permissions, [PermissionScope.OPERATION_REQUEST]);
+  async sendOperations(params: Parameters<WalletProvider['sendOperations']>[0]) {
+    const client = this.client;
+    return withWalletLease(client, false, async (assertCurrent) => {
+      const account = await client.getActiveAccount();
+      assertCurrent();
+      if (!account) throw new BeaconWalletNotInitialized();
+      this.validateRequiredScopesOrFail(account.scopes, [PermissionScope.OPERATION_REQUEST]);
+      const request =
+        account.network?.chainId === undefined
+          ? { operationDetails: params }
+          : { operationDetails: params, network: this.resolveNetwork(account.network.chainId) };
+      const { transactionHash } = await client.requestOperation(request);
+      return transactionHash;
+    });
+  }
 
-    const { transactionHash } = await this.client.requestOperation({ operationDetails: params });
-    return transactionHash;
+  /** All locally stored SDK accounts, including accounts from other peers. */
+  async getAccounts(): Promise<AccountInfo[]> {
+    const client = this.client;
+    return client.getAccounts();
+  }
+
+  async getActiveNetwork() {
+    const client = this.client;
+    return (await client.getActiveAccount())?.network;
+  }
+
+  /** Chain IDs represented by stored accounts for the active peer, not fresh permission proof. */
+  async getGrantedNetworks(): Promise<string[]> {
+    const client = this.client;
+    const active = await client.getActiveAccount();
+    if (!active) return [];
+    const accounts = await client.getAccounts();
+    return [
+      ...new Set(
+        accounts
+          .filter((account) => this.samePeer(active, account))
+          .flatMap((account) =>
+            account.network.chainId === undefined
+              ? []
+              : [this.resolveNetwork(account.network.chainId)]
+          )
+      ),
+    ];
+  }
+
+  async setActiveNetwork(network: string): Promise<void> {
+    const client = this.client;
+    await withWalletLease(client, false, async (assertCurrent) => {
+      const chainId = this.resolveNetwork(network);
+      const active = await client.getActiveAccount();
+      assertCurrent();
+      if (!active) throw new BeaconWalletNotInitialized();
+      if (
+        active.network.chainId !== undefined &&
+        this.resolveNetwork(active.network.chainId) === chainId
+      )
+        return;
+      const accounts = await client.getAccounts();
+      assertCurrent();
+      const matches = accounts.filter(
+        (account) =>
+          this.samePeer(active, account) &&
+          account.network.chainId !== undefined &&
+          this.resolveNetwork(account.network.chainId) === chainId
+      );
+      if (matches.length === 0) throw new NetworkNotGrantedError(chainId);
+      if (matches.length > 1) throw new AmbiguousBeaconNetworkError(chainId);
+      await client.setActiveAccount(matches[0]);
+      assertCurrent();
+    });
+  }
+
+  private samePeer(first: AccountInfo, second: AccountInfo): boolean {
+    return (
+      first.senderId === second.senderId &&
+      first.origin.type === second.origin.type &&
+      first.origin.id === second.origin.id
+    );
+  }
+
+  private resolveNetwork(network: string): string {
+    const named = Object.values(NetworkType).find((value) => value === network);
+    const chainId =
+      named === undefined ? normalizeTezosCaip2(network) : tezosCaip2FromNetworkType(named);
+    if (chainId === undefined || !isValidTezosCaip2(chainId))
+      throw new InvalidBeaconNetworkError(network);
+    return chainId;
   }
 
   /**
@@ -342,13 +450,16 @@ export class BeaconWallet implements WalletProvider {
    * `client.disconnect()` under the hood, which notifies wallet peers, clears
    * the active account, and tears down the active Beacon transports.
    *
-   * After calling this method, the BeaconWallet instance can be used to
-   * reconnect through a new permission request.
+   * A new permission request can start after teardown settles. Reconnection
+   * still depends on the SDK lifecycle fixes described in the migration guide.
    *
    * For switching accounts without a full logout, use {@link clearActiveAccount} instead.
    */
   async disconnect() {
-    await this.client.disconnect();
+    const client = this.client;
+    await withWalletLease(client, true, async () => {
+      await client.disconnect();
+    });
   }
 
   /**
@@ -364,7 +475,10 @@ export class BeaconWallet implements WalletProvider {
    * @see {@link disconnect}
    */
   async clearActiveAccount() {
-    await this.client.setActiveAccount();
+    const client = this.client;
+    await withWalletLease(client, true, async () => {
+      await client.setActiveAccount();
+    });
   }
 
   async sign(bytes: string, watermark?: Uint8Array) {
@@ -379,11 +493,14 @@ export class BeaconWallet implements WalletProvider {
         `Taquito Beacon Wallet currently only supports signing operations, not ${signingType}`
       );
     }
-    const { signature } = await this.client.requestSignPayload({
-      payload: watermarkedBytes,
-      signingType,
+    const client = this.client;
+    return withWalletLease(client, false, async () => {
+      const { signature } = await client.requestSignPayload({
+        payload: watermarkedBytes,
+        signingType,
+      });
+      return signature;
     });
-    return signature;
   }
 
   private getSigningType(watermark?: Uint8Array) {
