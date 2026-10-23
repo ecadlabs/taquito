@@ -1,3 +1,5 @@
+import { DetachedIdentity } from './prepare/detached-identity';
+import { DetachedSigningWorkflow } from './prepare/detached-signing';
 /**
  * @packageDocumentation
  * @module @taquito/taquito
@@ -223,7 +225,7 @@ export class TezosToolkit {
     } else if (this._options.forger === undefined) {
       const f = this.getFactory(TaquitoLocalForger)();
       this._options.forger = f;
-      this._context.forger = f;
+      this._context.setDefaultForger(f);
     }
   }
 
@@ -246,7 +248,7 @@ export class TezosToolkit {
     } else if (this._options.stream === undefined) {
       const s = this.getFactory(PollingSubscribeProvider)();
       this._options.stream = s;
-      this._context.stream = s;
+      this._context.setDefaultStream(s);
     }
   }
 
@@ -262,7 +264,7 @@ export class TezosToolkit {
     if (!this._options.wallet && typeof wallet === 'undefined') {
       const w = this.getFactory(LegacyWalletProvider)();
       this._options.wallet = w;
-      this._context.walletProvider = w;
+      this._context.setDefaultWalletProvider(w);
     } else if (typeof wallet !== 'undefined') {
       this._options.wallet = wallet;
       this._context.walletProvider = wallet;
@@ -280,7 +282,7 @@ export class TezosToolkit {
   setPackerProvider(packer?: SetProviderOptions['packer']) {
     if (!this._options.packer && typeof packer === 'undefined') {
       const p = this.getFactory(RpcPacker)();
-      this._context.packer = p;
+      this._context.setDefaultPacker(p);
       this._options.packer = p;
     } else if (typeof packer !== 'undefined') {
       this._context.packer = packer;
@@ -331,10 +333,11 @@ export class TezosToolkit {
     } else {
       const defaultReadProvider = new RpcReadAdapter(this._context.rpc);
       this._defaultReadProvider = defaultReadProvider;
+      this._context.setDefaultReadProvider(defaultReadProvider);
       readProvider = defaultReadProvider;
     }
     this._options.readProvider = readProvider;
-    this._context.readProvider = readProvider;
+    if (readProvider !== this._defaultReadProvider) this._context.readProvider = readProvider;
   }
 
   /**
@@ -346,7 +349,7 @@ export class TezosToolkit {
   setParserProvider(parserProvider?: SetProviderOptions['parserProvider']) {
     if (!this._options.parserProvider && typeof parserProvider === 'undefined') {
       const p = new MichelCodecParser(this._context);
-      this._context.parser = p;
+      this._context.setDefaultParser(p);
       this._options.parserProvider = p;
     } else if (typeof parserProvider !== 'undefined') {
       this._context.parser = parserProvider;
@@ -363,7 +366,7 @@ export class TezosToolkit {
   setInjectorProvider(injectorProvider?: SetProviderOptions['injectorProvider']) {
     if (!this._options.injectorProvider && typeof injectorProvider === 'undefined') {
       const i = new RpcInjector(this._context);
-      this._context.injector = i;
+      this._context.setDefaultInjector(i);
       this._options.injectorProvider = i;
     } else if (typeof injectorProvider !== 'undefined') {
       this._context.injector = injectorProvider;
@@ -391,6 +394,11 @@ export class TezosToolkit {
    */
   get contract(): ContractProvider {
     return this._context.contract;
+  }
+
+  /** Create an identity-bound workflow for external operation signing. */
+  prepareFor(identity: DetachedIdentity): DetachedSigningWorkflow {
+    return new DetachedSigningWorkflow(this._context, identity);
   }
 
   /**
@@ -471,3 +479,11 @@ export class TezosToolkit {
     return VERSION;
   }
 }
+
+export { DetachedIdentity } from './prepare/detached-identity';
+export {
+  DetachedSigningWorkflow,
+  DetachedSignableOperation,
+  DetachedSignedOperation,
+  DetachedBatchParams,
+} from './prepare/detached-signing';

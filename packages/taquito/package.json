@@ -26,7 +26,7 @@
     "Simon Boissonneault-Robert <simon@ecadlabs.com>",
     "Roxane Letourneau <roxane@ecadlabs.com>",
     "Davis Sawali <davis.sawali@ecadlabs.com>",
-    "Jev Björsell (jevonearth)"
+    "Jev Bj\u00f6rsell (jevonearth)"
   ],
   "homepage": "https://taquito.io/",
   "repository": {
@@ -69,7 +69,8 @@
     "@taquito/signer": "^25.1.0",
     "@taquito/utils": "^25.1.0",
     "bignumber.js": "^10.0.2",
-    "rxjs": "^7.8.2"
+    "rxjs": "^7.8.2",
+    "@noble/hashes": "2.2.0"
   },
   "devDependencies": {
     "@babel/types": "7.29.8",
@@ -104,7 +105,8 @@
     "webpack": "5.107.2",
     "webpack-assets-manifest": "^5.2.1",
     "webpack-cli": "^5.1.4",
-    "webpack-subresource-integrity": "^5.1.0"
+    "webpack-subresource-integrity": "^5.1.0",
+    "@rollup/plugin-node-resolve": "16.0.3"
   },
   "gitHead": "551e35aeff7d6dcde1c72284238c0ed3c3aae77e"
 }
