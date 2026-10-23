@@ -8,7 +8,7 @@
     "Simon Boissonneault-Robert <simon@ecadlabs.com>",
     "Roxane Letourneau <roxane@ecadlabs.com>",
     "Davis Sawali <davis.sawali@ecadlabs.com>",
-    "Jev Björsell (jevonearth)"
+    "Jev Bj\u00f6rsell (jevonearth)"
   ],
   "homepage": "https://taquito.io/",
   "repository": {
@@ -100,20 +100,6 @@
     "vitest": "^4.1.12"
   },
   "overrides": {
-    "@airgap/beacon-dapp": "npm:@ecadlabs/beacon-dapp@4.8.4-ecad",
-    "@airgap/beacon-core": "npm:@ecadlabs/beacon-core@4.8.4-ecad",
-    "@airgap/beacon-types": "npm:@ecadlabs/beacon-types@4.8.4-ecad",
-    "@airgap/beacon-utils": "npm:@ecadlabs/beacon-utils@4.8.4-ecad",
-    "@airgap/beacon-ui": "npm:@ecadlabs/beacon-ui@4.8.4-ecad",
-    "@airgap/beacon-transport-matrix": "npm:@ecadlabs/beacon-transport-matrix@4.8.4-ecad",
-    "@airgap/beacon-transport-postmessage": "npm:@ecadlabs/beacon-transport-postmessage@4.8.4-ecad",
-    "@airgap/beacon-transport-walletconnect": "npm:@ecadlabs/beacon-transport-walletconnect@4.8.4-ecad",
-    "@ecadlabs/beacon-transport-walletconnect": {
-      "@walletconnect/core": "2.18.0",
-      "@walletconnect/sign-client": "2.18.0",
-      "@walletconnect/types": "2.18.0",
-      "@walletconnect/utils": "2.18.0"
-    },
     "@babel/plugin-transform-modules-systemjs": "7.29.8",
     "axios": "1.20.0",
     "fast-uri": "3.1.8",

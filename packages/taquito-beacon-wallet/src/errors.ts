@@ -1,4 +1,4 @@
-import { PermissionScope } from '@ecadlabs/beacon-dapp';
+import { PermissionScope } from '@tezos-x/octez.connect-dapp';
 import { PermissionDeniedError } from '@taquito/core';
 
 /**
