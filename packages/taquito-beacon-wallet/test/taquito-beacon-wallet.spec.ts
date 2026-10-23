@@ -275,4 +275,36 @@ describe('Beacon Wallet tests', () => {
     const wallet = new BeaconWallet({ name: 'Test', storage: new LocalStorage() });
     expect(async () => await wallet.sign('48656C6C6F20576F726C64')).rejects.toThrow();
   });
+  it('preserves the exact legacy operation request and returned hash', async () => {
+    const wallet = new BeaconWallet({ name: 'legacy' });
+    const account = { address: 'tz1legacy', scopes: [PermissionScope.OPERATION_REQUEST] };
+    wallet.client.getActiveAccount = vi.fn().mockResolvedValue(account);
+    wallet.client.requestOperation = vi
+      .fn()
+      .mockResolvedValue({ transactionHash: 'operation-hash' });
+    const operations = [{ kind: 'transaction', amount: '1', destination: 'tz1recipient' }];
+    expect(await wallet.sendOperations(operations)).toBe('operation-hash');
+    expect(wallet.client.requestOperation).toHaveBeenCalledExactlyOnceWith({
+      operationDetails: operations,
+    });
+  });
+  it('preserves the exact signing payload and original wallet rejection', async () => {
+    const wallet = new BeaconWallet({ name: 'legacy' });
+    wallet.client.requestSignPayload = vi.fn().mockResolvedValue({ signature: 'signature' });
+    expect(await wallet.sign('1234', new Uint8Array([3]))).toBe('signature');
+    expect(wallet.client.requestSignPayload).toHaveBeenCalledExactlyOnceWith({
+      payload: '031234',
+      signingType: SigningType.OPERATION,
+    });
+    const rejection = new Error('Wallet rejected');
+    wallet.client.requestSignPayload = vi.fn().mockRejectedValue(rejection);
+    await expect(wallet.sign('1234', new Uint8Array([3]))).rejects.toBe(rejection);
+  });
+  it('disconnects while a permission request is still pending', async () => {
+    const wallet = new BeaconWallet({ name: 'legacy' });
+    wallet.client.requestPermissions = vi.fn().mockReturnValue(new Promise(() => {}));
+    void wallet.requestPermissions();
+    await wallet.disconnect();
+    expect(wallet.client.disconnect).toHaveBeenCalledExactlyOnceWith();
+  });
 });
