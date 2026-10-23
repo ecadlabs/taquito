@@ -250,4 +250,55 @@ describe('detached submission', () => {
     expect((await workflow.toSignable(prepared())).unsignedBytes).toBe(vector.unsignedBytes);
     expect(forge).toHaveBeenCalledOnce();
   });
+  it.each(['skipped', 'backtracked', 'failed'])(
+    'does not inject an internal %s result without errors',
+    async (status) => {
+      server.setPreapplyResult([
+        {
+          contents: [
+            {
+              ...vector.operation.contents[0],
+              metadata: {
+                operation_result: { status: 'applied' },
+                internal_operation_results: [{ kind: 'transaction', result: { status } }],
+              },
+            },
+          ],
+        },
+      ]);
+      const workflow = new TezosToolkit(server.url).prepareFor(vector);
+      const signed = workflow.attachSignature(
+        await workflow.toSignable(prepared()),
+        vector.signature
+      );
+      await expect(workflow.inject(signed)).rejects.toThrow();
+      expect(
+        server.requests.some((request) => request.path.startsWith('/injection/operation'))
+      ).toBe(false);
+    }
+  );
+  it('injects when every internal operation is applied', async () => {
+    server.setPreapplyResult([
+      {
+        contents: [
+          {
+            ...vector.operation.contents[0],
+            metadata: {
+              operation_result: { status: 'applied' },
+              internal_operation_results: [{ kind: 'transaction', result: { status: 'applied' } }],
+            },
+          },
+        ],
+      },
+    ]);
+    const workflow = new TezosToolkit(server.url).prepareFor(vector);
+    const signed = workflow.attachSignature(
+      await workflow.toSignable(prepared()),
+      vector.signature
+    );
+    expect((await workflow.inject(signed)).raw.opbytes).toBe(vector.signedBytes);
+    expect(
+      server.requests.filter((request) => request.path.startsWith('/injection/operation'))
+    ).toHaveLength(1);
+  });
 });

@@ -1,7 +1,7 @@
 import operationVectors from './detached-operation-vectors';
 import { ContractMethodObject } from '../../src/contract/contract-methods/contract-method-object-param';
 import { ParameterSchema } from '@taquito/michelson-encoder';
-import { TezosToolkit } from '../../src/taquito';
+import { TezosToolkit, OpKind } from '../../src/taquito';
 import vectors from './detached-signing-vectors';
 import { fixtureServer } from './detached-test-server';
 
@@ -130,5 +130,109 @@ describe('detached signing', () => {
     });
     expect((await workflow.prepare.reveal()).opOb.contents[0]).toMatchObject({ proof: bls.proof });
     expect(await workflow.estimate.reveal()).toBeDefined();
+  });
+  it('prepares and estimates a delegation with the scoped source', async () => {
+    const workflow = new TezosToolkit(server.url).prepareFor(vector);
+    const delegation = { delegate: params.to, fee: 1000, gasLimit: 1040, storageLimit: 0 };
+    const prepared = await workflow.prepare.delegation(delegation);
+    expect(prepared.opOb.contents).toEqual([
+      {
+        kind: 'delegation',
+        source: vector.pkh,
+        fee: '1000',
+        counter: '1',
+        gas_limit: '1040',
+        storage_limit: '0',
+        delegate: params.to,
+      },
+    ]);
+    expect((await workflow.estimate.setDelegate(delegation)).suggestedFeeMutez).toBeGreaterThan(0);
+    expect(
+      server.requests.filter((request) => request.path.endsWith('/simulate_operation'))
+    ).toEqual([
+      expect.objectContaining({
+        body: expect.objectContaining({
+          operation: expect.objectContaining({
+            contents: [
+              expect.objectContaining({
+                kind: 'delegation',
+                source: vector.pkh,
+                delegate: params.to,
+              }),
+            ],
+          }),
+        }),
+      }),
+    ]);
+  });
+  it('prepares and estimates originations alone and in a batch', async () => {
+    const workflow = new TezosToolkit(server.url).prepareFor(vector);
+    const origination = {
+      code: [
+        { prim: 'parameter', args: [{ prim: 'unit' }] },
+        { prim: 'storage', args: [{ prim: 'unit' }] },
+        {
+          prim: 'code',
+          args: [
+            [{ prim: 'CDR' }, { prim: 'NIL', args: [{ prim: 'operation' }] }, { prim: 'PAIR' }],
+          ],
+        },
+      ],
+      init: { prim: 'Unit' },
+      balance: 0,
+      fee: 1000,
+      gasLimit: 1040,
+      storageLimit: 0,
+    };
+    const expected = {
+      kind: 'origination',
+      source: vector.pkh,
+      fee: '1000',
+      counter: '1',
+      gas_limit: '1040',
+      storage_limit: '0',
+      balance: '0',
+      script: { code: origination.code, storage: { prim: 'Unit' } },
+    };
+    expect((await workflow.prepare.originate(origination)).opOb.contents).toEqual([expected]);
+    expect(
+      (await workflow.prepare.batch([{ ...origination, kind: OpKind.ORIGINATION }])).opOb.contents
+    ).toEqual([expected]);
+    expect((await workflow.estimate.originate(origination)).suggestedFeeMutez).toBeGreaterThan(0);
+    expect(
+      await workflow.estimate.batch([{ ...origination, kind: OpKind.ORIGINATION }])
+    ).toHaveLength(1);
+
+    const simulations = server.requests.filter((request) =>
+      request.path.endsWith('/simulate_operation')
+    );
+    expect(simulations).toHaveLength(2);
+    for (const request of simulations)
+      expect(request.body).toMatchObject({
+        operation: {
+          contents: [
+            {
+              kind: 'origination',
+              source: vector.pkh,
+              balance: '0',
+              script: { code: origination.code, storage: { prim: 'Unit' } },
+            },
+          ],
+        },
+      });
+  });
+  it('requires the BLS identity proof for explicit reveal estimation', async () => {
+    const bls = operationVectors.vectors.find((item) => item.scheme === 'bls');
+    if (!bls) throw new Error('Missing BLS fixture');
+    server.setRevealed(false);
+    const workflow = new TezosToolkit(server.url).prepareFor({
+      pkh: bls.pkh,
+      publicKey: bls.publicKey,
+    });
+    await expect(workflow.estimate.reveal()).rejects.toThrow('proof');
+    await expect(workflow.prepare.reveal()).rejects.toThrow('proof');
+    expect(server.requests.some((request) => request.path.includes('simulate_operation'))).toBe(
+      false
+    );
   });
 });

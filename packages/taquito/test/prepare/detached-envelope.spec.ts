@@ -124,4 +124,68 @@ describe('detached operation envelopes', () => {
       expect(() => workflow.attachSignature(signable, signature)).toThrow();
     }
   });
+  it.each(['cycle', 'accessor', 'prototype', 'nonfinite'])(
+    'rejects %s data before forging',
+    async (kind) => {
+      const { tezos, prepared } = setup();
+      const forge = vi.fn(async () => vector.unsignedBytes);
+      tezos.setForgerProvider({ forge });
+      const workflow = tezos.prepareFor(vector);
+      if (kind === 'cycle') Object.assign(prepared, { counter: prepared });
+      if (kind === 'accessor')
+        Object.defineProperty(prepared.opOb, 'branch', {
+          get() {
+            throw new Error('Getter executed');
+          },
+        });
+      if (kind === 'prototype') Object.setPrototypeOf(prepared.opOb, { inherited: true });
+      if (kind === 'nonfinite') prepared.counter = Infinity;
+      await expect(workflow.toSignable(prepared)).rejects.toThrow(/Operation must contain/);
+      expect(forge).not.toHaveBeenCalled();
+    }
+  );
+  it.each(['', 'abc', 'not-hex'])('rejects invalid custom-forger bytes %s', async (bytes) => {
+    const { tezos, prepared } = setup();
+    tezos.setForgerProvider({ forge: async () => bytes });
+    await expect(tezos.prepareFor(vector).toSignable(prepared)).rejects.toThrow(
+      'invalid operation bytes'
+    );
+  });
+  it('rejects a reveal with a different public key before forging', async () => {
+    const reveal = vectors.vectors.find((item) => item.operationKind === 'reveal');
+    if (!reveal) throw new Error('Missing reveal fixture');
+    const { tezos } = setup();
+    const forge = vi.fn(async () => vector.unsignedBytes);
+    tezos.setForgerProvider({ forge });
+    const workflow = tezos.prepareFor(vector);
+    const input: PreparedOperation = structuredClone({
+      opOb: { ...reveal.operation, protocol: reveal.protocol },
+      counter: 0,
+    });
+    for (const content of input.opOb.contents) {
+      if (content.kind === 'reveal') content.public_key = 'wrong-public-key';
+    }
+    await expect(workflow.toSignable(input)).rejects.toThrow('Reveal key differs');
+    expect(forge).not.toHaveBeenCalled();
+  });
+  it('rejects a prepared operation without its source', async () => {
+    const { workflow, prepared } = setup();
+    for (const content of prepared.opOb.contents) Reflect.deleteProperty(content, 'source');
+    await expect(workflow.toSignable(prepared)).rejects.toThrow('Operation source differs');
+  });
+  it('rejects a BLS reveal snapshot missing the validated identity proof', async () => {
+    const bls = vectors.vectors.find(
+      (item) => item.scheme === 'bls' && item.operationKind === 'reveal'
+    );
+    if (!bls) throw new Error('Missing BLS reveal fixture');
+    const { tezos } = setup();
+    const input: PreparedOperation = structuredClone({
+      opOb: { ...bls.operation, protocol: bls.protocol },
+      counter: 0,
+    });
+    for (const content of input.opOb.contents) Reflect.deleteProperty(content, 'proof');
+    await expect(tezos.prepareFor(bls).toSignable(input)).rejects.toThrow(
+      'Reveal must contain the identity proof'
+    );
+  });
 });
