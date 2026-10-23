@@ -658,3 +658,62 @@ In most cases, you want to use the Wallet API as it gives the users of your dApp
 When the dApp sends the operation to the wallet, the dApp will "listen" when the operation appears in a block. The Wallet API observable will "emit" a stream of events as they occur. Orphan/Uncle block detection is also surfaced when observing confirmations for an operation.
 
 The duties of a wallet are much broader than the very narrow duty of signing operation byte sequences. That's one reason why we built the Wallet API. It offers a better user experience by doing less.
+
+
+## Octez Connect migration candidate
+
+This unreleased change uses `@tezos-x/octez.connect-*` 5.0.4 behind the existing `@taquito/beacon-wallet` package. It remains a local migration candidate. Adoption is blocked until a published SDK release contains the disconnect fixes and passes the reconnect checks. Version 5.0.4 does not contain upstream [#55](https://github.com/trilitech/octez.connect/pull/55).
+
+Keep importing `BeaconWallet` from `@taquito/beacon-wallet`. Import enums and types such as `NetworkType`, `AccountInfo` and `RequestPermissionNetwork` from `@taquito/beacon-wallet/types` to avoid loading the dapp SDK.
+
+The SDK upgrade changes some options even for single-network applications:
+
+- Replace `disclaimerText` with a URL in `termsAndConditionsUrl`. Free-form text is no longer accepted in that option.
+- `requestTimeoutMs` and the built-in request timeout are removed. A timeout in application code does not cancel an operation already sent to a wallet.
+- Advanced `wallet.client` callers must remove the old disconnect options and removed SDK error types. See the [SDK migration guide](https://github.com/trilitech/octez.connect/blob/master/MIGRATION.md).
+- WalletConnect is enabled by default. Use `walletConnectOptions` for your own project configuration or `disableWalletConnect: true` to disable it. This candidate retains the SDK's WalletConnect 2.18.0 dependencies. The separate `@taquito/wallet-connect` package keeps its own dependency versions.
+
+### Connecting to several networks
+
+Request several networks through the SDK, then select a stored account for the current wallet peer:
+
+```typescript
+import { BeaconWallet } from '@taquito/beacon-wallet';
+import { NetworkType } from '@taquito/beacon-wallet/types';
+
+const wallet = new BeaconWallet({
+  name: 'My dapp',
+  network: { type: NetworkType.MAINNET },
+});
+await wallet.requestPermissions({
+  networks: [
+    { chainId: 'tezos:NetXdQprcVkpaWU' },
+    { chainId: 'tezos:NetXsqzbfFenSTS' },
+  ],
+});
+
+const networks = await wallet.getGrantedNetworks();
+if (networks.includes('tezos:NetXsqzbfFenSTS')) {
+  await wallet.setActiveNetwork(NetworkType.SHADOWNET);
+  Tezos.setRpcProvider('https://rpc.shadownet.teztnets.com');
+  Tezos.setWalletProvider(wallet);
+}
+```
+
+Older wallets can grant only one account. Check the returned accounts rather than assuming every requested network was granted. The SDK's `requiredMinimumVersion: '4'` option requests a compatible protocol where its peer negotiation supports that check.
+
+`getAccounts()` returns all accounts stored by the SDK. `getGrantedNetworks()` returns distinct chain IDs from stored accounts with the active account's sender and transport origin. These records can include older permissions from the same peer. They are not fresh proof of a live session. With no active account it returns an empty list. `getActiveNetwork()` returns the selected account's network or `undefined`.
+
+`setActiveNetwork()` accepts a supported `NetworkType`, a bare chain ID or a `tezos:` chain ID. Rotating and custom networks need an explicit chain ID. Validation checks the identifier syntax, not a live RPC. Selection never pairs with a different peer. It preserves the active account if it already matches, rejects an ungranted network, and rejects multiple matching accounts instead of selecting an arbitrary address. Advanced applications can select an exact account through `wallet.client`.
+
+Operations use the active SDK account's chain ID. Legacy accounts without that field keep their previous request format. SDK-stored multi-network accounts use canonical `tezos:` IDs. The wallet does not change `Tezos.rpc`. Configure the toolkit's RPC to match the selected wallet network before reading state, estimating or monitoring an operation.
+
+### Pending requests and disconnection
+
+Overlapping permission, signing, operation and network-selection calls through wrappers sharing one SDK client reject with `BeaconWalletBusyError`. Finish the pending request before starting another. The wrapper does not queue wallet approvals.
+
+`disconnect()` and `clearActiveAccount()` can interrupt a pending wrapper call. During teardown, further requests and overlapping teardown calls reject as busy. If teardown fails, its SDK error is returned and another attempt is allowed. Failure does not establish that the session was cleared.
+
+An interrupted operation that has not reached the SDK is not dispatched. If an operation or signing request has already reached the SDK, teardown does not cancel it. Its successful transaction hash or signature is still returned so the application can track the outcome. Do not resend an operation merely because the user disconnected. Interrupted permission and selection calls report `BeaconWalletRequestInterruptedError` when their late response arrives.
+
+This coordination applies to Taquito wrapper calls. Direct `wallet.client` calls, SDK events and other tabs can change account state independently. An already running SDK call can also change SDK state after teardown. The wrapper does not promise cancellation or atomic account changes across those actors.
