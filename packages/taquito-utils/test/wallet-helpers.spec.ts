@@ -5,6 +5,18 @@ const address = 'tz1ipB38oB5F76HnbTRqWPLEnVtCgj6yf2nB';
 const contract = 'KT1JVErLYTgtY8uGGZ4mso2npTSxqVLDRVbC';
 const publicKey = 'edpku61nGAwkeoA7PQJEFWmrVP1eWrSTVoHgCaF2isjWqDeGdux37k';
 const operation = 'oo6JPEAy8VuMRGaFuMmLNFFGdJgiaKfnmT1CpHJfKP3Ye5ZahiP';
+// Fixed valid values from validators.spec.ts and the independent BLS RPC fixtures.
+const additionalAddresses = [
+  'tz2TSvNTh2epDMhZHrw73nV9piBX7kLZ9K9m',
+  'tz3VEZ4k6a4Wx42iyev6i2aVAptTRLEAivNN',
+  'tz4AQcKaQU1sUzsmPTX43qnK4ddkCeeknJnf',
+  'sr166cywS6HJx9gmqMU28Vo284gPQaPcGmYW',
+];
+const additionalPublicKeys = [
+  'sppk7aqSksZan1AGXuKtCz9UBLZZ77e3ZWGpFxR7ig1Z17GneEhSSbH',
+  'p2pk66tTYL5EvahKAXncbtbRPBkAnxo3CszzUho5wPCgWauBMyvybuB',
+  'BLpk1wMU34nS7N96D2owyejLxQtwZwLARLg6tdTFMP5N8fz6yCiLogfFXkYo9ZHnZ95Kba3D3cvt',
+];
 const nonstrings: unknown[] = [
   undefined,
   null,
@@ -18,12 +30,19 @@ const nonstrings: unknown[] = [
 ];
 
 describe('isValidAddress', () => {
-  it.each([address, contract, `${contract}%entrypoint`, `${address}%default`, tz5.publicKeyHash])(
-    'accepts %s',
-    (value) => {
-      expect(utils.isValidAddress(value)).toBe(true);
-    }
-  );
+  it.each(additionalPublicKeys)('rejects a public key as an address %s', (value) => {
+    expect(utils.isValidAddress(value)).toBe(false);
+  });
+  it.each([
+    address,
+    ...additionalAddresses,
+    contract,
+    `${contract}%entrypoint`,
+    `${address}%default`,
+    tz5.publicKeyHash,
+  ])('accepts %s', (value) => {
+    expect(utils.isValidAddress(value)).toBe(true);
+  });
   it.each(nonstrings)('rejects nonstring input %#', (value) => {
     expect(utils.isValidAddress(value)).toBe(false);
   });
@@ -49,6 +68,9 @@ describe('isValidAddress', () => {
 });
 
 describe('isValidContractAddress', () => {
+  it.each(additionalAddresses)('rejects noncontract address %s', (value) => {
+    expect(utils.isValidContractAddress(value)).toBe(false);
+  });
   it.each([contract])('accepts %s', (value) => {
     expect(utils.isValidContractAddress(value)).toBe(true);
   });
@@ -77,7 +99,10 @@ describe('isValidContractAddress', () => {
 });
 
 describe('isValidPublicKey', () => {
-  it.each([publicKey, tz5.publicKey])('accepts %s', (value) => {
+  it.each(additionalAddresses)('rejects an address as a public key %s', (value) => {
+    expect(utils.isValidPublicKey(value)).toBe(false);
+  });
+  it.each([publicKey, ...additionalPublicKeys, tz5.publicKey])('accepts %s', (value) => {
     expect(utils.isValidPublicKey(value)).toBe(true);
   });
   it.each(nonstrings)('rejects nonstring input %#', (value) => {
