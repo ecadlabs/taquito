@@ -60,3 +60,29 @@ test(`${artifact} RemoteSigner preserves signed bytes and verification without a
   });
   expect(await page.evaluate(() => 'Buffer' in globalThis)).toBe(false);
 });
+
+test(`${artifact} BeaconWallet preserves operation payloads and rejects unsupported watermarks`, async ({
+  page,
+}) => {
+  await page.goto('/scenario.html?scenario=beacon-wallet-buffer-behavior');
+  await expect
+    .poll(async () => JSON.parse(await page.locator('#status').innerText()).status)
+    .not.toBe('loading');
+  const terminal = await page.locator('#status').innerText();
+  expect(terminal, terminal).not.toContain('"status":"error"');
+  expect(JSON.parse(terminal)).toMatchObject({
+    status: 'ok',
+    summary: {
+      signature: signingSignature,
+      requests: [{ payload: signingBytes, signingType: 'operation' }],
+      rejected: [
+        'UnsupportedActionError',
+        'UnsupportedActionError',
+        'UnsupportedActionError',
+        'Error',
+        'Error',
+      ],
+    },
+  });
+  expect(await page.evaluate(() => 'Buffer' in globalThis)).toBe(false);
+});

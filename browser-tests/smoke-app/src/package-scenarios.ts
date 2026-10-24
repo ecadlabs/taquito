@@ -43,6 +43,7 @@ const localForgerOperation = {
 const scenarios: Record<PackageScenarioId, SmokeScenario> = {
   'local-forging-buffer-control': () => runBufferScenario('local-forging-buffer-control'),
   'local-forging-buffer-behavior': () => runBufferScenario('local-forging-buffer-behavior'),
+  'beacon-wallet-buffer-behavior': () => runBufferScenario('beacon-wallet-buffer-behavior'),
   'remote-signer-buffer-behavior': () => runBufferScenario('remote-signer-buffer-behavior'),
   'core-import': async () => {
     const core = await importPackage<typeof import('@taquito/core')>('@taquito/core');

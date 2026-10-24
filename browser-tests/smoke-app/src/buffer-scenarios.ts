@@ -14,6 +14,65 @@ const scenarios: Record<
   string,
   () => Promise<{ exports: string[]; summary: Record<string, unknown> }>
 > = {
+  'beacon-wallet-buffer-behavior': async () => {
+    assertNoGlobalBuffer();
+    const { BeaconWallet } = await import('@taquito/beacon-wallet');
+    const { UnsupportedActionError } = await import('@taquito/core');
+    const { BeaconMessageType, SigningType } = await import('@ecadlabs/beacon-types');
+    assertNoGlobalBuffer();
+    const wallet = new BeaconWallet({ name: 'Buffer regression' });
+    const requests: unknown[] = [];
+    wallet.client.requestSignPayload = async (request) => {
+      requests.push(request);
+      return {
+        type: BeaconMessageType.SignPayloadResponse,
+        signingType: SigningType.OPERATION,
+        signature: signingSignature,
+        version: '2',
+        id: 'fixture',
+        senderId: 'fixture',
+      };
+    };
+    try {
+      const rejected: string[] = [];
+      for (const watermark of [
+        undefined,
+        new Uint8Array(),
+        new Uint8Array([5]),
+        new Uint8Array([4]),
+        new Uint8Array([3, 0]),
+      ]) {
+        let didReject = false;
+        try {
+          await wallet.sign(signingBytes.slice(2), watermark);
+        } catch (error) {
+          if (!(error instanceof Error)) throw error;
+          didReject = true;
+          rejected.push(
+            error instanceof UnsupportedActionError ? 'UnsupportedActionError' : error.name
+          );
+        }
+        if (!didReject) throw new Error('An unsupported watermark was accepted');
+      }
+      const signature = await wallet.sign(signingBytes.slice(2), new Uint8Array([3]));
+      const failure = new Error('Controlled wallet rejection');
+      wallet.client.requestSignPayload = async () => {
+        throw failure;
+      };
+      let propagated = false;
+      try {
+        await wallet.sign(signingBytes.slice(2), new Uint8Array([3]));
+      } catch (error) {
+        if (error !== failure) throw error;
+        propagated = true;
+      }
+      if (!propagated) throw new Error('Wallet rejection was lost');
+      assertNoGlobalBuffer();
+      return { exports: ['BeaconWallet'], summary: { signature, requests, rejected } };
+    } finally {
+      await wallet.client.destroy();
+    }
+  },
   'remote-signer-buffer-behavior': async () => {
     assertNoGlobalBuffer();
     const { RemoteSigner } = await import('@taquito/remote-signer');
