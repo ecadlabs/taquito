@@ -2978,3 +2978,38 @@ export type PendingStakingParametersResponse = Array<{
 }>;
 
 export type DestinationIndexResponse = string | null;
+
+/** A Base58Check-encoded BLS public key and its proof of possession. */
+export interface BlsPublicKeyWithProof {
+  public_key: string;
+  proof: string;
+}
+
+/** Null means the node could not aggregate or verify the supplied keys and proofs. */
+export type BlsAggregatePublicKeysResponse = {
+  public_key: string;
+  public_key_hash: string;
+} | null;
+
+/** Aggregate BLS signatures for a Base58Check public key and an unprefixed hex-encoded message. */
+export interface BlsAggregateSignaturesParams {
+  public_key: string;
+  message: string;
+  signature_shares: string[];
+}
+
+/** Null means aggregation or verification failed. Signatures use Base58Check. */
+export type BlsSignatureResponse = string | null;
+
+/** An indexed BLS signature share. The node encodes id as signed int8, from -128 through 127. */
+export interface BlsThresholdSignatureShare {
+  id: number;
+  signature: string;
+}
+
+/** Reconstruct a BLS threshold signature for an unprefixed hex-encoded message. */
+export interface BlsThresholdSignaturesParams {
+  public_key: string;
+  message: string;
+  signature_shares: BlsThresholdSignatureShare[];
+}

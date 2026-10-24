@@ -16,6 +16,11 @@ import {
   RPCOptions,
 } from './rpc-client-interface';
 import {
+  BlsPublicKeyWithProof,
+  BlsAggregatePublicKeysResponse,
+  BlsAggregateSignaturesParams,
+  BlsSignatureResponse,
+  BlsThresholdSignaturesParams,
   BakingRightsQueryArguments,
   BakingRightsResponse,
   BalanceResponse,
@@ -1343,5 +1348,48 @@ export class RpcClient implements RpcClientInterface {
       ),
       method: 'GET',
     });
+  }
+  /** Aggregate BLS public keys after checking their proofs of possession.
+   * @param keys Base58Check-encoded public keys and proofs.
+   * @returns The aggregate key and hash, or null if aggregation or proof verification fails.
+   * @see https://octez.tezos.com/docs/_static/rpc-openapi.html
+   */
+  async aggregatePublicKeys(
+    keys: BlsPublicKeyWithProof[]
+  ): Promise<BlsAggregatePublicKeysResponse> {
+    return this.httpBackend.createRequest<BlsAggregatePublicKeysResponse>(
+      { url: this.createURL('/bls/aggregate_public_keys'), method: 'POST' },
+      keys
+    );
+  }
+
+  /** Check a Base58Check-encoded BLS proof of possession. Returns false for an invalid proof.
+   * @see https://octez.tezos.com/docs/_static/rpc-openapi.html
+   */
+  async checkProof(key: BlsPublicKeyWithProof): Promise<boolean> {
+    return this.httpBackend.createRequest<boolean>(
+      { url: this.createURL('/bls/check_proof'), method: 'POST' },
+      key
+    );
+  }
+
+  /** Aggregate BLS signatures. Returns null if aggregation or signature verification fails.
+   * @see https://octez.tezos.com/docs/_static/rpc-openapi.html
+   */
+  async aggregateSignatures(params: BlsAggregateSignaturesParams): Promise<BlsSignatureResponse> {
+    return this.httpBackend.createRequest<BlsSignatureResponse>(
+      { url: this.createURL('/bls/aggregate_signatures'), method: 'POST' },
+      params
+    );
+  }
+
+  /** Reconstruct a BLS threshold signature. Returns null if reconstruction or verification fails.
+   * @see https://octez.tezos.com/docs/_static/rpc-openapi.html
+   */
+  async thresholdSignatures(params: BlsThresholdSignaturesParams): Promise<BlsSignatureResponse> {
+    return this.httpBackend.createRequest<BlsSignatureResponse>(
+      { url: this.createURL('/bls/threshold_signatures'), method: 'POST' },
+      params
+    );
   }
 }
