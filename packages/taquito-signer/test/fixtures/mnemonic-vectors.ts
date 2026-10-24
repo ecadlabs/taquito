@@ -1,5 +1,5 @@
 import type { FromMnemonicParams } from '../../src/taquito-signer';
-import vectors from '../../../../test-fixtures/mnemonic-keys.json';
+import vectors from './mnemonic-keys.json';
 
 export default vectors.map(({ params, ...vector }) => {
   const { curve, ...options } = params;

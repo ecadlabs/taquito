@@ -11,7 +11,7 @@ from cryptography.hazmat.primitives.asymmetric import ec, ed25519
 from cryptography.hazmat.primitives.serialization import Encoding, PublicFormat
 
 
-REPOSITORY = Path(__file__).resolve().parent.parent
+FIXTURES = Path(__file__).resolve().parent
 MNEMONIC = "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about"
 BASE58_ALPHABET = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
 CURVES = {
@@ -134,6 +134,6 @@ for label, options in cases:
         {"label": label, "params": parameters, "expected": derive_key_tuple(parameters)}
     )
 
-fixture = REPOSITORY / "test-fixtures/mnemonic-keys.json"
+fixture = FIXTURES / "mnemonic-keys.json"
 fixture.write_text(json.dumps(vectors, indent=2) + "\n")
 print(f"Wrote {len(vectors)} independent key tuples")

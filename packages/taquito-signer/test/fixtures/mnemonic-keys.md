@@ -12,8 +12,8 @@ The recorded run used Python 3.12 and cryptography 41.0.7 on 21 October 2026.
 Reproduce from the repository root with Python and cryptography installed:
 
 ```sh
-python3 test-fixtures/mnemonic-keys.py
-git diff --exit-code -- test-fixtures/mnemonic-keys.json
+python3 packages/taquito-signer/test/fixtures/mnemonic-keys.py
+git diff --exit-code -- packages/taquito-signer/test/fixtures/mnemonic-keys.json
 ```
 
 All tuples also matched unchanged Taquito main at 7f60ff38 before extraction of
