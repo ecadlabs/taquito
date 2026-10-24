@@ -1,9 +1,10 @@
 import {
   deriveKeyFromMnemonic,
+  InvalidMnemonicError,
   InMemorySigner,
   type FromMnemonicParams,
 } from '../src/taquito-signer';
-import { InvalidCurveError, InvalidMnemonicError, ToBeImplemented } from '../src/errors';
+import { InvalidCurveError, ToBeImplemented } from '../src/errors';
 import { InvalidDerivationPathError } from '@taquito/core';
 import { verifySignature } from '@taquito/utils';
 import vectors from './fixtures/mnemonic-vectors';

@@ -1,12 +1,15 @@
 import { runInNewContext } from 'node:vm';
 import * as signer from '../src/taquito-signer';
-import { InvalidMnemonicError } from '../src/errors';
+import { InvalidMnemonicError } from '../src/taquito-signer';
 
 const phrase =
   'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about';
 const entropyHex = '00000000000000000000000000000000';
 
 describe('mnemonicToEntropy', () => {
+  it('exports the mnemonic error constructor from the public entrypoint', () => {
+    expect(signer.InvalidMnemonicError).toBeTypeOf('function');
+  });
   it('decodes the fixed BIP39 zero-entropy vector', () => {
     expect(signer.mnemonicToEntropy(phrase)).toEqual(new Uint8Array(16));
   });
