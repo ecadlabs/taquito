@@ -31,9 +31,17 @@ and the consumer resolve the same installed core package. It then runs:
 The CommonJS default export exposed through native ESM is recorded as existing
 behavior. These checks do not define every namespace export as a permanent API.
 
+The native ESM default-export identity and the browser's exact `module` route
+are assertions about current packaging. A later native ESM entry or export map
+needs an explicit compatibility decision before changing these assertions. This
+first increment does not define a permanent default export or module filename.
+It also does not check access to `package.json` or direct `dist` subpaths. Agree
+which of those paths must remain available before restricting package exports.
+
 Each child process has a three-minute timeout. HTTP requests and browser waits
 have shorter timeouts. Servers, browser instances and temporary files are closed
-or removed after success or failure.
+or removed after ordinary success or failure. Forced process termination can
+prevent that cleanup.
 
 The install can access the registry for transitive dependencies. This is not an
 offline test. The command prints runtime and compiler versions, tarball hashes,
