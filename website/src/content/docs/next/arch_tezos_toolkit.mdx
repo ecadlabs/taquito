@@ -119,7 +119,7 @@ tezos.setForgerProvider(new LocalForger());
 
 A user can set any other Forger on the TezosToolkit as long as it implements the Forger interface.
 
-**SubscribeProvider:** The TezosToolkit ships by default with an instance of PollingSubscribeProvider allowing subscribing to particular operations from the blockchain. This provider is not internally used by Taquito unlike the forger, parser and signer/wallet.
+**SubscribeProvider:** The TezosToolkit ships by default with an instance of PollingSubscribeProvider for subscribing to blocks, operations, and events from the blockchain, and for polling block heads during operation confirmation.
 
 **Packer:** A packer serializes data to its optimized binary representation, identical to the one used by the PACK Michelson instructions. When fetching big map values, the RPC expects to be called with a "packed" key. As for the forger, data can be packed using the RPC or locally.
 

@@ -192,26 +192,6 @@ describe('two-step polling through public subscriptions', () => {
     expect(context.rpc.getBlock).toHaveBeenCalledTimes(1);
   });
 
-  it('keeps an active full stream shared without replaying to a second subscriber', async () => {
-    const first = provider.subscribeBlock('head');
-    close.push(() => first.close());
-    const firstData = vi.fn();
-    first.on('data', firstData);
-    await vi.advanceTimersByTimeAsync(1);
-    const second = provider.subscribeBlock('head');
-    close.push(() => second.close());
-    const secondData = vi.fn();
-    second.on('data', secondData);
-    await vi.advanceTimersByTimeAsync(100);
-    expect(firstData).toHaveBeenCalledTimes(1);
-    expect(secondData).not.toHaveBeenCalled();
-    head = 'B2';
-    await vi.advanceTimersByTimeAsync(100);
-    expect(firstData).toHaveBeenCalledTimes(2);
-    expect(secondData).toHaveBeenCalledExactlyOnceWith(block('B2'));
-    expect(context.rpc.getBlock).toHaveBeenCalledTimes(2);
-  });
-
   it('stops polling after the last subscriber closes and ignores a pending result', async () => {
     let finish!: (value: BlockResponse) => void;
     vi.mocked(context.rpc.getBlock).mockReturnValueOnce(

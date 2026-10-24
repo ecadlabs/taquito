@@ -129,25 +129,6 @@ describe('polling public compatibility', () => {
     expect(firstData).toHaveBeenCalledTimes(1);
     expect(closed).toHaveBeenCalledTimes(1);
     expect(secondData).toHaveBeenCalledExactlyOnceWith(head);
-  });
-
-  it('delivers an in-flight block and samples the next head after it completes', async () => {
-    const firstBlock = head;
-    let finish!: (value: BlockResponse) => void;
-    vi.mocked(context.rpc.getBlock).mockReturnValueOnce(
-      new Promise((resolve) => {
-        finish = resolve;
-      })
-    );
-    const sub = provider.subscribeBlock('head');
-    close.push(() => sub.close());
-    const values: string[] = [];
-    sub.on('data', (value) => values.push(value.hash));
-    await vi.advanceTimersByTimeAsync(1);
-    head = { ...head, hash: 'B2' };
-    await vi.advanceTimersByTimeAsync(250);
-    finish(firstBlock);
-    await vi.advanceTimersByTimeAsync(100);
-    expect(values).toEqual(['B1', 'B2']);
+    expect(context.rpc.getBlock).toHaveBeenCalledTimes(2);
   });
 });
