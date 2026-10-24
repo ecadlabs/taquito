@@ -73,6 +73,7 @@ describe('RpcTzProvider test', () => {
         getManagerKey: vi.fn(),
         getStorage: vi.fn(),
         getBlockHeader: vi.fn(),
+        getBlockHash: vi.fn(),
         getProtocols: vi.fn(),
         getContract: vi.fn(),
         injectOperation: vi.fn(),
@@ -100,6 +101,9 @@ describe('RpcTzProvider test', () => {
       mockRpcClient.getBlockHeader.mockResolvedValue({
         hash: 'BLJjnzaPtSsxykZ9pLTFLSfsKuiN3z7SjSPDPWwbE4Q68u5EpBw',
       });
+      mockRpcClient.getBlockHash.mockResolvedValue(
+        'BLJjnzaPtSsxykZ9pLTFLSfsKuiN3z7SjSPDPWwbE4Q68u5EpBw'
+      );
       mockRpcClient.preapplyOperations.mockResolvedValue([]);
       mockRpcClient.getProtocols.mockResolvedValue({ next_protocol: 'test_proto' });
       mockForger.forge.mockResolvedValue('test');

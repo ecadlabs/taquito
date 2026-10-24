@@ -26,6 +26,7 @@ describe('RpcReadAdapter test', () => {
     getConstants: ReturnType<typeof vi.fn>;
     getNormalizedScript: ReturnType<typeof vi.fn>;
     getStorage: ReturnType<typeof vi.fn>;
+    getBlockHash: ReturnType<typeof vi.fn>;
     getBlockHeader: ReturnType<typeof vi.fn>;
     getContract: ReturnType<typeof vi.fn>;
     getBigMapExpr: ReturnType<typeof vi.fn>;
@@ -48,6 +49,7 @@ describe('RpcReadAdapter test', () => {
       getConstants: vi.fn(),
       getNormalizedScript: vi.fn(),
       getStorage: vi.fn(),
+      getBlockHash: vi.fn(),
       getBlockHeader: vi.fn(),
       getContract: vi.fn(),
       getBigMapExpr: vi.fn(),
@@ -153,12 +155,15 @@ describe('RpcReadAdapter test', () => {
     });
 
     it(`should get the block hash at block: ${block}`, async () => {
-      mockRpcClient.getBlockHeader.mockResolvedValue(blockHeader);
+      mockRpcClient.getBlockHash.mockResolvedValue(
+        'BMLSgpbkkpjwPcz4V73DBehuyUiusANELHKPMiQhsb9psm5gTWD'
+      );
 
       const result = await readProvider.getBlockHash(block);
       expect(result).toEqual('BMLSgpbkkpjwPcz4V73DBehuyUiusANELHKPMiQhsb9psm5gTWD');
 
-      expect(mockRpcClient.getBlockHeader.mock.calls[0][0]).toEqual({ block: `${block}` });
+      expect(mockRpcClient.getBlockHash.mock.calls[0][0]).toEqual({ block: `${block}` });
+      expect(mockRpcClient.getBlockHeader).not.toHaveBeenCalled();
     });
 
     it(`should get the block level at block: ${block}`, async () => {
