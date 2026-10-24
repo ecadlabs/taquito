@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 
 const browserTestsDir = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(browserTestsDir, '..');
-const packagesDir = join(repoRoot, 'packages');
+const packagesDir = process.env.TAQUITO_BROWSER_PACKAGES_DIR ?? join(repoRoot, 'packages');
 
 const taquitoAliases = Object.fromEntries(
   readdirSync(packagesDir, { withFileTypes: true })
@@ -14,7 +14,11 @@ const taquitoAliases = Object.fromEntries(
     .filter((packageJsonPath) => {
       try {
         const pkg = JSON.parse(readFileSync(packageJsonPath, 'utf8'));
-        return typeof pkg.name === 'string' && pkg.name.startsWith('@taquito/') && typeof pkg.module === 'string';
+        return (
+          typeof pkg.name === 'string' &&
+          pkg.name.startsWith('@taquito/') &&
+          typeof pkg.module === 'string'
+        );
       } catch {
         return false;
       }
@@ -48,15 +52,15 @@ export default defineConfig({
   },
   server: {
     fs: {
-      allow: [repoRoot],
+      allow: [repoRoot, packagesDir],
     },
     host: '127.0.0.1',
-    port: 4173,
+    port: Number(process.env.TAQUITO_BROWSER_PORT ?? 4173),
     strictPort: true,
   },
   preview: {
     host: '127.0.0.1',
-    port: 4173,
+    port: Number(process.env.TAQUITO_BROWSER_PORT ?? 4173),
     strictPort: true,
   },
 });

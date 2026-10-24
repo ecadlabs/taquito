@@ -1,3 +1,9 @@
+import {
+  bufferOperation,
+  expectedBufferOperation,
+  bufferControl,
+  expectedBufferControl,
+} from './buffer-fixtures';
 import type { PackageScenarioId } from '../../scenario-manifest';
 import { setSmokeResult } from './smoke-shared';
 
@@ -39,7 +45,33 @@ const localForgerOperation = {
   ],
 } as const;
 
+const assertNoGlobalBuffer = () => {
+  if ('Buffer' in globalThis) throw new Error('A global Buffer would hide the browser regression');
+};
+
 const scenarios: Record<PackageScenarioId, SmokeScenario> = {
+  'local-forging-buffer-control': async () => {
+    assertNoGlobalBuffer();
+    const { LocalForger } =
+      await importPackage<typeof import('@taquito/local-forging')>('@taquito/local-forging');
+    const bytes = await new LocalForger().forge(bufferControl);
+    if (bytes !== expectedBufferControl) throw new Error('Ordinary transfer bytes changed');
+    assertNoGlobalBuffer();
+    return { exports: ['LocalForger'], summary: { bytes } };
+  },
+  'local-forging-buffer-behavior': async () => {
+    assertNoGlobalBuffer();
+    const { LocalForger } =
+      await importPackage<typeof import('@taquito/local-forging')>('@taquito/local-forging');
+    assertNoGlobalBuffer();
+    const forger = new LocalForger();
+    const bytes = await forger.forge(bufferOperation);
+    if (bytes !== expectedBufferOperation)
+      throw new Error('Forged bytes differ from the Octez fixture');
+    const decoded = await forger.parse(expectedBufferOperation);
+    assertNoGlobalBuffer();
+    return { exports: ['LocalForger'], summary: { bytes, decoded } };
+  },
   'core-import': async () => {
     const core = await importPackage<typeof import('@taquito/core')>('@taquito/core');
 
@@ -53,9 +85,8 @@ const scenarios: Record<PackageScenarioId, SmokeScenario> = {
   },
 
   'http-utils-behavior': async () => {
-    const { HttpBackend, HttpRequestFailed, HttpResponseError } = await importPackage<
-      typeof import('@taquito/http-utils')
-    >('@taquito/http-utils');
+    const { HttpBackend, HttpRequestFailed, HttpResponseError } =
+      await importPackage<typeof import('@taquito/http-utils')>('@taquito/http-utils');
     const backend = new HttpBackend(1234);
 
     return {
@@ -69,9 +100,8 @@ const scenarios: Record<PackageScenarioId, SmokeScenario> = {
   },
 
   'utils-behavior': async () => {
-    const { bytesToString, stringToBytes, hex2Bytes } = await importPackage<
-      typeof import('@taquito/utils')
-    >('@taquito/utils');
+    const { bytesToString, stringToBytes, hex2Bytes } =
+      await importPackage<typeof import('@taquito/utils')>('@taquito/utils');
     const encoded = stringToBytes('taquito');
 
     return {
@@ -85,7 +115,8 @@ const scenarios: Record<PackageScenarioId, SmokeScenario> = {
   },
 
   'rpc-behavior': async () => {
-    const { RpcClient, OpKind } = await importPackage<typeof import('@taquito/rpc')>('@taquito/rpc');
+    const { RpcClient, OpKind } =
+      await importPackage<typeof import('@taquito/rpc')>('@taquito/rpc');
     const client = new RpcClient('https://example.invalid');
 
     return {
@@ -98,9 +129,8 @@ const scenarios: Record<PackageScenarioId, SmokeScenario> = {
   },
 
   'michel-codec-behavior': async () => {
-    const { Parser, emitMicheline } = await importPackage<typeof import('@taquito/michel-codec')>(
-      '@taquito/michel-codec'
-    );
+    const { Parser, emitMicheline } =
+      await importPackage<typeof import('@taquito/michel-codec')>('@taquito/michel-codec');
     const parser = new Parser();
     const parsed = parser.parseMichelineExpression('{ Pair 1 2 }');
 
@@ -132,9 +162,8 @@ const scenarios: Record<PackageScenarioId, SmokeScenario> = {
   },
 
   'local-forging-behavior': async () => {
-    const { LocalForger } = await importPackage<typeof import('@taquito/local-forging')>(
-      '@taquito/local-forging'
-    );
+    const { LocalForger } =
+      await importPackage<typeof import('@taquito/local-forging')>('@taquito/local-forging');
     const localForger = new LocalForger();
     const forged = await localForger.forge(localForgerOperation as any);
 
@@ -161,9 +190,8 @@ const scenarios: Record<PackageScenarioId, SmokeScenario> = {
   },
 
   'taquito-behavior': async () => {
-    const { MichelsonMap, OpKind, TezosToolkit } = await importPackage<
-      typeof import('@taquito/taquito')
-    >('@taquito/taquito');
+    const { MichelsonMap, OpKind, TezosToolkit } =
+      await importPackage<typeof import('@taquito/taquito')>('@taquito/taquito');
     const tezos = new TezosToolkit('https://example.invalid');
     const map = new MichelsonMap();
 
@@ -178,9 +206,8 @@ const scenarios: Record<PackageScenarioId, SmokeScenario> = {
   },
 
   'tzip16-behavior': async () => {
-    const { DEFAULT_HANDLERS, Tzip16Module } = await importPackage<typeof import('@taquito/tzip16')>(
-      '@taquito/tzip16'
-    );
+    const { DEFAULT_HANDLERS, Tzip16Module } =
+      await importPackage<typeof import('@taquito/tzip16')>('@taquito/tzip16');
     const module = new Tzip16Module();
 
     return {
@@ -193,7 +220,8 @@ const scenarios: Record<PackageScenarioId, SmokeScenario> = {
   },
 
   'tzip12-behavior': async () => {
-    const { Tzip12Module } = await importPackage<typeof import('@taquito/tzip12')>('@taquito/tzip12');
+    const { Tzip12Module } =
+      await importPackage<typeof import('@taquito/tzip12')>('@taquito/tzip12');
     const module = new Tzip12Module();
 
     return {
@@ -242,9 +270,8 @@ const scenarios: Record<PackageScenarioId, SmokeScenario> = {
   },
 
   'beacon-wallet-import': async () => {
-    const beaconWallet = await importPackage<typeof import('@taquito/beacon-wallet')>(
-      '@taquito/beacon-wallet'
-    );
+    const beaconWallet =
+      await importPackage<typeof import('@taquito/beacon-wallet')>('@taquito/beacon-wallet');
 
     return {
       exports: ['BeaconWallet', 'BeaconWalletNotInitialized'],
@@ -256,9 +283,8 @@ const scenarios: Record<PackageScenarioId, SmokeScenario> = {
   },
 
   'wallet-connect-import': async () => {
-    const walletConnect = await importPackage<typeof import('@taquito/wallet-connect')>(
-      '@taquito/wallet-connect'
-    );
+    const walletConnect =
+      await importPackage<typeof import('@taquito/wallet-connect')>('@taquito/wallet-connect');
 
     return {
       exports: ['WalletConnect', 'NetworkType'],
@@ -270,18 +296,20 @@ const scenarios: Record<PackageScenarioId, SmokeScenario> = {
   },
 
   'ledger-signer-behavior': async () => {
-    const { DerivationType, LedgerSigner } = await importPackage<typeof import('@taquito/ledger-signer')>(
-      '@taquito/ledger-signer'
-    );
+    const { DerivationType, LedgerSigner } =
+      await importPackage<typeof import('@taquito/ledger-signer')>('@taquito/ledger-signer');
     const mockTransport = {
       send: async () =>
-        hexToBytes(
-          '21026760ff228c2c16cbca18bb782a106e51c43a131776f5dfad30ecb5d5e43eccbd9000',
-        ),
+        hexToBytes('21026760ff228c2c16cbca18bb782a106e51c43a131776f5dfad30ecb5d5e43eccbd9000'),
       decorateAppAPIMethods: () => undefined,
       setScrambleKey: () => undefined,
     };
-    const signer = new LedgerSigner(mockTransport as any, "44'/1729'/0'/0'", false, DerivationType.ED25519);
+    const signer = new LedgerSigner(
+      mockTransport as any,
+      "44'/1729'/0'/0'",
+      false,
+      DerivationType.ED25519
+    );
     const publicKey = await signer.publicKey();
     const publicKeyHash = await signer.publicKeyHash();
 
@@ -298,7 +326,12 @@ const scenarios: Record<PackageScenarioId, SmokeScenario> = {
     const sapling = await importPackage<typeof import('@taquito/sapling')>('@taquito/sapling');
 
     return {
-      exports: ['SaplingToolkit', 'SaplingTransactionViewer', 'initSapling', 'preloadSaplingParams'],
+      exports: [
+        'SaplingToolkit',
+        'SaplingTransactionViewer',
+        'initSapling',
+        'preloadSaplingParams',
+      ],
       summary: {
         hasSaplingToolkit: typeof sapling.SaplingToolkit === 'function',
         hasTransactionViewer: typeof sapling.SaplingTransactionViewer === 'function',

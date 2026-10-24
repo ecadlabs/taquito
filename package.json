@@ -60,10 +60,11 @@
     "test:browser:packages:webkit": "npm run build && npm run test:dist:esm-imports && playwright test --config browser-tests/playwright.config.ts --project=webkit",
     "test:browser:packages:all": "npm run build && npm run test:dist:esm-imports && playwright test --config browser-tests/playwright.config.ts",
     "test:browser:http": "npm run build && npm run test:dist:esm-imports && playwright test --config browser-tests/playwright.config.ts browser-tests/tests/http-backend.spec.ts",
-    "test:browser:packages:ci": "npm run test:browser:packages",
+    "test:browser:packages:ci": "npm run test:browser:packages && node scripts/test-browser-buffer.mjs",
     "typecheck:tests": "tsc -p tsconfig.typecheck-tests.json",
     "test:consumers": "node scripts/test-installed-consumers.mjs",
-    "test:fa21:local": "vitest run --config integration-tests/fa21/vitest.config.ts"
+    "test:fa21:local": "vitest run --config integration-tests/fa21/vitest.config.ts",
+    "test:browser:buffer": "npm run build && node scripts/test-browser-buffer.mjs"
   },
   "devDependencies": {
     "@nx/vite": "22.7.12",

@@ -2,6 +2,7 @@ import { defineConfig } from '@playwright/test';
 import { resolve } from 'node:path';
 
 const repoRoot = resolve(__dirname, '..');
+const browserPort = Number(process.env.TAQUITO_BROWSER_PORT ?? 4173);
 
 export default defineConfig({
   testDir: resolve(__dirname, 'tests'),
@@ -10,7 +11,7 @@ export default defineConfig({
   workers: 1,
   reporter: 'list',
   use: {
-    baseURL: 'http://127.0.0.1:4173',
+    baseURL: `http://127.0.0.1:${browserPort}`,
     headless: true,
     trace: 'retain-on-failure',
   },
@@ -38,7 +39,7 @@ export default defineConfig({
   webServer: {
     command: 'npx vite --config browser-tests/vite.config.mts',
     cwd: repoRoot,
-    url: 'http://127.0.0.1:4173/scenario.html?scenario=http-utils-behavior',
+    url: `http://127.0.0.1:${browserPort}/scenario.html?scenario=http-utils-behavior`,
     reuseExistingServer: !process.env.CI,
     stdout: 'pipe',
     stderr: 'pipe',

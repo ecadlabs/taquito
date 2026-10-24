@@ -60,7 +60,8 @@
     "@taquito/core": "^25.1.0",
     "@taquito/utils": "^25.1.0",
     "bignumber.js": "^10.0.2",
-    "fast-text-encoding": "^1.0.6"
+    "fast-text-encoding": "^1.0.6",
+    "buffer": "^6.0.3"
   },
   "devDependencies": {
     "@rollup/plugin-json": "^6.1.0",

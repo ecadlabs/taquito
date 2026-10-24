@@ -1,4 +1,6 @@
 export type PackageScenarioId =
+  | 'local-forging-buffer-control'
+  | 'local-forging-buffer-behavior'
   | 'core-import'
   | 'http-utils-behavior'
   | 'utils-behavior'
@@ -25,6 +27,11 @@ export type PackageScenario = {
 };
 
 export const packageScenarios: readonly PackageScenario[] = [
+  {
+    id: 'local-forging-buffer-behavior',
+    packageName: '@taquito/local-forging',
+    description: 'forges and parses fixed UTF-8 operation bytes without a global Buffer',
+  },
   {
     id: 'core-import',
     packageName: '@taquito/core',

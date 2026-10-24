@@ -1,3 +1,4 @@
+import { Buffer } from 'buffer';
 import BigNumber from 'bignumber.js';
 import { Decoder } from '../decoder';
 import { Uint8ArrayConsumer } from '../uint8array-consumer';

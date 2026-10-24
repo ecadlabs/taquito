@@ -1,3 +1,4 @@
+import { Buffer } from 'buffer';
 import {
   buf2hex,
   PrefixV2,
