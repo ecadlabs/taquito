@@ -37,7 +37,9 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'npx vite --config browser-tests/vite.config.mts',
+    command: process.env.TAQUITO_BUFFER_CONSUMER_CONFIG
+      ? `npx vite preview --config ${process.env.TAQUITO_BUFFER_CONSUMER_CONFIG}`
+      : 'npx vite --config browser-tests/vite.config.mts',
     cwd: repoRoot,
     url: `http://127.0.0.1:${browserPort}/scenario.html?scenario=http-utils-behavior`,
     reuseExistingServer: !process.env.CI,

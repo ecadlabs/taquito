@@ -1,6 +1,7 @@
 export type PackageScenarioId =
   | 'local-forging-buffer-control'
   | 'local-forging-buffer-behavior'
+  | 'remote-signer-buffer-behavior'
   | 'core-import'
   | 'http-utils-behavior'
   | 'utils-behavior'

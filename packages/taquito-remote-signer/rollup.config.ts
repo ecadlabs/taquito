@@ -9,27 +9,21 @@ const libraryName = 'taquito-remote-signer';
 export default {
   input: `src/${libraryName}.ts`,
   output: [
-    { 
-      file: pkg.main, 
-      name: camelCase(libraryName), 
-      format: 'umd', 
-      sourcemap: true, 
-      globals: { 
+    {
+      file: pkg.main,
+      name: camelCase(libraryName),
+      format: 'umd',
+      sourcemap: true,
+      globals: {
         '@taquito/core': 'core',
         '@taquito/http-utils': 'httpUtils',
         '@taquito/utils': 'utils',
-        'typedarray-to-buffer': 'toBuffer',
-      } 
+      },
     },
     { file: pkg.module, format: 'es', sourcemap: true },
   ],
   // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
-  external: [
-    '@taquito/core',
-    '@taquito/http-utils',
-    '@taquito/utils',
-    'typedarray-to-buffer'
-  ],
+  external: ['@taquito/core', '@taquito/http-utils', '@taquito/utils'],
   watch: {
     include: 'src/**',
   },

@@ -6,6 +6,7 @@ import {
   mkdirSync,
   readdirSync,
   readFileSync,
+  copyFileSync,
   writeFileSync,
   realpathSync,
   rmSync,
@@ -44,6 +45,7 @@ try {
         '--target',
         'es2020',
         'browser-tests/tests/buffer-portability.spec.ts',
+        'browser-tests/smoke-app/src/buffer-scenarios.ts',
       ],
       root
     )
@@ -77,6 +79,48 @@ try {
     return join(temporary, packed.filename);
   });
   console.log(run('npm', ['install', '--ignore-scripts', '--no-audit', '--no-fund', ...tarballs]));
+  for (const name of ['buffer-fixtures.ts', 'buffer-scenarios.ts'])
+    copyFileSync(join(root, 'browser-tests/smoke-app/src', name), join(consumer, name));
+  writeFileSync(
+    join(consumer, 'scenario.html'),
+    '<div id="status">{"status":"loading"}</div><script type="module" src="/main.ts"></script>'
+  );
+  writeFileSync(
+    join(consumer, 'main.ts'),
+    `import {runBufferScenario} from './buffer-scenarios';
+    try { const id=new URL(location.href).searchParams.get('scenario'); const result=await runBufferScenario(id ?? ''); document.querySelector('#status').textContent=JSON.stringify({status:'ok',...result}); }
+    catch(error) { document.querySelector('#status').textContent=JSON.stringify({status:'error',message:error instanceof Error ? error.message : String(error),stack:error instanceof Error ? error.stack : ''}); }`
+  );
+  console.log(
+    run(join(root, 'node_modules/.bin/tsc'), [
+      '--ignoreConfig',
+      '--noEmit',
+      '--skipLibCheck',
+      '--strict',
+      '--moduleResolution',
+      'bundler',
+      '--module',
+      'esnext',
+      '--target',
+      'es2020',
+      'buffer-scenarios.ts',
+    ])
+  );
+  const config = join(temporary, 'vite.config.mjs');
+  writeFileSync(
+    config,
+    'export default ' +
+      JSON.stringify({
+        root: consumer,
+        build: {
+          target: 'es2022',
+          minify: false,
+          rollupOptions: { input: join(consumer, 'scenario.html') },
+        },
+        preview: { host: '127.0.0.1', port: 4373, strictPort: true },
+      })
+  );
+  console.log(run(join(root, 'node_modules/.bin/vite'), ['build', '--config', config], root));
   const require = createRequire(join(consumer, 'package.json'));
   for (const name of packages) {
     const pkg = JSON.parse(readFileSync(join(root, 'packages', name, 'package.json'), 'utf8'));
@@ -107,6 +151,7 @@ try {
           NODE_PATH: '',
           CI: '1',
           TAQUITO_BROWSER_PORT: '4373',
+          TAQUITO_BUFFER_CONSUMER_CONFIG: config,
           TAQUITO_BROWSER_PACKAGES_DIR: join(consumer, 'node_modules', '@taquito'),
         },
       }

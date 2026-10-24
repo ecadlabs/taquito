@@ -1,9 +1,4 @@
-import {
-  bufferOperation,
-  expectedBufferOperation,
-  bufferControl,
-  expectedBufferControl,
-} from './buffer-fixtures';
+import { runBufferScenario } from './buffer-scenarios';
 import type { PackageScenarioId } from '../../scenario-manifest';
 import { setSmokeResult } from './smoke-shared';
 
@@ -45,33 +40,10 @@ const localForgerOperation = {
   ],
 } as const;
 
-const assertNoGlobalBuffer = () => {
-  if ('Buffer' in globalThis) throw new Error('A global Buffer would hide the browser regression');
-};
-
 const scenarios: Record<PackageScenarioId, SmokeScenario> = {
-  'local-forging-buffer-control': async () => {
-    assertNoGlobalBuffer();
-    const { LocalForger } =
-      await importPackage<typeof import('@taquito/local-forging')>('@taquito/local-forging');
-    const bytes = await new LocalForger().forge(bufferControl);
-    if (bytes !== expectedBufferControl) throw new Error('Ordinary transfer bytes changed');
-    assertNoGlobalBuffer();
-    return { exports: ['LocalForger'], summary: { bytes } };
-  },
-  'local-forging-buffer-behavior': async () => {
-    assertNoGlobalBuffer();
-    const { LocalForger } =
-      await importPackage<typeof import('@taquito/local-forging')>('@taquito/local-forging');
-    assertNoGlobalBuffer();
-    const forger = new LocalForger();
-    const bytes = await forger.forge(bufferOperation);
-    if (bytes !== expectedBufferOperation)
-      throw new Error('Forged bytes differ from the Octez fixture');
-    const decoded = await forger.parse(expectedBufferOperation);
-    assertNoGlobalBuffer();
-    return { exports: ['LocalForger'], summary: { bytes, decoded } };
-  },
+  'local-forging-buffer-control': () => runBufferScenario('local-forging-buffer-control'),
+  'local-forging-buffer-behavior': () => runBufferScenario('local-forging-buffer-behavior'),
+  'remote-signer-buffer-behavior': () => runBufferScenario('remote-signer-buffer-behavior'),
   'core-import': async () => {
     const core = await importPackage<typeof import('@taquito/core')>('@taquito/core');
 
