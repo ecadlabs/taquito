@@ -1,6 +1,6 @@
 # Mnemonic key fixtures
 
-mnemonic-keys.json contains 16 fixed, complete key tuples for the public BIP39
+mnemonic-keys.json contains 15 fixed, complete key tuples for the public BIP39
 zero-entropy phrase. The fixtures are test data, not private accounts.
 
 The independent generator mnemonic-keys.py uses Python hashlib and hmac for BIP39
@@ -20,7 +20,7 @@ All tuples also matched unchanged Taquito main at 7f60ff38 before extraction of
 the mnemonic helper. The preservation suite checks the complete public key,
 address and canonical secret key. Ed25519 uses the expanded 64-byte secret key.
 Cases cover defaults, account one, root and empty paths, hardened notation,
-legacy numeric-prefix parsing, nonhardened ECDSA paths and normalized passwords.
+nonhardened ECDSA paths and normalized passwords.
 
 The generator is a fixture tool, not a general HD library. It asserts that these
 vectors do not reach rare scalar-retry cases. It does not establish correctness

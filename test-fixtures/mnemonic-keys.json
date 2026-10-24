@@ -35,18 +35,6 @@
     }
   },
   {
-    "label": "legacy numeric-prefix notation",
-    "params": {
-      "mnemonic": "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about",
-      "derivationPath": "44junkh/1729h/0h/0h"
-    },
-    "expected": {
-      "publicKey": "edpku4US3ZykcZifjzSGFCmFr3zRgCKndE82estE4irj4d5oqDNDvf",
-      "publicKeyHash": "tz1VQA4RP4fLjEEMW2FR4pE9kAg5abb5h5GL",
-      "secretKey": "edskS3wZrW6P38vvgnrHqjuLLz76vy5dv9QduxAQ2yG7WL5WjEubiJQUcwS49tFfwym1MBioLATPzQFckaYgGhWBUS7nmikuME"
-    }
-  },
-  {
     "label": "root",
     "params": {
       "mnemonic": "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about",

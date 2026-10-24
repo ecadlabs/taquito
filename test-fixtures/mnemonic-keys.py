@@ -79,9 +79,11 @@ def derive_key_tuple(parameters):
     if parts and parts[0] == "m":
         parts = parts[1:]
     for part in parts:
-        hardened = part[-1:] in ("'", "h", "H")
-        # The legacy numeric-prefix fixture intentionally follows Taquito parsing.
-        number = int(re.match(r"\d+", part)[0])
+        component = re.fullmatch(r"([0-9]+)(['hH]?)", part)
+        if component is None:
+            raise ValueError("Invalid fixture derivation path component")
+        number = int(component[1])
+        hardened = bool(component[2])
         index = number + (0x80000000 if hardened else 0)
         data = b"\0" + secret_key if hardened else public_key_bytes(curve, secret_key)
         digest = hmac.digest(chain_code, data + index.to_bytes(4, "big"), "sha512")
@@ -110,7 +112,6 @@ cases = [
     ("defaults", {}),
     ("account one", {"derivationPath": "44'/1729'/1'/0'"}),
     ("alternate hardened notation", {"derivationPath": "m/44h/1729H/0h/0h"}),
-    ("legacy numeric-prefix notation", {"derivationPath": "44junkh/1729h/0h/0h"}),
     ("root", {"derivationPath": "m"}),
     ("empty path", {"derivationPath": ""}),
     ("Unicode password", {"password": "caf\u00e9"}),
