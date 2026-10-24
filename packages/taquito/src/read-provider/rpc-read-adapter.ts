@@ -114,8 +114,7 @@ export class RpcReadAdapter implements TzReadProvider {
    * Access the block hash
    */
   async getBlockHash(block: BlockIdentifier): Promise<string> {
-    const { hash } = await this.rpc.getBlockHeader({ block: String(block) });
-    return hash;
+    return this.rpc.getBlockHash({ block: String(block) });
   }
 
   /**

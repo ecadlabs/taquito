@@ -52,6 +52,8 @@ describe('PollingSubscribeProvider: exhaustMap behavior', () => {
     const mockContext = {
       rpc: mockRpc,
       readProvider: {
+        ...mockRpc,
+        getBlockHash: vi.fn().mockResolvedValue('BLockHash1'),
         getProtocolConstants: vi.fn(),
       },
     } as any;
@@ -104,6 +106,8 @@ describe('PollingSubscribeProvider: exhaustMap behavior', () => {
     const mockContext = {
       rpc: mockRpc,
       readProvider: {
+        ...mockRpc,
+        getBlockHash: vi.fn().mockResolvedValueOnce('BLockHash1').mockResolvedValue('BLockHash2'),
         getProtocolConstants: vi.fn(),
       },
     } as any;
@@ -160,6 +164,8 @@ describe('PollingSubscribeProvider: exhaustMap behavior', () => {
     const mockContext = {
       rpc: mockRpc,
       readProvider: {
+        ...mockRpc,
+        getBlockHash: vi.fn().mockResolvedValue('BLockHash1'),
         getProtocolConstants: vi.fn(),
       },
     } as any;
@@ -188,15 +194,14 @@ describe('PollingSubscribeProvider: exhaustMap behavior', () => {
     const block2 = makeBlock('BLockAfterError', 2);
 
     const mockRpc = {
-      getBlock: vi
-        .fn()
-        .mockRejectedValueOnce(rpcError)
-        .mockResolvedValueOnce(block2),
+      getBlock: vi.fn().mockRejectedValueOnce(rpcError).mockResolvedValueOnce(block2),
     };
 
     const mockContext = {
       rpc: mockRpc,
       readProvider: {
+        ...mockRpc,
+        getBlockHash: vi.fn().mockResolvedValue('BLockHash1'),
         getProtocolConstants: vi.fn(),
       },
     } as any;
@@ -238,15 +243,14 @@ describe('PollingSubscribeProvider: exhaustMap behavior', () => {
     const block1 = makeBlock('BLockRecovered', 1);
 
     const mockRpc = {
-      getBlock: vi
-        .fn()
-        .mockRejectedValueOnce(rpcError)
-        .mockResolvedValue(block1),
+      getBlock: vi.fn().mockRejectedValueOnce(rpcError).mockResolvedValue(block1),
     };
 
     const mockContext = {
       rpc: mockRpc,
       readProvider: {
+        ...mockRpc,
+        getBlockHash: vi.fn().mockResolvedValue('BLockHash1'),
         getProtocolConstants: vi.fn(),
       },
     } as any;
@@ -279,15 +283,14 @@ describe('PollingSubscribeProvider: exhaustMap behavior', () => {
     const block1 = makeBlock('BLockAfterClose', 1);
 
     const mockRpc = {
-      getBlock: vi
-        .fn()
-        .mockRejectedValueOnce(rpcError)
-        .mockResolvedValue(block1),
+      getBlock: vi.fn().mockRejectedValueOnce(rpcError).mockResolvedValue(block1),
     };
 
     const mockContext = {
       rpc: mockRpc,
       readProvider: {
+        ...mockRpc,
+        getBlockHash: vi.fn().mockResolvedValue('BLockHash1'),
         getProtocolConstants: vi.fn(),
       },
     } as any;
@@ -323,6 +326,8 @@ describe('PollingSubscribeProvider: exhaustMap behavior', () => {
     const mockContext = {
       rpc: mockRpc,
       readProvider: {
+        ...mockRpc,
+        getBlockHash: vi.fn().mockResolvedValue('BLockHash1'),
         getProtocolConstants: vi.fn(),
       },
     } as any;

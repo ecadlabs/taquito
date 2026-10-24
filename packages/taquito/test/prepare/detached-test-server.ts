@@ -55,6 +55,7 @@ export async function fixtureServer() {
       };
     else if (path.endsWith('/protocols'))
       value = { protocol: vector.protocol, next_protocol: vector.protocol };
+    else if (path.endsWith('/hash')) value = vector.operation.branch;
     else if (path.endsWith('/header')) value = { hash: vector.operation.branch, level: 1 };
     else if (path.endsWith('/manager_key')) value = revealed ? vector.publicKey : null;
     else if (path.endsWith('/balance')) value = '100000000';

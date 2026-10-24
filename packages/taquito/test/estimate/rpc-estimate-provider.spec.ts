@@ -48,6 +48,7 @@ describe('RPCEstimateProvider test signer', () => {
     getSpendable: ReturnType<typeof vi.fn>;
     getStorage: ReturnType<typeof vi.fn>;
     getBlockHeader: ReturnType<typeof vi.fn>;
+    getBlockHash: ReturnType<typeof vi.fn>;
     getManagerKey: ReturnType<typeof vi.fn>;
     getBlock: ReturnType<typeof vi.fn>;
     getContract: ReturnType<typeof vi.fn>;
@@ -83,6 +84,7 @@ describe('RPCEstimateProvider test signer', () => {
       getManagerKey: vi.fn(),
       getStorage: vi.fn(),
       getBlockHeader: vi.fn(),
+      getBlockHash: vi.fn(),
       getBlockMetadata: vi.fn(),
       getContract: vi.fn(),
       injectOperation: vi.fn(),
@@ -115,6 +117,7 @@ describe('RPCEstimateProvider test signer', () => {
     mockRpcClient.getManagerKey.mockResolvedValue('test');
     mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
     mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
+    mockRpcClient.getBlockHash.mockResolvedValue('test');
     mockRpcClient.getBlockMetadata.mockResolvedValue({ next_protocol: 'test_proto' });
     mockRpcClient.getProtocols.mockResolvedValue({ next_protocol: 'test_proto' });
     mockForger.forge.mockResolvedValue('1234');
@@ -564,6 +567,7 @@ describe('RPCEstimateProvider test signer', () => {
       };
       mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
       mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
+      mockRpcClient.getBlockHash.mockResolvedValue('test');
       mockRpcClient.simulateOperation.mockResolvedValue(preapplyResultFrom(params).withError()[0]);
       mockRpcClient.getManagerKey.mockResolvedValue('test');
       mockRpcClient.getBlockMetadata.mockResolvedValue({ next_protocol: 'test_proto' });
@@ -586,6 +590,7 @@ describe('RPCEstimateProvider test signer', () => {
       };
       mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
       mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
+      mockRpcClient.getBlockHash.mockResolvedValue('test');
       mockRpcClient.simulateOperation.mockResolvedValue(
         preapplyResultFrom(params).withBalanceTooLowError()[0]
       );
@@ -609,6 +614,7 @@ describe('RPCEstimateProvider test signer', () => {
       };
       mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
       mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
+      mockRpcClient.getBlockHash.mockResolvedValue('test');
       mockRpcClient.simulateOperation.mockResolvedValue(
         preapplyResultFrom(params).withInternalError()[0]
       );
@@ -1359,6 +1365,7 @@ describe('RPCEstimateProvider test wallet', () => {
     getSpendable: ReturnType<typeof vi.fn>;
     getStorage: ReturnType<typeof vi.fn>;
     getBlockHeader: ReturnType<typeof vi.fn>;
+    getBlockHash: ReturnType<typeof vi.fn>;
     getManagerKey: ReturnType<typeof vi.fn>;
     getBlock: ReturnType<typeof vi.fn>;
     getContract: ReturnType<typeof vi.fn>;
@@ -1395,6 +1402,7 @@ describe('RPCEstimateProvider test wallet', () => {
       getManagerKey: vi.fn(),
       getStorage: vi.fn(),
       getBlockHeader: vi.fn(),
+      getBlockHash: vi.fn(),
       getBlockMetadata: vi.fn(),
       getContract: vi.fn(),
       injectOperation: vi.fn(),
@@ -1430,6 +1438,7 @@ describe('RPCEstimateProvider test wallet', () => {
     mockRpcClient.getManagerKey.mockResolvedValue('test');
     mockRpcClient.getContract.mockResolvedValue({ counter: 0 });
     mockRpcClient.getBlockHeader.mockResolvedValue({ hash: 'test' });
+    mockRpcClient.getBlockHash.mockResolvedValue('test');
     mockRpcClient.getBlockMetadata.mockResolvedValue({ next_protocol: 'test_proto' });
     mockRpcClient.getProtocols.mockResolvedValue({ next_protocol: 'test_proto' });
     mockForger.forge.mockResolvedValue('1234');

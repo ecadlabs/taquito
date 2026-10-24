@@ -24,9 +24,9 @@ describe('detached signing', () => {
   };
   it('prepares a transfer using only public identity', async () => {
     const workflow = new TezosToolkit(server.url).prepareFor({ pkh: vector.pkh });
-    expect((await workflow.prepare.transaction(params)).opOb.contents).toEqual(
-      vector.operation.contents
-    );
+    const prepared = await workflow.prepare.transaction(params);
+    expect(prepared.opOb.contents).toEqual(vector.operation.contents);
+    expect(prepared.opOb.branch).toBe(vector.operation.branch);
     expect('toPreapply' in workflow.prepare).toBe(false);
   });
 
