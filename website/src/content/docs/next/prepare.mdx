@@ -8,6 +8,7 @@ Before operations are _forged_, _signed_, and then _injected_, they first need t
 In Taquito, the act of preparing an operation is to create the Operation Object and the counter in one single object that we name `PreparedOperation`.
 
 An example of `PreparedOperation` object for a `ballot` operation looks something like this:
+
 ```typescript
 {
   opOb: {
@@ -27,6 +28,7 @@ An example of `PreparedOperation` object for a `ballot` operation looks somethin
 ```
 
 Having access to the `PreparedOperation` object offers a few benefits, a few of them being:
+
 - The ability to retrieve information about the operation before injecting (operation hash, etc)
 - The ability to simulate an operation before injecting
 
@@ -35,28 +37,33 @@ The `PrepareProvider` class affords extension and control to users when preparin
 ## Usage example
 
 ### Individual operations
+
 The `PrepareProvider` is accessible via the `TezosToolkit` class:
+
 ```typescript
 // const Tezos = new TezosToolkit('RPC_ENDPOINT');
 
 const prepared = await Tezos.prepare.transaction({
   to: 'tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn',
-  amount: 5
+  amount: 5,
 });
 ```
 
 Let's break that transaction prepare call down.
 
 The interface of the `transaction` member method is as follows:
+
 ```typescript
-transaction(params: TransferParams , source?: string): Promise<PreparedOperation>;
+transaction(params: TransferParams): Promise<PreparedOperation>;
 ```
 
 - `params` is the Transaction operation parameters. In this case, the required properties are `to` and `amount`.
-- `source` is the source public key hash if you do wish to override the source. This parameter is optional by design. If you do not wish to override it, the source will be grabbed from the `Context`.
+- `params.source` optionally overrides the source public key hash. Without it, preparation uses the configured signer or wallet identity.
 
 ### Batch operations
+
 `PrepareProvider` also has support for batch operations:
+
 ```typescript
 const prepared = await Tezos.prepare.batch([
   {
@@ -71,10 +78,13 @@ const prepared = await Tezos.prepare.batch([
   },
 ]);
 ```
+
 The parameters for each object in the array are the required parameters for each respective operation, with the added `kind` property that denotes the operation kind. Users can also utilize `OpKind` which is an enum that holds operation kind values.
 
 ### Contract calls
+
 Users are also able to utilize the `PrepareProvider` to prepare contract calls:
+
 ```typescript
 const contractAbs = await Tezos.contract.at(contractAddress);
 const method = await contractAbs.methodsObject.increment(1);
@@ -86,19 +96,22 @@ const prepared = await Tezos.prepare.contractCall(method);
 We've also added a couple utility methods to convert a `PreparedOperation` into objects that can be consumed by the `forger` as well as the `preapplyOperations` method.
 
 ### `toPreapply()`
+
 The `toPreapply()` method converts a `PreparedOperation` object into an entity that is consumable by the `preapplyOperations()` method in the RPC package (i.e. `PreapplyParams` type object).
 
 #### Example
+
 ```typescript
 const preparedTransferOp = await Tezos.prepare.transaction({
-    amount: 1,
-    to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu'
+  amount: 1,
+  to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
 });
 const params = await Tezos.prepare.toPreapply(preparedTransferOp);
 const preapplyOp = await Tezos.rpc.preapplyOperations(params);
 ```
 
 ### `toForge()`
+
 The `toForge()` method converts a `PreparedOperation` into an object that can be passed into the `forge` method (i.e. `ForgeParams` type object)
 
 #### Example
@@ -106,8 +119,65 @@ The `toForge()` method converts a `PreparedOperation` into an object that can be
 ```typescript
 const preparedTransfer = await Tezos.prepare.transaction({
   amount: 1,
-  to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu'
+  to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
 });
 const params = Tezos.prepare.toForge(preparedTransfer);
 const forgedBytes = await forger.forge(params);
 ```
+
+## Detached signing
+
+Use `Tezos.prepareFor()` when an MPC service, HSM or offline signer produces the signature outside Taquito. The workflow needs a public key hash and, for an unrevealed account, its public key. It does not call the configured signer or wallet.
+
+```typescript
+const external = Tezos.prepareFor({ pkh: senderAddress, publicKey: senderPublicKey });
+const transfer = { to: recipientAddress, amount: 1 };
+const estimate = await external.estimate.transfer(transfer);
+const prepared = await external.prepare.transaction({
+  ...transfer,
+  fee: estimate.suggestedFeeMutez,
+  gasLimit: estimate.gasLimit,
+  storageLimit: estimate.storageLimit,
+});
+const signable = await external.toSignable(prepared);
+
+// Your application obtains a Base58Check signature from the external signer.
+const signature = await requestExternalSignature(signable);
+const signed = external.attachSignature(signable, signature);
+const operation = await external.inject(signed);
+await operation.confirmation();
+```
+
+Preparation and estimation are separate. A prepared operation's default simulation limits are not final fee estimates. Copy the estimate fields as shown above before signing.
+
+The `prepare` methods are `transaction`, `contractCall`, `delegation`, `originate`, `reveal` and `batch`. The corresponding `estimate` methods are `transfer`, `contractCall`, `setDelegate`, `originate`, `reveal` and `batch`. Contract calls accept the contract's `methodsObject` result. Input batches accept transactions, delegations and originations. Taquito inserts a reveal when needed. Use `prepare.reveal()` for a separate explicit reveal. Explicit reveal batches and other operation kinds are not supported by this workflow.
+
+Each operation must use the workflow's public key hash as its source. A supplied public key must match that hash. An unrevealed BLS account also needs its proof of possession:
+
+```typescript
+const external = Tezos.prepareFor({
+  pkh: blsAddress,
+  publicKey: blsPublicKey,
+  proof: blsProofOfPossession,
+});
+```
+
+The workflow verifies this proof when created. Explicit reveal calls may omit the proof or supply that same proof. A different per-call proof is rejected.
+
+### Signable bytes and signature formats
+
+The signable object contains `unsignedBytes`, watermark `03`, `watermarkedBytes`, `blake2bDigest`, `scheme` and `signingInput`. All byte fields are hexadecimal strings. Ed25519, secp256k1 and P-256 sign the Blake2b-256 digest of the watermarked bytes. BLS signs the watermarked bytes with the Tezos BLS domain separator. ML-DSA-44 signs the digest using pure ML-DSA with an empty context. Follow `signingInput` and the scheme's rules. Do not hash a digest again or add a second watermark.
+
+`attachSignature()` accepts `edsig`, `spsig1`, `p2sig`, `BLsig` and `mdsig` for the matching account scheme. The generic 64-byte `sig` format is also accepted for Ed25519, secp256k1 and P-256. Raw signature bytes and aggregate signatures are not accepted. Taquito adds the operation envelope required for BLS and ML-DSA. Scheme support still depends on the network protocol. The independent ML-DSA operation fixtures use Alpha; Tallinn rejects ML-DSA manager sources.
+
+If the identity includes a public key, attachment verifies the signature locally. For a revealed account supplied only as a public key hash, attachment checks the format and scheme; node preapplication checks the signature. Preapplication is required before injection in both cases.
+
+### Lifetime and retries
+
+`toSignable()` copies the prepared operation before forging. Later edits to the input do not change the approved bytes. Signable and signed objects belong to the workflow that created them. They cannot be copied, serialized for restart or passed to another workflow.
+
+`inject()` preapplies and injects the signed bytes without changing counters or forging again. A stale branch or counter requires fresh preparation and a new signature. Repeated calls with the same signed object return the same attempt, including after a failure. They do not automatically resend an operation after an ambiguous network response. Check the operation's network status before deciding whether to create another attempt.
+
+The workflow captures the selected RPC, protocol and confirmation settings. SDK default providers use that captured context even if the toolkit changes later. Caller-supplied providers are retained as the same instances, including explicitly configured built-in instances. Their own mutable state cannot be copied by Taquito. Use providers whose configuration remains stable for the workflow's lifetime.
+
+The existing `Tezos.prepare` methods remain available. In particular, its `toPreapply()` still forges and signs with the configured signer.

@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "../..",
+    "noEmit": true,
+    "strict": true,
+    "types": ["node", "vitest/globals"],
+    "resolveJsonModule": true
+  },
+  "include": ["src/**/*", "test/prepare/detached-*.ts"]
+}

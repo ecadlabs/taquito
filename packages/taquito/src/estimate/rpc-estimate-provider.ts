@@ -1,3 +1,6 @@
+import { detachedSignatureEncoding } from '../prepare/detached-envelope';
+import { Context } from '../context';
+import { DetachedIdentity, detachedProof } from '../prepare/detached-identity';
 import {
   PreapplyResponse,
   ConstantsResponse,
@@ -97,12 +100,22 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
   private readonly STORAGE_BUFFER = 20; // according to octez-client
   private readonly UNKNOWN_GAS_LIMIT_PER_OPERATION = 1000;
 
-  private prepare = new PrepareProvider(this.context);
+  private prepare: PrepareProvider;
+
+  constructor(
+    context: Context,
+    private readonly identity?: Readonly<DetachedIdentity>
+  ) {
+    super(context);
+    this.prepare = new PrepareProvider(context, identity);
+  }
 
   private async getKeys(): Promise<{
     publicKeyHash: string;
     publicKey?: string;
   }> {
+    if (this.identity)
+      return { publicKeyHash: this.identity.pkh, publicKey: this.identity.publicKey };
     const isSignerConfigured = this.context.isAnySignerConfigured();
     return {
       publicKeyHash: isSignerConfigured
@@ -470,7 +483,12 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
         // Octez's operation envelope includes ff04 before the complete signature.
         eachOpSize = (opbytes.length / 2 + 2 + sigSize[PrefixV2.MLDSA44Signature]) / numberOfOps;
       } else if (content.source.startsWith(PrefixV2.BLS12_381PublicKeyHash)) {
-        eachOpSize = (opbytes.length / 2 + sigSize[PrefixV2.BLS12_381Signature]) / numberOfOps;
+        eachOpSize =
+          (opbytes.length / 2 +
+            (this.identity
+              ? detachedSignatureEncoding(this.identity.pkh).size
+              : sigSize[PrefixV2.BLS12_381Signature])) /
+          numberOfOps;
       } else {
         eachOpSize = (opbytes.length / 2 + sigSize[PrefixV2.Ed25519Signature]) / numberOfOps;
       }
@@ -810,7 +828,9 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
         if (params && params.proof) {
           b58DecodeAndCheckPrefix(params.proof, [PrefixV2.BLS12_381Signature]); // validate proof to be a bls signature
         } else {
-          const { prefixSig } = await this.signer.provePossession!();
+          const prefixSig = this.identity
+            ? detachedProof(this.identity)
+            : (await this.signer.provePossession!()).prefixSig;
           params = { ...params, proof: prefixSig };
         }
       } else {

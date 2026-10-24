@@ -151,3 +151,7 @@ See the top-level [https://github.com/ecadlabs/taquito](https://github.com/ecadl
 ## Disclaimer
 
 THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+### External signing
+
+`Tezos.prepareFor({ pkh, publicKey, proof })` prepares and estimates operations using public identity. The public key is optional for a revealed account, and the proof applies to BLS reveals. Use `toSignable()`, `attachSignature()` and `inject()` to obtain external approval and submit the exact signed bytes. The workflow returns the standard operation handle for confirmations. See the [detached signing guide](https://taquito.io/docs/next/prepare/#detached-signing) for signature formats, provider capture and retry behavior.
