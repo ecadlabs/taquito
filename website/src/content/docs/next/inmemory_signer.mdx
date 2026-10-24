@@ -237,8 +237,7 @@ Ed25519 paths must be hardened. BLS and ML-DSA mnemonic derivation are not suppo
 
 The returned `secretKey` is unencrypted. Avoid logging or sharing the account
 object. Ed25519 uses the expanded secret-key form returned by
-`InMemorySigner.secretKey()`. The helper can throw low-level key validation
-errors that `InMemorySigner.fromMnemonic` translates through its constructor.
+`InMemorySigner.secretKey()`.
 
 ### A simple factory multiple keys/wallets
 

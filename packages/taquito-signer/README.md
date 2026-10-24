@@ -103,9 +103,8 @@ by InMemorySigner.secretKey().
 Options match InMemorySigner.fromMnemonic. password is the optional BIP39
 passphrase and defaults to an empty string. The default path is 44'/1729'/0'/0'
 and the default curve is ed25519. Supported mnemonic curves are ed25519,
-secp256k1 and p256. Ed25519 paths must be hardened. Existing InMemorySigner.fromMnemonic path parsing and
-error behavior are unchanged. The new helper uses low-level key validation errors
-and does not apply the signer constructor error translation. BLS and ML-DSA mnemonic derivation are not added here.
+secp256k1 and p256. Ed25519 paths must be hardened. BLS and ML-DSA mnemonic
+derivation are not supported.
 
 ## Additional info
 
