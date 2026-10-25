@@ -903,3 +903,27 @@ try {
 
   </TabItem>
 </Tabs>
+
+## Read a finite page of values
+
+Use `getValuesPage` to read decoded values without knowing their keys. The result includes the exact block hash used for the read. Pass that hash to subsequent calls to read the same snapshot.
+
+```typescript
+const first = await bigMap.getValuesPage({ offset: 0, length: 20 });
+const second = await bigMap.getValuesPage({
+  offset: 20,
+  length: 20,
+  block: first.blockHash,
+});
+const empty = await bigMap.isEmpty(first.blockHash);
+```
+
+`getValues` returns only the decoded values of one page. Both page methods default to offset 0 and length 100. Length must be between 1 and 1000, and offset must be a nonnegative safe integer. These limits are SDK policy. The low-level `RpcClient.getBigMapValues` method also allows length 0 and has no maximum beyond safe integers.
+
+Each high-level call captures the selected read provider and resolves a block level or `head` to an exact hash before reading. A supplied exact hash avoids that lookup. Separate calls only share a snapshot when you pass the same hash. Values use the existing schema decoder. The new page path checks Micheline structure, but does not add a full Michelson type check against the schema.
+
+Value order is unspecified. This API does not recover original keys and does not provide an unbounded iterator. A missing map, unavailable historical context or denied RPC remains an error. `isEmpty` requests at most one value and propagates those errors.
+
+The item limit does not bound response bytes or node work. The Octez 25.3 implementation traverses the whole big-map storage before slicing a page, so even `isEmpty` can be expensive for large maps. Repeated pages repeat that work. RPC nodes must expose the big-map values endpoint and retain the requested context.
+
+Custom RPC, read and storage providers can add the optional page methods. If the selected provider lacks that capability, these methods throw `UnsupportedActionError` instead of switching to another provider. Existing single-key and known-key batch reads keep their behavior.
