@@ -61,7 +61,9 @@
     "test:browser:packages:all": "npm run build && npm run test:dist:esm-imports && playwright test --config browser-tests/playwright.config.ts",
     "test:browser:http": "npm run build && npm run test:dist:esm-imports && playwright test --config browser-tests/playwright.config.ts browser-tests/tests/http-backend.spec.ts",
     "test:browser:packages:ci": "npm run test:browser:packages",
-    "typecheck:smart-rollup-whitelist": "tsc -p tsconfig.smart-rollup-whitelist-tests.json"
+    "typecheck:smart-rollup-whitelist": "tsc -p tsconfig.smart-rollup-whitelist-tests.json",
+    "typecheck:big-map-values": "tsc -p tsconfig.big-map-values-tests.json",
+    "test:big-map-values:packages": "npm run build && npm run typecheck:big-map-values && node scripts/test-big-map-values-consumers.mjs"
   },
   "devDependencies": {
     "@nx/vite": "22.7.12",

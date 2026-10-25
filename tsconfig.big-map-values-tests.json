@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "rootDir": "."
+  },
+  "include": [
+    "packages/taquito/test/contract/big-map-values*.spec.ts",
+    "packages/taquito-rpc/test/big-map-values*.spec.ts"
+  ]
+}
