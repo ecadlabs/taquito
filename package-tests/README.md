@@ -28,6 +28,10 @@ and the consumer resolve the same installed core package. It then runs:
 - A Vite bundle built from installed packages, executed in Chromium. The build
   checks that both installed ESM module files participate, without source aliases.
 
+The full HTTP scenario runs once through CommonJS and once through native ESM.
+Explicit constructor-identity assertions cover mixed imports without repeating
+the scenario for every import combination.
+
 The CommonJS default export exposed through native ESM is recorded as existing
 behavior. These checks do not define every namespace export as a permanent API.
 

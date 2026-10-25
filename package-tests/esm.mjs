@@ -15,5 +15,3 @@ assert.equal(HttpResponseError, commonHttp.HttpResponseError);
 assert.equal(core.default, commonCore);
 assert.equal(http.default, commonHttp);
 await checkConsumer(core, http);
-await checkConsumer(commonCore, http);
-await checkConsumer(core, commonHttp);
