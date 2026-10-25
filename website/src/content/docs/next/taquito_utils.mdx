@@ -261,3 +261,18 @@ const sig = 'spsig1cdLkp1RLgUHAp13aRFkZ6MQDPp7xCnjAExGL3MBSdMDmT6JgQSX8cufyDgJRM
 const isValid = verifySignature(message, pk, sig);
 console.log(isValid);
 ```
+
+## Tezos X synthetic operation hashes
+
+On a compatible Tezos X kernel, an operation that crosses runtimes has a synthetic operation in the destination runtime. Use `getEthereumTransactionHash` with the parent Michelson operation hash, or `getTezosOperationHash` with the parent EVM transaction hash.
+
+```typescript
+import { getEthereumTransactionHash, getTezosOperationHash } from '@taquito/utils';
+
+const evmHash = getEthereumTransactionHash(parentMichelsonOperationHash);
+const michelsonHash = getTezosOperationHash(parentEvmTransactionHash);
+```
+
+The EVM input is a 32-byte hex string with an optional `0x` prefix. The Michelson input must be a valid Base58Check operation hash. These helpers implement the formulas in [kernel revision e494418e](https://gitlab.com/tezos/tezos/-/merge_requests/22718). They use raw parent bytes with the destination tag `evm` or `michelson`.
+
+These are directional derivations, not inverse conversions. Computing a hash does not establish that its parent exists, crossed runtimes or belongs to a network with this kernel. Check the selected network and query its RPC separately. These formulas do not apply to ordinary Tezos L1 operations.
