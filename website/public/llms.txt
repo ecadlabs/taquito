@@ -76,6 +76,7 @@ The `next` version contains the latest unreleased documentation.
 - `contracts-library` - Contracts Library
 - `timelock` - Timelock (BETA)
 - `taquito_utils` - Taquito Utils
+- `tezosx_cross_runtime` - Experimental Tezos X call preparation
 - **Sapling**
   - `sapling` - Sapling Toolkit
   - `sapling_in_memory_spending_key` - InMemorySpendingKey
