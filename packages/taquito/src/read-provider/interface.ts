@@ -1,6 +1,7 @@
 import { validateBlock, ValidationResult } from '@taquito/utils';
 import {
   BlockResponse,
+  BigMapPagination,
   EntrypointsResponse,
   MichelsonV1Expression,
   SaplingDiffResponse,
@@ -28,6 +29,11 @@ export const isBlockHashIdentifier = (block: string): block is `B${string}` => {
 };
 
 export interface TzReadProvider {
+  getBigMapValues?(
+    id: string,
+    page: BigMapPagination,
+    block: BlockIdentifier
+  ): Promise<MichelsonV1Expression[]>;
   /**
    * The spendable balance of a contract (in mutez), also known as liquid balance. Corresponds to tez owned by the contract that are neither staked, nor in unstaked requests, nor in frozen bonds. Identical to the 'spendable' RPC.
    * @param address address from which we want to retrieve the spendable balance

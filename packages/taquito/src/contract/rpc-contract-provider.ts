@@ -1,3 +1,7 @@
+import { Parser, assertMichelsonData } from '@taquito/michel-codec';
+import { normalizeBigMapValuesOptions } from './big-map-values-options';
+import { isBlockHashIdentifier } from '../read-provider/interface';
+import type { BigMapValuesOptions, BigMapValuesPage } from './interface';
 import { HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
 import { BigMapKeyType, MichelsonMap, MichelsonMapKey, Schema } from '@taquito/michelson-encoder';
 import {
@@ -40,6 +44,7 @@ import {
   InvalidFinalizeUnstakeAmountError,
   InvalidStakingAddressError,
   ProhibitedActionError,
+  UnsupportedActionError,
 } from '@taquito/core';
 import { OperationBatch } from '../batch/rpc-batch-provider';
 import { Context } from '../context';
@@ -139,6 +144,38 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
       script.storage,
       smartContractAbstractionSemantic(this, block)
     ) as T; // Cast into T because only the caller can know the true type of the storage
+  }
+
+  /** Read and decode one finite page through a captured read context. */
+  async getBigMapValuesPageByID<T>(
+    id: string,
+    schema: Schema,
+    options: BigMapValuesOptions = {}
+  ): Promise<BigMapValuesPage<T>> {
+    const { offset, length, block } = normalizeBigMapValuesOptions(options);
+    const snapshot = this.context.clone();
+    const reader = snapshot.readProvider;
+    if (typeof reader.getBigMapValues !== 'function')
+      throw new UnsupportedActionError('The read provider does not support big-map values pages');
+    const selected = block ?? 'head';
+    const hash =
+      typeof selected === 'string' && isBlockHashIdentifier(selected)
+        ? selected
+        : await reader.getBlockHash(selected);
+    if (!isBlockHashIdentifier(hash))
+      throw new TypeError('The read provider returned an invalid block hash');
+    const raw = await reader.getBigMapValues(id, { offset, length }, hash);
+    if (!Array.isArray(raw) || raw.length > length)
+      throw new TypeError('Invalid or overlength big-map values response');
+    const semantic = smartContractAbstractionSemantic(snapshot.contract, hash);
+    const parser = new Parser({ expandMacros: false });
+    const values = raw.map((value) => {
+      // Validate structure without changing the existing schema decoder's mappings.
+      const parsed = parser.parseJSON(value);
+      assertMichelsonData(parsed);
+      return schema.ExecuteOnBigMapValue(parsed, semantic) as T;
+    });
+    return { values, blockHash: hash };
   }
 
   /**

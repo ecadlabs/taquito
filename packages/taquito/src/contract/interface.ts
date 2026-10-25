@@ -1,5 +1,5 @@
 import { BigMapKeyType, MichelsonMap, MichelsonMapKey, Schema } from '@taquito/michelson-encoder';
-import { SaplingDiffResponse } from '@taquito/rpc';
+import { SaplingDiffResponse, BigMapPagination } from '@taquito/rpc';
 import { OperationBatch } from '../batch/rpc-batch-provider';
 import { Context } from '../context';
 import { DelegateOperation } from '../operations/delegate-operation';
@@ -46,7 +46,22 @@ import type { BlockIdentifier } from '../read-provider/interface';
 
 export type ContractSchema = Schema | unknown;
 
+export interface BigMapValuesOptions extends BigMapPagination {
+  block?: BlockIdentifier;
+}
+export interface BigMapValuesPage<T> {
+  values: T[];
+  blockHash: `B${string}`;
+}
+
 export interface StorageProvider {
+  /** Optional finite values-page capability. The returned hash identifies the selected snapshot. */
+  getBigMapValuesPageByID?<T>(
+    id: string,
+    schema: Schema,
+    options?: BigMapValuesOptions
+  ): Promise<BigMapValuesPage<T>>;
+
   /**
    *
    * Return a well formatted json object of the contract storage

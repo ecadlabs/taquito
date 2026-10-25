@@ -1,5 +1,7 @@
+import { UnsupportedActionError } from '@taquito/core';
 import {
   BlockResponse,
+  BigMapPagination,
   EntrypointsResponse,
   MichelsonV1Expression,
   RpcClientInterface,
@@ -231,5 +233,14 @@ export class RpcReadAdapter implements TzReadProvider {
    */
   getAdaptiveIssuanceLaunchCycle(block: BlockIdentifier): Promise<AILaunchCycleResponse> {
     return this.rpc.getAdaptiveIssuanceLaunchCycle({ block: String(block) });
+  }
+  async getBigMapValues(
+    id: string,
+    page: BigMapPagination,
+    block: BlockIdentifier
+  ): Promise<MichelsonV1Expression[]> {
+    if (typeof this.rpc.getBigMapValues !== 'function')
+      throw new UnsupportedActionError('The RPC client does not support big-map values pages');
+    return this.rpc.getBigMapValues(id, page, { block: String(block) });
   }
 }
