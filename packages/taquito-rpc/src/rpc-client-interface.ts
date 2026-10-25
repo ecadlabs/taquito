@@ -3,6 +3,8 @@ type BigNumber = InstanceType<typeof BigNumberJs>;
 const BigNumber = BigNumberJs;
 import {
   BlsPublicKeyWithProof,
+  BigMapPagination,
+  MichelsonV1Expression,
   BlsAggregatePublicKeysResponse,
   BlsAggregateSignaturesParams,
   BlsSignatureResponse,
@@ -71,6 +73,11 @@ export const defaultChain = 'main';
 export const defaultRPCOptions: RPCOptions = { block: 'head' };
 
 export interface RpcClientInterface {
+  getBigMapValues?(
+    id: string,
+    page?: BigMapPagination,
+    options?: RPCOptions
+  ): Promise<MichelsonV1Expression[]>;
   thresholdSignatures(params: BlsThresholdSignaturesParams): Promise<BlsSignatureResponse>;
   aggregateSignatures(params: BlsAggregateSignaturesParams): Promise<BlsSignatureResponse>;
   checkProof(key: BlsPublicKeyWithProof): Promise<boolean>;
@@ -167,6 +174,7 @@ export enum RPCMethodName {
   GET_BAKING_RIGHTS = 'getBakingRights',
   GET_BALLOTS = 'getBallots',
   GET_BALLOT_LIST = 'getBallotList',
+  GET_BIG_MAP_VALUES = 'getBigMapValues',
   GET_BIG_MAP_EXPR = 'getBigMapExpr',
   GET_BLOCK_HASH = 'getBlockHash',
   GET_BLOCK = 'getBlock',

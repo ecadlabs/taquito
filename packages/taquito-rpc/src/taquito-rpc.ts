@@ -1,3 +1,4 @@
+import { normalizeBigMapPagination } from './big-map-pagination';
 /**
  * @packageDocumentation
  * @module @taquito/rpc
@@ -17,6 +18,8 @@ import {
 } from './rpc-client-interface';
 import {
   BlsPublicKeyWithProof,
+  BigMapPagination,
+  MichelsonV1Expression,
   BlsAggregatePublicKeysResponse,
   BlsAggregateSignaturesParams,
   BlsSignatureResponse,
@@ -1391,5 +1394,23 @@ export class RpcClient implements RpcClientInterface {
       { url: this.createURL('/bls/threshold_signatures'), method: 'POST' },
       params
     );
+  }
+  /** Read one finite page of big-map values. Ordering is unspecified; original keys are not returned. */
+  async getBigMapValues(
+    id: string,
+    page: BigMapPagination = {},
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<MichelsonV1Expression[]> {
+    if (typeof id !== 'string' || !/^\d+$/.test(id))
+      throw new RangeError('Expected a non-negative big-map ID');
+    const query = normalizeBigMapPagination(page);
+    const values = await this.httpBackend.createRequest<MichelsonV1Expression[]>({
+      url: this.createURL('/chains/' + this.chain + '/blocks/' + block + '/context/big_maps/' + id),
+      method: 'GET',
+      query,
+    });
+    if (!Array.isArray(values) || values.length > query.length)
+      throw new TypeError('Invalid or overlength big-map values response');
+    return values;
   }
 }

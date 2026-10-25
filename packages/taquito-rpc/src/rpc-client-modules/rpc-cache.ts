@@ -1,3 +1,5 @@
+import { UnsupportedActionError } from '@taquito/core';
+import { normalizeBigMapPagination } from '../big-map-pagination';
 import { RPCMethodName } from './../rpc-client-interface';
 import BigNumberJs from 'bignumber.js';
 type BigNumber = InstanceType<typeof BigNumberJs>;
@@ -5,6 +7,8 @@ const BigNumber = BigNumberJs;
 import { defaultRPCOptions, RpcClientInterface, RPCOptions } from '../rpc-client-interface';
 import {
   BlsPublicKeyWithProof,
+  BigMapPagination,
+  MichelsonV1Expression,
   BlsAggregatePublicKeysResponse,
   BlsAggregateSignaturesParams,
   BlsSignatureResponse,
@@ -1486,5 +1490,25 @@ export class RpcClientCache implements RpcClientInterface {
    */
   async thresholdSignatures(params: BlsThresholdSignaturesParams): Promise<BlsSignatureResponse> {
     return this.rpcClient.thresholdSignatures(params);
+  }
+  /** Cache pages by RPC URL, block, map ID, offset and length. */
+  async getBigMapValues(
+    id: string,
+    page: BigMapPagination = {},
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<MichelsonV1Expression[]> {
+    const { offset, length } = normalizeBigMapPagination(page);
+    if (typeof this.rpcClient.getBigMapValues !== 'function')
+      throw new UnsupportedActionError('The RPC client does not support big-map values pages');
+    const key = this.formatCacheKey(this.rpcClient.getRpcUrl(), RPCMethodName.GET_BIG_MAP_VALUES, [
+      encodeURIComponent(block),
+      encodeURIComponent(id),
+      String(offset),
+      String(length),
+    ]);
+    if (this.has(key)) return this.get(key);
+    const result = this.rpcClient.getBigMapValues(id, { offset, length }, { block });
+    this.put(key, result);
+    return result;
   }
 }
