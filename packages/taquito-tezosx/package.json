@@ -1,0 +1,39 @@
+{
+  "name": "@taquito/tezosx",
+  "version": "25.1.1",
+  "description": "Experimental unsigned Tezos X cross-runtime call builders.",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "main": "./dist/lib/taquito-tezosx.js",
+  "module": "./dist/taquito-tezosx.mjs",
+  "types": "./dist/types/taquito-tezosx.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/taquito-tezosx.d.ts",
+      "import": "./dist/taquito-tezosx.mjs",
+      "require": "./dist/lib/taquito-tezosx.js"
+    }
+  },
+  "files": [
+    "dist",
+    "NOTICE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "prebuild": "rimraf dist",
+    "build": "tsc -p tsconfig.prod.json --module commonjs && rollup -c rollup.config.mjs",
+    "test": "vitest run --config vitest.config.ts",
+    "lint": "eslint --ext .ts src test",
+    "version-stamp": "node ../taquito/version-stamping.js"
+  },
+  "dependencies": {
+    "@taquito/core": "^25.1.1",
+    "@taquito/michel-codec": "^25.1.1",
+    "@taquito/utils": "^25.1.1",
+    "viem": "2.47.2"
+  }
+}

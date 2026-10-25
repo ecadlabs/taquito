@@ -84,6 +84,7 @@ Taquito is a [monorepo](https://en.wikipedia.org/wiki/Monorepo), composed of npm
 | `@taquito/sapling` | [npm](https://www.npmjs.com/package/@taquito/sapling) | [source](./packages/taquito-sapling) | Sapling transaction building and viewing support for Taquito. |
 | `@taquito/signer` | [npm](https://www.npmjs.com/package/@taquito/signer) | [source](./packages/taquito-signer) | Software signer implementations and signing utilities for Taquito. |
 | `@taquito/taquito` | [npm](https://www.npmjs.com/package/@taquito/taquito) | [source](./packages/taquito) | TypeScript SDK for building wallets, dapps, and tooling on Tezos. |
+| `@taquito/tezosx` | [npm](https://www.npmjs.com/package/@taquito/tezosx) | [source](./packages/taquito-tezosx) | Experimental unsigned Tezos X cross-runtime call builders. |
 | `@taquito/timelock` | [npm](https://www.npmjs.com/package/@taquito/timelock) | [source](./packages/taquito-timelock) | Timelock cryptography support for Taquito and Tezos applications. |
 | `@taquito/tzip12` | [npm](https://www.npmjs.com/package/@taquito/tzip12) | [source](./packages/taquito-tzip12) | TZIP-12 token metadata support for Taquito. |
 | `@taquito/tzip16` | [npm](https://www.npmjs.com/package/@taquito/tzip16) | [source](./packages/taquito-tzip16) | TZIP-16 contract metadata support for Taquito. |
