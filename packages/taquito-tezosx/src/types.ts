@@ -124,7 +124,9 @@ export type EvmToMichelsonIntent =
        * Entrypoint parameter, either as binary Micheline (hex, without the `05` pack
        * prefix) or as a Michelson expression with an optional type.
        */
-      parameter: string | { value: MichelineExpression; type?: import('@taquito/michel-codec').MichelsonType };
+      parameter:
+        | string
+        | { value: MichelineExpression; type?: import('@taquito/michel-codec').MichelsonType };
       /** Amount in mutez. Defaults to 0 */
       amount?: AmountLike;
     };
