@@ -1,5 +1,5 @@
 import { it, expect } from 'vitest';
-import { packDataBytes } from '@taquito/michel-codec';
+import { packDataBytes, type MichelsonData } from '@taquito/michel-codec';
 import {
   buildMichelsonToEvmCall,
   toTransferParams,
@@ -30,7 +30,7 @@ it('builds the complete native gateway parameter against independent Octez bytes
 it.each(['none', 'some'])('strips exactly the selector and preserves the %s callback', (label) => {
   const expected = vectors.contracts.find((v) => v.label === label);
   if (!expected) throw new Error('Fixture missing');
-  const callback =
+  const callback: MichelsonData | undefined =
     label === 'some'
       ? { prim: 'Some' as const, args: [{ string: vectors.destination + '%receive' }] }
       : undefined;
@@ -104,4 +104,28 @@ it('revalidates manually constructed transfer amounts and parameters', () => {
   expect(() =>
     Reflect.apply(toTransferParams, undefined, [{ ...call, entrypoint: 'arbitrary' }])
   ).toThrow();
+});
+
+it('rejects malformed JavaScript literals and option arities at both exported boundaries', () => {
+  const call = buildMichelsonToEvmCall({ to: vectors.evm });
+  const malformed = {
+    ...call,
+    parameter: {
+      ...vectors.nativeParameter,
+      args: [{ string: 42 }, vectors.nativeParameter.args[1]],
+    },
+  };
+  expect(() => Reflect.apply(toTransferParams, undefined, [malformed])).toThrow();
+  for (const callback of [
+    { prim: 'None', args: [{ int: '1' }] },
+    { prim: 'Some', args: [{ string: 42 }] },
+    { prim: 'Some', args: [{ string: 'invalid' }] },
+  ]) {
+    expect(() =>
+      Reflect.apply(buildMichelsonToEvmCall, undefined, [
+        { to: vectors.evm, data: vectors.erc20Calldata },
+        { callback },
+      ])
+    ).toThrow();
+  }
 });

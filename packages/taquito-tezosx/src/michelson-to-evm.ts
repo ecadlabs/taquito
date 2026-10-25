@@ -1,3 +1,4 @@
+import { parseData } from './micheline';
 // Adapted from trilitech/octez.js #123-125. Copyright 2026 Nomadic Labs. Apache-2.0.
 import {
   InvalidContractAddressError,
@@ -53,7 +54,8 @@ export function buildMichelsonToEvmCall(
   if (gatewayValidation !== ValidationResult.VALID) {
     throw new InvalidContractAddressError(contractAddress, gatewayValidation);
   }
-  if (options.callback !== undefined) assertDataValid(options.callback, CALLBACK_TYPE);
+  const callback = parseData(options.callback ?? { prim: 'None' });
+  assertDataValid(callback, CALLBACK_VALUE_TYPE);
   const mutezAmount = weiToMutezExact(parseAmount(tx.value ?? BigInt(0)));
   // A non-empty calldata starts with a 4-byte function selector
   const calldata = parseHexBytes(tx.data ?? '');
@@ -85,12 +87,7 @@ export function buildMichelsonToEvmCall(
     direction: 'michelson-to-evm',
     contractAddress,
     entrypoint: 'call_evm',
-    parameter: buildCallEvmParameter(
-      to,
-      methodSignature,
-      calldata.slice(8),
-      options.callback ?? { prim: 'None' }
-    ),
+    parameter: buildCallEvmParameter(to, methodSignature, calldata.slice(8), callback),
     mutezAmount,
     methodSignature,
   };
@@ -114,6 +111,7 @@ export function toTransferParams(call: GatewayCall): GatewayTransferParams {
   if (addressResult !== ValidationResult.VALID)
     throw new InvalidContractAddressError(call.contractAddress, addressResult);
   const amount = parseAmount(call.mutezAmount);
+  const parameter = parseData(call.parameter);
   assertDataValid(call.parameter, call.entrypoint === 'call' ? HTTP_CALL_TYPE : EVM_CALL_TYPE);
   if (amount > BigInt(Number.MAX_SAFE_INTEGER)) {
     throw new UnsafeMutezAmountError(call.mutezAmount);
@@ -124,14 +122,15 @@ export function toTransferParams(call: GatewayCall): GatewayTransferParams {
     mutez: true,
     parameter: {
       entrypoint: call.entrypoint,
-      value: call.parameter,
+      value: parameter,
     },
   };
 }
 
-const CALLBACK_TYPE: MichelsonType = {
+// Offline checks validate an address representation, not the receiving contract bytes type.
+const CALLBACK_VALUE_TYPE: MichelsonType = {
   prim: 'option',
-  args: [{ prim: 'contract', args: [{ prim: 'bytes' }] }],
+  args: [{ prim: 'address' }],
 };
 const EVM_CALL_TYPE: MichelsonType = {
   prim: 'pair',
@@ -139,7 +138,7 @@ const EVM_CALL_TYPE: MichelsonType = {
     { prim: 'string' },
     {
       prim: 'pair',
-      args: [{ prim: 'string' }, { prim: 'pair', args: [{ prim: 'bytes' }, CALLBACK_TYPE] }],
+      args: [{ prim: 'string' }, { prim: 'pair', args: [{ prim: 'bytes' }, CALLBACK_VALUE_TYPE] }],
     },
   ],
 };
@@ -153,7 +152,7 @@ const HTTP_CALL_TYPE: MichelsonType = {
         { prim: 'list', args: [{ prim: 'pair', args: [{ prim: 'string' }, { prim: 'string' }] }] },
         {
           prim: 'pair',
-          args: [{ prim: 'bytes' }, { prim: 'pair', args: [{ prim: 'nat' }, CALLBACK_TYPE] }],
+          args: [{ prim: 'bytes' }, { prim: 'pair', args: [{ prim: 'nat' }, CALLBACK_VALUE_TYPE] }],
         },
       ],
     },
