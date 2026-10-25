@@ -63,6 +63,7 @@ jobs:
       - run: google-chrome --version
       - run: npx playwright install --with-deps firefox webkit
       - run: npm run test:browser:packages
+      - run: node scripts/test-synthetic-hash-consumers.mjs
       - run: npx playwright test --config browser-tests/playwright.config.ts browser-tests/tests/http-backend.spec.ts --project=firefox --project=webkit
 
   tz5-local-octez:

@@ -20,3 +20,5 @@ export { format } from './format';
 
 /** Descriptive alias of getPkhfromPk. Keeps the same supported keys and errors. */
 export { getPkhfromPk as getPublicKeyHashFromPublicKey } from './encoding';
+
+export { getTezosOperationHash, getEthereumTransactionHash } from './operation-hash';
