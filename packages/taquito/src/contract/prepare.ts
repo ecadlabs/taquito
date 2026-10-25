@@ -337,6 +337,7 @@ export const createSmartRollupOriginateOperation = async ({
   pvmKind,
   kernel,
   parametersType,
+  whitelist,
 }: SmartRollupOriginateParams) => {
   return {
     kind: OpKind.SMART_ROLLUP_ORIGINATE,
@@ -347,6 +348,7 @@ export const createSmartRollupOriginateOperation = async ({
     pvm_kind: pvmKind,
     kernel,
     parameters_ty: parametersType,
+    ...(whitelist === undefined ? {} : { whitelist }),
   } as RPCSmartRollupOriginateOperation;
 };
 

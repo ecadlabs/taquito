@@ -112,6 +112,7 @@ jobs:
           cache: npm
       - run: npx -y npm@11 ci
       - run: npm run build
+      - run: npm run typecheck:smart-rollup-whitelist
       - run: npm run test:scripts
       - run: npm run test:dist:esm-imports
       - run: npm run lint
