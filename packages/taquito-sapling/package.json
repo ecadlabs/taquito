@@ -51,7 +51,8 @@
     "prepare:release-artifacts": "node ./prepare-sapling-release-artifacts.js",
     "build": "tsc --project ./tsconfig.prod.json --module commonjs && rollup -c rollup.config.ts --bundleConfigAsCjs",
     "start": "rollup -c rollup.config.ts --bundleConfigAsCjs -w",
-    "test:types": "tsc --noEmit --project test/tsconfig.types.json"
+    "test:types": "tsc --noEmit --project test/tsconfig.types.json",
+    "test:types:dist": "tsc --noEmit --project test/tsconfig.dist-types.json"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [

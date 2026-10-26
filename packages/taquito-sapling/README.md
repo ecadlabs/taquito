@@ -152,3 +152,6 @@ From `packages/taquito-sapling`, run `npm run test:types`.
 The check compiles the existing constructor and both output-order policies.
 It also requires TypeScript to reject an unknown policy.
 The fixture imports the public `@taquito/sapling` entry through the repository's source aliases.
+
+After the workspace build, run `npm run test:types:dist` from the same directory.
+This check resolves the public package's emitted declarations without source aliases.
