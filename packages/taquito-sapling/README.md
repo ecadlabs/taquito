@@ -145,3 +145,10 @@ Randomized output order removes the default builder's deterministic last-positio
 It does not hide output counts or public deposits and withdrawals.
 Amounts, timing, application behavior, and other evidence can still identify outputs or users.
 This option does not provide a proof of anonymity.
+
+### Check the public constructor types
+
+From `packages/taquito-sapling`, run `npm run test:types`.
+The check compiles the existing constructor and both output-order policies.
+It also requires TypeScript to reject an unknown policy.
+The fixture imports the public `@taquito/sapling` entry through the repository's source aliases.
