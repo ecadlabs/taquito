@@ -53,6 +53,32 @@ Refer to the `taquito/integration-tests/config.ts` file for details on test conf
 - `TAQUITO_ITEST_DIAGNOSTICS=true`: enables structured setup/key selection diagnostics in test logs
 
 
+Fresh-key selection retries HTTP 502, 503 and 504 while selection attempts remain.
+A failed consumed prefetch entry uses the same retry policy. Other HTTP errors
+and invalid successful responses still fail immediately. The configured delay
+applies before the next selection attempt. Prefetch can start background requests
+before that delay, so the selection budget does not cap all network requests.
+
+This retry policy applies only to fresh-key acquisition. Invalid signer keys
+still fail immediately. Signer-state RPC errors keep their existing behavior:
+failed balance reads produce a null balance. With no minimum balance, selection
+can succeed. With a positive minimum balance, an unavailable balance fails the
+constraint and consumes a selection attempt.
+
+### Check fresh-key setup locally
+
+Run the controlled setup checks from the `integration-tests` directory:
+
+```sh
+npx vitest run __tests__/fresh-key-setup.spec.ts
+```
+
+The checks use local HTTP key-service and RPC fixtures. They do not request real
+keys or send operations to a Tezos network. They cover transient retry and the
+existing error and key-selection behavior. They do not verify recovery from a
+real key-service outage.
+
+
 ## CLI Options
 
 

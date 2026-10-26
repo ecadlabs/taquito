@@ -8,7 +8,7 @@ import {
   importKey,
 } from '@taquito/taquito';
 import { RemoteSigner } from '@taquito/remote-signer';
-import { HttpBackend } from '@taquito/http-utils';
+import { HttpBackend, HttpResponseError } from '@taquito/http-utils';
 import { b58Encode, PrefixV2 } from '@taquito/utils';
 import { InMemorySigner } from '@taquito/signer';
 import { RpcClient, RpcClientCache } from '@taquito/rpc';
@@ -507,12 +507,41 @@ const setupSignerWithFreshKey = async (
     : freshKeyPrefetch;
   const freshKeyPool = getFreshKeyPool(signerConfig, options);
   for (let attempt = 1; attempt <= options.maxAttempts; attempt++) {
+    let candidate: Awaited<ReturnType<typeof freshKeyPool.take>>;
+    try {
+      candidate = await freshKeyPool.take();
+    } catch (error) {
+      if (
+        !(error instanceof HttpResponseError) ||
+        ![502, 503, 504].includes(error.status) ||
+        attempt === options.maxAttempts
+      ) {
+        throw error;
+      }
+
+      console.warn(
+        `[keygen] transient HTTP ${error.status} (attempt ${attempt}/${options.maxAttempts}); ` +
+          'requesting a new key'
+      );
+      diagnosticsLog({
+        stage: 'fresh-key-request-retry',
+        keyUrl: v2FreshKeyUrl,
+        attempt,
+        maxAttempts: options.maxAttempts,
+        status: error.status,
+      });
+      if (options.retryDelayMs > 0) {
+        await sleep(options.retryDelayMs);
+      }
+      continue;
+    }
+
     const {
       value: { keyResponse, keyRequestDurationMs },
       waitMs: keyAcquireWaitMs,
       wasPrefetched,
       readyLeadMs,
-    } = await freshKeyPool.take();
+    } = candidate;
 
     if (!keyResponse.secret_key) {
       throw new Error(`Keygen V2 did not return secret_key from ${v2FreshKeyUrl}`);
