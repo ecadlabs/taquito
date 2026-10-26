@@ -64,6 +64,48 @@ Sending operations requires a protocol with `tz5_account_enable` enabled. This
 support is validated against an isolated Octez 25.2 Ushuaia sandbox, and does not
 imply activation on mainnet. See the [local conformance suite](../../integration-tests/tz5/README.md).
 
+### Mnemonics and account previews
+
+```ts
+import {
+  generateMnemonic,
+  mnemonicToEntropy,
+  entropyToMnemonic,
+  deriveKeyFromMnemonic,
+} from '@taquito/signer';
+
+const mnemonic = generateMnemonic();
+const entropy = mnemonicToEntropy(mnemonic);
+const restored = entropyToMnemonic(entropy);
+const account = deriveKeyFromMnemonic({
+  mnemonic: restored,
+  derivationPath: "44'/1729'/0'/0'",
+  curve: 'ed25519',
+});
+const address = account.publicKeyHash;
+```
+
+The helpers use the English BIP39 wordlist. generateMnemonic defaults to 128 bits
+and accepts 128, 160, 192, 224 or 256. mnemonicToEntropy returns Uint8Array.
+entropyToMnemonic accepts 16, 20, 24, 28 or 32 bytes, or an unprefixed, even-length
+hexadecimal string. Invalid phrases throw InvalidMnemonicError without including
+the phrase in the error.
+
+Byte input must be a Uint8Array, such as a Node.js Buffer or a subarray view.
+The helper uses only the bytes in that view and leaves the input unchanged.
+Plain number arrays and other typed-array kinds are not accepted.
+
+deriveKeyFromMnemonic is synchronous and constructs no InMemorySigner. It returns
+publicKey, publicKeyHash and secretKey. The secret key is unencrypted, so avoid
+logging or sharing the result. Ed25519 returns the expanded secret-key form used
+by InMemorySigner.secretKey().
+
+Options match InMemorySigner.fromMnemonic. password is the optional BIP39
+passphrase and defaults to an empty string. The default path is 44'/1729'/0'/0'
+and the default curve is ed25519. Supported mnemonic curves are ed25519,
+secp256k1 and p256. Ed25519 paths must be hardened. BLS and ML-DSA mnemonic
+derivation are not supported.
+
 ## Additional info
 
 See the top-level [https://github.com/ecadlabs/taquito](https://github.com/ecadlabs/taquito) file for details on reporting issues, contributing and versioning.

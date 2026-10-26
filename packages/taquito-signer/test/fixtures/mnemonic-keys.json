@@ -1,0 +1,187 @@
+[
+  {
+    "label": "defaults",
+    "params": {
+      "mnemonic": "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about"
+    },
+    "expected": {
+      "publicKey": "edpku4US3ZykcZifjzSGFCmFr3zRgCKndE82estE4irj4d5oqDNDvf",
+      "publicKeyHash": "tz1VQA4RP4fLjEEMW2FR4pE9kAg5abb5h5GL",
+      "secretKey": "edskS3wZrW6P38vvgnrHqjuLLz76vy5dv9QduxAQ2yG7WL5WjEubiJQUcwS49tFfwym1MBioLATPzQFckaYgGhWBUS7nmikuME"
+    }
+  },
+  {
+    "label": "account one",
+    "params": {
+      "mnemonic": "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about",
+      "derivationPath": "44'/1729'/1'/0'"
+    },
+    "expected": {
+      "publicKey": "edpku4J2bq38SAaNrP6kLV34ZzTBWu9FwLmmeFaXV3XzozUckyEvb6",
+      "publicKeyHash": "tz1gvekQVEwFFdxT2KrcY6kZgFK1qMN3mmWF",
+      "secretKey": "edskS6pNYUKhc78sLdoLaoSzHrUAU2PQaZfX4C12KpBgnwqGUvW6XffATPw2z8sJqRpDoFVVz9h4KZG8TcGDwseKvjc1vaMLfb"
+    }
+  },
+  {
+    "label": "alternate hardened notation",
+    "params": {
+      "mnemonic": "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about",
+      "derivationPath": "m/44h/1729H/0h/0h"
+    },
+    "expected": {
+      "publicKey": "edpku4US3ZykcZifjzSGFCmFr3zRgCKndE82estE4irj4d5oqDNDvf",
+      "publicKeyHash": "tz1VQA4RP4fLjEEMW2FR4pE9kAg5abb5h5GL",
+      "secretKey": "edskS3wZrW6P38vvgnrHqjuLLz76vy5dv9QduxAQ2yG7WL5WjEubiJQUcwS49tFfwym1MBioLATPzQFckaYgGhWBUS7nmikuME"
+    }
+  },
+  {
+    "label": "root",
+    "params": {
+      "mnemonic": "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about",
+      "derivationPath": "m"
+    },
+    "expected": {
+      "publicKey": "edpkvR2JALpNdAajufKWHQtpcnDGV7WeUAoL9qze7CvuXQSqGXnVQn",
+      "publicKeyHash": "tz1b7JzRrLwr3ocm2J2SSfnCxTqGjoNPWzJo",
+      "secretKey": "edskRoGp51SLPYweagGJmAHDqxDqidnMbB6VKLCZ15RHkK8Scon95pE6Hx4j1DhrrMgjM6P36FLVv8jgCahuoZhyMMPNSiareE"
+    }
+  },
+  {
+    "label": "empty path",
+    "params": {
+      "mnemonic": "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about",
+      "derivationPath": ""
+    },
+    "expected": {
+      "publicKey": "edpkvR2JALpNdAajufKWHQtpcnDGV7WeUAoL9qze7CvuXQSqGXnVQn",
+      "publicKeyHash": "tz1b7JzRrLwr3ocm2J2SSfnCxTqGjoNPWzJo",
+      "secretKey": "edskRoGp51SLPYweagGJmAHDqxDqidnMbB6VKLCZ15RHkK8Scon95pE6Hx4j1DhrrMgjM6P36FLVv8jgCahuoZhyMMPNSiareE"
+    }
+  },
+  {
+    "label": "Unicode password",
+    "params": {
+      "mnemonic": "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about",
+      "password": "caf\u00e9"
+    },
+    "expected": {
+      "publicKey": "edpkv39HJRWnoSGafizsAZEgARydjYzV6CGuEjeGWHFQ83KQtMoqFP",
+      "publicKeyHash": "tz1hJgs7RWotdK6Mw9VBocGMu4mzRf1GaWZi",
+      "secretKey": "edskS3jDwkJKaZ2BPJZq1FLSu3CY2tjMstegtNH2zK5x4nb2itYgXmHfUFTTqPbet7XGF3FJSYZU3FDm21fezXNDjbxDozqQeS"
+    }
+  },
+  {
+    "label": "normalized password",
+    "params": {
+      "mnemonic": "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about",
+      "password": "cafe\u0301"
+    },
+    "expected": {
+      "publicKey": "edpkv39HJRWnoSGafizsAZEgARydjYzV6CGuEjeGWHFQ83KQtMoqFP",
+      "publicKeyHash": "tz1hJgs7RWotdK6Mw9VBocGMu4mzRf1GaWZi",
+      "secretKey": "edskS3jDwkJKaZ2BPJZq1FLSu3CY2tjMstegtNH2zK5x4nb2itYgXmHfUFTTqPbet7XGF3FJSYZU3FDm21fezXNDjbxDozqQeS"
+    }
+  },
+  {
+    "label": "secp256k1 hardened",
+    "params": {
+      "mnemonic": "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about",
+      "curve": "secp256k1"
+    },
+    "expected": {
+      "publicKey": "sppk7aR8GfP4tzTJFAmUpZ98GtgroEauCDtsNQpzRWP4sN6nmytbx6Y",
+      "publicKeyHash": "tz2V8sWp1WJGnFuWmCpcLVuGknMNWXE95bf4",
+      "secretKey": "spsk1ohUhwrwVED6fq1vR8CpwFL2VdTbM9g85Sz9gMDUDBVH9EdacN"
+    }
+  },
+  {
+    "label": "secp256k1 nonhardened",
+    "params": {
+      "mnemonic": "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about",
+      "curve": "secp256k1",
+      "derivationPath": "44'/1729'/0/0"
+    },
+    "expected": {
+      "publicKey": "sppk7baE2QMnYPgmZWGFeg39L1BCh6eLHGBVt9EfYQn4m35wXfcd1TZ",
+      "publicKeyHash": "tz2GpXd3FzUNnJq6W75aaZrbX87BdAsgbTBa",
+      "secretKey": "spsk2XsMLEp9QxWgSg52Zbr3RpFc44GobAvqfwM6pVDPbkNmUAwWqY"
+    }
+  },
+  {
+    "label": "secp256k1 password",
+    "params": {
+      "mnemonic": "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about",
+      "curve": "secp256k1",
+      "password": "TREZOR"
+    },
+    "expected": {
+      "publicKey": "sppk7bybChzZqmCbn8Y2onRCE7qzQgfVQXm1gzPb3UjrwioxTYWsLth",
+      "publicKeyHash": "tz2Nn7TkH4Dz6oD9wSXVjbgR99dayqwFQATw",
+      "secretKey": "spsk2nYhu1ryqfb7CktAp2aeo97BLHfEZeH3Yo1QXxLxCKsqWQtpfp"
+    }
+  },
+  {
+    "label": "secp256k1 root",
+    "params": {
+      "mnemonic": "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about",
+      "curve": "secp256k1",
+      "derivationPath": "m"
+    },
+    "expected": {
+      "publicKey": "sppk7ctxJMdvMizNPFqmhb1DY1JPpxmZfH2NXbQVsgWMTy6mpJdTVRv",
+      "publicKeyHash": "tz2S7ByZEodxgygsXDZJEpAxVpRV4SFak1q5",
+      "secretKey": "spsk1cEHvaHLUgsgZf6csQ7FHKNd74SgZCdW5jV7aPi82y55dVWmJY"
+    }
+  },
+  {
+    "label": "p256 hardened",
+    "params": {
+      "mnemonic": "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about",
+      "curve": "p256"
+    },
+    "expected": {
+      "publicKey": "p2pk66kWmbmgdjUtk1EPiigEJr6yU9U9nVYeGcDGDkaB3h2gRQepsAF",
+      "publicKeyHash": "tz3Z2ieN3G57rFR8G24pnL2u4FPisJhHxVrt",
+      "secretKey": "p2sk3h6eY9JnnZeS5159mkJTpu1S4WcNbq7bhBYqdcLYnYskQwPvmA"
+    }
+  },
+  {
+    "label": "p256 nonhardened",
+    "params": {
+      "mnemonic": "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about",
+      "curve": "p256",
+      "derivationPath": "44'/1729'/0/0"
+    },
+    "expected": {
+      "publicKey": "p2pk66uPZYNZc2XNiKdppATGsUE9RrNvPMXRjfNuQkpguoM6E3cMd61",
+      "publicKeyHash": "tz3ZrVEcA9BGcYQtqVyAyBRpLT8BkchqdoYj",
+      "secretKey": "p2sk2fuZLQ5MejQDqvfKz9urrHBBW6ycpRgzfS8mAA9YAx3BXpgcg8"
+    }
+  },
+  {
+    "label": "p256 password",
+    "params": {
+      "mnemonic": "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about",
+      "curve": "p256",
+      "password": "TREZOR"
+    },
+    "expected": {
+      "publicKey": "p2pk66tLBLHpm7jGU7bYFqACqYcqLGdDBuTt4CFgCCjd1hwdKeqhT53",
+      "publicKeyHash": "tz3bmhhwFnJ7TzN3tvLFkhSdLbiSLhLknmio",
+      "secretKey": "p2sk3hD2r2b7xuEPTvYfc2hB6HcLkvmh7vocJteR8UFzYNW9AqqW62"
+    }
+  },
+  {
+    "label": "p256 root",
+    "params": {
+      "mnemonic": "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about",
+      "curve": "p256",
+      "derivationPath": "m"
+    },
+    "expected": {
+      "publicKey": "p2pk65jmhi287sVyQZJiKHYKDuFRjmGvZThM23XY7HYNFTf21vdifxb",
+      "publicKeyHash": "tz3TYkEvXRuZ7Udeiq3ntrQNgYYBWH3AG1HH",
+      "secretKey": "p2sk3RY4uMf6Xgxevwf5y8DGFLYisMRp42XvU9Zs8zC9LxP5qihsnj"
+    }
+  }
+]

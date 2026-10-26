@@ -20,6 +20,21 @@ const payload = b58DecodeAndCheckPrefix('tz1...', [PrefixV2.Ed25519PublicKeyHash
 const length = payloadLength[PrefixV2.Ed25519PublicKeyHash]
 ```
 
+## Derive an address from a public key
+
+The `getPublicKeyHashFromPublicKey` function is a descriptive alias of
+`getPkhfromPk`. Both functions return the same address and use the same validation
+rules. They support Ed25519, secp256k1, P-256, BLS12-381, and ML-DSA-44 public keys.
+
+```js
+import { getPublicKeyHashFromPublicKey } from '@taquito/utils';
+
+const address = getPublicKeyHashFromPublicKey(
+  'edpku61nGAwkeoA7PQJEFWmrVP1eWrSTVoHgCaF2isjWqDeGdux37k'
+);
+console.log(address); // 'tz1ipB38oB5F76HnbTRqWPLEnVtCgj6yf2nB'
+```
+
 ## Using validation functions from `@taquito/utils`
 
 Taquito provides functions that allow us to see if an address, a chain, a key hash, a contract address, a public key, or a signature is valid. Note that these validations do not rely on a node but are done based on checksums. Thus, they allow us to check if a value is valid and not if it exists on a chain. The `ValidationResult` returned by these functions is an enum that can take the following values:
@@ -33,6 +48,37 @@ Taquito provides functions that allow us to see if an address, a chain, a key ha
 5 = INVALID_ENCODING,
 6 = OTHER,
 ```
+
+### Boolean validation helpers
+
+If you only need a boolean result, use `isValidAddress`, `isValidContractAddress`,
+`isValidPublicKey`, or `isValidOperationHash`. These functions accept `unknown`
+values and return `false` for nonstrings. For strings, they apply the corresponding
+`validateAddress`, `validateContractAddress`, `validatePublicKey`, or
+`validateOperation` rules.
+
+```ts
+import {
+  isValidAddress,
+  isValidContractAddress,
+  isValidPublicKey,
+  isValidOperationHash,
+} from '@taquito/utils';
+
+const input: unknown = 'tz1ipB38oB5F76HnbTRqWPLEnVtCgj6yf2nB';
+console.log(isValidAddress(input)); // true
+console.log(isValidAddress(null)); // false
+console.log(isValidContractAddress('KT1JVErLYTgtY8uGGZ4mso2npTSxqVLDRVbC')); // true
+console.log(isValidPublicKey('edpku61nGAwkeoA7PQJEFWmrVP1eWrSTVoHgCaF2isjWqDeGdux37k')); // true
+console.log(isValidOperationHash('oo6JPEAy8VuMRGaFuMmLNFFGdJgiaKfnmT1CpHJfKP3Ye5ZahiP')); // true
+```
+
+`isValidAddress` follows `validateAddress` and checks the address before the first
+`%`, so an entrypoint suffix does not affect its result. `isValidContractAddress`
+checks the complete string and does not accept an entrypoint suffix. These checks
+do not query a node or establish that an address exists on a network.
+
+Use the existing enum validators when you need the reason for a rejected value.
 
 ### Validate an address
 
