@@ -1,7 +1,3 @@
-import { Parser, assertMichelsonData } from '@taquito/michel-codec';
-import { normalizeBigMapValuesOptions } from './big-map-values-options';
-import { isBlockHashIdentifier } from '../read-provider/interface';
-import type { BigMapValuesOptions, BigMapValuesPage } from './interface';
 import { HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
 import { BigMapKeyType, MichelsonMap, MichelsonMapKey, Schema } from '@taquito/michelson-encoder';
 import {
@@ -44,7 +40,6 @@ import {
   InvalidFinalizeUnstakeAmountError,
   InvalidStakingAddressError,
   ProhibitedActionError,
-  UnsupportedActionError,
 } from '@taquito/core';
 import { OperationBatch } from '../batch/rpc-batch-provider';
 import { Context } from '../context';
@@ -78,8 +73,20 @@ import {
 } from '../operations/types';
 import { DefaultContractType, ContractStorageType, ContractAbstraction } from './contract';
 import { InvalidDelegationSource, RevealOperationError } from './errors';
-import { ContractProvider, ContractSchema, StorageProvider } from './interface';
+import {
+  BigMapValuesOptions,
+  BigMapValuesPage,
+  ContractProvider,
+  ContractSchema,
+  StorageProvider,
+} from './interface';
 import { smartContractAbstractionSemantic } from './semantic';
+import {
+  assertBigMapValuesReader,
+  normalizeBigMapValuesOptions,
+  readBigMapValues,
+} from './big-map-values';
+import { RPCResponseError } from '../errors';
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
 import { TransferTicketOperation } from '../operations/transfer-ticket-operation';
 import { IncreasePaidStorageOperation } from '../operations/increase-paid-storage-operation';
@@ -94,7 +101,7 @@ import { SmartRollupExecuteOutboxMessageOperation } from '../operations/smart-ro
 import { Provider } from '../provider';
 import { PrepareProvider } from '../prepare';
 import { FailingNoopOperation } from '../operations/failing-noop-operation';
-import { BlockIdentifier } from '../read-provider/interface';
+import { BlockIdentifier, isBlockHashIdentifier } from '../read-provider/interface';
 import { isNotFoundError, retryOnNotFound } from './not-found-retry';
 
 export class RpcContractProvider extends Provider implements ContractProvider, StorageProvider {
@@ -146,7 +153,20 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
     ) as T; // Cast into T because only the caller can know the true type of the storage
   }
 
-  /** Read and decode one finite page through a captured read context. */
+  /**
+   *
+   * Return one finite page of decoded big-map values and the hash of the block it was read at
+   * The read context is captured when the call starts, so a later setReadProvider does not affect it.
+   *
+   * @param id Big Map ID
+   * @param schema Big Map schema (can be determined using your contract type)
+   * @param options optional offset (default 0), length (1 to 1000, default 100) and block (default to head)
+   * @throws {@link UnsupportedActionError} if the read provider cannot read big-map values
+   * @throws {@link InvalidBigMapParameterError} if the page options are invalid
+   * @throws {@link RpcError} if the read provider returns an invalid response
+   *
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-big-maps-big-map-id
+   */
   async getBigMapValuesPageByID<T>(
     id: string,
     schema: Schema,
@@ -155,27 +175,64 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
     const { offset, length, block } = normalizeBigMapValuesOptions(options);
     const snapshot = this.context.clone();
     const reader = snapshot.readProvider;
-    if (typeof reader.getBigMapValues !== 'function')
-      throw new UnsupportedActionError('The read provider does not support big-map values pages');
+    // Fail on a missing capability before spending a request on block resolution.
+    assertBigMapValuesReader(reader);
     const selected = block ?? 'head';
     const hash =
       typeof selected === 'string' && isBlockHashIdentifier(selected)
         ? selected
         : await reader.getBlockHash(selected);
     if (!isBlockHashIdentifier(hash))
-      throw new TypeError('The read provider returned an invalid block hash');
-    const raw = await reader.getBigMapValues(id, { offset, length }, hash);
-    if (!Array.isArray(raw) || raw.length > length)
-      throw new TypeError('Invalid or overlength big-map values response');
+      throw new RPCResponseError(`The read provider returned an invalid block hash "${hash}"`);
+    const raw = await readBigMapValues(reader, id, { offset, length }, hash);
     const semantic = smartContractAbstractionSemantic(snapshot.contract, hash);
-    const parser = new Parser({ expandMacros: false });
-    const values = raw.map((value) => {
-      // Validate structure without changing the existing schema decoder's mappings.
-      const parsed = parser.parseJSON(value);
-      assertMichelsonData(parsed);
-      return schema.ExecuteOnBigMapValue(parsed, semantic) as T;
-    });
+    const values = raw.map((value) => schema.ExecuteOnBigMapValue(value, semantic) as T);
     return { values, blockHash: hash };
+  }
+
+  /**
+   *
+   * Return one finite page of decoded big-map values with a single request at the given block
+   *
+   * @param id Big Map ID
+   * @param schema Big Map schema (can be determined using your contract type)
+   * @param options optional offset (default 0), length (1 to 1000, default 100) and block (default to head)
+   * @throws {@link UnsupportedActionError} if the read provider cannot read big-map values
+   * @throws {@link InvalidBigMapParameterError} if the page options are invalid
+   * @throws {@link RpcError} if the read provider returns an invalid response
+   *
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-big-maps-big-map-id
+   */
+  async listBigMapValuesByID<T>(
+    id: string,
+    schema: Schema,
+    options: BigMapValuesOptions = {}
+  ): Promise<T[]> {
+    const { offset, length, block } = normalizeBigMapValuesOptions(options);
+    const requestedBlock = block ?? 'head';
+    const reader = this.context.readProvider;
+    assertBigMapValuesReader(reader);
+    const raw = await readBigMapValues(reader, id, { offset, length }, requestedBlock);
+    const semantic = smartContractAbstractionSemantic(this, requestedBlock);
+    return raw.map((value) => schema.ExecuteOnBigMapValue(value, semantic) as T);
+  }
+
+  /**
+   *
+   * Return true if the big map has no values. Reads at most one raw value and decodes nothing.
+   *
+   * @param id Big Map ID
+   * @param block optional block level to check (default to head)
+   * @throws {@link UnsupportedActionError} if the read provider cannot read big-map values
+   * @throws {@link RpcError} if the read provider returns an invalid response
+   *
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-big-maps-big-map-id
+   */
+  async isBigMapEmptyByID(id: string, block: BlockIdentifier = 'head'): Promise<boolean> {
+    const reader = this.context.readProvider;
+    assertBigMapValuesReader(reader);
+    const raw = await readBigMapValues(reader, id, { offset: 0, length: 1 }, block);
+    return raw.length === 0;
   }
 
   /**

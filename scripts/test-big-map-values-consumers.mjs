@@ -59,8 +59,8 @@ try {
     assert.equal(page.values[0].toFixed(), '42');
     assert.equal(calls[1].url, 'https://rpc.invalid/chains/main/blocks/' + page.blockHash + '/context/big_maps/123');
     assert.deepEqual(calls[1].query, { offset: 0, length: 1 });
-    Object.defineProperty(rpc, 'getBigMapValues', { value: undefined });
-    await assert.rejects(new rpcPkg.RpcClientCache(rpc).getBigMapValues('123'), corePkg.UnsupportedActionError);
+    Object.defineProperty(rpc, 'getBigMapValuesPage', { value: undefined });
+    await assert.rejects(new rpcPkg.RpcClientCache(rpc).getBigMapValuesPage('123'), corePkg.UnsupportedActionError);
   `;
   const names = {
     sdkPkg: 'taquito',

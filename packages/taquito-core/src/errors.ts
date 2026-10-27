@@ -170,6 +170,20 @@ export class InvalidBlockHashError extends ParameterValidationError {
 }
 
 /**
+ *  @category Error
+ *  Error that indicates an invalid big-map ID or invalid big-map page options being passed
+ */
+export class InvalidBigMapParameterError extends ParameterValidationError {
+  constructor(
+    public readonly parameter: string,
+    errorDetail?: string
+  ) {
+    super(`Invalid big-map ${parameter}${errorDetail ? `: ${errorDetail}` : ''}`, errorDetail);
+    this.name = this.constructor.name;
+  }
+}
+
+/**
  * @category Error
  * Error that indicates an invalid amount of tez being passed as a parameter
  */

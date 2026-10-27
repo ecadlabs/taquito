@@ -19,10 +19,10 @@ it('serializes real GET pagination and leaves HTTP 404 visible', async () => {
     const address = server.address();
     if (!address || typeof address === 'string') throw new Error('No TCP address');
     const rpc = new RpcClient('http://127.0.0.1:' + address.port, 'other');
-    expect(await rpc.getBigMapValues('123', { offset: 2, length: 1 }, { block: '42' })).toEqual([
-      { int: '42' },
-    ]);
-    await expect(rpc.getBigMapValues('999', { length: 1 })).rejects.toMatchObject({
+    expect(await rpc.getBigMapValuesPage('123', { offset: 2, length: 1 }, { block: '42' })).toEqual(
+      [{ int: '42' }]
+    );
+    await expect(rpc.getBigMapValuesPage('999', { length: 1 })).rejects.toMatchObject({
       status: 404,
       body: 'missing map',
     });

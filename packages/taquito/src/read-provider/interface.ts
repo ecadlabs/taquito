@@ -29,11 +29,6 @@ export const isBlockHashIdentifier = (block: string): block is `B${string}` => {
 };
 
 export interface TzReadProvider {
-  getBigMapValues?(
-    id: string,
-    page: BigMapPagination,
-    block: BlockIdentifier
-  ): Promise<MichelsonV1Expression[]>;
   /**
    * The spendable balance of a contract (in mutez), also known as liquid balance. Corresponds to tez owned by the contract that are neither staked, nor in unstaked requests, nor in frozen bonds. Identical to the 'spendable' RPC.
    * @param address address from which we want to retrieve the spendable balance
@@ -121,6 +116,18 @@ export interface TzReadProvider {
    * @param block from which we want to retrieve the big map value
    */
   getBigMapValue(bigMapQuery: BigMapQuery, block: BlockIdentifier): Promise<MichelsonV1Expression>;
+
+  /**
+   * Optional. Access one finite page of raw big-map values. The order is unspecified and the keys are not returned.
+   * @param id Big Map ID
+   * @param page offset and length of the page
+   * @param block from which we want to retrieve the big map values
+   */
+  getBigMapValuesPage?(
+    id: string,
+    page: BigMapPagination,
+    block: BlockIdentifier
+  ): Promise<MichelsonV1Expression[]>;
 
   /**
    * Access the value associated with a sapling state ID.

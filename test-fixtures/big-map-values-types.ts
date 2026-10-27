@@ -8,8 +8,8 @@ import {
 } from '@taquito/taquito';
 import { RpcClient, type RpcClientInterface } from '@taquito/rpc';
 declare const storage: Omit<StorageProvider, 'getBigMapValuesPageByID'>;
-declare const reader: Omit<TzReadProvider, 'getBigMapValues'>;
-declare const oldRpc: Omit<RpcClientInterface, 'getBigMapValues'>;
+declare const reader: Omit<TzReadProvider, 'getBigMapValuesPage'>;
+declare const oldRpc: Omit<RpcClientInterface, 'getBigMapValuesPage'>;
 const preservedStorage: StorageProvider = storage;
 const preservedReader: TzReadProvider = reader;
 const preservedRpc: RpcClientInterface = oldRpc;
@@ -20,5 +20,5 @@ page.then((value) => {
   const block: BlockIdentifier = value.blockHash;
   return map.isEmpty(block);
 });
-const raw = new RpcClient('https://rpc.invalid').getBigMapValues('123');
+const raw = new RpcClient('https://rpc.invalid').getBigMapValuesPage('123');
 void [preservedStorage, preservedReader, preservedRpc, raw];

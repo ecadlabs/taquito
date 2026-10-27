@@ -7,6 +7,7 @@ import {
   BigMapAbstraction,
   TezosToolkit,
   RpcReadAdapter,
+  UnsupportedActionError,
   type StorageProvider,
 } from '../../src/taquito';
 const schema = new Schema({ prim: 'big_map', args: [{ prim: 'string' }, { prim: 'nat' }] });
@@ -28,6 +29,13 @@ it('keeps old storage implementations usable without page capability', async () 
   expect(map.toJSON()).toBe('123');
   expect(map.toString()).toBe('123');
 });
+it.each(['isEmpty', 'listValues', 'getValuesPage'] as const)(
+  'reports %s as unsupported on old storage implementations',
+  async (method) => {
+    const map = new BigMapAbstraction(new BigNumber(123), schema, legacyProvider);
+    await expect(map[method]()).rejects.toBeInstanceOf(UnsupportedActionError);
+  }
+);
 it('retains live single-key routing rather than adding block resolution to old reads', async () => {
   const toolkit = new TezosToolkit('http://127.0.0.1:1');
   const reader = new RpcReadAdapter(new RpcClient('http://127.0.0.1:1'));

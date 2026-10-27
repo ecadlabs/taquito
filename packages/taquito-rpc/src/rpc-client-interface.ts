@@ -73,11 +73,6 @@ export const defaultChain = 'main';
 export const defaultRPCOptions: RPCOptions = { block: 'head' };
 
 export interface RpcClientInterface {
-  getBigMapValues?(
-    id: string,
-    page?: BigMapPagination,
-    options?: RPCOptions
-  ): Promise<MichelsonV1Expression[]>;
   thresholdSignatures(params: BlsThresholdSignaturesParams): Promise<BlsSignatureResponse>;
   aggregateSignatures(params: BlsAggregateSignaturesParams): Promise<BlsSignatureResponse>;
   checkProof(key: BlsPublicKeyWithProof): Promise<boolean>;
@@ -104,6 +99,11 @@ export interface RpcClientInterface {
   getManagerKey(address: string, options?: RPCOptions): Promise<ManagerKeyResponse>;
   getDelegate(address: string, options?: RPCOptions): Promise<DelegateResponse>;
   getBigMapExpr(id: string, expr: string, options?: RPCOptions): Promise<BigMapResponse>;
+  getBigMapValuesPage?(
+    id: string,
+    page?: BigMapPagination,
+    options?: RPCOptions
+  ): Promise<MichelsonV1Expression[]>;
   getAllDelegates(args: AllDelegatesQueryArguments, options?: RPCOptions): Promise<string[]>;
   getDelegates(address: string, options?: RPCOptions): Promise<DelegatesResponse>;
   getVotingInfo(address: string, options?: RPCOptions): Promise<VotingInfoResponse>;
@@ -174,7 +174,7 @@ export enum RPCMethodName {
   GET_BAKING_RIGHTS = 'getBakingRights',
   GET_BALLOTS = 'getBallots',
   GET_BALLOT_LIST = 'getBallotList',
-  GET_BIG_MAP_VALUES = 'getBigMapValues',
+  GET_BIG_MAP_VALUES_PAGE = 'getBigMapValuesPage',
   GET_BIG_MAP_EXPR = 'getBigMapExpr',
   GET_BLOCK_HASH = 'getBlockHash',
   GET_BLOCK = 'getBlock',

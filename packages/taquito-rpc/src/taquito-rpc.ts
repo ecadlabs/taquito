@@ -1,4 +1,3 @@
-import { normalizeBigMapPagination } from './big-map-pagination';
 /**
  * @packageDocumentation
  * @module @taquito/rpc
@@ -80,7 +79,7 @@ import {
   MempoolFilterQueryArguments,
   MempoolFilterResponse,
 } from './types';
-import { castToBigNumber } from './utils/utils';
+import { castToBigNumber, normalizeBigMapPagination } from './utils/utils';
 import {
   validateAddress,
   validateContractAddress,
@@ -88,9 +87,15 @@ import {
   validateProtocol,
   InvalidProtocolHashError,
 } from '@taquito/utils';
-import { InvalidAddressError, InvalidContractAddressError } from '@taquito/core';
+import {
+  InvalidAddressError,
+  InvalidBigMapParameterError,
+  InvalidContractAddressError,
+} from '@taquito/core';
 
 export { castToBigNumber } from './utils/utils';
+
+export { InvalidBigMapParameterError, UnsupportedActionError } from '@taquito/core';
 
 export {
   RPCOptions,
@@ -521,6 +526,28 @@ export class RpcClient implements RpcClientInterface {
     return this.httpBackend.createRequest<BigMapResponse>({
       url: this.createURL(`/chains/${this.chain}/blocks/${block}/context/big_maps/${id}/${expr}`),
       method: 'GET',
+    });
+  }
+
+  /**
+   * @param id Big Map ID
+   * @param page optional offset and length of the page (default offset 0 and length 100)
+   * @param options contains generic configuration for rpc calls to specified block (default to head)
+   * Read one finite page of big-map values. The order is unspecified and the keys are not returned.
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-big-maps-big-map-id
+   */
+  async getBigMapValuesPage(
+    id: string,
+    page: BigMapPagination = {},
+    { block }: { block: string } = defaultRPCOptions
+  ): Promise<MichelsonV1Expression[]> {
+    if (typeof id !== 'string' || !/^\d+$/.test(id)) {
+      throw new InvalidBigMapParameterError('ID', `expected a non-negative integer, got "${id}"`);
+    }
+    return this.httpBackend.createRequest<MichelsonV1Expression[]>({
+      url: this.createURL(`/chains/${this.chain}/blocks/${block}/context/big_maps/${id}`),
+      method: 'GET',
+      query: normalizeBigMapPagination(page),
     });
   }
 
@@ -1394,23 +1421,5 @@ export class RpcClient implements RpcClientInterface {
       { url: this.createURL('/bls/threshold_signatures'), method: 'POST' },
       params
     );
-  }
-  /** Read one finite page of big-map values. Ordering is unspecified; original keys are not returned. */
-  async getBigMapValues(
-    id: string,
-    page: BigMapPagination = {},
-    { block }: RPCOptions = defaultRPCOptions
-  ): Promise<MichelsonV1Expression[]> {
-    if (typeof id !== 'string' || !/^\d+$/.test(id))
-      throw new RangeError('Expected a non-negative big-map ID');
-    const query = normalizeBigMapPagination(page);
-    const values = await this.httpBackend.createRequest<MichelsonV1Expression[]>({
-      url: this.createURL('/chains/' + this.chain + '/blocks/' + block + '/context/big_maps/' + id),
-      method: 'GET',
-      query,
-    });
-    if (!Array.isArray(values) || values.length > query.length)
-      throw new TypeError('Invalid or overlength big-map values response');
-    return values;
   }
 }
