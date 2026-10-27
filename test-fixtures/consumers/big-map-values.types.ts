@@ -7,7 +7,10 @@ import {
   type BlockIdentifier,
 } from '@taquito/taquito';
 import { RpcClient, type RpcClientInterface } from '@taquito/rpc';
-declare const storage: Omit<StorageProvider, 'getBigMapValuesPageByID'>;
+declare const storage: Omit<
+  StorageProvider,
+  'getBigMapValuesPageByID' | 'listBigMapValuesByID' | 'isBigMapEmptyByID'
+>;
 declare const reader: Omit<TzReadProvider, 'getBigMapValuesPage'>;
 declare const oldRpc: Omit<RpcClientInterface, 'getBigMapValuesPage'>;
 const preservedStorage: StorageProvider = storage;
