@@ -911,6 +911,11 @@ export interface SmartRollupOriginateParams {
    * Must be a valid Michelson type accepted by protocol rollup parameter typing rules.
    */
   parametersType: MichelsonV1Expression;
+  /**
+   * Public key hashes allowed to publish commitments for a private rollup.
+   * Omit for a public rollup. The protocol rejects an empty whitelist.
+   */
+  whitelist?: string[];
 }
 
 export interface RPCSmartRollupOriginateOperation {
@@ -922,6 +927,7 @@ export interface RPCSmartRollupOriginateOperation {
   pvm_kind: PvmKind;
   kernel: string;
   parameters_ty: MichelsonV1Expression;
+  whitelist?: string[];
 }
 
 export interface SmartRollupExecuteOutboxMessageParams {

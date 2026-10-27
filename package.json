@@ -60,7 +60,8 @@
     "test:browser:packages:webkit": "npm run build && npm run test:dist:esm-imports && playwright test --config browser-tests/playwright.config.ts --project=webkit",
     "test:browser:packages:all": "npm run build && npm run test:dist:esm-imports && playwright test --config browser-tests/playwright.config.ts",
     "test:browser:http": "npm run build && npm run test:dist:esm-imports && playwright test --config browser-tests/playwright.config.ts browser-tests/tests/http-backend.spec.ts",
-    "test:browser:packages:ci": "npm run test:browser:packages"
+    "test:browser:packages:ci": "npm run test:browser:packages",
+    "typecheck:smart-rollup-whitelist": "tsc -p tsconfig.smart-rollup-whitelist-tests.json"
   },
   "devDependencies": {
     "@nx/vite": "22.7.12",
