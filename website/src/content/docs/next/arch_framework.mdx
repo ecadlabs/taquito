@@ -360,6 +360,7 @@ Several queries only apply to Originated Accounts:
 - **getSaplingDiffByContract** - fetches the Sapling State of a specified Smart Contract
 - **getSaplingDiffById** - fetches the Sapling State for a specified Sapling State Identity
 - **getBigMapExpr** - Fetches the BigMap value for the specified Big Map identity and key. The key is represented in Binary Micheline, a binary encoding of Micheline (see packData RPC). The returned value is represented in JSON Micheline.
+- **getBigMapValuesPage** - Fetches one finite page of values for the specified Big Map identity, using an offset and a length. The keys are not returned and the order is unspecified. The returned values are represented in JSON Micheline.
 
 The following query applies only to Implicit Accounts:
 - **getManagerKey** - fetches the custodial public key of a specified Implicit Account
