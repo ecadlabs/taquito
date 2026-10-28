@@ -71,6 +71,7 @@ function setup(contents: OperationContentsAndResult[] = []) {
     hash: block.hash,
     content: { command: 'activate', hash: '', fitness: [], protocol_parameters: '' },
   });
+  vi.spyOn(rpc, 'getBlockHash').mockResolvedValue(block.hash);
   vi.spyOn(rpc, 'getBlock').mockResolvedValue(block);
   return { tezos, provider, rpc };
 }
