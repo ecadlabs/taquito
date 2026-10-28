@@ -79,19 +79,6 @@ function setup(contents: OperationContentsAndResult[] = []) {
 
 afterEach(() => vi.restoreAllMocks());
 
-it('rejects an unsupported rollup before mapping any earlier batch operation', async () => {
-  const { tezos, provider } = setup();
-  await expect(
-    tezos.wallet
-      .batch()
-      .withTransfer({ to: address, amount: 1 })
-      .withSmartRollupAddMessages({ message: ['00'] })
-      .send()
-  ).rejects.toBeInstanceOf(UnsupportedActionError);
-  expect(provider.mapTransferParamsToWalletParams).not.toHaveBeenCalled();
-  expect(provider.sendOperations).not.toHaveBeenCalled();
-});
-
 const messages = { message: ['00', 'ff'], fee: 0, gasLimit: 1, storageLimit: 0 };
 const originate = {
   pvmKind: PvmKind.WASM2,
@@ -104,6 +91,23 @@ const outbox = {
   cementedCommitment: 'src13rFpXGRRwQTPRcvTA8Ka5avJMt6MCrCEodDTCvD65BVVEoShoh',
   outputProof: '00ff',
 };
+const unsupportedBatchCases: WalletParamsWithKind[] = [
+  { ...messages, kind: OpKind.SMART_ROLLUP_ADD_MESSAGES },
+  { ...originate, kind: OpKind.SMART_ROLLUP_ORIGINATE },
+  { ...outbox, kind: OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE },
+];
+it.each(unsupportedBatchCases)(
+  'rejects unsupported $kind before mapping an earlier transfer',
+  async (operation) => {
+    const { tezos, provider } = setup();
+    await expect(
+      tezos.wallet.batch([{ kind: OpKind.TRANSACTION, to: address, amount: 1 }, operation]).send()
+    ).rejects.toBeInstanceOf(UnsupportedActionError);
+    expect(provider.mapTransferParamsToWalletParams).not.toHaveBeenCalled();
+    expect(provider.sendOperations).not.toHaveBeenCalled();
+  }
+);
+
 const manager = {
   source: address,
   fee: '100',
@@ -267,10 +271,12 @@ it('defers mapping until send and anchors before submission', async () => {
 it.each(['fluent', 'array'])('preserves mixed batch order through the %s route', async (route) => {
   const { tezos, provider } = setup([receiptCases[0].content]);
   support(provider);
+  const batchOriginate = { ...originate, whitelist: [...originate.whitelist] };
+  Object.freeze(batchOriginate.whitelist);
   const params: WalletParamsWithKind[] = [
     { ...messages, kind: OpKind.SMART_ROLLUP_ADD_MESSAGES },
     { to: address, amount: 1, kind: OpKind.TRANSACTION },
-    { ...originate, kind: OpKind.SMART_ROLLUP_ORIGINATE },
+    { ...batchOriginate, kind: OpKind.SMART_ROLLUP_ORIGINATE },
     { ...outbox, kind: OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE },
   ];
   const batch =
@@ -280,10 +286,14 @@ it.each(['fluent', 'array'])('preserves mixed batch order through the %s route',
           .batch()
           .withSmartRollupAddMessages(messages)
           .withTransfer({ to: address, amount: 1 })
-          .withSmartRollupOriginate(originate)
+          .withSmartRollupOriginate(batchOriginate)
           .withSmartRollupExecuteOutboxMessage(outbox);
   const operation = await batch.send();
   expect(provider.sendOperations).toHaveBeenCalledExactlyOnceWith(params);
+  expect(batchOriginate.whitelist).toEqual([
+    'tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh',
+    'tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx',
+  ]);
   await operation.operationResults();
   expect(await operation.status()).toBe('applied');
 });
@@ -293,6 +303,84 @@ it.each(receiptCases)('$name rejects missing capabilities without submission', a
   await expect(send(tezos.wallet)).rejects.toBeInstanceOf(UnsupportedActionError);
   expect(provider.sendOperations).not.toHaveBeenCalled();
 });
+
+it.each(['fluent', 'array'])(
+  'preserves legacy-only batches through the %s route',
+  async (route) => {
+    const { tezos, provider, rpc } = setup();
+    vi.spyOn(rpc, 'getProtocols').mockResolvedValue({
+      protocol: blockResponse.protocol,
+      next_protocol: blockResponse.protocol,
+    });
+    const origination = Object.freeze({
+      code: 'parameter unit; storage unit; code { CDR; NIL operation; PAIR }',
+      init: 'Unit',
+    });
+    const ticket = {
+      ticketContents: { string: 'ticket' },
+      ticketTy: { prim: 'string' },
+      ticketTicketer: 'KT1RJ6PbjHpwc3M5rw5s2Nbmefwbuwbdxton',
+      ticketAmount: 1,
+      destination: address,
+      entrypoint: 'default',
+    };
+    const params: WalletParamsWithKind[] = [
+      { ...origination, kind: OpKind.ORIGINATION },
+      { delegate: address, kind: OpKind.DELEGATION },
+      { destination: address, amount: 1, kind: OpKind.INCREASE_PAID_STORAGE },
+      { value: { prim: 'Unit' }, kind: OpKind.REGISTER_GLOBAL_CONSTANT },
+      { ...ticket, kind: OpKind.TRANSFER_TICKET },
+    ];
+    const batch =
+      route === 'array'
+        ? tezos.wallet.batch(params)
+        : tezos.wallet
+            .batch()
+            .withOrigination(origination)
+            .withDelegation({ delegate: address })
+            .withIncreasePaidStorage({ destination: address, amount: 1 })
+            .withRegisterGlobalConstant({ value: { prim: 'Unit' } })
+            .withTransferTicket(ticket);
+    await batch.send();
+    expect(provider.sendOperations).toHaveBeenCalledTimes(1);
+    // Parser source-location symbols are not part of the serialized wallet payload.
+    const submitted: unknown = JSON.parse(
+      JSON.stringify(vi.mocked(provider.sendOperations).mock.calls[0][0])
+    );
+    expect(submitted).toEqual([
+      {
+        kind: OpKind.ORIGINATION,
+        code: [
+          { prim: 'parameter', args: [{ prim: 'unit' }] },
+          { prim: 'storage', args: [{ prim: 'unit' }] },
+          {
+            prim: 'code',
+            args: [
+              [{ prim: 'CDR' }, { prim: 'NIL', args: [{ prim: 'operation' }] }, { prim: 'PAIR' }],
+            ],
+          },
+        ],
+        init: { prim: 'Unit' },
+      },
+      { delegate: address, kind: OpKind.DELEGATION },
+      { destination: address, amount: 1, kind: OpKind.INCREASE_PAID_STORAGE },
+      { value: { prim: 'Unit' }, kind: OpKind.REGISTER_GLOBAL_CONSTANT },
+      {
+        kind: OpKind.TRANSFER_TICKET,
+        ticketContents: { string: 'ticket' },
+        ticketTy: { prim: 'string' },
+        ticketTicketer: 'KT1RJ6PbjHpwc3M5rw5s2Nbmefwbuwbdxton',
+        ticketAmount: 1,
+        destination: address,
+        entrypoint: 'default',
+      },
+    ]);
+    expect(origination.code).toBe(
+      'parameter unit; storage unit; code { CDR; NIL operation; PAIR }'
+    );
+    expect(origination.init).toBe('Unit');
+  }
+);
 
 it('waits for each batch mapper before starting the next one', async () => {
   const { tezos, provider } = setup();
@@ -314,8 +402,8 @@ it('waits for each batch mapper before starting the next one', async () => {
   } finally {
     gate.next();
     gate.complete();
+    await pending;
   }
-  await pending;
   expect(provider.mapSmartRollupOriginateParamsToWalletParams).toHaveBeenCalledTimes(1);
   expect(provider.sendOperations).toHaveBeenCalledTimes(1);
 });
