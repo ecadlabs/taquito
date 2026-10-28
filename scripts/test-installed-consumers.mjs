@@ -1,7 +1,9 @@
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import {
   existsSync,
+  cpSync,
   mkdtempSync,
   mkdirSync,
   readdirSync,
@@ -12,21 +14,17 @@ import {
 } from 'node:fs';
 import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
-import { join, dirname } from 'node:path';
+import { join, dirname, basename, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
-// Packs the built @taquito packages that the fixtures name, with their workspace dependencies,
-// installs the tarballs into a fresh consumer, runs every test-fixtures/consumers/*.runtime.mjs
-// through require and import, and type-checks every test-fixtures/consumers/*.types.ts as CJS and
-// ESM. Run `npm run build` first. The packages ship UMD builds without an
-// exports map, so the import run checks Node's CJS interop, not a separate ESM build.
 const fixtures = join(root, 'test-fixtures/consumers');
 const run = (cmd, args, cwd = consumer) =>
   execFileSync(cmd, args, {
     cwd,
     encoding: 'utf8',
     timeout: 180000,
-    env: { ...process.env, NODE_PATH: '' },
+    maxBuffer: 10 * 1024 * 1024,
+    env: { ...process.env, NODE_PATH: '', TAQUITO_HTTP_RETRY_COUNT: '0' },
   });
 const workspace = new Map();
 for (const folder of readdirSync(join(root, 'packages'))) {
@@ -79,9 +77,32 @@ try {
     return join(temp, item.filename);
   });
   run('npm', ['install', '--ignore-scripts', '--no-audit', '--no-fund', ...tarballs]);
+  const lock = readFileSync(join(consumer, 'package-lock.json'));
+  const provenance = {
+    node: process.version,
+    typescript: JSON.parse(readFileSync(join(root, 'node_modules/typescript/package.json'), 'utf8'))
+      .version,
+    lockSha256: createHash('sha256').update(lock).digest('hex'),
+    tarballs: tarballs.map((path) => ({
+      name: basename(path),
+      sha256: createHash('sha256').update(readFileSync(path)).digest('hex'),
+    })),
+    dependencies: JSON.parse(lock.toString()).packages,
+  };
+  console.log(`Consumer runtime ${provenance.node}, TypeScript ${provenance.typescript}`);
+  if (process.env.TAQUITO_PACKAGE_REPORT_DIR) {
+    mkdirSync(process.env.TAQUITO_PACKAGE_REPORT_DIR, { recursive: true });
+    writeFileSync(join(process.env.TAQUITO_PACKAGE_REPORT_DIR, 'package-lock.json'), lock);
+    writeFileSync(
+      join(process.env.TAQUITO_PACKAGE_REPORT_DIR, 'provenance.json'),
+      JSON.stringify(provenance, null, 2) + '\n'
+    );
+  }
   const require = createRequire(join(consumer, 'package.json'));
-  for (const name of packages)
-    assert.ok(realpathSync(require.resolve(name)).startsWith(join(consumer, 'node_modules')));
+  for (const name of packages) {
+    const installed = join(consumer, 'node_modules', name) + sep;
+    assert.ok(realpathSync(require.resolve(name)).startsWith(installed));
+  }
 
   for (const file of runtimeFixtures) {
     writeFileSync(join(consumer, file), readFileSync(join(fixtures, file), 'utf8'));
@@ -91,7 +112,7 @@ try {
       `const assert = require('node:assert/strict');
 const load = async (name) => require(name);
 import('./${file}')
-  .then((fixture) => fixture.default({ assert, load }))
+  .then((fixture) => fixture.default({ assert, load, mode: 'require' }))
   .catch((error) => {
     console.error(error);
     process.exitCode = 1;
@@ -102,7 +123,7 @@ import('./${file}')
       join(consumer, base + '.check.mjs'),
       `import assert from 'node:assert/strict';
 import fixture from './${file}';
-await fixture({ assert, load: async (name) => (await import(name)).default });
+await fixture({ assert, load: (name) => import(name), mode: 'import' });
 `
     );
     run(process.execPath, [base + '.check.cjs']);
@@ -127,6 +148,30 @@ await fixture({ assert, load: async (name) => (await import(name)).default });
       ]);
     }
   }
+  for (const file of typeFixtures) {
+    writeFileSync(join(consumer, file), readFileSync(join(fixtures, file), 'utf8'));
+    run(process.execPath, [
+      join(root, 'node_modules/typescript/bin/tsc'),
+      '--strict',
+      '--noEmit',
+      '--target',
+      'ES2022',
+      '--module',
+      'preserve',
+      '--moduleResolution',
+      'bundler',
+      file,
+    ]);
+  }
+  cpSync(join(fixtures, 'browser'), consumer, { recursive: true });
+  const requireRoot = createRequire(join(root, 'package.json'));
+  console.log(
+    run(process.execPath, [
+      'browser-runner.mjs',
+      requireRoot.resolve('vite'),
+      requireRoot.resolve('playwright'),
+    ])
+  );
   console.log(
     `Installed ${packages.size} packages: ${runtimeFixtures.length} runtime and ${typeFixtures.length} type fixture(s) passed.`
   );
