@@ -1,4 +1,6 @@
 import BigNumber from 'bignumber.js';
+import { InvalidBigMapParameterError } from '@taquito/core';
+import type { BigMapPagination } from '../types';
 
 /**
  * Casts object/array items to BigNumber
@@ -67,4 +69,22 @@ export function castToString(data: any, keys?: any): object {
   });
 
   return response;
+}
+
+/**
+ * Applies the default big-map page (offset 0, length 100) and validates it
+ * @param page optional offset and length of the page
+ */
+export function normalizeBigMapPagination(page: BigMapPagination = {}): Required<BigMapPagination> {
+  if (!page || typeof page !== 'object') {
+    throw new InvalidBigMapParameterError('page options', 'expected an object');
+  }
+  const { offset = 0, length = 100 } = page;
+  if (!Number.isSafeInteger(offset) || offset < 0 || !Number.isSafeInteger(length) || length < 0) {
+    throw new InvalidBigMapParameterError(
+      'page options',
+      'offset and length must be non-negative safe integers'
+    );
+  }
+  return { offset, length };
 }

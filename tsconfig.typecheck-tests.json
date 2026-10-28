@@ -8,7 +8,10 @@
     "skipLibCheck": true
   },
   "include": [
+    "packages/taquito/test/contract/big-map-values*.spec.ts",
+    "packages/taquito-rpc/test/big-map-values*.spec.ts",
     "packages/taquito/test/contract/smart-rollup-whitelist.spec.ts",
+    "integration-tests/__tests__/contract/big-map-values.spec.ts",
     "integration-tests/__tests__/contract/operations/smart-rollup-originate.spec.ts"
   ]
 }

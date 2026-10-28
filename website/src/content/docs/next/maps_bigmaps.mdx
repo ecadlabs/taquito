@@ -903,3 +903,30 @@ try {
 
   </TabItem>
 </Tabs>
+
+## Read a finite page of values
+
+Use `getValuesPage` to read decoded values without knowing their keys. The result includes the exact block hash used for the read. Pass that hash to subsequent calls to read the same snapshot.
+
+```typescript
+const first = await bigMap.getValuesPage({ offset: 0, length: 20 });
+const second = await bigMap.getValuesPage({
+  offset: 20,
+  length: 20,
+  block: first.blockHash,
+});
+const empty = await bigMap.isEmpty(first.blockHash);
+
+// One request, without a block hash in the result
+const values = await bigMap.listValues({ offset: 0, length: 20 });
+```
+
+`listValues` returns only the decoded values of one page. Both page methods default to offset 0 and length 100. Length must be between 1 and 1000, and offset must be a nonnegative safe integer. Other values throw `InvalidBigMapParameterError`. These limits are SDK policy. The low-level `RpcClient.getBigMapValuesPage` method also allows length 0 and has no maximum beyond safe integers.
+
+`getValuesPage` captures the selected read provider and resolves a block level or `head` to an exact hash before reading. A supplied exact hash avoids that lookup. `listValues` and `isEmpty` make a single request at the given block, the abstraction's default block, or `head`, like `get`. Separate calls only share a snapshot when they use the same hash, so use `getValuesPage` for multi-page reads. Values go straight to the existing schema decoder.
+
+Value order is unspecified but consistent at a fixed block. This API does not recover original keys and does not provide an unbounded iterator. A missing map, unavailable historical context or denied RPC remains an error. `isEmpty` requests at most one value, does not decode it, and propagates those errors.
+
+The item limit does not bound response bytes or node work. The Octez 25.3 implementation selects the requested page while traversing the whole big-map storage, and continues traversing after the page is full. Even `isEmpty` can be expensive for large maps. Repeated pages repeat that work. RPC nodes must expose the big-map values endpoint and retain the requested context.
+
+Custom RPC, read and storage providers can add the optional methods: `getBigMapValuesPage` on RPC clients and read providers, and `getBigMapValuesPageByID`, `listBigMapValuesByID` and `isBigMapEmptyByID` on storage providers. If the selected provider lacks a capability, the matching method throws `UnsupportedActionError` instead of switching to another provider. A read provider response that is not an array, is longer than the page, or has an invalid block hash throws an `RpcError`. `UnsupportedActionError` and `InvalidBigMapParameterError` are exported from `@taquito/taquito` and `@taquito/rpc`. Existing single-key and known-key batch reads keep their behavior.

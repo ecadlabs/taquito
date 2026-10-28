@@ -1,5 +1,5 @@
 import { BigMapKeyType, MichelsonMap, MichelsonMapKey, Schema } from '@taquito/michelson-encoder';
-import { SaplingDiffResponse } from '@taquito/rpc';
+import { SaplingDiffResponse, BigMapPagination } from '@taquito/rpc';
 import { OperationBatch } from '../batch/rpc-batch-provider';
 import { Context } from '../context';
 import { DelegateOperation } from '../operations/delegate-operation';
@@ -45,6 +45,14 @@ import { FailingNoopOperation } from '../operations/failing-noop-operation';
 import type { BlockIdentifier } from '../read-provider/interface';
 
 export type ContractSchema = Schema | unknown;
+
+export interface BigMapValuesOptions extends BigMapPagination {
+  block?: BlockIdentifier;
+}
+export interface BigMapValuesPage<T> {
+  values: T[];
+  blockHash: `B${string}`;
+}
 
 export interface StorageProvider {
   /**
@@ -95,6 +103,43 @@ export interface StorageProvider {
     block?: BlockIdentifier,
     batchSize?: number
   ): Promise<MichelsonMap<MichelsonMapKey, T | undefined>>;
+
+  /**
+   *
+   * Optional. Return one finite page of decoded big-map values and the hash of the block it was read at
+   * The returned blockHash must be the exact hash of the block the values were read at.
+   *
+   * @param id Big Map ID
+   * @param schema Big Map schema (can be determined using your contract type)
+   * @param options optional offset, length and block of the page
+   *
+   */
+  getBigMapValuesPageByID?<T>(
+    id: string,
+    schema: Schema,
+    options?: BigMapValuesOptions
+  ): Promise<BigMapValuesPage<T>>;
+
+  /**
+   *
+   * Optional. Return one finite page of decoded big-map values with a single request at the given block
+   *
+   * @param id Big Map ID
+   * @param schema Big Map schema (can be determined using your contract type)
+   * @param options optional offset, length and block of the page
+   *
+   */
+  listBigMapValuesByID?<T>(id: string, schema: Schema, options?: BigMapValuesOptions): Promise<T[]>;
+
+  /**
+   *
+   * Optional. Return true if the big map has no values, without decoding any value
+   *
+   * @param id Big Map ID
+   * @param block optional block level to check
+   *
+   */
+  isBigMapEmptyByID?(id: string, block?: BlockIdentifier): Promise<boolean>;
 
   /**
    *

@@ -628,10 +628,10 @@ export function hex2Bytes(hex: string): Buffer {
  * Converts a number or Bignumber to hexadecimal  string
  * @param val The value  that will be converted to a hexadecimal string value
  */
-export function toHexBuf(val: number | BigNumber, bitLength = 8) {
+export function toHexBuf(val: number | BigNumber, bitLength = 8): Buffer {
   return Buffer.from(num2PaddedHex(val, bitLength), 'hex');
 }
-export function numToHexBuffer(val: number | BigNumber, bitLength = 8) {
+export function numToHexBuffer(val: number | BigNumber, bitLength = 8): Buffer {
   return Buffer.from(num2PaddedHex(val, bitLength), 'hex');
 }
 

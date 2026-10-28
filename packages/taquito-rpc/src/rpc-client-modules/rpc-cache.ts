@@ -1,10 +1,14 @@
+import { UnsupportedActionError } from '@taquito/core';
 import { RPCMethodName } from './../rpc-client-interface';
 import BigNumberJs from 'bignumber.js';
 type BigNumber = InstanceType<typeof BigNumberJs>;
 const BigNumber = BigNumberJs;
 import { defaultRPCOptions, RpcClientInterface, RPCOptions } from '../rpc-client-interface';
+import { normalizeBigMapPagination } from '../utils/utils';
 import {
   BlsPublicKeyWithProof,
+  BigMapPagination,
+  MichelsonV1Expression,
   BlsAggregatePublicKeysResponse,
   BlsAggregateSignaturesParams,
   BlsSignatureResponse,
@@ -605,6 +609,36 @@ export class RpcClientCache implements RpcClientInterface {
       return this.get(key);
     } else {
       const response = this.rpcClient.getBigMapExpr(id, expr, { block });
+      this.put(key, response);
+      return response;
+    }
+  }
+
+  /**
+   * @param id Big Map ID
+   * @param page optional offset and length of the page (default offset 0 and length 100)
+   * @param options contains generic configuration for rpc calls to specified block (default to head)
+   * Read one finite page of big-map values. The order is unspecified and the keys are not returned.
+   * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-big-maps-big-map-id
+   */
+  async getBigMapValuesPage(
+    id: string,
+    page: BigMapPagination = {},
+    { block }: { block: string } = defaultRPCOptions
+  ): Promise<MichelsonV1Expression[]> {
+    if (typeof this.rpcClient.getBigMapValuesPage !== 'function') {
+      throw new UnsupportedActionError('The RPC client does not support big-map value reads');
+    }
+    const { offset, length } = normalizeBigMapPagination(page);
+    const key = this.formatCacheKey(
+      this.rpcClient.getRpcUrl(),
+      RPCMethodName.GET_BIG_MAP_VALUES_PAGE,
+      [block, id, String(offset), String(length)]
+    );
+    if (this.has(key)) {
+      return this.get(key);
+    } else {
+      const response = this.rpcClient.getBigMapValuesPage(id, { offset, length }, { block });
       this.put(key, response);
       return response;
     }

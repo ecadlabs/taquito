@@ -494,6 +494,8 @@ const storage: BigMapAbstraction = await contractAbs.storage();
 const value = await storage.get({ 'test': 'test2', 'test2': 'test3' });
 ```
 
+To read values without knowing their keys, the BigMapAbstraction reads finite pages with `getValuesPage` or `listValues`, and `isEmpty` checks whether the big map has values. See [Read a finite page of values](maps_bigmaps#read-a-finite-page-of-values).
+
 ### Interacting with Contract Metadata (Tzip-16)
 
 A user can add an instance of the [Tzip16Module](metadata-tzip16) as an extension to the TezosToolkit to extend the contractAbstraction class with the tzip16 functionalities.

@@ -3013,3 +3013,9 @@ export interface BlsThresholdSignaturesParams {
   message: string;
   signature_shares: BlsThresholdSignatureShare[];
 }
+
+/** Finite big-map values pagination. Defaults to offset 0 and length 100. */
+export interface BigMapPagination {
+  offset?: number;
+  length?: number;
+}

@@ -22,6 +22,7 @@ import {
   InvalidOperationKindError,
   DeprecationError,
   ProhibitedActionError,
+  InvalidBigMapParameterError,
 } from '../src/taquito-core';
 
 describe('parent errors classes', () => {
@@ -107,6 +108,21 @@ describe('common error classes', () => {
       expect(error).toBeInstanceOf(InvalidBlockHashError);
       if (error instanceof InvalidBlockHashError) {
         expect(error.message).toContain(`Invalid block hash "foo"`);
+      }
+    }
+  });
+
+  it('should throw an InvalidBigMapParameterError', () => {
+    try {
+      throw new InvalidBigMapParameterError('ID', 'expected a non-negative integer, got "1/2"');
+    } catch (error: unknown) {
+      expect(error).toBeInstanceOf(ParameterValidationError);
+      expect(error).toBeInstanceOf(InvalidBigMapParameterError);
+      if (error instanceof InvalidBigMapParameterError) {
+        expect(error.parameter).toBe('ID');
+        expect(error.message).toBe(
+          'Invalid big-map ID: expected a non-negative integer, got "1/2"'
+        );
       }
     }
   });

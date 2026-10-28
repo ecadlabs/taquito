@@ -1,6 +1,7 @@
 import { validateBlock, ValidationResult } from '@taquito/utils';
 import {
   BlockResponse,
+  BigMapPagination,
   EntrypointsResponse,
   MichelsonV1Expression,
   SaplingDiffResponse,
@@ -115,6 +116,18 @@ export interface TzReadProvider {
    * @param block from which we want to retrieve the big map value
    */
   getBigMapValue(bigMapQuery: BigMapQuery, block: BlockIdentifier): Promise<MichelsonV1Expression>;
+
+  /**
+   * Optional. Access one finite page of raw big-map values. The order is unspecified and the keys are not returned.
+   * @param id Big Map ID
+   * @param page offset and length of the page
+   * @param block from which we want to retrieve the big map values
+   */
+  getBigMapValuesPage?(
+    id: string,
+    page: BigMapPagination,
+    block: BlockIdentifier
+  ): Promise<MichelsonV1Expression[]>;
 
   /**
    * Access the value associated with a sapling state ID.
