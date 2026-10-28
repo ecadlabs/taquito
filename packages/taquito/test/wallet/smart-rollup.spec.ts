@@ -7,6 +7,7 @@ import {
   RpcClient,
 } from '@taquito/rpc';
 import { UnsupportedActionError } from '@taquito/core';
+import { firstValueFrom, Subject } from 'rxjs';
 
 import { blockResponse } from '../read-provider/data';
 
@@ -290,6 +291,49 @@ it.each(['fluent', 'array'])('preserves mixed batch order through the %s route',
 it.each(receiptCases)('$name rejects missing capabilities without submission', async ({ send }) => {
   const { tezos, provider } = setup();
   await expect(send(tezos.wallet)).rejects.toBeInstanceOf(UnsupportedActionError);
+  expect(provider.sendOperations).not.toHaveBeenCalled();
+});
+
+it('waits for each batch mapper before starting the next one', async () => {
+  const { tezos, provider } = setup();
+  support(provider);
+  const gate = new Subject<void>();
+  provider.mapTransferParamsToWalletParams = vi.fn(async (get) => {
+    await firstValueFrom(gate);
+    return { ...(await get()), kind: OpKind.TRANSACTION };
+  });
+  const pending = tezos.wallet
+    .batch()
+    .withTransfer({ to: address, amount: 1 })
+    .withSmartRollupOriginate(originate)
+    .send();
+  try {
+    expect(provider.mapTransferParamsToWalletParams).toHaveBeenCalledTimes(1);
+    expect(provider.mapSmartRollupOriginateParamsToWalletParams).not.toHaveBeenCalled();
+    expect(provider.sendOperations).not.toHaveBeenCalled();
+  } finally {
+    gate.next();
+    gate.complete();
+  }
+  await pending;
+  expect(provider.mapSmartRollupOriginateParamsToWalletParams).toHaveBeenCalledTimes(1);
+  expect(provider.sendOperations).toHaveBeenCalledTimes(1);
+});
+
+it('stops batch mapping on rejection without reading a block or submitting', async () => {
+  const { tezos, provider, rpc } = setup();
+  support(provider);
+  const failure = new Error('batch mapping failed');
+  vi.mocked(provider.mapTransferParamsToWalletParams).mockRejectedValue(failure);
+  await expect(
+    tezos.wallet
+      .batch()
+      .withTransfer({ to: address, amount: 1 })
+      .withSmartRollupOriginate(originate)
+      .send()
+  ).rejects.toBe(failure);
+  expect(provider.mapSmartRollupOriginateParamsToWalletParams).not.toHaveBeenCalled();
+  expect(rpc.getBlockHeader).not.toHaveBeenCalled();
   expect(provider.sendOperations).not.toHaveBeenCalled();
 });
 

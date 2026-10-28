@@ -52,28 +52,6 @@ export type WalletParamsWithKind =
   | withKind<WalletTransferTicketParams, OpKind.TRANSFER_TICKET>
   | withKind<WalletRegisterGlobalConstantParams, OpKind.REGISTER_GLOBAL_CONSTANT>;
 
-function requireRollupCapability(provider: WalletProvider, kind: OpKind) {
-  switch (kind) {
-    case OpKind.SMART_ROLLUP_ADD_MESSAGES:
-      if (!provider.mapSmartRollupAddMessagesParamsToWalletParams) {
-        throw new UnsupportedActionError('Wallet provider does not support smartRollupAddMessages');
-      }
-      break;
-    case OpKind.SMART_ROLLUP_ORIGINATE:
-      if (!provider.mapSmartRollupOriginateParamsToWalletParams) {
-        throw new UnsupportedActionError('Wallet provider does not support smartRollupOriginate');
-      }
-      break;
-    case OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE:
-      if (!provider.mapSmartRollupExecuteOutboxMessageParamsToWalletParams) {
-        throw new UnsupportedActionError(
-          'Wallet provider does not support smartRollupExecuteOutboxMessage'
-        );
-      }
-      break;
-  }
-}
-
 async function sendOperations(context: Context, walletProvider: WalletProvider, params: unknown[]) {
   // The wallet can return its hash after inclusion, so anchor monitoring before submission.
   const level = await context.readProvider.getBlockLevel('head');
@@ -188,52 +166,52 @@ export class WalletOperationBatch {
     return this;
   }
 
-  private async mapOperation(param: WalletParamsWithKind) {
-    switch (param.kind) {
+  private prepareOperationMapper(param: WalletParamsWithKind): () => Promise<unknown> {
+    const provider = this.walletProvider;
+    const kind = param.kind;
+    switch (kind) {
       case OpKind.SMART_ROLLUP_ADD_MESSAGES: {
-        const provider = this.walletProvider;
-        if (!provider.mapSmartRollupAddMessagesParamsToWalletParams) {
+        const mapper = provider.mapSmartRollupAddMessagesParamsToWalletParams;
+        if (!mapper) {
           throw new UnsupportedActionError(
             'Wallet provider does not support smartRollupAddMessages'
           );
         }
-        return provider.mapSmartRollupAddMessagesParamsToWalletParams(async () => param);
+        return () => mapper.call(provider, async () => param);
       }
       case OpKind.SMART_ROLLUP_ORIGINATE: {
-        const provider = this.walletProvider;
-        if (!provider.mapSmartRollupOriginateParamsToWalletParams) {
+        const mapper = provider.mapSmartRollupOriginateParamsToWalletParams;
+        if (!mapper) {
           throw new UnsupportedActionError('Wallet provider does not support smartRollupOriginate');
         }
-        return provider.mapSmartRollupOriginateParamsToWalletParams(async () => param);
+        return () => mapper.call(provider, async () => param);
       }
       case OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE: {
-        const provider = this.walletProvider;
-        if (!provider.mapSmartRollupExecuteOutboxMessageParamsToWalletParams) {
+        const mapper = provider.mapSmartRollupExecuteOutboxMessageParamsToWalletParams;
+        if (!mapper) {
           throw new UnsupportedActionError(
             'Wallet provider does not support smartRollupExecuteOutboxMessage'
           );
         }
-        return provider.mapSmartRollupExecuteOutboxMessageParamsToWalletParams(async () => param);
+        return () => mapper.call(provider, async () => param);
       }
-
       case OpKind.TRANSACTION:
-        return this.walletProvider.mapTransferParamsToWalletParams(async () => param);
+        return () => provider.mapTransferParamsToWalletParams(async () => param);
       case OpKind.ORIGINATION:
-        return this.walletProvider.mapOriginateParamsToWalletParams(async () =>
-          this.context.parser.prepareCodeOrigination({
-            ...param,
-          })
-        );
+        return () =>
+          provider.mapOriginateParamsToWalletParams(async () =>
+            this.context.parser.prepareCodeOrigination({ ...param })
+          );
       case OpKind.DELEGATION:
-        return this.walletProvider.mapDelegateParamsToWalletParams(async () => param);
+        return () => provider.mapDelegateParamsToWalletParams(async () => param);
       case OpKind.INCREASE_PAID_STORAGE:
-        return this.walletProvider.mapIncreasePaidStorageWalletParams(async () => param);
+        return () => provider.mapIncreasePaidStorageWalletParams(async () => param);
       case OpKind.REGISTER_GLOBAL_CONSTANT:
-        return this.walletProvider.mapRegisterGlobalConstantParamsToWalletParams(async () => param);
+        return () => provider.mapRegisterGlobalConstantParamsToWalletParams(async () => param);
       case OpKind.TRANSFER_TICKET:
-        return this.walletProvider.mapTransferTicketParamsToWalletParams(async () => param);
+        return () => provider.mapTransferTicketParamsToWalletParams(async () => param);
       default:
-        throw new InvalidOperationKindError(JSON.stringify((param as any).kind));
+        throw new InvalidOperationKindError(JSON.stringify(kind));
     }
   }
 
@@ -285,13 +263,10 @@ export class WalletOperationBatch {
    * Submit batch operation to wallet
    */
   async send() {
-    for (const op of this.operations) {
-      requireRollupCapability(this.walletProvider, op.kind);
-    }
+    const mappers = this.operations.map((op) => this.prepareOperationMapper(op));
     const ops: unknown[] = [];
-
-    for (const op of this.operations) {
-      ops.push(await this.mapOperation(op));
+    for (const map of mappers) {
+      ops.push(await map());
     }
 
     const { opHash, blockIdentifier } = await sendOperations(
