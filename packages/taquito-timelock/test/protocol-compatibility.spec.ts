@@ -1,5 +1,5 @@
 import bigInt, { BigInteger } from 'big-integer';
-import { Chest, ChestKey, RNG, Timelock } from '../src/taquito-timelock';
+import { Chest, ChestKey, decrypt, encrypt, RNG, Timelock } from '../src/taquito-timelock';
 import fixtures from './fixtures/octez-proof-padding.json';
 
 const payload = Uint8Array.from(Buffer.from(fixtures.payload, 'hex'));
@@ -70,6 +70,38 @@ describe('Octez timelock compatibility', () => {
     const [chest] = Chest.fromArray(Buffer.from(fixtures.cases[0].chest, 'hex'));
     const [key] = ChestKey.fromArray(Buffer.from(fixtures.cases[1].key, 'hex'));
     expect(chest.open(key, fixtures.time)).toBeNull();
+  });
+
+  it('rejects a decoded zero-unlocked key even when its ciphertext decrypts', () => {
+    const fixture = fixtures.cases.find(({ name }) => name === 'aligned-control');
+    if (!fixture) {
+      throw new Error('Missing aligned compatibility control');
+    }
+    const [validChest] = Chest.fromArray(Buffer.from(fixture.chest, 'hex'));
+    const [validKey] = ChestKey.fromArray(Buffer.from(fixture.key, 'hex'));
+    const malformedKey = new ChestKey({
+      vdfTuple: new Timelock({
+        lockedValue: validKey.vdfTuple.lockedValue,
+        unlockedValue: bigInt(0),
+        vdfProof: validKey.vdfTuple.vdfProof,
+        modulus: validKey.vdfTuple.modulus,
+      }),
+      nonce: validKey.nonce,
+    });
+    const [decodedKey] = ChestKey.fromArray(malformedKey.encode());
+    const symmetricKey = decodedKey.symmetricKey();
+    const controlledChest = new Chest({
+      lockedValue: validChest.lockedValue,
+      cipherText: encrypt(symmetricKey, payload, {
+        getRandomValues(target) {
+          target.fill(0);
+          return target;
+        },
+      }),
+    });
+    expect(decrypt(symmetricKey, controlledChest.cipherText)).toEqual(payload);
+    expect(controlledChest.open(decodedKey, fixtures.time)).toBeNull();
+    expect(validChest.open(validKey, fixtures.time)).toEqual(payload);
   });
 
   it('uses the same hash convention with a custom modulus', () => {

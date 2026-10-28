@@ -55,3 +55,12 @@ value, a 255-byte locked value, a separate 255-byte unlocked value, and a contro
 with both values at 256 bytes. The custom modulus `3233` checks padding of the
 modulus itself. Time 1024 produces nontrivial proofs; small time values can hide
 a wrong hash behind proof integer `1`.
+
+## Zero-valued input rejection
+
+The public API test constructs and decodes a key with a zero unlocked value.
+Its controlled ciphertext decrypts with that key's symmetric key, but `Chest.open`
+must still reject the invalid proof. The unchanged aligned fixture also opens.
+This checks malformed-key handling without a private helper test. It does not
+establish a valid zero-valued proof or an independent zero transcript fixture.
+The controlled ciphertext is test data, not an Octez-verified fixture.
