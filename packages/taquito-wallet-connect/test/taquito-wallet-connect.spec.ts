@@ -1408,6 +1408,7 @@ describe('Wallet connect tests', () => {
         kernel: '0061736d01000000',
         parametersType: { prim: 'pair', args: [{ prim: 'bytes' }, { prim: 'nat' }] },
         storageLimit: 0,
+        whitelist: ['tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh', 'tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx'],
       });
       expect(
         await walletConnect.mapSmartRollupOriginateParamsToWalletParams(async () => input)
@@ -1418,8 +1419,17 @@ describe('Wallet connect tests', () => {
         kernel: '0061736d01000000',
         parameters_ty: { prim: 'pair', args: [{ prim: 'bytes' }, { prim: 'nat' }] },
         storage_limit: '0',
+        whitelist: ['tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh', 'tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx'],
       });
       expect(input.storageLimit).toBe(0);
+    });
+    it('omits the whitelist when origination does not supply one', async () => {
+      const result = await walletConnect.mapSmartRollupOriginateParamsToWalletParams(async () => ({
+        pvmKind: PvmKind.WASM2,
+        kernel: '0061736d01000000',
+        parametersType: { prim: 'bytes' },
+      }));
+      expect(result).not.toHaveProperty('whitelist');
     });
     it('submits mapped rollup requests through WalletConnect', async () => {
       mockSignClient.request.mockResolvedValue({ operationHash: 'operation-hash' });

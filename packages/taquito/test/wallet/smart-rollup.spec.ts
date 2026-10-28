@@ -96,6 +96,7 @@ const originate = {
   pvmKind: PvmKind.WASM2,
   kernel: '0061736d01000000',
   parametersType: { prim: 'bytes' },
+  whitelist: ['tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh', 'tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx'],
 };
 const outbox = {
   rollup: 'sr1JZsZT5u27MUQXeTh1aHqZBo8NvyxRKnyv',
@@ -214,6 +215,27 @@ it.each(receiptCases)('$name reports unknown for a missing matching receipt', as
   const operation = await send(tezos.wallet);
   await operation.operationResults();
   expect(await operation.status()).toBe('unknown');
+});
+
+it('forwards an ordered origination whitelist without changing the input', async () => {
+  const { tezos, provider } = setup();
+  support(provider);
+  const input = Object.freeze({ ...originate, whitelist: [...originate.whitelist] });
+  Object.freeze(input.whitelist);
+  await tezos.wallet.smartRollupOriginate(input).send();
+  expect(provider.sendOperations).toHaveBeenCalledExactlyOnceWith([
+    {
+      kind: OpKind.SMART_ROLLUP_ORIGINATE,
+      pvmKind: PvmKind.WASM2,
+      kernel: '0061736d01000000',
+      parametersType: { prim: 'bytes' },
+      whitelist: ['tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh', 'tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx'],
+    },
+  ]);
+  expect(input.whitelist).toEqual([
+    'tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh',
+    'tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx',
+  ]);
 });
 
 it('returns the originated rollup address', async () => {
