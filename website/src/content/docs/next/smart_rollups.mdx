@@ -173,6 +173,10 @@ await origination.confirmation();
 console.log(await origination.rollupAddress());
 ```
 
+Wallet origination also accepts the optional `whitelist` parameter described
+above. BeaconWallet and WalletConnect forward the supplied addresses in order.
+Omit it for a public rollup. Wallet batches accept the same parameter.
+
 To execute an outbox message, obtain its serialized proof from the rollup node
 and the corresponding cemented commitment hash. Supply values for the selected
 rollup and message rather than reusing a proof from another operation:
