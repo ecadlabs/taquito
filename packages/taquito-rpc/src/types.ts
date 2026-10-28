@@ -3019,3 +3019,9 @@ export interface BigMapPagination {
   offset?: number;
   length?: number;
 }
+
+/** Participant POP-domain proofs over the same Base58Check aggregate BLS public key. */
+export interface BlsAggregateProofsParams {
+  public_key: string;
+  proofs: string[];
+}

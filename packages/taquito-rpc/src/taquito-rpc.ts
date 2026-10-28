@@ -21,6 +21,7 @@ import {
   MichelsonV1Expression,
   BlsAggregatePublicKeysResponse,
   BlsAggregateSignaturesParams,
+  BlsAggregateProofsParams,
   BlsSignatureResponse,
   BlsThresholdSignaturesParams,
   BakingRightsQueryArguments,
@@ -1419,6 +1420,15 @@ export class RpcClient implements RpcClientInterface {
   async thresholdSignatures(params: BlsThresholdSignaturesParams): Promise<BlsSignatureResponse> {
     return this.httpBackend.createRequest<BlsSignatureResponse>(
       { url: this.createURL('/bls/threshold_signatures'), method: 'POST' },
+      params
+    );
+  }
+  /** Aggregate participant proofs over one aggregate public key. Invalid combinations return null.
+   * @see https://octez.tezos.com/docs/alpha/native_multisig.html
+   */
+  async aggregateProofs(params: BlsAggregateProofsParams): Promise<BlsSignatureResponse> {
+    return this.httpBackend.createRequest<BlsSignatureResponse>(
+      { url: this.createURL('/bls/aggregate_proofs'), method: 'POST' },
       params
     );
   }
