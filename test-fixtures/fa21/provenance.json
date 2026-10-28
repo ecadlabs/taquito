@@ -1,0 +1,9 @@
+{
+  "project": "nomadic-labs-free-resources/fa2.1/archetype-fa2.1",
+  "commit": "42e985a6aee9fafff6f2592415c3e1ad2f0085d2",
+  "artifact": "types/fa21.code.ts",
+  "source_url": "https://gitlab.com/api/v4/projects/47584817/repository/files/types%2Ffa21.code.ts/raw?ref=42e985a6aee9fafff6f2592415c3e1ad2f0085d2",
+  "source_sha256": "2dd6331e8adbc025b1e619dc320cad3527ef27c6f5ca3d83af0e65f26bc6c4fa",
+  "fixture_sha256": "1a8c833833b4593ea9c0dd4bf94eb1214455265d6741fb2a9f76da522b0077be",
+  "note": "Reference README declares MIT. No standalone LICENSE was present at this pin. Reference is work in progress."
+}
