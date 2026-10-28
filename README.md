@@ -158,9 +158,9 @@ Refer to the top-level `package.json` for available scripts. Common commands:
 ### Testing packed packages
 
 Before changing package entrypoints or published files, run the
-[packed package consumer checks](package-tests/README.md). They test installed
-`@taquito/core` and `@taquito/http-utils` tarballs on Linux or WSL. The guide lists
-the build and browser prerequisites for `npm run test:packages:consumers`.
+[packed package consumer checks](test-fixtures/consumers/README.md). They test installed
+packages through CommonJS, native ESM, TypeScript and a bundled browser consumer
+on Linux or WSL. The guide lists the prerequisites for `npm run test:consumers`.
 
 ### Running Integration Tests
 
