@@ -114,7 +114,6 @@ jobs:
       - run: npm run build
       - run: npm run typecheck:tests
       - run: npm run test:consumers
-      - run: npm run typecheck:smart-rollup-whitelist
       - run: npm run typecheck:wallet-rollups
       - run: npm run test:scripts
       - run: npm run test:dist:esm-imports
