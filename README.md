@@ -22,7 +22,7 @@ Taquito is used by **over 80% of DApps** in the Tezos ecosystem. It is easy to u
 
 ## Why should I use Taquito?
 
-Taquito provides convenient abstractions for a multitude of common operations, including wallet interactions (with [WalletConnect/Reown](https://reown.com/) in the works), batching operations, calling into contracts, querying the blockchain, and more. Taquito will shield your code from subtle - and not-so-subtle - changes to the underlying Tezos protocol.
+Taquito provides convenient abstractions for a multitude of common operations, including wallet interactions (via [Beacon](https://www.npmjs.com/package/@taquito/beacon-wallet) and [WalletConnect](https://www.npmjs.com/package/@taquito/wallet-connect)), batching operations, calling into contracts, querying the blockchain, and more. Taquito will shield your code from subtle, and not-so-subtle, changes to the underlying Tezos protocol.
 
 ...Not to mention our thriving, helpful, and welcoming community!
 
@@ -104,11 +104,11 @@ Taquito supports the *current* and *next* (beta) protocol versions of Tezos.
 
 We use [Semantic Versioning](https://semver.org) with a twist: the *Major* version typically tracks the latest version of Tezos, while *Minor* and *Patch* follow standard SemVer rules.
 
-For example, a stable Taquito release line might be `v24.x`, while the next protocol release is prepared as `v25.0.0-beta.1`.
+For example, a stable Taquito release line might be `v25.x`, while the next protocol release is prepared as `v26.0.0-beta.1`.
 
 ### Release Timing
 
-When the next protocol proposal is likely to be promoted, and Taquito has been updated and tested against it, we release the next version (e.g., `v25.0.0-beta.1`) *before* the chain switches. This gives DApp developers time to update and test their projects.
+When the next protocol proposal is likely to be promoted, and Taquito has been updated and tested against it, we release the next version (e.g., `v26.0.0-beta.1`) *before* the chain switches. This gives DApp developers time to update and test their projects.
 
 During these “Major” version updates, the Taquito public API *may* undergo breaking changes. We do our best to document these in release notes.
 
@@ -126,53 +126,42 @@ Interested in contributing to Taquito? Wonderful! Read on to set up your environ
 
 ### Setup and Build the Taquito Project
 
-*Perform these steps in order.*
-
-1. **Install libudev-dev** (if on GNU/Linux):
-    - **Ubuntu** / **Debian**-based: `sudo apt-get install libudev-dev`
-    - **Fedora** / **RedHat**-based: `sudo dnf install libudev-devel`
-
-2. **Install or use a compatible version of Node.js** (see [Supported Versions](#supported-versions-of-node)), for example:
+1. **Use a supported version of Node.js** (see [Supported Versions](#supported-versions-of-node)):
     ```bash
     nvm install
     nvm use
     ```
 
-### Building Taquito
+2. **Install dependencies and build all packages**:
+    ```bash
+    npm ci
+    npm run build
+    ```
 
-Once prerequisites are installed, run:
-```bash
-npm ci
-npm run build
-```
-If everything goes well, run the unit tests:
-```bash
-npm run test
-```
-All tests should pass successfully.
+3. **Run the unit tests**:
+    ```bash
+    npm run test
+    ```
 
-### Build Gotchas
+### Useful Commands
 
-- **Do not delete `node_modules/` manually** – this confuses the build system. Use `npm run clean` instead.
-- **Prefer `npm ci` rather than `npm install`** to ensure a deterministic installation that respects `package-lock.json`.
+Refer to the top-level `package.json` for available scripts. Common commands:
 
-### Useful npm Scripts
-
-Refer to the top-level `package.json` for available scripts. Common ones:
-
-- `npm run clean`: Recursively deletes build artifacts
-- `npm run test`: Runs the unit tests
-- `npm run build`: Generates bundles, type definitions, and TypeDocs for all packages
-- `npm run lint`: Runs ESLint
-- `npm run example`: Runs an example Node.js app demonstrating Taquito functionality
+- `npm run build`: Builds all workspace packages via Nx
+- `npm run test`: Runs unit tests across all packages
+- `npm run lint`: Checks the package catalog and runs ESLint across workspaces
+- `npm run build-docs`: Generates TypeDoc API documentation
+- `npm run clean`: Removes `node_modules` directories across the monorepo
+- `npx nx build <package-name>`: Builds a single package (e.g., `npx nx build @taquito/taquito`)
+- `npx nx test <package-name>`: Runs unit tests for a single package (e.g., `npx nx test @taquito/taquito`)
 
 ### Running Integration Tests
 
-See the `integration-tests/` directory for details. The README in that folder explains how to configure and run integration tests.
+See [`integration-tests/README.md`](./integration-tests/README.md) for instructions on configuring and running integration tests.
 
 ### Modifying Taquito Source
 
-After making your changes:
+Before committing your changes, ensure linting and tests pass:
 
 ```bash
 npm run lint
@@ -180,14 +169,17 @@ npm run test
 git commit
 ```
 
-Use a conventional commit message for your final commit.
+Use a [Conventional Commit](https://www.conventionalcommits.org/) message for your commits.
 
 ### Running the Website Locally
 
-The [Taquito website][4] is built with [Astro][5]. To run it locally:
+The [Taquito website][4] lives in `website/` and is built with [Astro][5]. To run it locally after building the root packages:
 
-1. `npm ci`
-2. `npm -w @taquito/website dev`
+```bash
+cd website
+npm ci
+npm run dev
+```
 
 ## Contributions / Reporting Issues
 
@@ -211,13 +203,13 @@ Before submitting a pull request, please ensure there’s an open issue describi
 
 This repository contains materials under two separate licenses:
 
-### Source Code — Apache License 2.0
+### Source Code: Apache License 2.0
 
 The Taquito source code (all directories and files in this repository **except** the `website/` directory) is licensed under the [Apache License, Version 2.0](LICENSE). You are free to use, modify, and distribute the source code in accordance with the terms of that license.
 
-### Website & Documentation — Proprietary
+### Website & Documentation: Proprietary
 
-The contents of the [`website/`](website/) directory — including all documentation, written content, tutorials, guides, images, graphics, logos, design assets, and website source code — are the **exclusive property of ECAD Labs Inc.** and are **NOT** licensed under Apache 2.0 or any other open-source license. All rights are reserved. See [`website/LICENSE`](website/LICENSE) for details.
+The contents of the [`website/`](website/) directory (including all documentation, written content, tutorials, guides, images, graphics, logos, design assets, and website source code) are the **exclusive property of ECAD Labs Inc.** and are **NOT** licensed under Apache 2.0 or any other open-source license. All rights are reserved. See [`website/LICENSE`](website/LICENSE) for details.
 
 For permissions or licensing inquiries regarding the website and documentation, please contact [info@ecadlabs.com](mailto:info@ecadlabs.com).
 
