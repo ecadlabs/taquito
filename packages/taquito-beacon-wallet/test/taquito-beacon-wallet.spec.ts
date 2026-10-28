@@ -382,6 +382,16 @@ describe('Beacon Wallet tests', () => {
         fee: '0',
       });
     });
+    it('does not request parameters when Beacon preparation rejects', async () => {
+      const failure = new Error('preparation rejected');
+      vi.mocked(wallet.client.showPrepare).mockRejectedValue(failure);
+      const params = vi.fn(async () => ({ message: ['00'] }));
+      await expect(wallet.mapSmartRollupAddMessagesParamsToWalletParams(params)).rejects.toBe(
+        failure
+      );
+      expect(params).not.toHaveBeenCalled();
+      expect(wallet.client.hideUI).not.toHaveBeenCalled();
+    });
     it('preserves callback errors', async () => {
       const error = new Error('parameter rejection');
       await expect(

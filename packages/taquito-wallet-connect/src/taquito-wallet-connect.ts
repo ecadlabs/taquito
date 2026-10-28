@@ -64,6 +64,11 @@ export { SignClientTypes, PairingTypes };
 export * from './errors';
 export * from './types';
 
+type RPCOperationWithLimits = Pick<
+  Awaited<ReturnType<typeof createSmartRollupAddMessagesOperation>>,
+  'fee' | 'gas_limit' | 'storage_limit'
+>;
+
 const TEZOS_PLACEHOLDER = 'tezos';
 
 /**
@@ -642,49 +647,39 @@ export class WalletConnect implements WalletProvider {
     return operatedParams;
   }
 
-  /** Map SmartRollupAddMessages parameters for the wallet request. */
-  async mapSmartRollupAddMessagesParamsToWalletParams(
-    params: () => Promise<WalletSmartRollupAddMessagesParams>
-  ) {
+  private async mapSmartRollupOperation<
+    Params extends object,
+    Operation extends RPCOperationWithLimits,
+  >(params: () => Promise<Params>, createOperation: (input: Params) => Promise<Operation>) {
     const input = await params();
-    const { fee, gas_limit, storage_limit, ...operation } =
-      await createSmartRollupAddMessagesOperation({ ...input });
+    const { fee, gas_limit, storage_limit, ...operation } = await createOperation({ ...input });
     return {
       ...operation,
       ...(fee === undefined ? {} : { fee: String(fee) }),
       ...(gas_limit === undefined ? {} : { gas_limit: String(gas_limit) }),
       ...(storage_limit === undefined ? {} : { storage_limit: String(storage_limit) }),
     };
+  }
+
+  /** Map SmartRollupAddMessages parameters for the wallet request. */
+  async mapSmartRollupAddMessagesParamsToWalletParams(
+    params: () => Promise<WalletSmartRollupAddMessagesParams>
+  ) {
+    return this.mapSmartRollupOperation(params, createSmartRollupAddMessagesOperation);
   }
 
   /** Map SmartRollupOriginate parameters for the wallet request. */
   async mapSmartRollupOriginateParamsToWalletParams(
     params: () => Promise<WalletSmartRollupOriginateParams>
   ) {
-    const input = await params();
-    const { fee, gas_limit, storage_limit, ...operation } =
-      await createSmartRollupOriginateOperation({ ...input });
-    return {
-      ...operation,
-      ...(fee === undefined ? {} : { fee: String(fee) }),
-      ...(gas_limit === undefined ? {} : { gas_limit: String(gas_limit) }),
-      ...(storage_limit === undefined ? {} : { storage_limit: String(storage_limit) }),
-    };
+    return this.mapSmartRollupOperation(params, createSmartRollupOriginateOperation);
   }
 
   /** Map SmartRollupExecuteOutboxMessage parameters for the wallet request. */
   async mapSmartRollupExecuteOutboxMessageParamsToWalletParams(
     params: () => Promise<WalletSmartRollupExecuteOutboxMessageParams>
   ) {
-    const input = await params();
-    const { fee, gas_limit, storage_limit, ...operation } =
-      await createSmartRollupExecuteOutboxMessageOperation({ ...input });
-    return {
-      ...operation,
-      ...(fee === undefined ? {} : { fee: String(fee) }),
-      ...(gas_limit === undefined ? {} : { gas_limit: String(gas_limit) }),
-      ...(storage_limit === undefined ? {} : { storage_limit: String(storage_limit) }),
-    };
+    return this.mapSmartRollupOperation(params, createSmartRollupExecuteOutboxMessageOperation);
   }
 
   async mapTransferParamsToWalletParams(params: () => Promise<WalletTransferParams>) {

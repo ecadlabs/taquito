@@ -3,10 +3,7 @@
   "compilerOptions": {
     "noEmit": true,
     "rootDir": ".",
-    "types": [
-      "node",
-      "vitest/globals"
-    ],
+    "types": ["node", "vitest/globals"],
     "resolveJsonModule": true,
     "skipLibCheck": true
   },
@@ -33,6 +30,7 @@
     "packages/taquito/src/wallet/smart-rollup-originate-operation.ts",
     "packages/taquito/src/wallet/wallet.ts",
     "packages/taquito/test/batch/rpc-batch-provider.spec.ts",
-    "packages/taquito/test/wallet/smart-rollup.spec.ts"
+    "packages/taquito/test/wallet/smart-rollup.spec.ts",
+    "test-fixtures/wallet-rollup-mapper.types.ts"
   ]
 }
