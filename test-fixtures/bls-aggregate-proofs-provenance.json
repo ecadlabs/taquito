@@ -1,0 +1,220 @@
+{
+  "commonOptions": [
+    "--base-dir",
+    "<fresh temporary mockup>",
+    "--mode",
+    "mockup"
+  ],
+  "commands": [
+    {
+      "args": [
+        "--protocol",
+        "PtTALLiNtPec",
+        "create",
+        "mockup"
+      ],
+      "exitCode": 0,
+      "stdout": "Created mockup client base dir in /tmp/taquito-3175-proof-z54pmfxb\nTezos address added: tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx\nTezos address added: tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN\nTezos address added: tz1faswCTDciRzE4oJ9jn2Vm2dvjeyA9fUzU\nTezos address added: tz1b7tUupMgCNw2cCLpKTkSD1NZzB5TkP2sv\nTezos address added: tz1ddb9NMYHZi5UzPdzTZMYQQZoMub195zgv\n",
+      "stderr": "Base directory /tmp/taquito-3175-proof-z54pmfxb is empty.\nMove directory /tmp/taquito-3175-proof-z54pmfxb away and create it anew with:\n./octez-client --mode mockup --base-dir /tmp/taquito-3175-proof-z54pmfxb create mockup\nor use another directory name.\nSome commands (e.g., transfer) might not work correctly.\n"
+    },
+    {
+      "args": [
+        "import",
+        "secret",
+        "key",
+        "fixture-0",
+        "unencrypted:BLsk2jjZe6wQH9TwtBzJwL7xLePfEgUxsV6BfwDP8dGfsosgnekSgC"
+      ],
+      "exitCode": 0,
+      "stdout": "Tezos address added: tz4AQcKaQU1sUzsmPTX43qnK4ddkCeeknJnf\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "show",
+        "address",
+        "fixture-0"
+      ],
+      "exitCode": 0,
+      "stdout": "Hash: tz4AQcKaQU1sUzsmPTX43qnK4ddkCeeknJnf\nPublic Key: BLpk1wMU34nS7N96D2owyejLxQtwZwLARLg6tdTFMP5N8fz6yCiLogfFXkYo9ZHnZ95Kba3D3cvt\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "create",
+        "bls",
+        "proof",
+        "for",
+        "fixture-0"
+      ],
+      "exitCode": 0,
+      "stdout": "BLsig9cW2ffM82s8cZWNDQTmecxHPHmJcTUh5DF2dVP7GV7oUmmptd4JpxBvSyE1VDeLtGyV68KaTuaEM1qiSUELMqkdwCLJFDQYGL6ZZLZDEUAfyu3Vu3ivs66jhV8ANwt3tKg6qABoqx\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "import",
+        "secret",
+        "key",
+        "fixture-1",
+        "unencrypted:BLsk2zk6pBGysG9BJn4u3XNtFnJQ1wpUYz6sQMTZQdfxQaiBWkqLyh"
+      ],
+      "exitCode": 0,
+      "stdout": "Tezos address added: tz4JmbuiJGyC2thisABCS59PnGr749dsP4WY\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "show",
+        "address",
+        "fixture-1"
+      ],
+      "exitCode": 0,
+      "stdout": "Hash: tz4JmbuiJGyC2thisABCS59PnGr749dsP4WY\nPublic Key: BLpk1oWB1ZbeKePu8FiRMpktQoZw1rPs67qu6zbnYxiCcJDyZih8PXUiGnLyMWR6Fay9cDNyCzj9\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "create",
+        "bls",
+        "proof",
+        "for",
+        "fixture-1"
+      ],
+      "exitCode": 0,
+      "stdout": "BLsigAp94rBWCJU7yM7X5F4zSw15AKkW1JZ5dwkqa2Xjdo1y4jhcQKVf6Sh7GFV261MUEx3WbfStUkP83tmKRpAucD4NEo1bLCB3s1TM4ByDUYZ1vUV5qsAWFLagvbnHfn61DnouoxmTij\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "aggregate",
+        "bls",
+        "public",
+        "keys",
+        "[{\"public_key\": \"BLpk1wMU34nS7N96D2owyejLxQtwZwLARLg6tdTFMP5N8fz6yCiLogfFXkYo9ZHnZ95Kba3D3cvt\", \"proof\": \"BLsig9cW2ffM82s8cZWNDQTmecxHPHmJcTUh5DF2dVP7GV7oUmmptd4JpxBvSyE1VDeLtGyV68KaTuaEM1qiSUELMqkdwCLJFDQYGL6ZZLZDEUAfyu3Vu3ivs66jhV8ANwt3tKg6qABoqx\"}, {\"public_key\": \"BLpk1oWB1ZbeKePu8FiRMpktQoZw1rPs67qu6zbnYxiCcJDyZih8PXUiGnLyMWR6Fay9cDNyCzj9\", \"proof\": \"BLsigAp94rBWCJU7yM7X5F4zSw15AKkW1JZ5dwkqa2Xjdo1y4jhcQKVf6Sh7GFV261MUEx3WbfStUkP83tmKRpAucD4NEo1bLCB3s1TM4ByDUYZ1vUV5qsAWFLagvbnHfn61DnouoxmTij\"}]"
+      ],
+      "exitCode": 0,
+      "stdout": "{ \"public_key\":\n    \"BLpk1nGsPWudaiPFkzo7iZRGrbbFSH5RD9PXXzNKajKmBGKcGHUaZxKBSibQbYUW1Swo3VbuuNC8\",\n  \"public_key_hash\": \"tz4J6b9buTuVriYWtYm12v6nz3xLrDCVfDkj\" }\n\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "create",
+        "bls",
+        "proof",
+        "for",
+        "fixture-0",
+        "--override-public-key",
+        "BLpk1nGsPWudaiPFkzo7iZRGrbbFSH5RD9PXXzNKajKmBGKcGHUaZxKBSibQbYUW1Swo3VbuuNC8"
+      ],
+      "exitCode": 0,
+      "stdout": "BLsig9qErEnSP3AMZXnXfY85YdhJmW91xq5QsqWJBbFW3t8YFzHbGhsbfEfEuEFL7UPGWFh9Nmai2TomRZiKv8vkhwvk8kDhtAUV5qVNTiSwWNzWFEuLjxGp3bKhKPW3mFzmh93w4Fvrg9\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "create",
+        "bls",
+        "proof",
+        "for",
+        "fixture-1",
+        "--override-public-key",
+        "BLpk1nGsPWudaiPFkzo7iZRGrbbFSH5RD9PXXzNKajKmBGKcGHUaZxKBSibQbYUW1Swo3VbuuNC8"
+      ],
+      "exitCode": 0,
+      "stdout": "BLsigANoYkqpCmSPUi8UCP29nCm6C98HR9oU7vmQzNQAwV2kAFvkBQ6BZkKatf4DD7vD5uxhfwUHz6KZonq4BFH3PwuDYLRNXophffed3XhQGMNYqhKN19wpe6U86gVzLbYTKHyWK4Qzzc\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "aggregate",
+        "bls",
+        "proofs",
+        "{\"public_key\": \"BLpk1nGsPWudaiPFkzo7iZRGrbbFSH5RD9PXXzNKajKmBGKcGHUaZxKBSibQbYUW1Swo3VbuuNC8\", \"proofs\": [\"BLsig9qErEnSP3AMZXnXfY85YdhJmW91xq5QsqWJBbFW3t8YFzHbGhsbfEfEuEFL7UPGWFh9Nmai2TomRZiKv8vkhwvk8kDhtAUV5qVNTiSwWNzWFEuLjxGp3bKhKPW3mFzmh93w4Fvrg9\", \"BLsigANoYkqpCmSPUi8UCP29nCm6C98HR9oU7vmQzNQAwV2kAFvkBQ6BZkKatf4DD7vD5uxhfwUHz6KZonq4BFH3PwuDYLRNXophffed3XhQGMNYqhKN19wpe6U86gVzLbYTKHyWK4Qzzc\"]}"
+      ],
+      "exitCode": 0,
+      "stdout": "BLsigBajmQpyUCdzpxfvwv7iijFzxmBoBvMYUtCN8CFQXkrNPatugkhTJXQzuPsN4DiD4MutVggDMjn4yeqyprNE3oRXaVzg9g53FfnurtV7wM3DASZqYUEhUcQH6MqzBuwYnHJVatF7Jo\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "check",
+        "bls",
+        "proof",
+        "BLsigBajmQpyUCdzpxfvwv7iijFzxmBoBvMYUtCN8CFQXkrNPatugkhTJXQzuPsN4DiD4MutVggDMjn4yeqyprNE3oRXaVzg9g53FfnurtV7wM3DASZqYUEhUcQH6MqzBuwYnHJVatF7Jo",
+        "for",
+        "BLpk1nGsPWudaiPFkzo7iZRGrbbFSH5RD9PXXzNKajKmBGKcGHUaZxKBSibQbYUW1Swo3VbuuNC8"
+      ],
+      "exitCode": 0,
+      "stdout": "Proof check is successful.\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "aggregate",
+        "bls",
+        "proofs",
+        "{\"public_key\": \"BLpk1nGsPWudaiPFkzo7iZRGrbbFSH5RD9PXXzNKajKmBGKcGHUaZxKBSibQbYUW1Swo3VbuuNC8\", \"proofs\": [\"BLsig9cW2ffM82s8cZWNDQTmecxHPHmJcTUh5DF2dVP7GV7oUmmptd4JpxBvSyE1VDeLtGyV68KaTuaEM1qiSUELMqkdwCLJFDQYGL6ZZLZDEUAfyu3Vu3ivs66jhV8ANwt3tKg6qABoqx\", \"BLsigAp94rBWCJU7yM7X5F4zSw15AKkW1JZ5dwkqa2Xjdo1y4jhcQKVf6Sh7GFV261MUEx3WbfStUkP83tmKRpAucD4NEo1bLCB3s1TM4ByDUYZ1vUV5qsAWFLagvbnHfn61DnouoxmTij\"]}"
+      ],
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": "Fatal error:\n  Aggregated proof is invalid\n"
+    },
+    {
+      "args": [
+        "create",
+        "bls",
+        "proof",
+        "for",
+        "fixture-0",
+        "--override-public-key",
+        "BLpk221KuhaXc1tMowWziKHB1ycetnfumXqwKumbydo2ops4CA6MtdQ5fmVUpPd9JC7x4pDPyP6M"
+      ],
+      "exitCode": 0,
+      "stdout": "BLsig9eitPbLKoZcdrUBUvZXUZp1mbrvtwUH8ywPZhCuxfW81ouGGWihtmPeEqLwB2fRJNq7bkEGN9FqwFZY2dN4r2cdM5hrwJtbgQTBF4s1NZvbnDKUDvcKwWttfR9uPy2KE1Xg6ah46g\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "create",
+        "bls",
+        "proof",
+        "for",
+        "fixture-0",
+        "--override-public-key",
+        "BLpk1keJqxvUV6KccX3dEizZPcAVkG75ZjPjQPWy6TTuGMZMtvwqtoAXbh54U9PXCSL8ocTzf3Mu"
+      ],
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": "Fatal error:\n  Failed to read a BLS public key\n"
+    },
+    {
+      "args": [
+        "create",
+        "bls",
+        "proof",
+        "for",
+        "fixture-0",
+        "--override-public-key",
+        "BLpk1DvGiVcNFFC8Dg6tHYRL8sGBTCyRA8VKZM1hL6oeBQwyJUeou8hRTYEDmevGzvkWHCr72BD6"
+      ],
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": "Fatal error:\n  Failed to read a BLS public key\n"
+    },
+    {
+      "args": [
+        "create",
+        "bls",
+        "proof",
+        "for",
+        "fixture-0",
+        "--override-public-key",
+        "BLpk2HNLySEaiwT71MzNBuZneM4p3KEjyLJ9FS2Erp8AMJAkVPEstTddjquuAdrmPwumL1xRcttD"
+      ],
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": "Fatal error:\n  Failed to read a BLS public key\n"
+    }
+  ]
+}

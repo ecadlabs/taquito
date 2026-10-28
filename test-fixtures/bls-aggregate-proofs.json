@@ -1,0 +1,64 @@
+{
+  "octez": "e5d8a6b8 (2026-10-15 09:10:29 +0200) (Octez 25.3 (build: 0))",
+  "sourceRevision": "octez-v25.3",
+  "members": [
+    {
+      "secretKey": "BLsk2jjZe6wQH9TwtBzJwL7xLePfEgUxsV6BfwDP8dGfsosgnekSgC",
+      "publicKey": "BLpk1wMU34nS7N96D2owyejLxQtwZwLARLg6tdTFMP5N8fz6yCiLogfFXkYo9ZHnZ95Kba3D3cvt",
+      "publicKeyHash": "tz4AQcKaQU1sUzsmPTX43qnK4ddkCeeknJnf",
+      "selfProof": "BLsig9cW2ffM82s8cZWNDQTmecxHPHmJcTUh5DF2dVP7GV7oUmmptd4JpxBvSyE1VDeLtGyV68KaTuaEM1qiSUELMqkdwCLJFDQYGL6ZZLZDEUAfyu3Vu3ivs66jhV8ANwt3tKg6qABoqx",
+      "overrideProof": "BLsig9qErEnSP3AMZXnXfY85YdhJmW91xq5QsqWJBbFW3t8YFzHbGhsbfEfEuEFL7UPGWFh9Nmai2TomRZiKv8vkhwvk8kDhtAUV5qVNTiSwWNzWFEuLjxGp3bKhKPW3mFzmh93w4Fvrg9",
+      "selfProofRawHex": "82bf090a8a48ee7f0ea80ec4efafd159d8fbd84c6b08f41399d907388ddc0225e8417da9605649529ef1fac9bb83073a0493ef702b967996cadd8b5304a0f6dad6768017a9ca2cb5fd51c4ff7f4b85e4c95b063deeacab666b93e3aa7d50a6f1",
+      "selfProofGeneric": "G4s2nhNsfgwBT8UfmGupvbw6d89sWRW2WL3EK7as856qtLGeC81WqhP3jGRnpHoUsbn1nPQ2kvasvqmMUMsfXxbzodnz1VPSytubpXf1vPkEcrysPSCVZ2NBCRDEMZYHaq5A4kFuT29H",
+      "overrideProofRawHex": "8865b7d0ef537d59b7a8742ddcdb76fee494797dffec9e4758c869691860faaa4c44638331d15d5f5f85a2e02c99cf1f1482d915c229db56265b06463bd6a62732ef1d842f03a2d7b0341a859bf0c8d52278e05d8774f8a76e59c0ebfa1a1bd3",
+      "overrideProofGeneric": "G4s31SCSnnCBkMRe3SMxauq7N9Y5t8rQ73qraP8xzTtEu53rhtPbezDLCat3qcRjcXPzW3gg249SANquLyMLENx6yjzXtu2Q3qj7DLZPp829ShFDFH3Q6uYgRNq8jSvbhYsySaZNw5xV"
+    },
+    {
+      "secretKey": "BLsk2zk6pBGysG9BJn4u3XNtFnJQ1wpUYz6sQMTZQdfxQaiBWkqLyh",
+      "publicKey": "BLpk1oWB1ZbeKePu8FiRMpktQoZw1rPs67qu6zbnYxiCcJDyZih8PXUiGnLyMWR6Fay9cDNyCzj9",
+      "publicKeyHash": "tz4JmbuiJGyC2thisABCS59PnGr749dsP4WY",
+      "selfProof": "BLsigAp94rBWCJU7yM7X5F4zSw15AKkW1JZ5dwkqa2Xjdo1y4jhcQKVf6Sh7GFV261MUEx3WbfStUkP83tmKRpAucD4NEo1bLCB3s1TM4ByDUYZ1vUV5qsAWFLagvbnHfn61DnouoxmTij",
+      "overrideProof": "BLsigANoYkqpCmSPUi8UCP29nCm6C98HR9oU7vmQzNQAwV2kAFvkBQ6BZkKatf4DD7vD5uxhfwUHz6KZonq4BFH3PwuDYLRNXophffed3XhQGMNYqhKN19wpe6U86gVzLbYTKHyWK4Qzzc",
+      "selfProofRawHex": "a1a3de6c691d95ec161ba7723b4df85b41a35bae813fcc34ff3bf3108800128d348f290a0bcc572ae0f0c21348cffd320b54388db6974521762fcc40ba8905e3fac69c26a5243c072dd1b529b19289bf50abc06f92d7e1332f6452c1e43f1ff4",
+      "selfProofGeneric": "G4s3zLR4Br1T47qTNRmfXpjQfuvuVctsaibxpvXQGhU9nVrc7uXDH3eYETF55JQGaj8grQuZtEbijjUEPxs1UXrN7N6agnURkQWHBK9sLPzK1CvSq29JzbkRgNSM1gq7nnQdCZHANVWt",
+      "overrideProofRawHex": "966667fd9ab59c3680a8a6cf74cca727f8f84f5da984c6dce2ea92c64770d2f0f619f215302bdc318c03de8eca7f5b8817c44f0a9be1f71535b70f08493d28909b70c53235c424caf002ca7572d0157d9998121f58bd285cdbd1fa4f62dc7eab",
+      "overrideProofGeneric": "G4s3YztxrA1v2PLpPNtoUz4gRvxisQJiq75wqVwk98mqoGx8M3JHsa7qrvsUeVXP9Tyembyque74gBE8ThcSafe6xDQ86Zg3Q4JwNb9D4an7pjqffJJbmv9BZocRjPVwFEW8N9kx5Zhq"
+    }
+  ],
+  "aggregate": {
+    "public_key": "BLpk1nGsPWudaiPFkzo7iZRGrbbFSH5RD9PXXzNKajKmBGKcGHUaZxKBSibQbYUW1Swo3VbuuNC8",
+    "public_key_hash": "tz4J6b9buTuVriYWtYm12v6nz3xLrDCVfDkj"
+  },
+  "aggregateProof": "BLsigBajmQpyUCdzpxfvwv7iijFzxmBoBvMYUtCN8CFQXkrNPatugkhTJXQzuPsN4DiD4MutVggDMjn4yeqyprNE3oRXaVzg9g53FfnurtV7wM3DASZqYUEhUcQH6MqzBuwYnHJVatF7Jo",
+  "selfProofAggregationRejected": true,
+  "points": [
+    {
+      "label": "infinity",
+      "publicKey": "BLpk221KuhaXc1tMowWziKHB1ycetnfumXqwKumbydo2ops4CA6MtdQ5fmVUpPd9JC7x4pDPyP6M",
+      "rawHex": "c00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "accepted": true,
+      "proof": "BLsig9eitPbLKoZcdrUBUvZXUZp1mbrvtwUH8ywPZhCuxfW81ouGGWihtmPeEqLwB2fRJNq7bkEGN9FqwFZY2dN4r2cdM5hrwJtbgQTBF4s1NZvbnDKUDvcKwWttfR9uPy2KE1Xg6ah46g"
+    },
+    {
+      "label": "order-three",
+      "publicKey": "BLpk1keJqxvUV6KccX3dEizZPcAVkG75ZjPjQPWy6TTuGMZMtvwqtoAXbh54U9PXCSL8ocTzf3Mu",
+      "rawHex": "800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "accepted": false,
+      "proof": null
+    },
+    {
+      "label": "invalid-compression",
+      "publicKey": "BLpk1DvGiVcNFFC8Dg6tHYRL8sGBTCyRA8VKZM1hL6oeBQwyJUeou8hRTYEDmevGzvkWHCr72BD6",
+      "rawHex": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "accepted": false,
+      "proof": null
+    },
+    {
+      "label": "noncanonical",
+      "publicKey": "BLpk2HNLySEaiwT71MzNBuZneM4p3KEjyLJ9FS2Erp8AMJAkVPEstTddjquuAdrmPwumL1xRcttD",
+      "rawHex": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "accepted": false,
+      "proof": null
+    }
+  ]
+}
