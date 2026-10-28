@@ -1,3 +1,4 @@
+import { PvmKind } from '@taquito/rpc';
 import { expectTypeOf, vi, type Mock } from 'vitest';
 import { OpKind } from '@taquito/taquito';
 import {
@@ -1398,6 +1399,109 @@ describe('Wallet connect tests', () => {
       ).toThrow('Tezos not found in namespaces');
 
       expect(walletConnect.isActiveSession()).toBeFalsy();
+    });
+  });
+  describe('smart rollup mapping', () => {
+    it('maps the PVM and nested parameter type without changing the input', async () => {
+      const input = Object.freeze({
+        pvmKind: PvmKind.WASM2,
+        kernel: '0061736d01000000',
+        parametersType: { prim: 'pair', args: [{ prim: 'bytes' }, { prim: 'nat' }] },
+        storageLimit: 0,
+      });
+      expect(
+        await walletConnect.mapSmartRollupOriginateParamsToWalletParams(async () => input)
+      ).toEqual({
+        kind: 'smart_rollup_originate',
+        source: undefined,
+        pvm_kind: 'wasm_2_0_0',
+        kernel: '0061736d01000000',
+        parameters_ty: { prim: 'pair', args: [{ prim: 'bytes' }, { prim: 'nat' }] },
+        storage_limit: '0',
+      });
+      expect(input.storageLimit).toBe(0);
+    });
+    it('submits mapped rollup requests through WalletConnect', async () => {
+      mockSignClient.request.mockResolvedValue({ operationHash: 'operation-hash' });
+      await walletConnect.requestPermissions({
+        permissionScope: {
+          methods: [PermissionScopeMethods.TEZOS_SEND],
+          networks: [NetworkType.SHADOWNET],
+        },
+      });
+      const mapped = await walletConnect.mapSmartRollupAddMessagesParamsToWalletParams(
+        async () => ({ message: ['00'], fee: 0 })
+      );
+      expect(await walletConnect.sendOperations([mapped])).toBe('operation-hash');
+      expect(mockSignClient.request).toHaveBeenCalledExactlyOnceWith({
+        topic: sessionExample.topic,
+        chainId: 'tezos:shadownet',
+        request: {
+          method: PermissionScopeMethods.TEZOS_SEND,
+          params: {
+            account: 'tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh',
+            operations: [
+              { kind: 'smart_rollup_add_messages', source: undefined, message: ['00'], fee: '0' },
+            ],
+          },
+        },
+      });
+    });
+    it('maps add-messages without changing the input and preserves zero limits', async () => {
+      const input = Object.freeze({ message: ['00', 'ff'], fee: 0, gasLimit: 2, storageLimit: 0 });
+      const result = await walletConnect.mapSmartRollupAddMessagesParamsToWalletParams(
+        async () => input
+      );
+      expect(result).toEqual({
+        kind: 'smart_rollup_add_messages',
+        source: undefined,
+        message: ['00', 'ff'],
+        fee: '0',
+        gas_limit: '2',
+        storage_limit: '0',
+      });
+      expect(input).toEqual({ message: ['00', 'ff'], fee: 0, gasLimit: 2, storageLimit: 0 });
+    });
+    it('omits unspecified limits', async () => {
+      const result = await walletConnect.mapSmartRollupAddMessagesParamsToWalletParams(
+        async () => ({ message: ['00'] })
+      );
+      expect(result).toEqual({
+        kind: 'smart_rollup_add_messages',
+        source: undefined,
+        message: ['00'],
+      });
+      expect(result).not.toHaveProperty('fee');
+      expect(result).not.toHaveProperty('gas_limit');
+      expect(result).not.toHaveProperty('storage_limit');
+    });
+    it('maps outbox proof and commitment without reinterpretation', async () => {
+      const input = Object.freeze({
+        rollup: 'sr1-rollup',
+        cementedCommitment: 'src1-commitment',
+        outputProof: '00ff',
+        fee: 0,
+      });
+      expect(
+        await walletConnect.mapSmartRollupExecuteOutboxMessageParamsToWalletParams(
+          async () => input
+        )
+      ).toEqual({
+        kind: 'smart_rollup_execute_outbox_message',
+        source: undefined,
+        rollup: 'sr1-rollup',
+        cemented_commitment: 'src1-commitment',
+        output_proof: '00ff',
+        fee: '0',
+      });
+    });
+    it('preserves callback errors', async () => {
+      const error = new Error('parameter rejection');
+      await expect(
+        walletConnect.mapSmartRollupAddMessagesParamsToWalletParams(async () => {
+          throw error;
+        })
+      ).rejects.toBe(error);
     });
   });
 });

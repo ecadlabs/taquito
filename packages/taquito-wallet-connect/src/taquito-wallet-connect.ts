@@ -9,6 +9,12 @@ import { WalletConnectModal } from '@walletconnect/modal';
 
 import {
   createOriginationOperation,
+  createSmartRollupAddMessagesOperation,
+  WalletSmartRollupAddMessagesParams,
+  createSmartRollupOriginateOperation,
+  WalletSmartRollupOriginateParams,
+  createSmartRollupExecuteOutboxMessageOperation,
+  WalletSmartRollupExecuteOutboxMessageParams,
   createSetDelegateOperation,
   createTransferOperation,
   createTransferTicketOperation,
@@ -634,6 +640,51 @@ export class WalletConnect implements WalletProvider {
       delete operatedParams.gas_limit;
     }
     return operatedParams;
+  }
+
+  /** Map SmartRollupAddMessages parameters for the wallet request. */
+  async mapSmartRollupAddMessagesParamsToWalletParams(
+    params: () => Promise<WalletSmartRollupAddMessagesParams>
+  ) {
+    const input = await params();
+    const { fee, gas_limit, storage_limit, ...operation } =
+      await createSmartRollupAddMessagesOperation({ ...input });
+    return {
+      ...operation,
+      ...(fee === undefined ? {} : { fee: String(fee) }),
+      ...(gas_limit === undefined ? {} : { gas_limit: String(gas_limit) }),
+      ...(storage_limit === undefined ? {} : { storage_limit: String(storage_limit) }),
+    };
+  }
+
+  /** Map SmartRollupOriginate parameters for the wallet request. */
+  async mapSmartRollupOriginateParamsToWalletParams(
+    params: () => Promise<WalletSmartRollupOriginateParams>
+  ) {
+    const input = await params();
+    const { fee, gas_limit, storage_limit, ...operation } =
+      await createSmartRollupOriginateOperation({ ...input });
+    return {
+      ...operation,
+      ...(fee === undefined ? {} : { fee: String(fee) }),
+      ...(gas_limit === undefined ? {} : { gas_limit: String(gas_limit) }),
+      ...(storage_limit === undefined ? {} : { storage_limit: String(storage_limit) }),
+    };
+  }
+
+  /** Map SmartRollupExecuteOutboxMessage parameters for the wallet request. */
+  async mapSmartRollupExecuteOutboxMessageParamsToWalletParams(
+    params: () => Promise<WalletSmartRollupExecuteOutboxMessageParams>
+  ) {
+    const input = await params();
+    const { fee, gas_limit, storage_limit, ...operation } =
+      await createSmartRollupExecuteOutboxMessageOperation({ ...input });
+    return {
+      ...operation,
+      ...(fee === undefined ? {} : { fee: String(fee) }),
+      ...(gas_limit === undefined ? {} : { gas_limit: String(gas_limit) }),
+      ...(storage_limit === undefined ? {} : { storage_limit: String(storage_limit) }),
+    };
   }
 
   async mapTransferParamsToWalletParams(params: () => Promise<WalletTransferParams>) {
