@@ -156,6 +156,39 @@ except `source`. The wallet selects the source account. Fees and limits are
 optional. Messages are hex-encoded bytes; the rollup kernel determines their
 meaning.
 
+To originate a rollup, supply the hex-encoded bytes of your compiled WASM kernel
+and its Michelson parameter type. In this example, `kernelHex` contains those bytes:
+
+```typescript
+import { PvmKind } from '@taquito/rpc';
+
+const origination = await Tezos.wallet
+  .smartRollupOriginate({
+    pvmKind: PvmKind.WASM2,
+    kernel: kernelHex,
+    parametersType: { prim: 'bytes' },
+  })
+  .send();
+await origination.confirmation();
+console.log(await origination.rollupAddress());
+```
+
+To execute an outbox message, obtain its serialized proof from the rollup node
+and the corresponding cemented commitment hash. Supply values for the selected
+rollup and message rather than reusing a proof from another operation:
+
+```typescript
+const execution = await Tezos.wallet
+  .smartRollupExecuteOutboxMessage({
+    rollup: rollupAddress,
+    cementedCommitment: cementedCommitmentHash,
+    outputProof: serializedOutboxProof,
+  })
+  .send();
+await execution.confirmation();
+console.log(await execution.status());
+```
+
 Use `smartRollupOriginateOperation()`, `smartRollupAddMessagesOperation()` or
 `smartRollupExecuteOutboxMessageOperation()` to read the corresponding included
 operation. For origination, `await operation.rollupAddress()` returns the new
@@ -166,7 +199,20 @@ failed origination. Rollup operations also support `revealOperation()`,
 Wallet batches support the corresponding `withSmartRollupOriginate`,
 `withSmartRollupAddMessages` and `withSmartRollupExecuteOutboxMessage` methods,
 or an array of parameters with their operation `kind`. Operations retain their
-batch order.
+batch order. For example, submit two inbox-message operations in one wallet request:
+
+```typescript
+const batch = await Tezos.wallet
+  .batch()
+  .withSmartRollupAddMessages({ message: ['00'] })
+  .withSmartRollupAddMessages({ message: ['ff'] })
+  .send();
+await batch.confirmation();
+const results = await batch.operationResults();
+```
+
+`status()` on a batch follows the existing first-result rule. Use
+`operationResults()` to inspect every operation in a mixed batch.
 
 The built-in signer-backed provider, BeaconWallet and WalletConnect implement
 these mappings. The connected wallet application must also support the requested
