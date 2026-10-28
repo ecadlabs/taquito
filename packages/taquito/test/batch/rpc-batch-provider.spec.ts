@@ -1,3 +1,4 @@
+import type { Forger } from '@taquito/local-forging';
 import { PvmKind } from '@taquito/rpc';
 import { OperationBatch } from '../../src/batch/rpc-batch-provider';
 import { Context } from '../../src/context';
@@ -57,7 +58,7 @@ describe('OperationBatch test', () => {
   };
 
   let mockForger: {
-    forge: ReturnType<typeof vi.fn>;
+    forge: ReturnType<typeof vi.fn<Forger['forge']>>;
   };
 
   beforeEach(() => {
@@ -909,5 +910,63 @@ describe('OperationBatch test', () => {
         counter: 0,
       });
     });
+  });
+  it('sends all wallet rollup kinds through the default legacy provider and RPC batch', async () => {
+    vi.spyOn(context.estimate, 'batch').mockResolvedValue([
+      new Estimate(1000000, 0, 100, 250),
+      new Estimate(1000000, 0, 100, 250),
+      new Estimate(1000000, 0, 100, 250),
+    ]);
+    context.readProvider = {
+      ...context.readProvider,
+      getBlockLevel: async () => 100,
+      getBlock: async () => {
+        throw new Error('End controlled polling');
+      },
+    };
+    mockReadProvider.isAccountRevealed.mockResolvedValue(true);
+    mockForger.forge.mockResolvedValue('00');
+    const operation = await context.wallet
+      .batch()
+      .withSmartRollupAddMessages({ message: ['00'] })
+      .withSmartRollupOriginate({
+        pvmKind: PvmKind.WASM2,
+        kernel: '00',
+        parametersType: { prim: 'bytes' },
+      })
+      .withSmartRollupExecuteOutboxMessage({
+        rollup: 'sr1-rollup',
+        cementedCommitment: 'src1-commitment',
+        outputProof: '00ff',
+      })
+      .send();
+    expect(operation.opHash).toBe('onwtjK2Q32ndjF9zbEPPtmifdBq5qB59wjMP2oCH22mARjyKnGP');
+    expect(mockForger.forge).toHaveBeenCalledWith(
+      expect.objectContaining({
+        contents: [
+          expect.objectContaining({
+            kind: OpKind.SMART_ROLLUP_ADD_MESSAGES,
+            message: ['00'],
+            source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+            counter: '1',
+          }),
+          expect.objectContaining({
+            kind: OpKind.SMART_ROLLUP_ORIGINATE,
+            pvm_kind: 'wasm_2_0_0',
+            kernel: '00',
+            parameters_ty: { prim: 'bytes' },
+            counter: '2',
+          }),
+          expect.objectContaining({
+            kind: OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE,
+            rollup: 'sr1-rollup',
+            cemented_commitment: 'src1-commitment',
+            output_proof: '00ff',
+            counter: '3',
+          }),
+        ],
+      })
+    );
+    expect(mockRpcClient.injectOperation).toHaveBeenCalledExactlyOnceWith('test');
   });
 });

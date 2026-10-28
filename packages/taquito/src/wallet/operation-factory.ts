@@ -1,3 +1,6 @@
+import { SmartRollupAddMessagesWalletOperation } from './smart-rollup-add-messages-operation';
+import { SmartRollupOriginateWalletOperation } from './smart-rollup-originate-operation';
+import { SmartRollupExecuteOutboxMessageWalletOperation } from './smart-rollup-execute-outbox-message-operation';
 import { BlockResponse } from '@taquito/rpc';
 import {
   BehaviorSubject,
@@ -202,6 +205,38 @@ export class OperationFactory {
     config: OperationFactoryConfig = {}
   ): Promise<RegisterGlobalConstantWalletOperation> {
     return new RegisterGlobalConstantWalletOperation(
+      hash,
+      this.context.clone(),
+      await this.createHeadObservableFromConfig(config)
+    );
+  }
+  async createSmartRollupAddMessagesOperation(
+    hash: string,
+    config: OperationFactoryConfig = {}
+  ): Promise<SmartRollupAddMessagesWalletOperation> {
+    return new SmartRollupAddMessagesWalletOperation(
+      hash,
+      this.context.clone(),
+      await this.createHeadObservableFromConfig(config)
+    );
+  }
+
+  async createSmartRollupOriginateOperation(
+    hash: string,
+    config: OperationFactoryConfig = {}
+  ): Promise<SmartRollupOriginateWalletOperation> {
+    return new SmartRollupOriginateWalletOperation(
+      hash,
+      this.context.clone(),
+      await this.createHeadObservableFromConfig(config)
+    );
+  }
+
+  async createSmartRollupExecuteOutboxMessageOperation(
+    hash: string,
+    config: OperationFactoryConfig = {}
+  ): Promise<SmartRollupExecuteOutboxMessageWalletOperation> {
+    return new SmartRollupExecuteOutboxMessageWalletOperation(
       hash,
       this.context.clone(),
       await this.createHeadObservableFromConfig(config)
