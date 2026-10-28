@@ -42,7 +42,15 @@ function generate(rng: RNG, mod: BigInteger): BigInteger {
 }
 
 function toLE(x: BigInteger): number[] {
-  return x.toArray(256).value.reverse();
+  if (x.isZero()) {
+    return [];
+  }
+  const bytes = x.toArray(256).value.reverse();
+  // Octez hashes Zarith Z.to_bits: complete 64-bit limbs, including high zero bytes.
+  while (bytes.length % 8 !== 0) {
+    bytes.push(0);
+  }
+  return bytes;
 }
 
 function fromLE(x: number[]): BigInteger {
