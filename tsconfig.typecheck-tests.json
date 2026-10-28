@@ -3,7 +3,10 @@
   "compilerOptions": {
     "noEmit": true,
     "rootDir": ".",
-    "types": ["node", "vitest/globals"],
+    "types": [
+      "node",
+      "vitest/globals"
+    ],
     "resolveJsonModule": true,
     "skipLibCheck": true
   },
@@ -12,6 +15,24 @@
     "packages/taquito-rpc/test/big-map-values*.spec.ts",
     "packages/taquito/test/contract/smart-rollup-whitelist.spec.ts",
     "integration-tests/__tests__/contract/big-map-values.spec.ts",
-    "integration-tests/__tests__/contract/operations/smart-rollup-originate.spec.ts"
+    "integration-tests/__tests__/contract/operations/smart-rollup-originate.spec.ts",
+    "integration-tests/__tests__/wallet/smart-rollups.spec.ts",
+    "integration-tests/data/smart-rollup-echo-kernel.ts",
+    "packages/taquito-beacon-wallet/src/taquito-beacon-wallet.ts",
+    "packages/taquito-beacon-wallet/test/taquito-beacon-wallet.spec.ts",
+    "packages/taquito-wallet-connect/src/taquito-wallet-connect.ts",
+    "packages/taquito-wallet-connect/src/types.ts",
+    "packages/taquito-wallet-connect/test/taquito-wallet-connect.spec.ts",
+    "packages/taquito/src/wallet/batch-operation.ts",
+    "packages/taquito/src/wallet/index.ts",
+    "packages/taquito/src/wallet/interface.ts",
+    "packages/taquito/src/wallet/legacy.ts",
+    "packages/taquito/src/wallet/operation-factory.ts",
+    "packages/taquito/src/wallet/smart-rollup-add-messages-operation.ts",
+    "packages/taquito/src/wallet/smart-rollup-execute-outbox-message-operation.ts",
+    "packages/taquito/src/wallet/smart-rollup-originate-operation.ts",
+    "packages/taquito/src/wallet/wallet.ts",
+    "packages/taquito/test/batch/rpc-batch-provider.spec.ts",
+    "packages/taquito/test/wallet/smart-rollup.spec.ts"
   ]
 }

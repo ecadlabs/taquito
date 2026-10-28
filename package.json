@@ -62,8 +62,7 @@
     "test:browser:http": "npm run build && npm run test:dist:esm-imports && playwright test --config browser-tests/playwright.config.ts browser-tests/tests/http-backend.spec.ts",
     "test:browser:packages:ci": "npm run test:browser:packages",
     "typecheck:tests": "tsc -p tsconfig.typecheck-tests.json",
-    "test:consumers": "node scripts/test-installed-consumers.mjs",
-    "typecheck:wallet-rollups": "tsc -p tsconfig.wallet-rollup-tests.json"
+    "test:consumers": "node scripts/test-installed-consumers.mjs"
   },
   "devDependencies": {
     "@nx/vite": "22.7.12",
