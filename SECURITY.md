@@ -6,6 +6,7 @@ We currently provide security fixes for the latest Taquito release line.
 
 | Release Line | Supported          |
 | ------------ | ------------------ |
+| 25.x         | :white_check_mark: |
 | 24.x         | :white_check_mark: |
 | < 24.0       | :x:                |
 

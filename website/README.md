@@ -6,17 +6,18 @@ This directory contains the source code and content for the [Taquito website](ht
 
 **This directory is NOT covered by the Apache License, Version 2.0.**
 
-All content in this directory and its subdirectories — including documentation, written content, tutorials, guides, images, graphics, logos, design assets, and website source code — is the exclusive property of **ECAD Labs Inc.** All rights reserved.
+All content in this directory and its subdirectories (including documentation, written content, tutorials, guides, images, graphics, logos, design assets, and website source code) is the exclusive property of **ECAD Labs Inc.** All rights reserved.
 
 See [LICENSE](LICENSE) in this directory for the full proprietary license terms.
 
 ## Running Locally
 
-To run the website locally for development purposes:
+After building the root Taquito packages (`npm ci && npm run build` from the repository root), run the website locally with:
 
-```
+```bash
+cd website
 npm ci
-npm -w @taquito/website dev
+npm run dev
 ```
 
 ## Contact
