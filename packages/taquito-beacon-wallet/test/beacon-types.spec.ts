@@ -1,12 +1,7 @@
 import { existsSync, readFileSync } from 'fs';
 import { resolve } from 'path';
 
-import {
-  NetworkType,
-  PermissionScope,
-  SigningType,
-  Regions,
-} from '../src/beacon-types';
+import { NetworkType, PermissionScope, SigningType, Regions } from '../src/beacon-types';
 
 import type {
   RequestPermissionInput,
@@ -15,7 +10,7 @@ import type {
 } from '../src/beacon-types';
 
 // BeaconEvent and DAppClientOptions live on the main entry point (not ./types)
-// because they require @ecadlabs/beacon-dapp which has side effects.
+// because they require @tezos-x/octez.connect-dapp which has side effects.
 import { BeaconEvent } from '../src/taquito-beacon-wallet';
 import type { DAppClientOptions } from '../src/taquito-beacon-wallet';
 
@@ -73,10 +68,16 @@ describe('package.json exports map', () => {
 
 // Type-level assertions: these assignments verify the types exist and are structurally correct.
 // They never execute; they only need to compile.
-const _opts: DAppClientOptions = {} as DAppClientOptions;
-const _perm: RequestPermissionInput = {} as RequestPermissionInput;
-const _sign: RequestSignPayloadInput = {} as RequestSignPayloadInput;
-const _nodes: NodeDistributions = {} as NodeDistributions;
+const _opts = { name: 'type-consumer' } satisfies DAppClientOptions;
+const _perm = {} satisfies RequestPermissionInput;
+const _sign = { payload: '031234' } satisfies RequestSignPayloadInput;
+const _nodes = {
+  [Regions.EUROPE_WEST]: [],
+  [Regions.NORTH_AMERICA_EAST]: [],
+  [Regions.NORTH_AMERICA_WEST]: [],
+  [Regions.ASIA_EAST]: [],
+  [Regions.AUSTRALIA]: [],
+} satisfies NodeDistributions;
 
 void _opts;
 void _perm;
