@@ -194,9 +194,9 @@ export class InMemorySigner implements Signer {
     };
   }
 
-  async provePossession(): Promise<RawSignResult> {
+  async provePossession(overridePublicKey?: string): Promise<RawSignResult> {
     if (isPOP(this.#key)) {
-      return this.#key.provePossession();
+      return this.#key.provePossession(overridePublicKey);
     } else {
       throw new ProhibitedActionError('Only BLS keys can prove possession');
     }

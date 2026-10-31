@@ -7,6 +7,7 @@ import {
   MichelsonV1Expression,
   BlsAggregatePublicKeysResponse,
   BlsAggregateSignaturesParams,
+  BlsAggregateProofsParams,
   BlsSignatureResponse,
   BlsThresholdSignaturesParams,
   BakingRightsQueryArguments,
@@ -74,6 +75,7 @@ export const defaultRPCOptions: RPCOptions = { block: 'head' };
 
 export interface RpcClientInterface {
   thresholdSignatures(params: BlsThresholdSignaturesParams): Promise<BlsSignatureResponse>;
+  aggregateProofs?(params: BlsAggregateProofsParams): Promise<BlsSignatureResponse>;
   aggregateSignatures(params: BlsAggregateSignaturesParams): Promise<BlsSignatureResponse>;
   checkProof(key: BlsPublicKeyWithProof): Promise<boolean>;
   aggregatePublicKeys(keys: BlsPublicKeyWithProof[]): Promise<BlsAggregatePublicKeysResponse>;

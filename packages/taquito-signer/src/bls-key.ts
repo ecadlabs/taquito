@@ -56,8 +56,22 @@ export class BLSKey implements SigningKeyWithProofOfPossession {
     return this.signDst(message, BLS12_381_DST);
   }
 
-  provePossession(): RawSignResult {
-    return this.signDst(this.#publicKey, POP_DST);
+  provePossession(overridePublicKey?: string): RawSignResult {
+    let message = this.#publicKey;
+    if (overridePublicKey !== undefined) {
+      try {
+        if (typeof overridePublicKey !== 'string') throw new Error('Expected a public key');
+        message = b58DecodeAndCheckPrefix(overridePublicKey, [PrefixV2.BLS12_381PublicKey], true);
+        // Match Octez's compressed G1 parser, including subgroup checks and its accepted infinity encoding.
+        bls12_381.G1.Point.fromBytes(message).assertValidity();
+      } catch {
+        throw new InvalidPublicKeyError(
+          'BLS override public key',
+          'Expecting a valid BLS public key'
+        );
+      }
+    }
+    return this.signDst(message, POP_DST);
   }
 
   publicKey(): PublicKey {
