@@ -19,6 +19,19 @@ This scheme makes it possible to prove a certain decision was made before the in
 
 ## Taquito implementation
 
+### Proof compatibility
+
+Timelock proof generation and verification use the same integer padding as Octez.
+Earlier Taquito versions could generate proofs that opened locally but were rejected
+by Michelson `OPEN_CHEST` when an integer in the proof hash needed padding.
+
+Protocol-valid chest and key bytes remain unchanged. Precomputed tuples or keys
+affected by the old hash convention are now rejected. Regenerate affected precomputed
+tuples with `Timelock.precompute`. For an existing chest, use `chest.newKey(time)` to
+compute a corrected key. The encrypted payload and chest encoding are unchanged.
+Custom moduli use the corrected hash convention too, but Michelson `OPEN_CHEST`
+uses the fixed Tezos RSA modulus.
+
 ### Creating a chest
 ```
 import { Chest } from '@taquito/timelock'
