@@ -1,3 +1,5 @@
+import { BeaconMessageType, NetworkType, Origin } from '@ecadlabs/beacon-types';
+import { PvmKind } from '@taquito/rpc';
 import { vi } from 'vitest';
 import {
   BeaconWallet,
@@ -37,6 +39,7 @@ vi.mock('@ecadlabs/beacon-dapp', async () => {
     ...originalModule,
     getDAppClientInstance: vi.fn().mockImplementation(() => ({
       requestPermissions: vi.fn(),
+      requestOperation: vi.fn(),
       getActiveAccount: vi.fn(),
       showPrepare: vi.fn(),
       hideUI: vi.fn(),
@@ -274,5 +277,129 @@ describe('Beacon Wallet tests', () => {
   it('Verify sign throws for Raw', async () => {
     const wallet = new BeaconWallet({ name: 'Test', storage: new LocalStorage() });
     expect(async () => await wallet.sign('48656C6C6F20576F726C64')).rejects.toThrow();
+  });
+  describe('smart rollup mapping', () => {
+    let wallet: BeaconWallet;
+    beforeEach(() => {
+      wallet = new BeaconWallet({ name: 'Rollup test' });
+    });
+    it('maps the PVM and nested parameter type without changing the input', async () => {
+      const input = Object.freeze({
+        pvmKind: PvmKind.WASM2,
+        kernel: '0061736d01000000',
+        parametersType: { prim: 'pair', args: [{ prim: 'bytes' }, { prim: 'nat' }] },
+        storageLimit: 0,
+        whitelist: ['tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh', 'tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx'],
+      });
+      expect(await wallet.mapSmartRollupOriginateParamsToWalletParams(async () => input)).toEqual({
+        kind: 'smart_rollup_originate',
+        source: undefined,
+        pvm_kind: 'wasm_2_0_0',
+        kernel: '0061736d01000000',
+        parameters_ty: { prim: 'pair', args: [{ prim: 'bytes' }, { prim: 'nat' }] },
+        storage_limit: '0',
+        whitelist: ['tz2AJ8DYxeRSUWr8zS5DcFfJYzTSNYzALxSh', 'tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx'],
+      });
+      expect(input.storageLimit).toBe(0);
+    });
+    it('omits the whitelist when origination does not supply one', async () => {
+      const result = await wallet.mapSmartRollupOriginateParamsToWalletParams(async () => ({
+        pvmKind: PvmKind.WASM2,
+        kernel: '0061736d01000000',
+        parametersType: { prim: 'bytes' },
+      }));
+      expect(result).not.toHaveProperty('whitelist');
+    });
+    it('submits mapped rollup requests through Beacon', async () => {
+      vi.mocked(wallet.client.getActiveAccount).mockResolvedValue({
+        accountIdentifier: 'account',
+        senderId: 'sender',
+        origin: { type: Origin.P2P, id: 'peer' },
+        connectedAt: 1,
+        walletType: 'implicit',
+        address: 'tz1-address',
+        network: { type: NetworkType.CUSTOM },
+        scopes: [PermissionScope.OPERATION_REQUEST],
+      });
+      vi.mocked(wallet.client.requestOperation).mockResolvedValue({
+        type: BeaconMessageType.OperationResponse,
+        id: 'request',
+        version: '2',
+        senderId: 'sender',
+        transactionHash: 'operation-hash',
+      });
+      const mapped = await wallet.mapSmartRollupAddMessagesParamsToWalletParams(async () => ({
+        message: ['00'],
+      }));
+      expect(await wallet.sendOperations([mapped])).toBe('operation-hash');
+      expect(wallet.client.requestOperation).toHaveBeenCalledExactlyOnceWith({
+        operationDetails: [
+          { kind: 'smart_rollup_add_messages', source: undefined, message: ['00'] },
+        ],
+      });
+    });
+    it('maps add-messages without changing the input and preserves zero limits', async () => {
+      const input = Object.freeze({ message: ['00', 'ff'], fee: 0, gasLimit: 2, storageLimit: 0 });
+      const result = await wallet.mapSmartRollupAddMessagesParamsToWalletParams(async () => input);
+      expect(result).toEqual({
+        kind: 'smart_rollup_add_messages',
+        source: undefined,
+        message: ['00', 'ff'],
+        fee: '0',
+        gas_limit: '2',
+        storage_limit: '0',
+      });
+      expect(input).toEqual({ message: ['00', 'ff'], fee: 0, gasLimit: 2, storageLimit: 0 });
+    });
+    it('omits unspecified limits', async () => {
+      const result = await wallet.mapSmartRollupAddMessagesParamsToWalletParams(async () => ({
+        message: ['00'],
+      }));
+      expect(result).toEqual({
+        kind: 'smart_rollup_add_messages',
+        source: undefined,
+        message: ['00'],
+      });
+      expect(result).not.toHaveProperty('fee');
+      expect(result).not.toHaveProperty('gas_limit');
+      expect(result).not.toHaveProperty('storage_limit');
+    });
+    it('maps outbox proof and commitment without reinterpretation', async () => {
+      const input = Object.freeze({
+        rollup: 'sr1-rollup',
+        cementedCommitment: 'src1-commitment',
+        outputProof: '00ff',
+        fee: 0,
+      });
+      expect(
+        await wallet.mapSmartRollupExecuteOutboxMessageParamsToWalletParams(async () => input)
+      ).toEqual({
+        kind: 'smart_rollup_execute_outbox_message',
+        source: undefined,
+        rollup: 'sr1-rollup',
+        cemented_commitment: 'src1-commitment',
+        output_proof: '00ff',
+        fee: '0',
+      });
+    });
+    it('does not request parameters when Beacon preparation rejects', async () => {
+      const failure = new Error('preparation rejected');
+      vi.mocked(wallet.client.showPrepare).mockRejectedValue(failure);
+      const params = vi.fn(async () => ({ message: ['00'] }));
+      await expect(wallet.mapSmartRollupAddMessagesParamsToWalletParams(params)).rejects.toBe(
+        failure
+      );
+      expect(params).not.toHaveBeenCalled();
+      expect(wallet.client.hideUI).not.toHaveBeenCalled();
+    });
+    it('preserves callback errors', async () => {
+      const error = new Error('parameter rejection');
+      await expect(
+        wallet.mapSmartRollupAddMessagesParamsToWalletParams(async () => {
+          throw error;
+        })
+      ).rejects.toBe(error);
+      expect(wallet.client.hideUI).toHaveBeenCalledWith(['alert']);
+    });
   });
 });

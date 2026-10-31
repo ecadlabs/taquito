@@ -9,3 +9,6 @@ export * from './register-global-constant-operation';
 export * from './increase-paid-storage-operation';
 export * from './interface';
 export * from './legacy';
+export * from './smart-rollup-add-messages-operation';
+export * from './smart-rollup-originate-operation';
+export * from './smart-rollup-execute-outbox-message-operation';

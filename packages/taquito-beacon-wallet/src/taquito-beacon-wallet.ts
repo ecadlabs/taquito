@@ -18,6 +18,12 @@ import toBuffer from 'typedarray-to-buffer';
 import {
   createIncreasePaidStorageOperation,
   createOriginationOperation,
+  createSmartRollupAddMessagesOperation,
+  WalletSmartRollupAddMessagesParams,
+  createSmartRollupOriginateOperation,
+  WalletSmartRollupOriginateParams,
+  createSmartRollupExecuteOutboxMessageOperation,
+  WalletSmartRollupExecuteOutboxMessageParams,
   createSetDelegateOperation,
   createTransferOperation,
   createRegisterGlobalConstantOperation,
@@ -138,6 +144,48 @@ export class BeaconWallet implements WalletProvider {
       throw new BeaconWalletNotInitialized();
     }
     return account.publicKey ?? '';
+  }
+
+  private async mapSmartRollupOperation<
+    Params extends object,
+    Operation extends RPCOperationWithLimits,
+  >(params: () => Promise<Params>, createOperation: (input: Params) => Promise<Operation>) {
+    await this.client.showPrepare();
+    let input: Params;
+    try {
+      input = await params();
+    } catch (error) {
+      await this.client.hideUI(['alert']);
+      throw error;
+    }
+    const { fee, gas_limit, storage_limit, ...operation } = await createOperation({ ...input });
+    return {
+      ...operation,
+      ...(fee === undefined ? {} : { fee: String(fee) }),
+      ...(gas_limit === undefined ? {} : { gas_limit: String(gas_limit) }),
+      ...(storage_limit === undefined ? {} : { storage_limit: String(storage_limit) }),
+    };
+  }
+
+  /** Map SmartRollupAddMessages parameters for the wallet request. */
+  async mapSmartRollupAddMessagesParamsToWalletParams(
+    params: () => Promise<WalletSmartRollupAddMessagesParams>
+  ) {
+    return this.mapSmartRollupOperation(params, createSmartRollupAddMessagesOperation);
+  }
+
+  /** Map SmartRollupOriginate parameters for the wallet request. */
+  async mapSmartRollupOriginateParamsToWalletParams(
+    params: () => Promise<WalletSmartRollupOriginateParams>
+  ) {
+    return this.mapSmartRollupOperation(params, createSmartRollupOriginateOperation);
+  }
+
+  /** Map SmartRollupExecuteOutboxMessage parameters for the wallet request. */
+  async mapSmartRollupExecuteOutboxMessageParamsToWalletParams(
+    params: () => Promise<WalletSmartRollupExecuteOutboxMessageParams>
+  ) {
+    return this.mapSmartRollupOperation(params, createSmartRollupExecuteOutboxMessageOperation);
   }
 
   async mapTransferParamsToWalletParams(params: () => Promise<WalletTransferParams>) {

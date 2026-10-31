@@ -86,15 +86,18 @@ export type ProposalsParams = Omit<RPCProposalsOperation, WalletDefinedFields>;
 export type SmartRollupAddMessagesParams = Omit<
   RPCSmartRollupAddMessagesOperation,
   WalletDefinedFields
->;
+> &
+  WalletOptionalFields;
 export type SmartRollupOriginateParams = Omit<
   RPCSmartRollupOriginateOperation,
   WalletDefinedFields
->;
+> &
+  WalletOptionalFields;
 export type SmartRollupExecuteOutboxMessageParams = Omit<
   RPCSmartRollupOutboxMessageOperation,
   WalletDefinedFields
->;
+> &
+  WalletOptionalFields;
 export type FailingNoopParams = Omit<RPCFailingNoopOperation, WalletDefinedFields>;
 
 export type OperationParams =

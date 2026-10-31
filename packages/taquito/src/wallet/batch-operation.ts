@@ -19,6 +19,9 @@ export const WALLET_BATCH_KINDS = [
   OpKind.REGISTER_GLOBAL_CONSTANT,
   OpKind.INCREASE_PAID_STORAGE,
   OpKind.TRANSFER_TICKET,
+  OpKind.SMART_ROLLUP_ADD_MESSAGES,
+  OpKind.SMART_ROLLUP_ORIGINATE,
+  OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE,
 ];
 
 export class BatchWalletOperation extends WalletOperation {
@@ -36,8 +39,7 @@ export class BatchWalletOperation extends WalletOperation {
       throw new ObservableError('Unable to fetch operation results');
     } else {
       return operationResult.find((x) => x.kind === OpKind.REVEAL) as
-        | OperationContentsAndResultReveal
-        | undefined;
+        OperationContentsAndResultReveal | undefined;
     }
   }
 

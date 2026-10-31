@@ -112,13 +112,17 @@ endpoints.
 | Method | POST endpoint | Result |
 | --- | --- | --- |
 | `aggregatePublicKeys` | `/bls/aggregate_public_keys` | An object with `public_key` and `public_key_hash`, or `null` |
+| `aggregateProofs` | `/bls/aggregate_proofs` | A proof signature string, or `null` |
 | `checkProof` | `/bls/check_proof` | A boolean |
 | `aggregateSignatures` | `/bls/aggregate_signatures` | A signature string, or `null` |
 | `thresholdSignatures` | `/bls/threshold_signatures` | A signature string, or `null` |
 
 `checkProof` takes a public key and its proof of possession. `aggregatePublicKeys`
-takes an array of those objects. Keys, proofs, and signatures use Base58Check
-encoding. The following example uses fixed public test values:
+takes an array of those objects. `aggregateProofs` takes an object with `public_key`
+(the aggregate `BLpk...` key) and `proofs` (an array of each participant's proof of
+possession over that aggregate key, produced via `signer.provePossession(aggregatePk)`).
+Keys, proofs, and signatures use Base58Check encoding. The following example uses
+fixed public test values:
 
 ```js
 import { RpcClient } from '@taquito/rpc';
@@ -151,6 +155,8 @@ A failed proof check can return `false`, and failed aggregation can return
 also cause an HTTP error. Handle these rejections separately from `false` and
 `null` results.
 
-`RpcClientCache` forwards these four methods without caching their results.
-If you implement `RpcClientInterface` yourself, add all four required methods.
+`RpcClientCache` forwards these five methods without caching their results.
+If you implement `RpcClientInterface` yourself, the original four methods are
+required and `aggregateProofs` is optional (`RpcClientCache` throws
+`UnsupportedActionError` when the underlying client omits `aggregateProofs`).
 Existing RPC methods and cache policies are unchanged.

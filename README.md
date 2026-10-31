@@ -152,8 +152,16 @@ Refer to the top-level `package.json` for available scripts. Common commands:
 - `npm run lint`: Checks the package catalog and runs ESLint across workspaces
 - `npm run build-docs`: Generates TypeDoc API documentation
 - `npm run clean`: Removes `node_modules` directories across the monorepo
+- `npm run typecheck:tests`: Strictly checks selected contract and wallet tests, provider compatibility and configured-network fixtures. CI runs it after the build.
 - `npx nx build <package-name>`: Builds a single package (e.g., `npx nx build @taquito/taquito`)
 - `npx nx test <package-name>`: Runs unit tests for a single package (e.g., `npx nx test @taquito/taquito`)
+
+### Testing packed packages
+
+Before changing package entrypoints or published files, run the
+[packed package consumer checks](test-fixtures/consumers/README.md). They test installed
+packages through CommonJS, native ESM, TypeScript and a bundled browser consumer
+on Linux or WSL. The guide lists the prerequisites for `npm run test:consumers`.
 
 ### Running Integration Tests
 

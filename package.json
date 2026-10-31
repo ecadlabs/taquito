@@ -64,8 +64,7 @@
     "typecheck:tests": "tsc -p tsconfig.typecheck-tests.json",
     "test:consumers": "node scripts/test-installed-consumers.mjs",
     "typecheck:smart-rollup-whitelist": "tsc -p tsconfig.smart-rollup-whitelist-tests.json",
-    "typecheck:bls-proofs": "tsc -p tsconfig.bls-proof-tests.json",
-    "test:bls-proofs:packages": "npm run build && npm run typecheck:bls-proofs && node scripts/test-bls-proof-consumers.mjs"
+    "test:fa21:local": "vitest run --config integration-tests/fa21/vitest.config.ts"
   },
   "devDependencies": {
     "@nx/vite": "22.7.12",
