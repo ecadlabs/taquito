@@ -15,7 +15,7 @@
   "version": "25.1.0",
   "optionalDependencies": {
     "@ledgerhq/devices": "^8.8.0",
-    "@ledgerhq/hw-transport": "^6.36.0",
+    "@ledgerhq/hw-transport": "^6.36.1",
     "@ledgerhq/hw-transport-node-hid": "6.30.0",
     "@ledgerhq/hw-transport-node-hid-noevents": "6.31.0"
   },
