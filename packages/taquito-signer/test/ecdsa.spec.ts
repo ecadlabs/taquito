@@ -1,5 +1,12 @@
 import { ECDSA, Hard } from '../src/derivation-tools';
+import { ECKey, ECPublicKey } from '../src/ec-key';
+import { b58DecodeAndCheckPrefix, PrefixV2, verifySignature } from '@taquito/utils';
 import * as bip39 from '@scure/bip39';
+import { readFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
+import * as path from 'node:path';
+import { pathToFileURL } from 'node:url';
+import { vi } from 'vitest';
 
 interface TestKeyData {
   path: number[];
@@ -282,4 +289,342 @@ describe('ECDSA', () => {
       }
     });
   }
+
+  describe('ECKey and ECPublicKey compressed/uncompressed bytes and known-answer vectors', () => {
+    const secp256k1Order = BigInt(
+      '0xfffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141'
+    );
+    const p256Order = BigInt('0xffffffff00000000ffffffffffffffffbce6faada7179e84f3b9cac2fc632551');
+
+    it('ECPublicKey.bytes(compressed) returns 33-byte compressed and 65-byte uncompressed SEC1 points for secp256k1 (sppk)', () => {
+      const pkString = 'sppk7aqSksZan1AGXuKtCz9UBLZZ77e3ZWGpFxR7ig1Z17GneEhSSbH';
+      const pubKey = new ECPublicKey(pkString);
+
+      const compressed = pubKey.bytes(true);
+      const uncompressed = pubKey.bytes(false);
+
+      expect(compressed).toBeInstanceOf(Uint8Array);
+      expect(compressed.length).toBe(33);
+      expect(Buffer.from(compressed).toString('hex')).toBe(
+        '02c9a6a1cafec7ab8a5624a04f0b07aad7c2a4e4aa2137e977af43b56e0ef59ad0'
+      );
+
+      expect(uncompressed).toBeInstanceOf(Uint8Array);
+      expect(uncompressed.length).toBe(65);
+      expect(uncompressed[0]).toBe(0x04);
+      expect(Buffer.from(uncompressed).toString('hex')).toBe(
+        '04c9a6a1cafec7ab8a5624a04f0b07aad7c2a4e4aa2137e977af43b56e0ef59ad0f6c52983035d68cb9e2507fd726252430301a28f5baa9e662ac452b25b49e658'
+      );
+      expect(Buffer.from(uncompressed.subarray(1, 33)).toString('hex')).toBe(
+        Buffer.from(compressed.subarray(1, 33)).toString('hex')
+      );
+      expect(pubKey.toProtocol().length).toBe(34);
+      expect(pubKey.toProtocol()[0]).toBe(1);
+    });
+
+    it('ECPublicKey.bytes(compressed) returns 33-byte compressed and 65-byte uncompressed SEC1 points for P-256 (p2pk)', () => {
+      const pkString = 'p2pk66tTYL5EvahKAXncbtbRPBkAnxo3CszzUho5wPCgWauBMyvybuB';
+      const pubKey = new ECPublicKey(pkString);
+
+      const compressed = pubKey.bytes(true);
+      const uncompressed = pubKey.bytes(false);
+
+      expect(compressed).toBeInstanceOf(Uint8Array);
+      expect(compressed.length).toBe(33);
+      expect(Buffer.from(compressed).toString('hex')).toBe(
+        '0330ef59d5da4547c684aa0d5b7d8c1527fceab462cfd8d4a3529319c469b0d4d7'
+      );
+
+      expect(uncompressed).toBeInstanceOf(Uint8Array);
+      expect(uncompressed.length).toBe(65);
+      expect(uncompressed[0]).toBe(0x04);
+      expect(Buffer.from(uncompressed).toString('hex')).toBe(
+        '0430ef59d5da4547c684aa0d5b7d8c1527fceab462cfd8d4a3529319c469b0d4d7896fd6b04882b4736eb99a1e60c1547dee3d180e85c72ec9ec55f50777214341'
+      );
+      expect(Buffer.from(uncompressed.subarray(1, 33)).toString('hex')).toBe(
+        Buffer.from(compressed.subarray(1, 33)).toString('hex')
+      );
+      expect(pubKey.toProtocol().length).toBe(34);
+      expect(pubKey.toProtocol()[0]).toBe(2);
+    });
+
+    it('ECKey.sign produces canonical low-S prehash:false signatures over Blake2b-256 digests for tz2 (secp256k1), matching octez-client 25.2', () => {
+      // Provenance: `octez-client --protocol PtSeouLouXkx sign bytes 0x031234` with spsk2rBDDeUqakQ42nBHDGQTtP3GErb6AahHPwF9bhca3Q5KA5HESE
+      // produces `spsig194cg549ti3fNuGqvQs4dZEn4aJHCbXHde4kc4dDaCs5y4nCwp5uMUp4DbyGuTjisaTU2UV1v7vy7CybSGJJS4ur88uBWT`.
+      const wateredBytes = new Uint8Array([3, 0x12, 0x34]);
+      const tz2Key = new ECKey('spsk2rBDDeUqakQ42nBHDGQTtP3GErb6AahHPwF9bhca3Q5KA5HESE');
+      const tz2Sig = tz2Key.sign(wateredBytes);
+      expect(tz2Sig.sig).toBe(
+        'sigREwM1SuRN5WzjH5xGJuyeZQ9kWi8XtbA4wRqGTumJwNY18PmF1XQMLCXEQBr4frnriKHWdPUynF1vGUvPcoWrNjb3s5xp'
+      );
+      expect(tz2Sig.prefixSig).toBe(
+        'spsig194cg549ti3fNuGqvQs4dZEn4aJHCbXHde4kc4dDaCs5y4nCwp5uMUp4DbyGuTjisaTU2UV1v7vy7CybSGJJS4ur88uBWT'
+      );
+      const [tz2RawSig] = b58DecodeAndCheckPrefix(tz2Sig.prefixSig, [PrefixV2.Secp256k1Signature]);
+      expect(tz2RawSig.length).toBe(64);
+      const tz2S = BigInt('0x' + Buffer.from(tz2RawSig.subarray(32, 64)).toString('hex'));
+      expect(tz2S <= secp256k1Order / 2n).toBe(true);
+      expect(
+        verifySignature('1234', tz2Key.publicKey().toString(), tz2Sig.prefixSig, new Uint8Array([3]))
+      ).toBe(true);
+    });
+
+    it('ECKey.sign produces canonical low-S prehash:false signatures over Blake2b-256 digests for tz3 (P-256), accepted by octez-client 25.2', () => {
+      // Provenance: verified via `octez-client --protocol PtSeouLouXkx check that bytes 0x031234 were signed by ...`
+      const wateredBytes = new Uint8Array([3, 0x12, 0x34]);
+      const tz3Key = new ECKey('p2sk2obfVMEuPUnadAConLWk7Tf4Dt3n4svSgJwrgpamRqJXvaYcg1');
+      const tz3Sig = tz3Key.sign(wateredBytes);
+      expect(tz3Sig.sig).toBe(
+        'sigRUobRZ4oG7CvdtQfNoDe3Gqn8zrLw6RXjXVa84rX3HMzWuCuncWgDqY8wRkssofLUsfbdR6MNGJzDWaNXEwTxDktfrKmj'
+      );
+      const [tz3RawSig] = b58DecodeAndCheckPrefix(tz3Sig.prefixSig, [PrefixV2.P256Signature]);
+      expect(tz3RawSig.length).toBe(64);
+      const tz3S = BigInt('0x' + Buffer.from(tz3RawSig.subarray(32, 64)).toString('hex'));
+      expect(tz3S <= p256Order / 2n).toBe(true);
+      expect(
+        verifySignature('1234', tz3Key.publicKey().toString(), tz3Sig.prefixSig, new Uint8Array([3]))
+      ).toBe(true);
+    });
+
+    it('bip39.mnemonicToSeedSync normalizes non-ASCII passphrases via NFKD consistently', () => {
+      const mnemonic =
+        'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about';
+      const decomposedSeed = bip39.mnemonicToSeedSync(mnemonic, 'TREZOR-\u05d0-e\u0301');
+      const precomposedSeed = bip39.mnemonicToSeedSync(mnemonic, 'TREZOR-\u05d0-\u00e9');
+      expect(Buffer.from(decomposedSeed).toString('hex')).toBe(
+        'ed8f4cbca63e92260538b00c96bf2568039026708e4f1cb71d8e005584d75f9b0aa748d47098094e6e5468a956010b46bce01e813b45133af874564538bb3f0f'
+      );
+      expect(Buffer.from(precomposedSeed).toString('hex')).toBe(
+        Buffer.from(decomposedSeed).toString('hex')
+      );
+    });
+  });
+
+  describe('Noble curves v2 compatibility for @taquito/signer', () => {
+    const resolveNobleCurvesV2Dir = (): string => {
+      const req = createRequire(import.meta.url);
+      const directEntryPath = req.resolve('@noble/curves/ed25519.js');
+      const directDir = path.dirname(directEntryPath);
+      const directPkg = JSON.parse(readFileSync(path.join(directDir, 'package.json'), 'utf8')) as {
+        version: string;
+      };
+      if (Number(directPkg.version.split('.')[0]) >= 2) {
+        return directDir;
+      }
+      const pqEntryPath = req.resolve('@noble/post-quantum/ml-dsa.js');
+      const nestedEntryPath = createRequire(pqEntryPath).resolve('@noble/curves/ed25519.js');
+      const nestedDir = path.dirname(nestedEntryPath);
+      const nestedPkg = JSON.parse(readFileSync(path.join(nestedDir, 'package.json'), 'utf8')) as {
+        version: string;
+      };
+      expect(Number(nestedPkg.version.split('.')[0])).toBeGreaterThanOrEqual(2);
+      return nestedDir;
+    };
+
+    const hasExtensionlessCurveExports = (): boolean => {
+      try {
+        createRequire(import.meta.url).resolve('@noble/curves/secp256k1');
+        return true;
+      } catch {
+        return false;
+      }
+    };
+
+    afterEach(() => {
+      const hasExtensionless = hasExtensionlessCurveExports();
+      for (const curve of ['secp256k1', 'nist', 'ed25519', 'bls12-381']) {
+        vi.doUnmock(`@noble/curves/${curve}.js`);
+        if (hasExtensionless) {
+          vi.doUnmock(`@noble/curves/${curve}`);
+        }
+      }
+      vi.resetModules();
+    });
+
+    it('uses explicit .js subpath specifiers for @noble/curves in source and marks all 4 curve subpaths external in Rollup config', async () => {
+      const pkgDir = path.resolve(__dirname, '..');
+      const sourceFiles = [
+        'src/ec-key.ts',
+        'src/ed-key.ts',
+        'src/bls-key.ts',
+        'src/derivation-tools/ecdsa.ts',
+        'src/derivation-tools/ed25519.ts',
+      ];
+      const bareCurveSpecifier = /['"]@noble\/curves\/(secp256k1|nist|ed25519|bls12-381)['"]/g;
+
+      for (const relPath of sourceFiles) {
+        const content = readFileSync(path.join(pkgDir, relPath), 'utf8');
+        const matches = content.match(bareCurveSpecifier) ?? [];
+        expect(matches, `${relPath} contains extensionless @noble/curves specifiers`).toEqual([]);
+      }
+
+      const rollupConfigModule = await import('../rollup.config');
+      const rollupConfig = rollupConfigModule.default as {
+        external?: string[] | ((id: string) => boolean);
+      };
+      const isExternal = (id: string): boolean => {
+        if (typeof rollupConfig.external === 'function') {
+          return Boolean(rollupConfig.external(id));
+        }
+        return Array.isArray(rollupConfig.external) && rollupConfig.external.includes(id);
+      };
+
+      for (const subpath of [
+        '@noble/curves/ed25519.js',
+        '@noble/curves/secp256k1.js',
+        '@noble/curves/nist.js',
+        '@noble/curves/bls12-381.js',
+      ]) {
+        expect(isExternal(subpath), `${subpath} must be external in rollup.config.ts`).toBe(true);
+      }
+    });
+
+    const mockNobleCurvesV2 = () => {
+      const v2Dir = resolveNobleCurvesV2Dir();
+      const importV2 = (subpath: string) =>
+        import(pathToFileURL(path.join(v2Dir, subpath)).href);
+
+      const hasExtensionless = hasExtensionlessCurveExports();
+
+      for (const curve of ['secp256k1', 'nist', 'ed25519', 'bls12-381']) {
+        vi.doMock(`@noble/curves/${curve}.js`, () => importV2(`${curve}.js`));
+        if (hasExtensionless) {
+          vi.doMock(`@noble/curves/${curve}`, () => importV2(`${curve}.js`));
+        }
+      }
+      vi.resetModules();
+    };
+
+    it('serializes uncompressed SEC1 points via ECPublicKey.bytes(false) for secp256k1 (sppk) under @noble/curves v2', async () => {
+      mockNobleCurvesV2();
+      const { ECPublicKey: V2ECPublicKey } = await import('../src/ec-key');
+
+      const tz2PubKey = new V2ECPublicKey('sppk7aqSksZan1AGXuKtCz9UBLZZ77e3ZWGpFxR7ig1Z17GneEhSSbH');
+      expect(Buffer.from(tz2PubKey.bytes(false)).toString('hex')).toBe(
+        '04c9a6a1cafec7ab8a5624a04f0b07aad7c2a4e4aa2137e977af43b56e0ef59ad0f6c52983035d68cb9e2507fd726252430301a28f5baa9e662ac452b25b49e658'
+      );
+    });
+
+    it('serializes uncompressed SEC1 points via ECPublicKey.bytes(false) for P-256 (p2pk) under @noble/curves v2', async () => {
+      mockNobleCurvesV2();
+      const { ECPublicKey: V2ECPublicKey } = await import('../src/ec-key');
+
+      const tz3PubKey = new V2ECPublicKey('p2pk66tTYL5EvahKAXncbtbRPBkAnxo3CszzUho5wPCgWauBMyvybuB');
+      expect(Buffer.from(tz3PubKey.bytes(false)).toString('hex')).toBe(
+        '0430ef59d5da4547c684aa0d5b7d8c1527fceab462cfd8d4a3529319c469b0d4d7896fd6b04882b4736eb99a1e60c1547dee3d180e85c72ec9ec55f50777214341'
+      );
+    });
+
+    it('preserves tz2 (secp256k1) ECKey.sign and ECPublicKey.toString under @noble/curves v2', async () => {
+      mockNobleCurvesV2();
+      const { ECKey: V2ECKey } = await import('../src/ec-key');
+
+      const wateredBytes = new Uint8Array([3, 0x12, 0x34]);
+      const tz2Key = new V2ECKey('spsk2rBDDeUqakQ42nBHDGQTtP3GErb6AahHPwF9bhca3Q5KA5HESE');
+      const signed = tz2Key.sign(wateredBytes);
+      expect(signed.sig).toBe(
+        'sigREwM1SuRN5WzjH5xGJuyeZQ9kWi8XtbA4wRqGTumJwNY18PmF1XQMLCXEQBr4frnriKHWdPUynF1vGUvPcoWrNjb3s5xp'
+      );
+      expect(signed.prefixSig).toBe(
+        'spsig194cg549ti3fNuGqvQs4dZEn4aJHCbXHde4kc4dDaCs5y4nCwp5uMUp4DbyGuTjisaTU2UV1v7vy7CybSGJJS4ur88uBWT'
+      );
+      expect(tz2Key.publicKey().toString()).toBe(
+        'sppk7aqSksZan1AGXuKtCz9UBLZZ77e3ZWGpFxR7ig1Z17GneEhSSbH'
+      );
+    });
+
+    it('preserves tz3 (P-256) ECKey.sign and ECPublicKey.toString under @noble/curves v2', async () => {
+      mockNobleCurvesV2();
+      const { ECKey: V2ECKey } = await import('../src/ec-key');
+
+      const wateredBytes = new Uint8Array([3, 0x12, 0x34]);
+      const tz3Key = new V2ECKey('p2sk2obfVMEuPUnadAConLWk7Tf4Dt3n4svSgJwrgpamRqJXvaYcg1');
+      expect(tz3Key.sign(wateredBytes).sig).toBe(
+        'sigRUobRZ4oG7CvdtQfNoDe3Gqn8zrLw6RXjXVa84rX3HMzWuCuncWgDqY8wRkssofLUsfbdR6MNGJzDWaNXEwTxDktfrKmj'
+      );
+      expect(tz3Key.publicKey().toString()).toBe(
+        'p2pk66tTYL5EvahKAXncbtbRPBkAnxo3CszzUho5wPCgWauBMyvybuB'
+      );
+    });
+
+    it('preserves tz1 (Ed25519) EdKey.sign and tz4 (BLS12-381) BLSKey.sign/provePossession under @noble/curves v2', async () => {
+      mockNobleCurvesV2();
+      const { EdKey: V2EdKey } = await import('../src/ed-key');
+      const { BLSKey: V2BLSKey } = await import('../src/bls-key');
+
+      const wateredBytes = new Uint8Array([3, 0x12, 0x34]);
+      const tz1Key = new V2EdKey('edsk4TjJWEszkHKono7XMnepVqwi37FrpbVt1KCsifJeAGimxheShG');
+      expect(tz1Key.publicKey().toString()).toBe(
+        'edpkuhmrbunxumoiVdQuxBZUPMmwkPt7yLtY5Qnua3VJVTLWr3vXXa'
+      );
+      expect(tz1Key.sign(wateredBytes).sig).toBe(
+        'sigpKAnfQGzG4Rk5pV7z9mx2TL9veQCHD7qN4PhsUZMj1BqsumBoApBS9Ue616vKVymxrzfZE2L4h27zzxRUVy6BNPRMpufb'
+      );
+
+      const tz4Key = new V2BLSKey('BLsk2zk6pBGysG9BJn4u3XNtFnJQ1wpUYz6sQMTZQdfxQaiBWkqLyh');
+      expect(tz4Key.publicKey().toString()).toBe(
+        'BLpk1oWB1ZbeKePu8FiRMpktQoZw1rPs67qu6zbnYxiCcJDyZih8PXUiGnLyMWR6Fay9cDNyCzj9'
+      );
+      expect(tz4Key.sign(new Uint8Array([1, 2, 3, 4])).prefixSig).toBe(
+        'BLsigAMExDCYjNtvjLUqvLiEQJro6VrJFZ7yr7eNY4YCAVTYVerMnrNtk7cY8ve8D4HfJ55YtK93sQNFTcXTYGt8c6HutFneTz31aR198QkbBfZpHmvJV4zGQTHKroNFDRWLw3c3eJXyAu'
+      );
+      expect(tz4Key.provePossession().prefixSig).toBe(
+        'BLsigAp94rBWCJU7yM7X5F4zSw15AKkW1JZ5dwkqa2Xjdo1y4jhcQKVf6Sh7GFV261MUEx3WbfStUkP83tmKRpAucD4NEo1bLCB3s1TM4ByDUYZ1vUV5qsAWFLagvbnHfn61DnouoxmTij'
+      );
+      expect(
+        tz4Key.provePossession(
+          'BLpk1nGsPWudaiPFkzo7iZRGrbbFSH5RD9PXXzNKajKmBGKcGHUaZxKBSibQbYUW1Swo3VbuuNC8'
+        ).prefixSig
+      ).toBe(
+        'BLsigANoYkqpCmSPUi8UCP29nCm6C98HR9oU7vmQzNQAwV2kAFvkBQ6BZkKatf4DD7vD5uxhfwUHz6KZonq4BFH3PwuDYLRNXophffed3XhQGMNYqhKN19wpe6U86gVzLbYTKHyWK4Qzzc'
+      );
+    });
+
+    it('preserves ECDSA (secp256k1, P-256) and Ed25519 SLIP-0010 HD key derivation under @noble/curves v2', async () => {
+      mockNobleCurvesV2();
+      const { ECDSA: V2ECDSA, Ed25519: V2Ed25519, Hard: V2Hard } = await import(
+        '../src/derivation-tools'
+      );
+
+      const seed = Buffer.from('000102030405060708090a0b0c0d0e0f', 'hex');
+      const secpChild = V2ECDSA.PrivateKey.fromSeed(seed, 'secp256k1').derivePath([
+        0 | V2Hard,
+        1,
+        2 | V2Hard,
+      ]);
+      expect(Buffer.from(secpChild.bytes()).toString('hex')).toBe(
+        'cbce0d719ecf7431d88e6a89fa1483e02e35092af60c042b1df2ff59fa424dca'
+      );
+      expect(Buffer.from(secpChild.chainCode).toString('hex')).toBe(
+        '04466b9cc8e161e966409ca52986c584f07e9dc81f735db683c3ff6ec7b1503f'
+      );
+
+      const p256Child = V2ECDSA.PrivateKey.fromSeed(seed, 'p256').derivePath([
+        0 | V2Hard,
+        1,
+        2 | V2Hard,
+      ]);
+      expect(Buffer.from(p256Child.bytes()).toString('hex')).toBe(
+        '694596e8a54f252c960eb771a3c41e7e32496d03b954aeb90f61635b8e092aa7'
+      );
+      expect(Buffer.from(p256Child.chainCode).toString('hex')).toBe(
+        '98c7514f562e64e74170cc3cf304ee1ce54d6b6da4f880f313e8204c2a185318'
+      );
+
+      const edChild = V2Ed25519.PrivateKey.fromSeed(seed).derivePath([
+        0 | V2Hard,
+        1 | V2Hard,
+        2 | V2Hard,
+      ]);
+      expect(Buffer.from(edChild.seed()).toString('hex')).toBe(
+        '92a5b23c0b8a99e37d07df3fb9966917f5d06e02ddbd909c7e184371463e9fc9'
+      );
+      expect(Buffer.from(edChild.priv.subarray(32)).toString('hex')).toBe(
+        'ae98736566d30ed0e9d2f4486a64bc95740d89c7db33f52121f8ea8f76ff0fc1'
+      );
+      expect(Buffer.from(edChild.chainCode).toString('hex')).toBe(
+        '2e69929e00b5ab250f49c3fb1c12f252de4fed2c1db88387094a0f8c4c9ccd6c'
+      );
+    });
+  });
 });

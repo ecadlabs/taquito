@@ -6,7 +6,7 @@ import {
   compareArrays,
   InvalidPublicKeyError,
 } from '@taquito/utils';
-import { secp256k1 } from '@noble/curves/secp256k1';
+import { secp256k1 } from '@noble/curves/secp256k1.js';
 import { p256 } from '@noble/curves/nist.js';
 import { SigningKey, PublicKey } from './key-interface';
 import { RawSignResult } from '@taquito/core';
@@ -98,17 +98,15 @@ export class ECKey implements SigningKey {
 
     let signature: Uint8Array;
     if (this.#keyPair.curve === 'secp256k1') {
-      signature = secp256k1
-        .sign(hash, this.#keyPair.secretKey, {
-          lowS: true, // Use canonical signatures (prevents malleability)
-        })
-        .toBytes('compact');
+      signature = secp256k1.sign(hash, this.#keyPair.secretKey, {
+        lowS: true, // Use canonical signatures (prevents malleability)
+        prehash: false,
+      });
     } else {
-      signature = p256
-        .sign(hash, this.#keyPair.secretKey, {
-          lowS: true, // Use canonical signatures (prevents malleability)
-        })
-        .toBytes('compact');
+      signature = p256.sign(hash, this.#keyPair.secretKey, {
+        lowS: true, // Use canonical signatures (prevents malleability)
+        prehash: false,
+      });
     }
 
     return {
@@ -186,11 +184,11 @@ export class ECPublicKey implements PublicKey {
 
     if (this.curve === 'secp256k1') {
       // For secp256k1, we need to get the public key from the stored bytes and convert format
-      const point = secp256k1.Point.fromHex(this.#key);
+      const point = secp256k1.Point.fromBytes(this.#key);
       return point.toBytes(compress);
     } else {
       // For p256, we need to get the public key from the stored bytes and convert format
-      const point = p256.Point.fromHex(this.#key);
+      const point = p256.Point.fromBytes(this.#key);
       return point.toBytes(compress);
     }
   }

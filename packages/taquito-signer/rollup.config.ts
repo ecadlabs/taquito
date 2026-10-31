@@ -18,15 +18,14 @@ export default {
       format: 'umd',
       sourcemap: true,
       globals: {
-        "@noble/curves/ed25519": "ed25519",
+        "@noble/curves/ed25519.js": "ed25519",
         "@taquito/utils": "utils",
         "@taquito/core": "core",
         "@stablelib/hmac": "hmac",
         "bn.js": "BN",
-        "@noble/curves/bls12-381": "bls12381",
-        "@noble/curves/secp256k1": "secp256k1",
+        "@noble/curves/bls12-381.js": "bls12381",
+        "@noble/curves/secp256k1.js": "secp256k1",
         "@noble/curves/nist.js": "nist",
-        "@noble/curves/nist": "nist",
         "@stablelib/nacl": "nacl",
         "bip39": "Bip39",
         "typedarray-to-buffer": "toBuffer"
@@ -36,15 +35,14 @@ export default {
   ],
   // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
   external: [
-    '@noble/curves/ed25519',
+    '@noble/curves/ed25519.js',
     '@taquito/utils',
     '@taquito/core',
     '@stablelib/hmac',
     'bn.js',
-    '@noble/curves/bls12-381',
-    '@noble/curves/secp256k1',
+    '@noble/curves/bls12-381.js',
+    '@noble/curves/secp256k1.js',
     '@noble/curves/nist.js',
-    '@noble/curves/nist',
     '@stablelib/nacl',
     'bip39',
     'typedarray-to-buffer'

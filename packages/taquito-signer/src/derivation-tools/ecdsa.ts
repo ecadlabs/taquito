@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-this-alias */
-import { secp256k1 } from '@noble/curves/secp256k1';
-import { p256 } from '@noble/curves/nist';
+import { secp256k1 } from '@noble/curves/secp256k1.js';
+import { p256 } from '@noble/curves/nist.js';
 import { Hard, ExtendedPrivateKey } from './types';
 import { hmac } from '@noble/hashes/hmac.js';
 import { sha512 } from '@noble/hashes/sha2.js';
