@@ -1,3 +1,8 @@
+import { execFileSync } from 'node:child_process';
+import { existsSync } from 'node:fs';
+import { createRequire } from 'node:module';
+import { fileURLToPath } from 'node:url';
+import rollupConfig from '../rollup.config';
 import {
   encodeExpr,
   stringToBytes,
@@ -171,6 +176,80 @@ describe('b58DecodeAndCheckPrefix', () => {
       expect(Array.isArray(result)).toBe(true);
       expect(result[0]).toBeInstanceOf(Uint8Array);
       expect(typeof result[1]).toBe('string');
+    });
+    it('Should return a plain Uint8Array (not a Node Buffer subclass) in both tuple and payloadOnly modes', () => {
+      const address = 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM';
+      const [tuplePayload, prefix] = b58DecodeAndCheckPrefix(address, [
+        PrefixV2.Ed25519PublicKeyHash,
+      ]);
+      const directPayload = b58DecodeAndCheckPrefix(
+        address,
+        [PrefixV2.Ed25519PublicKeyHash],
+        true
+      );
+
+      expect(prefix).toBe(PrefixV2.Ed25519PublicKeyHash);
+      expect(tuplePayload).toBeInstanceOf(Uint8Array);
+      expect(Buffer.isBuffer(tuplePayload)).toBe(false);
+      expect(tuplePayload.constructor).toBe(Uint8Array);
+
+      expect(directPayload).toBeInstanceOf(Uint8Array);
+      expect(Buffer.isBuffer(directPayload)).toBe(false);
+      expect(directPayload.constructor).toBe(Uint8Array);
+      expect(directPayload).toEqual(tuplePayload);
+    });
+  });
+
+  describe('b58Encode and b58DecodeAndCheckPrefix round-trip with Uint8Array views', () => {
+    it('Should round-trip plain Uint8Array and subarray views with non-zero byteOffset', () => {
+      const fullBacking = new Uint8Array([
+        0xde, 0xad, 0xbe, 0xef,
+        // 20-byte Ed25519 public key hash payload at offset 4..24:
+        0xe9, 0x6b, 0x9f, 0x8b, 0x19, 0xaf, 0x9c, 0x7f, 0xfa, 0x0c,
+        0x04, 0x80, 0xe1, 0x97, 0x7b, 0x29, 0x58, 0x50, 0x96, 0x1f,
+        0xca, 0xfe, 0xba, 0xbe,
+      ]);
+      const subarrayPayload = fullBacking.subarray(4, 24);
+      expect(subarrayPayload.byteOffset).toBe(4);
+      expect(subarrayPayload.byteLength).toBe(20);
+
+      const encoded = b58Encode(subarrayPayload, PrefixV2.Ed25519PublicKeyHash);
+      expect(encoded).toBe('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM');
+
+      const [decoded, prefix] = b58DecodeAndCheckPrefix(encoded, [PrefixV2.Ed25519PublicKeyHash]);
+      expect(prefix).toBe(PrefixV2.Ed25519PublicKeyHash);
+      expect(Buffer.isBuffer(decoded)).toBe(false);
+      expect(decoded.constructor).toBe(Uint8Array);
+      expect(decoded).toEqual(subarrayPayload);
+    });
+
+    it('Should encode and decode via the built CommonJS UMD bundle with bs58check v4 default-export interop', () => {
+      const umdOutput = rollupConfig.output.find((entry) => entry.format === 'umd');
+      expect(umdOutput).toMatchObject({ format: 'umd', interop: 'auto' });
+
+      const umdPath = fileURLToPath(new URL('../dist/taquito-utils.umd.js', import.meta.url));
+      if (!existsSync(umdPath)) {
+        execFileSync('npm', ['run', 'build'], {
+          cwd: fileURLToPath(new URL('..', import.meta.url)),
+          stdio: 'pipe',
+        });
+      }
+
+      const requireFromTest = createRequire(import.meta.url);
+      const cjsUtils = requireFromTest(umdPath) as typeof import('../src/taquito-utils');
+      const payload = new Uint8Array([
+        0xe9, 0x6b, 0x9f, 0x8b, 0x19, 0xaf, 0x9c, 0x7f, 0xfa, 0x0c,
+        0x04, 0x80, 0xe1, 0x97, 0x7b, 0x29, 0x58, 0x50, 0x96, 0x1f,
+      ]);
+
+      const encoded = cjsUtils.b58Encode(payload, cjsUtils.PrefixV2.Ed25519PublicKeyHash);
+      expect(encoded).toBe('tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM');
+
+      const [decoded, prefix] = cjsUtils.b58DecodeAndCheckPrefix(encoded, [
+        cjsUtils.PrefixV2.Ed25519PublicKeyHash,
+      ]);
+      expect(prefix).toBe(cjsUtils.PrefixV2.Ed25519PublicKeyHash);
+      expect(decoded).toEqual(payload);
     });
   });
 

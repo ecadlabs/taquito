@@ -21,4 +21,10 @@ describe('Timelock chest unit test', () => {
     expect(op1).toEqual(payload);
     expect(op2).toEqual(op1);
   });
+
+  it('opening chest with wrong key or wrong time should return null', () => {
+    const { key: wrongKey } = Chest.newChestAndKey(payload, time);
+    expect(chest.open(wrongKey, time)).toBeNull();
+    expect(chest.open(chestKey1, time + 1)).toBeNull();
+  });
 });

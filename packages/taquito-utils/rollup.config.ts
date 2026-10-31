@@ -15,6 +15,7 @@ export default {
       file: pkg.main,
       name: camelCase(libraryName),
       format: 'umd',
+      interop: 'auto',
       sourcemap: true,
       globals: {
         buffer: "buffer",

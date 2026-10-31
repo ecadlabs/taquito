@@ -105,7 +105,7 @@ describe('tz5 / ML-DSA-44 Octez reference vectors', () => {
     const bytes = bs58check.decode(encoded);
     expect(() => b58DecodeAndCheckPrefix(bs58check.encode(bytes.subarray(0, -1)))).toThrow();
     expect(() =>
-      b58DecodeAndCheckPrefix(bs58check.encode(Buffer.concat([bytes, Buffer.from([0])])))
+      b58DecodeAndCheckPrefix(bs58check.encode(new Uint8Array([...bytes, 0])))
     ).toThrow();
   });
 

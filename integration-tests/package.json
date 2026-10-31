@@ -16,8 +16,8 @@
   "optionalDependencies": {
     "@ledgerhq/devices": "^8.8.0",
     "@ledgerhq/hw-transport": "^6.36.1",
-    "@ledgerhq/hw-transport-node-hid": "6.30.0",
-    "@ledgerhq/hw-transport-node-hid-noevents": "6.31.0"
+    "@ledgerhq/hw-transport-node-hid": "6.33.5",
+    "@ledgerhq/hw-transport-node-hid-noevents": "6.36.0"
   },
   "dependencies": {
     "@scure/bip39": "2.4.0",

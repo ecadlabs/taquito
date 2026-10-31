@@ -24,7 +24,6 @@ export default {
         "@taquito/sapling-wasm": "sapling",
         "blakejs": "blake",
         "@stablelib/nacl": "nacl",
-        "@stablelib/random": "random",
         "typedarray-to-buffer": "toBuffer",
       }
     },
@@ -40,7 +39,6 @@ export default {
     '@taquito/sapling-wasm',
     '@stablelib/nacl',
     'bip39',
-    '@stablelib/random',
     '@taquito/taquito'
   ],
   watch: {

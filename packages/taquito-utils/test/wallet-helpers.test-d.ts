@@ -1,4 +1,5 @@
 import { expectTypeOf, test } from 'vitest';
+import bs58check from 'bs58check';
 import {
   isValidAddress,
   isValidContractAddress,
@@ -42,4 +43,10 @@ test('isValidOperationHash narrows unknown strings and remains usable as a boole
   expectTypeOf(consume).returns.toEqualTypeOf<string | undefined>();
   const accepted: boolean = isValidOperationHash('invalid');
   expectTypeOf(accepted).toEqualTypeOf<boolean>();
+});
+
+test('bs58check built-in types accept Uint8Array | number[] without Node Buffer union and return plain Uint8Array', () => {
+  expectTypeOf(bs58check.encode).parameter(0).toEqualTypeOf<Uint8Array | number[]>();
+  expectTypeOf(bs58check.decode).returns.toEqualTypeOf<Uint8Array>();
+  expectTypeOf(bs58check.decodeUnsafe).returns.toEqualTypeOf<Uint8Array | undefined>();
 });
