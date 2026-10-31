@@ -63,7 +63,6 @@
     "test:browser:packages:ci": "npm run test:browser:packages",
     "typecheck:tests": "tsc -p tsconfig.typecheck-tests.json",
     "test:consumers": "node scripts/test-installed-consumers.mjs",
-    "typecheck:smart-rollup-whitelist": "tsc -p tsconfig.smart-rollup-whitelist-tests.json",
     "test:fa21:local": "vitest run --config integration-tests/fa21/vitest.config.ts"
   },
   "devDependencies": {

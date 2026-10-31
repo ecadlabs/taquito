@@ -6,7 +6,7 @@ import {
   PvmKind,
   RpcClient,
 } from '@taquito/rpc';
-import { UnsupportedActionError } from '@taquito/core';
+import { InvalidOperationKindError, UnsupportedActionError } from '@taquito/core';
 import { firstValueFrom, Subject } from 'rxjs';
 
 import { blockResponse } from '../read-provider/data';
@@ -487,4 +487,15 @@ it('keeps source selection with the wallet in public parameter types', () => {
   expectTypeOf<Parameters<Wallet['smartRollupExecuteOutboxMessage']>[0]>().not.toHaveProperty(
     'source'
   );
+});
+
+it('rejects an invalid operation kind during batch mapper preparation', async () => {
+  const { tezos, provider } = setup();
+  const batch = tezos.wallet
+    .batch()
+    .withRegisterGlobalConstant(
+      Object.assign({ value: { prim: 'Unit' } }, { kind: OpKind.BALLOT })
+    );
+  await expect(batch.send()).rejects.toThrowError(new InvalidOperationKindError('"ballot"'));
+  expect(provider.sendOperations).not.toHaveBeenCalled();
 });

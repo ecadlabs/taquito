@@ -118,7 +118,7 @@ jobs:
       - run: npm run test:consumers
         env:
           TAQUITO_PACKAGE_REPORT_DIR: ${{ runner.temp }}/package-consumer-report
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: package-consumer-provenance-node-${{ steps.node.outputs.node-version }}

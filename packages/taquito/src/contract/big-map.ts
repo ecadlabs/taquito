@@ -76,9 +76,9 @@ export class BigMapAbstraction {
    *
    * @param options optional offset (default 0), length (1 to 1000, default 100) and block (default to the block of this abstraction, then head)
    * @returns The decoded values, in unspecified order, and the block hash
-   * @throws {@link UnsupportedActionError} if the storage provider cannot read big-map values
-   * @throws {@link InvalidBigMapParameterError} if the page options are invalid
-   * @throws {@link RpcError} if the read provider returns an invalid response
+   * @throws {@link @taquito/core!UnsupportedActionError | UnsupportedActionError} if the storage provider cannot read big-map values
+   * @throws {@link @taquito/core!InvalidBigMapParameterError | InvalidBigMapParameterError} if the page options are invalid
+   * @throws {@link @taquito/core!RpcError | RpcError} if the read provider returns an invalid response
    *
    */
   async getValuesPage<T>(options: BigMapValuesOptions = {}): Promise<BigMapValuesPage<T>> {
@@ -99,9 +99,9 @@ export class BigMapAbstraction {
    *
    * @param options optional offset (default 0), length (1 to 1000, default 100) and block (default to the block of this abstraction, then head)
    * @returns The decoded values, in unspecified order
-   * @throws {@link UnsupportedActionError} if the storage provider cannot read big-map values
-   * @throws {@link InvalidBigMapParameterError} if the page options are invalid
-   * @throws {@link RpcError} if the read provider returns an invalid response
+   * @throws {@link @taquito/core!UnsupportedActionError | UnsupportedActionError} if the storage provider cannot read big-map values
+   * @throws {@link @taquito/core!InvalidBigMapParameterError | InvalidBigMapParameterError} if the page options are invalid
+   * @throws {@link @taquito/core!RpcError | RpcError} if the read provider returns an invalid response
    *
    */
   async listValues<T>(options: BigMapValuesOptions = {}): Promise<T[]> {
@@ -121,8 +121,8 @@ export class BigMapAbstraction {
    * RPC errors, including 404 for an unknown big-map ID, are not converted.
    *
    * @param block optional block level to check (default to the block of this abstraction, then head)
-   * @throws {@link UnsupportedActionError} if the storage provider cannot read big-map values
-   * @throws {@link RpcError} if the read provider returns an invalid response
+   * @throws {@link @taquito/core!UnsupportedActionError | UnsupportedActionError} if the storage provider cannot read big-map values
+   * @throws {@link @taquito/core!RpcError | RpcError} if the read provider returns an invalid response
    *
    */
   async isEmpty(block?: BlockIdentifier): Promise<boolean> {
