@@ -161,9 +161,9 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
    * @param id Big Map ID
    * @param schema Big Map schema (can be determined using your contract type)
    * @param options optional offset (default 0), length (1 to 1000, default 100) and block (default to head)
-   * @throws {@link UnsupportedActionError} if the read provider cannot read big-map values
-   * @throws {@link InvalidBigMapParameterError} if the page options are invalid
-   * @throws {@link RpcError} if the read provider returns an invalid response
+   * @throws {@link @taquito/core!UnsupportedActionError | UnsupportedActionError} if the read provider cannot read big-map values
+   * @throws {@link @taquito/core!InvalidBigMapParameterError | InvalidBigMapParameterError} if the page options are invalid
+   * @throws {@link @taquito/core!RpcError | RpcError} if the read provider returns an invalid response
    *
    * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-big-maps-big-map-id
    */
@@ -197,9 +197,9 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
    * @param id Big Map ID
    * @param schema Big Map schema (can be determined using your contract type)
    * @param options optional offset (default 0), length (1 to 1000, default 100) and block (default to head)
-   * @throws {@link UnsupportedActionError} if the read provider cannot read big-map values
-   * @throws {@link InvalidBigMapParameterError} if the page options are invalid
-   * @throws {@link RpcError} if the read provider returns an invalid response
+   * @throws {@link @taquito/core!UnsupportedActionError | UnsupportedActionError} if the read provider cannot read big-map values
+   * @throws {@link @taquito/core!InvalidBigMapParameterError | InvalidBigMapParameterError} if the page options are invalid
+   * @throws {@link @taquito/core!RpcError | RpcError} if the read provider returns an invalid response
    *
    * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-big-maps-big-map-id
    */
@@ -223,8 +223,8 @@ export class RpcContractProvider extends Provider implements ContractProvider, S
    *
    * @param id Big Map ID
    * @param block optional block level to check (default to head)
-   * @throws {@link UnsupportedActionError} if the read provider cannot read big-map values
-   * @throws {@link RpcError} if the read provider returns an invalid response
+   * @throws {@link @taquito/core!UnsupportedActionError | UnsupportedActionError} if the read provider cannot read big-map values
+   * @throws {@link @taquito/core!RpcError | RpcError} if the read provider returns an invalid response
    *
    * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-big-maps-big-map-id
    */

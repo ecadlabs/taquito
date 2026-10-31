@@ -39,14 +39,17 @@ const collect = (name) => {
   packages.add(name);
   Object.keys(workspace.get(name).manifest.dependencies ?? {}).forEach(collect);
 };
-const fixtureFiles = (suffix) => {
-  const files = readdirSync(fixtures).filter((file) => file.endsWith(suffix));
+const fixtureFiles = (suffix, dir = fixtures) => {
+  const files = readdirSync(dir).filter((file) => file.endsWith(suffix));
   assert.ok(files.length > 0, `Expected consumer fixtures matching *${suffix}`);
   return files;
 };
 const runtimeFixtures = fixtureFiles('.runtime.mjs');
 const typeFixtures = fixtureFiles('.types.ts');
-for (const file of [...runtimeFixtures, ...typeFixtures]) {
+const browserFixtures = fixtureFiles('.js', join(fixtures, 'browser')).map((file) =>
+  join('browser', file)
+);
+for (const file of [...runtimeFixtures, ...typeFixtures, ...browserFixtures]) {
   for (const [name] of readFileSync(join(fixtures, file), 'utf8').matchAll(
     /@taquito\/[a-z0-9-]+/g
   )) {
@@ -100,7 +103,7 @@ try {
   }
   const require = createRequire(join(consumer, 'package.json'));
   for (const name of packages) {
-    const installed = join(consumer, 'node_modules', name) + sep;
+    const installed = realpathSync(join(consumer, 'node_modules', name)) + sep;
     assert.ok(realpathSync(require.resolve(name)).startsWith(installed));
   }
 

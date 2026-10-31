@@ -100,7 +100,7 @@ export class UnsupportedOperationError extends ParameterValidationError {
 }
 
 /**
- * @cateogry Error
+ * @category Error
  * Error that indicates an unsupported pvm being passed or used
  */
 export class UnsupportedPvmKindError extends ParameterValidationError {

@@ -1,4 +1,4 @@
-import { PvmKind } from '@taquito/rpc';
+import { type MichelsonV1Expression, PvmKind } from '@taquito/rpc';
 import { expectTypeOf, vi, type Mock } from 'vitest';
 import { OpKind } from '@taquito/taquito';
 import {
@@ -1512,6 +1512,46 @@ describe('Wallet connect tests', () => {
           throw error;
         })
       ).rejects.toBe(error);
+    });
+    it('preserves public return types for rollup mapper methods', () => {
+      type Result<Method extends (...params: never[]) => unknown> = {
+        [Field in keyof Awaited<ReturnType<Method>>]: Awaited<ReturnType<Method>>[Field];
+      };
+      expectTypeOf<
+        Result<WalletConnect['mapSmartRollupAddMessagesParamsToWalletParams']>
+      >().toEqualTypeOf<{
+        fee?: string;
+        gas_limit?: string;
+        storage_limit?: string;
+        kind: OpKind.SMART_ROLLUP_ADD_MESSAGES;
+        source: string;
+        message: string[];
+      }>();
+      expectTypeOf<
+        Result<WalletConnect['mapSmartRollupOriginateParamsToWalletParams']>
+      >().toEqualTypeOf<{
+        fee?: string;
+        gas_limit?: string;
+        storage_limit?: string;
+        kind: OpKind.SMART_ROLLUP_ORIGINATE;
+        source: string;
+        pvm_kind: PvmKind;
+        kernel: string;
+        parameters_ty: MichelsonV1Expression;
+        whitelist?: string[];
+      }>();
+      expectTypeOf<
+        Result<WalletConnect['mapSmartRollupExecuteOutboxMessageParamsToWalletParams']>
+      >().toEqualTypeOf<{
+        fee?: string;
+        gas_limit?: string;
+        storage_limit?: string;
+        kind: OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE;
+        source: string;
+        rollup: string;
+        cemented_commitment: string;
+        output_proof: string;
+      }>();
     });
   });
 });

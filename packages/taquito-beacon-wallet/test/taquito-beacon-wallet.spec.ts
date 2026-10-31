@@ -1,6 +1,6 @@
 import { BeaconMessageType, NetworkType, Origin } from '@ecadlabs/beacon-types';
-import { PvmKind } from '@taquito/rpc';
-import { vi } from 'vitest';
+import { type MichelsonV1Expression, OpKind, PvmKind } from '@taquito/rpc';
+import { expectTypeOf, vi } from 'vitest';
 import {
   BeaconWallet,
   BeaconWalletNotInitialized,
@@ -400,6 +400,46 @@ describe('Beacon Wallet tests', () => {
         })
       ).rejects.toBe(error);
       expect(wallet.client.hideUI).toHaveBeenCalledWith(['alert']);
+    });
+    it('preserves public return types for rollup mapper methods', () => {
+      type Result<Method extends (...params: never[]) => unknown> = {
+        [Field in keyof Awaited<ReturnType<Method>>]: Awaited<ReturnType<Method>>[Field];
+      };
+      expectTypeOf<
+        Result<BeaconWallet['mapSmartRollupAddMessagesParamsToWalletParams']>
+      >().toEqualTypeOf<{
+        fee?: string;
+        gas_limit?: string;
+        storage_limit?: string;
+        kind: OpKind.SMART_ROLLUP_ADD_MESSAGES;
+        source: string;
+        message: string[];
+      }>();
+      expectTypeOf<
+        Result<BeaconWallet['mapSmartRollupOriginateParamsToWalletParams']>
+      >().toEqualTypeOf<{
+        fee?: string;
+        gas_limit?: string;
+        storage_limit?: string;
+        kind: OpKind.SMART_ROLLUP_ORIGINATE;
+        source: string;
+        pvm_kind: PvmKind;
+        kernel: string;
+        parameters_ty: MichelsonV1Expression;
+        whitelist?: string[];
+      }>();
+      expectTypeOf<
+        Result<BeaconWallet['mapSmartRollupExecuteOutboxMessageParamsToWalletParams']>
+      >().toEqualTypeOf<{
+        fee?: string;
+        gas_limit?: string;
+        storage_limit?: string;
+        kind: OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE;
+        source: string;
+        rollup: string;
+        cemented_commitment: string;
+        output_proof: string;
+      }>();
     });
   });
 });

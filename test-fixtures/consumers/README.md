@@ -5,21 +5,23 @@ public big-map methods and the core and HTTP-utils package compatibility needed
 before the module migration in [#3345](https://github.com/ecadlabs/taquito/issues/3345).
 They do not change package entrypoints or remove UMD builds.
 
-Run on Linux or WSL, as in the Ubuntu CI jobs. From the repository root:
+Run on Linux, WSL or macOS. From the repository root:
 
 ```sh
 npm ci
 npm run build
-npx playwright install --with-deps chromium
+npx playwright install --with-deps chromium # on macOS, omit --with-deps
 npm run test:consumers
 ```
 
 Build all packages because the big-map fixtures also use the SDK, RPC and encoder
-packages. The Playwright command installs Chromium and its Linux libraries and
-may request administrator access. Rebuild after source or manifest changes.
+packages. On Linux or WSL, `--with-deps` installs Chromium and its system
+libraries and may request administrator access; on macOS, run
+`npx playwright install chromium` without `--with-deps`. Rebuild after source or
+manifest changes.
 
-`scripts/test-installed-consumers.mjs` discovers the root `*.runtime.mjs` and
-`*.types.ts` fixtures here. It packs the packages they name and their workspace
+`scripts/test-installed-consumers.mjs` discovers the root `*.runtime.mjs`,
+`*.types.ts` and `browser/*.js` fixtures here. It packs the packages they name and their workspace
 dependencies, then installs them together in one temporary consumer. Resolution
 checks require each package to come from that installation. The core/HTTP fixture
 also checks that HTTP-utils resolves the consumer's copy of core.
@@ -40,8 +42,7 @@ The runner also builds `browser/` with Vite and executes the result in Chromium
 using the same installed tarballs. The build verifies that the core and HTTP-utils
 `module` files participate without source aliases. The browser fixture checks
 public errors and cross-package inheritance. It does not perform HTTP transport
-or wallet operations. Browser dependencies currently come from the core/HTTP
-root fixtures, not automatic scanning of the browser directory.
+or wallet operations.
 
 Each child process has a three-minute timeout. HTTP and browser waits have shorter
 timeouts. Servers, Chromium and temporary files are closed or removed after

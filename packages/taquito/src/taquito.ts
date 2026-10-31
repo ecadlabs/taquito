@@ -1,9 +1,10 @@
-import { DetachedIdentity } from './prepare/detached-identity';
-import { DetachedSigningWorkflow } from './prepare/detached-signing';
 /**
  * @packageDocumentation
  * @module @taquito/taquito
  */
+
+import { DetachedIdentity } from './prepare/detached-identity';
+import { DetachedSigningWorkflow } from './prepare/detached-signing';
 
 import { RpcClient, RpcClientInterface } from '@taquito/rpc';
 import { Forger } from '@taquito/local-forging';
