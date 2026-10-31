@@ -11,6 +11,8 @@
     "packages/taquito/test/contract/big-map-values*.spec.ts",
     "packages/taquito/test/contract/fa21.spec.ts",
     "packages/taquito-rpc/test/big-map-values*.spec.ts",
+    "packages/taquito-rpc/test/aggregate-proofs*.spec.ts",
+    "packages/taquito-signer/test/aggregate-proof*.spec.ts",
     "packages/taquito/test/contract/smart-rollup-whitelist.spec.ts",
     "packages/taquito-timelock/test/protocol-compatibility.spec.ts",
     "integration-tests/__tests__/contract/big-map-values.spec.ts",

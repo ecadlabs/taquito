@@ -4,11 +4,11 @@ export interface SigningKey {
   sign(message: Uint8Array): RawSignResult;
   publicKey(): PublicKey;
   secretKey(): string;
-  provePossession?: () => RawSignResult;
+  provePossession?: (overridePublicKey?: string) => RawSignResult;
 }
 
 export interface SigningKeyWithProofOfPossession extends SigningKey {
-  provePossession(): RawSignResult;
+  provePossession(overridePublicKey?: string): RawSignResult;
 }
 
 export function isPOP(k: SigningKey): k is SigningKeyWithProofOfPossession {

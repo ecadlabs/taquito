@@ -11,6 +11,7 @@ import {
   MichelsonV1Expression,
   BlsAggregatePublicKeysResponse,
   BlsAggregateSignaturesParams,
+  BlsAggregateProofsParams,
   BlsSignatureResponse,
   BlsThresholdSignaturesParams,
   BakingRightsQueryArguments,
@@ -1520,5 +1521,12 @@ export class RpcClientCache implements RpcClientInterface {
    */
   async thresholdSignatures(params: BlsThresholdSignaturesParams): Promise<BlsSignatureResponse> {
     return this.rpcClient.thresholdSignatures(params);
+  }
+  /** Forward aggregate proof requests without caching. Custom clients may omit this capability. */
+  async aggregateProofs(params: BlsAggregateProofsParams): Promise<BlsSignatureResponse> {
+    if (typeof this.rpcClient.aggregateProofs !== 'function') {
+      throw new UnsupportedActionError('The RPC client does not support aggregateProofs');
+    }
+    return this.rpcClient.aggregateProofs(params);
   }
 }

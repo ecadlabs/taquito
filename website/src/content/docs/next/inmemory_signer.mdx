@@ -261,3 +261,36 @@ const alice = await signerFactory('alice_secret_key');
 
 [0]: https://signatory.io
 [1]: https://github.com/tacoinfra/remote-signer
+
+## Aggregate-key BLS proofs
+
+`InMemorySigner.provePossession()` still creates a proof over its own BLS public key. For the N-of-N native multisig reveal flow, `provePossession(aggregatePublicKey)` creates a proof share over the raw aggregate key instead. It uses the proof-of-possession domain, without an operation watermark or message prehash.
+
+There are two proof stages. First, each participant supplies its public key and its ordinary self proof. The coordinator calls `RpcClient.aggregatePublicKeys` to check those proofs before constructing the aggregate key. This check protects against rogue-key inputs.
+
+Each participant must verify the agreed participant list and aggregate key before creating an override proof with its own signer:
+
+```typescript
+const share = await signer.provePossession(approvedAggregatePublicKey);
+const publicProofShare = share.prefixSig;
+```
+
+The coordinator collects those public proof shares and calls:
+
+```typescript
+const proof = await rpc.aggregateProofs({
+  public_key: approvedAggregatePublicKey,
+  proofs: approvedProofShares,
+});
+if (proof === null) {
+  throw new Error('The aggregate proof did not verify');
+}
+```
+
+Use the resulting proof in the aggregate account's reveal workflow. Aggregating the original self proofs does not produce this reveal proof because those proofs sign different keys. Participants keep their private keys; this API does not coordinate or store them.
+
+The override is a concrete `InMemorySigner` feature. The generic `Signer` interface retains its zero-argument proof method, so do not assume an external signer accepts an aggregate key. Existing non-BLS rejection and ordinary signing are unchanged.
+
+The RPC follows Octez 25.3's root `/bls/aggregate_proofs` endpoint. Invalid proof combinations can return `null`; malformed encodings can produce HTTP errors. `RpcClientCache` forwards each request without caching. Older custom RPC clients may omit the optional capability and receive `UnsupportedActionError` if it is invoked through the cache.
+
+These helpers prepare proof setup for N-of-N accounts. They do not provide participant transport, consent, threshold key generation, secure custody or a funded reveal test. See the [native multisig reference](https://octez.tezos.com/docs/alpha/native_multisig.html).
