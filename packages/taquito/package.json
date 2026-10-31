@@ -70,7 +70,7 @@
     "@taquito/utils": "^25.1.0",
     "bignumber.js": "^10.0.2",
     "rxjs": "^7.8.2",
-    "@noble/hashes": "2.2.0"
+    "@noble/hashes": "2.4.0"
   },
   "devDependencies": {
     "@babel/types": "7.29.8",

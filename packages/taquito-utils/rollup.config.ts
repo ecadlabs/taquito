@@ -22,10 +22,10 @@ export default {
         "bignumber.js": "BigNumber",
         "typedarray-to-buffer": "toBuffer",
         "@taquito/core": "core",
-        "@noble/curves/ed25519": "ed25519",
-        "@noble/curves/bls12-381": "bls12381",
-        "@noble/curves/secp256k1": "secp256k1",
-        "@noble/curves/nist": "nist"
+        "@noble/curves/ed25519.js": "ed25519",
+        "@noble/curves/bls12-381.js": "bls12381",
+        "@noble/curves/secp256k1.js": "secp256k1",
+        "@noble/curves/nist.js": "nist"
       }
     },
     { file: pkg.module, format: 'es', sourcemap: true },
@@ -36,10 +36,10 @@ export default {
     'blakejs',
     'bs58check',
     '@taquito/core',
-    '@noble/curves/ed25519',
-    '@noble/curves/bls12-381',
-    '@noble/curves/secp256k1',
-    '@noble/curves/nist',
+    '@noble/curves/ed25519.js',
+    '@noble/curves/bls12-381.js',
+    '@noble/curves/secp256k1.js',
+    '@noble/curves/nist.js',
     'bignumber.js',
   ],
   watch: {

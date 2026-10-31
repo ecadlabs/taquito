@@ -20,7 +20,7 @@
     "@ledgerhq/hw-transport-node-hid-noevents": "6.31.0"
   },
   "dependencies": {
-    "@scure/bip39": "2.2.0",
+    "@scure/bip39": "2.4.0",
     "@taquito/contracts-library": "^25.1.0",
     "@taquito/core": "^25.1.0",
     "@taquito/http-utils": "^25.1.0",

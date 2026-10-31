@@ -55,7 +55,7 @@
     "@taquito/core": "^25.1.0",
     "@taquito/taquito": "^25.1.0",
     "@taquito/utils": "^25.1.0",
-    "@noble/hashes": "2.2.0",
+    "@noble/hashes": "2.4.0",
     "buffer": "^6.0.3"
   },
   "devDependencies": {

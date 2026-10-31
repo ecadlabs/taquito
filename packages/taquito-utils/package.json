@@ -55,8 +55,8 @@
     ]
   },
   "dependencies": {
-    "@noble/curves": "^1.9.7",
-    "@noble/hashes": "2.2.0",
+    "@noble/curves": "2.4.0",
+    "@noble/hashes": "2.4.0",
     "@noble/post-quantum": "0.7.1",
     "@taquito/core": "^25.1.0",
     "@types/bs58check": "^2.1.2",

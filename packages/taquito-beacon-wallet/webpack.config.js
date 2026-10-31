@@ -33,7 +33,7 @@ module.exports = {
     },
     conditionNames: ['import', 'module', 'browser', 'default'],
     alias: {
-      '@noble/hashes': path.resolve(__dirname, '../../node_modules/@noble/hashes/esm')
+      '@noble/hashes/sha256$': path.resolve(__dirname, '../../node_modules/@noble/hashes/esm/sha256.js')
     }
   },
   output: {
