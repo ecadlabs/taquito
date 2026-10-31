@@ -2,6 +2,9 @@ import { Context } from '../context';
 import { attachKind, OpKind } from '../operations/types';
 import {
   WalletDelegateParams,
+  WalletSmartRollupAddMessagesParams,
+  WalletSmartRollupOriginateParams,
+  WalletSmartRollupExecuteOutboxMessageParams,
   WalletIncreasePaidStorageParams,
   WalletOriginateParams,
   WalletProvider,
@@ -57,8 +60,28 @@ export class LegacyWalletProvider implements WalletProvider {
     return attachKind(await params(), OpKind.TRANSFER_TICKET);
   }
 
-  async mapRegisterGlobalConstantParamsToWalletParams(params: () => Promise<WalletRegisterGlobalConstantParams>) {
+  async mapRegisterGlobalConstantParamsToWalletParams(
+    params: () => Promise<WalletRegisterGlobalConstantParams>
+  ) {
     return attachKind(await params(), OpKind.REGISTER_GLOBAL_CONSTANT);
+  }
+
+  async mapSmartRollupAddMessagesParamsToWalletParams(
+    params: () => Promise<WalletSmartRollupAddMessagesParams>
+  ) {
+    return attachKind(await params(), OpKind.SMART_ROLLUP_ADD_MESSAGES);
+  }
+
+  async mapSmartRollupOriginateParamsToWalletParams(
+    params: () => Promise<WalletSmartRollupOriginateParams>
+  ) {
+    return attachKind(await params(), OpKind.SMART_ROLLUP_ORIGINATE);
+  }
+
+  async mapSmartRollupExecuteOutboxMessageParamsToWalletParams(
+    params: () => Promise<WalletSmartRollupExecuteOutboxMessageParams>
+  ) {
+    return attachKind(await params(), OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE);
   }
 
   async sendOperations(params: WalletParamsWithKind[]) {

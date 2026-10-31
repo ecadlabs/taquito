@@ -1,5 +1,8 @@
 import {
   DelegateParams,
+  SmartRollupAddMessagesParams,
+  SmartRollupOriginateParams,
+  SmartRollupExecuteOutboxMessageParams,
   FailingNoopParams,
   IncreasePaidStorageParams,
   OriginateParams,
@@ -34,9 +37,42 @@ export type WalletIncreasePaidStorageParams = Omit<IncreasePaidStorageParams, Wa
 
 export type WalletTransferTicketParams = Omit<TransferTicketParams, WalletDefinedFields>;
 
-export type WalletRegisterGlobalConstantParams = Omit<RegisterGlobalConstantParams, WalletDefinedFields>;
+export type WalletRegisterGlobalConstantParams = Omit<
+  RegisterGlobalConstantParams,
+  WalletDefinedFields
+>;
+
+export type WalletSmartRollupAddMessagesParams = Omit<
+  SmartRollupAddMessagesParams,
+  WalletDefinedFields
+>;
+
+export type WalletSmartRollupOriginateParams = Omit<
+  SmartRollupOriginateParams,
+  WalletDefinedFields
+>;
+
+export type WalletSmartRollupExecuteOutboxMessageParams = Omit<
+  SmartRollupExecuteOutboxMessageParams,
+  WalletDefinedFields
+>;
 
 export interface WalletProvider {
+  /** Map SmartRollupAddMessages parameters when this provider supports the operation. */
+  mapSmartRollupAddMessagesParamsToWalletParams?: (
+    params: () => Promise<WalletSmartRollupAddMessagesParams>
+  ) => Promise<unknown>;
+
+  /** Map SmartRollupOriginate parameters when this provider supports the operation. */
+  mapSmartRollupOriginateParamsToWalletParams?: (
+    params: () => Promise<WalletSmartRollupOriginateParams>
+  ) => Promise<unknown>;
+
+  /** Map SmartRollupExecuteOutboxMessage parameters when this provider supports the operation. */
+  mapSmartRollupExecuteOutboxMessageParamsToWalletParams?: (
+    params: () => Promise<WalletSmartRollupExecuteOutboxMessageParams>
+  ) => Promise<unknown>;
+
   /**
    * Request the public key hash from the wallet
    */
