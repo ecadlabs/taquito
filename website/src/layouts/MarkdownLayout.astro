@@ -6,7 +6,6 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import DocsSidebar from '../components/DocsSidebar.astro';
 import FeedbackWidget from '../components/docs/FeedbackWidget.astro';
-import ChatKitWidget from '@components/ChatKitWidget.astro';
 import RpcStatusBanner from '@components/RpcStatusBanner.astro';
 import { DEFAULT_VERSION } from '../pages/api/search/[version].json.ts'
 
@@ -217,7 +216,6 @@ const articleJsonLd = {
 
           <div class="markdown-body flex-1 min-w-0 pb-8">
             <slot />
-            <ChatKitWidget />
           </div>
 
           {isDocsPage && <FeedbackWidget version={version} pageTitle={title} />}
