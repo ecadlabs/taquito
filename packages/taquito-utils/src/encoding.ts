@@ -355,7 +355,7 @@ export function b58Encode(value: string | Uint8Array, pre: PrefixV2): string {
   const n = new Uint8Array(p.length + data.length);
   n.set(p);
   n.set(data, p.length);
-  return bs58check.encode(Buffer.from(n.buffer, n.byteOffset, n.byteLength));
+  return bs58check.encode(n);
 }
 
 /**

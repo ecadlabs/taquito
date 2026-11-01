@@ -60,7 +60,7 @@
     "@noble/hashes": "2.4.0",
     "@noble/post-quantum": "0.7.1",
     "@scure/bip39": "2.4.0",
-    "@stablelib/nacl": "^1.0.4",
+    "@stablelib/nacl": "^2.0.1",
     "@taquito/core": "^25.1.0",
     "@taquito/utils": "^25.1.0",
     "@types/bn.js": "^5.2.0",

@@ -16,7 +16,6 @@ export default {
   external: [
     'typedarray-to-buffer',
     'blakejs',
-    'bs58check'
   ],
   watch: {
     include: 'src/**',

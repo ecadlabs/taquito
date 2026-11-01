@@ -59,10 +59,9 @@
     "@noble/hashes": "2.4.0",
     "@noble/post-quantum": "0.7.1",
     "@taquito/core": "^25.1.0",
-    "@types/bs58check": "^2.1.2",
     "bignumber.js": "^10.0.2",
     "blakejs": "^1.2.1",
-    "bs58check": "^3.0.1",
+    "bs58check": "^4.0.0",
     "buffer": "^6.0.3",
     "typedarray-to-buffer": "^4.0.0"
   },

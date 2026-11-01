@@ -1,6 +1,6 @@
 import { InvalidCurveError, InvalidMnemonicError, ToBeImplemented } from '../src/errors';
 import { InMemorySigner } from '../src/taquito-signer';
-import { InvalidDerivationPathError, InvalidKeyError } from '@taquito/core';
+import { InvalidDerivationPathError, InvalidKeyError, InvalidPassphraseError } from '@taquito/core';
 import { runInNewContext } from 'node:vm';
 
 const serialize = (value: unknown): string => {
@@ -261,6 +261,23 @@ describe('inmemory-signer', () => {
     expect(await signer.secretKey()).toEqual(
       'p2sk2mJNRYqs3UXJzzF44Ym6jk38RVDPVSuLCfNd5ShE5zyVdu8Au9'
     );
+  }, 15000);
+
+  it('Tz3 Encrypted rejects missing or wrong passphrase', () => {
+    expect(
+      () =>
+        new InMemorySigner(
+          'p2esk2TFqgNcoT4u99ut5doGTUFNwo9x4nNvkpM6YMLqXrt4SbFdQnqLM3hoAXLMB2uZYazj6LZGvcoYzk16H6Et'
+        )
+    ).toThrow(InvalidPassphraseError);
+
+    expect(
+      () =>
+        new InMemorySigner(
+          'p2esk2TFqgNcoT4u99ut5doGTUFNwo9x4nNvkpM6YMLqXrt4SbFdQnqLM3hoAXLMB2uZYazj6LZGvcoYzk16H6Et',
+          'wrong-passphrase'
+        )
+    ).toThrow("can't decrypt secret key");
   }, 15000);
 
   it('Tz3 with bytes producing signature that needs padding', async () => {

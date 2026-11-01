@@ -56,7 +56,7 @@
   },
   "dependencies": {
     "@noble/hashes": "2.4.0",
-    "@stablelib/nacl": "^1.0.4",
+    "@stablelib/nacl": "^2.0.1",
     "big-integer": "^1.6.52"
   },
   "devDependencies": {
