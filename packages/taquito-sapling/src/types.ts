@@ -163,7 +163,7 @@ export interface SaplingTransactionParams {
 export interface SaplingContractDetails {
   /**
    * Output ordering for the default transaction builder. Defaults to 'preserve'.
-   * 'randomized' shuffles complete outputs before signing, including private change.
+   * 'randomized' shuffles complete outputs before creating the binding signature, including private change.
    * Randomized mode changes output and transaction-history positions and requires secure randomness.
    * A custom transaction builder is responsible for its own output ordering.
    */

@@ -128,7 +128,7 @@ Randomization can retain the original order.
 
 The builder uses `globalThis.crypto.getRandomValues` through its existing random-byte provider.
 The shuffle uses Fisher-Yates with rejection sampling to avoid modulo bias.
-A failure to obtain randomness rejects the transaction before signing.
+A failure to obtain randomness rejects the transaction before creating the binding signature.
 An unknown policy throws during default builder construction.
 Only an omitted option or `undefined` selects the default.
 
