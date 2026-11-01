@@ -6,6 +6,10 @@ layout: ../layouts/MarkdownLayout.astro
 ---
 # Unreleased
 
+### Beacon imports and declarations
+
+- Fixed native Node.js imports of `@taquito/beacon-wallet` and `@taquito/beacon-wallet/types`. Browser imports retain their ESM routes. Published Beacon declarations now explicitly include their required Chrome types for strict TypeScript consumers.
+
 ### tz5 and ML-DSA-44
 
 - Added tz5 address, key, signature, Michelson, and operation codecs. `InMemorySigner` imports Octez `mdsk` and encrypted `mdesk` keys and produces `mdsig` signatures with the complete `ff04` operation envelope. Sending operations requires a protocol with `tz5_account_enable` enabled.
