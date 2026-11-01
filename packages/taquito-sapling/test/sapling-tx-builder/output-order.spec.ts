@@ -93,7 +93,7 @@ describe('Sapling output order', () => {
       ['private', ['2', '3'], 5],
       ['private', [], 0],
     ] as const)(
-      'matches independent current-main bytes with %s and policy ' + policy,
+      'matches independent preserved-order byte fixtures with %s and policy ' + policy,
       async (kind, amounts, selected) => {
         const { build, random } = setup(policy);
         const tx = await build(kind, [...amounts], selected);
@@ -161,7 +161,7 @@ describe('Sapling output order', () => {
   });
 
   it.each(['shield', 'private'] as const)(
-    'fails before signing if %s order entropy fails',
+    'fails before creating the binding signature if %s order entropy fails',
     async (kind) => {
       const { build, random, signature } = setup('randomized');
       random.mockImplementation(() => {
@@ -183,6 +183,52 @@ describe('Sapling output order', () => {
       () => new SaplingToolkit(keys, { ...contract, outputOrder: 'invalid' as any }, readProvider)
     ).toThrow('Unknown Sapling output order');
   });
+
+  it.each([undefined, 'preserve', 'randomized', 'builder-owned'] as const)(
+    'uses a supplied builder without changing its signed outputs with policy %s',
+    async (outputOrder) => {
+      const custom = setup();
+      const transaction = await custom.build('shield', ['2', '3']);
+      const createShieldedTx = vi.spyOn(custom.builder, 'createShieldedTx');
+      createShieldedTx.mockResolvedValue(transaction);
+      const customForger = new SaplingForger();
+      const forge = vi.spyOn(customForger, 'forgeSaplingTransaction');
+      const readProvider = {
+        getSaplingDiffByContract: vi.fn().mockResolvedValue({ root: '00'.repeat(32) }),
+      };
+      const toolkit = new SaplingToolkit(
+        custom.keys,
+        // A supplied builder owns validation, including untyped JavaScript calls.
+        { ...contract, outputOrder: outputOrder as any },
+        readProvider as any,
+        undefined,
+        customForger,
+        custom.builder
+      );
+      const random = vi.fn(() => {
+        throw new Error('No toolkit ordering entropy expected for a supplied builder');
+      });
+      vi.stubGlobal('crypto', { getRandomValues: random });
+      try {
+        const encoded = await toolkit.prepareShieldedTransaction([
+          { to: address, amount: '2', mutez: true, memo: 'first' },
+          { to: address, amount: '3', mutez: true, memo: 'second' },
+        ]);
+        expect(createShieldedTx).toHaveBeenCalledOnce();
+        expect(createShieldedTx.mock.calls[0][0]).toEqual([
+          { to: address, amount: '2', memo: 'first' },
+          { to: address, amount: '3', memo: 'second' },
+        ]);
+        expect(forge).toHaveBeenCalledOnce();
+        expect(forge.mock.calls[0][0].outputs).toBe(transaction.outputs);
+        expect(forge.mock.calls[0][0].signature).toBe(transaction.signature);
+        expect(encoded).toBe(forge.mock.results[0].value.toString('hex'));
+        expect(random).not.toHaveBeenCalled();
+      } finally {
+        vi.unstubAllGlobals();
+      }
+    }
+  );
 
   it('uses the secure platform provider and fails when it is unavailable', () => {
     const getRandomValues = vi.fn((bytes: Uint8Array) => {
