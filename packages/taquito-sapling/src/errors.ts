@@ -84,3 +84,14 @@ export class SaplingTransactionViewerError extends TaquitoError {
     this.name = 'SaplingTransactionViewerError';
   }
 }
+
+/**
+ * @category Error
+ * Error indicates an unsupported output-order policy for the default builder.
+ */
+export class InvalidSaplingOutputOrderError extends ParameterValidationError {
+  constructor() {
+    super('Unknown Sapling output order');
+    this.name = 'InvalidSaplingOutputOrderError';
+  }
+}

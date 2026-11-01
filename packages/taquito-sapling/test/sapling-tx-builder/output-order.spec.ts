@@ -6,6 +6,8 @@ import { SaplingTransactionBuilder } from '../../src/sapling-tx-builder/sapling-
 import { SaplingForger } from '../../src/sapling-forger/sapling-forger';
 import { SaplingWrapper } from '../../src/sapling-module-wrapper';
 import { SaplingToolkit } from '../../src/taquito-sapling';
+import * as sapling from '../../src/taquito-sapling';
+import { ParameterValidationError } from '@taquito/core';
 import { SaplingContractDetails, SaplingTransactionOutput } from '../../src/types';
 // Forged-byte hashes from unchanged bbe1ba244356fef92da9fdef2aa212a17c43831c.
 // Output descriptions are controlled fixtures. Binding hashes and serialization use real code.
@@ -157,7 +159,18 @@ describe('Sapling output order', () => {
   );
 
   it.each(['shuffle', '', null, false, 0])('rejects invalid runtime policy %s', (policy) => {
-    expect(() => setup(policy as any)).toThrow('Unknown Sapling output order');
+    let received: unknown;
+    try {
+      setup(policy as any);
+    } catch (error) {
+      received = error;
+    }
+    expect(received).toBeInstanceOf(ParameterValidationError);
+    expect(received).toBeInstanceOf(sapling.InvalidSaplingOutputOrderError);
+    expect(received).toMatchObject({
+      name: 'InvalidSaplingOutputOrderError',
+      message: 'Unknown Sapling output order',
+    });
   });
 
   it.each(['shield', 'private'] as const)(

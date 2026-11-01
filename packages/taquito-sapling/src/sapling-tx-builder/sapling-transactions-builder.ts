@@ -1,4 +1,5 @@
 import { shuffleOutputs } from './shuffle-outputs';
+import { InvalidSaplingOutputOrderError } from '../errors';
 import { Buffer } from 'buffer';
 import blake from 'blakejs';
 import { secretBox } from '@stablelib/nacl';
@@ -60,7 +61,7 @@ export class SaplingTransactionBuilder {
         ? 'preserve'
         : saplingContractDetails.outputOrder;
     if (this.#outputOrder !== 'preserve' && this.#outputOrder !== 'randomized') {
-      throw new Error('Unknown Sapling output order');
+      throw new InvalidSaplingOutputOrderError();
     }
     this.#inMemorySpendingKey = keys.saplingSigner;
     this.#inMemoryProvingKey = keys.saplingProver;

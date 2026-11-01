@@ -245,7 +245,9 @@ to the request by index or assume that the last output is change. Use viewing
 keys and the transaction viewer to inspect payments. Amounts, recipients, memos
 and bound withdrawal data do not change.
 
-An unsupported policy fails when the default builder is created. If ordering
+An unsupported policy throws `InvalidSaplingOutputOrderError` when the default
+builder is created. The error is exported from `@taquito/sapling` and extends
+`ParameterValidationError` from `@taquito/core`. If ordering
 entropy fails, the operation rejects before the binding signature. Private
 spend authorization signatures may already have been created.
 
