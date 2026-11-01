@@ -51,7 +51,7 @@ ordinary success or failure. Forced termination can prevent cleanup.
 The install can access the registry for transitive dependencies. It is not an
 offline test. Set `TAQUITO_PACKAGE_REPORT_DIR` to retain the consumer lockfile and
 provenance JSON, including Node and TypeScript versions, tarball hashes and
-dependency records. CI uploads these files for Node 22 and 24. The lockfile records
+dependency records. CI uploads these files for Node 22, 24 and 26. The lockfile records
 temporary tarball paths and is an audit record, not a standalone install recipe.
 
 ## Later migration steps
