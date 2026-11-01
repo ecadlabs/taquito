@@ -6,6 +6,10 @@ layout: ../layouts/MarkdownLayout.astro
 ---
 # Unreleased
 
+### Node.js 26 LTS support
+
+- Added Node.js 26 LTS support and CI coverage alongside Node.js 22 and 24. The minimum version remains Node.js 22.
+
 ### tz5 and ML-DSA-44
 
 - Added tz5 address, key, signature, Michelson, and operation codecs. `InMemorySigner` imports Octez `mdsk` and encrypted `mdesk` keys and produces `mdsig` signatures with the complete `ff04` operation envelope. Sending operations requires a protocol with `tz5_account_enable` enabled.
