@@ -211,8 +211,8 @@ describe('Sapling output order', () => {
       vi.stubGlobal('crypto', { getRandomValues: random });
       try {
         const encoded = await toolkit.prepareShieldedTransaction([
-          { to: address, amount: '2', mutez: true, memo: 'first' },
-          { to: address, amount: '3', mutez: true, memo: 'second' },
+          { to: address, amount: 2, mutez: true, memo: 'first' },
+          { to: address, amount: 3, mutez: true, memo: 'second' },
         ]);
         expect(createShieldedTx).toHaveBeenCalledOnce();
         expect(createShieldedTx.mock.calls[0][0]).toEqual([
