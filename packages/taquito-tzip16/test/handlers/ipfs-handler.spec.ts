@@ -114,8 +114,8 @@ describe('TZIP-16 IPFS HTTP handler', () => {
       const url = `https://gateway.example.com/ipfs/${cid}/`;
       const fetch = vi
         .spyOn(globalThis, 'fetch')
-        .mockResolvedValue(
-          new Response('Gateway response', { status, statusText: 'Gateway failure' })
+        .mockImplementation(
+          async () => new Response('Gateway response', { status, statusText: 'Gateway failure' })
         );
       const result = new IpfsHttpHandler('gateway.example.com').getMetadata(contract, uri, context);
 
@@ -137,7 +137,7 @@ describe('TZIP-16 IPFS HTTP handler', () => {
         'message',
         expect.stringContaining(String(status))
       );
-      expect(fetch).toHaveBeenCalledTimes(1);
+      expect(fetch).toHaveBeenCalledTimes(status === STATUS_CODE.SERVICE_UNAVAILABLE ? 2 : 1);
     }
   );
 
