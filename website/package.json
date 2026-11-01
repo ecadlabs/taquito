@@ -15,11 +15,12 @@
     "test:live-code:prod": "node scripts/prod-live-code-smoke.mjs"
   },
   "dependencies": {
-    "@astrojs/mdx": "^4.3.14",
+    "@astrojs/markdown-remark": "^7.3.5",
+    "@astrojs/mdx": "^8.1.2",
     "@astrojs/sitemap": "^3.7.4",
-    "@cloudflare/workers-types": "^4.20260702.1",
+    "@cloudflare/workers-types": "^5.20261101.1",
     "@ledgerhq/hw-transport-webhid": "^6.36.0",
-    "@lucide/astro": "^0.562.0",
+    "@lucide/astro": "^1.66.0",
     "@taquito/beacon-wallet": "^25.1.0",
     "@taquito/ledger-signer": "^25.1.0",
     "@taquito/michel-codec": "^25.1.0",
@@ -29,8 +30,8 @@
     "@taquito/tzip16": "^25.1.0",
     "@taquito/utils": "^25.1.0",
     "@taquito/wallet-connect": "^25.1.0",
-    "astro": "^5.18.2",
-    "astro-auto-import": "^0.5.2",
+    "astro": "^7.4.4",
+    "astro-auto-import": "^0.6.0",
     "bignumber.js": "^10.0.2",
     "buffer": "^6.0.3",
     "fuse.js": "^7.5.0",
@@ -46,11 +47,7 @@
   "overrides": {
     "@stablelib/ed25519": "2.1.0",
     "defu": "6.1.5",
-    "devalue": "5.9.4",
     "h3": "1.15.9",
-    "vite": "6.4.5",
-    "picomatch@^2.0.4": "2.3.2",
-    "picomatch@^4.0.2": "4.0.4",
-    "picomatch@^4.0.3": "4.0.4"
+    "picomatch@^2.0.4": "2.3.2"
   }
 }

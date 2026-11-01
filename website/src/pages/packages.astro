@@ -1,10 +1,26 @@
 ---
+import fs from 'node:fs';
 import { createRequire } from 'node:module';
+import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import MainLayout from '../layouts/MainLayout.astro';
 
 const require = createRequire(import.meta.url);
-const sharedCatalogPath = fileURLToPath(new URL('../../../scripts/package-catalog-data.js', import.meta.url));
+function resolveSharedCatalogPath(startDir: string): string {
+  let currentDir = startDir;
+  while (true) {
+    const candidate = path.join(currentDir, 'scripts', 'package-catalog-data.js');
+    if (fs.existsSync(candidate)) {
+      return candidate;
+    }
+    const parentDir = path.dirname(currentDir);
+    if (parentDir === currentDir) {
+      throw new Error(`Unable to locate scripts/package-catalog-data.js from ${startDir}`);
+    }
+    currentDir = parentDir;
+  }
+}
+const sharedCatalogPath = resolveSharedCatalogPath(path.dirname(fileURLToPath(import.meta.url)));
 const { getWorkspacePackages, externalPackages } = require(sharedCatalogPath);
 
 const workspacePackages = getWorkspacePackages();
