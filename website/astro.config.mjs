@@ -1,5 +1,6 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import { unified } from '@astrojs/markdown-remark';
 import mdx from '@astrojs/mdx';
 import AutoImport from 'astro-auto-import';
 import { remarkLiveCode } from './src/utils/remark-live-code.mjs';
@@ -44,7 +45,9 @@ export default defineConfig({
     },
   })],
   markdown: {
-    remarkPlugins: [remarkRelativeLinks, remarkCallouts, remarkLiveCode],
+    processor: unified({
+      remarkPlugins: [remarkRelativeLinks, remarkCallouts, remarkLiveCode],
+    }),
     syntaxHighlight: false,
   },
   vite: {
