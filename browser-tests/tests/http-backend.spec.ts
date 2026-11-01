@@ -178,6 +178,26 @@ test('reports the configured timeout after the server receives the request', asy
   expect(endpoint.requests.length).toBeGreaterThan(0);
 });
 
+for (const json of [true, false]) {
+  test(`keeps the timeout active after response headers (json=${json})`, async ({
+    page,
+    endpoint,
+  }) => {
+    endpoint.respond = (_request, response) => {
+      response.writeHead(200);
+      response.flushHeaders();
+      response.write('{"level":');
+    };
+    const pending = page.evaluate(
+      ({ url, json }) => window.httpTest.request({ url, timeout: 1500, json }),
+      { url: endpoint.url, json }
+    );
+    await expect.poll(() => page.evaluate(() => window.httpTest.responseHeaders())).toBe(1);
+    expect(await pending).toEqual({ kind: 'timeout', timeout: 1500, url: endpoint.url });
+    expect(await page.evaluate(() => window.httpTest.fetchAttempts())).toBe(1);
+  });
+}
+
 // Keep failing through the browser's internal socket replay. Recover only after
 // native fetch fails, so success requires an HttpBackend retry.
 const recoverAfterFetchFailure = (page: Page, endpoint: Endpoint) => {

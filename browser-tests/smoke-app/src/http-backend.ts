@@ -18,9 +18,12 @@ const http = (await import(
 // without changing requests, responses, or rejections.
 const nativeFetch = globalThis.fetch.bind(globalThis);
 let fetchAttempts = 0;
-globalThis.fetch = (...args) => {
+let responseHeaders = 0;
+globalThis.fetch = async (...args) => {
   fetchAttempts++;
-  return nativeFetch(...args);
+  const response = await nativeFetch(...args);
+  responseHeaders++;
+  return response;
 };
 
 const request = async (options: HttpRequestOptions, data?: object | string) => {
@@ -56,6 +59,7 @@ declare global {
     httpTest: {
       request: typeof request;
       fetchAttempts: () => number;
+      responseHeaders: () => number;
       beforeImport: Record<string, string>;
       afterImport: Record<string, string>;
     };
@@ -64,6 +68,7 @@ declare global {
 window.httpTest = {
   request,
   fetchAttempts: () => fetchAttempts,
+  responseHeaders: () => responseHeaders,
   beforeImport,
   afterImport: nodeGlobals(),
 };

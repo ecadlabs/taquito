@@ -8,6 +8,7 @@
     "skipLibCheck": true
   },
   "include": [
+    "packages/taquito-http-utils/test/native-fetch.spec.ts",
     "packages/taquito/test/contract/big-map-values*.spec.ts",
     "packages/taquito/test/contract/fa21.spec.ts",
     "packages/taquito-rpc/test/big-map-values*.spec.ts",
