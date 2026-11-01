@@ -1,6 +1,11 @@
 /// <reference types="node" />
 
-import { SaplingToolkit, InMemorySpendingKey } from '@taquito/sapling';
+import {
+  SaplingToolkit,
+  InMemorySpendingKey,
+  InvalidSaplingOutputOrderError,
+} from '@taquito/sapling';
+import { ParameterValidationError } from '@taquito/core';
 import { RpcClient } from '@taquito/rpc';
 import { RpcReadAdapter } from '@taquito/taquito';
 
@@ -14,3 +19,6 @@ new SaplingToolkit(keys, { ...contract, outputOrder: 'preserve' }, readProvider)
 new SaplingToolkit(keys, { ...contract, outputOrder: 'randomized' }, readProvider);
 // @ts-expect-error Unknown policies must fail for a public consumer.
 new SaplingToolkit(keys, { ...contract, outputOrder: 'random' }, readProvider);
+
+const policyError: ParameterValidationError = new InvalidSaplingOutputOrderError();
+void policyError;

@@ -36,6 +36,7 @@ import { InMemoryProvingKey } from './sapling-keys/in-memory-proving-key';
 import { InvalidAddressError, InvalidKeyHashError } from '@taquito/core';
 export { initSapling, preloadSaplingParams, SaplingParamsError } from './sapling-params-loader';
 export type { SaplingInitOptions, SaplingParamsSource } from './types';
+export { InvalidSaplingOutputOrderError } from './errors';
 
 export { SaplingTransactionViewer } from './sapling-tx-viewer/sapling-transaction-viewer';
 export { InMemoryViewingKey } from './sapling-keys/in-memory-viewing-key';

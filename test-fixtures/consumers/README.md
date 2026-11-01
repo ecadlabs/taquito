@@ -39,8 +39,9 @@ errors. The existing big-map fixtures retain custom-provider compatibility and
 public result checks. The Sapling constructor fixture checks omitted, preserve
 and randomized output order, and requires an unknown policy to remain a type
 error. The root `typecheck:tests` command also checks that same fixture through
-source aliases. Sapling coverage here is limited to declarations; it does not
-execute Sapling constructors or generate proofs. The fixture explicitly loads
+source aliases. The Sapling runtime fixture checks constructor creation and the
+exported validation error through CommonJS and native ESM. It does not generate proofs,
+load proving parameters or submit transactions. The fixture explicitly loads
 Node's declarations for Sapling's public `Buffer` types. Browser-only consumers
 without those ambient declarations are not covered.
 

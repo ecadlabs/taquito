@@ -129,7 +129,8 @@ Randomization can retain the original order.
 The builder uses `globalThis.crypto.getRandomValues` through its existing random-byte provider.
 The shuffle uses Fisher-Yates with rejection sampling to avoid modulo bias.
 A failure to obtain randomness rejects the transaction before creating the binding signature.
-An unknown policy throws during default builder construction.
+An unknown policy throws the exported `InvalidSaplingOutputOrderError` during default builder construction.
+This error extends `ParameterValidationError` from `@taquito/core`.
 Only an omitted option or `undefined` selects the default.
 
 Output positions and the corresponding history positions can change in randomized mode.
@@ -166,5 +167,6 @@ Sapling's public `Buffer` types. It does not check a browser-only type environme
 without those declarations.
 
 The fixture covers the existing constructor, both output-order policies and an
-unknown policy that TypeScript must reject. These are declaration checks. They
-do not generate proofs or submit transactions.
+unknown policy that TypeScript must reject. The runtime fixture also checks
+constructor creation and error identity through CommonJS and native ESM.
+Neither fixture generates proofs or submits transactions.
