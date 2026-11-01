@@ -16,11 +16,13 @@
   "exports": {
     ".": {
       "types": "./dist/types/taquito-beacon-wallet.d.ts",
+      "node": "./dist/taquito-beacon-wallet.umd.js",
       "import": "./dist/taquito-beacon-wallet.es6.js",
       "require": "./dist/taquito-beacon-wallet.umd.js"
     },
     "./types": {
       "types": "./dist/types/beacon-types.d.ts",
+      "node": "./dist/beacon-types.umd.js",
       "import": "./dist/beacon-types.es6.js",
       "require": "./dist/beacon-types.umd.js"
     },
@@ -72,6 +74,7 @@
   "dependencies": {
     "@ecadlabs/beacon-dapp": "4.8.4-ecad",
     "@ecadlabs/beacon-types": "4.8.4-ecad",
+    "@types/chrome": "0.1.40",
     "@taquito/core": "^25.1.0",
     "@taquito/taquito": "^25.1.0",
     "@taquito/utils": "^25.1.0",
@@ -83,7 +86,6 @@
     "@ecadlabs/beacon-ui": "4.8.4-ecad",
     "@rollup/plugin-json": "^6.1.0",
     "@types/bluebird": "^3.5.42",
-    "@types/chrome": "0.1.40",
     "@types/node": "^22.20.5",
     "@types/ws": "^8.18.2",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
