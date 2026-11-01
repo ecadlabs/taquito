@@ -1,3 +1,5 @@
+import { shuffleOutputs } from './shuffle-outputs';
+import { InvalidSaplingOutputOrderError } from '../errors';
 import { Buffer } from 'buffer';
 import blake from 'blakejs';
 import { secretBox } from '@stablelib/nacl';
@@ -35,6 +37,7 @@ export class SaplingTransactionBuilder {
   #contractAddress: string;
   #saplingId: string | undefined;
   #memoSize: number;
+  #outputOrder: 'preserve' | 'randomized';
   #readProvider: TzReadProvider;
   #saplingWrapper: SaplingWrapper;
   #chainId: string | undefined;
@@ -53,6 +56,13 @@ export class SaplingTransactionBuilder {
     this.#saplingForger = saplingForger;
     this.#contractAddress = saplingContractDetails.contractAddress;
     this.#memoSize = saplingContractDetails.memoSize;
+    this.#outputOrder =
+      saplingContractDetails.outputOrder === undefined
+        ? 'preserve'
+        : saplingContractDetails.outputOrder;
+    if (this.#outputOrder !== 'preserve' && this.#outputOrder !== 'randomized') {
+      throw new InvalidSaplingOutputOrderError();
+    }
     this.#inMemorySpendingKey = keys.saplingSigner;
     this.#inMemoryProvingKey = keys.saplingProver;
     this.#saplingState = new SaplingState(32);
@@ -88,6 +98,10 @@ export class SaplingTransactionBuilder {
               randomCommitmentTrapdoor: rcm,
             })
           );
+        }
+
+        if (this.#outputOrder === 'randomized') {
+          shuffleOutputs(outputs, (length) => this.#saplingWrapper.getRandomBytes(length));
         }
 
         const signature = await this.createBindingSignature({
@@ -170,6 +184,10 @@ export class SaplingTransactionBuilder {
           chosenInputs.sumSelectedInputs.toString(),
           sumAmountOutput.toString()
         );
+
+        if (this.#outputOrder === 'randomized') {
+          shuffleOutputs(outputs, (length) => this.#saplingWrapper.getRandomBytes(length));
+        }
 
         const signature = await this.createBindingSignature({
           saplingContext,

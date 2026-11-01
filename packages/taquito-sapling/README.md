@@ -91,3 +91,82 @@ See the top-level project [https://github.com/ecadlabs/taquito](https://github.c
 ## Disclaimer
 
 THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+## Output order
+
+The default transaction builder preserves recipient order and appends private change.
+Omitting `outputOrder` preserves this behavior.
+Explicit `'preserve'` has the same behavior and requests no extra randomness for ordering.
+
+```typescript
+import { InMemorySpendingKey, SaplingToolkit } from '@taquito/sapling';
+import { RpcClient } from '@taquito/rpc';
+import { RpcReadAdapter } from '@taquito/taquito';
+
+const saplingSigner = await InMemorySpendingKey.fromMnemonic(mnemonic);
+const readProvider = new RpcReadAdapter(new RpcClient(rpcUrl));
+
+// Existing callers preserve output order.
+const preserved = new SaplingToolkit(
+	{ saplingSigner },
+	{ contractAddress, memoSize: 8 },
+	readProvider
+);
+
+// Opt in to randomized output order.
+const randomized = new SaplingToolkit(
+	{ saplingSigner },
+	{ contractAddress, memoSize: 8, outputOrder: 'randomized' },
+	readProvider
+);
+```
+
+`'randomized'` shuffles complete output descriptions before the binding signature.
+The policy applies to shield operations and private transactions, including change.
+Zero or one output requires no ordering randomness.
+Randomization can retain the original order.
+
+The builder uses `globalThis.crypto.getRandomValues` through its existing random-byte provider.
+The shuffle uses Fisher-Yates with rejection sampling to avoid modulo bias.
+A failure to obtain randomness rejects the transaction before creating the binding signature.
+An unknown policy throws the exported `InvalidSaplingOutputOrderError` during default builder construction.
+This error extends `ParameterValidationError` from `@taquito/core`.
+Only an omitted option or `undefined` selects the default.
+
+Output positions and the corresponding history positions can change in randomized mode.
+Applications must not identify recipients or change from output position.
+The shuffle keeps each proof and ciphertext with its original output description.
+It does not change amounts, memos, recipients, inputs, or bound withdrawal data.
+
+A custom `saplingTxBuilder` passed to `SaplingToolkit` replaces the default builder.
+That custom builder is responsible for policy validation, secure randomness, output ordering, and signing.
+The toolkit does not shuffle the custom builder's result.
+
+Randomized output order removes the default builder's deterministic last-position change rule.
+It does not hide output counts or public deposits and withdrawals.
+Amounts, timing, application behavior, and other evidence can still identify outputs or users.
+This option does not provide a proof of anonymity.
+
+### Check the public constructor types
+
+From the repository root, run:
+
+```sh
+npm run typecheck:tests
+npm run build
+npm run test:consumers
+```
+
+Both CI jobs, on Node 22 and 24, check the same constructor fixture in
+`test-fixtures/consumers/sapling-output-order.types.ts`.
+The root type-check resolves the public package through source aliases.
+The installed-consumer runner packs Sapling and its workspace dependencies, then
+checks the emitted declarations outside the workspace under strict NodeNext CJS,
+NodeNext ESM and bundler resolution. It uses no source aliases. The fixture explicitly loads Node's declarations for
+Sapling's public `Buffer` types. It does not check a browser-only type environment
+without those declarations.
+
+The fixture covers the existing constructor, both output-order policies and an
+unknown policy that TypeScript must reject. The runtime fixture also checks
+constructor creation and error identity through CommonJS and native ESM.
+Neither fixture generates proofs or submits transactions.
