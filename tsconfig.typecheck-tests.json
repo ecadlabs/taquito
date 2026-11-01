@@ -27,6 +27,7 @@
     "packages/taquito/test/prepare/detached-*.ts",
     "packages/taquito/test/wallet/smart-rollup.spec.ts",
     "packages/taquito-sapling/test/sapling-tx-builder/output-order.spec.ts",
-    "packages/taquito-sapling/test/sapling-tx-builder/shuffle-outputs.spec.ts"
+    "packages/taquito-sapling/test/sapling-tx-builder/shuffle-outputs.spec.ts",
+    "test-fixtures/consumers/sapling-output-order.types.ts"
   ]
 }
