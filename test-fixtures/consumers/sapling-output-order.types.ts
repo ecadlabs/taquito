@@ -1,3 +1,5 @@
+/// <reference types="node" />
+
 import { SaplingToolkit, InMemorySpendingKey } from '@taquito/sapling';
 import { RpcClient } from '@taquito/rpc';
 import { RpcReadAdapter } from '@taquito/taquito';

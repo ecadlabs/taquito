@@ -148,10 +148,23 @@ This option does not provide a proof of anonymity.
 
 ### Check the public constructor types
 
-From `packages/taquito-sapling`, run `npm run test:types`.
-The check compiles the existing constructor and both output-order policies.
-It also requires TypeScript to reject an unknown policy.
-The fixture imports the public `@taquito/sapling` entry through the repository's source aliases.
+From the repository root, run:
 
-After the workspace build, run `npm run test:types:dist` from the same directory.
-This check resolves the public package's emitted declarations without source aliases.
+```sh
+npm run typecheck:tests
+npm run build
+npm run test:consumers
+```
+
+Both CI jobs, on Node 22 and 24, check the same constructor fixture in
+`test-fixtures/consumers/sapling-output-order.types.ts`.
+The root type-check resolves the public package through source aliases.
+The installed-consumer runner packs Sapling and its workspace dependencies, then
+checks the emitted declarations outside the workspace under strict NodeNext CJS,
+NodeNext ESM and bundler resolution. It uses no source aliases. The fixture explicitly loads Node's declarations for
+Sapling's public `Buffer` types. It does not check a browser-only type environment
+without those declarations.
+
+The fixture covers the existing constructor, both output-order policies and an
+unknown policy that TypeScript must reject. These are declaration checks. They
+do not generate proofs or submit transactions.
