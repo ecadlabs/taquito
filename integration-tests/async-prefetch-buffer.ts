@@ -1,12 +1,19 @@
 class BufferedEntry<T> {
   readyAt?: number;
+  failed = false;
   readonly promise: Promise<T>;
 
   constructor(producer: () => Promise<T>) {
-    this.promise = producer().then((value) => {
-      this.readyAt = Date.now();
-      return value;
-    });
+    this.promise = producer().then(
+      (value) => {
+        this.readyAt = Date.now();
+        return value;
+      },
+      (error) => {
+        this.failed = true;
+        throw error;
+      }
+    );
     // Background prefetch entries may never be consumed. Attach a rejection
     // handler now so a failed unused prefetch does not become an unhandled
     // rejection; callers that do consume this entry still observe the original
@@ -60,6 +67,10 @@ export class AsyncPrefetchBuffer<T> {
   private getNextEntry(): BufferedEntry<T> {
     if (this.targetSize <= 0) {
       return this.createEntry();
+    }
+
+    while (this.entries[0]?.failed) {
+      this.entries.shift();
     }
 
     this.fill();
