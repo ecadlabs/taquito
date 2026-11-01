@@ -26,7 +26,7 @@ const parsedLowBalanceWarnMutez = Number(
   process.env['TAQUITO_DIAG_BALANCE_WARN_MUTEZ'] ?? '9000000'
 );
 const parsedFreshKeyMaxAttempts = Number(process.env['TAQUITO_FRESH_KEY_MAX_ATTEMPTS'] ?? '');
-const parsedFreshKeyRetryMs = Number(process.env['TAQUITO_FRESH_KEY_RETRY_MS'] ?? '0');
+const parsedFreshKeyRetryMs = Number(process.env['TAQUITO_FRESH_KEY_RETRY_MS'] ?? '1000');
 const parsedKeygenRequestTimeoutMs = Number(
   process.env['TAQUITO_KEYGEN_REQUEST_TIMEOUT_MS'] ?? '30000'
 );
@@ -346,6 +346,23 @@ const requestFreshKeyCandidate = async (
   };
 };
 
+// Keys in go-tezos-keygen's pool are pre-funded to 15 tez. Requests above that
+// threshold trigger an on-chain top-up from a single funder account, so
+// concurrent prefetch requests would collide on the funder's manager counter.
+const standardKeygenPoolBalanceMutez = 15_000_000;
+
+const getPrefetchBufferSize = (
+  options: Pick<Required<SetupOptions>, 'requireUnrevealed' | 'minBalanceMutez'>
+) => {
+  if (options.minBalanceMutez > standardKeygenPoolBalanceMutez) {
+    return 0;
+  }
+  if (options.requireUnrevealed) {
+    return Math.min(freshKeyPrefetch, 1);
+  }
+  return freshKeyPrefetch;
+};
+
 const getFreshKeyPool = (
   signerConfig: EphemeralConfig,
   options: Required<Pick<SetupOptions, 'requireUnrevealed' | 'minBalanceMutez' | 'maxAttempts'>>
@@ -357,7 +374,7 @@ const getFreshKeyPool = (
     return existing;
   }
 
-  const bufferSize = options.requireUnrevealed ? Math.min(freshKeyPrefetch, 1) : freshKeyPrefetch;
+  const bufferSize = getPrefetchBufferSize(options);
 
   // Octez is not the bottleneck here, CI is. Keep a tiny per-constraint buffer
   // so each "fresh" account is still consumed exactly once, but the next keygen
@@ -502,9 +519,7 @@ const setupSignerWithFreshKey = async (
   const { v2FreshKeyUrl } = getKeygenEndpoints(signerConfig);
   const reasons: string[] = [];
   let state: SignerStateSnapshot | undefined;
-  const actualPrefetchBufferSize = options.requireUnrevealed
-    ? Math.min(freshKeyPrefetch, 1)
-    : freshKeyPrefetch;
+  const actualPrefetchBufferSize = getPrefetchBufferSize(options);
   const freshKeyPool = getFreshKeyPool(signerConfig, options);
   for (let attempt = 1; attempt <= options.maxAttempts; attempt++) {
     let candidate: Awaited<ReturnType<typeof freshKeyPool.take>>;

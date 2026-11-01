@@ -353,7 +353,7 @@ describe('HttpBackend', () => {
         expect(result).toEqual({ block: 'head' });
       });
 
-      it('does not retry HttpResponseError even if body contains transport-like text', async () => {
+      it('does not retry 500 HttpResponseError even if body contains transport-like text', async () => {
         // RPC returns 500 with body text that matches transport error patterns
         mockFetch.mockResolvedValue(
           mockResponse({
@@ -441,16 +441,30 @@ describe('HttpBackend', () => {
           },
         };
         mockFetch
-          .mockRejectedValueOnce(econnreset())
+          .mockResolvedValueOnce(
+            mockResponse({
+              status: 502,
+              statusText: 'Bad Gateway',
+              body: '<html>502 Bad Gateway</html>',
+            })
+          )
           .mockResolvedValueOnce(mockResponse({ jsonBody: { ok: true } }));
         await drainRetries(
-          backend.createRequest({ url: 'https://rpc.example.com/', method: 'GET' }, data)
+          backend.createRequest(
+            {
+              url: 'https://rpc.example.com/chains/main/blocks/head/helpers/scripts/simulate_operation',
+              method: 'POST',
+            },
+            data
+          )
         );
         expect(mockFetch).toHaveBeenCalledTimes(2);
-        // Body should be identical on both calls (serialized once)
+        expect(callCount).toBe(1);
+        // Body should be identical and non-empty on both calls (serialized once)
         const body1 = mockFetch.mock.calls[0][1].body;
         const body2 = mockFetch.mock.calls[1][1].body;
-        expect(body1).toBe(body2);
+        expect(body1).toBe('{"branch":"head","contents":[1]}');
+        expect(body2).toBe(body1);
       });
 
       it('throws after exhausting retries (fetch called 2x)', async () => {
@@ -464,6 +478,209 @@ describe('HttpBackend', () => {
         // Default retry count is 1, so 1 initial + 1 retry = 2 calls
         expect(mockFetch).toHaveBeenCalledTimes(2);
       });
+
+      it.each([
+        [502, 'Bad Gateway'],
+        [503, 'Service Unavailable'],
+        [504, 'Gateway Timeout'],
+      ])('retries GET on %i %s and succeeds on second attempt', async (status, statusText) => {
+        mockFetch
+          .mockResolvedValueOnce(
+            mockResponse({
+              status,
+              statusText,
+              body: `<html><h1>${status} ${statusText}</h1></html>`,
+            })
+          )
+          .mockResolvedValueOnce(mockResponse({ jsonBody: { ok: true } }));
+        const result = await drainRetries(
+          backend.createRequest({ url: 'https://rpc.example.com/chains/main/blocks/head' })
+        );
+        expect(mockFetch).toHaveBeenCalledTimes(2);
+        expect(result).toEqual({ ok: true });
+      });
+
+      it.each([
+        '/chains/main/blocks/head/helpers/scripts/simulate_operation',
+        '/chains/main/blocks/head/helpers/scripts/run_operation',
+        '/chains/main/blocks/head/helpers/scripts/run_code',
+        '/chains/main/blocks/head/helpers/scripts/run_view',
+        '/chains/main/blocks/head/helpers/scripts/run_script_view',
+        '/chains/main/blocks/head/helpers/scripts/pack_data',
+        '/chains/main/blocks/head/helpers/forge/operations',
+        '/chains/main/blocks/head/helpers/preapply/operations',
+        '/injection/operation',
+      ])('retries POST to %s on 502 Bad Gateway', async (path) => {
+        mockFetch
+          .mockResolvedValueOnce(
+            mockResponse({
+              status: 502,
+              statusText: 'Bad Gateway',
+              body: '<html><head><title>502 Bad Gateway</title></head></html>',
+            })
+          )
+          .mockResolvedValueOnce(mockResponse({ jsonBody: { ok: true } }));
+        const result = await drainRetries(
+          backend.createRequest(
+            {
+              url: `https://rpc.example.com${path}`,
+              method: 'POST',
+              query: { version: '1' },
+            },
+            { contents: [] }
+          )
+        );
+        expect(mockFetch).toHaveBeenCalledTimes(2);
+        expect(result).toEqual({ ok: true });
+      });
+
+      it('retries POST /injection/operation with identical signed bytes and propagates final 500 on duplicate replay', async () => {
+        const signedOpBytes = '8f3d2a01020304deadbeef';
+        mockFetch
+          .mockResolvedValueOnce(
+            mockResponse({
+              status: 504,
+              statusText: 'Gateway Timeout',
+              body: '<html>504 Gateway Timeout</html>',
+            })
+          )
+          .mockResolvedValueOnce(
+            mockResponse({
+              status: 500,
+              statusText: 'Internal Server Error',
+              body: '[{"kind":"branch","id":"injection_operation_error"}]',
+            })
+          );
+        const promise = backend.createRequest(
+          {
+            url: 'https://rpc.example.com/injection/operation',
+            method: 'POST',
+          },
+          signedOpBytes
+        );
+        const assertion = expect(promise).rejects.toMatchObject({
+          name: 'HttpResponseError',
+          status: 500,
+          statusText: 'Internal Server Error',
+          body: '[{"kind":"branch","id":"injection_operation_error"}]',
+          url: 'https://rpc.example.com/injection/operation',
+        });
+        await vi.advanceTimersByTimeAsync(10_000);
+        await assertion;
+        expect(mockFetch).toHaveBeenCalledTimes(2);
+        expect(mockFetch.mock.calls[0][1].body).toBe(JSON.stringify(signedOpBytes));
+        expect(mockFetch.mock.calls[1][1].body).toBe(JSON.stringify(signedOpBytes));
+      });
+
+      it('throws the final HttpResponseError after exhausting retries on persistent gateway errors', async () => {
+        mockFetch
+          .mockResolvedValueOnce(
+            mockResponse({
+              status: 502,
+              statusText: 'Bad Gateway',
+              body: '<html>first attempt 502</html>',
+            })
+          )
+          .mockResolvedValueOnce(
+            mockResponse({
+              status: 503,
+              statusText: 'Service Unavailable',
+              body: '<html>second attempt 503</html>',
+            })
+          );
+        const promise = backend.createRequest({
+          url: 'https://rpc.example.com/chains/main/blocks/head/helpers/scripts/simulate_operation',
+          method: 'POST',
+        });
+        const assertion = expect(promise).rejects.toMatchObject({
+          name: 'HttpResponseError',
+          status: 503,
+          statusText: 'Service Unavailable',
+          body: '<html>second attempt 503</html>',
+          url: 'https://rpc.example.com/chains/main/blocks/head/helpers/scripts/simulate_operation',
+        });
+        await vi.advanceTimersByTimeAsync(10_000);
+        await assertion;
+        expect(mockFetch).toHaveBeenCalledTimes(2);
+      });
+
+      it('preserves HTTP status policy when reading the error response body fails', async () => {
+        // 1. A 500 response whose body stream resets must NOT be retried as a transport error
+        mockFetch.mockResolvedValueOnce({
+          status: 500,
+          statusText: 'Internal Server Error',
+          text: () => Promise.reject(econnreset()),
+          json: () => Promise.reject(econnreset()),
+        } as unknown as Response);
+        await expect(
+          backend.createRequest({
+            url: 'https://rpc.example.com/chains/main/blocks/head',
+            method: 'GET',
+          })
+        ).rejects.toMatchObject({
+          name: 'HttpResponseError',
+          status: 500,
+          statusText: 'Internal Server Error',
+        });
+        expect(mockFetch).toHaveBeenCalledTimes(1);
+
+        // 2. A 503 response whose body stream aborts/resets IS retried as a 503 gateway error
+        mockFetch.mockClear();
+        mockFetch
+          .mockResolvedValueOnce({
+            status: 503,
+            statusText: 'Service Unavailable',
+            text: () => Promise.reject(econnreset()),
+            json: () => Promise.reject(econnreset()),
+          } as unknown as Response)
+          .mockResolvedValueOnce(mockResponse({ jsonBody: { ok: true } }));
+        const result = await drainRetries(
+          backend.createRequest({
+            url: 'https://rpc.example.com/chains/main/blocks/head',
+            method: 'GET',
+          })
+        );
+        expect(mockFetch).toHaveBeenCalledTimes(2);
+        expect(result).toEqual({ ok: true });
+      });
+
+      it('does not retry 502 on non-allowlisted POST endpoint even if query contains allowlisted suffix', async () => {
+        mockFetch.mockResolvedValueOnce(
+          mockResponse({
+            status: 502,
+            statusText: 'Bad Gateway',
+            body: '<html>502 Bad Gateway</html>',
+          })
+        );
+        await expect(
+          backend.createRequest({
+            url: 'https://rpc.example.com/v2/shadownet',
+            method: 'POST',
+            query: { next: '/helpers/scripts/simulate_operation' },
+          })
+        ).rejects.toThrow(HttpResponseError);
+        expect(mockFetch).toHaveBeenCalledTimes(1);
+      });
+
+      it.each([400, 404, 500])(
+        'does not retry %i status on allowlisted requests',
+        async (status) => {
+          mockFetch.mockResolvedValueOnce(
+            mockResponse({
+              status,
+              statusText: 'Error',
+              body: 'error body',
+            })
+          );
+          await expect(
+            backend.createRequest({
+              url: 'https://rpc.example.com/chains/main/blocks/head/helpers/scripts/simulate_operation',
+              method: 'POST',
+            })
+          ).rejects.toThrow(HttpResponseError);
+          expect(mockFetch).toHaveBeenCalledTimes(1);
+        }
+      );
     });
   });
 

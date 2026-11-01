@@ -2,11 +2,13 @@ import { AsyncPrefetchBuffer } from '../async-prefetch-buffer';
 
 const deferred = <T>() => {
   let resolve!: (value: T) => void;
-  const promise = new Promise<T>((res) => {
+  let reject!: (reason?: unknown) => void;
+  const promise = new Promise<T>((res, rej) => {
     resolve = res;
+    reject = rej;
   });
 
-  return { promise, resolve };
+  return { promise, resolve, reject };
 };
 
 describe('AsyncPrefetchBuffer', () => {
@@ -64,5 +66,41 @@ describe('AsyncPrefetchBuffer', () => {
     const taken = await takePromise;
     expect(taken.value).toBe('direct');
     expect(taken.wasPrefetched).toBe(false);
+  });
+
+  it('discards prefetched entries that already failed before the next take', async () => {
+    const first = deferred<string>();
+    const second = deferred<string>();
+    const third = deferred<string>();
+    const fourth = deferred<string>();
+    const fifth = deferred<string>();
+    const sixth = deferred<string>();
+    const queue = [first, second, third, fourth, fifth, sixth];
+    let producerCalls = 0;
+
+    const buffer = new AsyncPrefetchBuffer(() => {
+      producerCalls++;
+      const next = queue.shift();
+      if (!next) {
+        throw new Error('producer exhausted');
+      }
+      return next.promise;
+    }, 2);
+
+    const firstTake = buffer.take();
+    expect(producerCalls).toBe(3);
+
+    first.reject(new Error('burst failure 1'));
+    second.reject(new Error('burst failure 2'));
+    third.reject(new Error('burst failure 3'));
+    await expect(firstTake).rejects.toThrow('burst failure 1');
+    await Promise.resolve();
+
+    fourth.resolve('recovered');
+    fifth.resolve('next');
+    sixth.resolve('after-next');
+    const secondTake = await buffer.take();
+    expect(secondTake.value).toBe('recovered');
+    expect(producerCalls).toBe(6);
   });
 });
