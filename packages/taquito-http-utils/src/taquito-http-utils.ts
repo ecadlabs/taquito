@@ -111,6 +111,10 @@ const isRetriableRequest = (method: string, url: string) => {
     normalizedUrl.endsWith('/helpers/preapply/operations') ||
     normalizedUrl.endsWith('/helpers/scripts/simulate_operation') ||
     normalizedUrl.endsWith('/helpers/scripts/run_operation') ||
+    normalizedUrl.endsWith('/helpers/scripts/run_code') ||
+    normalizedUrl.endsWith('/helpers/scripts/run_view') ||
+    normalizedUrl.endsWith('/helpers/scripts/run_script_view') ||
+    normalizedUrl.endsWith('/helpers/scripts/pack_data') ||
     // Safe to retry: ops are content-addressed, mempool deduplicates identical bytes,
     // and counter prevents replay. If the first request secretly succeeded but the
     // connection dropped, the retry may get a 500 (async_injection_failed) which
@@ -118,6 +122,17 @@ const isRetriableRequest = (method: string, url: string) => {
     // but the caller may see an error despite the op being on-chain.
     normalizedUrl.endsWith('/injection/operation')
   );
+};
+
+const isRetriableStatus = (status: number) =>
+  status === STATUS_CODE.BAD_GATEWAY ||
+  status === STATUS_CODE.SERVICE_UNAVAILABLE ||
+  status === STATUS_CODE.GATEWAY_TIMEOUT;
+
+const computeRetryDelayMs = (attempt: number) => {
+  const exponential = httpRetryBaseMs * Math.pow(2, attempt);
+  const jitter = Math.floor(Math.random() * httpRetryBaseMs);
+  return exponential + jitter;
 };
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -142,8 +157,10 @@ export interface HttpRequestOptions {
  * HTTP client used by Taquito to communicate with Tezos RPC nodes.
  *
  * Uses `globalThis.fetch` (Node.js >= 22 built-in or browser native).
- * Retries retriable transport errors (socket resets, DNS, timeouts) with
- * exponential backoff and jitter. Configure via environment variables:
+ * Retries retriable transport errors (socket resets, DNS, timeouts) and transient
+ * gateway HTTP statuses (`502`, `503`, `504`) on allowlisted requests (`GET` and
+ * safe RPC `POST` endpoints) with exponential backoff and jitter. Configure via
+ * environment variables:
  *
  * - `TAQUITO_HTTP_RETRY_COUNT` - max retries (default `1`)
  * - `TAQUITO_HTTP_RETRY_BASE_MS` - base delay in ms (default `100`)
@@ -151,7 +168,7 @@ export interface HttpRequestOptions {
  */
 export class HttpBackend {
   /**
-   * @param timeout - Default request timeout in milliseconds (default `30000`).
+   * @param timeout - Default per-attempt request timeout in milliseconds (default `30000`).
    */
   constructor(private timeout: number = 30000) {}
 
@@ -197,13 +214,14 @@ export class HttpBackend {
   }
 
   /**
-   * Send an HTTP request to the given URL, with automatic retries on transport errors.
+   * Send an HTTP request to the given URL, with automatic retries on retriable transport
+   * errors and transient gateway statuses (`502`, `503`, `504`) for allowlisted requests.
    *
-   * @param options - Request configuration (URL, method, timeout, headers, etc.).
+   * @param options - Request configuration (URL, method, per-attempt timeout, headers, etc.).
    * @param data - Request body, serialized to JSON via `JSON.stringify`.
    * @returns The parsed JSON response (or raw text when `json: false`).
-   * @throws {@link HttpResponseError} when the server returns HTTP status >= 400.
-   * @throws {@link HttpTimeoutError} when the request exceeds the configured timeout.
+   * @throws {@link HttpResponseError} when the server returns HTTP status >= 400 (after any applicable retries).
+   * @throws {@link HttpTimeoutError} when an attempt exceeds the configured timeout.
    * @throws {@link HttpRequestFailed} for transport-level failures (network, DNS, socket, etc.).
    */
   async createRequest<T>(
@@ -248,7 +266,14 @@ export class HttpBackend {
 
         // Handle responses with status code >= 400
         if (response.status >= 400) {
-          const errorData = await response.text();
+          let errorData = '';
+          try {
+            errorData = await response.text();
+          } catch {
+            // If reading the error body fails (e.g. socket reset or timeout mid-error-body),
+            // preserve the HTTP status so the status-based retry policy still governs.
+            errorData = response.statusText || '';
+          }
           traceHttp({
             stage: 'response-error',
             method: methodValue,
@@ -280,9 +305,31 @@ export class HttpBackend {
         }
       } catch (e: unknown) {
         // HttpResponseError is an application-level error (status >= 400), not a transport error.
-        // Short-circuit before classification to prevent RPC body text (which may contain
-        // strings like "connection reset") from being misclassified as a transport error.
+        // Only transient gateway errors (502, 503, 504) on allowlisted requests are retried;
+        // other status codes (e.g. 500 from Octez RPC) short-circuit before transport
+        // classification so RPC body text containing strings like "connection reset" is not
+        // misclassified as a transport error.
         if (e instanceof HttpResponseError) {
+          if (
+            attempt < httpRetryCount &&
+            isRetriableStatus(e.status) &&
+            isRetriableRequest(methodValue, urlWithQuery)
+          ) {
+            const retryDelayMs = computeRetryDelayMs(attempt);
+            traceHttp({
+              stage: 'request-retry',
+              method: methodValue,
+              url: normalizeTraceUrl(urlWithQuery),
+              elapsedMs: Date.now() - requestStartedAt,
+              attempt: attempt + 1,
+              maxAttempts: httpRetryCount + 1,
+              retryDelayMs,
+              status: e.status,
+              statusText: e.statusText,
+            });
+            await sleep(retryDelayMs);
+            continue;
+          }
           traceHttp({
             stage: 'http-response-error',
             method: methodValue,
@@ -302,9 +349,7 @@ export class HttpBackend {
           isRetriableTransport;
 
         if (shouldRetry) {
-          const exponential = httpRetryBaseMs * Math.pow(2, attempt);
-          const jitter = Math.floor(Math.random() * httpRetryBaseMs);
-          const retryDelayMs = exponential + jitter;
+          const retryDelayMs = computeRetryDelayMs(attempt);
           traceHttp({
             stage: 'request-retry',
             method: methodValue,
