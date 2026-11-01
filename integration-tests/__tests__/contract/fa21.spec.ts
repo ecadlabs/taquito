@@ -12,7 +12,7 @@ import BigNumber from 'bignumber.js';
 CONFIGS().forEach(({ lib: tezos, rpc, setup }) => {
   describe(`FA2.1 pinned reference on ${rpc}`, () => {
     beforeEach(async () => {
-      await setup({ preferFreshKey: true, minBalanceMutez: 20_000_000 });
+      await setup({ preferFreshKey: true, minBalanceMutez: 10_000_000 });
     });
 
     it('supports owner transfers, approvals, events and a real ticket round trip', async () => {
