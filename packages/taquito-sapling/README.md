@@ -157,7 +157,7 @@ npm run build
 npm run test:consumers
 ```
 
-Both CI jobs, on Node 22 and 24, check the same constructor fixture in
+The CI jobs on Node 22, 24 and 26 check the same constructor fixture in
 `test-fixtures/consumers/sapling-output-order.types.ts`.
 The root type-check resolves the public package through source aliases.
 The installed-consumer runner packs Sapling and its workspace dependencies, then
