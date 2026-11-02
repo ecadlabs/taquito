@@ -168,6 +168,7 @@ The constructor of the `SaplingToolkit` takes the following properties:
   - the address of the Sapling contract (string)
   - the size of the memo of the corresponding Sapling contract (number)
   - an optional Sapling id that must be specified if the contract contains more than one Sapling state.
+  - an optional `outputOrder` policy for the default transaction builder, either `'preserve'` or `'randomized'`. The default is `'preserve'`.
 - an instance of a class implementing the `TzReadProvider` interface, which allows getting data from the blockchain
 - it is possible to specify a different packer than the `MichelCodecPacker`, which is used by default
 
@@ -175,7 +176,7 @@ Here is an example of how to instantiate a `SaplingToolkit`:
 
 ```ts
 import { TezosToolkit, RpcReadAdapter } from '@taquito/taquito';
-import { SaplingToolkit } from '@taquito/sapling';
+import { SaplingToolkit, InMemorySpendingKey } from '@taquito/sapling';
 import { RpcClient } from '@taquito/rpc';
 
 const tezos = new TezosToolkit('https://tezos-shadownet.octez.io/');
@@ -210,6 +211,54 @@ With `memoSize: 8`, four `é` characters fit, but five use 10 bytes and exceed t
 limit. Taquito throws `InvalidMemo` when a memo is too large. This check applies
 to both `prepareShieldedTransaction` and `prepareSaplingTransaction`. If you omit
 the memo, Taquito uses an empty string.
+
+## Output order
+
+The default builder keeps recipients in request order and appends private change.
+Omit `outputOrder`, as in the example above, or set it to `'preserve'` to keep
+this behavior. Preserve mode requests no extra randomness for output ordering.
+
+To randomize output order, use the signer, contract and read provider from the
+example above:
+
+```ts
+const randomizedSaplingToolkit = new SaplingToolkit(
+    { saplingSigner: inMemorySpendingKey },
+    {
+        contractAddress: saplingContract.address,
+        memoSize: 8,
+        outputOrder: 'randomized',
+    },
+    readProvider
+);
+```
+
+Randomized mode covers private transfers with change and shielding to multiple
+recipients. It shuffles each complete output description before creating the
+binding signature. The commitment, proof and ciphertext stay together. The
+shuffle uses the existing secure random-byte provider and rejection sampling to
+avoid modulo bias. It can produce the original order. Zero or one output needs
+no ordering randomness.
+
+Output indices and transaction-history order can change. Do not match recipients
+to the request by index or assume that the last output is change. Use viewing
+keys and the transaction viewer to inspect payments. Amounts, recipients, memos
+and bound withdrawal data do not change.
+
+An unsupported policy throws `InvalidSaplingOutputOrderError` when the default
+builder is created. The error is exported from `@taquito/sapling` and extends
+`ParameterValidationError` from `@taquito/core`. If ordering
+entropy fails, the operation rejects before the binding signature. Private
+spend authorization signatures may already have been created.
+
+A custom `saplingTxBuilder` passed to the toolkit replaces the default builder.
+Configure that builder's ordering separately. It owns policy validation, secure
+randomness and signing. The toolkit does not shuffle its signed result.
+
+Randomization removes this builder's deterministic change-last pattern. It does
+not hide output counts, public deposits and withdrawals, or timing. Other
+application behavior can still identify outputs. This option does not provide
+a proof of anonymity.
 
 ## How to retrieve my balance in the Sapling shielded set?
 
