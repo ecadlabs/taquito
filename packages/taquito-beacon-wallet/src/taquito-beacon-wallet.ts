@@ -1,3 +1,4 @@
+/// <reference types="chrome" preserve="true" />
 /**
  * @packageDocumentation
  * @module @taquito/beacon-wallet
