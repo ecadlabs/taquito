@@ -9,11 +9,14 @@ const {
   default: { chromium },
 } = await import(pathToFileURL(process.argv[3]).href);
 const root = process.cwd();
-const expected = ['core', 'http-utils'].map((name) => {
+const expected = ['core', 'http-utils', 'beacon-wallet'].map((name) => {
   const directory = join(root, 'node_modules', '@taquito', name);
   const pkg = JSON.parse(readFileSync(join(directory, 'package.json'), 'utf8'));
   return join(directory, pkg.module);
 });
+const beaconDirectory = join(root, 'node_modules', '@taquito', 'beacon-wallet');
+const beacon = JSON.parse(readFileSync(join(beaconDirectory, 'package.json'), 'utf8'));
+expected.push(join(beaconDirectory, beacon.exports['./types'].import));
 await build({
   root,
   configFile: false,

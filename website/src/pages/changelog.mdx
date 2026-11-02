@@ -6,6 +6,9 @@ layout: ../layouts/MarkdownLayout.astro
 ---
 # Unreleased
 
+### Beacon imports and declarations
+
+- Fixed native Node.js imports of `@taquito/beacon-wallet` and `@taquito/beacon-wallet/types`. Browser imports retain their ESM routes. Published Beacon declarations now explicitly include their required Chrome types for strict TypeScript consumers.
 ### HTTP response-body timeouts
 
 - HTTP request timeouts now remain active while reading successful response bodies. JSON parse errors and other non-abort body errors still propagate unchanged. This fixes an existing issue across supported Node.js versions and browsers.

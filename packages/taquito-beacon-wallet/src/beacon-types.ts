@@ -1,3 +1,4 @@
+/// <reference types="chrome" preserve="true" />
 // Side-effect-free re-exports from @ecadlabs/beacon-types.
 // Importing this module does NOT pull in the Beacon DAppClient or trigger
 // any beacon-dapp initialization. Safe for type-only or enum-only usage.

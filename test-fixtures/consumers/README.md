@@ -1,9 +1,9 @@
 # Installed package consumers
 
 These checks install built Taquito tarballs outside the workspace. They cover
-public big-map methods and the core and HTTP-utils package compatibility needed
-before the module migration in [#3345](https://github.com/ecadlabs/taquito/issues/3345).
-They do not change package entrypoints or remove UMD builds.
+public big-map methods, core and HTTP-utils compatibility, and Beacon wallet
+imports and declarations before the module migration in
+[#3345](https://github.com/ecadlabs/taquito/issues/3345). They do not remove UMD builds.
 
 Run on Linux, WSL or macOS. From the repository root:
 
@@ -34,15 +34,22 @@ export. It runs a real local HTTP 404 request in each mode, without repeating th
 request for mixed import combinations.
 
 Declaration fixtures compile under strict NodeNext CJS, NodeNext ESM and bundler
-resolution. The core/HTTP fixture includes invalid calls that must remain type
+resolution in a separate TypeScript program for each fixture, each with explicit `types: []` and `types: ["node"]`. Chrome types
+required by Beacon must come from its published declarations and dependencies.
+Separate root and `/types` fixtures prevent either entrypoint from supplying the
+other's Chrome type reference.
+The core/HTTP fixture includes invalid calls that must remain type
 errors. The existing big-map fixtures retain custom-provider compatibility and
 public result checks.
 
 The runner also builds `browser/` with Vite and executes the result in Chromium
 using the same installed tarballs. The build verifies that the core and HTTP-utils
 `module` files participate without source aliases. The browser fixture checks
-public errors and cross-package inheritance. It does not perform HTTP transport
-or wallet operations.
+public errors, cross-package inheritance and Beacon wallet root/types exports. It
+requires both Beacon paths to use their existing ESM files. Node runtime fixtures
+load the Beacon root/types paths with default globals in require and native import
+modes and compare their named exports. The Beacon fixtures do not construct a
+wallet or perform wallet operations. The browser fixture does not perform HTTP transport.
 
 Each child process has a three-minute timeout. HTTP and browser waits have shorter
 timeouts. Servers, Chromium and temporary files are closed or removed after
@@ -61,6 +68,10 @@ current packaging. Agree default-export behavior and supported subpaths before
 changing exports maps. These tests do not define every namespace export or bundle
 filename as a permanent API, and they do not test direct `dist` or `package.json`
 imports.
+
+The Beacon wallet Node conditions currently use its existing UMD/CJS files. When
+those outputs are removed, update the Node targets together with the require
+targets. Browser imports retain the existing ESM routes.
 
 Next, pilot dedicated CJS, Node-valid ESM and explicit exports for core and
 HTTP-utils, then remove their UMD output. Extend the agreed pattern to other
