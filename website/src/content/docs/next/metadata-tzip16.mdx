@@ -9,7 +9,7 @@ The `@taquito/tzip16` package allows retrieving metadata associated with a smart
 
 The package can be used as an extension to the well known Taquito contract abstraction.
 
-**For production applications that retrieve IPFS metadata, configure a reliable gateway.** The shared public default, `ipfs.filebase.io`, is provided for convenience and may be rate-limited or unavailable. Its [public gateway](https://filebase.com/docs/ipfs/concepts/what-is-an-ipfs-gateway) is intended for testing and light usage, with a limit of 200 requests per minute. Use a dedicated or application-controlled gateway that can retrieve your content and supports CORS for browser applications. See the custom metadata provider example below.
+**For production applications that retrieve IPFS metadata, configure a reliable gateway.** The defaults try `ipfs.filebase.io`, `gateway.pinata.cloud`, then `4everland.io` in order. Public gateways may be rate-limited or unavailable. A dedicated gateway needs to support raw block requests (`?format=raw`) and CORS for browser applications. See the custom metadata provider example below.
 
 A gateway override changes how Taquito retrieves `ipfs://` metadata. It does not rewrite `https://ipfs.io/...` URIs stored in contracts or URLs inside the returned metadata.
 
@@ -40,7 +40,7 @@ In some cases, we may want to use a customized metadata provider. The constructo
 
 The former default, `ipfs.io`, and `dweb.link` are [transitioning to service-worker gateways](https://blog.ipfs.tech/2026-08-beyond-sponsored-gateways/). They can reject plain HTTP metadata requests with rate-limit responses. Taquito's HTTP handler cannot execute a service-worker bootstrap. If your application explicitly configures either gateway, update that override as well.
 
-To override the default, pass your gateway hostname to `IpfsHttpHandler`, without `https://` or `/ipfs/`. Taquito constructs `https://<hostname>/ipfs/<content-path>/`. Existing explicit gateway overrides are preserved. The following example replaces the IPFS handler while retaining the default HTTP, HTTPS, and Tezos storage handlers:
+To override the default, pass your gateway hostname to `IpfsHttpHandler`, without `https://` or `/ipfs/`. Taquito retrieves verified blocks from `https://<hostname>/ipfs/<cid>?format=raw` and resolves directory paths locally. An explicit override uses that gateway alone. The optional second constructor argument sets the total per-gateway deadline in milliseconds (default `30000`). The following example replaces the IPFS handler while retaining the default HTTP, HTTPS, and Tezos storage handlers:
 
 ```js
 import { TezosToolkit } from '@taquito/taquito';
@@ -80,7 +80,7 @@ All other methods of the `ContractAbstraction` class can be called as usual on t
 
 ## Get the metadata
 
-The `getMetadata` method returns an object which contains the URI, the metadata in JSON format, an optional SHA256 hash of the metadata and an optional integrity check result.
+The `getMetadata` method returns an object containing the URI, parsed metadata, an optional SHA256 hash, and an optional integrity check result. The default provider rejects SHA-256 mismatches with `MetadataHashMismatchError` before returning metadata or creating views. Successful SHA-256 checks return `integrityCheckResult: true`; URIs without a SHA-256 wrapper leave it undefined. Hashes require 64 hexadecimal digits, accepting either case. This replaces the previous behavior of returning metadata with `integrityCheckResult: false`.
 
 A sequence diagram can be found [here](./tzip16-sequence-diagram#get-the-metadata).
 
@@ -94,12 +94,16 @@ Catch rejections from `contract.tzip16().getMetadata()` and let users retry or d
 | `HttpRequestFailed` | HTTP `method`, gateway `url`, original `cause`, and `transportError` when available |
 | `HttpTimeoutError` | `timeout` in milliseconds and gateway `url` |
 | `InvalidContractMetadataError` | Original response text in `invalidMetadata`; the metadata URI is included in the message |
+| `MetadataHashMismatchError` | `uri`, `expectedHash`, and `actualHash` |
+| `IpfsGatewayError` | Individual gateway failures in `errors` after all defaults fail |
 
-HTTP errors are exported by `@taquito/http-utils`; `InvalidContractMetadataError` is exported by `@taquito/tzip16`. Prefer error types and diagnostic fields over matching message text.
+HTTP errors are exported by `@taquito/http-utils`; metadata and gateway errors are exported by `@taquito/tzip16`. An explicit gateway preserves its underlying HTTP error; the default list aggregates failures in `IpfsGatewayError`. Prefer error types and diagnostic fields over matching message text.
 
-A non-JSON response can be malformed metadata or an HTML page returned by a gateway. For IPFS parse failures, the message identifies the original `ipfs://` URI, not the HTTP gateway URL. JSON parsing happens in `MetadataProvider`; calling `IpfsHttpHandler.getMetadata()` directly still returns raw text.
+IPFS blocks are checked against their CIDs before UnixFS decoding. Substituted HTML normally fails integrity verification before JSON parsing. Calling `IpfsHttpHandler.getMetadata()` directly returns verified, JSON-parseable text. An outer `sha256://` commitment is checked against the reconstructed metadata, not the encoded UnixFS blocks.
 
-Taquito does not automatically switch gateways or retry HTTP 429/5xx responses. A 404 may mean that content is unavailable; changing gateways does not ensure that the content exists or remains pinned. TZIP-12 retains its existing contract-metadata fallback behavior.
+The default list advances to the next gateway on HTTP errors, timeouts, invalid JSON, or failed integrity checks. Each gateway has a total deadline covering all block and body reads. There is no fallback to unverified responses. A 404 may mean that content is unavailable; changing gateways does not ensure that it remains pinned. TZIP-12 retains its existing contract-metadata fallback behavior.
+
+The built-in handler supports CIDv0/CIDv1 raw and dag-pb UnixFS files using SHA-256 or SHA-512 multihashes, including directory paths and multi-block files. Limits per gateway are 2 MiB per block, 32 MiB of downloaded blocks and reconstructed metadata, and 1,024 block reads. Unsupported codecs, hashes, and inputs exceeding these bounds are rejected. Custom handlers are responsible for their own content-addressed integrity verification.
 
 #### Tezos-storage example
 

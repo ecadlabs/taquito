@@ -110,50 +110,10 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
                 expect(contractAddressInvalidHash).toBeDefined();
             });
 
-            it('Verify that the metadata for the contract having an invalid sha256 hash in URI can be fetched', async () => {
+            it('Reject metadata for a contract having an invalid sha256 hash in its URI', async () => {
                 const contract = await Tezos.contract.at(contractAddressInvalidHash, tzip16);
-                const metadata = await contract.tzip16().getMetadata();
-
-                expect(metadata.uri).toEqual('sha256://0x7e99ecf3a4491e3044ccdf319898d77380a2fc20aae36b6e40327d678399d17b/https:%2F%2Fstorage.googleapis.com%2Ftzip-16%2Ftaco-shop-metadata.json');
-                expect(metadata.integrityCheckResult).toEqual(false);
-                expect(metadata.sha256Hash).toEqual('18b983a4cc78d7c15d53f7642461176c1366fbdb83960ea432188130db1f8c9d');
-                expect(metadata.metadata).toEqual({
-                    "name": "Taquito test with valid metadata",
-                    "description": "This is metadata test for Taquito integration tests with the Ligo Taco shop contract modified to include metadata in storage",
-                    "version": "7.1.0-beta.0",
-                    "license": {
-                        "name": "MIT",
-                        "details": "The MIT License"
-                    },
-                    "homepage": "https://github.com/ecadlabs/taquito",
-                    "source": {
-                        "tools": [
-                            "Ligo",
-                            "https://ide.ligolang.org/p/-uS469slzUlSm1zwNqHl1A"
-                        ],
-                        "location": "https://ligolang.org/docs/tutorials/get-started/tezos-taco-shop-payout"
-                    }
-                });
-
-                expect(await (await contract.tzip16()).metadataName()).toEqual('Taquito test with valid metadata')
-                expect(await (await contract.tzip16()).metadataDescription()).toEqual('This is metadata test for Taquito integration tests with the Ligo Taco shop contract modified to include metadata in storage')
-                expect(await (await contract.tzip16()).metadataVersion()).toEqual('7.1.0-beta.0')
-                expect(await (await contract.tzip16()).metadataLicense()).toEqual({
-                    "name": "MIT",
-                    "details": "The MIT License"
-                })
-                expect(await (await contract.tzip16()).metadataAuthors()).toBeUndefined()
-                expect(await (await contract.tzip16()).metadataHomepage()).toEqual('https://github.com/ecadlabs/taquito')
-                expect(await (await contract.tzip16()).metadataSource()).toEqual({
-                    "tools": [
-                        "Ligo",
-                        "https://ide.ligolang.org/p/-uS469slzUlSm1zwNqHl1A"
-                    ],
-                    "location": "https://ligolang.org/docs/tutorials/get-started/tezos-taco-shop-payout"
-                })
-                expect(await (await contract.tzip16()).metadataInterfaces()).toBeUndefined()
-                expect(await (await contract.tzip16()).metadataErrors()).toBeUndefined()
-                expect(await (await contract.tzip16()).metadataViews()).toEqual({});
+                await expect(contract.tzip16().getMetadata()).rejects.toThrow(/integrity|hash|digest/i);
+                await expect(contract.tzip16().metadataViews()).rejects.toThrow(/integrity|hash|digest/i);
             });
         });
     });

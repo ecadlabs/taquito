@@ -43,11 +43,11 @@ Then branch on the protocol and use a class specific to that protocol to retriev
 
 ## Integrity check using sha256
 
-Consider using a regex to extract the sha256 hash from the URI.
-
-If the hash is present. Compute the sha256 hash of the JSON string before returning to taquito clients.
-
-*Notes:* Confirm on which form of the data the sha256 hash must be computed.
+Validate the URI hash as 64 hexadecimal digits before retrieval. Hash the metadata
+string before JSON parsing, preserving whitespace and Unicode. Reject a mismatch
+before returning metadata to callers or constructing off-chain views. Successful
+checks return `integrityCheckResult: true`; a URI without a SHA-256 commitment
+leaves the field undefined.
 
 ## Http/Https
 > https://raw.githubusercontent.com/tqtezos/TZComet/8d95f7b/data/metadata_example0.json

@@ -2,6 +2,28 @@ import { ParameterValidationError, TaquitoError, TezosToolkitConfigError } from 
 
 export { InvalidViewParameterError } from '@taquito/core';
 
+/** Metadata bytes do not match the hash committed by their URI or CID. */
+export class MetadataHashMismatchError extends TaquitoError {
+  constructor(
+    public readonly uri: string,
+    public readonly expectedHash: string,
+    public readonly actualHash: string
+  ) {
+    super();
+    this.name = 'MetadataHashMismatchError';
+    this.message = `Metadata integrity check failed for ${uri}: expected hash ${expectedHash}, received ${actualHash}.`;
+  }
+}
+
+/** Every configured IPFS gateway failed to return verified metadata. */
+export class IpfsGatewayError extends TaquitoError {
+  constructor(public readonly errors: readonly Error[]) {
+    super();
+    this.name = 'IpfsGatewayError';
+    this.message = `IPFS metadata retrieval failed at every gateway: ${errors.map((error) => error.message).join('; ')}`;
+  }
+}
+
 /**
  *  @category Error
  *  Error that indicates missing big map metadata (non compliance to the TZIP-16 standard)
@@ -119,7 +141,10 @@ export class ForbiddenInstructionInViewCodeError extends TaquitoError {
  *  Error that indicates parameters are being passed when it is not required
  */
 export class NoParameterExpectedError extends ParameterValidationError {
-  constructor(public readonly viewName: string, public readonly args: any[]) {
+  constructor(
+    public readonly viewName: string,
+    public readonly args: any[]
+  ) {
     super();
     this.name = 'NoParameterExpectedError';
     this.message = `${viewName} Received ${args.length} arguments while expecting no parameter or 'Unit'`;

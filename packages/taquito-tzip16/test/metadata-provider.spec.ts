@@ -105,7 +105,7 @@ describe('Metadata provider test', () => {
     });
   });
 
-  it('Should succesfully fetch metadata for IPFS', async () => {
+  it('delegates IPFS retrieval and CID verification to the configured handler', async () => {
     mockIpfsHttpHandler.getMetadata.mockResolvedValue(
       `{"name":"test","description":"A metadata test","version":"0.1","license":"MIT","authors":["Taquito <https://taquito.io/>"],"homepage":"https://taquito.io/"}`
     );

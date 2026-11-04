@@ -1,228 +1,153 @@
 import { vi } from 'vitest';
 import {
-  HttpBackend,
   HttpRequestFailed,
   HttpResponseError,
   HttpTimeoutError,
   STATUS_CODE,
-  classifyTransportError,
 } from '@taquito/http-utils';
-import { Context, ContractAbstraction } from '@taquito/taquito';
+import { Context } from '@taquito/taquito';
 import { IpfsHttpHandler } from '../../src/handlers/ipfs-handler';
 import { MetadataProvider } from '../../src/metadata-provider';
 import { Tzip16Module } from '../../src/tzip16-extension';
-import { InvalidContractMetadataError } from '../../src/errors';
+import {
+  blocks,
+  fixtures,
+  gatewayResponse,
+  metadataContract,
+} from '../fixtures/metadata-integrity';
 
 describe('TZIP-16 IPFS HTTP handler', () => {
-  const context = new Context('https://rpc.example.com');
-  const contract = new ContractAbstraction(
-    'KT1RJ6PbjHpwc3M5rw5s2Nbmefwbuwbdxton',
-    {
-      code: [
-        { prim: 'parameter', args: [{ prim: 'unit' }] },
-        { prim: 'storage', args: [{ prim: 'unit' }] },
-        { prim: 'code', args: [[]] },
-      ],
-      storage: { prim: 'Unit' },
-    },
-    context.contract,
-    context.contract,
-    { entrypoints: { default: { prim: 'unit' } } },
-    context.rpc,
-    context.readProvider
-  );
-  const cid = 'QmXnASUptTDnfhmcoznFqz3S1Mxu7X1zqo2YwbTN3nW52V';
+  const { context, contract } = metadataContract();
+  const cid = fixtures.raw.cid;
   const uri = { sha256hash: undefined, protocol: 'ipfs', location: `//${cid}` };
-  const metadata = '{ "name": "Taquito test" }';
 
   afterEach(() => {
     vi.restoreAllMocks();
+    vi.useRealTimers();
   });
 
-  it.each([undefined, ''])(
-    'uses the replacement default gateway when given %s',
-    async (gateway) => {
-      const request = vi.spyOn(HttpBackend.prototype, 'createRequest').mockResolvedValue(metadata);
+  it.each([undefined, ''])('uses the default gateway when given %s', async (gateway) => {
+    const hosts: string[] = [];
+    vi.spyOn(globalThis, 'fetch').mockImplementation(async (input, init) => {
+      hosts.push(new Request(input, init).url);
+      return gatewayResponse(input, init, blocks, null);
+    });
+    await expect(new IpfsHttpHandler(gateway).getMetadata(contract, uri, context)).resolves.toBe(
+      fixtures.metadata
+    );
+    expect([...new Set(hosts.map((url) => new URL(url).hostname))]).toEqual(['ipfs.filebase.io']);
+  });
 
-      await expect(new IpfsHttpHandler(gateway).getMetadata(contract, uri, context)).resolves.toBe(
-        metadata
-      );
-
-      expect(request).toHaveBeenCalledExactlyOnceWith({
-        url: `https://ipfs.filebase.io/ipfs/${cid}/`,
-        method: 'GET',
-        headers: { 'Content-Type': 'text/plain; charset=utf-8' },
-        json: false,
-      });
-    }
-  );
-
-  it('uses the replacement gateway through the default Tzip16Module', async () => {
-    const request = vi.spyOn(HttpBackend.prototype, 'createRequest').mockResolvedValue(metadata);
+  it('uses verified retrieval through the default Tzip16Module', async () => {
+    const hosts: string[] = [];
+    vi.spyOn(globalThis, 'fetch').mockImplementation(async (input, init) => {
+      hosts.push(new URL(new Request(input, init).url).hostname);
+      return gatewayResponse(input, init, blocks, null);
+    });
     const metadataContext = Object.assign(new Context('https://rpc.example.com'), {
       metadataProvider: new MetadataProvider(new Map()),
     });
     new Tzip16Module().configureContext(metadataContext);
-
     await expect(
       metadataContext.metadataProvider.provideMetadata(contract, `ipfs://${cid}`, metadataContext)
-    ).resolves.toEqual({
-      uri: `ipfs://${cid}`,
-      metadata: { name: 'Taquito test' },
-      integrityCheckResult: undefined,
-      sha256Hash: undefined,
-    });
-    expect(request).toHaveBeenCalledExactlyOnceWith(
-      expect.objectContaining({ url: `https://ipfs.filebase.io/ipfs/${cid}/` })
-    );
+    ).resolves.toMatchObject({ uri: `ipfs://${cid}`, metadata: { name: 'Verified café' } });
+    expect([...new Set(hosts)]).toEqual(['ipfs.filebase.io']);
   });
 
   it.each(['gateway.example.com', 'ipfs.io', 'dweb.link'])(
-    'preserves the explicit gateway %s and the content path',
+    'preserves the explicit gateway %s and resolves the committed directory path',
     async (gateway) => {
-      const request = vi.spyOn(HttpBackend.prototype, 'createRequest').mockResolvedValue(metadata);
-
+      const hosts: string[] = [];
+      vi.spyOn(globalThis, 'fetch').mockImplementation(async (input, init) => {
+        hosts.push(new URL(new Request(input, init).url).hostname);
+        return gatewayResponse(input, init, blocks, null);
+      });
       await expect(
         new IpfsHttpHandler(gateway).getMetadata(
           contract,
-          { ...uri, location: `//${cid}/metadata.json` },
+          { ...uri, location: `//${fixtures.directory.cid}/metadata.json` },
           context
         )
-      ).resolves.toBe(metadata);
-
-      expect(request).toHaveBeenCalledExactlyOnceWith(
-        expect.objectContaining({ url: `https://${gateway}/ipfs/${cid}/metadata.json/` })
-      );
+      ).resolves.toBe(fixtures.metadata);
+      expect([...new Set(hosts)]).toEqual([gateway]);
     }
   );
 
-  it('propagates a custom gateway failure without silently using another gateway', async () => {
-    const error = new Error('Gateway unavailable');
-    const request = vi.spyOn(HttpBackend.prototype, 'createRequest').mockRejectedValue(error);
-
-    await expect(
-      new IpfsHttpHandler('gateway.example.com').getMetadata(contract, uri, context)
-    ).rejects.toBe(error);
-    expect(request).toHaveBeenCalledExactlyOnceWith(
-      expect.objectContaining({ url: `https://gateway.example.com/ipfs/${cid}/` })
-    );
-  });
-
   it.each([STATUS_CODE.TOO_MANY_REQUESTS, STATUS_CODE.SERVICE_UNAVAILABLE, STATUS_CODE.NOT_FOUND])(
-    'explains an IPFS HTTP %s failure and preserves its response details',
+    'explains an IPFS HTTP %s failure and preserves response details',
     async (status) => {
-      const url = `https://gateway.example.com/ipfs/${cid}/`;
-      const fetch = vi
-        .spyOn(globalThis, 'fetch')
-        .mockImplementation(
-          async () => new Response('Gateway response', { status, statusText: 'Gateway failure' })
-        );
+      const urls: string[] = [];
+      vi.spyOn(globalThis, 'fetch').mockImplementation(async (input, init) => {
+        urls.push(new Request(input, init).url);
+        return new Response('Gateway response', { status, statusText: 'Gateway failure' });
+      });
       const result = new IpfsHttpHandler('gateway.example.com').getMetadata(contract, uri, context);
-
       await expect(result).rejects.toBeInstanceOf(HttpResponseError);
       await expect(result).rejects.toMatchObject({
-        name: 'HttpResponseError',
         status,
         statusText: 'Gateway failure',
         body: 'Gateway response',
-        url,
-        message: expect.stringContaining(url),
+        url: expect.stringContaining('gateway.example.com'),
+        message: expect.stringContaining('IpfsHttpHandler'),
       });
-      await expect(result).rejects.toHaveProperty('message', expect.stringContaining('IPFS'));
-      await expect(result).rejects.toHaveProperty(
-        'message',
-        expect.stringContaining('IpfsHttpHandler')
-      );
-      await expect(result).rejects.toHaveProperty(
-        'message',
-        expect.stringContaining(String(status))
-      );
-      expect(fetch).toHaveBeenCalledTimes(status === STATUS_CODE.SERVICE_UNAVAILABLE ? 2 : 1);
+      const error: unknown = await result.catch((reason: unknown) => reason);
+      if (!(error instanceof HttpResponseError)) throw new Error('Expected HTTP response error');
+      expect(urls).toContain(error.url);
+      expect(error.message).toContain(error.url);
+      expect(error.message).toContain(String(status));
+      expect([...new Set(urls.map((url) => new URL(url).hostname))]).toEqual([
+        'gateway.example.com',
+      ]);
     }
   );
 
-  it('explains an IPFS timeout and preserves the timeout duration and URL', async () => {
-    const url = `https://gateway.example.com/ipfs/${cid}/`;
-    vi.spyOn(HttpBackend.prototype, 'createRequest').mockRejectedValue(
-      new HttpTimeoutError(1234, url)
-    );
-    const result = new IpfsHttpHandler('gateway.example.com').getMetadata(contract, uri, context);
-
-    await expect(result).rejects.toBeInstanceOf(HttpTimeoutError);
-    await expect(result).rejects.toMatchObject({
-      timeout: 1234,
-      url,
-      message: expect.stringContaining(url),
+  it('explains an IPFS timeout and preserves its duration and URL', async () => {
+    vi.useFakeTimers();
+    const urls: string[] = [];
+    vi.spyOn(globalThis, 'fetch').mockImplementation((input, init) => {
+      const request = new Request(input, init);
+      urls.push(request.url);
+      return new Promise<Response>((_resolve, reject) => {
+        request.signal.addEventListener(
+          'abort',
+          () => reject(new DOMException('Timed out', 'AbortError')),
+          { once: true }
+        );
+      });
     });
-    await expect(result).rejects.toHaveProperty('message', expect.stringContaining('1234'));
-    await expect(result).rejects.toHaveProperty(
-      'message',
-      expect.stringContaining('IpfsHttpHandler')
-    );
+    const result = new IpfsHttpHandler('gateway.example.com').getMetadata(contract, uri, context);
+    const outcome = result.catch((error: unknown) => error);
+    await vi.runAllTimersAsync();
+    const error = await outcome;
+    expect(error).toBeInstanceOf(HttpTimeoutError);
+    if (!(error instanceof HttpTimeoutError)) throw new Error('Expected timeout error');
+    expect(error.timeout).toBeGreaterThan(0);
+    expect(urls).toContain(error.url);
+    expect(error.message).toContain(String(error.timeout));
+    expect(error.message).toContain('IpfsHttpHandler');
+    expect(error.message).toContain(error.url);
+    expect([...new Set(urls.map((url) => new URL(url).hostname))]).toEqual(['gateway.example.com']);
   });
 
   it('explains an IPFS network failure and preserves its underlying cause', async () => {
-    const url = `https://gateway.example.com/ipfs/${cid}/`;
     const cause = new TypeError('Failed to fetch');
-    const transportError = classifyTransportError(cause);
-    expect(transportError).toBeDefined();
-    const error = new HttpRequestFailed('GET', url, cause, transportError);
-    vi.spyOn(HttpBackend.prototype, 'createRequest').mockRejectedValue(error);
+    const urls: string[] = [];
+    vi.spyOn(globalThis, 'fetch').mockImplementation(async (input, init) => {
+      urls.push(new Request(input, init).url);
+      throw cause;
+    });
     const result = new IpfsHttpHandler('gateway.example.com').getMetadata(contract, uri, context);
-
     await expect(result).rejects.toBeInstanceOf(HttpRequestFailed);
-    await expect(result).rejects.toMatchObject({ method: 'GET', url });
-    await expect(result).rejects.toHaveProperty('cause', cause);
-    await expect(result).rejects.toHaveProperty('transportError', transportError);
-    await expect(result).rejects.toHaveProperty(
-      'message',
-      expect.stringContaining('Failed to fetch')
-    );
-    await expect(result).rejects.toHaveProperty(
-      'message',
-      expect.stringContaining('IpfsHttpHandler')
-    );
-  });
-
-  it.each(['<html>Enable JavaScript</html>', '{"name":'])(
-    'identifies a non-JSON IPFS response without declaring the contract noncompliant: %s',
-    async (body) => {
-      const fetch = vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(body));
-      const provider = new MetadataProvider(
-        new Map([['ipfs', new IpfsHttpHandler('gateway.example.com')]])
-      );
-      const result = provider.provideMetadata(contract, `ipfs://${cid}`, context);
-
-      await expect(result).rejects.toBeInstanceOf(InvalidContractMetadataError);
-      await expect(result).rejects.toHaveProperty('invalidMetadata', body);
-      await expect(result).rejects.toHaveProperty(
-        'message',
-        expect.stringContaining(`ipfs://${cid}`)
-      );
-      await expect(result).rejects.toHaveProperty('message', expect.stringContaining('as JSON'));
-      await expect(result).rejects.toHaveProperty(
-        'message',
-        expect.stringContaining('IpfsHttpHandler')
-      );
-      await expect(result).rejects.toHaveProperty(
-        'message',
-        expect.not.stringMatching(/non.?complian|not compliant/i)
-      );
-      expect(fetch).toHaveBeenCalledTimes(1);
-    }
-  );
-
-  it('continues to return non-JSON text when the IPFS handler is used directly', async () => {
-    const body = '<html>Enable JavaScript</html>';
-    vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(body));
-
-    await expect(new IpfsHttpHandler().getMetadata(contract, uri, context)).resolves.toBe(body);
-  });
-
-  it('preserves valid IPFS response bytes for the metadata integrity check', async () => {
-    const body = '{\n  "name": "Taquito test"\n}\n';
-    vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(body));
-
-    await expect(new IpfsHttpHandler().getMetadata(contract, uri, context)).resolves.toBe(body);
+    await expect(result).rejects.toMatchObject({
+      method: 'GET',
+      cause,
+      message: expect.stringContaining('IpfsHttpHandler'),
+    });
+    const error: unknown = await result.catch((reason: unknown) => reason);
+    if (!(error instanceof HttpRequestFailed)) throw new Error('Expected request failure');
+    expect(urls).toContain(error.url);
+    expect(error.message).toContain(error.url);
+    expect(error.message).toContain('Failed to fetch');
+    expect([...new Set(urls.map((url) => new URL(url).hostname))]).toEqual(['gateway.example.com']);
   });
 });

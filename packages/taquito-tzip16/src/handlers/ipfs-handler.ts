@@ -1,53 +1,105 @@
-import {
-  HttpBackend,
-  HttpRequestFailed,
-  HttpResponseError,
-  HttpTimeoutError,
-} from '@taquito/http-utils';
+import { HttpBackend, HttpTimeoutError } from '@taquito/http-utils';
 import { ContractAbstraction, ContractProvider, Wallet, Context } from '@taquito/taquito';
 import { Handler, Tzip16Uri } from '../metadata-provider';
+import {
+  InvalidContractMetadataError,
+  IpfsGatewayError,
+  MetadataHashMismatchError,
+} from '../errors';
+import { calculateSHA256Hash } from '../tzip16-utils';
+import { MAX_IPFS_BLOCK_BYTES, parseIpfsLocation, readVerifiedIpfsFile } from './ipfs-metadata';
+
+const DEFAULT_GATEWAYS = ['ipfs.filebase.io', 'gateway.pinata.cloud', '4everland.io'];
 
 export class IpfsHttpHandler implements Handler {
-  private _ipfsGateway: string;
+  private readonly gateways: readonly string[];
   public httpBackend = new HttpBackend();
 
-  constructor(ipfsGateway?: string) {
-    this._ipfsGateway = ipfsGateway ? ipfsGateway : 'ipfs.filebase.io';
+  /** timeout is the total deadline for each gateway, including all block reads. */
+  constructor(
+    ipfsGateway?: string,
+    private readonly timeout = 30000
+  ) {
+    if (!Number.isFinite(timeout) || timeout <= 0)
+      throw new RangeError('IPFS gateway timeout must be positive');
+    this.gateways = ipfsGateway ? [ipfsGateway] : DEFAULT_GATEWAYS;
   }
 
   async getMetadata(
     _contractAbstraction: ContractAbstraction<ContractProvider | Wallet>,
-    { location }: Tzip16Uri,
+    { location, sha256hash }: Tzip16Uri,
     _context: Context
   ): Promise<string> {
-    const url = `https://${this._ipfsGateway}/ipfs/${location.substring(2)}/`;
-    try {
-      return await this.httpBackend.createRequest<string>({
-        url,
-        method: 'GET',
-        headers: {
-          'Content-Type': 'text/plain; charset=utf-8',
-        },
-        json: false,
+    const { root, path } = parseIpfsLocation(location);
+    const errors: Error[] = [];
+    const uri = `ipfs:${location}`;
+    for (const gateway of this.gateways) {
+      const controller = new AbortController();
+      let url = `https://${gateway}/ipfs/${root}?format=raw`;
+      let timer: ReturnType<typeof setTimeout> | undefined;
+      const deadline = Date.now() + this.timeout;
+      const timedOut = new Promise<never>((_resolve, reject) => {
+        timer = setTimeout(() => {
+          reject(new HttpTimeoutError(this.timeout, url));
+          controller.abort();
+        }, this.timeout);
       });
-    } catch (error) {
-      const guidance =
-        `IPFS metadata retrieval failed at ${url}. Check gateway availability and that the content is retrievable. ` +
-        `Configure a reliable gateway with IpfsHttpHandler('your-gateway-hostname').`;
-
-      if (error instanceof HttpResponseError) {
-        throw new HttpResponseError(
-          `${guidance} ${error.message}`,
-          error.status,
-          error.statusText,
-          error.body,
-          error.url
-        );
+      try {
+        const metadata = await Promise.race([
+          readVerifiedIpfsFile(
+            root,
+            path,
+            async (cid) => {
+              url = `https://${gateway}/ipfs/${cid}?format=raw`;
+              // Decoding can exhaust the budget before the timer callback runs.
+              const remaining = deadline - Date.now();
+              if (remaining <= 0) throw new HttpTimeoutError(this.timeout, url);
+              return this.httpBackend.createRequestBytes(
+                {
+                  url,
+                  method: 'GET',
+                  headers: {
+                    Accept: 'application/vnd.ipld.raw',
+                    'Content-Type': 'text/plain; charset=utf-8',
+                  },
+                  timeout: remaining,
+                  signal: controller.signal,
+                },
+                MAX_IPFS_BLOCK_BYTES
+              );
+            },
+            controller.signal
+          ),
+          timedOut,
+        ]);
+        // Both commitments and JSON parsing are inside the attempt so failures try the next gateway.
+        if (sha256hash !== undefined) {
+          const actualHash = calculateSHA256Hash(metadata);
+          if (sha256hash.toLowerCase() !== actualHash)
+            throw new MetadataHashMismatchError(uri, sha256hash, actualHash);
+        }
+        try {
+          JSON.parse(metadata.replace(/^\uFEFF/, ''));
+        } catch {
+          const error = new InvalidContractMetadataError(metadata);
+          error.message = `Unable to parse verified metadata from ${uri} as JSON.`;
+          throw error;
+        }
+        return metadata;
+      } catch (error) {
+        const failure = error instanceof Error ? error : new Error(String(error));
+        const guidance =
+          `IPFS metadata retrieval failed at ${url}. ` +
+          `Configure a reliable gateway with IpfsHttpHandler('your-gateway-hostname').`;
+        failure.message = `${guidance} ${failure.message}`;
+        errors.push(failure);
+      } finally {
+        clearTimeout(timer);
+        // Stop exporter prefetch work before starting a different gateway.
+        controller.abort();
       }
-      if (error instanceof HttpRequestFailed || error instanceof HttpTimeoutError) {
-        error.message = `${guidance} ${error.message}`;
-      }
-      throw error;
     }
+    if (this.gateways.length === 1) throw errors[0];
+    throw new IpfsGatewayError(errors);
   }
 }

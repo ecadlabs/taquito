@@ -145,6 +145,8 @@ export interface HttpRequestOptions {
   method?: 'GET' | 'POST';
   /** Per-request timeout in milliseconds. Defaults to the backend's constructor value (30 000 ms). */
   timeout?: number;
+  /** Optional caller cancellation, independent of the per-attempt timeout. */
+  signal?: AbortSignal;
   /** Parse the response as JSON. When `false`, returns raw text. Defaults to `true`. */
   json?: boolean;
   /** Query parameters appended to the URL as a query string. */
@@ -224,9 +226,62 @@ export class HttpBackend {
    * @throws {@link HttpTimeoutError} when an attempt exceeds the configured timeout.
    * @throws {@link HttpRequestFailed} for transport-level failures (network, DNS, socket, etc.).
    */
-  async createRequest<T>(
-    { url, method, timeout = this.timeout, query, headers = {}, json = true }: HttpRequestOptions,
-    data?: object | string
+  async createRequest<T>(options: HttpRequestOptions, data?: object | string): Promise<T> {
+    return this.request(options, data, async (response) => {
+      if (options.json !== false) {
+        return response.json() as Promise<T>;
+      }
+      // The existing generic API lets callers specify the raw text result type.
+      return response.text() as unknown as Promise<T>;
+    });
+  }
+
+  /** Fetch binary data without text decoding, with a bound on buffered response bytes. */
+  async createRequestBytes(
+    options: HttpRequestOptions,
+    maxResponseBytes: number
+  ): Promise<Uint8Array> {
+    if (!Number.isSafeInteger(maxResponseBytes) || maxResponseBytes <= 0) {
+      throw new RangeError('maxResponseBytes must be a positive safe integer');
+    }
+    const readBytes = async (response: Response): Promise<Uint8Array> => {
+      if (!response.body) return new Uint8Array();
+      const reader = response.body.getReader();
+      const chunks: Uint8Array[] = [];
+      let size = 0;
+      try {
+        for (;;) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          size += value.byteLength;
+          if (size > maxResponseBytes) {
+            throw new RangeError(`HTTP response exceeds ${maxResponseBytes} bytes`);
+          }
+          chunks.push(value);
+        }
+      } finally {
+        // Cancel on limits/read failures, and release the stream before retrying.
+        await reader.cancel().catch(() => undefined);
+        reader.releaseLock();
+      }
+      const bytes = new Uint8Array(size);
+      let offset = 0;
+      for (const chunk of chunks) {
+        bytes.set(chunk, offset);
+        offset += chunk.byteLength;
+      }
+      return bytes;
+    };
+    return this.request(options, undefined, readBytes, async (response) =>
+      new TextDecoder().decode(await readBytes(response))
+    );
+  }
+
+  private async request<T>(
+    { url, method, timeout = this.timeout, signal, query, headers = {} }: HttpRequestOptions,
+    data: object | string | undefined,
+    readResponse: (response: Response) => Promise<T>,
+    readErrorResponse: (response: Response) => Promise<string> = (response) => response.text()
   ) {
     // Serializes query params
     const urlWithQuery = url + this.serialize(query);
@@ -242,6 +297,7 @@ export class HttpBackend {
     let bodySerialized = false;
 
     for (let attempt = 0; attempt <= httpRetryCount; attempt++) {
+      signal?.throwIfAborted();
       // Creates a new AbortController instance to handle timeouts
       const controller = new AbortController();
       const t = setTimeout(() => controller.abort(), timeout);
@@ -257,7 +313,7 @@ export class HttpBackend {
           method,
           headers,
           body,
-          signal: controller.signal,
+          signal: signal ? AbortSignal.any([controller.signal, signal]) : controller.signal,
         });
 
         if (typeof response === 'undefined') {
@@ -268,7 +324,7 @@ export class HttpBackend {
         if (response.status >= 400) {
           let errorData = '';
           try {
-            errorData = await response.text();
+            errorData = await readErrorResponse(response);
           } catch {
             // If reading the error body fails (e.g. socket reset or timeout mid-error-body),
             // preserve the HTTP status so the status-based retry policy still governs.
@@ -298,12 +354,12 @@ export class HttpBackend {
           elapsedMs: Date.now() - requestStartedAt,
         });
 
-        if (json) {
-          return response.json() as T;
-        } else {
-          return response.text() as unknown as T;
-        }
+        // Keep the deadline and transport classification alive through body consumption.
+        return await readResponse(response);
       } catch (e: unknown) {
+        if (signal?.aborted) throw e;
+        // Preserve the public JSON parse error; it is not a transport failure.
+        if (e instanceof SyntaxError) throw e;
         // HttpResponseError is an application-level error (status >= 400), not a transport error.
         // Only transient gateway errors (502, 503, 504) on allowlisted requests are retried;
         // other status codes (e.g. 500 from Octez RPC) short-circuit before transport

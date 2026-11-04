@@ -8,6 +8,12 @@
     "skipLibCheck": true
   },
   "include": [
+    "packages/taquito-tzip16/test/metadata-integrity.spec.ts",
+    "packages/taquito-tzip16/test/handlers/ipfs-integrity.spec.ts",
+    "packages/taquito-tzip16/test/handlers/ipfs-fallback.spec.ts",
+    "packages/taquito-tzip16/test/handlers/ipfs-handler.spec.ts",
+    "packages/taquito-http-utils/test/response-body-timeout.spec.ts",
+    "integration-tests/__tests__/tzip-metadata/tzip16-originate-contracts-with-metadata-on-HTTPS-and-sha256-hash-and-fetch-metadata.spec.ts",
     "packages/taquito/test/contract/big-map-values*.spec.ts",
     "packages/taquito/test/contract/fa21.spec.ts",
     "packages/taquito-rpc/test/big-map-values*.spec.ts",
