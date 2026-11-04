@@ -143,7 +143,7 @@ export interface HttpRequestOptions {
   url: string;
   /** HTTP method. Defaults to `'GET'`. */
   method?: 'GET' | 'POST';
-  /** Per-request timeout in milliseconds. Defaults to the backend's constructor value (30 000 ms). */
+  /** Per-attempt timeout in milliseconds, including response body reads. Defaults to the backend's constructor value (30 000 ms). */
   timeout?: number;
   /** Optional caller cancellation, independent of the per-attempt timeout. */
   signal?: AbortSignal;
@@ -159,10 +159,10 @@ export interface HttpRequestOptions {
  * HTTP client used by Taquito to communicate with Tezos RPC nodes.
  *
  * Uses `globalThis.fetch` (Node.js >= 22 built-in or browser native).
- * Retries retriable transport errors (socket resets, DNS, timeouts) and transient
+ * Retries eligible transport failures, such as socket resets and DNS errors, and transient
  * gateway HTTP statuses (`502`, `503`, `504`) on allowlisted requests (`GET` and
- * safe RPC `POST` endpoints) with exponential backoff and jitter. Configure via
- * environment variables:
+ * safe RPC `POST` endpoints) with exponential backoff and jitter. Requests that fail
+ * with {@link HttpTimeoutError} are not retried. Configure via environment variables:
  *
  * - `TAQUITO_HTTP_RETRY_COUNT` - max retries (default `1`)
  * - `TAQUITO_HTTP_RETRY_BASE_MS` - base delay in ms (default `100`)
@@ -218,13 +218,16 @@ export class HttpBackend {
   /**
    * Send an HTTP request to the given URL, with automatic retries on retriable transport
    * errors and transient gateway statuses (`502`, `503`, `504`) for allowlisted requests.
+   * The timeout covers headers and body reads for each attempt. Non-abort errors
+   * reading a successful response body, including JSON parse errors, propagate unchanged.
+   * Failures reading an HTTP error response body retain the status-based retry policy.
    *
    * @param options - Request configuration (URL, method, per-attempt timeout, headers, etc.).
    * @param data - Request body, serialized to JSON via `JSON.stringify`.
    * @returns The parsed JSON response (or raw text when `json: false`).
    * @throws {@link HttpResponseError} when the server returns HTTP status >= 400 (after any applicable retries).
-   * @throws {@link HttpTimeoutError} when an attempt exceeds the configured timeout.
-   * @throws {@link HttpRequestFailed} for transport-level failures (network, DNS, socket, etc.).
+   * @throws {@link HttpTimeoutError} when an attempt times out before response headers or while reading a successful response body.
+   * @throws {@link HttpRequestFailed} for transport failures before reading a successful body.
    */
   async createRequest<T>(options: HttpRequestOptions, data?: object | string): Promise<T> {
     return this.request(options, data, async (response) => {
@@ -302,6 +305,7 @@ export class HttpBackend {
       const controller = new AbortController();
       const t = setTimeout(() => controller.abort(), timeout);
       const requestStartedAt = Date.now();
+      let readingResponseBody = false;
 
       try {
         if (!bodySerialized) {
@@ -354,7 +358,8 @@ export class HttpBackend {
           elapsedMs: Date.now() - requestStartedAt,
         });
 
-        // Keep the deadline and transport classification alive through body consumption.
+        // Keep the deadline active while retaining the existing body-error policy.
+        readingResponseBody = true;
         return await readResponse(response);
       } catch (e: unknown) {
         if (signal?.aborted) throw e;
@@ -397,6 +402,11 @@ export class HttpBackend {
         }
 
         const classified = e instanceof Error ? classifyTransportError(e) : undefined;
+        // Preserve body-read and JSON parse errors without transport wrapping or retries.
+        // An aborted body read still uses the request's timeout error.
+        if (readingResponseBody && classified?.kind !== 'abort') {
+          throw e;
+        }
         const isRetriableTransport =
           classified !== undefined && classified.kind !== 'abort' && classified.kind !== 'tls';
         const shouldRetry =

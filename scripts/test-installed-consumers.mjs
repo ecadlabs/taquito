@@ -134,37 +134,32 @@ await fixture({ assert, load: (name) => import(name), mode: 'import' });
   }
 
   for (const file of typeFixtures) {
-    for (const ext of ['cts', 'mts']) {
+    for (const { ext, module, moduleResolution } of [
+      { ext: 'cts', module: 'NodeNext', moduleResolution: 'NodeNext' },
+      { ext: 'mts', module: 'NodeNext', moduleResolution: 'NodeNext' },
+      { ext: 'ts', module: 'preserve', moduleResolution: 'bundler' },
+    ]) {
       const name = file.replace(/\.ts$/, '.' + ext);
       writeFileSync(join(consumer, name), readFileSync(join(fixtures, file), 'utf8'));
-      run(process.execPath, [
-        join(root, 'node_modules/typescript/bin/tsc'),
-        '--strict',
-        '--noEmit',
-        '--target',
-        'ES2022',
-        '--module',
-        'NodeNext',
-        '--moduleResolution',
-        'NodeNext',
-        name,
-      ]);
+      for (const types of [[], ['node']]) {
+        const config = `tsconfig.${ext}.${types.length ? 'node' : 'empty'}.json`;
+        writeFileSync(
+          join(consumer, config),
+          JSON.stringify({
+            compilerOptions: {
+              strict: true,
+              noEmit: true,
+              target: 'ES2022',
+              module,
+              moduleResolution,
+              types,
+            },
+            files: [name],
+          })
+        );
+        run(process.execPath, [join(root, 'node_modules/typescript/bin/tsc'), '--project', config]);
+      }
     }
-  }
-  for (const file of typeFixtures) {
-    writeFileSync(join(consumer, file), readFileSync(join(fixtures, file), 'utf8'));
-    run(process.execPath, [
-      join(root, 'node_modules/typescript/bin/tsc'),
-      '--strict',
-      '--noEmit',
-      '--target',
-      'ES2022',
-      '--module',
-      'preserve',
-      '--moduleResolution',
-      'bundler',
-      file,
-    ]);
   }
   cpSync(join(fixtures, 'browser'), consumer, { recursive: true });
   const requireRoot = createRequire(join(root, 'package.json'));

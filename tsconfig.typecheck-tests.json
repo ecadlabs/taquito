@@ -14,6 +14,7 @@
     "packages/taquito-tzip16/test/handlers/ipfs-handler.spec.ts",
     "packages/taquito-http-utils/test/response-body-timeout.spec.ts",
     "integration-tests/__tests__/tzip-metadata/tzip16-originate-contracts-with-metadata-on-HTTPS-and-sha256-hash-and-fetch-metadata.spec.ts",
+    "packages/taquito-http-utils/test/native-fetch.spec.ts",
     "packages/taquito/test/contract/big-map-values*.spec.ts",
     "packages/taquito/test/contract/fa21.spec.ts",
     "packages/taquito-rpc/test/big-map-values*.spec.ts",
@@ -31,6 +32,9 @@
     "packages/taquito-wallet-connect/test/taquito-wallet-connect.spec.ts",
     "packages/taquito/test/batch/rpc-batch-provider.spec.ts",
     "packages/taquito/test/prepare/detached-*.ts",
-    "packages/taquito/test/wallet/smart-rollup.spec.ts"
+    "packages/taquito/test/wallet/smart-rollup.spec.ts",
+    "packages/taquito-sapling/test/sapling-tx-builder/output-order.spec.ts",
+    "packages/taquito-sapling/test/sapling-tx-builder/shuffle-outputs.spec.ts",
+    "test-fixtures/consumers/sapling-output-order.types.ts"
   ]
 }

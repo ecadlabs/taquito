@@ -151,8 +151,8 @@ export function classifyTransportError(err: unknown): ClassifiedTransportError |
 
   // 7. Generic fetch failure (browser TypeError, undici wrapper)
   // "terminated" is undici's wrapper for body-read failures (e.g. response.json() after socket drop).
-  // This classifier has no request-phase context. HttpBackend awaits successful response bodies,
-  // so their transport failures also pass through classification and retry handling.
+  // This classifier has no request-phase context. HttpBackend preserves non-abort errors
+  // from successful response bodies without retrying them.
   if (
     err instanceof TypeError &&
     (msg.includes('fetch failed') ||
