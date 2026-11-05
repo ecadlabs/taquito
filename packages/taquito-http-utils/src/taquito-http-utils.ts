@@ -11,8 +11,10 @@ if (typeof globalThis.fetch !== 'function') {
 
 const env = typeof process !== 'undefined' ? process.env : undefined;
 
-const httpTraceEnabled =
-  /^(1|true)$/i.test(env?.TAQUITO_HTTP_TRACE ?? '') || env?.RUNNER_DEBUG === '1';
+const isHttpTraceEnabled = () => {
+  const trace = env?.TAQUITO_HTTP_TRACE;
+  return (trace !== undefined && /^(1|true)$/i.test(trace)) || env?.RUNNER_DEBUG === '1';
+};
 const parsedHttpRetryCount = Number(env?.TAQUITO_HTTP_RETRY_COUNT ?? '1');
 const httpRetryCount =
   Number.isFinite(parsedHttpRetryCount) && parsedHttpRetryCount >= 0
@@ -25,7 +27,12 @@ const httpRetryBaseMs =
     : 100;
 
 import { STATUS_CODE } from './status_code';
-import { HttpRequestFailed, HttpResponseError, HttpTimeoutError } from './errors';
+import {
+  formatErrorCauseChain,
+  HttpRequestFailed,
+  HttpResponseError,
+  HttpTimeoutError,
+} from './errors';
 import { classifyTransportError } from './transport-errors';
 
 export * from './status_code';
@@ -45,53 +52,12 @@ const normalizeTraceUrl = (url: string) => {
   }
 };
 
-const traceHttp = (payload: Record<string, unknown>) => {
-  if (!httpTraceEnabled) {
+const traceHttp = (buildPayload: () => Record<string, unknown>) => {
+  if (!isHttpTraceEnabled()) {
     return;
   }
   // JSON logs make CI-side grepping and aggregation much easier.
-  console.log(`[taquito:http-trace] ${JSON.stringify(payload)}`);
-};
-
-const getCause = (err: Error): unknown => (err as unknown as Record<string, unknown>)['cause'];
-
-const getCode = (err: Error): string | undefined => {
-  const code = (err as unknown as Record<string, unknown>)['code'];
-  return typeof code === 'string' ? code : undefined;
-};
-
-const MAX_CAUSE_DEPTH = 10;
-
-const toErrorMessage = (error: unknown): string => {
-  if (!(error instanceof Error)) {
-    return String(error);
-  }
-  const parts: string[] = [`${error.name}: ${error.message}`];
-  let current: unknown = getCause(error);
-  let depth = 0;
-  while (depth < MAX_CAUSE_DEPTH) {
-    if (current instanceof Error) {
-      const code = getCode(current);
-      const codeSuffix = code ? ` [${code}]` : '';
-      parts.push(`${current.name}: ${current.message}${codeSuffix}`);
-      current = getCause(current);
-      depth++;
-      continue;
-    }
-    // Handle object-shaped causes (e.g. undici { message, code } objects)
-    if (
-      typeof current === 'object' &&
-      current !== null &&
-      typeof (current as Record<string, unknown>)['message'] === 'string'
-    ) {
-      const obj = current as Record<string, unknown>;
-      const code = typeof obj['code'] === 'string' ? obj['code'] : undefined;
-      const codeSuffix = code ? ` [${code}]` : '';
-      parts.push(`${obj['message']}${codeSuffix}`);
-    }
-    break;
-  }
-  return parts.join(' → ');
+  console.log(`[taquito:http-trace] ${JSON.stringify(buildPayload())}`);
 };
 
 const isRetriableRequest = (method: string, url: string) => {
@@ -136,6 +102,38 @@ const computeRetryDelayMs = (attempt: number) => {
 };
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const readBoundedBytes = async (
+  response: Response,
+  maxResponseBytes: number
+): Promise<Uint8Array> => {
+  if (!response.body) return new Uint8Array();
+  const reader = response.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let size = 0;
+  try {
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      size += value.byteLength;
+      if (size > maxResponseBytes) {
+        throw new RangeError(`HTTP response exceeds ${maxResponseBytes} bytes`);
+      }
+      chunks.push(value);
+    }
+  } finally {
+    // Cancel on limits/read failures, and release the stream before retrying.
+    await reader.cancel().catch(() => undefined);
+    reader.releaseLock();
+  }
+  const bytes = new Uint8Array(size);
+  let offset = 0;
+  for (const chunk of chunks) {
+    bytes.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  return bytes;
+};
 
 /** Options for {@link HttpBackend.createRequest}. */
 export interface HttpRequestOptions {
@@ -247,34 +245,7 @@ export class HttpBackend {
     if (!Number.isSafeInteger(maxResponseBytes) || maxResponseBytes <= 0) {
       throw new RangeError('maxResponseBytes must be a positive safe integer');
     }
-    const readBytes = async (response: Response): Promise<Uint8Array> => {
-      if (!response.body) return new Uint8Array();
-      const reader = response.body.getReader();
-      const chunks: Uint8Array[] = [];
-      let size = 0;
-      try {
-        for (;;) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          size += value.byteLength;
-          if (size > maxResponseBytes) {
-            throw new RangeError(`HTTP response exceeds ${maxResponseBytes} bytes`);
-          }
-          chunks.push(value);
-        }
-      } finally {
-        // Cancel on limits/read failures, and release the stream before retrying.
-        await reader.cancel().catch(() => undefined);
-        reader.releaseLock();
-      }
-      const bytes = new Uint8Array(size);
-      let offset = 0;
-      for (const chunk of chunks) {
-        bytes.set(chunk, offset);
-        offset += chunk.byteLength;
-      }
-      return bytes;
-    };
+    const readBytes = (response: Response) => readBoundedBytes(response, maxResponseBytes);
     return this.request(options, undefined, readBytes, async (response) =>
       new TextDecoder().decode(await readBytes(response))
     );
@@ -290,10 +261,11 @@ export class HttpBackend {
     const urlWithQuery = url + this.serialize(query);
     const methodValue = String(method ?? 'GET');
 
-    // Adds default header entry if there aren't any Content-Type header
-    if (!headers['Content-Type']) {
-      headers['Content-Type'] = 'application/json';
-    }
+    // Default Content-Type without mutating the caller's headers object
+    const requestHeaders: { [key: string]: string } = {
+      'Content-Type': 'application/json',
+      ...headers,
+    };
 
     // Serialized once on first attempt, reused on retries for byte-stable requests.
     let body: string | undefined;
@@ -315,7 +287,7 @@ export class HttpBackend {
 
         const response = await globalThis.fetch(urlWithQuery, {
           method,
-          headers,
+          headers: requestHeaders,
           body,
           signal: signal ? AbortSignal.any([controller.signal, signal]) : controller.signal,
         });
@@ -334,13 +306,13 @@ export class HttpBackend {
             // preserve the HTTP status so the status-based retry policy still governs.
             errorData = response.statusText || '';
           }
-          traceHttp({
+          traceHttp(() => ({
             stage: 'response-error',
             method: methodValue,
             url: normalizeTraceUrl(urlWithQuery),
             status: response.status,
             elapsedMs: Date.now() - requestStartedAt,
-          });
+          }));
           throw new HttpResponseError(
             `Http error response: (${response.status}) ${errorData}`,
             response.status as STATUS_CODE,
@@ -350,13 +322,13 @@ export class HttpBackend {
           );
         }
 
-        traceHttp({
+        traceHttp(() => ({
           stage: 'response-ok',
           method: methodValue,
           url: normalizeTraceUrl(urlWithQuery),
           status: response.status,
           elapsedMs: Date.now() - requestStartedAt,
-        });
+        }));
 
         // Keep the deadline active while retaining the existing body-error policy.
         readingResponseBody = true;
@@ -377,7 +349,7 @@ export class HttpBackend {
             isRetriableRequest(methodValue, urlWithQuery)
           ) {
             const retryDelayMs = computeRetryDelayMs(attempt);
-            traceHttp({
+            traceHttp(() => ({
               stage: 'request-retry',
               method: methodValue,
               url: normalizeTraceUrl(urlWithQuery),
@@ -387,17 +359,17 @@ export class HttpBackend {
               retryDelayMs,
               status: e.status,
               statusText: e.statusText,
-            });
+            }));
             await sleep(retryDelayMs);
             continue;
           }
-          traceHttp({
+          traceHttp(() => ({
             stage: 'http-response-error',
             method: methodValue,
             url: normalizeTraceUrl(urlWithQuery),
             elapsedMs: Date.now() - requestStartedAt,
             status: e.status,
-          });
+          }));
           throw e;
         }
 
@@ -416,7 +388,7 @@ export class HttpBackend {
 
         if (shouldRetry) {
           const retryDelayMs = computeRetryDelayMs(attempt);
-          traceHttp({
+          traceHttp(() => ({
             stage: 'request-retry',
             method: methodValue,
             url: normalizeTraceUrl(urlWithQuery),
@@ -424,31 +396,31 @@ export class HttpBackend {
             attempt: attempt + 1,
             maxAttempts: httpRetryCount + 1,
             retryDelayMs,
-            error: toErrorMessage(e),
+            error: formatErrorCauseChain(e),
             transportKind: classified?.kind,
-          });
+          }));
           await sleep(retryDelayMs);
           continue;
         }
 
         if (classified?.kind === 'abort') {
-          traceHttp({
+          traceHttp(() => ({
             stage: 'timeout',
             method: methodValue,
             url: normalizeTraceUrl(urlWithQuery),
             elapsedMs: Date.now() - requestStartedAt,
             timeoutMs: timeout,
-          });
+          }));
           throw new HttpTimeoutError(timeout, urlWithQuery);
         } else {
-          traceHttp({
+          traceHttp(() => ({
             stage: 'request-failed',
             method: methodValue,
             url: normalizeTraceUrl(urlWithQuery),
             elapsedMs: Date.now() - requestStartedAt,
-            error: toErrorMessage(e),
+            error: formatErrorCauseChain(e),
             transportKind: classified?.kind,
-          });
+          }));
           const cause = e instanceof Error ? e : new Error(String(e));
           throw new HttpRequestFailed(methodValue, urlWithQuery, cause, classified);
         }
