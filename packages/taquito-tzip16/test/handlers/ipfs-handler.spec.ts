@@ -121,10 +121,11 @@ describe('TZIP-16 IPFS HTTP handler', () => {
     const error = await outcome;
     expect(error).toBeInstanceOf(HttpTimeoutError);
     if (!(error instanceof HttpTimeoutError)) throw new Error('Expected timeout error');
-    expect(error.timeout).toBeGreaterThan(0);
+    expect(error.timeout).toBe(10000);
     expect(urls).toContain(error.url);
     expect(error.message).toContain(String(error.timeout));
     expect(error.message).toContain('IpfsHttpHandler');
+    expect(error.message).toMatch(/SLA|self-hosted/i);
     expect(error.message).toContain(error.url);
     expect([...new Set(urls.map((url) => new URL(url).hostname))]).toEqual(['gateway.example.com']);
   });

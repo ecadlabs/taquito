@@ -9,16 +9,27 @@ import {
 import { calculateSHA256Hash } from '../tzip16-utils';
 import { MAX_IPFS_BLOCK_BYTES, parseIpfsLocation, readVerifiedIpfsFile } from './ipfs-metadata';
 
-const DEFAULT_GATEWAYS = ['ipfs.filebase.io', 'gateway.pinata.cloud', '4everland.io'];
+const DEFAULT_GATEWAYS = ['ipfs.filebase.io', 'gateway.pinata.cloud'];
 
+/**
+ * Handler for retrieving and verifying TZIP-16 contract metadata over HTTPS IPFS gateways.
+ *
+ * By default, tries the public gateways `ipfs.filebase.io` and `gateway.pinata.cloud` in order
+ * with a 10-second per-gateway deadline. Public gateways are best-effort and may rate-limit or
+ * time out; for production applications, configure a paid IPFS gateway service with an SLA or
+ * a self-hosted HTTPS IPFS gateway supporting raw block retrieval (`?format=raw`).
+ */
 export class IpfsHttpHandler implements Handler {
   private readonly gateways: readonly string[];
   public httpBackend = new HttpBackend();
 
-  /** timeout is the total deadline for each gateway, including all block reads. */
+  /**
+   * @param ipfsGateway - Optional HTTPS gateway hostname (without `https://` or `/ipfs/`). For production, use a paid gateway service with an SLA or a self-hosted HTTPS IPFS gateway. When omitted, falls back across the default public gateways.
+   * @param timeout - Total deadline in milliseconds for each gateway, including all block and body reads (default `10000`).
+   */
   constructor(
     ipfsGateway?: string,
-    private readonly timeout = 30000
+    private readonly timeout = 10000
   ) {
     if (!Number.isFinite(timeout) || timeout <= 0)
       throw new RangeError('IPFS gateway timeout must be positive');
@@ -90,7 +101,7 @@ export class IpfsHttpHandler implements Handler {
         const failure = error instanceof Error ? error : new Error(String(error));
         const guidance =
           `IPFS metadata retrieval failed at ${url}. ` +
-          `Configure a reliable gateway with IpfsHttpHandler('your-gateway-hostname').`;
+          `Public IPFS gateways are best-effort and may rate-limit or time out; for production, configure a paid gateway service with an SLA or a self-hosted HTTPS IPFS gateway with IpfsHttpHandler('your-gateway-hostname').`;
         failure.message = `${guidance} ${failure.message}`;
         errors.push(failure);
       } finally {

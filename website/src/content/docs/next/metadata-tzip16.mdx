@@ -9,7 +9,7 @@ The `@taquito/tzip16` package allows retrieving metadata associated with a smart
 
 The package can be used as an extension to the well known Taquito contract abstraction.
 
-**For production applications that retrieve IPFS metadata, configure a reliable gateway.** The defaults try `ipfs.filebase.io`, `gateway.pinata.cloud`, then `4everland.io` in order. Public gateways may be rate-limited or unavailable. A dedicated gateway needs to support raw block requests (`?format=raw`) and CORS for browser applications. See the custom metadata provider example below.
+**For production applications that retrieve IPFS metadata, configure a paid gateway service with an SLA or a self-hosted HTTPS IPFS gateway.** The defaults try `ipfs.filebase.io`, then `gateway.pinata.cloud` in order. Public gateways are best-effort and may be rate-limited, slow, or unavailable. A dedicated or self-hosted HTTPS gateway needs to support raw block requests (`?format=raw`) and CORS for browser applications. See the custom metadata provider example below.
 
 A gateway override changes how Taquito retrieves `ipfs://` metadata. It does not rewrite `https://ipfs.io/...` URIs stored in contracts or URLs inside the returned metadata.
 
@@ -40,7 +40,7 @@ In some cases, we may want to use a customized metadata provider. The constructo
 
 The former default, `ipfs.io`, and `dweb.link` are [transitioning to service-worker gateways](https://blog.ipfs.tech/2026-08-beyond-sponsored-gateways/). They can reject plain HTTP metadata requests with rate-limit responses. Taquito's HTTP handler cannot execute a service-worker bootstrap. If your application explicitly configures either gateway, update that override as well.
 
-To override the default, pass your gateway hostname to `IpfsHttpHandler`, without `https://` or `/ipfs/`. Taquito retrieves verified blocks from `https://<hostname>/ipfs/<cid>?format=raw` and resolves directory paths locally. An explicit override uses that gateway alone. The optional second constructor argument sets the total per-gateway deadline in milliseconds (default `30000`). The following example replaces the IPFS handler while retaining the default HTTP, HTTPS, and Tezos storage handlers:
+To override the default, pass your HTTPS gateway hostname (for example, a paid gateway service with an SLA or a self-hosted HTTPS IPFS gateway) to `IpfsHttpHandler`, without `https://` or `/ipfs/`. Taquito retrieves verified blocks from `https://<hostname>/ipfs/<cid>?format=raw` and resolves directory paths locally. An explicit override uses that gateway alone. The optional second constructor argument sets the total per-gateway deadline in milliseconds (default `10000`). The following example replaces the IPFS handler while retaining the default HTTP, HTTPS, and Tezos storage handlers:
 
 ```js
 import { TezosToolkit } from '@taquito/taquito';

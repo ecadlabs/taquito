@@ -22,12 +22,11 @@ npm i --save @taquito/taquito
 
 ## Usage
 
-**For production applications that retrieve IPFS metadata, configure a reliable gateway.**
-The shared public gateways are provided for convenience and may be rate-limited or
-unavailable. The default handler tries `ipfs.filebase.io`, `gateway.pinata.cloud`,
-then `4everland.io` in order. Use a dedicated or application-controlled gateway that
-supports raw block requests (`?format=raw`), can retrieve your content, and supports
-CORS for browser applications.
+**For production applications that retrieve IPFS metadata, configure a paid gateway service with an SLA or a self-hosted HTTPS IPFS gateway.**
+The shared public gateways are best-effort and may be rate-limited, slow, or
+unavailable. The default handler tries `ipfs.filebase.io`, then `gateway.pinata.cloud`
+in order. Use a dedicated or self-hosted HTTPS gateway that supports raw block requests
+(`?format=raw`), can retrieve your content, and supports CORS for browser applications.
 
 **Create an instance of the `Tzip16Module` and add it as an extension to the `TezosToolkit`**
 
@@ -69,7 +68,7 @@ integrity failures, and invalid JSON cause the next default gateway to be tried.
 Applications should catch metadata retrieval failures and let users retry or display
 that metadata is temporarily unavailable.
 
-Each gateway has a 30-second total deadline, including block retrieval and body
+Each gateway has a 10-second total deadline (`10000` ms), including block retrieval and body
 reads. The second constructor argument can change it, for example
 `new IpfsHttpHandler('ipfs.example.com', 15000)` for 15 seconds.
 
