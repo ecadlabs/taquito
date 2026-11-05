@@ -1,7 +1,12 @@
 import { ContractAbstraction, ContractProvider, Wallet, Context } from '@taquito/taquito';
 import { MetadataInterface } from './metadata-interface';
 import { MetadataContext } from './tzip16-contract-abstraction';
-import { InvalidContractMetadataError, InvalidUriError, ProtocolNotSupportedError } from './errors';
+import {
+  InvalidContractMetadataError,
+  InvalidUriError,
+  MetadataHashMismatchError,
+  ProtocolNotSupportedError,
+} from './errors';
 import { calculateSHA256Hash } from './tzip16-utils';
 
 export interface MetadataProviderInterface {
@@ -65,9 +70,12 @@ export class MetadataProvider implements MetadataProviderInterface {
 
     const metadata = await handler.getMetadata(contractAbstraction, uriInfo, context);
     const sha256Hash = calculateSHA256Hash(metadata);
+    if (uriInfo.sha256hash !== undefined && uriInfo.sha256hash !== sha256Hash) {
+      throw new MetadataHashMismatchError(uri, uriInfo.sha256hash, sha256Hash);
+    }
     let metadataJSON;
     try {
-      metadataJSON = JSON.parse(metadata);
+      metadataJSON = JSON.parse(metadata.replace(/^\uFEFF/, ''));
     } catch (ex) {
       const error = new InvalidContractMetadataError(metadata);
       error.message = `Unable to parse metadata from ${uri} as JSON.`;
@@ -98,6 +106,10 @@ export class MetadataProvider implements MetadataProviderInterface {
       }
 
       sha256hash = uri.slice(SHA256_PREFIX.length, sha256EndIndex);
+      if (!/^[0-9a-fA-F]{64}$/.test(sha256hash)) {
+        return;
+      }
+      sha256hash = sha256hash.toLowerCase();
       uri = uri.slice(sha256EndIndex + 1);
     }
 

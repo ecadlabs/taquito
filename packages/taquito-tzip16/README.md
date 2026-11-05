@@ -23,9 +23,11 @@ npm i --save @taquito/taquito
 ## Usage
 
 **For production applications that retrieve IPFS metadata, configure a reliable gateway.**
-The shared public default, `ipfs.filebase.io`, is provided for convenience and may be
-rate-limited or unavailable. Use a dedicated or application-controlled gateway that
-can retrieve your content and supports CORS for browser applications.
+The shared public gateways are provided for convenience and may be rate-limited or
+unavailable. The default handler tries `ipfs.filebase.io`, `gateway.pinata.cloud`,
+then `4everland.io` in order. Use a dedicated or application-controlled gateway that
+supports raw block requests (`?format=raw`), can retrieve your content, and supports
+CORS for browser applications.
 
 **Create an instance of the `Tzip16Module` and add it as an extension to the `TezosToolkit`**
 
@@ -61,10 +63,28 @@ Tezos.addExtension(new Tzip16Module(new MetadataProvider(handlers)));
 ```
 
 An override changes retrieval of `ipfs://` metadata. It does not rewrite HTTP URLs
-stored in contracts or URLs inside the returned metadata. Taquito does not
-automatically switch gateways when a request fails, or retry HTTP 429/5xx responses.
+stored in contracts or URLs inside the returned metadata. An explicit gateway
+override uses that gateway alone. Without an override, HTTP errors, timeouts,
+integrity failures, and invalid JSON cause the next default gateway to be tried.
 Applications should catch metadata retrieval failures and let users retry or display
 that metadata is temporarily unavailable.
+
+Each gateway has a 30-second total deadline, including block retrieval and body
+reads. The second constructor argument can change it, for example
+`new IpfsHttpHandler('ipfs.example.com', 15000)` for 15 seconds.
+
+### IPFS verification
+
+The built-in handler verifies every retrieved block against its CID before UnixFS
+decoding. It supports CIDv0/CIDv1 raw and dag-pb UnixFS data with SHA-256 or SHA-512
+multihashes, including directory paths and multi-block files. Files are reassembled
+before UTF-8 decoding and before an optional outer `sha256://` check. Gateways
+that cannot serve raw blocks fail; there is no fallback to unverified JSON.
+
+Retrieval is bounded to 2 MiB per block, 32 MiB of downloaded blocks and reconstructed
+metadata per gateway, and 1,024 block reads. Unsupported codecs, hashes, or metadata
+exceeding these bounds are rejected. Custom protocol handlers are responsible for
+enforcing their own content-addressed integrity checks.
 
 See the [metadata documentation](https://taquito.io/docs/metadata-tzip16/) for more details.
 
@@ -76,17 +96,29 @@ const metadata = await contract.tzip16().getMetadata();
 
 The `getMetadata` method returns an object which contains the URI, the metadata in JSON format, an optional SHA256 hash of the metadata, and an optional integrity check result.
 
-On failure, catch `HttpResponseError`, `HttpRequestFailed`, or `HttpTimeoutError`
-from `@taquito/http-utils`. IPFS failures include gateway context and configuration
-guidance in the message; the existing status, URL, timeout, cause, and transport
-classification fields remain available on their respective error types.
+The default metadata provider rejects `sha256://` hash mismatches with
+`MetadataHashMismatchError` before returning metadata or creating off-chain views.
+The error includes the URI, expected hash, and actual hash. A successful SHA-256
+check returns `integrityCheckResult: true`; URIs without a SHA-256 wrapper leave
+that field undefined. Hashes must contain 64 hexadecimal digits; uppercase and
+lowercase digits are accepted. This changes the previous behavior, which returned
+metadata even when `integrityCheckResult` was false.
+
+With an explicit gateway, HTTP failures retain `HttpResponseError`,
+`HttpRequestFailed`, or `HttpTimeoutError` from `@taquito/http-utils`, including
+their existing diagnostic fields. When all default gateways fail, `IpfsGatewayError`
+from `@taquito/tzip16` contains the individual failures in its `errors` array.
+IPFS failures include gateway context and configuration guidance in the message.
 
 If a response cannot be parsed as JSON, `InvalidContractMetadataError` from
 `@taquito/tzip16` includes the metadata URI in its message and retains the response
 text in `invalidMetadata`. For IPFS this URI is the original `ipfs://` address.
-A gateway may have returned an HTML page instead of metadata. Prefer error types
-and diagnostic fields over matching message text. TZIP-12 retains its existing
-contract-metadata fallback behavior.
+IPFS responses are verified before JSON parsing, so a substituted HTML page will
+normally fail the CID check first. Calling `IpfsHttpHandler.getMetadata()` directly
+returns verified, JSON-parseable text. Prefer error types and diagnostic fields over
+matching message text. TZIP-12 retains its existing contract-metadata fallback behavior.
+
+Custom `IpfsHttpHandler.httpBackend` subclasses must override `createRequestBytes()` to customize binary block requests. An override of `createRequest()` alone no longer intercepts IPFS retrieval.
 
 ### Execute off-chain views
 

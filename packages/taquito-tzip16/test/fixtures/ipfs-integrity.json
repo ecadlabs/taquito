@@ -1,0 +1,50 @@
+{
+  "metadata": " {\n  \"name\": \"Verified caf\u00e9\", \"description\": \"two chunks\"\n}\n",
+  "raw": {
+    "cid": "bafkreicmufxcimdidadqhkp32fmlhpsefenhjazsaw3ezvb5zlhhu2qdva",
+    "cidHex": "015512204ca16e243068180703a9fbd158b3be44291a74833205b64cd43dcace7a6a03a8",
+    "hex": "207b0a2020226e616d65223a2022566572696669656420636166c3a9222c20226465736372697074696f6e223a202274776f206368756e6b73220a7d0a",
+    "links": []
+  },
+  "singleV0": {
+    "cid": "QmTTfy7in4QLCFLkTpcAACVrdbTgErtUxMXp9SFHqS5eXf",
+    "cidHex": "12204c16ec723b2b31b86f14b85ab888364c7278911698e3ae97a2e1abd2bc51b656",
+    "hex": "0a430802123d207b0a2020226e616d65223a2022566572696669656420636166c3a9222c20226465736372697074696f6e223a202274776f206368756e6b73220a7d0a183d",
+    "links": []
+  },
+  "singleV1": {
+    "cid": "bafybeicmc3wheozlgg4g6ffylk4iqnsmoj4jcfuy4oxjpixbvpjlyunwky",
+    "cidHex": "017012204c16ec723b2b31b86f14b85ab888364c7278911698e3ae97a2e1abd2bc51b656",
+    "hex": "0a430802123d207b0a2020226e616d65223a2022566572696669656420636166c3a9222c20226465736372697074696f6e223a202274776f206368756e6b73220a7d0a183d",
+    "links": []
+  },
+  "multi": {
+    "cid": "bafybeibyhrgrtxhxgo7j64lgw32a5xj7mzi46vvgwcjotktou637msxqjm",
+    "cidHex": "01701220383c4d19dcf733be9f7166b6f40edd3f6651cf56a6b092e9aa6ea7b7f64af04b",
+    "hex": "122a0a240155122045d0dbd5151d21bab8911b1b6ca03f359bca7b95e441ba66521e9487d14c998f1200181b122a0a24015512206d1e7992e719d607c6a563fdf5d93c811f3b3bec17488da0eed0f63eaaeb3ec3120018220a080802183d201b2022",
+    "links": [
+      "bafkreicf2dn5kfi5eg5lrei3dnwkapzvtpfhxfpeig5gmuq6ssd5ctezr4",
+      "bafkreidndz4zfzyz2yd4njld7x25spebd45tx3axjcg2b3wq6y7kv2z6ym"
+    ]
+  },
+  "directory": {
+    "cid": "bafybeihar24hzffa35aejrpwx3ukvdh6f3yjtipyqih2h6smyy66zau3vy",
+    "cidHex": "01701220e08eb87c94a0df4044c5f6bee8aa8cfe2ef099a1f8820fa3fa4cc63dec829bae",
+    "hex": "12380a2401701220383c4d19dcf733be9f7166b6f40edd3f6651cf56a6b092e9aa6ea7b7f64af04b120d6d657461646174612e6a736f6e189f010a020801",
+    "links": ["bafybeibyhrgrtxhxgo7j64lgw32a5xj7mzi46vvgwcjotktou637msxqjm"]
+  },
+  "children": [
+    {
+      "cid": "bafkreicf2dn5kfi5eg5lrei3dnwkapzvtpfhxfpeig5gmuq6ssd5ctezr4",
+      "cidHex": "0155122045d0dbd5151d21bab8911b1b6ca03f359bca7b95e441ba66521e9487d14c998f",
+      "hex": "207b0a2020226e616d65223a2022566572696669656420636166c3",
+      "links": []
+    },
+    {
+      "cid": "bafkreidndz4zfzyz2yd4njld7x25spebd45tx3axjcg2b3wq6y7kv2z6ym",
+      "cidHex": "015512206d1e7992e719d607c6a563fdf5d93c811f3b3bec17488da0eed0f63eaaeb3ec3",
+      "hex": "a9222c20226465736372697074696f6e223a202274776f206368756e6b73220a7d0a",
+      "links": []
+    }
+  ]
+}
