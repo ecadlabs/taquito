@@ -18,12 +18,16 @@ export default {
         '@taquito/core': 'core',
         '@taquito/http-utils': 'httpUtils',
         '@taquito/utils': 'utils',
-      },
+      }
     },
     { file: pkg.module, format: 'es', sourcemap: true },
   ],
   // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
-  external: ['@taquito/core', '@taquito/http-utils', '@taquito/utils'],
+  external: [
+    '@taquito/core',
+    '@taquito/http-utils',
+    '@taquito/utils',
+  ],
   watch: {
     include: 'src/**',
   },

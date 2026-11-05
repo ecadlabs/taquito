@@ -16,6 +16,6 @@ import '@taquito/wallet-connect';
 import '@taquito/ledger-signer';
 import '@taquito/sapling';
 
-export const prewarmedPackages = true;
-
 import '@taquito/remote-signer';
+
+export const prewarmedPackages = true;

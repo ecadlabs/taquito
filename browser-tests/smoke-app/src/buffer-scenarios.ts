@@ -131,7 +131,8 @@ const scenarios: Record<
   },
   'local-forging-buffer-behavior': async () => {
     assertNoGlobalBuffer();
-    const { LocalForger } = await import('@taquito/local-forging');
+    const { LocalForger, stringEncoder, valueDecoder, Uint8ArrayConsumer } =
+      await import('@taquito/local-forging');
     assertNoGlobalBuffer();
     const forger = new LocalForger();
     const bytes = await forger.forge(bufferOperation);
@@ -139,7 +140,13 @@ const scenarios: Record<
       throw new Error('Forged bytes differ from the Octez fixture');
     const decoded = await forger.parse(expectedBufferOperation);
     assertNoGlobalBuffer();
-    return { exports: ['LocalForger'], summary: { bytes, decoded } };
+    const decode = (hex: string) => valueDecoder(Uint8ArrayConsumer.fromHexString(hex));
+    const utf8 = {
+      surrogateEncoding: stringEncoder({ string: String.fromCharCode(0xd800, 0xd801) }),
+      truncated: decode('0100000002e282'),
+      bom: decode('0100000004efbbbf41'),
+    };
+    return { exports: ['LocalForger'], summary: { bytes, decoded, utf8 } };
   },
 };
 

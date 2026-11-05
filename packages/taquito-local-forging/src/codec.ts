@@ -32,7 +32,7 @@ import {
   stripLengthPrefixFromBytes,
 } from './michelson/codec';
 import { Uint8ArrayConsumer } from './uint8array-consumer';
-import { pad, toHexString } from './utils';
+import { decodeUtf8, pad, toHexString } from './utils';
 import {
   InvalidAddressError,
   InvalidContractAddressError,
@@ -388,7 +388,7 @@ export const entrypointDecoder = (value: Uint8ArrayConsumer) => {
   } else {
     const entry = extractRequiredLen(value, 1);
 
-    const entrypoint = Buffer.from(entry).toString('utf8');
+    const entrypoint = decodeUtf8(entry);
 
     if (entrypoint.length > ENTRYPOINT_MAX_LENGTH) {
       throw new OversizedEntryPointError(entrypoint);
@@ -456,7 +456,7 @@ export const entrypointNameEncoder = (entrypoint: string) => {
 export const entrypointNameDecoder = (val: Uint8ArrayConsumer) => {
   const entry = extractRequiredLen(val);
 
-  return Buffer.from(entry).toString('utf8');
+  return decodeUtf8(entry);
 };
 
 export const burnLimitEncoder = (val: string) => {

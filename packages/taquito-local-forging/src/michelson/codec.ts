@@ -4,7 +4,7 @@ import { Decoder } from '../decoder';
 import { Uint8ArrayConsumer } from '../uint8array-consumer';
 import { Encoder } from '../encoder';
 import { opMappingReverse, opMapping } from '../constants';
-import { pad } from '../utils';
+import { decodeUtf8, pad } from '../utils';
 import { UnexpectedMichelsonValueError } from '../errors';
 import { InvalidHexStringError } from '@taquito/core';
 
@@ -132,8 +132,13 @@ export const bytesDecoder: Decoder = (value: Uint8ArrayConsumer) => {
   };
 };
 
+function encodeUtf8ToHex(value: string): string {
+  if (typeof value !== 'string') throw new TypeError('Expected a string');
+  return Buffer.from(new TextEncoder().encode(value)).toString('hex');
+}
+
 export const stringEncoder: Encoder<StringValue> = (value) => {
-  const str = Buffer.from(value.string, 'utf8').toString('hex');
+  const str = encodeUtf8ToHex(value.string);
   const hexLength = str.length / 2;
   return `01${pad(hexLength)}${str}`;
 };
@@ -141,7 +146,7 @@ export const stringEncoder: Encoder<StringValue> = (value) => {
 export const stringDecoder: Decoder = (value: Uint8ArrayConsumer) => {
   const str = extractRequiredLen(value);
   return {
-    string: Buffer.from(str).toString('utf8'),
+    string: decodeUtf8(str),
   };
 };
 
@@ -304,9 +309,7 @@ export const decodeCombPair: Decoder = (val: Uint8ArrayConsumer) => {
 
 export const encodeAnnots: Encoder<string[]> = (value: string[]) => {
   const mergedAnnot = value
-    .map((x) => {
-      return Buffer.from(x, 'utf8').toString('hex');
-    })
+    .map(encodeUtf8ToHex)
     .join('20');
 
   const len = mergedAnnot.length / 2;
@@ -319,5 +322,5 @@ export const decodeAnnots: Decoder = (val: Uint8ArrayConsumer): string[] => {
   const restOfAnnot = val.consume(annotLen);
 
   const restOfAnnotHex = Buffer.from(restOfAnnot).toString('hex');
-  return restOfAnnotHex.split('20').map((x) => Buffer.from(x, 'hex').toString('utf8'));
+  return restOfAnnotHex.split('20').map((x) => decodeUtf8(Buffer.from(x, 'hex')));
 };

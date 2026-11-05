@@ -12,12 +12,12 @@ import {
   rmSync,
 } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join, dirname } from 'node:path';
+import { join, dirname, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
-const temporary = mkdtempSync(join(tmpdir(), 'taquito-buffer-'));
+const temporary = mkdtempSync(join(realpathSync(tmpdir()), 'taquito-buffer-'));
 const consumer = join(temporary, 'consumer');
 const run = (command, args, cwd = consumer) =>
   execFileSync(command, args, {
@@ -124,12 +124,19 @@ try {
   const require = createRequire(join(consumer, 'package.json'));
   for (const name of packages) {
     const pkg = JSON.parse(readFileSync(join(root, 'packages', name, 'package.json'), 'utf8'));
-    assert.ok(
-      realpathSync(require.resolve(pkg.name)).startsWith(
-        join(consumer, 'node_modules', '@taquito') + '/'
-      )
-    );
+    const installed = realpathSync(join(consumer, 'node_modules', pkg.name));
+    assert.ok(realpathSync(require.resolve(pkg.name)).startsWith(installed + sep));
   }
+  const { stringEncoder, valueEncoder, valueDecoder, Uint8ArrayConsumer } = require('@taquito/local-forging');
+  const decode = (hex) => valueDecoder(Uint8ArrayConsumer.fromHexString(hex));
+  assert.equal(
+    stringEncoder({ string: String.fromCharCode(0xd800, 0xd801) }),
+    '0100000006efbfbdefbfbd'
+  );
+  assert.deepEqual(decode('0100000002e282'), { string: '\uFFFD' });
+  assert.deepEqual(decode('0100000004efbbbf41'), { string: '\uFEFFA' });
+  assert.throws(() => valueEncoder({ prim: 'Pair', annots: [42] }), TypeError);
+  console.log('Installed Node UTF-8 compatibility checks passed.');
   let result;
   try {
     result = execFileSync(

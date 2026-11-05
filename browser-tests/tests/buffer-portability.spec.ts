@@ -22,7 +22,15 @@ test(`${artifact} local-forging preserves complete Octez bytes without a global 
     .poll(async () => JSON.parse(await page.locator('#status').innerText()))
     .toMatchObject({
       status: 'ok',
-      summary: { bytes: expectedBufferOperation, decoded: bufferOperation },
+      summary: {
+        bytes: expectedBufferOperation,
+        decoded: bufferOperation,
+        utf8: {
+          surrogateEncoding: '0100000006efbfbdefbfbd',
+          truncated: { string: '\uFFFD' },
+          bom: { string: '\uFEFFA' },
+        },
+      },
     });
   expect(await page.evaluate(() => 'Buffer' in globalThis)).toBe(false);
 });

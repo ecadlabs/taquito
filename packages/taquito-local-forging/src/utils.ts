@@ -13,3 +13,8 @@ export const toHexString = (bytes: Uint8Array) =>
 export const pad = (num: number, paddingLen = 8) => {
   return num.toString(16).padStart(paddingLen, '0');
 };
+
+// Match native Buffer's handling of an initial BOM.
+export function decodeUtf8(bytes: Uint8Array): string {
+  return new TextDecoder('utf-8', { ignoreBOM: true }).decode(bytes);
+}
