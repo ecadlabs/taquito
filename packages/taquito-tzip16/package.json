@@ -66,13 +66,10 @@
     "@rollup/plugin-commonjs": "29.0.3",
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "16.0.3",
-    "@types/bluebird": "^3.5.42",
     "@types/crypto-js": "^4.2.2",
     "@types/node": "^22.20.5",
-    "@types/ws": "^8.18.2",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
-    "cross-env": "^7.0.3",
     "eslint": "^8.57.0",
     "lint-staged": "^15.2.7",
     "lodash.camelcase": "^4.3.0",
@@ -81,7 +78,6 @@
     "rollup": "^4.67.3",
     "rollup-plugin-typescript2": "^0.37.0",
     "ts-node": "^10.9.2",
-    "ts-toolbelt": "^9.6.0",
     "typescript": "^6.0.3"
   },
   "gitHead": "551e35aeff7d6dcde1c72284238c0ed3c3aae77e"

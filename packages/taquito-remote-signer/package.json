@@ -56,18 +56,14 @@
   "dependencies": {
     "@taquito/core": "^25.1.0",
     "@taquito/http-utils": "^25.1.0",
-    "@taquito/taquito": "^25.1.0",
     "@taquito/utils": "^25.1.0",
     "typedarray-to-buffer": "^4.0.0"
   },
   "devDependencies": {
     "@rollup/plugin-json": "^6.1.0",
-    "@types/bluebird": "^3.5.42",
     "@types/node": "^22.20.5",
-    "@types/ws": "^8.18.2",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
-    "cross-env": "^7.0.3",
     "eslint": "^8.57.0",
     "lint-staged": "^15.2.7",
     "lodash.camelcase": "^4.3.0",
@@ -76,7 +72,6 @@
     "rollup": "^4.67.3",
     "rollup-plugin-typescript2": "^0.37.0",
     "ts-node": "^10.9.2",
-    "ts-toolbelt": "^9.6.0",
     "typescript": "^6.0.3"
   },
   "gitHead": "551e35aeff7d6dcde1c72284238c0ed3c3aae77e"

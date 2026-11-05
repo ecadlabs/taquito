@@ -8,7 +8,7 @@
 ## Install
 Install the package as follows
 ```
-npm install @taquito/ledger-signer
+npm install @taquito/ledger-signer @taquito/taquito
 ```
 
 ## Usage
