@@ -15,7 +15,6 @@ import {
   Regions,
 } from '@ecadlabs/beacon-dapp';
 import { BeaconWalletNotInitialized, MissingRequiredScopes } from './errors';
-import toBuffer from 'typedarray-to-buffer';
 import {
   createIncreasePaidStorageOperation,
   createOriginationOperation,
@@ -336,7 +335,7 @@ export class BeaconWallet implements WalletProvider {
     if (typeof watermark !== 'undefined') {
       bb = mergebuf(watermark, bb);
     }
-    const watermarkedBytes = buf2hex(toBuffer(bb));
+    const watermarkedBytes = buf2hex(bb);
     const signingType = this.getSigningType(watermark);
     if (signingType !== SigningType.OPERATION) {
       throw new UnsupportedActionError(

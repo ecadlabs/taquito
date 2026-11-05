@@ -1,5 +1,5 @@
 import { InvalidSpendingKey } from '../errors';
-import toBuffer from 'typedarray-to-buffer';
+import { Buffer } from 'buffer';
 import { openSecretBox } from '@stablelib/nacl';
 import { pbkdf2 } from '@noble/hashes/pbkdf2.js';
 import { sha512 } from '@noble/hashes/sha2.js';
@@ -42,8 +42,8 @@ export function decryptKey(spendingKey: string, password?: string) {
     if (!decrypted) {
       throw new InvalidSpendingKey('incorrect password or unable to decrypt');
     }
-    return toBuffer(decrypted);
+    return Buffer.from(decrypted);
   } else {
-    return toBuffer(keyArr);
+    return Buffer.from(keyArr);
   }
 }

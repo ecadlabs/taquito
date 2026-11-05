@@ -26,8 +26,7 @@ export default {
         "@noble/curves/secp256k1.js": "secp256k1",
         "@noble/curves/nist.js": "nist",
         "@stablelib/nacl": "nacl",
-        "bip39": "Bip39",
-        "typedarray-to-buffer": "toBuffer"
+        "bip39": "Bip39"
       }
     },
     { file: pkg.module, format: 'es', sourcemap: true },
@@ -42,8 +41,7 @@ export default {
     '@noble/curves/secp256k1.js',
     '@noble/curves/nist.js',
     '@stablelib/nacl',
-    'bip39',
-    'typedarray-to-buffer'
+    'bip39'
   ],
   watch: {
     include: 'src/**',

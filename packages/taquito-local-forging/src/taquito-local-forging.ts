@@ -3,13 +3,6 @@
  * @module @taquito/local-forging
  */
 
-import 'fast-text-encoding';
-if (typeof globalThis.TextEncoder === 'undefined') {
-  globalThis.TextEncoder = TextEncoder as any;
-}
-if (typeof globalThis.TextDecoder === 'undefined') {
-  globalThis.TextDecoder = TextDecoder as any;
-}
 import { ForgeParams, Forger } from './interface';
 import { CODEC } from './constants';
 import { decoders } from './decoder';

@@ -3,7 +3,7 @@ import { Decoder } from '../decoder';
 import { Uint8ArrayConsumer } from '../uint8array-consumer';
 import { Encoder } from '../encoder';
 import { opMappingReverse, opMapping } from '../constants';
-import { pad } from '../utils';
+import { decodeUtf8, encodeUtf8ToHex, pad, toHexString } from '../utils';
 import { UnexpectedMichelsonValueError } from '../errors';
 import { InvalidHexStringError } from '@taquito/core';
 
@@ -94,7 +94,7 @@ export const valueDecoder: Decoder = (value: Uint8ArrayConsumer) => {
 
 export const extractRequiredLen = (value: Uint8ArrayConsumer, bytesLength = 4) => {
   const len = value.consume(bytesLength);
-  const valueLen = parseInt(Buffer.from(len).toString('hex'), 16);
+  const valueLen = parseInt(toHexString(len), 16);
   return value.consume(valueLen);
 };
 
@@ -127,12 +127,12 @@ export const bytesEncoder: Encoder<BytesValue> = (value) => {
 export const bytesDecoder: Decoder = (value: Uint8ArrayConsumer) => {
   const bytes = extractRequiredLen(value);
   return {
-    bytes: Buffer.from(bytes).toString('hex'),
+    bytes: toHexString(bytes),
   };
 };
 
 export const stringEncoder: Encoder<StringValue> = (value) => {
-  const str = Buffer.from(value.string, 'utf8').toString('hex');
+  const str = encodeUtf8ToHex(value.string);
   const hexLength = str.length / 2;
   return `01${pad(hexLength)}${str}`;
 };
@@ -140,7 +140,7 @@ export const stringEncoder: Encoder<StringValue> = (value) => {
 export const stringDecoder: Decoder = (value: Uint8ArrayConsumer) => {
   const str = extractRequiredLen(value);
   return {
-    string: Buffer.from(str).toString('utf8'),
+    string: decodeUtf8(str),
   };
 };
 
@@ -304,7 +304,7 @@ export const decodeCombPair: Decoder = (val: Uint8ArrayConsumer) => {
 export const encodeAnnots: Encoder<string[]> = (value: string[]) => {
   const mergedAnnot = value
     .map((x) => {
-      return Buffer.from(x, 'utf8').toString('hex');
+      return encodeUtf8ToHex(x);
     })
     .join('20');
 
@@ -314,9 +314,8 @@ export const encodeAnnots: Encoder<string[]> = (value: string[]) => {
 
 export const decodeAnnots: Decoder = (val: Uint8ArrayConsumer): string[] => {
   const len = val.consume(4);
-  const annotLen = parseInt(Buffer.from(len).toString('hex'), 16);
+  const annotLen = parseInt(toHexString(len), 16);
   const restOfAnnot = val.consume(annotLen);
 
-  const restOfAnnotHex = Buffer.from(restOfAnnot).toString('hex');
-  return restOfAnnotHex.split('20').map((x) => Buffer.from(x, 'hex').toString('utf8'));
+  return decodeUtf8(restOfAnnot).split(' ');
 };

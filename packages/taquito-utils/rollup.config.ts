@@ -21,7 +21,6 @@ export default {
         buffer: "buffer",
         bs58check: "bs58check",
         "bignumber.js": "BigNumber",
-        "typedarray-to-buffer": "toBuffer",
         "@taquito/core": "core",
         "@noble/curves/ed25519.js": "ed25519",
         "@noble/curves/bls12-381.js": "bls12381",
@@ -33,7 +32,6 @@ export default {
   ],
   // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
   external: [
-    'typedarray-to-buffer',
     'bs58check',
     '@taquito/core',
     '@noble/curves/ed25519.js',

@@ -64,8 +64,7 @@
     "@taquito/core": "^25.1.0",
     "@taquito/utils": "^25.1.0",
     "@types/bn.js": "^5.2.0",
-    "bn.js": "^5.2.5",
-    "typedarray-to-buffer": "^4.0.0"
+    "bn.js": "^5.2.5"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^29.0.3",

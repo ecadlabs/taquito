@@ -77,9 +77,7 @@
     "@types/chrome": "0.1.40",
     "@taquito/core": "^25.1.0",
     "@taquito/taquito": "^25.1.0",
-    "@taquito/utils": "^25.1.0",
-    "typedarray-to-buffer": "^4.0.0",
-    "util": "^0.12.5"
+    "@taquito/utils": "^25.1.0"
   },
   "devDependencies": {
     "@ecadlabs/beacon-transport-postmessage": "4.8.4-ecad",

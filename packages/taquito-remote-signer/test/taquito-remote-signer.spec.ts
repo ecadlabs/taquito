@@ -291,5 +291,53 @@ describe('RemoteSigner test', () => {
         expect(error).toBeInstanceOf(BadSigningDataError);
       }
     });
+
+    it('signs and verifies operation bytes without global Buffer', async () => {
+      const signer = new RemoteSigner(
+        'tz1iD5nmudc4QtfNW14WWaiP7JEDuUHnbXuv',
+        'http://127.0.0.1:6732',
+        {},
+        httpBackend as any
+      );
+      const signingBytes =
+        '0365cac93523b8c10346c0107cfea5e12ff3c759459020e532f299e2f41082f7cb6d0000f68c4abfa21dfc0c9efcf588190388cac85d9db60f81d6038b79d8030000000000b902000000b405000764045b0000000a2564656372656d656e74045b0000000a25696e6372656d656e740501035b0502020000008503210317057000010321057100020316072e020000002b032105700002032105710003034203210317057000010321057100020316034b051f020000000405200002020000002b0321057000020321057100030342032103170570000103210571000203160312051f0200000004052000020321053d036d0342051f020000000405200003000000020000';
+      const signature =
+        'sigiGUGvWRkoYuf7ReH3wWAYnpgBFTa2DJ4Nxi7v1Wy5KqS7sZaxNhRiW6ivuoSUdKZnyGTABVk23WnppatuYqHty7uDtWRY';
+      const signatureHex =
+        '9b00f3b02e3760092415595548e2bd6532b0223d8ff282d31b6f30e35592b6b91a4c37fb0a6a24cc8b5176cc497e204ab722a4711803121ff51dc5a450cfd10b';
+
+      httpBackend.createRequest
+        .mockResolvedValueOnce({ signature })
+        .mockResolvedValueOnce({
+          public_key: 'edpkuAhkJ81xGyf4PcmRMHLSaQGbDEpkGhNbcjNVnKWKR8kqkgQR3f',
+        })
+        .mockResolvedValueOnce({ signature })
+        .mockResolvedValueOnce({
+          public_key: 'edpkuAhkJ81xGyf4PcmRMHLSaQGbDEpkGhNbcjNVnKWKR8kqkgQR3f',
+        });
+
+      const descriptor = Object.getOwnPropertyDescriptor(globalThis, 'Buffer');
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      delete (globalThis as any).Buffer;
+      try {
+        expect('Buffer' in globalThis).toBe(false);
+        const unwatermarked = signingBytes.slice(2);
+        const subviewWatermark = new Uint8Array([0xff, 3, 0xaa]).subarray(1, 2);
+        const signed = await signer.sign(unwatermarked, subviewWatermark);
+        expect(httpBackend.createRequest.mock.calls[0][1]).toBe(signingBytes);
+        expect(signed).toEqual({
+          bytes: unwatermarked,
+          sig: signature,
+          prefixSig: signature,
+          sbytes: unwatermarked + signatureHex,
+        });
+
+        await expect(signer.sign(unwatermarked + '00', subviewWatermark)).rejects.toThrow();
+      } finally {
+        if (descriptor) {
+          Object.defineProperty(globalThis, 'Buffer', descriptor);
+        }
+      }
+    });
   });
 });

@@ -1,6 +1,8 @@
 import {
   entrypointEncoder,
   entrypointDecoder,
+  entrypointNameEncoder,
+  entrypointNameDecoder,
   ballotEncoder,
   ballotDecoder,
   pvmKindEncoder,
@@ -8,10 +10,20 @@ import {
   paddedBytesEncoder,
   paddedBytesDecoder,
   prefixDecoder,
+  int16Encoder,
   int16Decoder,
+  int32Encoder,
   int32Decoder,
   zarithDecoder,
+  burnLimitEncoder,
+  burnLimitDecoder,
+  depositsLimitEncoder,
+  depositsLimitDecoder,
+  smartRollupMessageEncoder,
+  smartRollupMessageDecoder,
 } from '../src/codec';
+import { OpKind } from '@taquito/rpc';
+import type { ForgeParams } from '../src/interface';
 import {
   localForger,
   OperationDecodingError,
@@ -493,6 +505,105 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
       expect(unterminatedMulti.consume(1)).toEqual(new Uint8Array([0xff]));
       expect(() => zarithDecoder(unterminatedMulti)).toThrow(OperationDecodingError);
       expect(unterminatedMulti.length()).toBe(2);
+    });
+  });
+
+  describe('Browser portability without globalThis.Buffer', () => {
+    const withNoGlobalBuffer = async <T>(fn: () => Promise<T> | T): Promise<T> => {
+      const descriptor = Object.getOwnPropertyDescriptor(globalThis, 'Buffer');
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      delete (globalThis as any).Buffer;
+      try {
+        expect('Buffer' in globalThis).toBe(false);
+        return await fn();
+      } finally {
+        if (descriptor) {
+          Object.defineProperty(globalThis, 'Buffer', descriptor);
+        }
+      }
+    };
+
+    test('localForger forges and parses a custom entrypoint and UTF-8 transaction without global Buffer', async () => {
+      // Forged by Octez 25.3 (e5d8a6b8) in local mockup mode
+      const op: ForgeParams = {
+        branch: 'BLxGBu48ybnWvZoaVLyXV4XVnhdeDc9V2NcB9wsegQniza6mxvX',
+        contents: [
+          {
+            kind: OpKind.TRANSACTION,
+            source: 'tz1h5DrMhmdrGMpb3qkykU1RmCWoTYAkFJPu',
+            fee: '1496',
+            counter: '3970',
+            gas_limit: '2849',
+            storage_limit: '6572',
+            amount: '0',
+            destination: 'KT1NGV6nvvedwwjMjCsWY6Vfm6p1q5sMMLDY',
+            parameters: {
+              entrypoint: 'my_entrypoint',
+              value: {
+                prim: 'Pair',
+                args: [{ string: 'taquito 🐙 café' }, { int: '42' }],
+              },
+            },
+          },
+        ],
+      };
+      const expectedHex =
+        'a3709dd3656c6d80bdfa9c3233d65bee9959207dae273e6fef48b7d6a2944d146c00eb1e5b162505a8b471dad53e6b95a287dc354eabd80b821fa116ac330001961c87824da8d4733dd7dee6f171e6c391c4240700ffff0d6d795f656e747279706f696e740000001b070701000000127461717569746f20f09f909920636166c3a9002a';
+
+      await withNoGlobalBuffer(async () => {
+        const forged = await localForger.forge(op);
+        expect(forged).toBe(expectedHex);
+        const parsed = await localForger.parse(forged);
+        expect(parsed).toEqual(op);
+      });
+    });
+
+    test('codec encoders and decoders work without global Buffer', async () => {
+      await withNoGlobalBuffer(() => {
+        expect(int16Encoder(0)).toBe('0000');
+        expect(int16Encoder(258)).toBe('0102');
+        expect(int16Encoder(-1)).toBe('ffff');
+        expect(int16Decoder(Uint8ArrayConsumer.fromHexString('0102'))).toBe(258);
+
+        expect(int32Encoder(0)).toBe('00000000');
+        expect(int32Encoder(16909060)).toBe('01020304');
+        expect(int32Encoder(-1)).toBe('ffffffff');
+        expect(int32Decoder(Uint8ArrayConsumer.fromHexString('01020304'))).toBe(16909060);
+
+        const epEncoded = entrypointEncoder('custom_ep');
+        expect(epEncoded).toBe('ff09637573746f6d5f6570');
+        const epConsumer = Uint8ArrayConsumer.fromHexString(epEncoded);
+        expect(entrypointDecoder(epConsumer)).toBe('custom_ep');
+        expect(epConsumer.length()).toBe(0);
+
+        const epNameEncoded = entrypointNameEncoder('ticket_ep');
+        expect(epNameEncoded).toBe('000000097469636b65745f6570');
+        const epNameConsumer = Uint8ArrayConsumer.fromHexString(epNameEncoded);
+        expect(entrypointNameDecoder(epNameConsumer)).toBe('ticket_ep');
+        expect(epNameConsumer.length()).toBe(0);
+
+        expect(burnLimitEncoder('')).toBe('00');
+        expect(burnLimitEncoder('1000')).toBe('ffe807');
+        expect(burnLimitDecoder(Uint8ArrayConsumer.fromHexString('00'))).toBeUndefined();
+        expect(burnLimitDecoder(Uint8ArrayConsumer.fromHexString('ffe807'))).toBe('1000');
+
+        expect(depositsLimitEncoder('')).toBe('00');
+        expect(depositsLimitEncoder('500')).toBe('fff403');
+        expect(depositsLimitDecoder(Uint8ArrayConsumer.fromHexString('00'))).toBeUndefined();
+        expect(depositsLimitDecoder(Uint8ArrayConsumer.fromHexString('fff403'))).toBe('500');
+
+        const padded = paddedBytesEncoder('deadbeef');
+        expect(padded).toBe('00000004deadbeef');
+        const paddedConsumer = Uint8ArrayConsumer.fromHexString(padded);
+        expect(paddedBytesDecoder(paddedConsumer)).toBe('deadbeef');
+        expect(paddedConsumer.length()).toBe(0);
+
+        const rollupMsg = smartRollupMessageEncoder(['0102', 'aabbcc']);
+        expect(rollupMsg).toBe('0000000d00000002010200000003aabbcc');
+        const rollupConsumer = Uint8ArrayConsumer.fromHexString(rollupMsg);
+        expect(smartRollupMessageDecoder(rollupConsumer)).toEqual(['0102', 'aabbcc']);
+        expect(rollupConsumer.length()).toBe(0);
+      });
     });
   });
 });

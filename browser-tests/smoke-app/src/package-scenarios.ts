@@ -39,6 +39,45 @@ const localForgerOperation = {
   ],
 } as const;
 
+const utf8ForgerOperation = {
+  branch: 'BLxGBu48ybnWvZoaVLyXV4XVnhdeDc9V2NcB9wsegQniza6mxvX',
+  contents: [
+    {
+      kind: 'transaction',
+      source: 'tz1h5DrMhmdrGMpb3qkykU1RmCWoTYAkFJPu',
+      fee: '1496',
+      counter: '3970',
+      gas_limit: '2849',
+      storage_limit: '6572',
+      amount: '0',
+      destination: validContractAddress,
+      parameters: {
+        entrypoint: 'my_entrypoint',
+        value: {
+          prim: 'Pair',
+          args: [{ string: 'taquito 🐙 café' }, { int: '42' }],
+        },
+      },
+    },
+  ],
+};
+
+const expectedUtf8ForgedBytes =
+  'a3709dd3656c6d80bdfa9c3233d65bee9959207dae273e6fef48b7d6a2944d146c00eb1e5b162505a8b471dad53e6b95a287dc354eabd80b821fa116ac330001961c87824da8d4733dd7dee6f171e6c391c4240700ffff0d6d795f656e747279706f696e740000001b070701000000127461717569746f20f09f909920636166c3a9002a';
+
+const signingBytesFixture =
+  '0365cac93523b8c10346c0107cfea5e12ff3c759459020e532f299e2f41082f7cb6d0000f68c4abfa21dfc0c9efcf588190388cac85d9db60f81d6038b79d8030000000000b902000000b405000764045b0000000a2564656372656d656e74045b0000000a25696e6372656d656e740501035b0502020000008503210317057000010321057100020316072e020000002b032105700002032105710003034203210317057000010321057100020316034b051f020000000405200002020000002b0321057000020321057100030342032103170570000103210571000203160312051f0200000004052000020321053d036d0342051f020000000405200003000000020000';
+const signingSignatureFixture =
+  'sigiGUGvWRkoYuf7ReH3wWAYnpgBFTa2DJ4Nxi7v1Wy5KqS7sZaxNhRiW6ivuoSUdKZnyGTABVk23WnppatuYqHty7uDtWRY';
+const signingSignatureHexFixture =
+  '9b00f3b02e3760092415595548e2bd6532b0223d8ff282d31b6f30e35592b6b91a4c37fb0a6a24cc8b5176cc497e204ab722a4711803121ff51dc5a450cfd10b';
+
+const assertNoGlobalBuffer = () => {
+  if ('Buffer' in globalThis) {
+    throw new Error('Unexpected globalThis.Buffer in browser smoke environment');
+  }
+};
+
 const scenarios: Record<PackageScenarioId, SmokeScenario> = {
   'core-import': async () => {
     const core = await importPackage<typeof import('@taquito/core')>('@taquito/core');
@@ -132,11 +171,44 @@ const scenarios: Record<PackageScenarioId, SmokeScenario> = {
   },
 
   'local-forging-behavior': async () => {
-    const { LocalForger } = await importPackage<typeof import('@taquito/local-forging')>(
-      '@taquito/local-forging'
-    );
+    assertNoGlobalBuffer();
+    const {
+      LocalForger,
+      Uint8ArrayConsumer,
+      decodeAnnots,
+      encodeAnnots,
+      stringEncoder,
+      valueDecoder,
+    } = await importPackage<typeof import('@taquito/local-forging')>('@taquito/local-forging');
     const localForger = new LocalForger();
     const forged = await localForger.forge(localForgerOperation as any);
+    const parsedRollup = await localForger.parse(forged);
+
+    const utf8Forged = await localForger.forge(utf8ForgerOperation as any);
+    if (utf8Forged !== expectedUtf8ForgedBytes) {
+      throw new Error('Forged UTF-8 operation bytes differ from Octez fixture');
+    }
+    const utf8Parsed = await localForger.parse(utf8Forged);
+    if (JSON.stringify(utf8Parsed) !== JSON.stringify(utf8ForgerOperation)) {
+      throw new Error('Parsed UTF-8 operation differs from original operation');
+    }
+
+    const surrogateHex = stringEncoder({ string: String.fromCharCode(0xd800, 0xd801) });
+    const truncatedDecoded = valueDecoder(Uint8ArrayConsumer.fromHexString('0100000002e282'));
+    const bomDecoded = valueDecoder(Uint8ArrayConsumer.fromHexString('0100000004efbbbf41'));
+    const annotsRoundTrip = decodeAnnots(
+      Uint8ArrayConsumer.fromHexString(encodeAnnots(['%ep', ':ty', '\x02\x01']))
+    );
+
+    if (
+      surrogateHex !== '0100000006efbfbdefbfbd' ||
+      JSON.stringify(truncatedDecoded) !== JSON.stringify({ string: '\uFFFD' }) ||
+      JSON.stringify(bomDecoded) !== JSON.stringify({ string: '\uFEFFA' }) ||
+      JSON.stringify(annotsRoundTrip) !== JSON.stringify(['%ep', ':ty', '\x02\x01'])
+    ) {
+      throw new Error('UTF-8 or annotation edge-case behavior changed in browser');
+    }
+    assertNoGlobalBuffer();
 
     return {
       exports: ['LocalForger'],
@@ -144,6 +216,8 @@ const scenarios: Record<PackageScenarioId, SmokeScenario> = {
         forgedPrefix: forged.slice(0, 20),
         forgedLength: forged.length,
         containsMessage: forged.includes(localForgerOperation.contents[0].message[0]),
+        parsedRollupKind: parsedRollup.contents[0]?.kind,
+        utf8MatchesFixture: utf8Forged === expectedUtf8ForgedBytes,
       },
     };
   },
@@ -242,15 +316,60 @@ const scenarios: Record<PackageScenarioId, SmokeScenario> = {
   },
 
   'beacon-wallet-import': async () => {
+    assertNoGlobalBuffer();
     const beaconWallet = await importPackage<typeof import('@taquito/beacon-wallet')>(
       '@taquito/beacon-wallet'
     );
+    const requests: Array<{ payload?: string; signingType?: string }> = [];
+    const wallet = Object.assign(Object.create(beaconWallet.BeaconWallet.prototype), {
+      client: {
+        requestSignPayload: async (request: { payload?: string; signingType?: string }) => {
+          requests.push(request);
+          return {
+            type: 'sign_payload_response',
+            signingType: 'operation',
+            signature: signingSignatureFixture,
+            version: '2',
+            id: 'fixture',
+            senderId: 'fixture',
+          };
+        },
+      },
+    }) as InstanceType<typeof beaconWallet.BeaconWallet>;
+
+    let rejectedRaw = false;
+    try {
+      await wallet.sign(signingBytesFixture.slice(2));
+    } catch (error) {
+      if (
+        error instanceof Error &&
+        error.message.includes('only supports signing operations, not raw')
+      ) {
+        rejectedRaw = true;
+      } else {
+        throw error;
+      }
+    }
+    if (!rejectedRaw || requests.length !== 0) {
+      throw new Error('Expected BeaconWallet.sign() without watermark to reject before sending');
+    }
+    const signature = await wallet.sign(signingBytesFixture.slice(2), new Uint8Array([3]));
+    if (
+      signature !== signingSignatureFixture ||
+      requests.length !== 1 ||
+      requests[0]?.payload !== signingBytesFixture ||
+      requests[0]?.signingType !== 'operation'
+    ) {
+      throw new Error('Unexpected BeaconWallet.sign() result in browser');
+    }
+    assertNoGlobalBuffer();
 
     return {
       exports: ['BeaconWallet', 'BeaconWalletNotInitialized'],
       summary: {
         beaconWalletType: typeof beaconWallet.BeaconWallet,
         errorType: typeof beaconWallet.BeaconWalletNotInitialized,
+        signedOperation: signature === signingSignatureFixture,
       },
     };
   },
@@ -294,18 +413,106 @@ const scenarios: Record<PackageScenarioId, SmokeScenario> = {
     };
   },
 
-  'sapling-import': async () => {
-    const sapling = await importPackage<typeof import('@taquito/sapling')>('@taquito/sapling');
-
-    return {
-      exports: ['SaplingToolkit', 'SaplingTransactionViewer', 'initSapling', 'preloadSaplingParams'],
-      summary: {
-        hasSaplingToolkit: typeof sapling.SaplingToolkit === 'function',
-        hasTransactionViewer: typeof sapling.SaplingTransactionViewer === 'function',
-        hasInitSapling: typeof sapling.initSapling === 'function',
-        hasPreloadSaplingParams: typeof sapling.preloadSaplingParams === 'function',
-      },
+  'remote-signer-behavior': async () => {
+    assertNoGlobalBuffer();
+    const { RemoteSigner } = await importPackage<typeof import('@taquito/remote-signer')>(
+      '@taquito/remote-signer'
+    );
+    const posts: Array<{ url: string; body: unknown }> = [];
+    const nativeFetch = globalThis.fetch;
+    globalThis.fetch = async (input, init) => {
+      const url = typeof input === 'string' ? input : input.toString();
+      if (init?.method === 'POST') {
+        if (typeof init.body !== 'string') {
+          throw new Error('Expected JSON string body for RemoteSigner POST');
+        }
+        posts.push({ url, body: JSON.parse(init.body) });
+        return Response.json({ signature: signingSignatureFixture });
+      }
+      return Response.json({
+        public_key: 'edpkuAhkJ81xGyf4PcmRMHLSaQGbDEpkGhNbcjNVnKWKR8kqkgQR3f',
+      });
     };
+    try {
+      const signer = new RemoteSigner(
+        'tz1iD5nmudc4QtfNW14WWaiP7JEDuUHnbXuv',
+        'https://signer.invalid'
+      );
+      const unwatermarked = signingBytesFixture.slice(2);
+      const signed = await signer.sign(unwatermarked, new Uint8Array([3]));
+      if (
+        signed.bytes !== unwatermarked ||
+        signed.sig !== signingSignatureFixture ||
+        signed.sbytes !== unwatermarked + signingSignatureHexFixture ||
+        posts[0]?.url !== 'https://signer.invalid/keys/tz1iD5nmudc4QtfNW14WWaiP7JEDuUHnbXuv' ||
+        posts[0]?.body !== signingBytesFixture
+      ) {
+        throw new Error('Unexpected RemoteSigner.sign() output in browser');
+      }
+      let tamperedRejected = false;
+      try {
+        await signer.sign(unwatermarked + '00', new Uint8Array([3]));
+      } catch (error) {
+        if (error instanceof Error && error.name === 'SignatureVerificationFailedError') {
+          tamperedRejected = true;
+        } else {
+          throw error;
+        }
+      }
+      if (!tamperedRejected) {
+        throw new Error('Expected tampered signature verification to fail');
+      }
+      assertNoGlobalBuffer();
+      return {
+        exports: ['RemoteSigner'],
+        summary: {
+          signedBytesMatch: signed.sbytes === unwatermarked + signingSignatureHexFixture,
+          postCount: posts.length,
+        },
+      };
+    } finally {
+      globalThis.fetch = nativeFetch;
+    }
+  },
+
+  'sapling-import': async () => {
+    assertNoGlobalBuffer();
+    const sapling = await importPackage<typeof import('@taquito/sapling')>('@taquito/sapling');
+    // @taquito/sapling's sapling-wasm wrapper installs a Buffer shim on globalThis for @taquito/sapling-wasm;
+    // remove it temporarily to verify InMemorySpendingKey / decryptKey works without globalThis.Buffer.
+    const installedShim = (globalThis as { Buffer?: unknown }).Buffer;
+    delete (globalThis as { Buffer?: unknown }).Buffer;
+    try {
+      assertNoGlobalBuffer();
+      const spendingKey = new sapling.InMemorySpendingKey(
+        'sask27SLmU9herddHz4qFJBLMjWYMbJF8RtS579w9ej9mfCYK7VUdyCJPHK8AzW9zMsopGZEkYeNjAY7Zz1bkM7CGu8eKLzrjBLTMC5wWJDhxiK91ahA29rhDRsHdJDV2u2jFwb2MNUix8JW7sAkAqYVaJpCehTBPgRQ1KqKwqqUaNmuD8kazd4Q8MCWmgbWs21Yuomdqyi9FLigjRp7oY4m5adaVU19Nj1AHvsMY2tePeU2L'
+      );
+      const encryptedSpendingKey = new sapling.InMemorySpendingKey(
+        'MMXjN99mhomTm1Y5nQt8NfwEKTHWugsLtucX7oWrpsJd99qxGYJWP5aMb3t8zZaoKHQ898bLu9dwpog71bnjiDZfS9J9hWnTLCGm4fAjKKYeRuwTgCRjSdsP9znCPBUpCvyxeEFvUfamA5URrp8c7AaooAkobLW1PjNh2vjHobtiyNVTEtyTUWTLcjdxaiPbQWs3NaWvcb5Qr6z9MHhKrYNBHmsd9HBeRB2rVnvvL7pMc8f8zqyuXtmAuzMhiqPz3B4BRzuc8a2jkkoL14',
+        'test'
+      );
+      assertNoGlobalBuffer();
+
+      return {
+        exports: [
+          'SaplingToolkit',
+          'SaplingTransactionViewer',
+          'initSapling',
+          'preloadSaplingParams',
+        ],
+        summary: {
+          hasSaplingToolkit: typeof sapling.SaplingToolkit === 'function',
+          hasTransactionViewer: typeof sapling.SaplingTransactionViewer === 'function',
+          hasInitSapling: typeof sapling.initSapling === 'function',
+          hasPreloadSaplingParams: typeof sapling.preloadSaplingParams === 'function',
+          hasSpendingKeyInstance: Boolean(spendingKey && encryptedSpendingKey),
+        },
+      };
+    } finally {
+      if (installedShim !== undefined) {
+        (globalThis as { Buffer?: unknown }).Buffer = installedShim;
+      }
+    }
   },
 
   'sapling-preload': async () => {
