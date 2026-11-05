@@ -4,34 +4,60 @@ import { ClassifiedTransportError } from './transport-errors';
 
 const MAX_CAUSE_DEPTH = 10;
 
-/** Walk the `.cause` chain and return the deepest Error (or object-shaped cause). */
-function deepestCause(err: Error): { message: string; code?: string } {
-  let current: { message: string; code?: string } = err;
+interface CauseEntry {
+  name?: string;
+  message: string;
+  code?: string;
+}
+
+const getRecordCode = (value: Record<string, unknown>): string | undefined =>
+  typeof value['code'] === 'string' ? value['code'] : undefined;
+
+/** Walk the `.cause` chain (including undici `{ message, code }` objects) up to `MAX_CAUSE_DEPTH`. */
+function walkCauseChain(err: Error): CauseEntry[] {
+  const chain: CauseEntry[] = [{ name: err.name, message: err.message }];
+  let current: unknown = (err as unknown as Record<string, unknown>)['cause'];
   let depth = 0;
-  for (;;) {
-    if (depth >= MAX_CAUSE_DEPTH) break;
-    const next: unknown = (current as unknown as Record<string, unknown>)['cause'];
-    if (next instanceof Error) {
-      current = next;
+  while (depth < MAX_CAUSE_DEPTH) {
+    if (current instanceof Error) {
+      chain.push({
+        name: current.name,
+        message: current.message,
+        code: getRecordCode(current as unknown as Record<string, unknown>),
+      });
+      current = (current as unknown as Record<string, unknown>)['cause'];
       depth++;
       continue;
     }
     // Handle object-shaped causes (e.g. undici sometimes throws { message, code } objects)
     if (
-      typeof next === 'object' &&
-      next !== null &&
-      typeof (next as Record<string, unknown>)['message'] === 'string'
+      typeof current === 'object' &&
+      current !== null &&
+      typeof (current as Record<string, unknown>)['message'] === 'string'
     ) {
-      const obj = next as Record<string, unknown>;
-      current = {
+      const obj = current as Record<string, unknown>;
+      chain.push({
         message: obj['message'] as string,
-        code: typeof obj['code'] === 'string' ? obj['code'] : undefined,
-      };
-      break;
+        code: getRecordCode(obj),
+      });
     }
     break;
   }
-  return current;
+  return chain;
+}
+
+/** Format an error and its `.cause` chain as a single human-readable diagnostic string. */
+export function formatErrorCauseChain(error: unknown): string {
+  if (!(error instanceof Error)) {
+    return String(error);
+  }
+  return walkCauseChain(error)
+    .map((entry, index) => {
+      const prefix = entry.name ? `${entry.name}: ` : '';
+      const codeSuffix = index > 0 && entry.code ? ` [${entry.code}]` : '';
+      return `${prefix}${entry.message}${codeSuffix}`;
+    })
+    .join(' → ');
 }
 
 /**
@@ -53,11 +79,11 @@ export class HttpRequestFailed extends NetworkError {
   ) {
     super();
     this.name = 'HttpRequestFailed';
-    const rootCause = deepestCause(cause);
-    const rootCode = rootCause.code;
+    const chain = walkCauseChain(cause);
+    const rootCause = chain[chain.length - 1];
     const detail =
-      rootCause !== (cause as { message: string; code?: string })
-        ? `${rootCause.message}${rootCode ? ` [${rootCode}]` : ''}`
+      chain.length > 1
+        ? `${rootCause.message}${rootCause.code ? ` [${rootCause.code}]` : ''}`
         : cause.message;
     const kindLabel = transportError ? ` (${transportError.kind})` : '';
     this.message = `${method} ${url}${kindLabel}: ${detail}`;

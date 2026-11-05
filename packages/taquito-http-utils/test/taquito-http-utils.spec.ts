@@ -146,15 +146,17 @@ describe('HttpBackend', () => {
         });
       });
 
-      it('passes custom headers', async () => {
+      it('passes custom headers without mutating caller headers object', async () => {
+        const callerHeaders: Record<string, string> = { Authorization: 'Bearer tok' };
         await backend.createRequest({
           url: 'https://rpc.example.com/',
-          headers: { Authorization: 'Bearer tok' },
+          headers: callerHeaders,
         });
         expect(mockFetch.mock.calls[0][1].headers).toMatchObject({
           Authorization: 'Bearer tok',
           'Content-Type': 'application/json',
         });
+        expect(callerHeaders).toEqual({ Authorization: 'Bearer tok' });
       });
 
       it('serializes data object as JSON body', async () => {
@@ -252,12 +254,61 @@ describe('HttpBackend', () => {
       });
     });
 
+    describe('caller AbortSignal', () => {
+      it('throws immediately without calling fetch when signal is already aborted', async () => {
+        const controller = new AbortController();
+        const reason = new Error('caller cancelled');
+        controller.abort(reason);
+        await expect(
+          backend.createRequest({
+            url: 'https://rpc.example.com/',
+            signal: controller.signal,
+          })
+        ).rejects.toBe(reason);
+        expect(mockFetch).not.toHaveBeenCalled();
+      });
+
+      it('rethrows caller abort error without wrapping in HttpTimeoutError or retrying', async () => {
+        const controller = new AbortController();
+        const reason = new DOMException('Aborted by caller', 'AbortError');
+        mockFetch.mockImplementationOnce((_url: string, init: RequestInit) => {
+          expect(init.signal).toBeInstanceOf(AbortSignal);
+          controller.abort(reason);
+          return Promise.reject(reason);
+        });
+        await expect(
+          backend.createRequest({
+            url: 'https://rpc.example.com/',
+            signal: controller.signal,
+          })
+        ).rejects.toBe(reason);
+        expect(mockFetch).toHaveBeenCalledTimes(1);
+      });
+    });
+
     describe('network errors', () => {
       it('throws HttpRequestFailed for generic fetch errors', async () => {
         mockFetch.mockRejectedValue(new TypeError('Failed to fetch'));
         await expect(backend.createRequest({ url: 'https://rpc.example.com/' })).rejects.toThrow(
           HttpRequestFailed
         );
+      });
+
+      it('throws HttpRequestFailed when fetch returns undefined response', async () => {
+        mockFetch.mockResolvedValueOnce(undefined);
+        await expect(backend.createRequest({ url: 'https://rpc.example.com/' })).rejects.toThrow(
+          HttpRequestFailed
+        );
+      });
+
+      it('wraps non-Error rejection reasons in HttpRequestFailed', async () => {
+        mockFetch.mockRejectedValueOnce('raw string failure');
+        await expect(
+          backend.createRequest({ url: 'https://rpc.example.com/', method: 'POST' })
+        ).rejects.toMatchObject({
+          name: 'HttpRequestFailed',
+          message: 'POST https://rpc.example.com/: raw string failure',
+        });
       });
 
       it('error contains method, url, and cause', async () => {
@@ -273,6 +324,34 @@ describe('HttpBackend', () => {
           expect(err.url).toBe('https://rpc.example.com/broken');
           expect(err.cause).toBe(cause);
         }
+      });
+
+      it('surfaces nested Error and object-shaped causes from native fetch rejections', async () => {
+        const socketErr = new Error('read ECONNRESET');
+        (socketErr as unknown as Record<string, unknown>)['code'] = 'ECONNRESET';
+        const wrappedErrorCause = new TypeError('fetch failed', { cause: socketErr });
+
+        const wrappedObjectCause = new TypeError('fetch failed', {
+          cause: { message: 'other side closed', code: 'UND_ERR_SOCKET' },
+        });
+
+        mockFetch
+          .mockRejectedValueOnce(wrappedErrorCause)
+          .mockRejectedValueOnce(wrappedObjectCause);
+
+        await expect(
+          backend.createRequest({ url: 'https://rpc.example.com/broken', method: 'POST' })
+        ).rejects.toMatchObject({
+          name: 'HttpRequestFailed',
+          message: expect.stringContaining('read ECONNRESET [ECONNRESET]'),
+        });
+
+        await expect(
+          backend.createRequest({ url: 'https://rpc.example.com/broken', method: 'POST' })
+        ).rejects.toMatchObject({
+          name: 'HttpRequestFailed',
+          message: expect.stringContaining('other side closed [UND_ERR_SOCKET]'),
+        });
       });
     });
 
@@ -684,6 +763,127 @@ describe('HttpBackend', () => {
     });
   });
 
+  describe('createRequestBytes', () => {
+    const backend = new HttpBackend();
+
+    function streamFromChunks(
+      chunks: Uint8Array[],
+      opts?: { keepOpen?: boolean; onCancel?: () => Promise<void> }
+    ): {
+      stream: ReadableStream<Uint8Array>;
+      cancelled: () => boolean;
+    } {
+      let index = 0;
+      let wasCancelled = false;
+      const stream = new ReadableStream<Uint8Array>({
+        pull(controller) {
+          if (index < chunks.length) {
+            controller.enqueue(chunks[index++]);
+          } else if (!opts?.keepOpen) {
+            controller.close();
+          }
+        },
+        async cancel() {
+          wasCancelled = true;
+          if (opts?.onCancel) {
+            await opts.onCancel();
+          }
+        },
+      });
+      return { stream, cancelled: () => wasCancelled };
+    }
+
+    it.each([0, -1, 1.5, Number.NaN, Number.POSITIVE_INFINITY])(
+      'rejects invalid maxResponseBytes (%s) with RangeError before calling fetch',
+      async (invalidLimit) => {
+        await expect(
+          backend.createRequestBytes({ url: 'https://rpc.example.com/bytes' }, invalidLimit)
+        ).rejects.toThrow(RangeError);
+        expect(mockFetch).not.toHaveBeenCalled();
+      }
+    );
+
+    it('returns an empty Uint8Array when response.body is null', async () => {
+      mockFetch.mockResolvedValueOnce({
+        status: 200,
+        statusText: 'OK',
+        body: null,
+      } as unknown as Response);
+      const bytes = await backend.createRequestBytes({ url: 'https://rpc.example.com/empty' }, 64);
+      expect(bytes).toEqual(new Uint8Array());
+    });
+
+    it('concatenates multiple response stream chunks in order', async () => {
+      const { stream } = streamFromChunks([
+        new Uint8Array([1, 2]),
+        new Uint8Array([3, 4, 5]),
+        new Uint8Array([6]),
+      ]);
+      mockFetch.mockResolvedValueOnce(new Response(stream, { status: 200 }));
+      const bytes = await backend.createRequestBytes({ url: 'https://rpc.example.com/bytes' }, 6);
+      expect(Array.from(bytes)).toEqual([1, 2, 3, 4, 5, 6]);
+    });
+
+    it('throws RangeError without retrying when response exceeds maxResponseBytes and cancels the stream', async () => {
+      const { stream, cancelled } = streamFromChunks(
+        [new Uint8Array([1, 2, 3]), new Uint8Array([4, 5, 6])],
+        { keepOpen: true }
+      );
+      mockFetch.mockResolvedValueOnce(new Response(stream, { status: 200 }));
+      await expect(
+        backend.createRequestBytes({ url: 'https://rpc.example.com/oversized' }, 4)
+      ).rejects.toThrow(new RangeError('HTTP response exceeds 4 bytes'));
+      expect(cancelled()).toBe(true);
+      expect(mockFetch).toHaveBeenCalledTimes(1);
+    });
+
+    it('propagates RangeError even if reader.cancel() rejects during cleanup', async () => {
+      const { stream, cancelled } = streamFromChunks([new Uint8Array([1, 2, 3, 4, 5])], {
+        keepOpen: true,
+        onCancel: () => Promise.reject(new Error('cancel failed')),
+      });
+      mockFetch.mockResolvedValueOnce(new Response(stream, { status: 200 }));
+      await expect(
+        backend.createRequestBytes({ url: 'https://rpc.example.com/oversized' }, 2)
+      ).rejects.toThrow(new RangeError('HTTP response exceeds 2 bytes'));
+      expect(cancelled()).toBe(true);
+    });
+
+    it('decodes bounded error response bodies into HttpResponseError', async () => {
+      const errorBytes = new TextEncoder().encode('not found body');
+      const { stream } = streamFromChunks([errorBytes]);
+      mockFetch.mockResolvedValueOnce(
+        new Response(stream, { status: 404, statusText: 'Not Found' })
+      );
+      await expect(
+        backend.createRequestBytes({ url: 'https://rpc.example.com/missing' }, 64)
+      ).rejects.toMatchObject({
+        name: 'HttpResponseError',
+        status: 404,
+        statusText: 'Not Found',
+        body: 'not found body',
+      });
+    });
+
+    it('falls back to statusText (or empty string) when error response body exceeds maxResponseBytes', async () => {
+      const oversizedError = new TextEncoder().encode('oversized error payload');
+      const { stream } = streamFromChunks([oversizedError]);
+      mockFetch.mockResolvedValueOnce({
+        status: 400,
+        statusText: '',
+        body: stream,
+      } as unknown as Response);
+      await expect(
+        backend.createRequestBytes({ url: 'https://rpc.example.com/bad' }, 4)
+      ).rejects.toMatchObject({
+        name: 'HttpResponseError',
+        status: 400,
+        statusText: '',
+        body: '',
+      });
+    });
+  });
+
   describe('error classes', () => {
     it('HttpRequestFailed properties and message', () => {
       const cause = new Error('ECONNREFUSED');
@@ -762,6 +962,90 @@ describe('HttpBackend', () => {
       expect(err.timeout).toBe(30000);
       expect(err.url).toBe('https://rpc.example.com/slow');
       expect(err.message).toContain('30000');
+    });
+  });
+
+  describe('HTTP trace logging', () => {
+    const backend = new HttpBackend();
+    const originalTrace = process.env.TAQUITO_HTTP_TRACE;
+
+    afterEach(() => {
+      if (originalTrace === undefined) {
+        delete process.env.TAQUITO_HTTP_TRACE;
+      } else {
+        process.env.TAQUITO_HTTP_TRACE = originalTrace;
+      }
+      vi.restoreAllMocks();
+    });
+
+    it('emits structured JSON trace logs with query-stripped URLs and formatted cause chains when TAQUITO_HTTP_TRACE=1', async () => {
+      process.env.TAQUITO_HTTP_TRACE = '1';
+      const logSpy = vi.spyOn(console, 'log').mockImplementation(() => undefined);
+
+      // 1. Successful request with a relative URL (exercises normalizeTraceUrl fallback)
+      mockFetch.mockResolvedValueOnce(mockResponse({ jsonBody: { ok: true } }));
+      await backend.createRequest({ url: '/relative/path', query: { secret: '1' } });
+
+      // 2. Non-retriable HTTP error response
+      mockFetch.mockResolvedValueOnce(
+        mockResponse({ status: 404, statusText: 'Not Found', body: 'missing' })
+      );
+      await expect(
+        backend.createRequest({ url: 'https://rpc.example.com/missing', query: { a: '1' } })
+      ).rejects.toThrow(HttpResponseError);
+
+      // 3. Timeout error
+      const abortErr = new Error('The operation was aborted');
+      abortErr.name = 'AbortError';
+      mockFetch.mockRejectedValueOnce(abortErr);
+      await expect(
+        backend.createRequest({ url: 'https://rpc.example.com/slow', timeout: 100 })
+      ).rejects.toThrow(HttpTimeoutError);
+
+      // 4. Transport failure with nested cause chain and non-Error failure
+      const rootErr = new Error('connect ECONNREFUSED');
+      (rootErr as unknown as Record<string, unknown>)['code'] = 'ECONNREFUSED';
+      const wrappedErr = new TypeError('fetch failed', { cause: rootErr });
+      mockFetch.mockRejectedValueOnce(wrappedErr).mockRejectedValueOnce('plain failure');
+      await expect(
+        backend.createRequest({ url: 'https://rpc.example.com/down', method: 'POST' })
+      ).rejects.toThrow(HttpRequestFailed);
+      await expect(
+        backend.createRequest({ url: 'https://rpc.example.com/down', method: 'POST' })
+      ).rejects.toThrow(HttpRequestFailed);
+
+      const traces = logSpy.mock.calls.map(([line]) =>
+        JSON.parse(String(line).replace(/^\[taquito:http-trace\] /, ''))
+      );
+      expect(traces).toEqual([
+        expect.objectContaining({ stage: 'response-ok', url: '/relative/path', status: 200 }),
+        expect.objectContaining({
+          stage: 'response-error',
+          url: 'https://rpc.example.com/missing',
+          status: 404,
+        }),
+        expect.objectContaining({
+          stage: 'http-response-error',
+          url: 'https://rpc.example.com/missing',
+          status: 404,
+        }),
+        expect.objectContaining({
+          stage: 'timeout',
+          url: 'https://rpc.example.com/slow',
+          timeoutMs: 100,
+        }),
+        expect.objectContaining({
+          stage: 'request-failed',
+          url: 'https://rpc.example.com/down',
+          transportKind: 'connect',
+          error: 'TypeError: fetch failed → Error: connect ECONNREFUSED [ECONNREFUSED]',
+        }),
+        expect.objectContaining({
+          stage: 'request-failed',
+          url: 'https://rpc.example.com/down',
+          error: 'plain failure',
+        }),
+      ]);
     });
   });
 });
