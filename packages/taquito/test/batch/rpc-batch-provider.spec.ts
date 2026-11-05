@@ -1,6 +1,18 @@
+import {
+  InvalidAddressError,
+  InvalidAmountError,
+  InvalidKeyHashError,
+  InvalidOperationKindError,
+  InvalidProofError,
+  ProhibitedActionError,
+} from '@taquito/core';
 import type { Forger } from '@taquito/local-forging';
 import { PvmKind } from '@taquito/rpc';
-import { OperationBatch } from '../../src/batch/rpc-batch-provider';
+import {
+  BATCH_KINDS,
+  OperationBatch,
+  RPCBatchProvider,
+} from '../../src/batch/rpc-batch-provider';
 import { Context } from '../../src/context';
 import { Estimate } from '../../src/estimate/estimate';
 import { OpKind, ParamsWithKind } from '../../src/operations/types';
@@ -968,5 +980,390 @@ describe('OperationBatch test', () => {
       })
     );
     expect(mockRpcClient.injectOperation).toHaveBeenCalledExactlyOnceWith('test');
+  });
+
+  describe('withTransfer and withContractCall', () => {
+    it('adds a transfer operation via withTransfer and via with()', async () => {
+      const estimate = new Estimate(1230000, 93, 142, 250);
+      mockEstimate.batch.mockResolvedValue([estimate, estimate]);
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
+
+      const batchOp = await operationBatch
+        .withTransfer({
+          to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
+          amount: 2,
+        })
+        .with([
+          {
+            kind: OpKind.TRANSACTION,
+            to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
+            amount: 0,
+          },
+        ])
+        .send({ source: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu' });
+
+      expect(batchOp.source).toBe('tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu');
+      expect(batchOp.raw.opOb.contents).toEqual([
+        expect.objectContaining({
+          kind: OpKind.TRANSACTION,
+          destination: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
+          amount: '2000000',
+          counter: '1',
+        }),
+        expect.objectContaining({
+          kind: OpKind.TRANSACTION,
+          destination: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
+          amount: '0',
+          counter: '2',
+        }),
+      ]);
+    });
+
+    it('rejects negative transfer amounts with InvalidAmountError', () => {
+      expect(() =>
+        operationBatch.withTransfer({
+          to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
+          amount: -1,
+        })
+      ).toThrowError(InvalidAmountError);
+    });
+
+    it('rejects invalid recipient addresses with InvalidAddressError', () => {
+      expect(() =>
+        operationBatch.withTransfer({
+          to: 'tz1invalid',
+          amount: 1,
+        })
+      ).toThrowError(InvalidAddressError);
+    });
+
+    it('delegates withContractCall to withTransfer using toTransferParams', async () => {
+      const estimate = new Estimate(1230000, 93, 142, 250);
+      mockEstimate.batch.mockResolvedValue([estimate]);
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
+
+      const toTransferParams = vi.fn().mockReturnValue({
+        to: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
+        amount: 5,
+        parameter: { entrypoint: 'default', value: { prim: 'Unit' } },
+      });
+
+      const contractMethod = {
+        toTransferParams,
+      } as unknown as Parameters<OperationBatch['withContractCall']>[0];
+      const batchOp = await operationBatch.withContractCall(contractMethod, { amount: 5 }).send();
+
+      expect(toTransferParams).toHaveBeenCalledWith({ amount: 5 });
+      expect(batchOp.raw.opOb.contents).toEqual([
+        expect.objectContaining({
+          kind: OpKind.TRANSACTION,
+          destination: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
+          amount: '5000000',
+        }),
+      ]);
+    });
+  });
+
+  describe('withTransferTicket', () => {
+    const validTransferTicketParams = {
+      ticketContents: { string: 'foobar' },
+      ticketTy: { prim: 'string' },
+      ticketTicketer: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
+      ticketAmount: 2,
+      destination: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
+      entrypoint: 'default',
+    };
+
+    it('adds a transfer_ticket operation via withTransferTicket and via with()', async () => {
+      const estimate = new Estimate(1230000, 93, 142, 250);
+      mockEstimate.batch.mockResolvedValue([estimate, estimate]);
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
+
+      const batchOp = await operationBatch
+        .withTransferTicket(validTransferTicketParams)
+        .with([{ kind: OpKind.TRANSFER_TICKET, ...validTransferTicketParams }])
+        .send();
+
+      expect(batchOp.raw.opOb.contents).toEqual([
+        expect.objectContaining({
+          kind: OpKind.TRANSFER_TICKET,
+          destination: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
+          ticket_amount: '2',
+          counter: '1',
+        }),
+        expect.objectContaining({
+          kind: OpKind.TRANSFER_TICKET,
+          destination: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
+          ticket_amount: '2',
+          counter: '2',
+        }),
+      ]);
+    });
+
+    it('rejects invalid destination addresses with InvalidAddressError', () => {
+      expect(() =>
+        operationBatch.withTransferTicket({
+          ...validTransferTicketParams,
+          destination: 'KT1invalid',
+        })
+      ).toThrowError(InvalidAddressError);
+    });
+  });
+
+  describe('withDelegation', () => {
+    it('adds delegation and clear-delegation operations via withDelegation and via with()', async () => {
+      const estimate = new Estimate(1230000, 0, 142, 250);
+      mockEstimate.batch.mockResolvedValue([estimate, estimate]);
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
+
+      const batchOp = await operationBatch
+        .withDelegation({
+          source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+          delegate: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
+        })
+        .with([{ kind: OpKind.DELEGATION }])
+        .send();
+
+      expect(batchOp.raw.opOb.contents).toEqual([
+        expect.objectContaining({
+          kind: OpKind.DELEGATION,
+          source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+          delegate: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
+          counter: '1',
+        }),
+        expect.objectContaining({
+          kind: OpKind.DELEGATION,
+          source: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+          delegate: undefined,
+          counter: '2',
+        }),
+      ]);
+    });
+
+    it('rejects invalid source or delegate addresses with InvalidAddressError', () => {
+      expect(() =>
+        operationBatch.withDelegation({
+          source: 'tz1invalid',
+          delegate: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
+        })
+      ).toThrowError(InvalidAddressError);
+
+      expect(() =>
+        operationBatch.withDelegation({
+          delegate: 'tz1invalid',
+        })
+      ).toThrowError(InvalidAddressError);
+    });
+  });
+
+  describe('withActivation and withOrigination', () => {
+    it('adds activation and origination operations via builder methods and via with()', async () => {
+      const estimate = new Estimate(1230000, 93, 142, 250);
+      mockEstimate.batch.mockResolvedValue([estimate, estimate, estimate, estimate]);
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
+
+      const originationParams = {
+        code: [
+          { prim: 'parameter', args: [{ prim: 'unit' }] },
+          { prim: 'storage', args: [{ prim: 'unit' }] },
+          {
+            prim: 'code',
+            args: [[{ prim: 'CDR' }, { prim: 'NIL', args: [{ prim: 'operation' }] }, { prim: 'PAIR' }]],
+          },
+        ],
+        init: { prim: 'Unit' },
+      };
+
+      const batchOp = await operationBatch
+        .withActivation({
+          pkh: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
+          secret: '0123456789abcdef',
+        })
+        .withOrigination(originationParams)
+        .with([
+          {
+            kind: OpKind.ACTIVATION,
+            pkh: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+            secret: 'fedcba9876543210',
+          },
+          {
+            kind: OpKind.ORIGINATION,
+            ...originationParams,
+          },
+        ])
+        .send();
+
+      expect(batchOp.raw.opOb.contents).toEqual([
+        {
+          kind: OpKind.ACTIVATION,
+          pkh: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
+          secret: '0123456789abcdef',
+        },
+        expect.objectContaining({
+          kind: OpKind.ORIGINATION,
+          counter: '1',
+        }),
+        {
+          kind: OpKind.ACTIVATION,
+          pkh: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+          secret: 'fedcba9876543210',
+        },
+        expect.objectContaining({
+          kind: OpKind.ORIGINATION,
+          counter: '2',
+        }),
+      ]);
+    });
+
+    it('supports direct withIncreasePaidStorage builder call', async () => {
+      const estimate = new Estimate(1230000, 93, 142, 250);
+      mockEstimate.batch.mockResolvedValue([estimate]);
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
+
+      const batchOp = await operationBatch
+        .withIncreasePaidStorage({
+          amount: 2,
+          destination: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
+        })
+        .send();
+
+      expect(batchOp.raw.opOb.contents).toEqual([
+        expect.objectContaining({
+          kind: OpKind.INCREASE_PAID_STORAGE,
+          amount: '2',
+          destination: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
+        }),
+      ]);
+    });
+
+    it('rejects invalid activation pkh with InvalidKeyHashError', () => {
+      expect(() =>
+        operationBatch.withActivation({
+          pkh: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
+          secret: '0123456789abcdef',
+        })
+      ).toThrowError(InvalidKeyHashError);
+    });
+  });
+
+  describe('withUpdateConsensusKey and withUpdateCompanionKey', () => {
+    const edpk = 'edpkti5K5JbdLpp2dCqiTLoLQqs5wqzeVhfHVnNhsSCuoU8zdHYoY7';
+    const blpk = 'BLpk1wMU34nS7N96D2owyejLxQtwZwLARLg6tdTFMP5N8fz6yCiLogfFXkYo9ZHnZ95Kba3D3cvt';
+    const blsProof =
+      'BLsig9cW2ffM82s8cZWNDQTmecxHPHmJcTUh5DF2dVP7GV7oUmmptd4JpxBvSyE1VDeLtGyV68KaTuaEM1qiSUELMqkdwCLJFDQYGL6ZZLZDEUAfyu3Vu3ivs66jhV8ANwt3tKg6qABoqx';
+
+    it('includes UPDATE_CONSENSUS_KEY and UPDATE_COMPANION_KEY in BATCH_KINDS', () => {
+      expect(BATCH_KINDS).toContain(OpKind.UPDATE_CONSENSUS_KEY);
+      expect(BATCH_KINDS).toContain(OpKind.UPDATE_COMPANION_KEY);
+    });
+
+    it('adds update_consensus_key (edpk and BLpk) and update_companion_key via builder methods and via with()', async () => {
+      const estimate = new Estimate(1230000, 93, 142, 250);
+      mockEstimate.batch.mockResolvedValue([estimate, estimate, estimate, estimate, estimate]);
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
+
+      const batchOp = await operationBatch
+        .withUpdateConsensusKey({ pk: edpk })
+        .withUpdateConsensusKey({ pk: blpk, proof: blsProof })
+        .withUpdateCompanionKey({ pk: blpk, proof: blsProof })
+        .with([
+          { kind: OpKind.UPDATE_CONSENSUS_KEY, pk: edpk },
+          { kind: OpKind.UPDATE_COMPANION_KEY, pk: blpk, proof: blsProof },
+        ])
+        .send();
+
+      expect(batchOp.raw.opOb.contents).toEqual([
+        expect.objectContaining({
+          kind: OpKind.UPDATE_CONSENSUS_KEY,
+          pk: edpk,
+          counter: '1',
+        }),
+        expect.objectContaining({
+          kind: OpKind.UPDATE_CONSENSUS_KEY,
+          pk: blpk,
+          proof: blsProof,
+          counter: '2',
+        }),
+        expect.objectContaining({
+          kind: OpKind.UPDATE_COMPANION_KEY,
+          pk: blpk,
+          proof: blsProof,
+          counter: '3',
+        }),
+        expect.objectContaining({
+          kind: OpKind.UPDATE_CONSENSUS_KEY,
+          pk: edpk,
+          counter: '4',
+        }),
+        expect.objectContaining({
+          kind: OpKind.UPDATE_COMPANION_KEY,
+          pk: blpk,
+          proof: blsProof,
+          counter: '5',
+        }),
+      ]);
+    });
+
+    it('validates proof and key prefix constraints for withUpdateConsensusKey', () => {
+      expect(() => operationBatch.withUpdateConsensusKey({ pk: blpk })).toThrowError(
+        InvalidProofError
+      );
+      expect(() =>
+        operationBatch.withUpdateConsensusKey({ pk: edpk, proof: blsProof })
+      ).toThrowError(ProhibitedActionError);
+    });
+
+    it('validates proof and key prefix constraints for withUpdateCompanionKey', () => {
+      expect(() =>
+        operationBatch.withUpdateCompanionKey({ pk: edpk, proof: blsProof })
+      ).toThrowError(ProhibitedActionError);
+      expect(() => operationBatch.withUpdateCompanionKey({ pk: blpk })).toThrowError(
+        InvalidProofError
+      );
+    });
+  });
+
+  describe('with() error handling and RPCBatchProvider', () => {
+    it('throws InvalidOperationKindError when with() receives an unsupported operation kind', () => {
+      expect(() =>
+        operationBatch.with([
+          {
+            kind: OpKind.FAILING_NOOP,
+            arbitrary: 'deadbeef',
+            basedOnBlock: 'head',
+          },
+        ])
+      ).toThrowError(new InvalidOperationKindError('"failing_noop"'));
+    });
+
+    it('creates an empty or pre-populated OperationBatch via RPCBatchProvider.batch()', async () => {
+      const provider = new RPCBatchProvider(
+        context,
+        mockEstimate as unknown as ConstructorParameters<typeof RPCBatchProvider>[1]
+      );
+      expect(provider.batch()).toBeInstanceOf(OperationBatch);
+
+      const estimate = new Estimate(1230000, 93, 142, 250);
+      mockEstimate.batch.mockResolvedValue([estimate]);
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
+
+      const batchOp = await provider
+        .batch([
+          {
+            kind: OpKind.TRANSACTION,
+            to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
+            amount: 1,
+          },
+        ])
+        .send();
+
+      expect(batchOp.raw.opOb.contents).toEqual([
+        expect.objectContaining({
+          kind: OpKind.TRANSACTION,
+          destination: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
+          amount: '1000000',
+        }),
+      ]);
+    });
   });
 });

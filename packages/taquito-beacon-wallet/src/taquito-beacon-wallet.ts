@@ -91,6 +91,17 @@ type RPCOperationWithLimits = {
   storage_limit?: number | string;
 };
 
+type WalletOperationParams =
+  | WalletTransferParams
+  | WalletStakeParams
+  | WalletUnstakeParams
+  | WalletFinalizeUnstakeParams
+  | WalletOriginateParams
+  | WalletDelegateParams
+  | WalletRegisterGlobalConstantParams
+  | WalletTransferTicketParams
+  | WalletIncreasePaidStorageParams;
+
 export class BeaconWallet implements WalletProvider {
   /**
    * The underlying Beacon `DAppClient` instance.
@@ -147,18 +158,21 @@ export class BeaconWallet implements WalletProvider {
     return account.publicKey ?? '';
   }
 
-  private async mapSmartRollupOperation<
-    Params extends object,
-    Operation extends RPCOperationWithLimits,
-  >(params: () => Promise<Params>, createOperation: (input: Params) => Promise<Operation>) {
+  private async prepareParams<Params>(params: () => Promise<Params>): Promise<Params> {
     await this.client.showPrepare();
-    let input: Params;
     try {
-      input = await params();
+      return await params();
     } catch (error) {
       await this.client.hideUI(['alert']);
       throw error;
     }
+  }
+
+  private async mapSmartRollupOperation<
+    Params extends object,
+    Operation extends RPCOperationWithLimits,
+  >(params: () => Promise<Params>, createOperation: (input: Params) => Promise<Operation>) {
+    const input = await this.prepareParams(params);
     const { fee, gas_limit, storage_limit, ...operation } = await createOperation({ ...input });
     return {
       ...operation,
@@ -166,6 +180,17 @@ export class BeaconWallet implements WalletProvider {
       ...(gas_limit === undefined ? {} : { gas_limit: String(gas_limit) }),
       ...(storage_limit === undefined ? {} : { storage_limit: String(storage_limit) }),
     };
+  }
+
+  private async mapWalletOperation<
+    Params extends WalletOperationParams,
+    Operation extends RPCOperationWithLimits,
+  >(params: () => Promise<Params>, createOperation: (input: Params) => Promise<Operation>) {
+    const walletParams = await this.prepareParams(params);
+    return this.removeDefaultParams(
+      walletParams,
+      await createOperation(this.formatParameters(walletParams))
+    );
   }
 
   /** Map SmartRollupAddMessages parameters for the wallet request. */
@@ -190,145 +215,47 @@ export class BeaconWallet implements WalletProvider {
   }
 
   async mapTransferParamsToWalletParams(params: () => Promise<WalletTransferParams>) {
-    let walletParams: WalletTransferParams;
-    await this.client.showPrepare();
-    try {
-      walletParams = await params();
-    } catch (err) {
-      await this.client.hideUI(['alert']);
-      throw err;
-    }
-    return this.removeDefaultParams(
-      walletParams,
-      await createTransferOperation(this.formatParameters(walletParams))
-    );
+    return this.mapWalletOperation(params, createTransferOperation);
   }
 
   async mapTransferTicketParamsToWalletParams(params: () => Promise<WalletTransferTicketParams>) {
-    let walletParams: WalletTransferTicketParams;
-    await this.client.showPrepare();
-    try {
-      walletParams = await params();
-    } catch (err) {
-      await this.client.hideUI(['alert']);
-      throw err;
-    }
-
-    return this.removeDefaultParams(
-      walletParams,
-      await createTransferTicketOperation(this.formatParameters(walletParams))
-    );
+    return this.mapWalletOperation(params, createTransferTicketOperation);
   }
 
   async mapStakeParamsToWalletParams(params: () => Promise<WalletStakeParams>) {
-    let walletParams: WalletStakeParams;
-    await this.client.showPrepare();
-    try {
-      walletParams = await params();
-    } catch (err) {
-      await this.client.hideUI(['alert']);
-      throw err;
-    }
-    return this.removeDefaultParams(
-      walletParams,
-      await createTransferOperation(this.formatParameters(walletParams) as WalletTransferParams)
+    return this.mapWalletOperation(params, (walletParams) =>
+      createTransferOperation(walletParams as WalletTransferParams)
     );
   }
 
   async mapUnstakeParamsToWalletParams(params: () => Promise<WalletUnstakeParams>) {
-    let walletParams: WalletUnstakeParams;
-    await this.client.showPrepare();
-    try {
-      walletParams = await params();
-    } catch (err) {
-      await this.client.hideUI(['alert']);
-      throw err;
-    }
-    return this.removeDefaultParams(
-      walletParams,
-      await createTransferOperation(this.formatParameters(walletParams) as WalletTransferParams)
+    return this.mapWalletOperation(params, (walletParams) =>
+      createTransferOperation(walletParams as WalletTransferParams)
     );
   }
 
   async mapFinalizeUnstakeParamsToWalletParams(params: () => Promise<WalletFinalizeUnstakeParams>) {
-    let walletParams: WalletFinalizeUnstakeParams;
-    await this.client.showPrepare();
-    try {
-      walletParams = await params();
-    } catch (err) {
-      await this.client.hideUI(['alert']);
-      throw err;
-    }
-    return this.removeDefaultParams(
-      walletParams,
-      await createTransferOperation(this.formatParameters(walletParams) as WalletTransferParams)
+    return this.mapWalletOperation(params, (walletParams) =>
+      createTransferOperation(walletParams as WalletTransferParams)
     );
   }
 
   async mapIncreasePaidStorageWalletParams(params: () => Promise<WalletIncreasePaidStorageParams>) {
-    let walletParams: WalletIncreasePaidStorageParams;
-    await this.client.showPrepare();
-    try {
-      walletParams = await params();
-    } catch (err) {
-      await this.client.hideUI(['alert']);
-      throw err;
-    }
-
-    return this.removeDefaultParams(
-      walletParams,
-      await createIncreasePaidStorageOperation(this.formatParameters(walletParams))
-    );
+    return this.mapWalletOperation(params, createIncreasePaidStorageOperation);
   }
 
   async mapOriginateParamsToWalletParams(params: () => Promise<WalletOriginateParams>) {
-    let walletParams: WalletOriginateParams;
-    await this.client.showPrepare();
-    try {
-      walletParams = await params();
-    } catch (err) {
-      await this.client.hideUI(['alert']);
-      throw err;
-    }
-
-    return this.removeDefaultParams(
-      walletParams,
-      await createOriginationOperation(this.formatParameters(walletParams))
-    );
+    return this.mapWalletOperation(params, createOriginationOperation);
   }
 
   async mapDelegateParamsToWalletParams(params: () => Promise<WalletDelegateParams>) {
-    let walletParams: WalletDelegateParams;
-    await this.client.showPrepare();
-    try {
-      walletParams = await params();
-    } catch (err) {
-      await this.client.hideUI(['alert']);
-      throw err;
-    }
-
-    return this.removeDefaultParams(
-      walletParams,
-      await createSetDelegateOperation(this.formatParameters(walletParams))
-    );
+    return this.mapWalletOperation(params, createSetDelegateOperation);
   }
 
   async mapRegisterGlobalConstantParamsToWalletParams(
     params: () => Promise<WalletRegisterGlobalConstantParams>
   ) {
-    let walletParams: WalletRegisterGlobalConstantParams;
-    await this.client.showPrepare();
-    try {
-      walletParams = await params();
-    } catch (err) {
-      await this.client.hideUI(['alert']);
-      throw err;
-    }
-
-    return this.removeDefaultParams(
-      walletParams,
-      await createRegisterGlobalConstantOperation(this.formatParameters(walletParams))
-    );
+    return this.mapWalletOperation(params, createRegisterGlobalConstantOperation);
   }
 
   formatParameters<T extends ParamsWithOptionalFees>(params: T): T {
@@ -344,19 +271,7 @@ export class BeaconWallet implements WalletProvider {
     return params;
   }
 
-  removeDefaultParams(
-    params:
-      | WalletTransferParams
-      | WalletStakeParams
-      | WalletUnstakeParams
-      | WalletFinalizeUnstakeParams
-      | WalletOriginateParams
-      | WalletDelegateParams
-      | WalletRegisterGlobalConstantParams
-      | WalletTransferTicketParams
-      | WalletIncreasePaidStorageParams,
-    operatedParams: RPCOperationWithLimits
-  ) {
+  removeDefaultParams(params: WalletOperationParams, operatedParams: RPCOperationWithLimits) {
     // If fee, storageLimit or gasLimit is undefined by user
     // in case of beacon wallet, dont override it by
     // defaults.

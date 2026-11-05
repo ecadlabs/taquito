@@ -2,19 +2,6 @@ import { Context } from '../context';
 import { ContractStorageType, DefaultContractType } from '../contract/contract';
 import { SendParams } from '../contract/contract-methods/contract-method-interface';
 import { ContractProvider } from '../contract/interface';
-import {
-  createOriginationOperation,
-  createRegisterGlobalConstantOperation,
-  createSetDelegateOperation,
-  createTransferOperation,
-  createTransferTicketOperation,
-  createIncreasePaidStorageOperation,
-  createSmartRollupAddMessagesOperation,
-  createSmartRollupOriginateOperation,
-  createSmartRollupExecuteOutboxMessageOperation,
-  createUpdateConsensusKeyOperation,
-  createUpdateCompanionKeyOperation,
-} from '../contract/prepare';
 import { BatchOperation } from '../operations/batch-operation';
 import {
   ActivationParams,
@@ -257,59 +244,6 @@ export class OperationBatch extends Provider {
     return this;
   }
 
-  async getRPCOp(param: ParamsWithKind) {
-    switch (param.kind) {
-      case OpKind.TRANSACTION:
-        return createTransferOperation({
-          ...param,
-        });
-      case OpKind.ORIGINATION:
-        return createOriginationOperation(
-          await this.context.parser.prepareCodeOrigination({
-            ...param,
-          })
-        );
-      case OpKind.DELEGATION:
-        return createSetDelegateOperation({
-          ...param,
-        });
-      case OpKind.REGISTER_GLOBAL_CONSTANT:
-        return createRegisterGlobalConstantOperation({
-          ...param,
-        });
-      case OpKind.INCREASE_PAID_STORAGE:
-        return createIncreasePaidStorageOperation({
-          ...param,
-        });
-      case OpKind.UPDATE_CONSENSUS_KEY:
-        return createUpdateConsensusKeyOperation({
-          ...param,
-        });
-      case OpKind.UPDATE_COMPANION_KEY:
-        return createUpdateCompanionKeyOperation({
-          ...param,
-        });
-      case OpKind.TRANSFER_TICKET:
-        return createTransferTicketOperation({
-          ...param,
-        });
-      case OpKind.SMART_ROLLUP_ADD_MESSAGES:
-        return createSmartRollupAddMessagesOperation({
-          ...param,
-        });
-      case OpKind.SMART_ROLLUP_ORIGINATE:
-        return createSmartRollupOriginateOperation({
-          ...param,
-        });
-      case OpKind.SMART_ROLLUP_EXECUTE_OUTBOX_MESSAGE:
-        return createSmartRollupExecuteOutboxMessageOperation({
-          ...param,
-        });
-      default:
-        throw new InvalidOperationKindError(JSON.stringify((param as any).kind));
-    }
-  }
-
   /**
    *
    * Add a group operation to the batch. Operation will be applied in the order they are in the params array
@@ -337,6 +271,12 @@ export class OperationBatch extends Provider {
           break;
         case OpKind.INCREASE_PAID_STORAGE:
           this.withIncreasePaidStorage(param);
+          break;
+        case OpKind.UPDATE_CONSENSUS_KEY:
+          this.withUpdateConsensusKey(param);
+          break;
+        case OpKind.UPDATE_COMPANION_KEY:
+          this.withUpdateCompanionKey(param);
           break;
         case OpKind.TRANSFER_TICKET:
           this.withTransferTicket(param);
