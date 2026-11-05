@@ -40,6 +40,8 @@ vi.mock('@ecadlabs/beacon-dapp', async () => {
     getDAppClientInstance: vi.fn().mockImplementation(() => ({
       requestPermissions: vi.fn(),
       requestOperation: vi.fn(),
+      requestSignPayload: vi.fn(),
+      setActiveAccount: vi.fn(),
       getActiveAccount: vi.fn(),
       showPrepare: vi.fn(),
       hideUI: vi.fn(),
@@ -440,6 +442,275 @@ describe('Beacon Wallet tests', () => {
         cemented_commitment: string;
         output_proof: string;
       }>();
+    });
+  });
+
+  describe('session, account, and signing methods', () => {
+    let wallet: BeaconWallet;
+    const baseAccount = {
+      accountIdentifier: 'account',
+      senderId: 'sender',
+      origin: { type: Origin.P2P, id: 'peer' },
+      connectedAt: 1,
+      walletType: 'implicit' as const,
+      address: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+      publicKey: 'edpkti5K5JbdLpp2dCqiTLoLQqs5wqzeVhfHVnNhsSCuoU8zdHYoY7',
+      network: { type: NetworkType.CUSTOM },
+      scopes: [PermissionScope.OPERATION_REQUEST],
+    };
+
+    beforeEach(() => {
+      wallet = new BeaconWallet({ name: 'Session test' });
+    });
+
+    it('forwards requestPermissions input to DAppClient.requestPermissions', async () => {
+      const request = { scopes: [PermissionScope.OPERATION_REQUEST] };
+      await wallet.requestPermissions(request);
+      expect(wallet.client.requestPermissions).toHaveBeenCalledExactlyOnceWith(request);
+    });
+
+    it('returns the active account address from getPKH when initialized', async () => {
+      vi.mocked(wallet.client.getActiveAccount).mockResolvedValue(baseAccount);
+      await expect(wallet.getPKH()).resolves.toBe(baseAccount.address);
+    });
+
+    it('throws BeaconWalletNotInitialized from getPK when no active account exists', async () => {
+      vi.mocked(wallet.client.getActiveAccount).mockResolvedValue(undefined);
+      await expect(wallet.getPK()).rejects.toThrowError(BeaconWalletNotInitialized);
+    });
+
+    it('returns the active account public key or empty string from getPK', async () => {
+      vi.mocked(wallet.client.getActiveAccount).mockResolvedValue(baseAccount);
+      await expect(wallet.getPK()).resolves.toBe(baseAccount.publicKey);
+
+      vi.mocked(wallet.client.getActiveAccount).mockResolvedValue({
+        ...baseAccount,
+        publicKey: undefined,
+      });
+      await expect(wallet.getPK()).resolves.toBe('');
+    });
+
+    it('clears the active account via client.setActiveAccount', async () => {
+      await wallet.clearActiveAccount();
+      expect(wallet.client.setActiveAccount).toHaveBeenCalledExactlyOnceWith();
+    });
+
+    it('throws BeaconWalletNotInitialized or MissingRequiredScopes from sendOperations when invalid', async () => {
+      vi.mocked(wallet.client.getActiveAccount).mockResolvedValue(undefined);
+      await expect(wallet.sendOperations([])).rejects.toThrowError(BeaconWalletNotInitialized);
+
+      vi.mocked(wallet.client.getActiveAccount).mockResolvedValue({
+        ...baseAccount,
+        scopes: [PermissionScope.SIGN],
+      });
+      await expect(wallet.sendOperations([])).rejects.toThrowError(
+        new MissingRequiredScopes([PermissionScope.OPERATION_REQUEST])
+      );
+    });
+
+    it('signs operation payloads with watermark 0x03 via client.requestSignPayload', async () => {
+      vi.mocked(wallet.client.requestSignPayload).mockResolvedValue({
+        type: BeaconMessageType.SignPayloadResponse,
+        id: 'sign-id',
+        version: '2',
+        senderId: 'sender',
+        signingType: SigningType.OPERATION,
+        signature: 'edsigtXomBKi5CTRf5cjATJWSyaRvhfYNHqSUGrn4SdbYRcGwQrUGjzEfQDTuqHhuA8b2d8NarZjz8TRf65WkpQmo423BtomS8Q',
+      });
+
+      const sig = await wallet.sign('48656c6c6f', new Uint8Array([3]));
+      expect(sig).toBe(
+        'edsigtXomBKi5CTRf5cjATJWSyaRvhfYNHqSUGrn4SdbYRcGwQrUGjzEfQDTuqHhuA8b2d8NarZjz8TRf65WkpQmo423BtomS8Q'
+      );
+      expect(wallet.client.requestSignPayload).toHaveBeenCalledExactlyOnceWith({
+        payload: '0348656c6c6f',
+        signingType: SigningType.OPERATION,
+      });
+    });
+  });
+
+  describe('wallet operation parameter mappers', () => {
+    let wallet: BeaconWallet;
+
+    beforeEach(() => {
+      wallet = new BeaconWallet({ name: 'Mapper test' });
+    });
+
+    it('maps transfer parameters and strips unspecified fee/gas/storage defaults', async () => {
+      const withoutLimits = await wallet.mapTransferParamsToWalletParams(async () => ({
+        to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
+        amount: 2,
+      }));
+      expect(wallet.client.showPrepare).toHaveBeenCalledOnce();
+      expect(withoutLimits).toEqual({
+        kind: OpKind.TRANSACTION,
+        source: undefined,
+        destination: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
+        amount: '2000000',
+        parameters: undefined,
+      });
+      expect(withoutLimits).not.toHaveProperty('fee');
+      expect(withoutLimits).not.toHaveProperty('gas_limit');
+      expect(withoutLimits).not.toHaveProperty('storage_limit');
+
+      const withLimits = await wallet.mapTransferParamsToWalletParams(async () => ({
+        to: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
+        amount: 2,
+        fee: 400,
+        gasLimit: 1200,
+        storageLimit: 50,
+      }));
+      expect(withLimits).toEqual({
+        kind: OpKind.TRANSACTION,
+        source: undefined,
+        destination: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
+        amount: '2000000',
+        parameters: undefined,
+        fee: '400',
+        gas_limit: '1200',
+        storage_limit: '50',
+      });
+    });
+
+    it('maps transfer_ticket parameters', async () => {
+      const mapped = await wallet.mapTransferTicketParamsToWalletParams(async () => ({
+        ticketContents: { string: 'ticket' },
+        ticketTy: { prim: 'string' },
+        ticketTicketer: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
+        ticketAmount: 3,
+        destination: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
+        entrypoint: 'default',
+      }));
+      expect(mapped).toEqual({
+        kind: OpKind.TRANSFER_TICKET,
+        source: undefined,
+        ticket_contents: { string: 'ticket' },
+        ticket_ty: { prim: 'string' },
+        ticket_ticketer: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
+        ticket_amount: 3,
+        destination: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
+        entrypoint: 'default',
+      });
+    });
+
+    it('maps stake, unstake, and finalize_unstake parameters', async () => {
+      const stake = await wallet.mapStakeParamsToWalletParams(async () => ({
+        to: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+        amount: 5,
+        parameter: { entrypoint: 'stake', value: { prim: 'Unit' } },
+      }));
+      expect(stake).toEqual({
+        kind: OpKind.TRANSACTION,
+        source: undefined,
+        destination: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+        amount: '5000000',
+        parameters: { entrypoint: 'stake', value: { prim: 'Unit' } },
+      });
+
+      const unstake = await wallet.mapUnstakeParamsToWalletParams(async () => ({
+        to: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+        amount: 2,
+        parameter: { entrypoint: 'unstake', value: { prim: 'Unit' } },
+      }));
+      expect(unstake).toEqual({
+        kind: OpKind.TRANSACTION,
+        source: undefined,
+        destination: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+        amount: '2000000',
+        parameters: { entrypoint: 'unstake', value: { prim: 'Unit' } },
+      });
+
+      const finalizeUnstake = await wallet.mapFinalizeUnstakeParamsToWalletParams(async () => ({
+        to: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+        amount: 0,
+        parameter: { entrypoint: 'finalize_unstake', value: { prim: 'Unit' } },
+      }));
+      expect(finalizeUnstake).toEqual({
+        kind: OpKind.TRANSACTION,
+        source: undefined,
+        destination: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
+        amount: '0',
+        parameters: { entrypoint: 'finalize_unstake', value: { prim: 'Unit' } },
+      });
+    });
+
+    it('maps increase_paid_storage, origination, delegation, and register_global_constant parameters', async () => {
+      const increasePaidStorage = await wallet.mapIncreasePaidStorageWalletParams(async () => ({
+        amount: 10,
+        destination: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
+      }));
+      expect(increasePaidStorage).toEqual({
+        kind: OpKind.INCREASE_PAID_STORAGE,
+        source: undefined,
+        amount: 10,
+        destination: 'KT1UiLW7MQCrgaG8pubSJsnpFZzxB2PMs92W',
+      });
+
+      const origination = await wallet.mapOriginateParamsToWalletParams(async () => ({
+        code: [
+          { prim: 'parameter', args: [{ prim: 'unit' }] },
+          { prim: 'storage', args: [{ prim: 'unit' }] },
+          {
+            prim: 'code',
+            args: [
+              [{ prim: 'CDR' }, { prim: 'NIL', args: [{ prim: 'operation' }] }, { prim: 'PAIR' }],
+            ],
+          },
+        ],
+        init: { prim: 'Unit' },
+      }));
+      expect(origination).toEqual(
+        expect.objectContaining({
+          kind: OpKind.ORIGINATION,
+          balance: '0',
+        })
+      );
+
+      const delegation = await wallet.mapDelegateParamsToWalletParams(async () => ({
+        delegate: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
+      }));
+      expect(delegation).toEqual({
+        kind: OpKind.DELEGATION,
+        source: undefined,
+        delegate: 'tz1ZfrERcALBwmAqwonRXYVQBDT9BjNjBHJu',
+      });
+
+      const registerGlobalConstant = await wallet.mapRegisterGlobalConstantParamsToWalletParams(
+        async () => ({
+          value: { int: '42' },
+        })
+      );
+      expect(registerGlobalConstant).toEqual({
+        kind: OpKind.REGISTER_GLOBAL_CONSTANT,
+        source: undefined,
+        value: { int: '42' },
+      });
+    });
+
+    it('hides the prepare alert UI and rethrows when parameter resolution rejects in any mapper', async () => {
+      const mappers: Array<(cb: () => Promise<never>) => Promise<unknown>> = [
+        (cb) => wallet.mapTransferParamsToWalletParams(cb),
+        (cb) => wallet.mapTransferTicketParamsToWalletParams(cb),
+        (cb) => wallet.mapStakeParamsToWalletParams(cb),
+        (cb) => wallet.mapUnstakeParamsToWalletParams(cb),
+        (cb) => wallet.mapFinalizeUnstakeParamsToWalletParams(cb),
+        (cb) => wallet.mapIncreasePaidStorageWalletParams(cb),
+        (cb) => wallet.mapOriginateParamsToWalletParams(cb),
+        (cb) => wallet.mapDelegateParamsToWalletParams(cb),
+        (cb) => wallet.mapRegisterGlobalConstantParamsToWalletParams(cb),
+      ];
+
+      for (const mapper of mappers) {
+        vi.clearAllMocks();
+        const failure = new Error('prepare failed');
+        await expect(
+          mapper(async () => {
+            throw failure;
+          })
+        ).rejects.toBe(failure);
+        expect(wallet.client.showPrepare).toHaveBeenCalledOnce();
+        expect(wallet.client.hideUI).toHaveBeenCalledExactlyOnceWith(['alert']);
+      }
     });
   });
 });
