@@ -12,7 +12,11 @@
   "module": "dist/taquito-tzip16.es6.js",
   "typings": "dist/types/taquito-tzip16.d.ts",
   "files": [
-    "dist"
+    "dist/taquito-tzip16.umd.js",
+    "dist/taquito-tzip16.umd.js.map",
+    "dist/taquito-tzip16.es6.js",
+    "dist/taquito-tzip16.es6.js.map",
+    "dist/types"
   ],
   "publishConfig": {
     "access": "public"
@@ -58,9 +62,7 @@
     "@taquito/taquito": "^25.1.0",
     "@taquito/utils": "^25.1.0",
     "bignumber.js": "^10.0.2",
-    "crypto-js": "^4.2.0",
-    "ipfs-unixfs-exporter": "16.2.3",
-    "multiformats": "14.0.5"
+    "crypto-js": "^4.2.0"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "29.0.3",
@@ -74,8 +76,10 @@
     "@typescript-eslint/parser": "^6.21.0",
     "cross-env": "^7.0.3",
     "eslint": "^8.57.0",
+    "ipfs-unixfs-exporter": "16.2.3",
     "lint-staged": "^15.2.7",
     "lodash.camelcase": "^4.3.0",
+    "multiformats": "14.0.5",
     "prettier": "^3.9.10",
     "rimraf": "^6.1.3",
     "rollup": "^4.67.3",

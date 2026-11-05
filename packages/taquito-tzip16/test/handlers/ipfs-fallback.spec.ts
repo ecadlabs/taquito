@@ -108,7 +108,8 @@ describe('default IPFS gateway fallback', () => {
       throw new Error('Expected an aggregate gateway error');
     }
     const distinctHosts = [...new Set(hosts)];
-    expect(distinctHosts.length).toBeGreaterThan(1);
+    expect(distinctHosts).toEqual(['ipfs.filebase.io', 'gateway.pinata.cloud']);
+    expect(error.message).toMatch(/SLA|self-hosted/i);
     // Preserve every gateway's failure, allowing multiple format attempts per gateway.
     for (const host of distinctHosts) {
       expect(
@@ -244,12 +245,15 @@ describe('default IPFS gateway fallback', () => {
       }
     );
     try {
-      await vi.runAllTimersAsync();
+      await vi.advanceTimersByTimeAsync(9999);
+      expect(hosts).toEqual(['ipfs.filebase.io']);
+      expect(stalled.every(({ signal }) => !signal.aborted)).toBe(true);
+      await vi.advanceTimersByTimeAsync(1);
       expect(settled).toBe(true);
       expect(stalled.length).toBeGreaterThan(0);
       expect(stalled.every(({ signal }) => signal.aborted)).toBe(true);
       await expect(outcome).resolves.toMatchObject({ metadata: { name: 'Verified café' } });
-      expect(new Set(hosts).size).toBe(2);
+      expect([...new Set(hosts)]).toEqual(['ipfs.filebase.io', 'gateway.pinata.cloud']);
     } finally {
       for (const { signal, controller } of stalled) {
         if (!signal.aborted) controller.close();

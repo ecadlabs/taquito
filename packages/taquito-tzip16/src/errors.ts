@@ -15,7 +15,10 @@ export class MetadataHashMismatchError extends TaquitoError {
   }
 }
 
-/** Every configured IPFS gateway failed to return verified metadata. */
+/**
+ * Every configured IPFS gateway failed to return verified metadata.
+ * For production reliability, configure a paid gateway service with an SLA or a self-hosted HTTPS IPFS gateway via `IpfsHttpHandler`.
+ */
 export class IpfsGatewayError extends TaquitoError {
   constructor(public readonly errors: readonly Error[]) {
     super();

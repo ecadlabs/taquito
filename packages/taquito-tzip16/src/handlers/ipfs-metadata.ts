@@ -34,7 +34,7 @@ function checkCid(cid: CID) {
   }
 }
 
-export function parseIpfsLocation(location: string): { root: CID; path: string[] } {
+export function parseIpfsLocation(location: string): { root: string; path: string[] } {
   try {
     if (!location.startsWith('//')) throw new Error('Missing IPFS authority');
     const [authority, ...segments] = location.slice(2).split('/');
@@ -45,7 +45,7 @@ export function parseIpfsLocation(location: string): { root: CID; path: string[]
       throw new Error('Invalid IPFS path');
     }
     checkCid(root);
-    return { root, path };
+    return { root: root.toString(), path };
   } catch {
     throw new InvalidUriError(`ipfs:${location}`);
   }
@@ -53,9 +53,9 @@ export function parseIpfsLocation(location: string): { root: CID; path: string[]
 
 /** Only verified blocks enter the UnixFS decoder, including directory and HAMT links. */
 export async function readVerifiedIpfsFile(
-  root: CID,
+  root: string,
   path: string[],
-  fetchBlock: (cid: CID) => Promise<Uint8Array>,
+  fetchBlock: (cid: string) => Promise<Uint8Array>,
   signal: AbortSignal
 ): Promise<string> {
   const verified = new Map<string, Uint8Array>();
@@ -73,7 +73,7 @@ export async function readVerifiedIpfsFile(
         yield cached;
         return;
       }
-      const block = await fetchBlock(cid);
+      const block = await fetchBlock(cid.toString());
       signal.throwIfAborted();
       downloadedBytes += block.byteLength;
       if (downloadedBytes > MAX_IPFS_METADATA_BYTES)
@@ -91,7 +91,7 @@ export async function readVerifiedIpfsFile(
     },
   };
 
-  const requestedPath = [root.toString(), ...path].join('/');
+  const requestedPath = [root, ...path].join('/');
   let entry = await exporter(requestedPath, storage, { signal });
   // The upstream resolver can consume a trailing segment without traversing it.
   if (entry.path !== requestedPath) throw new Error('IPFS metadata path was not fully resolved');
