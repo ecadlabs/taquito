@@ -42,10 +42,8 @@
   "dependencies": {
     "@ledgerhq/hw-transport-node-hid": "^6.33.5",
     "@taquito/ledger-signer": "^25.1.0",
-    "@taquito/local-forging": "^25.1.0",
     "@taquito/michel-codec": "^25.1.0",
     "@taquito/michelson-encoder": "^25.1.0",
-    "@taquito/rpc": "^25.1.0",
     "@taquito/sapling": "^25.1.0",
     "@taquito/signer": "^25.1.0",
     "@taquito/taquito": "^25.1.0",

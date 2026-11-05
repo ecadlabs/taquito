@@ -58,20 +58,17 @@
   },
   "dependencies": {
     "@taquito/core": "^25.1.0",
+    "@taquito/rpc": "^25.1.0",
     "@taquito/utils": "^25.1.0",
     "bignumber.js": "^10.0.2",
     "fast-text-encoding": "^1.0.6"
   },
   "devDependencies": {
     "@rollup/plugin-json": "^6.1.0",
-    "@taquito/rpc": "^25.1.0",
-    "@types/bluebird": "^3.5.42",
-    "@types/estree": "^1.0.10",
     "@types/fast-text-encoding": "^1.0.3",
     "@types/node": "^22.20.5",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
-    "cross-env": "^7.0.3",
     "eslint": "^8.57.0",
     "lint-staged": "^15.2.7",
     "lodash.camelcase": "^4.3.0",
@@ -83,7 +80,6 @@
     "stream-browserify": "^3.0.0",
     "ts-loader": "^9.6.2",
     "ts-node": "^10.9.2",
-    "ts-toolbelt": "^9.6.0",
     "typescript": "^6.0.3",
     "webpack": "5.107.2",
     "webpack-cli": "^5.1.4"

@@ -19,7 +19,8 @@
     "@ledgerhq/hw-transport-node-hid": "6.33.5",
     "@ledgerhq/hw-transport-node-hid-noevents": "6.36.0"
   },
-  "dependencies": {
+  "private": true,
+  "devDependencies": {
     "@scure/bip39": "2.4.0",
     "@taquito/contracts-library": "^25.1.0",
     "@taquito/core": "^25.1.0",
@@ -37,17 +38,14 @@
     "@taquito/tzip12": "^25.1.0",
     "@taquito/tzip16": "^25.1.0",
     "@taquito/utils": "^25.1.0",
-    "bignumber.js": "^10.0.2",
-    "blakejs": "^1.2.1",
-    "rxjs": "^7.8.2"
-  },
-  "private": true,
-  "devDependencies": {
     "@types/node": "^22.20.5",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
+    "bignumber.js": "^10.0.2",
+    "blakejs": "^1.2.1",
     "eslint": "^8.57.0",
     "lint-staged": "^15.2.7",
+    "rxjs": "^7.8.2",
     "ts-node": "^10.9.2",
     "typescript": "^6.0.3",
     "vitest": "^4.1.12"

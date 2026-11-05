@@ -34,7 +34,6 @@ export default {
   // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
   external: [
     'typedarray-to-buffer',
-    'blakejs',
     'bs58check',
     '@taquito/core',
     '@noble/curves/ed25519.js',
