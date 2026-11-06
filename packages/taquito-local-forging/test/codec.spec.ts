@@ -558,6 +558,34 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
       });
     });
 
+    test('localForger preserves ordinary transfer bytes without parameters when global Buffer is absent', async () => {
+      // Control transfer forged by Octez 25.3 (e5d8a6b8) in local mockup mode
+      const controlOp: ForgeParams = {
+        branch: 'BLxGBu48ybnWvZoaVLyXV4XVnhdeDc9V2NcB9wsegQniza6mxvX',
+        contents: [
+          {
+            kind: OpKind.TRANSACTION,
+            source: 'tz1h5DrMhmdrGMpb3qkykU1RmCWoTYAkFJPu',
+            fee: '1496',
+            counter: '3970',
+            gas_limit: '2849',
+            storage_limit: '6572',
+            amount: '0',
+            destination: 'KT1NGV6nvvedwwjMjCsWY6Vfm6p1q5sMMLDY',
+          },
+        ],
+      };
+      const expectedControlHex =
+        'a3709dd3656c6d80bdfa9c3233d65bee9959207dae273e6fef48b7d6a2944d146c00eb1e5b162505a8b471dad53e6b95a287dc354eabd80b821fa116ac330001961c87824da8d4733dd7dee6f171e6c391c424070000';
+
+      await withNoGlobalBuffer(async () => {
+        const forged = await localForger.forge(controlOp);
+        expect(forged).toBe(expectedControlHex);
+        const parsed = await localForger.parse(forged);
+        expect(parsed).toEqual(controlOp);
+      });
+    });
+
     test('codec encoders and decoders work without global Buffer', async () => {
       await withNoGlobalBuffer(() => {
         expect(int16Encoder(0)).toBe('0000');

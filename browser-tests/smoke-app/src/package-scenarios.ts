@@ -1,3 +1,5 @@
+import type { ForgeParams } from '@taquito/local-forging';
+import type { OpKind } from '@taquito/rpc';
 import type { PackageScenarioId } from '../../scenario-manifest';
 import { setSmokeResult } from './smoke-shared';
 
@@ -26,7 +28,7 @@ const localForgerOperation = {
   branch: 'BLxGBu48ybnWvZoaVLyXV4XVnhdeDc9V2NcB9wsegQniza6mxvX',
   contents: [
     {
-      kind: 'smart_rollup_add_messages',
+      kind: 'smart_rollup_add_messages' as OpKind.SMART_ROLLUP_ADD_MESSAGES,
       source: 'tz1h5DrMhmdrGMpb3qkykU1RmCWoTYAkFJPu',
       fee: '1496',
       counter: '3969',
@@ -37,13 +39,13 @@ const localForgerOperation = {
       ],
     },
   ],
-} as const;
+} satisfies ForgeParams;
 
 const utf8ForgerOperation = {
   branch: 'BLxGBu48ybnWvZoaVLyXV4XVnhdeDc9V2NcB9wsegQniza6mxvX',
   contents: [
     {
-      kind: 'transaction',
+      kind: 'transaction' as OpKind.TRANSACTION,
       source: 'tz1h5DrMhmdrGMpb3qkykU1RmCWoTYAkFJPu',
       fee: '1496',
       counter: '3970',
@@ -60,10 +62,29 @@ const utf8ForgerOperation = {
       },
     },
   ],
-};
+} satisfies ForgeParams;
 
 const expectedUtf8ForgedBytes =
   'a3709dd3656c6d80bdfa9c3233d65bee9959207dae273e6fef48b7d6a2944d146c00eb1e5b162505a8b471dad53e6b95a287dc354eabd80b821fa116ac330001961c87824da8d4733dd7dee6f171e6c391c4240700ffff0d6d795f656e747279706f696e740000001b070701000000127461717569746f20f09f909920636166c3a9002a';
+
+const ordinaryTransferOperation = {
+  branch: 'BLxGBu48ybnWvZoaVLyXV4XVnhdeDc9V2NcB9wsegQniza6mxvX',
+  contents: [
+    {
+      kind: 'transaction' as OpKind.TRANSACTION,
+      source: 'tz1h5DrMhmdrGMpb3qkykU1RmCWoTYAkFJPu',
+      fee: '1496',
+      counter: '3970',
+      gas_limit: '2849',
+      storage_limit: '6572',
+      amount: '0',
+      destination: validContractAddress,
+    },
+  ],
+} satisfies ForgeParams;
+
+const expectedOrdinaryTransferBytes =
+  'a3709dd3656c6d80bdfa9c3233d65bee9959207dae273e6fef48b7d6a2944d146c00eb1e5b162505a8b471dad53e6b95a287dc354eabd80b821fa116ac330001961c87824da8d4733dd7dee6f171e6c391c424070000';
 
 const signingBytesFixture =
   '0365cac93523b8c10346c0107cfea5e12ff3c759459020e532f299e2f41082f7cb6d0000f68c4abfa21dfc0c9efcf588190388cac85d9db60f81d6038b79d8030000000000b902000000b405000764045b0000000a2564656372656d656e74045b0000000a25696e6372656d656e740501035b0502020000008503210317057000010321057100020316072e020000002b032105700002032105710003034203210317057000010321057100020316034b051f020000000405200002020000002b0321057000020321057100030342032103170570000103210571000203160312051f0200000004052000020321053d036d0342051f020000000405200003000000020000';
@@ -181,10 +202,19 @@ const scenarios: Record<PackageScenarioId, SmokeScenario> = {
       valueDecoder,
     } = await importPackage<typeof import('@taquito/local-forging')>('@taquito/local-forging');
     const localForger = new LocalForger();
-    const forged = await localForger.forge(localForgerOperation as any);
+    const forged = await localForger.forge(localForgerOperation);
     const parsedRollup = await localForger.parse(forged);
 
-    const utf8Forged = await localForger.forge(utf8ForgerOperation as any);
+    const ordinaryForged = await localForger.forge(ordinaryTransferOperation);
+    if (ordinaryForged !== expectedOrdinaryTransferBytes) {
+      throw new Error('Ordinary transfer bytes differ from Octez control fixture');
+    }
+    const ordinaryParsed = await localForger.parse(ordinaryForged);
+    if (JSON.stringify(ordinaryParsed) !== JSON.stringify(ordinaryTransferOperation)) {
+      throw new Error('Parsed ordinary transfer differs from original control operation');
+    }
+
+    const utf8Forged = await localForger.forge(utf8ForgerOperation);
     if (utf8Forged !== expectedUtf8ForgedBytes) {
       throw new Error('Forged UTF-8 operation bytes differ from Octez fixture');
     }

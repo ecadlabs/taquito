@@ -46,14 +46,41 @@ const utf8Operation = {
 const expectedUtf8OperationHex =
   'a3709dd3656c6d80bdfa9c3233d65bee9959207dae273e6fef48b7d6a2944d146c00eb1e5b162505a8b471dad53e6b95a287dc354eabd80b821fa116ac330001961c87824da8d4733dd7dee6f171e6c391c4240700ffff0d6d795f656e747279706f696e740000001b070701000000127461717569746f20f09f909920636166c3a9002a';
 
+const ordinaryTransferOperation = {
+  branch: 'BLxGBu48ybnWvZoaVLyXV4XVnhdeDc9V2NcB9wsegQniza6mxvX',
+  contents: [
+    {
+      kind: 'transaction',
+      source: 'tz1h5DrMhmdrGMpb3qkykU1RmCWoTYAkFJPu',
+      fee: '1496',
+      counter: '3970',
+      gas_limit: '2849',
+      storage_limit: '6572',
+      amount: '0',
+      destination: 'KT1NGV6nvvedwwjMjCsWY6Vfm6p1q5sMMLDY',
+    },
+  ],
+};
+const expectedOrdinaryTransferHex =
+  'a3709dd3656c6d80bdfa9c3233d65bee9959207dae273e6fef48b7d6a2944d146c00eb1e5b162505a8b471dad53e6b95a287dc354eabd80b821fa116ac330001961c87824da8d4733dd7dee6f171e6c391c424070000';
+
 const forger = new LocalForger();
+const forgedControl = await forger.forge(ordinaryTransferOperation);
+const parsedControl = await forger.parse(forgedControl);
+if (
+  forgedControl !== expectedOrdinaryTransferHex ||
+  JSON.stringify(parsedControl) !== JSON.stringify(ordinaryTransferOperation)
+) {
+  throw new Error('LocalForger ordinary transfer browser behavior changed');
+}
+
 const forged = await forger.forge(utf8Operation);
 const parsed = await forger.parse(forged);
 if (
   forged !== expectedUtf8OperationHex ||
   JSON.stringify(parsed) !== JSON.stringify(utf8Operation)
 ) {
-  throw new Error('LocalForger browser behavior changed');
+  throw new Error('LocalForger UTF-8 browser behavior changed');
 }
 
 const signingBytes =
