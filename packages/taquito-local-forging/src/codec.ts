@@ -31,7 +31,7 @@ import {
   stripLengthPrefixFromBytes,
 } from './michelson/codec';
 import { Uint8ArrayConsumer } from './uint8array-consumer';
-import { pad, toHexString } from './utils';
+import { decodeUtf8, pad, toHexString } from './utils';
 import {
   InvalidAddressError,
   InvalidContractAddressError,
@@ -178,7 +178,7 @@ export const int32Encoder = (val: number | string): string => {
     const shiftBy = (4 - (i + 1)) * 8;
     byte.push((num & (0xff << shiftBy)) >> shiftBy);
   }
-  return Buffer.from(byte).toString('hex');
+  return buf2hex(byte);
 };
 
 export const int32Decoder = (val: Uint8ArrayConsumer) => {
@@ -198,7 +198,7 @@ export const int16Encoder = (val: number | string): string => {
     const shiftBy = (2 - (i + 1)) * 8;
     byte.push((num & (0xff << shiftBy)) >> shiftBy);
   }
-  return Buffer.from(byte).toString('hex');
+  return buf2hex(byte);
 };
 
 export const int16Decoder = (val: Uint8ArrayConsumer) => {
@@ -387,7 +387,7 @@ export const entrypointDecoder = (value: Uint8ArrayConsumer) => {
   } else {
     const entry = extractRequiredLen(value, 1);
 
-    const entrypoint = Buffer.from(entry).toString('utf8');
+    const entrypoint = decodeUtf8(entry);
 
     if (entrypoint.length > ENTRYPOINT_MAX_LENGTH) {
       throw new OversizedEntryPointError(entrypoint);
@@ -455,7 +455,7 @@ export const entrypointNameEncoder = (entrypoint: string) => {
 export const entrypointNameDecoder = (val: Uint8ArrayConsumer) => {
   const entry = extractRequiredLen(val);
 
-  return Buffer.from(entry).toString('utf8');
+  return decodeUtf8(entry);
 };
 
 export const burnLimitEncoder = (val: string) => {
@@ -464,7 +464,7 @@ export const burnLimitEncoder = (val: string) => {
 
 export const burnLimitDecoder = (value: Uint8ArrayConsumer) => {
   const prefix = value.consume(1);
-  if (Buffer.from(prefix).toString('hex') !== '00') {
+  if (toHexString(prefix) !== '00') {
     return zarithDecoder(value);
   }
 };
@@ -475,7 +475,7 @@ export const depositsLimitEncoder = (val: string) => {
 
 export const depositsLimitDecoder = (value: Uint8ArrayConsumer) => {
   const prefix = value.consume(1);
-  if (Buffer.from(prefix).toString('hex') !== '00') {
+  if (toHexString(prefix) !== '00') {
     return zarithDecoder(value);
   }
 };
@@ -527,7 +527,7 @@ export const paddedBytesEncoder = (val: string, paddingLength = 8) => {
 
 export const paddedBytesDecoder = (val: Uint8ArrayConsumer) => {
   const value = extractRequiredLen(val);
-  return Buffer.from(value).toString('hex');
+  return toHexString(value);
 };
 
 export const smartRollupMessageEncoder = (val: string[]) => {
@@ -540,7 +540,7 @@ export const smartRollupMessageEncoder = (val: string[]) => {
 export const smartRollupMessageDecoder = (val: Uint8ArrayConsumer) => {
   const valueArray = extractRequiredLen(val);
   const ret = stripLengthPrefixFromBytes(new Uint8ArrayConsumer(valueArray));
-  return ret.map((value) => Buffer.from(value).toString('hex'));
+  return ret.map((value) => toHexString(value));
 };
 
 export const dalCommitmentEncoder = (val: string): string => {

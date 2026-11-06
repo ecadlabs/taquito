@@ -61,14 +61,12 @@
     "@taquito/core": "^25.1.0",
     "bignumber.js": "^10.0.2",
     "bs58check": "^4.0.0",
-    "buffer": "^6.0.3",
-    "typedarray-to-buffer": "^4.0.0"
+    "buffer": "^6.0.3"
   },
   "devDependencies": {
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@types/node": "^22.20.5",
-    "@types/typedarray-to-buffer": "^4.0.4",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "eslint": "^8.57.0",

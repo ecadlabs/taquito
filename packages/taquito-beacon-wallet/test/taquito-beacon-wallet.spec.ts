@@ -1,4 +1,5 @@
 import { BeaconMessageType, NetworkType, Origin } from '@ecadlabs/beacon-types';
+import { UnsupportedActionError } from '@taquito/core';
 import { type MichelsonV1Expression, OpKind, PvmKind } from '@taquito/rpc';
 import { expectTypeOf, vi } from 'vitest';
 import {
@@ -271,14 +272,58 @@ describe('Beacon Wallet tests', () => {
 
   it('Verify sign throws for Micheline', async () => {
     const wallet = new BeaconWallet({ name: 'Test', storage: new LocalStorage() });
-    expect(
-      async () => await wallet.sign('48656C6C6F20576F726C64', new Uint8Array([5]))
-    ).rejects.toThrow();
+    await expect(
+      wallet.sign('48656C6C6F20576F726C64', new Uint8Array([5]))
+    ).rejects.toThrow(UnsupportedActionError);
   });
 
   it('Verify sign throws for Raw', async () => {
     const wallet = new BeaconWallet({ name: 'Test', storage: new LocalStorage() });
-    expect(async () => await wallet.sign('48656C6C6F20576F726C64')).rejects.toThrow();
+    await expect(wallet.sign('48656C6C6F20576F726C64')).rejects.toThrow(UnsupportedActionError);
+  });
+
+  it('signs operation payloads and rejects unsupported watermarks without global Buffer', async () => {
+    const descriptor = Object.getOwnPropertyDescriptor(globalThis, 'Buffer');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    delete (globalThis as any).Buffer;
+    try {
+      expect('Buffer' in globalThis).toBe(false);
+      const wallet = new BeaconWallet({ name: 'Test', storage: new LocalStorage() });
+      const requestSignPayload = vi.fn().mockResolvedValue({
+        type: BeaconMessageType.SignPayloadResponse,
+        signingType: SigningType.OPERATION,
+        signature:
+          'sigiGUGvWRkoYuf7ReH3wWAYnpgBFTa2DJ4Nxi7v1Wy5KqS7sZaxNhRiW6ivuoSUdKZnyGTABVk23WnppatuYqHty7uDtWRY',
+        version: '2',
+        id: 'fixture',
+        senderId: 'fixture',
+      });
+      wallet.client.requestSignPayload = requestSignPayload;
+
+      await expect(wallet.sign('48656c6c6f', undefined)).rejects.toThrow(UnsupportedActionError);
+      await expect(wallet.sign('48656c6c6f', new Uint8Array([5]))).rejects.toThrow(
+        UnsupportedActionError
+      );
+      await expect(wallet.sign('48656c6c6f', new Uint8Array([1, 2]))).rejects.toThrow(
+        'Invalid watermark'
+      );
+      expect(requestSignPayload).not.toHaveBeenCalled();
+
+      const subviewWatermark = new Uint8Array([0xff, 3, 0xaa]).subarray(1, 2);
+      const signature = await wallet.sign('48656c6c6f', subviewWatermark);
+      expect(signature).toBe(
+        'sigiGUGvWRkoYuf7ReH3wWAYnpgBFTa2DJ4Nxi7v1Wy5KqS7sZaxNhRiW6ivuoSUdKZnyGTABVk23WnppatuYqHty7uDtWRY'
+      );
+      expect(requestSignPayload).toHaveBeenCalledTimes(1);
+      expect(requestSignPayload).toHaveBeenCalledWith({
+        signingType: SigningType.OPERATION,
+        payload: '0348656c6c6f',
+      });
+    } finally {
+      if (descriptor) {
+        Object.defineProperty(globalThis, 'Buffer', descriptor);
+      }
+    }
   });
   describe('smart rollup mapping', () => {
     let wallet: BeaconWallet;

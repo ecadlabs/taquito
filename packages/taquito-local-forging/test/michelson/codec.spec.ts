@@ -1,5 +1,8 @@
 import {
   BytesValue,
+  bytesDecoder,
+  decodeAnnots,
+  encodeAnnots,
   extractRequiredLen,
   IntValue,
   isBytes,
@@ -11,6 +14,8 @@ import {
   PrimValue,
   scriptDecoder,
   scriptEncoder,
+  stringDecoder,
+  stringEncoder,
   stripLengthPrefixFromBytes,
   StringValue,
   Uint8ArrayConsumer,
@@ -116,5 +121,69 @@ describe('unint8arrayconsumer', () => {
     const scriptConsumer = Uint8ArrayConsumer.fromHexString(encodedScript);
     expect(scriptDecoder(scriptConsumer)).toEqual(script);
     expect(scriptConsumer.length()).toBe(0);
+  });
+
+  it('encodes and decodes Michelson strings, bytes, and annotations without global Buffer and preserves UTF-8 edge cases', () => {
+    const descriptor = Object.getOwnPropertyDescriptor(globalThis, 'Buffer');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    delete (globalThis as any).Buffer;
+    try {
+      expect('Buffer' in globalThis).toBe(false);
+
+      // Empty string round-trip
+      expect(stringEncoder({ string: '' })).toBe('0100000000');
+      expect(valueDecoder(Uint8ArrayConsumer.fromHexString('0100000000'))).toEqual({
+        string: '',
+      });
+
+      // Multi-byte UTF-8 round-trip
+      const utf8Encoded = stringEncoder({ string: 'taquito 🐙 café' });
+      expect(utf8Encoded).toBe('01000000127461717569746f20f09f909920636166c3a9');
+      expect(stringDecoder(Uint8ArrayConsumer.fromHexString(utf8Encoded).slice(1))).toEqual({
+        string: 'taquito 🐙 café',
+      });
+
+      // Lone UTF-16 high and low surrogates replace with U+FFFD (efbfbd)
+      expect(stringEncoder({ string: String.fromCharCode(0xd800, 0xd801) })).toBe(
+        '0100000006efbfbdefbfbd'
+      );
+      expect(stringEncoder({ string: '\udc00' })).toBe('0100000003efbfbd');
+
+      // Truncated and overlong UTF-8 sequences replace with U+FFFD without corrupting subsequent calls
+      expect(valueDecoder(Uint8ArrayConsumer.fromHexString('0100000002e282'))).toEqual({
+        string: '\uFFFD',
+      });
+      expect(valueDecoder(Uint8ArrayConsumer.fromHexString('0100000002c0af'))).toEqual({
+        string: '\uFFFD\uFFFD',
+      });
+      expect(valueDecoder(Uint8ArrayConsumer.fromHexString('01000000026f6b'))).toEqual({
+        string: 'ok',
+      });
+
+      // Leading UTF-8 BOM (efbbbf) is preserved, matching Node Buffer.toString('utf8')
+      expect(valueDecoder(Uint8ArrayConsumer.fromHexString('0100000004efbbbf41'))).toEqual({
+        string: '\uFEFFA',
+      });
+
+      // Non-string inputs throw TypeError
+      expect(() => stringEncoder({ string: 42 as unknown as string })).toThrow(TypeError);
+      expect(() =>
+        valueEncoder({ prim: 'Pair', annots: [42 as unknown as string] })
+      ).toThrow(TypeError);
+
+      // Bytes decoder without Buffer
+      expect(bytesDecoder(Uint8ArrayConsumer.fromHexString('00000004deadbeef'))).toEqual({
+        bytes: 'deadbeef',
+      });
+
+      // Annotations round-trip without Buffer, including byte pairs whose hex crosses '20' (0x02, 0x01 -> '0201')
+      const annots = ['%ep', ':ty', '@var', '\uFEFFbom', '\x02\x01'];
+      const encodedAnnots = encodeAnnots(annots);
+      expect(decodeAnnots(Uint8ArrayConsumer.fromHexString(encodedAnnots))).toEqual(annots);
+    } finally {
+      if (descriptor) {
+        Object.defineProperty(globalThis, 'Buffer', descriptor);
+      }
+    }
   });
 });
