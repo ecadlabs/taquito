@@ -1,7 +1,6 @@
 import camelCase from 'lodash.camelcase';
 import typescript from 'rollup-plugin-typescript2';
 import json from '@rollup/plugin-json';
-import nodePolyfills from 'rollup-plugin-polyfill-node';
 
 const pkg = require('./package.json');
 
@@ -28,7 +27,6 @@ export default {
     '@taquito/core',
     'bignumber.js',
     '@taquito/utils',
-    'fast-text-encoding'
   ],
   watch: {
     include: 'src/**',
@@ -38,6 +36,5 @@ export default {
     json(),
     // Compile TypeScript files
     typescript({ tsconfig: './tsconfig.prod.json', useTsconfigDeclarationDir: true }),
-    nodePolyfills(),
   ],
 };

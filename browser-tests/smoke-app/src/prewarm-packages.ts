@@ -14,6 +14,7 @@ import '@taquito/timelock';
 import '@taquito/beacon-wallet';
 import '@taquito/wallet-connect';
 import '@taquito/ledger-signer';
+import '@taquito/remote-signer';
 import '@taquito/sapling';
 
 export const prewarmedPackages = true;

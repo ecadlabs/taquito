@@ -15,6 +15,7 @@ export type PackageScenarioId =
   | 'beacon-wallet-import'
   | 'wallet-connect-import'
   | 'ledger-signer-behavior'
+  | 'remote-signer-behavior'
   | 'sapling-import'
   | 'sapling-preload';
 
@@ -104,6 +105,11 @@ export const packageScenarios: readonly PackageScenario[] = [
     id: 'ledger-signer-behavior',
     packageName: '@taquito/ledger-signer',
     description: 'imports ledger-signer and exercises LedgerSigner byte helpers',
+  },
+  {
+    id: 'remote-signer-behavior',
+    packageName: '@taquito/remote-signer',
+    description: 'imports remote-signer and signs and verifies operation bytes without global Buffer',
   },
   {
     id: 'sapling-import',

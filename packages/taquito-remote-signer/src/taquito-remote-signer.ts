@@ -15,7 +15,6 @@ import {
   getPkhfromPk,
   b58Encode,
 } from '@taquito/utils';
-import toBuffer from 'typedarray-to-buffer';
 import {
   BadSigningDataError,
   OperationNotAuthorizedError,
@@ -101,7 +100,7 @@ export class RemoteSigner implements Signer {
       if (typeof watermark !== 'undefined') {
         bb = mergebuf(watermark, bb);
       }
-      const watermarkedBytes = buf2hex(toBuffer(bb));
+      const watermarkedBytes = buf2hex(bb);
       const { signature } = await this.http.createRequest<SignResponse>(
         {
           url: this.createURL(`/keys/${this.pkh}`),
@@ -139,7 +138,7 @@ export class RemoteSigner implements Signer {
         bytes,
         sig: b58Encode(decoded, PrefixV2.GenericSignature),
         prefixSig: signature,
-        sbytes: bytes + buf2hex(toBuffer(decoded)),
+        sbytes: bytes + buf2hex(decoded),
       };
     } catch (ex) {
       if (ex instanceof HttpResponseError) {

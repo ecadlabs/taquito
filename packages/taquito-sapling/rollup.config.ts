@@ -24,14 +24,12 @@ export default {
         "@taquito/sapling-wasm": "sapling",
         "blakejs": "blake",
         "@stablelib/nacl": "nacl",
-        "typedarray-to-buffer": "toBuffer",
       }
     },
     { file: pkg.module, format: 'es', sourcemap: true },
   ],
   // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
   external: [
-    'typedarray-to-buffer',
     'blakejs',
     '@taquito/core',
     '@taquito/utils',

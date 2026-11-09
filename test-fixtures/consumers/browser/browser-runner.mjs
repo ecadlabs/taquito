@@ -9,7 +9,13 @@ const {
   default: { chromium },
 } = await import(pathToFileURL(process.argv[3]).href);
 const root = process.cwd();
-const expected = ['core', 'http-utils', 'beacon-wallet'].map((name) => {
+const expected = [
+  'core',
+  'http-utils',
+  'beacon-wallet',
+  'local-forging',
+  'remote-signer',
+].map((name) => {
   const directory = join(root, 'node_modules', '@taquito', name);
   const pkg = JSON.parse(readFileSync(join(directory, 'package.json'), 'utf8'));
   return join(directory, pkg.module);

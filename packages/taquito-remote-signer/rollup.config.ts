@@ -18,7 +18,6 @@ export default {
         '@taquito/core': 'core',
         '@taquito/http-utils': 'httpUtils',
         '@taquito/utils': 'utils',
-        'typedarray-to-buffer': 'toBuffer',
       } 
     },
     { file: pkg.module, format: 'es', sourcemap: true },
@@ -28,7 +27,6 @@ export default {
     '@taquito/core',
     '@taquito/http-utils',
     '@taquito/utils',
-    'typedarray-to-buffer'
   ],
   watch: {
     include: 'src/**',
