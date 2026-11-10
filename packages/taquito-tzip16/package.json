@@ -1,6 +1,6 @@
 {
   "name": "@taquito/tzip16",
-  "version": "25.1.0",
+  "version": "25.1.1",
   "description": "TZIP-16 contract metadata support for Taquito.",
   "keywords": [
     "taquito",
@@ -25,7 +25,7 @@
   "contributors": [
     "Roxane Letourneau <roxane@ecadlabs.com>",
     "Davis Sawali <davis.sawali@ecadlabs.com>",
-    "Jev Bj\u00f6rsell (jevonearth)"
+    "Jev Björsell (jevonearth)"
   ],
   "homepage": "https://taquito.io/",
   "repository": {
@@ -55,12 +55,12 @@
     ]
   },
   "dependencies": {
-    "@taquito/core": "^25.1.0",
-    "@taquito/http-utils": "^25.1.0",
-    "@taquito/michelson-encoder": "^25.1.0",
-    "@taquito/rpc": "^25.1.0",
-    "@taquito/taquito": "^25.1.0",
-    "@taquito/utils": "^25.1.0",
+    "@taquito/core": "^25.1.1",
+    "@taquito/http-utils": "^25.1.1",
+    "@taquito/michelson-encoder": "^25.1.1",
+    "@taquito/rpc": "^25.1.1",
+    "@taquito/taquito": "^25.1.1",
+    "@taquito/utils": "^25.1.1",
     "bignumber.js": "^10.0.2",
     "crypto-js": "^4.2.0"
   },

@@ -1,6 +1,6 @@
 {
   "name": "@taquito/michel-codec",
-  "version": "25.1.0",
+  "version": "25.1.1",
   "description": "Michelson parser, validator, and formatter for Taquito.",
   "keywords": [
     "taquito",
@@ -57,7 +57,7 @@
     ]
   },
   "dependencies": {
-    "@taquito/core": "^25.1.0"
+    "@taquito/core": "^25.1.1"
   },
   "devDependencies": {
     "@rollup/plugin-json": "^6.1.0",
