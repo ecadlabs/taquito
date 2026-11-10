@@ -63,7 +63,8 @@ export class ParameterSchema {
    */
   get hasAnnotation() {
     if (this.isMultipleEntryPoint) {
-      return Object.keys(this.generateSchema())[0] !== '0';
+      const token = this.root instanceof OptionToken ? this.root.subToken() : this.root;
+      return Object.keys(token.generateSchema().schema)[0] !== '0';
     } else {
       return true;
     }

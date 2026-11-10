@@ -99,7 +99,7 @@ export class PairToken extends ComparableToken {
     return this.args().map((a) => {
       const tok = this.createToken(a, this.getIdxForChildren() + cnt, 'Pair');
       if (tok instanceof PairToken) {
-        cnt += Object.keys(tok.generateSchema()).length;
+        cnt += Object.keys(tok.generateSchema().schema).length;
       } else {
         cnt++;
       }
@@ -119,7 +119,7 @@ export class PairToken extends ComparableToken {
     const leftToken = this.createToken(args[0], this.getIdxForChildren(), 'Pair');
     let keyCount = 1;
     if (leftToken instanceof OrToken) {
-      keyCount = Object.keys(leftToken.generateSchema()).length;
+      keyCount = Object.keys(leftToken.generateSchema().schema).length;
     }
 
     const rightToken = this.createToken(args[1], this.getIdxForChildren() + keyCount, 'Pair');
@@ -180,9 +180,7 @@ export class PairToken extends ComparableToken {
     let leftValue;
     if (leftToken instanceof PairToken && !leftToken.hasAnnotations()) {
       leftValue = getLeftValue(leftToken);
-      if (leftToken instanceof PairToken) {
-        keyCount = Object.keys(leftToken.generateSchema()).length;
-      }
+      keyCount = Object.keys(leftToken.generateSchema().schema).length;
     } else {
       leftValue = { [leftToken.annot()]: getLeftValue(leftToken) };
     }
