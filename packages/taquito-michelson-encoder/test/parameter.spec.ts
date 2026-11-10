@@ -21,3 +21,75 @@ describe('Schema test errors', () => {
     }
   });
 });
+
+describe('ParameterSchema.hasAnnotation', () => {
+  it('returns false for an unannotated multi-entrypoint or parameter', () => {
+    const schema = new ParameterSchema({
+      prim: 'or',
+      args: [{ prim: 'int' }, { prim: 'string' }],
+    });
+    expect(schema.isMultipleEntryPoint).toBe(true);
+    expect(schema.hasAnnotation).toBe(false);
+  });
+
+  it('returns true for an annotated multi-entrypoint or parameter', () => {
+    const schema = new ParameterSchema({
+      prim: 'or',
+      args: [
+        { prim: 'int', annots: ['%a'] },
+        { prim: 'string', annots: ['%b'] },
+      ],
+    });
+    expect(schema.isMultipleEntryPoint).toBe(true);
+    expect(schema.hasAnnotation).toBe(true);
+  });
+
+  it('returns true for an annotated multi-entrypoint or parameter with non-trivial entrypoint names', () => {
+    const schema = new ParameterSchema({
+      prim: 'or',
+      args: [
+        { prim: 'int', annots: ['%transfer'] },
+        { prim: 'string', annots: ['%approve'] },
+      ],
+    });
+    expect(schema.isMultipleEntryPoint).toBe(true);
+    expect(schema.hasAnnotation).toBe(true);
+  });
+
+  it('returns false for an unannotated option-wrapped multi-entrypoint or parameter', () => {
+    const schema = new ParameterSchema({
+      prim: 'option',
+      args: [
+        {
+          prim: 'or',
+          args: [{ prim: 'int' }, { prim: 'string' }],
+        },
+      ],
+    });
+    expect(schema.isMultipleEntryPoint).toBe(true);
+    expect(schema.hasAnnotation).toBe(false);
+  });
+
+  it('returns true for an annotated option-wrapped multi-entrypoint or parameter', () => {
+    const schema = new ParameterSchema({
+      prim: 'option',
+      args: [
+        {
+          prim: 'or',
+          args: [
+            { prim: 'int', annots: ['%transfer'] },
+            { prim: 'string', annots: ['%approve'] },
+          ],
+        },
+      ],
+    });
+    expect(schema.isMultipleEntryPoint).toBe(true);
+    expect(schema.hasAnnotation).toBe(true);
+  });
+
+  it('returns true for a single-entrypoint parameter', () => {
+    const schema = new ParameterSchema({ prim: 'int' });
+    expect(schema.isMultipleEntryPoint).toBe(false);
+    expect(schema.hasAnnotation).toBe(true);
+  });
+});
