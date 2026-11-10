@@ -3,6 +3,10 @@ version: v1.25.0
 ignore:
   SNYK-JS-ELLIPTIC-14908844:
     - '*':
-        reason: 'WalletConnect is explicitly pinned to 2.18.0 for Beacon compatibility; elliptic has no fixed release as of 2026-05-18.'
-        expires: '2026-06-18T00:00:00.000Z'
+        reason: >-
+          CVE-2025-14505 is a nonce-truncation flaw in elliptic ECDSA signing. elliptic
+          reaches us only through @walletconnect/utils 2.18.0, which Beacon pins exactly
+          because Kukai iOS depends on it, and that code only verifies P-256 attestation
+          JWT signatures. It never signs. elliptic has no fixed release as of 2026-11-10.
+        expires: '2027-05-10T00:00:00.000Z'
 patch: {}
