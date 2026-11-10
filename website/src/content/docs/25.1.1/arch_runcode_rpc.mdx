@@ -1,0 +1,77 @@
+---
+title: Understanding the RunCode RPC
+author: Peter McDonald
+---
+
+## Context
+
+Here we infer RunCode RPC semantics from Taquito Code.
+
+## References
+
+- R1: [runCode RPC](https://octez.tezos.com/docs/alpha/rpc.html)
+
+## RunCode RPC
+
+Reference R1 documentation for runCode RPC is "Run a piece of code in the current context".
+
+In Taquito the request inputs are described by:
+
+```
+RPCRunCodeParam
+  Script: MichelsonV1ExpressionExtended[]
+  Storage: MichelsonV1Expression
+  Input: MichelsonV1Expression
+  Amount: string
+  Chain_id: string
+  Source?: string
+  Payer?: string
+  Gas?: BigNumber
+  Entrypoint?: string
+  Balance?: string
+```
+
+The result is described by:
+
+```
+RunCodeResult
+  Storage: MichelsonV1Expression
+  Operations: InternalOperationResult[]
+  Big_map_diff?: ContractBigMapDiff
+  Lazy_storage_diff?: LazyStorageDiff
+```
+
+## Taquito's Use of RunCode
+
+Taquito leverages the RunCode RPC to:
+- Execute a [tzip-16 Michelson Storage View](metadata-tzip16)
+- Simulate execution of a Smart Contract's [OnChainView](on_chain_views)
+
+These Taquito use cases make use of RunCode in a very similar way, enabling us to infer semantics.
+
+## Inferred Semantics
+
+RunCode simulates execution of a specified Transaction against a specified (Michelson script, storage-value, balance) tuple as if that tuple is an Originated Account in the current Context.
+
+This interpretation enables us to make sense of (most of) RPCRunCodeParam.
+
+Some Parameters specify the virtual Smart Contract:
+- **Script** - defines Params, Storage and Code elements of the virtual Smart Contract
+- **Storage** - the storage state of the virtual Smart Contract
+- **Balance** - the balance state of the virtual Smart Contract
+
+Other Parameters specify the Transaction:
+- **Source** - the "To" is implicitly the virtual Smart Contract address
+- **Amount**
+- **Entrypoint**
+- **Input** - entrypoint arguments
+
+The Chain_id seems redundant. We are talking to a particular RPC Node which is already bound to a particular chain_id. Moreover, we are tasking this node to execute as if our virtual smart contract is in the current context; the only current context an RPC node can service is for the chain-id that it is bound to.
+
+This leaves two optional RPCRunCodeParam parameters that remain uninterpreted, namely: Payer and Gas. Taquito does not make use of these parameters.
+
+We can now make sense of RunCodeResult:
+- **Storage** - the value of the virtual smart contract's storage after the transaction is executed
+- **Operations** - the result of executing any Internal Operations left on the Michelson Stack after the transaction endpoint is executed. Taquito does not actually make use of this field since in both Taquito use cases, no Operations are left on the stack.
+
+This leaves two optional RunCodeResult parameters that remain uninterpreted, namely: Big_map_diff and Lazy_storage_diff. Taquito does not make use of these parameters.
