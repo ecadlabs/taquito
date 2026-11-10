@@ -22,7 +22,7 @@ Taquito is used by **over 80% of DApps** in the Tezos ecosystem. It is easy to u
 
 ## Why should I use Taquito?
 
-Taquito provides convenient abstractions for a multitude of common operations, including wallet interactions (via [Beacon](https://www.npmjs.com/package/@taquito/beacon-wallet) and [WalletConnect](https://www.npmjs.com/package/@taquito/wallet-connect)), batching operations, calling into contracts, querying the blockchain, and more. Taquito will shield your code from subtle, and not-so-subtle, changes to the underlying Tezos protocol.
+Taquito provides convenient abstractions for a multitude of common operations, including wallet interactions (via [Beacon](https://www.npmjs.com/package/@taquito/beacon-wallet)), batching operations, calling into contracts, querying the blockchain, and more. Taquito will shield your code from subtle, and not-so-subtle, changes to the underlying Tezos protocol.
 
 ...Not to mention our thriving, helpful, and welcoming community!
 
@@ -88,7 +88,6 @@ Taquito is a [monorepo](https://en.wikipedia.org/wiki/Monorepo), composed of npm
 | `@taquito/tzip12` | [npm](https://www.npmjs.com/package/@taquito/tzip12) | [source](./packages/taquito-tzip12) | TZIP-12 token metadata support for Taquito. |
 | `@taquito/tzip16` | [npm](https://www.npmjs.com/package/@taquito/tzip16) | [source](./packages/taquito-tzip16) | TZIP-16 contract metadata support for Taquito. |
 | `@taquito/utils` | [npm](https://www.npmjs.com/package/@taquito/utils) | [source](./packages/taquito-utils) | Encoding, crypto, and utility helpers for Taquito. |
-| `@taquito/wallet-connect` | [npm](https://www.npmjs.com/package/@taquito/wallet-connect) | [source](./packages/taquito-wallet-connect) | WalletConnect integration for Taquito applications. |
 
 ### Related Official Package
 

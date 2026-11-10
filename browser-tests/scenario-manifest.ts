@@ -13,7 +13,6 @@ export type PackageScenarioId =
   | 'contracts-library-behavior'
   | 'timelock-behavior'
   | 'beacon-wallet-import'
-  | 'wallet-connect-import'
   | 'ledger-signer-behavior'
   | 'remote-signer-behavior'
   | 'sapling-import'
@@ -95,11 +94,6 @@ export const packageScenarios: readonly PackageScenario[] = [
     id: 'beacon-wallet-import',
     packageName: '@taquito/beacon-wallet',
     description: 'imports beacon-wallet in a browser',
-  },
-  {
-    id: 'wallet-connect-import',
-    packageName: '@taquito/wallet-connect',
-    description: 'imports wallet-connect in a browser',
   },
   {
     id: 'ledger-signer-behavior',

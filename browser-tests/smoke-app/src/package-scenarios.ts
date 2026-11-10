@@ -404,20 +404,6 @@ const scenarios: Record<PackageScenarioId, SmokeScenario> = {
     };
   },
 
-  'wallet-connect-import': async () => {
-    const walletConnect = await importPackage<typeof import('@taquito/wallet-connect')>(
-      '@taquito/wallet-connect'
-    );
-
-    return {
-      exports: ['WalletConnect', 'NetworkType'],
-      summary: {
-        walletConnectType: typeof walletConnect.WalletConnect,
-        shadownet: walletConnect.NetworkType.SHADOWNET,
-      },
-    };
-  },
-
   'ledger-signer-behavior': async () => {
     const { DerivationType, LedgerSigner } = await importPackage<typeof import('@taquito/ledger-signer')>(
       '@taquito/ledger-signer'

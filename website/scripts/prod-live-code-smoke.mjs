@@ -25,7 +25,6 @@ const defaultPageSet = [
   { slug: 'storage_annotations', expectedBlocks: 6 },
   { slug: 'tzip12', expectedBlocks: 6 },
   { slug: 'wallet_API', expectedBlocks: 5 },
-  { slug: 'walletconnect', expectedBlocks: 1 },
 ];
 
 const args = process.argv.slice(2);

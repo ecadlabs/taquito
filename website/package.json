@@ -24,7 +24,6 @@
     "@taquito/tzip12": "^25.1.1",
     "@taquito/tzip16": "^25.1.1",
     "@taquito/utils": "^25.1.1",
-    "@taquito/wallet-connect": "^25.1.1",
     "bignumber.js": "^10.0.2",
     "buffer": "^6.0.3",
     "fuse.js": "^7.5.0",

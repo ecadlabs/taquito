@@ -47,7 +47,6 @@ The `next` version contains the latest unreleased documentation.
 - `failwith_errors` - Catching FAILWITH errors
 
 ### Wallets
-- `walletconnect` - WalletConnect
 - `wallets` - Wallets
 - `transaction_limits` - Transaction limits
 
