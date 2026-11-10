@@ -174,7 +174,7 @@ console.log(await origination.rollupAddress());
 ```
 
 Wallet origination also accepts the optional `whitelist` parameter described
-above. BeaconWallet and WalletConnect forward the supplied addresses in order.
+above. BeaconWallet forwards the supplied addresses in order.
 Omit it for a public rollup. Wallet batches accept the same parameter.
 
 To execute an outbox message, obtain its serialized proof from the rollup node
@@ -218,7 +218,7 @@ const results = await batch.operationResults();
 `status()` on a batch follows the existing first-result rule. Use
 `operationResults()` to inspect every operation in a mixed batch.
 
-The built-in signer-backed provider, BeaconWallet and WalletConnect implement
+The built-in signer-backed provider and BeaconWallet implement
 these mappings. The connected wallet application must also support the requested
 operation. A custom provider can implement each optional
 `mapSmartRollup...ParamsToWalletParams` method independently. If a required mapper
