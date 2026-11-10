@@ -21,8 +21,6 @@ const ledgerPatterns = [
   /\bDerivationType\b/,
 ];
 
-const walletConnectPatterns = [/\bWalletConnect\.init\b/, /\bwalletConnect\.requestPermissions\b/];
-
 const selfManagedSignerPatterns = [
   /\bconfigureSigner\s*\(/,
   /\bimportKey\s*\(/,
@@ -52,13 +50,6 @@ export const inferLiveCodeRuntime = ({ code, isWallet = false, noConfig = false 
   if (isWallet) {
     return {
       interactionMode: 'beacon',
-      signerMode: 'none',
-    };
-  }
-
-  if (matchesAny(code, walletConnectPatterns)) {
-    return {
-      interactionMode: 'walletconnect',
       signerMode: 'none',
     };
   }

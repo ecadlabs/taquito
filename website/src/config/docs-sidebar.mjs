@@ -48,7 +48,6 @@ export const sidebarConfig = [
   {
     name: "Wallets",
     items: [
-      "walletconnect",
       "wallets",
       "transaction_limits",
     ],

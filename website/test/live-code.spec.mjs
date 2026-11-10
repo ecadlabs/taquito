@@ -83,16 +83,7 @@ describe('inferLiveCodeRuntime', () => {
     });
   });
 
-  it('detects walletconnect and ledger flows as external interactions', () => {
-    expect(
-      inferLiveCodeRuntime({
-        code: `const walletConnect = await WalletConnect.init({ projectId: 'x' });`,
-      })
-    ).toEqual({
-      interactionMode: 'walletconnect',
-      signerMode: 'none',
-    });
-
+  it('detects ledger flows as external interactions', () => {
     expect(
       inferLiveCodeRuntime({
         code: `const transport = await TransportWebHID.create(); const signer = new LedgerSigner(transport);`,

@@ -54,9 +54,7 @@ declare global {
     LedgerSigner: any;
     DerivationType: any;
     HDPathTemplate: any;
-    WalletConnect: any;
     NetworkType: any;
-    PermissionScopeMethods: any;
 
     // Contract globals
     genericMultisigJSONfile: any;
@@ -221,10 +219,9 @@ async function init() {
     const { Tzip16Module, tzip16, MichelsonStorageView } = await import('@taquito/tzip16');
     const { stringToBytes, num2PaddedHex, bytesToString } = await import('@taquito/utils');
     const { BigNumber } = await import('bignumber.js');
-    const { SigningType } = await import('@taquito/beacon-wallet/types')
+    const { SigningType, NetworkType } = await import('@taquito/beacon-wallet/types');
     const { Parser, packDataBytes, emitMicheline } = await import('@taquito/michel-codec');
     const { b58Encode, PrefixV2 } = await import('@taquito/utils');
-    const { WalletConnect, NetworkType, PermissionScopeMethods } = await import("@taquito/wallet-connect");
 
     const Tezos = new TezosToolkit('https://tezos-shadownet.octez.io');
     window.Tezos = Tezos;
@@ -252,9 +249,7 @@ async function init() {
     window.PrefixV2 = PrefixV2;
     window.emitMicheline = emitMicheline;
     window.getRevealFee = getRevealFee;
-    window.WalletConnect = WalletConnect;
     window.NetworkType = NetworkType;
-    window.PermissionScopeMethods = PermissionScopeMethods;
 
     // Expose contracts for live code examples
     window.genericMultisigJSONfile = genericMultisigJSONfile;
