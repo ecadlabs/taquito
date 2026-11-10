@@ -1,6 +1,6 @@
 {
   "name": "@taquito/signer",
-  "version": "25.1.0",
+  "version": "25.1.1",
   "description": "Software signer implementations and signing utilities for Taquito.",
   "keywords": [
     "taquito",
@@ -61,8 +61,8 @@
     "@noble/post-quantum": "0.7.1",
     "@scure/bip39": "2.4.0",
     "@stablelib/nacl": "^2.0.1",
-    "@taquito/core": "^25.1.0",
-    "@taquito/utils": "^25.1.0",
+    "@taquito/core": "^25.1.1",
+    "@taquito/utils": "^25.1.1",
     "@types/bn.js": "^5.2.0",
     "bn.js": "^5.2.5"
   },

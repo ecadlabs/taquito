@@ -1,6 +1,6 @@
 {
   "name": "@taquito/taquito",
-  "version": "25.1.0",
+  "version": "25.1.1",
   "description": "TypeScript SDK for building wallets, dapps, and tooling on Tezos.",
   "keywords": [
     "taquito",
@@ -26,7 +26,7 @@
     "Simon Boissonneault-Robert <simon@ecadlabs.com>",
     "Roxane Letourneau <roxane@ecadlabs.com>",
     "Davis Sawali <davis.sawali@ecadlabs.com>",
-    "Jev Bj\u00f6rsell (jevonearth)"
+    "Jev Björsell (jevonearth)"
   ],
   "homepage": "https://taquito.io/",
   "repository": {
@@ -60,14 +60,14 @@
     ]
   },
   "dependencies": {
-    "@taquito/core": "^25.1.0",
-    "@taquito/http-utils": "^25.1.0",
-    "@taquito/local-forging": "^25.1.0",
-    "@taquito/michel-codec": "^25.1.0",
-    "@taquito/michelson-encoder": "^25.1.0",
-    "@taquito/rpc": "^25.1.0",
-    "@taquito/signer": "^25.1.0",
-    "@taquito/utils": "^25.1.0",
+    "@taquito/core": "^25.1.1",
+    "@taquito/http-utils": "^25.1.1",
+    "@taquito/local-forging": "^25.1.1",
+    "@taquito/michel-codec": "^25.1.1",
+    "@taquito/michelson-encoder": "^25.1.1",
+    "@taquito/rpc": "^25.1.1",
+    "@taquito/signer": "^25.1.1",
+    "@taquito/utils": "^25.1.1",
     "bignumber.js": "^10.0.2",
     "rxjs": "^7.8.2",
     "@noble/hashes": "2.4.0"

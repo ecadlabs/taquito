@@ -1,6 +1,6 @@
 {
   "name": "@taquito/local-forging",
-  "version": "25.1.0",
+  "version": "25.1.1",
   "description": "Local Tezos operation forging for Taquito.",
   "keywords": [
     "taquito",
@@ -57,9 +57,9 @@
     ]
   },
   "dependencies": {
-    "@taquito/core": "^25.1.0",
-    "@taquito/rpc": "^25.1.0",
-    "@taquito/utils": "^25.1.0",
+    "@taquito/core": "^25.1.1",
+    "@taquito/rpc": "^25.1.1",
+    "@taquito/utils": "^25.1.1",
     "bignumber.js": "^10.0.2"
   },
   "devDependencies": {

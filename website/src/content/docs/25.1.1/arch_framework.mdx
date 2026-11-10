@@ -1,0 +1,416 @@
+---
+title: The Taquito Framework
+author: Peter McDonald
+---
+
+## Introduction
+
+This document presents a top-down, completeness framework for Taquito. Completeness requires us to see the whole; hence we adopt a suitably high level of abstraction. Top-down requires that we ground the discussion of Taquito in a well-understood and rationalized context. Accordingly, since Taquito is an interface to Tezos, which is in turn, a crypto-ledger, we start our discussion with: what is a crypto-ledger, and why do we care? We proceed with: what is the Tezos crypto-ledger and why do we care? This sets the stage for: what is Taquito, and how does it help us leverage Tezos? Finally, we reconcile our top-down discussion with a discussion of Taquito as a set of cohesive Software Packages. If we have successfully constructed a completeness framework, the role of each Package can be seen as a contributing element of the whole.
+
+## References
+
+- R1: [Token Standards (TZIP-12/FA2)](https://gitlab.com/tezos/tzip/-/blob/master/proposals/tzip-12/tzip-12.md)
+- R2: [Michelson](https://octez.tezos.com/docs/active/michelson.html)
+- R3: [Micheline](https://octez.tezos.com/docs/shell/micheline.html)
+- R4: [Tezos Developer Documentation](https://docs.tezos.com)
+- R5: [Sapling](https://octez.tezos.com/docs/active/sapling.html)
+- R6: Tezos Baker Fee
+- R7: [Tezos Software Architecture](https://octez.tezos.com/docs/introduction/tezos.html)
+- R8: [Tezos JSON/RPC Interface](https://octez.tezos.com/docs/alpha/rpc.html)
+- R9: [Tezos RPC Nodes](rpc_nodes)
+- R10: [Tezos RPCs, Reference](https://octez.tezos.com/docs/alpha/rpc.html)
+
+## Crypto-Ledgers
+
+Crypto-Ledgers support the direct transfer of digital representations of money (crypto coins) without the need for a centralized institution acting as a third party (e.g., a bank). Elimination of the so-called institutional "middleman" can reduce transaction costs and protocol involving the intermediary, as well as improve both transaction transparency and anonymity.
+
+### Blockchain Technology
+
+Crypto-Ledgers eliminate the institutional middleman by leveraging blockchain technology to establish authoritative, distributed, shared ledgers. In turn, Blockchain technology is based on:
+- **Decentralized computing** - to establish a means for peer-to-peer communication in the absence of a central authority
+- **Game theory** - to establish rules (aka protocol) that encourage distributed, anonymous persons, with demonstrable qualifications, to build consensus over blocks of exchange transactions, and to record these blocks in a distributed, shared ledger.
+- **Cryptography** - to protect the rules of the "game" as transparently evidenced by the shared ledger
+  - Digital signatures to verify who did what
+  - Hash functions to ensure that the distributed, shared ledger cannot be tampered with.
+
+The result is a decentralized, yet authoritative Ledger of Accounts, each of which has a balance. Each public Crypto-Ledger has its own native currency, whose value is directly protected by the Ledger's protocol. The native currency of the Bitcoin Ledger is Bitcoin. The native currency of the Ethereum Ledger is Ether. Exchange transactions executed by the Ledger result in account balances being accordingly increased and/or decreased. At a logical level, this can be seen as a metaphorical transfer of crypto coins from one account to another. These electronic transfers of value take place without involving a centralized, institutional middleman such as a privately owned bank. We still have a middleman; however, it now takes the form of the Crypto-Ledger itself, and its decentralized, consensus protocol.
+
+The process whereby blocks are added to the blockchain can be seen as part of the internal machinery of the blockchain itself. Blockchain platforms establish a consensus-building protocol, which anonymous persons must follow to reap their crypto-token reward. The Bitcoin blockchain is based on a Proof-of-Work (PoW) protocol, whereby consensus builders (miners in Bitcoin parlance) must demonstrate that a task requiring a significant amount of computational work has been successfully accomplished before they are allowed to add (mine) a new block of transactions to the blockchain.
+
+Traditional fiat money is governed by rules imposed and ultimately enforced by a central bank (i.e., via monetary policy). Should economic conditions warrant, the central bank will modify monetary policy. Blockchain-based cryptocurrency platforms replace the central bank with hard-wired protocol rules taking the place of monetary policy. This can prove to be inflexible should a situation arise warranting a change to monetary policy. In practice, it can result in so-called hard forks where a blockchain splits into two chains with an older version that is not compatible with the newer version.
+
+### Smart Contracts
+
+Crypto-Ledgers extend the basic transfer-crypto-coin functionality with so-called smart contracts, which allow for crypto coin transfers to be governed by stateful smart contract programs stored in the ledger. This mechanism facilitates a general exchange of goods and services for crypto coins. While physical goods and services are necessarily exchanged outside the ledger, events are fed to the smart contract entry points, which execute to conditionally transfer crypto coins.
+
+This conditionality supports risk mitigation that is implicit in the real-world exchange of physical goods and services for money. If you give me funds equal to the price of a book, I will send you the book. However, this sort of exchange does not happen simultaneously. If you give me the price of the book, I promise to ship it to you. The exchange takes place in a context of commitments, which take place over time, and may be affected by unforeseen, or at least unlikely, events. The book may get lost in the mail.
+
+Commitments implicitly involve risk in the sense that money may be exchanged while goods and service commitments remain unfulfilled. A practical risk mitigation strategy is to enter into a contractual agreement and to leverage the legal system as an enforcement mechanism. An alternative is to use a Smart Contract, which codifies the commitments and circumstances that may occur.
+
+In our example, the price of the book, represented in crypto coins, may be transferred in good faith to the Smart Contract. Once the book is shipped, this event can be recorded by invoking a Smart Contract "shipped" entry point. Once a "received" entry point is invoked, the price of the book is transferred to the seller's Account. However, a purchaser, who never received a book that ostensibly was shipped, can make a claim for the balance. Alternatively, the seller can claim the funds if the book was shipped, and a prescribed amount of time has passed without a claim from the purchaser.
+
+We can think of the Smart Contract as a neutral third party capable of holding funds in an escrow balance. Smart Contract entry points are invoked to record events as time passes. Entry point code executes as these events occur and ultimately makes decisions over the funds held in escrow. Source Implicit Account managers have agency over the Smart Contract entry points that they invoke. They are obligated to understand the semantics of each of these entry points in the same way that parties to a contract are obliged to understand the terms and conditions of a signed legal contract.
+
+We have replaced one risk mitigation mechanism with another. Agreements are enforced in code rather than legal documents. The value-add is the avoidance of inefficiencies, both time and money, associated with the legal system. The potential downside is the precision and foresight required by automated enforcement. Coded automation leaves no room for human interpretation as real-world events unfold in potentially unforeseen ways. The implication is that it becomes critically important that at the very least, we can verify Smart Contract logic before it is deployed.
+
+With Smart Contracts, we mitigate risk in the exchange of goods and services for crypto coins without resorting to a traditional legal system. Once again, we have eliminated a third-party institution in favour of an authoritative, shared, decentralized protocol.
+
+### Oracles
+
+Smart Contracts depend on external events from off-chain sources, which often do not directly involve the human actors involved in an exchange. A Smart Contract may be sensitive to events ranging from pricing updates to weather bulletins to RFID sensor input to the simple passage of time. Servers that feed these sorts of real-world events to smart contracts are referred to as Oracles; named after the Oracles of Greece - priests or priestesses acting as a medium through which advice from Gods was obtained. The off-chain nature of these events represents their value but also their vulnerability. Off-chain sources of information are not subject to the same blockchain consensus mechanism protecting the on-chain ledger. It is important that the information source is seen as reliable and secure. Decentralized Oracles address this issue by mediating information from multiple sources.
+
+### Tokens
+
+In a general sense, a Token is an object that represents something else, such as another object or an abstract concept. In a Crypto-Ledger, a Token is a digital asset that can be transferred from one Account to another. From this perspective, we can view crypto coins associated with a Ledger as a type of token analogous to a fiat currency.
+
+Smart Contracts allow for alternate types of Tokens to be maintained by the Ledger. At an implementation level, smart contracts are programs that hold state. As such, they can hold application-specific assets, which can also be transferred, i.e., Application Tokens. Application Tokens represent many different things depending on the application. It may represent a physical or digital resource that is owned by an Account, an access right to a shared resource, or perhaps a credential associated with the owner of an Account. This leads to a vocabulary where we often need to distinguish between native tokens and application tokens. A Crypto-Ledger supports a single native token type corresponding to its native currency. It may also support many different types of application tokens governed by application-specific Smart Contracts deployed to the Ledger. Each of these application token types has a specific meaning in the context of its application.
+
+Smart Contracts enable us to support a broad range of token types. For instance, a native token type corresponds to a class of identical tokens, which are indistinguishable from each other. This is analogous to a fiat currency where a one-dollar bill simply represents stored value without any other distinguishing characteristics. Any physical one-dollar bill may be substituted for any other physical one-dollar bill without any transactional consequence. This property of fiat currencies and native token types is referred to as fungibility. On the other extreme, a so-called non-fungible token (NFT) has a value that is based entirely on its uniqueness. An NFT uniquely represents a digital asset that cannot be replicated. To the extent that this unique digital asset has value, so too does the NFT.
+
+In our earlier description of Smart Contracts, we described how Smart Contracts support the implicit promises associated with the exchange of off-chain physical goods and services. With application tokens, we allow for the possibility that the "good" that is exchanged is itself an on-chain digital "good". In effect we have two levels of token exchange - crypto-coins are transferred and in return, an application token is obtained.
+
+Native tokens and application tokens are implemented on different technology layers. Native tokens (aka protocol tokens) are built into the incentive scheme of the underlying blockchain infrastructure. Application Tokens are governed by smart contracts deployed on the ledger. [Token standards](https://gitlab.com/tezos/tzip/-/blob/master/proposals/tzip-12/tzip-12.md) (see R1) impose constraints on smart contract implementations of application token types. These constraints govern how application tokens are transferred and recorded. The goal is to enable new application token types to be introduced, which behave in a general sense, in a manner consistent with these standards. This enables cross-cutting applications such as decentralized exchanges and wallets to support Token Transfers in a generic way.
+
+## Tezos
+
+Tezos is a self-amending Crypto-Ledger. The native cryptocurrency for the Tezos blockchain is the Tez, which has the symbol XTZ. In Tezos, as with other Crypto-Ledgers, new blocks are added to the Blockchain through an automated consensus-building protocol. Tezos supports an additional on-chain consensus-building process, which addresses the need for changes to the governing protocol. This additional process enables stakeholders to propose protocol amendments, reach consensus over these amendments, and finally to activate the agreed-upon changes. Chain block assembly takes place in the context of gradual amendments to the protocol itself. In following this process, the hard forks described in the previous section are avoided.
+
+The Tezos Blockchain is based on a Proof-of-Stake (PoS) protocol rather than PoW. Under PoS only persons with sufficient stake referred to as delegates, participate in the consensus-building process. The degree to which a person has a stake is directly related to their crypto coin balance. Those without sufficient stake, or the necessary computing infrastructure, can participate indirectly by delegating their stake to delegates, who participate on their behalf. Delegates contribute by either assembling transactions into new blockchain blocks (a process referred to as baking) or by endorsing blocks assembled by other delegates. In comparison with PoW, PoS avoids unnecessary computational work and represents an implicit alignment of stakeholder interests with those doing the actual baking. Bakers earn a crypto coin reward for baking, while implicitly increasing public confidence in the cryptocurrency that they are both rewarded with and are stakeholders for.
+
+Tezos supports smart contracts through a domain-specific language known as [Michelson](https://octez.tezos.com/docs/active/michelson.html) (see R2). Michelson is a low-level, stack-based, strongly typed functional programming language. As a declarative language, Michelson programs can be formally verified, i.e., mathematically proven correct. This is particularly important in this context and relates to the earlier point regarding the importance of validating automated smart contract logic before deployment. Michelson's strong typing also enhances security, another real concern in an authoritative, decentralized, shared ledger. [Micheline](https://octez.tezos.com/docs/shell/micheline.html) (see R3) is the concrete syntax for the Michelson language.
+
+### Token-based Applications
+
+From the above discussion, we know that Tezos supports three loosely coupled processes:
+1. The conditional exchange of native tokens for physical and/or digital goods and services
+2. Blockchain Baking
+3. Blockchain Amendment
+
+The first process represents our primary problem. It is why a Crypto-Ledger was invented in the first place. The exchange of native tokens, conditioned by smart contracts, has applicability in domains ranging from banking, insurance, energy, healthcare, education and more. The latter two processes can be considered part of the crypto-ledger machinery invented to address our primary problem.
+
+The purpose of Taquito is to provide a high-level, JavaScript (implemented in TypeScript) interface to Tezos suitable for the development of token-based applications which leverage this primary capability. We define a Decentralized Application (dApp) as an interactive application which leverages a Crypto-Ledger for its primary purpose to support a particular domain of interest. We extend the scope of Taquito to include the development of backend systems such as Oracles, which also play a critical role in token-based applications.
+
+With this in mind, we next take a closer look at Tezos. What is Tezos from the Taquito point of view?
+
+## Tezos Up Close
+
+In our discussion, we need to distinguish between "Tezos", which refers to the Tezos software used to instantiate Ledgers, known as networks or chains and a Tezos Ledger. At the so-called genesis time, Tezos was used to instantiate the live, commercial network, known as Mainnet, with real Tez allocated to ICO investors. At any time, there are several test networks available, referred to generically as Testnets, which support a mechanism for obtaining free Tez. It is these Ledger instantiations that Token-based Applications interact with and that we now turn our attention to. We are interested in the possible states of a Tezos Ledger and the operations that we can execute on it.
+
+If we separate out the state of our primary problem, we uncover entities such as Accounts, which hold balances. In Tezos parlance, this state is referred to as the Context. Although once blocks are baked, they can never be modified, a new representation of the Context is effectively baked into each new Block. If we look at the head block of a Tezos chain, we uncover the latest consensus on this Context. This enables us to abstract away the blockchain blocks and simply look at the latest Context. Indeed, we can represent an Information Model of this Context in much the same way that we would do for a traditional database.
+
+We take this approach here. We present an Entity/Relationship Information Model (using UML as a notation). Our discussion is high level - vocabulary and semantics are emphasized over data type specification. As we proceed new vocabulary is introduced and highlighted. Once the possibilities of our Context have been established, we proceed to discuss the kinds of operations that can be executed against a particular Context.
+
+### Accounts
+
+*Figure 1: Accounts*
+
+Tezos supports the notion of an Account, which holds a Tez balance transferred to it. A Tez balance is, by definition, a positive amount. The identity of an Account is known as its address. There are two different types of Accounts in Tezos, Implicit Accounts and Originated Accounts (aka Smart Contracts).
+
+Implicit Accounts connect real persons/organizations to a shared Tezos ledger via an Account with a balance that they have agency over. Here, we use the term agency in the social science sense: the capacity of individuals to act independently and to make their own free choices. This agency relationship is governed by an implicit relationship between an Implicit Account and a cryptographic public/private key pair. The private key of this key pair lives off-chain and is managed directly by the person or organization with agency over the Account, known as the custodian of the Implicit Account. The address of the Implicit Account is directly the hash of the public key and starts with "tz1", "tz2" or "tz3" depending on the cryptographic signing scheme utilized (tz1 addresses utilize ED25519, tz2 addresses utilize SECP256K1 and tz3 utilizes P256). An operation submitted to the ledger, which intentionally has a negative impact on an Implicit Account's balance is said to be sourced from that Account. As such it must be digitally signed by the manager of the Implicit Account.
+
+Figure 1 illustrates additional attributes maintained by an Implicit Account:
+- **Custodian** - the public key of the Implicit Account Manager. This is used to validate signatures sourced from this Account. Its hash must equal the Account's address.
+- **Counter** - An ever-increasing count of operations executed by the ledger, that were sourced to this Account. The Ledger uses Counter to ensure that operations sourced to this Account are executed in sequence and more importantly, only once.
+- **isDelegate** - an Implicit Account may be registered as a Delegate. The implication is that the Custodian of the Account participates in the baking process.
+
+An Originated Account is a Tezos representation of a Smart Contract. Its address is based on a unique hash and starts with "KT1". As well as a balance, it holds a Script and Storage:
+- **Script** - a Michelson representation of the Smart Contract program. It has a four part structure:
+  - **Parameter:** defines a set of Entry Points and their associated Parameter Type
+  - **Storage:** defines the storage data type
+  - **Code:** defines Entry Point implementations. Each entry point transforms storage to a new value as a function of input arguments, or fails for reasons dictated by its code. It may also emit operations involving other Accounts. These internal operations are executed in sequence after entry point code execution completes.
+  - **View:** defines zero or more Storage Views. A Storage View is similar to an Entry Point in that it transforms storage as a function of input arguments received from calling contracts. However, it does not update storage or emit operations. Moreover, the computed result is synchronously returned to the calling contract at the time that it is invoked.
+- **Storage** - a Michelson representation of the Smart Contract's state accessed through Entry Points and Views.
+
+An Account may be delegated to a Delegate. Each time a Delegate successfully bakes a block they earn a baker reward and incentivization fees associated with operations included in the block. Delegates, in turn, compensate delegators based on the balance delegated. For the delegator, this is much like earning interest on funds deposited in a traditional bank. The distribution of rewards from a baker to its delegates is an off-chain process, managed by third-party tools. This delegation mechanism enables Implicit Account managers without sufficient stake, or the necessary computing infrastructure, to participate indirectly in the baking process, and in so doing, reap a reward.
+
+Implicit Account delegation places no limits on the Implicit Account manager's agency over their balance. Blocks in the Tezos blockchain are grouped into a sequence of cycles. The PoS algorithm assigns delegates with baking rights for a particular cycle based in part on a snapshot of their stake, including any delegated stake, at a point in time relative to the start of that cycle. The compensation for any blocks baked by the Baker during that cycle is shared with delegators based on that moment in time. Any changes which may have taken place since that time are simply considered in the next cycle.
+
+### Pre-allocations
+
+Tezos Ledgers are established with Pre-allocations. These Pre-allocations hold a pre-allocated Tez balance, which are not visible in the Context until they are activated as Implicit Accounts. This mechanism was used to reward Tezos ICO investors, at genesis-time, with pre-allocated Tez for Mainnet. Each Pre-allocation comes with a Pre-Allocation Descriptor, which is distributed to the intended individual/organization, and managed off-chain. Tezos supports an Activation Operation for activating a Pre-allocation, i.e., transforming it into an Implicit Account managed by the person/organization holding the Pre-allocation Descriptor. This can only be done once. It is a multi-step process:
+1. A Pre-allocation Descriptor includes a mnemonic and passphrase, which are used in a cryptographic computation to generate a corresponding public/private key pair.
+2. The generated public and private keys are stored securely in the usual way.
+3. A Pre-allocation Descriptor also includes an activation code, which, together with the hash of the derived public key, is submitted to the Tezos Ledger as part of an Activation operation to transform the Pre-Allocation into its corresponding Implicit Account together with the pre-allocated balance. The result is an Implicit Account whose corresponding public/private key pair is securely held by the Pre-Allocation Descriptor holder.
+
+Pre-allocations are also used to provide developers with Tez on test networks. Developers can visit a so-called Faucet for a particular Testnet and "turn on the faucet" to obtain a Pre-allocation Descriptor matching a Pre-allocation on that Testnet.
+
+### Operations
+
+An Operation represents an action submitted to the Tezos Ledger for updating the Context. Each Operation has an associated set of parameters.
+
+An Activation is an Operation, which activates a Pre-allocation, transforming it into an Implicit Account. An Activation takes the address of the Implicit Account being activated as well as a "secret" activation code.
+
+A Custodian Operation is an Operation with an associated cost incurred by its sourced account. A Custodian Operation is associated with a Governance Detail, a set of properties used by Tezos to govern its execution, namely:
+- **Gas limit** - a limit on computation required by the Operation
+- **Storage limit** - a limit to on-chain storage consumed by the Operation
+- **Fee** - a Baker incentive
+- **Counter** - must be greater than the source Account's Counter
+
+Gas limits, storage limits and fees are described in detail in the next section.
+
+A Reveal is a Custodian Operation whose action is to register the public key for an Implicit Account so that Custodian Operations may be sourced to this Account.
+
+A Transaction is a Custodian Operation whose action is to transfer Tez from a source Account to a destination Account. If the destination Account is an Originated Account, an entry point associated with the Originated Account is invoked. Execution of an entry point may result in the execution of additional Custodian Operations including calls to other Smart Contract entry points. A Custodian Operation directly submitted to Tezos for execution is referred to as an External Operation. A Custodian Operation that is spawned, directly or indirectly, by a Transaction is referred to as an Internal Operation. Internal Operations are sourced by the source Account for the root Transaction, which directly or indirectly spawned it. The implication is that the source account of an External Operation is responsible for all costs incurred during the processing of the External Operation, including any Internal Operations spawned as a result.
+
+An Origination is a Custodian Operation whose purpose is to establish a new Origination Account. The Origination allows for the new Smart Contract to be established with an initial balance and an assigned Delegate. The Origination takes a Script parameter, which includes the initial storage value of the Smart Contract. After Origination, the only mechanism for modifying the Smart Contract's storage is through the contract's entry points. In contrast, at origination time the contract's storage can be initialized to any value consistent with its prescribed type. This provides the originator with a one-time opportunity to establish a state that shapes the subsequent behaviour of the Smart Contract. For instance, the storage value specified at origination time might establish the originator with unique privileges, ones that cannot be subsequently modified through the Smart Contract's entry points. An Origination results in an address for the Smart Contract, which may be used as the destination of subsequent transactions.
+
+A Register Global Constant is a Custodian Operation whose purpose is to establish a new Global Constant for a Michelson expression. This Operation results in an identity for the Global Constant, which may be used by Smart Contracts to reference its value.
+
+A Delegation is a Custodian Operation whose effect is to either establish a delegate for a source Account or to register a Source Account as a delegate candidate for other Accounts. An Account delegated to itself is established as a possible Delegate for other Accounts.
+
+### Fees, Burn and Gas
+
+A Custodian Operation has an associated cost. There are two contributing factors:
+- **Storage cost** - a cost directly tied to the amount of additional on-chain storage consumed as a result of executing the Operation.
+- **Computation Cost** - a cost directly tied to the amount of computation required to execute the Operation. In Tezos parlance, we say that executing a Custodian Operation consumes "gas". The more computation required, the greater the amount of gas consumed.
+
+Storage costs are covered by decrementing the storage cost from the sourced Implicit Account balance. This storage fee is effectively removed from circulation, as it is not transferred to another Account. In Tezos vocabulary, we say that the Tez is simply burned. Storage fees encourage the frugal use of on-chain storage by Implicit Account managers.
+
+Each Custodian Operation is submitted with a fee to cover both the computation cost as well as a discretionary tip meant to incentivize Bakers to include the Operation in a new Block assembly. Upon execution, regardless of how much gas was consumed, the full fee is transferred from the sourced Implicit Account to the Baker. This fee supplements the Tez reward for the baker (and associated endorsers) built into the Tezos PoS algorithm. Baking rewards are not sourced from other Accounts; they add new Tez into circulation.
+
+A Custodian Operation is injected with a storage limit and gas limit, as well as a fee. These limits protect the Tezos Ledger from Custodian Operations, which might otherwise exceed their specified gas and storage limits. Tezos can simulate a Custodian Operation so that reasonable gas and storage limits may be specified up-front. An Operation that during execution, exceeds the gas and/or storage limits, fails and Ledger changes are rolled back. The fee for a rolled-back Operation is transferred to the Baker regardless. The Tezos Context is otherwise unaffected. It is as if, apart from the fee transfer, the Operation never happened.
+
+The up-front gas limit serves to establish baker expectations. They will collect the fee for no more gas consumption than the stated gas limit. In general, bakers are incentivized to assemble Blocks with Operations that have a high fee to gas-limit ratio. If the ratio is too low, the Operation may be ignored by bakers. As described in R6, a formula can be used to calculate a minimum expected fee based on estimated gas consumption and the size of the serialized Operation.
+
+The balance of a sourced Implicit Account must cover both the specified fee as well as the burn cost of reaching the specified storage limit. An Implicit Account manager cannot execute Custodian Operations which cannot be paid for.
+
+### Lifecycle of an Implicit Account
+
+*Figure 2: Implicit Account Lifecycle*
+
+Figure 2 illustrates the lifecycle of an Implicit Account. The control states affect the behaviour of the Account:
+- **Unrevealed** - the balance is positive, but the public key of the Account is not known. In this state, the only Custodian Operation that may be sourced to this Account is a Reveal.
+- **Revealed** - the balance is positive, and the public key of the Account is known. Any Custodian Operation may be sourced to this Account.
+- **Spent** - the balance is zero. No Custodian Operations may be sourced to this Account.
+
+Events move the Implicit Account from one state to the next. An Implicit Account may appear in the Context for the first time as the result of one of two events:
+- An Activation results in an Implicit Account in the Unrevealed state.
+- A Transaction transfers Tez to a new tz1, tz2 or tz3 address. This is referred to as an allocation event.
+
+From an Implicit Account Manager's point of view, the process for establishing a new Implicit Account starts with the creation of a public/private key pair, and hence the Implicit Account's address. The Implicit Account will be allocated to the Tezos Ledger the first time it is referenced as the destination of a Transaction i.e., Tez is transferred to it. This creates the Implicit Account in its Unrevealed State. A Reveal Operation must be executed to take it to the Revealed state, where it remains unless its balance is completely consumed. If the balance becomes zero, the Account transitions to the spent state. Another transfer of Tez is needed to transition it to the Unrevealed state once again.
+
+### Domain-Specific Michelson Features
+
+As a smart contract implementation language, Michelson supports several domain-specific features, of interest to Taquito and described here.
+
+#### Big Map
+
+Michelson supports both `map` and [`big_map`](maps_bigmaps) data types, which both hold key-value pairs, where the keys and values can be any data type. `big_map` can be seen as an alternative `map` implementation designed for smart contracts, which store large numbers of key-value pairs, of which few are needed at a time.
+
+Although both hold key-value pairs, `map` and `big_map` have different gas costs. Each smart contract entry point executes a function on its storage value. To support this processing, at entry point execution time, each map contained in storage is deserialized up-front. If a map holds a lot of entries, the gas cost of this deserialization can be expensive. If a map contains a lot of entries, of which relatively few are accessed at a time, a Big_map representation is more efficient. At entry point execution time, a Big_map is deserialized into a Big_map identity, which may be used to indirectly reference its set of entries. When this identity is subsequently used to access an entry on-demand, the entry deserialization is lazily deferred until that time. The cost to access each big_map entry is greater than that for a map, but the up-front deserialization cost is much less. For maps with many entries, of which relatively few are needed at a time, the overall gas cost of a big_map is substantially less than that of a map.
+
+#### Sapling
+
+Blockchain Ledgers offer anonymity in the sense that cryptographically generated addresses act as pseudonyms for participants. This stops short of privacy in the sense that balances and transactions associated with these addresses are transparent. Once an address is correlated with an actual participant, transactions involving that participant are effectively in the public domain. Domains involving sensitive information require stronger privacy, the ability to limit the visibility of transactions to authorized parties.
+
+[Sapling](https://octez.tezos.com/docs/active/sapling.html) (see R5) is a protocol that addresses the need of exchanging fungible tokens on a decentralized Ledger. For Taquito's Sapling support, see the [Sapling toolkit documentation](sapling). For a privacy-preserving transaction (aka shielded transaction) the sender and receiver are only visible to the parties involved.
+
+Sapling protocol establishes a pool of fungible application tokens that can be exchanged between Sapling addresses. As per our earlier discussion on application tokens, crypto coins can be used to purchase so-called shielded application tokens (aka shielded tokens), which can then be exchanged in a privacy-preserving manner from one Sapling address to another. At any time, shielded tokens can be redeemed for their crypto coin value. This pool of shielded tokens and related transactions represents a ledger-within-a-ledger referred to as a shielded pool. Privacy is preserved through the use of cryptographically generated keys managed by a custodian. A Spending Key is needed to authorize payments from a Sapling address. A Viewing Key may be derived from a Spending Key and used to generate Sapling Addresses in the first place. It is a prerequisite for viewing incoming and outgoing transactions of Sapling addresses generated by the key.
+
+Sapling_state represents the state of the shielded ledger. It is based on a transaction-centric representation like that used by Bitcoin, referred to as Unspent Transaction Output (UTXO). Under this representation, a Sapling address is implicitly the sum of transfers from other transactions, which remain unspent. Depending on the number of Sapling addresses and associated transactions, Sapling_state may involve a large amount of data. It is represented in a smart contract's storage as a Sapling_state identity which may be subsequently queried for the full state representation. This level of indirection is similar to Michelson's Big Map implementation.
+
+The second data type is sapling_transaction, which is used to represent a shielded transaction. This representation is general enough to represent the minting and burning of shielded tokens. A Transaction whose outputs represent greater value than its inputs is used to mint shielded tokens, in exchange for a crypto coin payment. A Transaction whose inputs represent greater value than its outputs is used to burn shielded tokens, and so doing, to redeem their crypto coin value.
+
+Michelson supports two Sapling instructions. Sapling_empty_state initializes an empty sapling_state. Sapling_verify_update verifies and executes a Sapling_transaction against the current sapling_state. Tezos also supports RPC endpoints for obtaining the Sapling-state of a Smart Contract. The full Sapling ecosystem involves off-chain management of Spending and Viewing keys.
+
+Full privacy-preserving scenarios are made possible by these capabilities. A Smart Contract can initialize its Sapling_state. A User can use an off-chain client to generate spending and viewing keys. The viewing key is used to generate a Sapling Address. The User can formulate Sapling_transactions which are executed through smart contract endpoints. The User can obtain the Smart Contract's Sapling State and use their Viewing Key to view transactions associated with their Sapling Address.
+
+## Blocks
+
+An Injection represents a set of one or more External Operations submitted from a single Implicit Account for incorporation into a new Tezos Block. Token-based Applications submit Injections as candidates for assembly into a new Block. As described earlier, Bakers look for Injections that have a high fee to gas-limit ratio and bake them into new Blocks.
+
+Each block contains:
+- A representation of those Operations that were applied to the Context as the block was baked.
+- An updated representation of the Context reflecting changes affected by the baking.
+
+Token-based Applications confirm that an Injection made it into the Ledger by looking for a Block that includes its Injection. In this section, we present an Information Model of Tezos Blocks with emphasis on finding embedded Injections and interpreting the result.
+
+### Injections
+
+*Figure 3: Blocks and Injections*
+
+An Operation represents an action submitted to the Tezos platform to update the Context.
+
+A Custodian Operation is a type of Operation executed on behalf of the custodian of a sourced Implicit Account. It has an associated cost incurred by the source Account. A Custodian Operation, when executed, may spawn other Custodian Operations. A Custodian Operation that is directly submitted to Tezos for execution is referred to as an External Operation. A Custodian Operation that is spawned by an External Operation is referred to as an Internal Operation. The spawned relationship of Figure 3 is not recursive. An External Operation references Internal Operations that it has directly or indirectly spawned. Any storage or execution costs incurred by an Internal Operation is borne by the External Operation that directly or indirectly spawned it.
+
+Custodian Operations have a source attribute, which identifies an Implicit Account. As might be expected, it plays a role in defining the functionality of an operation. A Transaction from a source account to a destination account involves a transfer of Tezos from the source account to the destination account. In the case of an External Operation, it also plays a governance role. For an External Operation, the public key of its source account must match the signature of its encompassing Injection. The implication is that the "source" of all External Operations for an Injection must equal the account which signed the Injection.
+
+Whereas the source of External Operation is directly constrained by an Injection signature, the source of an Internal Operation is not. Consider a Transaction Operation to a destination smart contract entry point. The Transaction Operation has a source attribute that helps to define the meaning of the operation. The source of a directly injected Transaction Operation must be consistent with the Injection's signature. However, a Transaction Operation executed indirectly as the result of a directly invoked smart contract entry point, is not subject to this constraint. Its source value represents the smart contract, which initiated it, rather than the source account for the Injection. This arrangement enables a source account to invoke smart contract entry points, which invoke other smart contract entry points, each with a localized runtime context.
+
+An Activation is a type of Operation, which activates an implicit Account, making it an active part of the Tezos Context. Tezos supports other non-Custodian Operations, but Activation is one that Taquito directly supports.
+
+A Block is a Block in the Tezos blockchain. Each Block has a level, which refers to the position of a Block in the chain, i.e., a measure of the number of blocks since the genesis block (level 0). Each newly baked Block references its predecessor and has a level greater than its predecessor by one.
+
+An Injection represents a set of one or more External Operations submitted from a single implicit Account for incorporation into a new Tezos Block. An Injection is atomic in the sense that all its operations are applied or, in the case of a failure, none of its operations are applied (apart from a baker fee transfer). The identity of an Injection is represented by a hash of the Injection. An Injection is signed by the custodian of the sourced Account.
+
+An Injection Entry is an element of an Injection referencing a single Operation and its associated Governance Detail.
+
+A Governance Detail is a set of properties used to govern the execution of an Injection Entry. Only Injection Entries associated with a Custodian Operation have a Governance Detail. Governance Detail properties are:
+- **Gas_limit** - The maximum amount of gas, in gas units, allocated for executing the Operation.
+- **Storage_limit** - The maximum amount of additional storage, in bytes, allowed to be consumed by executing the Operation.
+- **Fee** - The compensation, in mutez, paid to Bakers for baking the Operation into a Block.
+- **Counter** - Source Account Counter value under which an injected Custodian Operation executes. The Counter Values of injected Custodian Operations form an increasing sequence from the current Counter value of the Source Account. Each Operation in an Injection has a Counter value one greater than its predecessor.
+
+### Results
+
+*Figure 4: Custodian Operation and Results*
+
+A Transaction is a type of Custodian Operation whose action is to transfer Tez from a source Account to a destination Account. If the destination Account is an Originated Account, an entry point associated with the Originated Account is invoked.
+
+An Origination is a type of Custodian Operation whose action is to establish a new Origination Account.
+
+A Register Global Constant is a type of Custodian Operation whose action is to establish a new Global Constant for a Michelson expression.
+
+A Delegation is a type of Custodian Operation whose action is to either establish a delegate for a source Account or to register a source Account as an (implicit) Account that may act as a delegate for other Accounts.
+
+A Reveal is a type of Custodian Operation whose action is to register the custodial public key for an Implicit Account so that it may act as the source for subsequent External Operations.
+
+A Custodian Operation Result is a set of properties representing the execution of a Custodian Operation. Custodian Operation Result properties include:
+- **status** of the Operation:
+  - applied, successfully applied
+  - failed, e.g., gas limit reached
+  - backtracked, rolled back because a subsequent Injection Operation failed
+  - skipped, skipped because a previous Injection Operation failed
+- **consumed_gas** in milligas units
+- a set of error codes.
+
+A Transaction Result is a Custodian Operation Result for a Transaction. Transaction Result properties include:
+- **paid_storage_size_diff** - increased storage consumed in bytes
+- **allocated_destination_contract** - a Boolean that is true if the transaction transferred Tez to an Implicit Account for the first time, resulting in storage for the Implicit Account being allocated.
+
+An Origination Result is a Custodian Operation Result for an Origination. Origination Result properties include:
+- **Originated Contract** - the identity of the Originated Contract
+- **Paid_storage_size_diff** - increased storage consumed in bytes
+
+A Register Global Constant Result is a Custodian Operation Result for a Register Global Constant. Register Global Constant Result properties include:
+- **Storage_size** - storage consumed in bytes
+- **Global_address** - the identity of the Global Constant
+
+A Delegation Result is a Custodian Operation Result for a Delegation.
+
+A Reveal Result is a Custodian Operation Result for a Reveal.
+
+## Interfacing with a Tezos Network
+
+As described in [R7](https://octez.tezos.com/docs/introduction/tezos.html), the Tezos software architecture allows for a Protocol Subsystem to change over time. Each Tezos amendment arrives with a new Protocol reflecting agreed-upon changes to Tezos. Each new Protocol manifests itself as a new Protocol Subsystem executing in a protocol-independent Shell. From this perspective, we can think of Tezos as encompassing its protocol-independent Shell and multiple Protocol implementations.
+
+A Tezos Protocol can be instantiated as a Network (aka a Ledger or Chain). At any moment in time, a Network is based on a single Protocol. As per the amendment process, a Network can transition from one Protocol to another. A Network manifests itself as a decentralized set of computer Nodes communicating peer-to-peer. This community of Nodes is open to third parties who wish to participate.
+
+Token-based Applications interface to a Network through a protocol-specific API supported by the Nodes making up the Network. This API is implemented as a language-agnostic [RPC/JSON interface](https://octez.tezos.com/docs/alpha/rpc.html), described in R8. It defines many RPC endpoints, some of which are protocol-independent. Many of the endpoints relevant to Taquito are protocol-dependent.
+
+*Figure 5: Tezos Protocols, Networks and Nodes*
+
+Figure 5 presents an object model illustrating these concepts. In this figure Tezos is a singleton; there is one, and only one, Tezos. Tezos supports multiple Protocols, each of which may be instantiated into multiple Networks, each of which manifests as a set of participating Nodes. Token-based Applications interface to a Network by selecting a Node associated with that Network and invoking the version of the RPC Interface associated with that Network's Protocol.
+
+[Reference R9](rpc_nodes) describes several considerations when choosing a Network interfacing Node, i.e., trustworthiness, availability and whether RPC endpoints of interest are supported.
+
+### Available Networks
+
+The Mainnet Network runs with real Tez pre-allocated to donors of the July 2017 ICO. It has been active since the so-called genesis time (June 30, 2018) and continues to be amended to the latest agreed-to Protocol (referred to as the current Protocol).
+
+There are also several test networks which include a Faucet for obtaining free Tez. In general, there is a Test Network supporting the current Protocol, and one supporting the most-recently proposed Protocol. These Networks enable developers to test their software before going live, or for users who wish to familiarize themselves with Tezos before using their real Tez. By convention, these Networks take on the name of their Protocol.
+
+A Network is created for each newly proposed Protocol. If this Protocol is accepted as the new Mainnet protocol, it remains as an active Testnet for the newly current Protocol. It remains active until Mainnet is amended once again to an even more recent protocol, at which point the protocol associated with this Testnet has been superseded.
+
+### RPC Endpoints
+
+As described in [R10](https://octez.tezos.com/docs/alpha/rpc.html), the RPC Interface includes endpoints to Query the Ledger as well as several processing endpoints covering such things as operation injections and data serializations. The endpoints of interest to Taquito are covered here.
+
+[JSON Micheline](https://octez.tezos.com/docs/shell/micheline.html) is a JSON encoding of Micheline (see R3). It is used by RPC endpoints to represent Micheline.
+
+#### Query Endpoints
+
+**Network Query**
+
+The RPC Interface includes a getChainId endpoint for fetching the identity of the Network associated with the RPC Node.
+
+**Block Query**
+
+The RPC Interface includes several endpoints for obtaining Block information. A Block is identified as either:
+- the head of the Blockchain,
+- the Block at a particular level of the chain
+- the Block whose hash (identity) is a particular value
+- the Block which is at a particular level relative to the head Block (e.g., 2 Blocks before).
+
+Block Query endpoints include:
+- **getBlock** - Fetches the Block in its entirety
+- **getBlockHeader** - Fetches Block header information such as its hash, level, and timestamp
+- **getLiveBlocks** - Each Injection is submitted with a so-called branch value, the hash of a recently baked Block. This endpoint lists the ancestors of a specified block which, if referred to as the branch of an Injection, are recent enough for that Injection to be included in the specified block.
+- **getProtocols** - Each Block references the protocol used to bake it. It also references the protocol for baking the next block. At points of transition between protocols, the next-block protocol may be different from this Block's protocol. This endpoint returns both the given Block's protocol as well as the protocol for the next Block.
+- **getConstants** - Fetches constants that are used to impose business logic constraints such as:
+  - `minimal_block_delay` - A lower bound on elapsed time between timestamps of consecutive Blocks
+  - `hard_gas_limit_per_operation` - A gas consumption limit in gas units for an Injection Entry
+  - `hard_gas_limit_per_block` - A gas consumption limit in gas units for an Injection
+  - `hard_storage_limit_per_Operation` - A storage limit in bytes for an Injection Entry
+  - `Cost_per_byte` - Converts bytes to a burn cost in mutez
+
+**Context Query**
+
+The RPC Interface includes several endpoints for querying the Context of a Block. As with Block queries, the Block can be identified in several ways. Taquito is usually interested in obtaining Context with respect to the head of the blockchain, i.e., in obtaining the latest Context.
+
+We start with queries that apply to both Implicit Accounts and Originated Accounts:
+- **getBalance** - fetches the balance of a specified Account
+- **getDelegate** - fetches the Delegate of a specified Account
+- **getContract** - fetches the balance and delegate for an Account. For an Originated Account getContract fetches its script and storage. For an Implicit Account, the Account's counter is also fetched.
+
+Several queries only apply to Originated Accounts:
+- **getScript** - fetches the script and storage of a specified Originated Account
+- **getStorage** - fetches the storage of a specified Originated Account
+- **getEntryPoints** - fetches the entry point names and associated parameters of a specified Originated Account
+- **getSaplingDiffByContract** - fetches the Sapling State of a specified Smart Contract
+- **getSaplingDiffById** - fetches the Sapling State for a specified Sapling State Identity
+- **getBigMapExpr** - Fetches the BigMap value for the specified Big Map identity and key. The key is represented in Binary Micheline, a binary encoding of Micheline (see packData RPC). The returned value is represented in JSON Micheline.
+
+The following query applies only to Implicit Accounts:
+- **getManagerKey** - fetches the custodial public key of a specified Implicit Account
+
+#### Processing Endpoints
+
+The RPC Interface includes several processing endpoints:
+
+- **forgeOperations** - Serializes (aka forges) an Injection along with its branch value. Each Injection is submitted with a so-called branch value, the hash of a recently baked Block. This provides a time-to-live mechanism for the Injection. The branch of an Injection must be recent enough to include in a new Block assembly. Injections involving Custodian Operations must be signed by the sourced Custodian before being injected (see injectOperation). The forged Injection is returned.
+
+- **injectOperation** - Injects a signed, forged Injection. The identity (hash) of the Injection is returned.
+
+- **runOperation** - Simulates the result of injecting an Injection without actually transacting the ledger update. It takes an Injection, together with its branch value and the identity of the network (see getChainId above). It returns the Injection together with its simulated results. The runOperation RPC can be used to estimate the gas and storage consumption of an Injection prior to the actual injection.
+
+- **preapplyOperation** - Simulates the result of injecting an Injection without actually transacting the ledger update. It takes an Injection, a branch value, a protocol used to determine the version of Michelson used to parse the Injection, as well as the signature of the forged Injection. The protocol specified here is typically the head block's next-protocol to allow for protocol migrations. It returns the Injection together with its simulated results. The preapplyOperation RPC can be used to validate an Injection prior to the actual injection. Unlike runOperation it requires a valid custodial signature.
+
+- **packData** - Converts JSON Micheline to Binary Micheline, a binary encoding of Micheline.
+
+- **runCode** - RunCode simulates execution of a specified Transaction against a specified (Michelson script, storage, balance) tuple as if that tuple is an Originated Account in the current Context. For a detailed analysis, see [Understanding the RunCode RPC](arch_runcode_rpc). Some of the runCode Parameters specify the virtual Originated Contract:
+  - **Script** - defines Params, Storage and Code elements of the virtual Smart Contract
+  - **Storage** - the storage state of the virtual Smart Contract
+  - **Balance** - the balance state of the virtual Smart Contract
+
+  Other Parameters specify the Transaction:
+  - **Source** - The "To" is implicitly the virtual Smart Contract address
+  - **Amount**
+  - **Entrypoint**
+  - **Input** - entrypoint arguments
+
+  It returns the new Storage value as well as the results associated with executing the specified Transaction including any Internal Operations triggered as a result.
+
+- **runView** - RunView simulates a call to a TZIP-4 Callback View (see TZIP-4 section below) as if it were a Storage View. Rather than specifying a smart contract Entry Point callback to obtain the result, only the Callback View and the Callback View argument are specified; the result is obtained directly, and without incurring a gas or fee cost. See also [Lambda View](lambda_view) and [On-Chain Views](on_chain_views).
+
+## Extensions to Tezos
+
+### TZIP-4
+
+Tzip-4 defines coding patterns that make it easier for developers to build smart contracts in Michelson. It includes a pattern for a Callback View.
+
+A Callback View is a Smart Contract Entry Point whose Parameter Type is of the form: `pair a (contract r)`. Pair is a Michelson type constructor for building a 2-tuple. Contract is a Michelson type constructor for specifying a smart contract Entry Point with a particular parameter type.
+
+A Callback View represents a computation on storage that takes an argument of type `a`, and returns a result of type `r`. The result is returned via a callback to a Smart Contract Entry Point accepting `r`. By convention, a Callback View must emit only a single operation, namely the callback, and must not mutate the contract storage in any way.
+
+### Indexers
+
+The Tezos blockchain constitutes a distributed, shared, authoritative record of Operations, and the state of Accounts as these Operations are transacted. As such it acts as a kind of distributed database. However, unlike a traditional database, the emphasis is on adding entries to a distributed ledger and ensuring that it is cryptographically authoritative, rather than on efficient ad-hoc queries.
+
+Applications and services, which live outside the chain necessarily interface real people and events to the chain and need to be able to query the Tezos blockchain efficiently in ad-hoc ways. Indexers meet this need by regularly extracting data from the Tezos blockchain, transforming it, and loading it into an indexed database capable of supporting efficient ad-hoc queries. The blockchain remains the real authoritative record. An Indexer mirrors the authoritative content of the chain but holds it in a form more suited to ad-hoc queries.
+
+There are several third-party Indexers available with differing performance characteristics and query APIs. Here we simply list the capabilities of a "good" Indexer, namely, capabilities consistent with the distributed, shared nature of the Tezos blockchain, as well as those related to ad-hoc query:
+- Distributed, no single point of failure
+- Shared, public availability
+- Efficient query execution
+- Query expressivity, i.e. the ability to express "any interesting" query as a single request to an Indexer
