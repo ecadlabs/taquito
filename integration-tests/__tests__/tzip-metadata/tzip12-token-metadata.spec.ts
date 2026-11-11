@@ -121,7 +121,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 			const metadata = await contract.tzip16().getMetadata();
 			expect(metadata.uri).toEqual('https://storage.googleapis.com/tzip-16/fa2-token-factory.json');
 			expect(metadata.integrityCheckResult).toBeUndefined();
-			expect(metadata.sha256Hash).toBeUndefined();
+			expect(metadata.sha256Hash).toMatch(/^[0-9a-f]{64}$/);
 			expect(metadata.metadata).toEqual({
 				name: 'Test Taquito FA2 token Factory',
 				description:
@@ -261,7 +261,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 			const metadata = await contract.tzip16().getMetadata();
 			expect(metadata.uri).toEqual('https://storage.googleapis.com/tzip-16/fa2-views.json');
 			expect(metadata.integrityCheckResult).toBeUndefined();
-			expect(metadata.sha256Hash).toBeUndefined();
+			expect(metadata.sha256Hash).toMatch(/^[0-9a-f]{64}$/);
 			expect(metadata.metadata).toBeDefined();
 
 			// Verify if the tag TZIP-012 is present in the interface field of contract metadata

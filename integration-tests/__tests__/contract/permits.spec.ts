@@ -233,7 +233,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
       expect(contract_metadata.uri).toEqual(url);
       expect(contract_metadata.integrityCheckResult).toBeUndefined();
-      expect(contract_metadata.sha256Hash).toBeUndefined();
+      expect(contract_metadata.sha256Hash).toMatch(/^[0-9a-f]{64}$/);
 
       const views = await contract.tzip16().metadataViews();
 

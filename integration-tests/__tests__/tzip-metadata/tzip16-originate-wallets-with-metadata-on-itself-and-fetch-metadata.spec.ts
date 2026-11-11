@@ -1,25 +1,26 @@
 import { CONFIGS } from "../../config";
-import { tzip16, Tzip16Module } from '@taquito/tzip16';
+import { calculateSHA256Hash, tzip16, Tzip16Module } from '@taquito/tzip16';
 import { stringToBytes } from '@taquito/utils';
 import { tacoContractTzip16 } from "../../data/modified-taco-contract"
 import { MichelsonMap } from "@taquito/taquito";
+
+const metadataJSON = {
+  "name": "test",
+  "description": "A metadata test",
+  "version": "0.1",
+  "license": "MIT",
+  "authors": [
+    "Taquito <https://taquito.io/>"
+  ],
+  "homepage": "https://taquito.io/"
+};
+const expectedSha256Hash = calculateSHA256Hash(JSON.stringify(metadataJSON));
 
 CONFIGS().forEach(({ lib, rpc, setup }) => {
   const Tezos = lib;
   Tezos.addExtension(new Tzip16Module());
 
   const createEmbeddedMetadataMap = () => {
-    const metadataJSON = {
-      "name": "test",
-      "description": "A metadata test",
-      "version": "0.1",
-      "license": "MIT",
-      "authors": [
-        "Taquito <https://taquito.io/>"
-      ],
-      "homepage": "https://taquito.io/"
-    };
-
     const metadataBigMap = new MichelsonMap();
     metadataBigMap.set("", stringToBytes('tezos-storage:here'));
     metadataBigMap.set("here", stringToBytes(JSON.stringify(metadataJSON)));
@@ -56,7 +57,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
         expect(metadata.uri).toEqual('tezos-storage:here');
         expect(metadata.integrityCheckResult).toBeUndefined();
-        expect(metadata.sha256Hash).toBeUndefined();
+        expect(metadata.sha256Hash).toEqual(expectedSha256Hash);
         expect(metadata.metadata).toEqual({
           "name": "test",
           "description": "A metadata test",
@@ -120,7 +121,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
         expect(metadata.uri).toEqual(`tezos-storage://${sourceContractAddress}/here`);
         expect(metadata.integrityCheckResult).toBeUndefined();
-        expect(metadata.sha256Hash).toBeUndefined();
+        expect(metadata.sha256Hash).toEqual(expectedSha256Hash);
         expect(metadata.metadata).toEqual({
           "name": "test",
           "description": "A metadata test",
