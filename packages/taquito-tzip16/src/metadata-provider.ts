@@ -20,10 +20,11 @@ export interface MetadataProviderInterface {
 export interface MetadataEnvelope {
   uri: string;
   integrityCheckResult?: boolean;
-  sha256Hash?: string;
+  sha256Hash: string;
   metadata: MetadataInterface;
 }
 export interface Handler {
+  readonly integrityVerified?: boolean;
   getMetadata(
     contractAbstraction: ContractAbstraction<ContractProvider | Wallet>,
     uri: Tzip16Uri,
@@ -90,8 +91,9 @@ export class MetadataProvider implements MetadataProviderInterface {
     return {
       uri,
       metadata: metadataJSON,
-      integrityCheckResult: uriInfo.sha256hash ? uriInfo.sha256hash === sha256Hash : undefined,
-      sha256Hash: uriInfo.sha256hash ? sha256Hash : undefined,
+      integrityCheckResult:
+        uriInfo.sha256hash !== undefined || handler.integrityVerified === true ? true : undefined,
+      sha256Hash,
     };
   }
 

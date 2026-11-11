@@ -74,7 +74,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
                 expect(metadata.uri).toEqual('https://storage.googleapis.com/tzip-16/empty-metadata.json');
                 expect(metadata.integrityCheckResult).toBeUndefined();
-                expect(metadata.sha256Hash).toBeUndefined();
+                expect(metadata.sha256Hash).toMatch(/^[0-9a-f]{64}$/);
                 expect(metadata.metadata).toEqual({});
             });
         });
@@ -99,7 +99,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
                 expect(metadata.uri).toEqual('https://storage.googleapis.com/tzip-16/emoji-in-metadata.json');
                 expect(metadata.integrityCheckResult).toBeUndefined();
-                expect(metadata.sha256Hash).toBeUndefined();
+                expect(metadata.sha256Hash).toMatch(/^[0-9a-f]{64}$/);
                 expect(metadata.metadata).toEqual({
                     "name": "Taquito test with valid metadata containing emoji 😀 🤩",
                     "description": "👋 This is metadata test for Taquito integration tests 🧐 with the Ligo Taco shop contract modified to include metadata URI in the storage",

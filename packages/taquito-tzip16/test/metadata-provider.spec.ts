@@ -37,9 +37,8 @@ describe('Metadata provider test', () => {
   });
 
   it('Should succesfully fetch metadata on https', async () => {
-    mockHttpHandler.getMetadata.mockResolvedValue(
-      `{"name":"test","description":"A metadata test","version":"0.1","license":"MIT","authors":["Taquito <https://taquito.io/>"],"homepage":"https://taquito.io/"}`
-    );
+    const raw = `{"name":"test","description":"A metadata test","version":"0.1","license":"MIT","authors":["Taquito <https://taquito.io/>"],"homepage":"https://taquito.io/"}`;
+    mockHttpHandler.getMetadata.mockResolvedValue(raw);
 
     const metadata = await metadataProvider.provideMetadata(
       mockContractAbstraction,
@@ -58,7 +57,7 @@ describe('Metadata provider test', () => {
         homepage: 'https://taquito.io/',
       },
       integrityCheckResult: undefined,
-      sha256Hash: undefined,
+      sha256Hash: '0c9d0b2f75d5ff4814b69062646b15f31aa8336cfb4467a90beaa79eebed63d0',
     });
   });
 
@@ -75,7 +74,7 @@ describe('Metadata provider test', () => {
       uri: 'http://storage.googleapis.com/tzip-16/metadata.json',
       metadata: { name: 'test' },
       integrityCheckResult: undefined,
-      sha256Hash: undefined,
+      sha256Hash: '7d9fd2051fc32b32feab10946fab6bb91426ab7e39aa5439289ed892864aa91d',
     });
   });
 
@@ -101,7 +100,7 @@ describe('Metadata provider test', () => {
         homepage: 'https://taquito.io/',
       },
       integrityCheckResult: undefined,
-      sha256Hash: undefined,
+      sha256Hash: '0c9d0b2f75d5ff4814b69062646b15f31aa8336cfb4467a90beaa79eebed63d0',
     });
   });
 
@@ -127,7 +126,7 @@ describe('Metadata provider test', () => {
         homepage: 'https://taquito.io/',
       },
       integrityCheckResult: undefined,
-      sha256Hash: undefined,
+      sha256Hash: '0c9d0b2f75d5ff4814b69062646b15f31aa8336cfb4467a90beaa79eebed63d0',
     });
   });
 

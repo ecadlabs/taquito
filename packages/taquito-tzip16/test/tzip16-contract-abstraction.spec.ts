@@ -435,4 +435,120 @@ describe('Tzip16 contract abstraction test', () => {
     expect(Object.keys(metadataView)[2]).toEqual('multiply-the-nat-in-storage2');
     expect(Object.keys(metadataView)[3]).toBeUndefined();
   });
+
+  it('reuses the cached envelope from getMetadata() when building metadataViews() without re-fetching', async () => {
+    mockSchema.FindFirstInTopLevelPair.mockReturnValue({ int: '20350' });
+    mockRpcContractProvider.getBigMapKeyByID.mockResolvedValue('68747470733a2f2f74657374');
+    const firstEnvelope = {
+      uri: 'https://test',
+      sha256Hash: '11'.repeat(32),
+      metadata: {
+        name: 'Pinned metadata',
+        views: [
+          {
+            name: 'pinned-view',
+            implementations: [
+              {
+                michelsonStorageView: {
+                  returnType: { prim: 'nat', args: [], annots: [] },
+                  code: [{ prim: 'CDR', args: [], annots: [] }],
+                },
+              },
+            ],
+          },
+        ],
+      },
+    };
+    const secondEnvelope = {
+      uri: 'https://test',
+      sha256Hash: '22'.repeat(32),
+      metadata: {
+        name: 'Tampered metadata',
+        views: [
+          {
+            name: 'tampered-view',
+            implementations: [
+              {
+                michelsonStorageView: {
+                  returnType: { prim: 'nat', args: [], annots: [] },
+                  code: [{ prim: 'CDR', args: [], annots: [] }],
+                },
+              },
+            ],
+          },
+        ],
+      },
+    };
+    mockMetadataProvider.provideMetadata
+      .mockResolvedValueOnce(firstEnvelope)
+      .mockResolvedValueOnce(secondEnvelope);
+
+    const tzip16Abs = new Tzip16ContractAbstraction(mockContractAbstraction as any, mockContext);
+    const envelope = await tzip16Abs.getMetadata();
+    const views = await tzip16Abs.metadataViews();
+
+    expect(envelope).toBe(firstEnvelope);
+    expect(Object.keys(views)).toEqual(['pinned-view']);
+    expect(mockMetadataProvider.provideMetadata).toHaveBeenCalledTimes(1);
+    expect(mockRpcContractProvider.getBigMapKeyByID).toHaveBeenCalledTimes(1);
+  });
+
+  it('deduplicates concurrent getMetadata() and metadataViews() calls into a single fetch and shares the exact same envelope', async () => {
+    mockSchema.FindFirstInTopLevelPair.mockReturnValue({ int: '20350' });
+    mockRpcContractProvider.getBigMapKeyByID.mockResolvedValue('68747470733a2f2f74657374');
+    const firstEnvelope = {
+      uri: 'https://test',
+      sha256Hash: '11'.repeat(32),
+      metadata: {
+        name: 'Pinned metadata',
+        views: [
+          {
+            name: 'pinned-view',
+            implementations: [
+              {
+                michelsonStorageView: {
+                  returnType: { prim: 'nat', args: [], annots: [] },
+                  code: [{ prim: 'CDR', args: [], annots: [] }],
+                },
+              },
+            ],
+          },
+        ],
+      },
+    };
+    const secondEnvelope = {
+      uri: 'https://test',
+      sha256Hash: '22'.repeat(32),
+      metadata: {
+        name: 'Tampered metadata',
+        views: [
+          {
+            name: 'tampered-view',
+            implementations: [
+              {
+                michelsonStorageView: {
+                  returnType: { prim: 'nat', args: [], annots: [] },
+                  code: [{ prim: 'CDR', args: [], annots: [] }],
+                },
+              },
+            ],
+          },
+        ],
+      },
+    };
+    mockMetadataProvider.provideMetadata
+      .mockResolvedValueOnce(firstEnvelope)
+      .mockResolvedValueOnce(secondEnvelope);
+
+    const tzip16Abs = new Tzip16ContractAbstraction(mockContractAbstraction as any, mockContext);
+    const [envelope, views] = await Promise.all([
+      tzip16Abs.getMetadata(),
+      tzip16Abs.metadataViews(),
+    ]);
+
+    expect(envelope).toBe(firstEnvelope);
+    expect(Object.keys(views)).toEqual(['pinned-view']);
+    expect(mockMetadataProvider.provideMetadata).toHaveBeenCalledTimes(1);
+    expect(mockRpcContractProvider.getBigMapKeyByID).toHaveBeenCalledTimes(1);
+  });
 });

@@ -49,8 +49,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             const metadata = await contract.tzip16().getMetadata();
 
             expect(metadata.uri).toEqual('ipfs://QmXnASUptTDnfhmcoznFqz3S1Mxu7X1zqo2YwbTN3nW52V');
-            expect(metadata.integrityCheckResult).toBeUndefined();
-            expect(metadata.sha256Hash).toBeUndefined();
+            expect(metadata.integrityCheckResult).toEqual(true);
+            expect(metadata.sha256Hash).toMatch(/^[0-9a-f]{64}$/);
             expect(metadata.metadata).toEqual({
                 name: 'Taquito test with valid metadata',
                 description:

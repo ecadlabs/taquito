@@ -72,7 +72,7 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress }) => {
 
          expect(metadata.uri).toEqual('https://storage.googleapis.com/tzip-16/fa2-metadata.json');
          expect(metadata.integrityCheckResult).toBeUndefined();
-         expect(metadata.sha256Hash).toBeUndefined();
+         expect(metadata.sha256Hash).toMatch(/^[0-9a-f]{64}$/);
          expect(metadata.metadata).toEqual({
             "name": "FA2 having metadata",
             "description": "This is a test for Taquito integration tests of a Fa2 contract having metadata stored on an HTTPS URL",
