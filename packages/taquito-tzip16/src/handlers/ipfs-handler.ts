@@ -21,6 +21,7 @@ const DEFAULT_GATEWAYS = ['ipfs.filebase.io', 'gateway.pinata.cloud'];
  */
 export class IpfsHttpHandler implements Handler {
   private readonly gateways: readonly string[];
+  public readonly integrityVerified = true;
   public httpBackend = new HttpBackend();
 
   /**

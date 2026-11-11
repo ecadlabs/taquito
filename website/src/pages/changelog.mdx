@@ -27,6 +27,17 @@ layout: ../layouts/MarkdownLayout.astro
 - Michelson signature validation now rejects malformed hexadecimal and byte lengths other than 64, 96, or 2420. Typed unpacking also supports 96-byte BLS signatures as `BLsig`.
 - Local-forging decoders now reject truncated fixed-length payloads instead of returning malformed Base58 values.
 
+### `@taquito/tzip16` metadata integrity and view immutability
+
+- `MetadataProvider.provideMetadata` now always populates `sha256Hash` on the returned `MetadataEnvelope` across all protocols (`http`, `https`, `ipfs`, and `tezos-storage`).
+- `IpfsHttpHandler` sets `readonly integrityVerified = true`, so `MetadataEnvelope.integrityCheckResult` is `true` whenever metadata integrity was cryptographically verified (either via a `sha256://` URI commitment or via CID block verification in `IpfsHttpHandler`), while remaining `undefined` for unverified protocols or custom handlers that do not set `integrityVerified = true`.
+- `Tzip16ContractAbstraction.getMetadata()` caches the resolved `MetadataEnvelope` on the abstraction instance, and `metadataViews()` always constructs views from that same cached envelope without re-fetching.
+- `MichelsonStorageView.executeView()` now clones the view code before adapting context instructions (`SELF`, `BALANCE`, `NOW`, `CHAIN_ID`) or prepending `CDR`, preserving the cached `metadata.views` object across calls and handling nested instruction sequences.
+
+### Jest and `@noble/curves` v2 (ESM-only)
+
+- `@taquito/signer` and `@taquito/utils` depend on `@noble/curves` 2.x, which is published as ESM-only. Plain Node.js 22+ supports `require()` of ESM modules natively, so CJS/UMD consumers in Node.js need no flags. However, Jest's custom module loader does not support `require(esm)` by default; Jest consumers should either run Jest 30+ with `--experimental-vm-modules` (on Node.js 24.9+) or configure Jest to transform `@noble/curves` and `@noble/hashes` via `transformIgnorePatterns`.
+
 # Taquito v24.3.0
 
 ## Network reliability, browser compatibility, and internal modernization

@@ -43,6 +43,10 @@ export class MichelsonStorageView implements View {
 
     for (const forbiddenInstruction of illegalInstructions) {
       for (const instruction of code) {
+        if (Array.isArray(instruction)) {
+          this.findForbiddenInstructionInViewCodeError(instruction);
+          continue;
+        }
         if (instruction.prim === forbiddenInstruction) {
           throw new ForbiddenInstructionInViewCodeError(forbiddenInstruction);
         }
@@ -58,10 +62,15 @@ export class MichelsonStorageView implements View {
    * The method throws an error is the instruction SELF is present, but not followed by ADDRESS
    */
   private illegalUseOfSelfInstruction(code: MichelsonV1ExpressionExtended[]) {
-    for (const instruction of code) {
+    for (let i = 0; i < code.length; i++) {
+      const instruction = code[i];
+      if (Array.isArray(instruction)) {
+        this.illegalUseOfSelfInstruction(instruction);
+        continue;
+      }
       if (instruction.prim === 'SELF') {
-        const index = code.indexOf(instruction);
-        const nextInstruction = code[index + 1] ? code[index + 1].prim : undefined;
+        const next = code[i + 1];
+        const nextInstruction = next && !Array.isArray(next) ? next.prim : undefined;
         if (nextInstruction !== 'ADDRESS') {
           throw new ForbiddenInstructionInViewCodeError(
             'the instruction SELF should only be used before ADDRESS'
@@ -95,13 +104,17 @@ export class MichelsonStorageView implements View {
     };
 
     code.forEach((x: any, i: any) => {
+      if (Array.isArray(x)) {
+        this.adaptViewCodeToContext(x, contractBalance, blockTimeStamp, chainId);
+        return;
+      }
       for (const instruction in instructionsToReplace) {
         if (x.prim === instruction) {
           code[i] = Object(instructionsToReplace)[instruction];
         }
-        if (x.args && x.args.length !== 0) {
-          this.adaptViewCodeToContext(x.args, contractBalance, blockTimeStamp, chainId);
-        }
+      }
+      if (x.args && x.args.length !== 0) {
+        this.adaptViewCodeToContext(x.args, contractBalance, blockTimeStamp, chainId);
       }
     });
     return code;
@@ -157,7 +170,12 @@ export class MichelsonStorageView implements View {
     ).toString();
     const blockTimestamp = await this.readProvider.getBlockTimestamp(this.contract.readBlock);
 
-    const code = this.adaptViewCodeToContext(this.code, contractBalance, blockTimestamp, chainId);
+    const code = this.adaptViewCodeToContext(
+      structuredClone(this.code),
+      contractBalance,
+      blockTimestamp,
+      chainId
+    );
 
     if (!this.viewParameterType) {
       code.unshift({ prim: 'CDR' });

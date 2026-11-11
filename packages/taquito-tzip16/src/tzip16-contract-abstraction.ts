@@ -31,6 +31,7 @@ const metadataBigMapType = {
 export class Tzip16ContractAbstraction {
   private _metadataProvider: MetadataProviderInterface;
   private _metadataEnvelope?: MetadataEnvelope;
+  private _metadataEnvelopePromise?: Promise<MetadataEnvelope>;
   private _viewFactory = new ViewFactory();
   private _metadataViewsObject: { [key: string]: () => View } = {};
 
@@ -71,19 +72,36 @@ export class Tzip16ContractAbstraction {
   }
 
   /**
-   * Return an object containing the metadata, the uri, an optional integrity check result and an optional sha256 hash
+   * Fetch and cache the contract metadata envelope on this `Tzip16ContractAbstraction` instance.
+   * Subsequent calls to `getMetadata()`, `metadataViews()`, and the `metadata*()` accessors
+   * reuse the cached envelope without re-fetching.
+   *
+   * @returns an object containing the parsed `metadata`, the `uri`, the `sha256Hash` of the raw
+   * metadata string, and an optional `integrityCheckResult` (`true` when verified via a
+   * `sha256://` commitment or a content-verifying handler such as `IpfsHttpHandler`).
    */
   async getMetadata() {
     if (!this._metadataProvider) {
       throw new UnconfiguredContractMetadataProviderError();
     }
     if (!this._metadataEnvelope) {
-      const uri = await this.getUriOrFail();
-      this._metadataEnvelope = await this._metadataProvider.provideMetadata(
-        this.constractAbstraction,
-        bytesToString(uri),
-        this.context
-      );
+      if (!this._metadataEnvelopePromise) {
+        this._metadataEnvelopePromise = (async () => {
+          try {
+            const uri = await this.getUriOrFail();
+            const envelope = await this._metadataProvider.provideMetadata(
+              this.constractAbstraction,
+              bytesToString(uri),
+              this.context
+            );
+            this._metadataEnvelope = envelope;
+            return envelope;
+          } finally {
+            this._metadataEnvelopePromise = undefined;
+          }
+        })();
+      }
+      return this._metadataEnvelopePromise;
     }
     return this._metadataEnvelope;
   }
@@ -135,6 +153,11 @@ export class Tzip16ContractAbstraction {
     return this._metadataEnvelope!.metadata.errors;
   }
 
+  /**
+   * Build and cache off-chain view implementations from the cached metadata envelope returned by
+   * `getMetadata()`. If `getMetadata()` has already resolved on this instance, `metadataViews()`
+   * uses that same cached envelope without re-fetching.
+   */
   async metadataViews() {
     if (Object.keys(this._metadataViewsObject).length === 0) {
       await this.initializeMetadataViewsList();

@@ -1,15 +1,20 @@
 import { createHash } from 'node:crypto';
 import { vi } from 'vitest';
-import { MetadataProvider } from '../src/metadata-provider';
+import { Handler, MetadataProvider } from '../src/metadata-provider';
 import { HttpHandler } from '../src/handlers/http-handler';
 import { IpfsHttpHandler } from '../src/handlers/ipfs-handler';
 import { Tzip16ContractAbstraction } from '../src/tzip16-contract-abstraction';
-import { fixtures, metadataContract } from './fixtures/metadata-integrity';
+import {
+  blocks,
+  fixtures,
+  gatewayResponse,
+  metadataContract,
+} from './fixtures/metadata-integrity';
 
 describe('metadata integrity enforcement', () => {
   const { context, contract } = metadataContract();
   const provider = new MetadataProvider(
-    new Map([
+    new Map<string, Handler>([
       ['https', new HttpHandler()],
       ['ipfs', new IpfsHttpHandler('gateway.example.com')],
     ])
@@ -53,11 +58,47 @@ describe('metadata integrity enforcement', () => {
     ).rejects.toThrow(/integrity|hash|digest/i);
   });
 
-  it('continues to accept HTTPS metadata without a hash commitment', async () => {
+  it('continues to accept HTTPS metadata without a hash commitment and computes sha256Hash with undefined integrityCheckResult', async () => {
     vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(fixtures.metadata));
     await expect(
       provider.provideMetadata(contract, 'https://metadata.example.com/a', context)
-    ).resolves.toMatchObject({ metadata: { name: 'Verified café' } });
+    ).resolves.toEqual({
+      uri: 'https://metadata.example.com/a',
+      integrityCheckResult: undefined,
+      sha256Hash: digest,
+      metadata: { name: 'Verified café', description: 'two chunks' },
+    });
+  });
+
+  it('reports integrityCheckResult: true and sha256Hash for CID-verified IPFS metadata via IpfsHttpHandler', async () => {
+    vi.spyOn(globalThis, 'fetch').mockImplementation((input, init) =>
+      Promise.resolve(gatewayResponse(input, init, blocks, null))
+    );
+    await expect(
+      provider.provideMetadata(contract, `ipfs://${fixtures.raw.cid}`, context)
+    ).resolves.toEqual({
+      uri: `ipfs://${fixtures.raw.cid}`,
+      integrityCheckResult: true,
+      sha256Hash: digest,
+      metadata: { name: 'Verified café', description: 'two chunks' },
+    });
+  });
+
+  it('distinguishes an unverified custom IPFS handler from a verifying handler via integrityCheckResult', async () => {
+    const unverifiedCustomIpfsHandler: Handler = {
+      getMetadata: vi.fn().mockResolvedValue(fixtures.metadata),
+    };
+    const customProvider = new MetadataProvider(
+      new Map<string, Handler>([['ipfs', unverifiedCustomIpfsHandler]])
+    );
+    await expect(
+      customProvider.provideMetadata(contract, `ipfs://${fixtures.raw.cid}`, context)
+    ).resolves.toEqual({
+      uri: `ipfs://${fixtures.raw.cid}`,
+      integrityCheckResult: undefined,
+      sha256Hash: digest,
+      metadata: { name: 'Verified café', description: 'two chunks' },
+    });
   });
 
   it('does not expose views from rejected metadata or cache the rejected response', async () => {

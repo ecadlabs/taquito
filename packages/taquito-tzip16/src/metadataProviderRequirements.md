@@ -44,10 +44,12 @@ Then branch on the protocol and use a class specific to that protocol to retriev
 ## Integrity check using sha256
 
 Validate the URI hash as 64 hexadecimal digits before retrieval. Hash the metadata
-string before JSON parsing, preserving whitespace and Unicode. Reject a mismatch
-before returning metadata to callers or constructing off-chain views. Successful
-checks return `integrityCheckResult: true`; a URI without a SHA-256 commitment
-leaves the field undefined.
+string before JSON parsing, preserving whitespace and Unicode, and always populate
+`sha256Hash` on the returned `MetadataEnvelope`. Reject a mismatch before returning
+metadata to callers or constructing off-chain views. Successful checks (via a
+`sha256://` URI commitment or a content-verifying handler setting
+`integrityVerified = true`) return `integrityCheckResult: true`; unverified fetches
+leave `integrityCheckResult` undefined.
 
 ## Http/Https
 > https://raw.githubusercontent.com/tqtezos/TZComet/8d95f7b/data/metadata_example0.json

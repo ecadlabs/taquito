@@ -80,7 +80,9 @@ All other methods of the `ContractAbstraction` class can be called as usual on t
 
 ## Get the metadata
 
-The `getMetadata` method returns an object containing the URI, parsed metadata, an optional SHA256 hash, and an optional integrity check result. The default provider rejects SHA-256 mismatches with `MetadataHashMismatchError` before returning metadata or creating views. Successful SHA-256 checks return `integrityCheckResult: true`; URIs without a SHA-256 wrapper leave it undefined. Hashes require 64 hexadecimal digits, accepting either case. This replaces the previous behavior of returning metadata with `integrityCheckResult: false`.
+The `getMetadata` method returns a `MetadataEnvelope` containing the `uri`, parsed `metadata`, the `sha256Hash` of the raw metadata bytes (computed before JSON parsing across all protocols), and an optional `integrityCheckResult`. `Tzip16ContractAbstraction` caches this envelope on first resolution; subsequent calls to `getMetadata()`, `metadataViews()`, and the `metadata*()` accessors on the same instance reuse the cached envelope without re-fetching, and executing off-chain views does not mutate the cached metadata object.
+
+The default provider rejects SHA-256 mismatches with `MetadataHashMismatchError` before returning metadata or creating views. `integrityCheckResult` is `true` when content integrity is verified either via a `sha256://` URI commitment or a content-verifying protocol handler such as the built-in `IpfsHttpHandler` (which verifies IPFS blocks against their CIDs and sets `readonly integrityVerified = true`). Plain `http://`, `https://`, `tezos-storage://` URIs without a `sha256://` wrapper, or custom handlers that do not set `integrityVerified = true`, leave `integrityCheckResult` undefined. SHA-256 URI commitments require 64 hexadecimal digits, accepting either case. This replaces the previous behavior of returning metadata with `integrityCheckResult: false`.
 
 A sequence diagram can be found [here](./tzip16-sequence-diagram#get-the-metadata).
 

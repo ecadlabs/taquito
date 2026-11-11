@@ -569,4 +569,124 @@ describe('MichelsonStorageView test', () => {
       expect(e).toBeInstanceOf(NoParameterExpectedError);
     }
   });
+
+  it('does not mutate the passed view code array or nested expressions during executeView and adapts fresh context on repeated calls', async () => {
+    mockRpcClient.runCode.mockResolvedValue({
+      storage: { prim: 'Some', args: [{ int: '0' }] },
+      operations: [],
+    });
+
+    const originalCode = [
+      { prim: 'DROP', args: [], annots: [] },
+      {
+        prim: 'DIP',
+        args: [[{ prim: 'NOW', args: [], annots: [] }, { prim: 'CHAIN_ID', args: [], annots: [] }]],
+        annots: [],
+      },
+      { prim: 'SELF', args: [], annots: [] },
+      { prim: 'ADDRESS', args: [], annots: [] },
+      { prim: 'DROP', args: [], annots: [] },
+      { prim: 'BALANCE', args: [], annots: [] },
+    ];
+    const snapshotBefore = structuredClone(originalCode);
+
+    const michelsonStorageView = new MichelsonStorageView(
+      'test',
+      mockContractAbstraction,
+      mockRpcClient,
+      mockReadProvider,
+      { prim: 'mutez', args: [], annots: [] },
+      originalCode
+    );
+
+    await michelsonStorageView.executeView();
+    expect(originalCode).toEqual(snapshotBefore);
+
+    mockRpcClient.getBalance.mockResolvedValue('5000');
+    mockRpcClient.getBlockHeader.mockResolvedValue({ timestamp: '2025-05-01T00:00:00Z' });
+    mockRpcClient.getChainId.mockResolvedValue('NetSecondCall');
+
+    await michelsonStorageView.executeView();
+    expect(originalCode).toEqual(snapshotBefore);
+
+    const firstRunScript = mockRpcClient.runCode.mock.calls[0][0].script;
+    const secondRunScript = mockRpcClient.runCode.mock.calls[1][0].script;
+    const firstAdaptedCode = firstRunScript[2].args[0][1];
+    const secondAdaptedCode = secondRunScript[2].args[0][1];
+
+    expect(firstAdaptedCode[0]).toEqual({ prim: 'CDR' });
+    expect(secondAdaptedCode[0]).toEqual({ prim: 'CDR' });
+    expect(secondAdaptedCode[1]).toEqual({ prim: 'DROP', args: [], annots: [] });
+    expect(secondAdaptedCode).toContainEqual([
+      { prim: 'PUSH', args: [{ prim: 'mutez' }, { int: '5000' }] },
+    ]);
+    expect(JSON.stringify(secondAdaptedCode)).toContain('2025-05-01T00:00:00Z');
+    expect(JSON.stringify(secondAdaptedCode)).toContain('NetSecondCall');
+  });
+
+  it('rejects forbidden instructions nested inside sequence array elements (e.g. DIP or IF branches)', async () => {
+    const viewCode = [
+      {
+        prim: 'DIP',
+        args: [[{ prim: 'TRANSFER_TOKENS', args: [], annots: [] }]],
+        annots: [],
+      },
+    ];
+    const michelsonStorageView = new MichelsonStorageView(
+      'test',
+      mockContractAbstraction,
+      mockRpcClient,
+      mockReadProvider,
+      { prim: 'mutez', args: [], annots: [] },
+      viewCode as any
+    );
+
+    await expect(michelsonStorageView.executeView()).rejects.toBeInstanceOf(
+      ForbiddenInstructionInViewCodeError
+    );
+  });
+
+  it('rejects SELF not followed by ADDRESS when nested inside sequence array elements', async () => {
+    const viewCode = [
+      {
+        prim: 'DIP',
+        args: [[{ prim: 'SELF', args: [], annots: [] }, { prim: 'CONTRACT', args: [], annots: [] }]],
+        annots: [],
+      },
+    ];
+    const michelsonStorageView = new MichelsonStorageView(
+      'test',
+      mockContractAbstraction,
+      mockRpcClient,
+      mockReadProvider,
+      { prim: 'mutez', args: [], annots: [] },
+      viewCode as any
+    );
+
+    await expect(michelsonStorageView.executeView()).rejects.toBeInstanceOf(
+      ForbiddenInstructionInViewCodeError
+    );
+  });
+
+  it('rejects a second SELF instruction that is not followed by ADDRESS even when it shares the same object reference as an earlier valid SELF', async () => {
+    const sharedSelf = { prim: 'SELF', args: [], annots: [] };
+    const viewCode = [
+      sharedSelf,
+      { prim: 'ADDRESS', args: [], annots: [] },
+      { prim: 'DROP', args: [], annots: [] },
+      sharedSelf,
+    ];
+    const michelsonStorageView = new MichelsonStorageView(
+      'test',
+      mockContractAbstraction,
+      mockRpcClient,
+      mockReadProvider,
+      { prim: 'mutez', args: [], annots: [] },
+      viewCode
+    );
+
+    await expect(michelsonStorageView.executeView()).rejects.toBeInstanceOf(
+      ForbiddenInstructionInViewCodeError
+    );
+  });
 });
