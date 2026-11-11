@@ -6,9 +6,34 @@
 // For BeaconEvent and DAppClientOptions, import from '@taquito/beacon-wallet'
 // (the main entry point) instead, since those live in @ecadlabs/beacon-dapp
 // which has unavoidable side effects.
-export { NetworkType, PermissionScope, SigningType, Regions } from '@ecadlabs/beacon-types';
+export {
+  BeaconErrorType,
+  BeaconMessageType,
+  ColorMode,
+  NetworkType,
+  Origin,
+  PermissionScope,
+  Regions,
+  SigningType,
+  TransportStatus,
+  TransportType,
+} from '@ecadlabs/beacon-types';
 export type {
+  AccountInfo,
+  AppMetadata,
+  BlockExplorerInterface,
+  BroadcastResponseOutput,
+  ConnectionContext,
+  ErrorResponse,
+  Network,
+  NodeDistributions,
+  OperationResponseOutput,
+  PartialTezosOperation,
+  PermissionResponseOutput,
+  RequestBroadcastInput,
+  RequestOperationInput,
   RequestPermissionInput,
   RequestSignPayloadInput,
-  NodeDistributions,
+  SignPayloadResponseOutput,
+  WalletInfo,
 } from '@ecadlabs/beacon-types';
