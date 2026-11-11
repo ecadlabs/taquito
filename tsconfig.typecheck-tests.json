@@ -28,6 +28,7 @@
     "integration-tests/__tests__/wallet/smart-rollups.spec.ts",
     "integration-tests/data/smart-rollup-echo-kernel.ts",
     "integration-tests/fa21/*.ts",
+    "packages/taquito-beacon-wallet/test/beacon-types.spec.ts",
     "packages/taquito-beacon-wallet/test/taquito-beacon-wallet.spec.ts",
     "packages/taquito/test/batch/rpc-batch-provider.spec.ts",
     "packages/taquito/test/prepare/detached-*.ts",

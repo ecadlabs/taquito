@@ -162,13 +162,14 @@ describe('Beacon Wallet tests', () => {
     expect(new MissingRequiredScopes([PermissionScope.OPERATION_REQUEST])).toBeInstanceOf(Error);
   });
 
-  it('disconnects through the Beacon DAppClient logout path', async () => {
+  it('disconnects through the Beacon DAppClient logout path and forwards disconnect options', async () => {
     const wallet = new BeaconWallet({ name: 'testWallet' });
 
     await wallet.disconnect();
+    await wallet.disconnect({ notifyPeers: false });
 
-    const disconnect = wallet.client.disconnect as any;
-    expect(disconnect.mock.calls).toEqual([[]]);
+    const disconnect = vi.mocked(wallet.client.disconnect);
+    expect(disconnect.mock.calls).toEqual([[undefined], [{ notifyPeers: false }]]);
   });
 
   it('Verify that permissions must be called before getPKH', async () => {

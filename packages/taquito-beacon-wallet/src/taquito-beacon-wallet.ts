@@ -6,6 +6,7 @@
 
 import {
   DAppClient,
+  type DAppClientDisconnectOptions,
   DAppClientOptions,
   RequestPermissionInput,
   PermissionScope,
@@ -51,7 +52,26 @@ export { BeaconWalletNotInitialized, MissingRequiredScopes } from './errors';
 // beacon-types), so they come with beacon-dapp's side effects. For side-effect-free
 // beacon types (NetworkType, SigningType, etc.), use '@taquito/beacon-wallet/types'.
 export { BeaconEvent } from '@ecadlabs/beacon-dapp';
-export type { DAppClientOptions } from '@ecadlabs/beacon-dapp';
+export type {
+  BeaconEventHandler,
+  BeaconEventType,
+  DAppClient,
+  DAppClientDisconnectOptions,
+  DAppClientOptions,
+  DAppClientRemoveAllPeersOptions,
+  ErrorOrigin,
+  InvalidAccountDeactivatedEvent,
+  InvalidAccountDeactivatedReason,
+  LateErrorResponseInfo,
+  LateResponseInfo,
+  LateSuccessResponseInfo,
+  RequestErrorResponse,
+  ResponseMessage,
+  ResponseOutput,
+  V3ResponsePayload,
+  WireErrorMessage,
+  WireErrorPayload,
+} from '@ecadlabs/beacon-dapp';
 
 /**
  * Default matrix relay nodes curated by Taquito.
@@ -310,8 +330,8 @@ export class BeaconWallet implements WalletProvider {
    *
    * For switching accounts without a full logout, use {@link clearActiveAccount} instead.
    */
-  async disconnect() {
-    await this.client.disconnect();
+  async disconnect(options?: DAppClientDisconnectOptions) {
+    await this.client.disconnect(options);
   }
 
   /**
