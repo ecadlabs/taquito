@@ -1,6 +1,10 @@
 import { HttpResponseError } from '@taquito/http-utils';
-import { InvalidBigMapParameterError, UnsupportedActionError } from '@taquito/core';
-import { afterEach, it, expect, vi } from 'vitest';
+import {
+  InvalidBigMapParameterError,
+  PermissionDeniedError,
+  UnsupportedActionError,
+} from '@taquito/core';
+import { afterEach, describe, it, expect, vi } from 'vitest';
 import BigNumber from 'bignumber.js';
 import { Schema, MichelsonMap, type Semantic } from '@taquito/michelson-encoder';
 import {
@@ -16,8 +20,11 @@ import {
   BigMapAbstraction,
   InvalidBigMapParameterError as TaquitoInvalidBigMapParameterError,
   UnsupportedActionError as TaquitoUnsupportedActionError,
+  BigMapValuesAccessDeniedError as TaquitoBigMapValuesAccessDeniedError,
+  PermissionDeniedError as TaquitoPermissionDeniedError,
 } from '../../src/taquito';
 import { RPCResponseError } from '../../src/errors';
+import { BigMapValuesAccessDeniedError } from '../../src/contract/errors';
 import type { BlockIdentifier } from '../../src/read-provider/interface';
 import type { BigMapValuesOptions } from '../../src/contract/interface';
 const BLOCK = 'BLxGBu48ybnWvZoaVLyXV4XVnhdeDc9V2NcB9wsegQniza6mxvX';
@@ -157,7 +164,7 @@ it('passes RPC values to the decoder unchanged', async () => {
   expect(decode).toHaveBeenCalledTimes(2);
   expect(decode.mock.calls.every(([value]) => value === entry)).toBe(true);
 });
-it.each([404, 403, 502])('keeps HTTP %s visible from every read', async (status) => {
+it.each([400, 404, 500, 502])('keeps HTTP %s visible from every read', async (status) => {
   const reader = new Reader();
   const error = new HttpResponseError('controlled', status, 'failed', 'body', 'http://rpc.invalid');
   reader.getBigMapValuesPage.mockRejectedValue(error);
@@ -165,6 +172,102 @@ it.each([404, 403, 502])('keeps HTTP %s visible from every read', async (status)
   await expect(map.isEmpty()).rejects.toBe(error);
   await expect(map.listValues()).rejects.toBe(error);
   await expect(map.getValuesPage()).rejects.toBe(error);
+});
+describe('when the RPC node refuses the values endpoint', () => {
+  const url = 'https://rpc.invalid/chains/main/blocks/head/context/big_maps/123?offset=0&length=1';
+  const methods = ['isEmpty', 'listValues', 'getValuesPage'] as const;
+  const cases = [401, 403].flatMap((status) => methods.map((method) => ({ status, method })));
+
+  it.each(cases)(
+    '$method reports HTTP $status as BigMapValuesAccessDeniedError',
+    async ({ status, method }) => {
+      const reader = new Reader();
+      // Octez answers an ACL denial with an empty body.
+      const denied = new HttpResponseError('denied', status, 'Unauthorized', '', url);
+      reader.getBigMapValuesPage.mockRejectedValue(denied);
+      const error = await make(reader)
+        .map[method]()
+        .then(
+          () => expect.unreachable('the read should reject'),
+          (e: unknown) => e
+        );
+      expect(error).toBeInstanceOf(BigMapValuesAccessDeniedError);
+      expect(error).toBeInstanceOf(PermissionDeniedError);
+      if (!(error instanceof BigMapValuesAccessDeniedError)) return;
+      expect(error.name).toBe('BigMapValuesAccessDeniedError');
+      expect(error.bigMapId).toBe('123');
+      expect(error.status).toBe(status);
+      expect(error.url).toBe(url);
+      expect(error.cause).toBe(denied);
+      expect(error.message).toContain('big map 123');
+      expect(error.message).toContain(`HTTP ${status}`);
+      expect(error.message).toContain(url);
+      expect(error.message).toContain('GET /chains/*/blocks/*/context/big_maps/*');
+      expect(error.message).toContain('get()');
+    }
+  );
+
+  it('reports the big-map id of the abstraction that was read', async () => {
+    const reader = new Reader();
+    reader.getBigMapValuesPage.mockRejectedValue(
+      new HttpResponseError('denied', 401, 'Unauthorized', '', url)
+    );
+    const toolkit = new TezosToolkit('http://127.0.0.1:1');
+    toolkit.setReadProvider(reader);
+    const map = new BigMapAbstraction(new BigNumber(98765), schema, toolkit.contract);
+    await expect(map.listValues()).rejects.toMatchObject({ bigMapId: '98765' });
+  });
+
+  it('reports a refusal on the RpcContractProvider methods as well', async () => {
+    const reader = new Reader();
+    reader.getBigMapValuesPage.mockRejectedValue(
+      new HttpResponseError('denied', 403, 'Forbidden', '', url)
+    );
+    const { toolkit } = make(reader);
+    const contract = toolkit.contract;
+    const { isBigMapEmptyByID, listBigMapValuesByID, getBigMapValuesPageByID } = contract;
+    if (!isBigMapEmptyByID || !listBigMapValuesByID || !getBigMapValuesPageByID) {
+      throw new Error('the RPC contract provider should expose the big-map values methods');
+    }
+    const expected = { bigMapId: '7', status: 403, url };
+    for (const read of [
+      () => isBigMapEmptyByID.call(contract, '7'),
+      () => listBigMapValuesByID.call(contract, '7', schema),
+      () => getBigMapValuesPageByID.call(contract, '7', schema),
+    ]) {
+      const error = await read().then(
+        () => expect.unreachable('the read should reject'),
+        (e: unknown) => e
+      );
+      expect(error).toBeInstanceOf(BigMapValuesAccessDeniedError);
+      expect(error).toMatchObject(expected);
+    }
+  });
+
+  it('leaves a refused block-hash lookup untouched, since it is a different endpoint', async () => {
+    const reader = new Reader();
+    const denied = new HttpResponseError(
+      'denied',
+      401,
+      'Unauthorized',
+      '',
+      'https://rpc.invalid/chains/main/blocks/head/hash'
+    );
+    reader.getBlockHash.mockRejectedValue(denied);
+    await expect(make(reader).map.getValuesPage()).rejects.toBe(denied);
+    expect(reader.getBigMapValuesPage).not.toHaveBeenCalled();
+  });
+
+  it('does not translate errors that are not HTTP responses', async () => {
+    const reader = new Reader();
+    const lookalike = Object.assign(new Error('not http'), { status: 401, url });
+    reader.getBigMapValuesPage.mockRejectedValue(lookalike);
+    await expect(make(reader).map.listValues()).rejects.toBe(lookalike);
+  });
+
+  it('is exported from the package root', () => {
+    expect(TaquitoBigMapValuesAccessDeniedError).toBe(BigMapValuesAccessDeniedError);
+  });
 });
 it.each([
   { offset: -1 },
@@ -223,6 +326,7 @@ it('re-exports the core error classes of the big-map values API', () => {
   expect(RpcUnsupportedActionError).toBe(UnsupportedActionError);
   expect(TaquitoInvalidBigMapParameterError).toBe(InvalidBigMapParameterError);
   expect(RpcInvalidBigMapParameterError).toBe(InvalidBigMapParameterError);
+  expect(TaquitoPermissionDeniedError).toBe(PermissionDeniedError);
 });
 it('keeps a pending page on its captured provider when block resolution is delayed', async () => {
   const original = new Reader();

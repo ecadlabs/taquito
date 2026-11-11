@@ -77,6 +77,7 @@ export class BigMapAbstraction {
    * @param options optional offset (default 0), length (1 to 1000, default 100) and block (default to the block of this abstraction, then head)
    * @returns The decoded values, in unspecified order, and the block hash
    * @throws {@link @taquito/core!UnsupportedActionError | UnsupportedActionError} if the storage provider cannot read big-map values
+   * @throws {@link @taquito/taquito!BigMapValuesAccessDeniedError | BigMapValuesAccessDeniedError} if the RPC node refuses the big-map values endpoint (HTTP 401 or 403)
    * @throws {@link @taquito/core!InvalidBigMapParameterError | InvalidBigMapParameterError} if the page options are invalid
    * @throws {@link @taquito/core!RpcError | RpcError} if the read provider returns an invalid response
    *
@@ -100,6 +101,7 @@ export class BigMapAbstraction {
    * @param options optional offset (default 0), length (1 to 1000, default 100) and block (default to the block of this abstraction, then head)
    * @returns The decoded values, in unspecified order
    * @throws {@link @taquito/core!UnsupportedActionError | UnsupportedActionError} if the storage provider cannot read big-map values
+   * @throws {@link @taquito/taquito!BigMapValuesAccessDeniedError | BigMapValuesAccessDeniedError} if the RPC node refuses the big-map values endpoint (HTTP 401 or 403)
    * @throws {@link @taquito/core!InvalidBigMapParameterError | InvalidBigMapParameterError} if the page options are invalid
    * @throws {@link @taquito/core!RpcError | RpcError} if the read provider returns an invalid response
    *
@@ -122,6 +124,7 @@ export class BigMapAbstraction {
    *
    * @param block optional block level to check (default to the block of this abstraction, then head)
    * @throws {@link @taquito/core!UnsupportedActionError | UnsupportedActionError} if the storage provider cannot read big-map values
+   * @throws {@link @taquito/taquito!BigMapValuesAccessDeniedError | BigMapValuesAccessDeniedError} if the RPC node refuses the big-map values endpoint (HTTP 401 or 403)
    * @throws {@link @taquito/core!RpcError | RpcError} if the read provider returns an invalid response
    *
    */

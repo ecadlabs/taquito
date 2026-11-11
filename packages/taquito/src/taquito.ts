@@ -47,7 +47,12 @@ export { CompositeForger } from './forger/composite-forger';
 export { RpcForger } from './forger/rpc-forger';
 export * from './operations';
 export { OperationBatch } from './batch/rpc-batch-provider';
-export { InvalidBigMapParameterError, Signer, UnsupportedActionError } from '@taquito/core';
+export {
+  InvalidBigMapParameterError,
+  PermissionDeniedError,
+  Signer,
+  UnsupportedActionError,
+} from '@taquito/core';
 export * from './subscribe/interface';
 export { SubscribeProvider } from './subscribe/interface';
 export { PollingSubscribeProvider } from './subscribe/polling-subcribe-provider';
