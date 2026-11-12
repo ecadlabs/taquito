@@ -1,7 +1,7 @@
 import { shuffleOutputs } from './shuffle-outputs';
 import { InvalidSaplingOutputOrderError } from '../errors';
 import { Buffer } from 'buffer';
-import blake from 'blakejs';
+import { blake2b } from 'blakejs';
 import { secretBox } from '@stablelib/nacl';
 import { DEFAULT_MEMO, KDF_KEY, OCK_KEY } from '../constants';
 import { SaplingForger } from '../sapling-forger/sapling-forger';
@@ -13,7 +13,7 @@ import {
   SaplingTransactionOutput,
   SaplingTransactionInput,
   ParametersBindingSig,
-  ChosenSpendableInputs,
+  SaplingTransactionInputSelection,
   ParametersOutputDescription,
   ParametersCiphertext,
   Ciphertext,
@@ -73,12 +73,12 @@ export class SaplingTransactionBuilder {
 
   async createShieldedTx(
     saplingTransactionParams: SaplingTransactionParams[],
-    txTotalAmount: BigNumber,
+    txTotalAmount: BigNumberJs.Value,
     boundData: Buffer
   ): Promise<Pick<SaplingTransaction, 'inputs' | 'outputs' | 'signature' | 'balance'>> {
     const rcm = await this.#saplingWrapper.randR();
 
-    const balance = this.calculateTransactionBalance('0', txTotalAmount.toString());
+    const balance = this.calculateTransactionBalance('0', new BigNumber(txTotalAmount).toString());
 
     const { signature, inputs, outputs } = await this.#saplingWrapper.withProvingContext(
       async (saplingContext: number) => {
@@ -125,10 +125,11 @@ export class SaplingTransactionBuilder {
 
   async createSaplingTx(
     saplingTransactionParams: SaplingTransactionParams[],
-    txTotalAmount: BigNumber,
+    txTotalAmount: BigNumberJs.Value,
     boundData: Buffer,
-    chosenInputs: ChosenSpendableInputs
+    chosenInputs: SaplingTransactionInputSelection
   ) {
+    const sumSelectedInputs = new BigNumber(chosenInputs.sumSelectedInputs);
     const randomCommitmentTrapdoor = await this.#saplingWrapper.randR();
     const saplingViewer = await this.#inMemorySpendingKey.getSaplingViewingKeyProvider();
     const outgoingViewingKey = await saplingViewer.getOutgoingViewingKey();
@@ -161,19 +162,19 @@ export class SaplingTransactionBuilder {
           );
         }
 
-        if (chosenInputs.sumSelectedInputs.isGreaterThan(sumAmountOutput)) {
+        if (sumSelectedInputs.isGreaterThan(sumAmountOutput)) {
           const payBackAddress = (await saplingViewer.getAddress()).address;
           const [address] = b58DecodeAndCheckPrefix(payBackAddress, [PrefixV2.SaplingAddress]);
           const { payBackOutput, payBackAmount } = await this.createPaybackOutput(
             {
               saplingContext,
               address,
-              amount: txTotalAmount.toString(),
+              amount: new BigNumber(txTotalAmount).toString(),
               memo: DEFAULT_MEMO,
               randomCommitmentTrapdoor: randomCommitmentTrapdoor,
               outgoingViewingKey: outgoingViewingKey,
             },
-            chosenInputs.sumSelectedInputs
+            sumSelectedInputs
           );
 
           sumAmountOutput = sumAmountOutput.plus(new BigNumber(payBackAmount));
@@ -181,7 +182,7 @@ export class SaplingTransactionBuilder {
         }
 
         const balance = this.calculateTransactionBalance(
-          chosenInputs.sumSelectedInputs.toString(),
+          sumSelectedInputs.toString(),
           sumAmountOutput.toString()
         );
 
@@ -235,7 +236,7 @@ export class SaplingTransactionBuilder {
       ephemeralPrivateKey
     );
     const outgoingCipherKey = parametersOutputDescription.outgoingViewingKey
-      ? blake.blake2b(
+      ? blake2b(
           Buffer.concat([
             commitmentValue,
             commitment,
@@ -310,7 +311,7 @@ export class SaplingTransactionBuilder {
 
       const unsignedSpendDescriptionBytes =
         this.#saplingForger.forgeUnsignedTxInput(unsignedSpendDescription);
-      const hash = blake.blake2b(unsignedSpendDescriptionBytes, await this.getAntiReplay(), 32);
+      const hash = blake2b(unsignedSpendDescriptionBytes, await this.getAntiReplay(), 32);
       const spendDescription = await this.#inMemorySpendingKey.signSpendDescription({
         publicKeyReRandomization,
         unsignedSpendDescription,
@@ -335,7 +336,7 @@ export class SaplingTransactionBuilder {
       recipientDiversifiedTransmissionKey,
       parametersCiphertext.ephemeralPrivateKey
     );
-    const keyAgreementHash = blake.blake2b(keyAgreement, Buffer.from(KDF_KEY), 32);
+    const keyAgreementHash = blake2b(keyAgreement, Buffer.from(KDF_KEY), 32);
     const nonceEnc = Buffer.from(this.#saplingWrapper.getRandomBytes(24));
 
     const transactionPlaintext = this.#saplingForger.forgeTransactionPlaintext({
@@ -379,7 +380,7 @@ export class SaplingTransactionBuilder {
   async createBindingSignature(parametersBindingSig: ParametersBindingSig) {
     const outputs = this.#saplingForger.forgeOutputDescriptions(parametersBindingSig.outputs);
     const inputs = this.#saplingForger.forgeSpendDescriptions(parametersBindingSig.inputs);
-    const transactionSigHash = blake.blake2b(
+    const transactionSigHash = blake2b(
       Buffer.concat([inputs, outputs, parametersBindingSig.boundData]),
       await this.getAntiReplay(),
       32

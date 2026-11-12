@@ -5,7 +5,7 @@ type BigNumber = InstanceType<typeof BigNumberJs>;
 const BigNumber = BigNumberJs;
 import { hex2buf, mergebuf } from '@taquito/utils';
 import { CommitmentsAndCiphertexts, SaplingDiffResponse } from '@taquito/rpc';
-import blake from 'blakejs';
+import { blake2b } from 'blakejs';
 import { openSecretBox } from '@stablelib/nacl';
 import { InMemoryViewingKey } from '../sapling-keys/in-memory-viewing-key';
 import { bufToUint8Array, convertValueToBigNumber, readableFormat } from './helpers';
@@ -146,7 +146,7 @@ export class SaplingTransactionViewer {
 
     const incomingViewingKey = await this.#viewingKeyProvider.getIncomingViewingKey();
     const keyAgreement = await sapling.keyAgreement(epk, incomingViewingKey);
-    const keyAgreementHash = blake.blake2b(keyAgreement, Buffer.from(KDF_KEY), 32);
+    const keyAgreementHash = blake2b(keyAgreement, Buffer.from(KDF_KEY), 32);
 
     const decrypted = await this.decryptCiphertext(
       keyAgreementHash,
@@ -192,7 +192,7 @@ export class SaplingTransactionViewer {
 
     const outgoingViewingKey = await this.#viewingKeyProvider.getOutgoingViewingKey();
     const concat = cv.concat(commitment, epk, outgoingViewingKey.toString('hex'));
-    const outgoingCipherKey = blake.blake2b(Buffer.from(concat, 'hex'), Buffer.from(OCK_KEY), 32);
+    const outgoingCipherKey = blake2b(Buffer.from(concat, 'hex'), Buffer.from(OCK_KEY), 32);
 
     const decryptedOut = await this.decryptCiphertext(
       outgoingCipherKey,
@@ -204,7 +204,7 @@ export class SaplingTransactionViewer {
       const { recipientDiversifiedTransmissionKey: pkd, ephemeralPrivateKey: esk } =
         this.extractPkdAndEsk(decryptedOut);
       const keyAgreement = await sapling.keyAgreement(pkd, esk);
-      const keyAgreementHash = blake.blake2b(keyAgreement, Buffer.from(KDF_KEY), 32);
+      const keyAgreementHash = blake2b(keyAgreement, Buffer.from(KDF_KEY), 32);
 
       const decryptedEnc = await this.decryptCiphertext(
         keyAgreementHash,
