@@ -94,8 +94,13 @@ function toBinaryMicheline(
  *
  * @example
  * ```
- * const call = buildEvmToMichelsonCall({ kind: 'transfer', destination: 'tz1…', amount: 1000n });
- * await walletClient.sendTransaction({ to: call.to, data: call.data, value: call.value, gas: call.gasLimit });
+ * const call = buildEvmToMichelsonCall({
+ *   kind: 'transfer',
+ *   destination: 'tz1RvhdZ5pcjD19vCCK9PgZpnmErTba3dsBs',
+ *   amount: 1000n,
+ * });
+ * // Before signing, estimate gas for the actual sender on the target network.
+ * // The returned gasLimit is an initial estimate, not an execution guarantee.
  * ```
  */
 export function buildEvmToMichelsonCall(intent: EvmToMichelsonIntent): PrecompileCall {

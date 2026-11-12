@@ -31,8 +31,12 @@ import type {
  *
  * @example
  * ```
- * const call = buildMichelsonToEvmCall({ to: '0x…', value: 10n ** 15n });
- * await Tezos.contract.transfer(toTransferParams(call));
+ * const call = buildMichelsonToEvmCall({
+ *   to: '0x1111111111111111111111111111111111111111',
+ *   value: 10n ** 15n,
+ * });
+ * const transfer = toTransferParams(call);
+ * // Check the gateway on the target network and simulate before signing.
  * ```
  */
 export function buildMichelsonToEvmCall(
