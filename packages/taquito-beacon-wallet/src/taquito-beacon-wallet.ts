@@ -132,6 +132,19 @@ export class BeaconWallet implements WalletProvider {
    */
   public client: DAppClient;
 
+  /**
+   * Creates a `BeaconWallet` wrapping the singleton Beacon `DAppClient`.
+   *
+   * For WalletConnect support, register your own `projectId` at
+   * https://dashboard.reown.com/ (with your dApp's allowed origins configured)
+   * and pass it via `options.walletConnectOptions.projectId` (typically
+   * injected from a frontend build-time environment variable).
+   *
+   * Relying on Beacon's built-in default `projectId` in production may put
+   * your project in breach of the WalletConnect/Reown Terms of Service; that
+   * demo-only fallback is deprecated and will be removed in the next minor
+   * release of `@ecadlabs/beacon-dapp`.
+   */
   constructor(options: DAppClientOptions) {
     const matrixNodes: NodeDistributions = {
       ...TAQUITO_CURATED_MATRIX_NODES,

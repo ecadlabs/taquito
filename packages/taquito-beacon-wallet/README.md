@@ -51,3 +51,33 @@ See the top-level [https://github.com/ecadlabs/taquito](https://github.com/ecadl
 ## Disclaimer
 
 THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+## Active wallet metadata
+
+```ts
+import type { WalletInfo } from '@taquito/beacon-wallet';
+
+const info: WalletInfo | undefined = await wallet.getWalletInfo();
+```
+
+`getWalletInfo()` delegates to Beacon's `getActiveWalletInfo()`. It returns the
+active wallet's resolved name, optional icon, deep link and type, or `undefined`
+when disconnected or no wallet name is available. It does not request permissions.
+
+This API requires a Beacon release containing `DAppClient.getActiveWalletInfo()`;
+the pinned Beacon dependency must be updated to that release before shipping.
+
+## WalletConnect Project ID
+
+If your dApp supports WalletConnect connections, register your own `projectId` at [Reown Cloud](https://dashboard.reown.com/), configure your allowed origins list, and pass it in `BeaconWallet` options (in web dApps, typically via a build-time environment variable such as `VITE_*` or `NEXT_PUBLIC_*`):
+
+```ts
+const wallet = new BeaconWallet({
+  name: 'MyAwesomeDapp',
+  walletConnectOptions: {
+    projectId: import.meta.env.VITE_REOWN_PROJECT_ID,
+  },
+});
+```
+
+A `projectId` is a public client identifier (not a secret), with access control enforced through your Reown Cloud domain allowlist. Any built-in fallback `projectId` in the underlying Beacon SDK is for demo/testing purposes only; using it in production may put your project in breach of the WalletConnect/Reown Terms of Service, and it will be removed in the next minor release.
