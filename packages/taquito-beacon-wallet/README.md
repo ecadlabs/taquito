@@ -69,6 +69,8 @@ the pinned Beacon dependency must be updated to that release before shipping.
 
 ## WalletConnect Project ID
 
+Under the covers, Beacon selects a transport per wallet: browser extensions (such as Temple) communicate locally via `postMessage`, TZIP-10 P2P wallets (such as Kukai web) use Matrix relay nodes (curated by Taquito by default), and WalletConnect-enabled wallets (such as Kukai iOS) use WalletConnect v2. `walletConnectOptions` does not replace Matrix or extension transports.
+
 If your dApp supports WalletConnect connections, register your own `projectId` at [Reown Cloud](https://dashboard.reown.com/), configure your allowed origins list, and pass it in `BeaconWallet` options (in web dApps, typically via a build-time environment variable such as `VITE_*` or `NEXT_PUBLIC_*`):
 
 ```ts
@@ -80,4 +82,4 @@ const wallet = new BeaconWallet({
 });
 ```
 
-A `projectId` is a public client identifier (not a secret), with access control enforced through your Reown Cloud domain allowlist. Any built-in fallback `projectId` in the underlying Beacon SDK is for demo/testing purposes only; using it in production may put your project in breach of the WalletConnect/Reown Terms of Service, and it will be removed in the next minor release.
+A `projectId` is a public client identifier (not a secret), with access control enforced through your Reown Cloud domain allowlist. Any built-in fallback `projectId` in the underlying Beacon SDK is for demo/testing purposes only; using it in production may put your project in breach of the WalletConnect/Reown Terms of Service, and it will be removed in the next minor release (after which omitting `projectId` will only disable WalletConnect pairings, while extension and Matrix wallets continue to work).

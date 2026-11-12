@@ -135,6 +135,11 @@ export class BeaconWallet implements WalletProvider {
   /**
    * Creates a `BeaconWallet` wrapping the singleton Beacon `DAppClient`.
    *
+   * Under the covers, Beacon chooses a transport per wallet: browser extensions
+   * (such as Temple) use local `postMessage`, TZIP-10 P2P wallets (such as Kukai
+   * web) use Matrix relay nodes (curated by Taquito via `matrixNodes`), and
+   * WalletConnect-enabled wallets (such as Kukai iOS) use WalletConnect v2.
+   *
    * For WalletConnect support, register your own `projectId` at
    * https://dashboard.reown.com/ (with your dApp's allowed origins configured)
    * and pass it via `options.walletConnectOptions.projectId` (typically
@@ -143,7 +148,9 @@ export class BeaconWallet implements WalletProvider {
    * Relying on Beacon's built-in default `projectId` in production may put
    * your project in breach of the WalletConnect/Reown Terms of Service; that
    * demo-only fallback is deprecated and will be removed in the next minor
-   * release of `@ecadlabs/beacon-dapp`.
+   * release of `@ecadlabs/beacon-dapp` (after which omitting `projectId` will
+   * only disable WalletConnect pairings; extension and Matrix wallets will
+   * continue to work).
    */
   constructor(options: DAppClientOptions) {
     const matrixNodes: NodeDistributions = {
