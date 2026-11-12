@@ -3,12 +3,12 @@ import { execFileSync } from 'node:child_process';
 import { mkdtempSync, mkdirSync, readFileSync, writeFileSync, rmSync, realpathSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
-import { join, dirname } from 'node:path';
+import { join, dirname, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { build, preview } from 'vite';
 import { chromium } from 'playwright';
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
-const temp = mkdtempSync(join(tmpdir(), 'taquito-tezosx-consumer-'));
+const temp = realpathSync(mkdtempSync(join(tmpdir(), 'taquito-tezosx-consumer-')));
 const consumer = join(temp, 'consumer');
 const run = (cmd, args, cwd = consumer) =>
   execFileSync(cmd, args, {
@@ -54,7 +54,7 @@ try {
   const require = createRequire(join(consumer, 'package.json'));
   for (const name of ['tezosx', 'utils', 'taquito'])
     assert.ok(
-      realpathSync(require.resolve('@taquito/' + name)).startsWith(join(consumer, 'node_modules'))
+      realpathSync(require.resolve('@taquito/' + name)).startsWith(join(consumer, 'node_modules', '@taquito', name) + sep)
     );
   writeFileSync(join(consumer, 'vectors.json'), JSON.stringify(vectors));
   writeFileSync(
