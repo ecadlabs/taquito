@@ -1,6 +1,8 @@
 import { InvalidBigMapParameterError, UnsupportedActionError } from '@taquito/core';
+import { HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
 import type { BigMapPagination, MichelsonV1Expression } from '@taquito/rpc';
 import { RPCResponseError } from '../errors';
+import { BigMapValuesAccessDeniedError } from './errors';
 import type { BlockIdentifier, TzReadProvider } from '../read-provider/interface';
 import type { BigMapValuesOptions } from './interface';
 
@@ -36,14 +38,33 @@ export function assertBigMapValuesReader(
   }
 }
 
-/** Reads one page and rejects a response that is not an array or is longer than the page. */
+function isAccessDenied(error: unknown): error is HttpResponseError {
+  return (
+    error instanceof HttpResponseError &&
+    (error.status === STATUS_CODE.UNAUTHORIZED || error.status === STATUS_CODE.FORBIDDEN)
+  );
+}
+
+/**
+ * Reads one page and rejects a response that is not an array or is longer than the page.
+ * An HTTP 401 or 403 becomes BigMapValuesAccessDeniedError, because the default Octez RPC ACL
+ * denies this endpoint and a bare 401 reads like a credentials problem.
+ */
 export async function readBigMapValues(
   reader: BigMapValuesReader,
   id: string,
   page: Required<BigMapPagination>,
   block: BlockIdentifier
 ): Promise<MichelsonV1Expression[]> {
-  const values = await reader.getBigMapValuesPage(id, page, block);
+  let values: MichelsonV1Expression[];
+  try {
+    values = await reader.getBigMapValuesPage(id, page, block);
+  } catch (error) {
+    if (isAccessDenied(error)) {
+      throw new BigMapValuesAccessDeniedError(id, error.status, error.url, error);
+    }
+    throw error;
+  }
   if (!Array.isArray(values) || values.length > page.length) {
     throw new RPCResponseError('Invalid or overlength big-map values response');
   }

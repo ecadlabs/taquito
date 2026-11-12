@@ -1,5 +1,5 @@
-import { ParameterValidationError, RpcError } from '@taquito/core';
-import { HttpResponseError } from '@taquito/http-utils';
+import { ParameterValidationError, PermissionDeniedError, RpcError } from '@taquito/core';
+import { HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
 import { MichelsonV1Expression } from '@taquito/rpc';
 
 /**
@@ -138,5 +138,26 @@ export class InvalidBalanceError extends ParameterValidationError {
   constructor(public readonly message: string) {
     super();
     this.name = 'InvalidBalanceError';
+  }
+}
+
+/**
+ *  @category Error
+ *  Error that indicates the RPC node refused to list big-map values (HTTP 401 or 403).
+ *  Nodes using the default Octez RPC ACL allow big-map reads by key but deny value listing.
+ */
+export class BigMapValuesAccessDeniedError extends PermissionDeniedError {
+  constructor(
+    public readonly bigMapId: string,
+    public readonly status: STATUS_CODE,
+    public readonly url: string,
+    public readonly cause: HttpResponseError
+  ) {
+    super();
+    this.name = 'BigMapValuesAccessDeniedError';
+    this.message =
+      `The RPC node refused to list the values of big map ${bigMapId} (HTTP ${status} from ${url}). ` +
+      `Nodes using the default Octez RPC ACL deny GET /chains/*/blocks/*/context/big_maps/* and only allow reads by key. ` +
+      `Use an RPC node whose ACL allows that endpoint, read known keys with BigMapAbstraction.get() or getMultipleValues(), or use an indexer.`;
   }
 }
