@@ -3,13 +3,13 @@ import { execFileSync } from 'node:child_process';
 import { mkdtempSync, mkdirSync, readFileSync, writeFileSync, rmSync, realpathSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
-import { join, dirname } from 'node:path';
+import { join, dirname, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { build, preview } from 'vite';
 import { chromium } from 'playwright';
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
-const temporary = mkdtempSync(join(tmpdir(), 'taquito-hash-consumer-'));
+const temporary = realpathSync(mkdtempSync(join(tmpdir(), 'taquito-hash-consumer-')));
 const consumer = join(temporary, 'consumer');
 const vector = JSON.parse(
   readFileSync(join(root, 'packages/taquito-utils/test/data/synthetic-hashes.json'))
@@ -43,7 +43,7 @@ try {
   run('npm', ['install', '--ignore-scripts', '--no-audit', '--no-fund', ...tarballs]);
   const require = createRequire(join(consumer, 'package.json'));
   assert.ok(
-    realpathSync(require.resolve('@taquito/utils')).startsWith(join(consumer, 'node_modules'))
+    realpathSync(require.resolve('@taquito/utils')).startsWith(join(consumer, 'node_modules', '@taquito', 'utils') + sep)
   );
   writeFileSync(
     join(consumer, 'check.cjs'),
