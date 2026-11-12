@@ -269,10 +269,15 @@ On a compatible Tezos X kernel, an operation that crosses runtimes has a synthet
 ```typescript
 import { getEthereumTransactionHash, getTezosOperationHash } from '@taquito/utils';
 
-const evmHash = getEthereumTransactionHash(parentMichelsonOperationHash);
-const michelsonHash = getTezosOperationHash(parentEvmTransactionHash);
+const michelsonHash = getTezosOperationHash('0x' + '00'.repeat(32));
+// ooWoRGWknazPmA95zezMQYYEop6JaquJfLUPjcDByK3F6qhm3Ya
+
+const evmHash = getEthereumTransactionHash(
+  'oneDGhZacw99EEFaYDTtWfz5QEhUW3PPVFsHa7GShnLPuDn7gSd'
+);
+// 0x9e3d2459fac9713cf0ad82b503e7d050167c942ee8ff4bf689a8986216066a50
 ```
 
-The EVM input is a 32-byte hex string with an optional `0x` prefix. The Michelson input must be a valid Base58Check operation hash. These helpers implement the formulas in [kernel revision e494418e](https://gitlab.com/tezos/tezos/-/merge_requests/22718). They use raw parent bytes with the destination tag `evm` or `michelson`.
+The EVM input is a 32-byte hex string with an optional `0x` prefix. The Michelson input must be a valid Base58Check operation hash. These helpers implement the formulas in [kernel revision e494418e](https://gitlab.com/tezos/tezos/-/blob/e494418ef861bc8517f937459270f97470fd3faa/etherlink/kernel_latest/tezosx-journal/src/tezosx_journal.rs). They use raw parent bytes with the destination tag `evm` or `michelson`.
 
-These are directional derivations, not inverse conversions. Computing a hash does not establish that its parent exists, crossed runtimes or belongs to a network with this kernel. Check the selected network and query its RPC separately. These formulas do not apply to ordinary Tezos L1 operations.
+The example inputs are fixed test values. They do not identify verified on-chain operations. These are directional derivations, not inverse conversions. Computing a hash does not establish that its parent exists, crossed runtimes or belongs to a network with this kernel. Check the selected network and query its RPC separately. These formulas do not apply to ordinary Tezos L1 operations.
