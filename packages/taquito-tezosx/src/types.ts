@@ -56,6 +56,7 @@ export interface EvmTransactionRequest {
   methodSignature?: string;
 }
 
+/** Gateway address, callback and selector lookup options for a Michelson-to-EVM call. */
 export interface BuildMichelsonToEvmCallOptions {
   /** Address of the NAC gateway contract. Defaults to {@link NAC_GATEWAY} */
   gatewayAddress?: string;
@@ -99,8 +100,10 @@ export interface PrecompileCall {
   gasLimit: bigint;
 }
 
+/** An unsigned call prepared for either cross-runtime direction. */
 export type CrossRuntimeCall = GatewayCall | PrecompileCall;
 
+/** Direction of an unsigned cross-runtime call. */
 export type CrossRuntimeDirection = CrossRuntimeCall['direction'];
 
 /**

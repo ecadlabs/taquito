@@ -2,6 +2,10 @@
 
 `@taquito/tezosx` prepares unsigned NAC calls for compatible Tezos X kernels. It is optional and is not imported by `@taquito/utils` or the toolkit. The builders follow kernel revision `fb064e9f6a13c0ebd7bb1b7ec6727274e2dc23af`.
 
+## Try the unreleased package
+
+This package is not yet part of a published Taquito release. Check out this PR branch, then run `npm ci` and `npm run build` at the repository root. The examples use the built workspace package. Check that the target network runs a compatible kernel before using the builders.
+
 ## Michelson to EVM
 
 ```typescript
@@ -32,6 +36,20 @@ const request = buildEvmToMichelsonCall({
 ```
 
 The result has `to`, `data`, `value` in wei and `gasLimit`. It does not select an account, nonce, chain ID or fees, and does not sign or submit anything. `kind: 'transfer'` takes an `amount` in mutez. The builders expose POST calls only. Generic kernel GET support is outside this API.
+
+For a viem client, the transaction field is `gas`. The builder returns an initial `gasLimit` estimate. Use a public client and the actual sender on the selected network to estimate gas before signing:
+
+```typescript
+const transaction = {
+  to: request.to,
+  data: request.data,
+  value: request.value,
+};
+const gas = await publicClient.estimateGas({ account: sender, ...transaction });
+const unsignedTransaction = { ...transaction, gas };
+```
+
+`publicClient`, `sender` and `targetContract` come from your application. This example prepares an unsigned transaction and does not send it. A successful gas estimate does not verify other contracts, callbacks or networks.
 
 Parameters can be expressions or canonical binary Micheline. Raw input must contain exactly one expression without an outer PACK marker. A raw expression can itself begin with `05`, as `Some` does; do not remove that byte. The optional type hint validates and controls codec encoding. Contract types are checked as address representations offline while the original hint is retained for encoding. That check cannot prove a deployed contract's parameter type. Non-packable type hints are rejected. Without a hint, the builder validates data structure but cannot check the target schema.
 
