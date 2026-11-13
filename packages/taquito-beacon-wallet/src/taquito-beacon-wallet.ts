@@ -69,19 +69,26 @@ export {
   BeaconEvent,
   BroadcastBeaconError,
   defaultEventCallbacks,
+  getDebugEnabled,
   getError,
+  getLogger,
+  InternalLogger,
   isBeaconError,
   isErrorOrigin,
   isErrorResponse,
   isRequestErrorResponse,
   isTezosRpcError,
   LocalStorage,
+  Logger,
   NetworkNotSupportedBeaconError,
   NoAddressBeaconError,
   NoPrivateKeyBeaconError,
   NotGrantedBeaconError,
   ParametersInvalidBeaconError,
   PeerUnreachableBeaconError,
+  reportDiagnostic,
+  setDebugEnabled,
+  setLogger,
   SignatureTypeNotSupportedBeaconError,
   toBeaconError,
   TooManyOperationsBeaconError,
@@ -94,6 +101,7 @@ export type {
   BeaconErrorOptions,
   BeaconEventHandler,
   BeaconEventType,
+  BeaconMessageDisposition,
   BeaconMessageRecord,
   ConnectionInfo,
   DAppClient,
@@ -106,6 +114,8 @@ export type {
   LateErrorResponseInfo,
   LateResponseInfo,
   LateSuccessResponseInfo,
+  LoggerDiagnostic,
+  LoggerInterface,
   PendingRequestInfo,
   RequestErrorResponse,
   RequestResponseInfo,
@@ -228,6 +238,11 @@ export class BeaconWallet implements WalletProvider {
    * release of `@ecadlabs/beacon-dapp` (after which omitting `projectId` will
    * only disable WalletConnect pairings; extension and Matrix wallets will
    * continue to work).
+   *
+   * Note: `BeaconWallet` uses `getDAppClientInstance(options)` under the hood,
+   * so all `BeaconWallet` instances in a page share a single `DAppClient`
+   * singleton (Beacon logs a diagnostic warning if a second instance is
+   * constructed with a different `name` or `network`).
    */
   constructor(options: DAppClientOptions) {
     const matrixNodes: NodeDistributions = {
@@ -518,8 +533,9 @@ export class BeaconWallet implements WalletProvider {
 
   /**
    * Subscribes to immutable plaintext Beacon protocol message snapshots
-   * (`direction: 'in' | 'out'`, `transport`, `senderId`, `ts`, `message`) and
-   * returns an idempotent unsubscribe function.
+   * (`direction: 'incoming' | 'outgoing'`, `transport`, `senderId`, `ts`,
+   * `message`, and optional incoming routing `disposition`) and returns an
+   * idempotent unsubscribe function.
    */
   subscribeToMessages(listener: (record: BeaconMessageRecord) => void): () => void {
     return this.client.subscribeToMessages(listener);

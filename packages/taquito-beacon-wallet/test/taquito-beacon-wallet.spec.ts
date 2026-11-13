@@ -12,9 +12,19 @@ import {
   BeaconEvent,
   BeaconWallet,
   BeaconWalletNotInitialized,
+  getDebugEnabled,
+  getLogger,
+  InternalLogger,
+  Logger,
   MissingRequiredScopes,
+  reportDiagnostic,
+  setDebugEnabled,
+  setLogger,
+  type BeaconMessageDisposition,
   type BeaconMessageRecord,
   type ConnectionInfo,
+  type LoggerDiagnostic,
+  type LoggerInterface,
   type PendingRequestInfo,
   type WalletInfo,
 } from '../src/taquito-beacon-wallet';
@@ -909,6 +919,29 @@ describe('Beacon Wallet tests', () => {
       expect(returnedUnsubscribe).toBe(unsubscribe);
       returnedUnsubscribe();
       expect(unsubscribe).toHaveBeenCalledOnce();
+    });
+
+    it('re-exports Logger, InternalLogger, setLogger, getLogger, reportDiagnostic, setDebugEnabled, getDebugEnabled, and observability types', () => {
+      expect(typeof Logger).toBe('function');
+      expect(typeof InternalLogger).toBe('function');
+      expect(typeof setLogger).toBe('function');
+      expect(typeof getLogger).toBe('function');
+      expect(typeof reportDiagnostic).toBe('function');
+      expect(typeof setDebugEnabled).toBe('function');
+      expect(typeof getDebugEnabled).toBe('function');
+
+      const dispositions: BeaconMessageDisposition[] = [
+        'handled',
+        'stale',
+        'unknown-request',
+        'invalid',
+      ];
+      expect(dispositions).toHaveLength(4);
+      expectTypeOf<BeaconMessageRecord['disposition']>().toEqualTypeOf<
+        BeaconMessageDisposition | undefined
+      >();
+      expectTypeOf(setLogger).parameter(0).toEqualTypeOf<LoggerInterface>();
+      expectTypeOf(reportDiagnostic).parameter(0).toEqualTypeOf<LoggerDiagnostic>();
     });
   });
 });

@@ -232,9 +232,10 @@ try {
   }
 }
 
-// Observe plaintext protocol messages across transports for debugging:
+// Observe plaintext protocol messages across transports (with incoming routing disposition)
+// or configure Beacon debug logging via setDebugEnabled / setLogger:
 const stopMessages = wallet.subscribeToMessages((record) => {
-  console.debug(record.direction, record.transport, record.message.type);
+  console.debug(record.direction, record.transport, record.disposition, record.message);
 });
 ```
 
