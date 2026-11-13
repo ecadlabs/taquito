@@ -260,6 +260,70 @@ not hide output counts, public deposits and withdrawals, or timing. Other
 application behavior can still identify outputs. This option does not provide
 a proof of anonymity.
 
+## Custom bound data
+
+`SaplingToolkit.prepareUnshieldedTransaction` builds bound data from the recipient's
+implicit-account key hash. A contract that expects another encoding, such as a
+packed Michelson `address` for a token or ticket withdrawal, needs different bytes.
+Use `SaplingTransactionBuilder` and `SaplingForger` from `@taquito/sapling` to supply
+those bytes directly.
+
+Configure the proving parameters as described in [Runtime setup](#runtime-setup).
+The following helper uses the signer, contract and read provider from the earlier
+setup. It takes the recipient, withdrawal amount in base units, selected unspent
+inputs and Sapling root from the application:
+
+```ts
+import { Buffer } from 'buffer';
+import {
+    SaplingTransactionBuilder,
+    SaplingForger,
+    type SaplingTransactionInputSelection,
+} from '@taquito/sapling';
+import { packDataBytes } from '@taquito/michel-codec';
+
+const forger = new SaplingForger();
+const builder = new SaplingTransactionBuilder(
+    { saplingSigner: inMemorySpendingKey },
+    forger,
+    { contractAddress: saplingContract.address, memoSize: 8 },
+    readProvider
+);
+
+async function buildWithdrawal(
+    recipient: string,
+    amount: string,
+    chosenInputs: SaplingTransactionInputSelection,
+    root: string
+) {
+    const boundData = Buffer.from(
+        packDataBytes({ string: recipient }, { prim: 'address' }).bytes,
+        'hex'
+    );
+    const description = await builder.createSaplingTx([], amount, boundData, chosenInputs);
+    return forger.forgeSaplingTransaction({ ...description, root, boundData }).toString('hex');
+}
+```
+
+This example applies to contracts that expect `PACK address`. Encode bound data
+according to the destination contract and pass the same bytes to the builder and
+forger. `packDataBytes` supports tz4 recipients and preserves complete entrypoint
+names such as `receive%part`; the contract must also accept the recipient and
+entrypoint.
+
+The application selects enough unspent inputs to cover the withdrawal and supplies
+their total as `chosenInputs.sumSelectedInputs`. Use inputs and a root consistent
+with the Sapling state used to build the transaction. Amounts and the selected-input
+total accept `BigNumber.Value`, including decimal strings and `BigNumber` instances.
+The builder uses base units directly; it does not convert tez to mutez.
+
+`createSaplingTx` prepares private transfers and withdrawals. For the withdrawal
+above, the empty output list requests no new recipient notes; the builder creates
+private change when needed. `createShieldedTx` also accepts custom bound data as
+its third argument. Validate recipient policy, amounts and memos in the application
+when using these low-level methods. Forging returns transaction bytes; submitting
+them to the contract is a separate step.
+
 ## How to retrieve my balance in the Sapling shielded set?
 
 When calling the `getSaplingTransactionViewer` method of the `SaplingToolkit` class, an instance of the `SaplingTransactionViewer` class is returned. The `SaplingTransactionViewer` class allows retrieving and decrypting Sapling transactions for the specified viewing key and calculating the unspent balance.

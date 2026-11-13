@@ -30,6 +30,13 @@ import { SaplingWrapper } from '../sapling-module-wrapper';
 import { InMemorySpendingKey } from '../sapling-keys/in-memory-spending-key';
 import { InMemoryProvingKey } from '../sapling-keys/in-memory-proving-key';
 
+/**
+ * Build Sapling transactions with application-defined bound data.
+ *
+ * The caller validates recipients, amounts and memos, selects spendable inputs,
+ * and passes the same bound data to this builder and `SaplingForger`.
+ * Configure proving parameters with `initSapling` before generating proofs.
+ */
 export class SaplingTransactionBuilder {
   #inMemorySpendingKey: InMemorySpendingKey;
   #inMemoryProvingKey: InMemoryProvingKey | undefined;
@@ -71,6 +78,14 @@ export class SaplingTransactionBuilder {
     this.#readProvider = readProvider;
   }
 
+  /**
+   * Create recipient notes for a shielded deposit.
+   * @param saplingTransactionParams Recipient payment addresses, base-unit amounts and memos.
+   * @param txTotalAmount Total deposit in base units, without tez-to-mutez conversion.
+   * @param boundData Contract-specific bytes included in the binding signature.
+   * Pass the same bytes to the forger when serializing the transaction.
+   * @returns Transaction descriptions, signature and balance for the forger.
+   */
   async createShieldedTx(
     saplingTransactionParams: SaplingTransactionParams[],
     txTotalAmount: BigNumberJs.Value,
@@ -123,6 +138,16 @@ export class SaplingTransactionBuilder {
     };
   }
 
+  /**
+   * Spend selected notes for a private transfer or withdrawal, creating change when needed.
+   * @param saplingTransactionParams Recipient notes. Use an empty list for a withdrawal.
+   * @param txTotalAmount Amount to transfer or withdraw in base units.
+   * @param boundData Contract-specific bytes included in the binding signature.
+   * Pass the same bytes to the forger when serializing the transaction.
+   * @param chosenInputs Unspent inputs and their total value, sufficient to cover the amount.
+   * @returns Transaction descriptions, signature and balance for the forger.
+   * The caller supplies a consistent Sapling root when forging the transaction.
+   */
   async createSaplingTx(
     saplingTransactionParams: SaplingTransactionParams[],
     txTotalAmount: BigNumberJs.Value,
