@@ -63,7 +63,9 @@
     "test:browser:packages:ci": "npm run test:browser:packages",
     "typecheck:tests": "tsc -p tsconfig.typecheck-tests.json",
     "test:consumers": "node scripts/test-installed-consumers.mjs",
-    "test:fa21:local": "vitest run --config integration-tests/fa21/vitest.config.ts"
+    "test:fa21:local": "vitest run --config integration-tests/fa21/vitest.config.ts",
+    "typecheck:tezosx": "tsc -p tsconfig.tezosx-tests.json",
+    "test:tezosx:packages": "npm run build && npm run typecheck:tezosx && node scripts/test-tezosx-consumers.mjs"
   },
   "devDependencies": {
     "@nx/vite": "22.7.12",

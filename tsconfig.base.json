@@ -67,6 +67,9 @@
       ],
       "@taquito/utils": [
         "./packages/taquito-utils/src/taquito-utils.ts"
+      ],
+      "@taquito/tezosx": [
+        "./packages/taquito-tezosx/src/taquito-tezosx.ts"
       ]
     }
   }
