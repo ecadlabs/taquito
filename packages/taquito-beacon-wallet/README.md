@@ -21,21 +21,20 @@ Create a wallet instance with defined option parameters and set the wallet provi
 
 ```ts
 import { TezosToolkit } from '@taquito/taquito';
-import { BeaconWallet } from '@taquito/beacon-wallet';
+import { BeaconEvent, BeaconWallet } from '@taquito/beacon-wallet';
+import { NetworkType } from '@taquito/beacon-wallet/types';
 
-const options = {
+const wallet = new BeaconWallet({
   name: 'MyAwesomeDapp',
   iconUrl: 'https://taquito.io/img/favicon.svg',
-  network: { type: 'shadownet' },
-  enableMetrics: true,
-};
-const wallet = new BeaconWallet(options);
+  network: { type: NetworkType.SHADOWNET },
+});
 
-await wallet.client.subscribeToEvent(
+const unsubscribeAccount = await wallet.subscribeToEvent(
   BeaconEvent.ACTIVE_ACCOUNT_SET,
   async (account) => {
-    // An active account has been set, update the dApp UI
-    console.log(`${BeaconEvent.ACTIVE_ACCOUNT_SET} triggered: `, account);
+    // An active account has been set or cleared; update the dApp UI
+    console.log(`${BeaconEvent.ACTIVE_ACCOUNT_SET} triggered:`, account);
   },
 );
 await wallet.requestPermissions();
@@ -44,28 +43,134 @@ const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
 Tezos.setWalletProvider(wallet);
 ```
 
-## Additional Info
-
-See the top-level [https://github.com/ecadlabs/taquito](https://github.com/ecadlabs/taquito) file for details on reporting issues, contributing and versioning.
-
-## Disclaimer
-
-THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-## Active wallet metadata
+## Active Wallet Metadata (`getWalletInfo()`)
 
 ```ts
 import type { WalletInfo } from '@taquito/beacon-wallet';
 
 const info: WalletInfo | undefined = await wallet.getWalletInfo();
+if (info) {
+  console.log(info.name, info.type, info.icon, info.deeplink);
+}
 ```
 
-`getWalletInfo()` delegates to Beacon's `getActiveWalletInfo()`. It returns the
-active wallet's resolved name, optional icon, deep link and type, or `undefined`
-when disconnected or no wallet name is available. It does not request permissions.
+`getWalletInfo()` delegates to Beacon's `DAppClient.getActiveWalletInfo()`. It returns the active wallet's resolved `name`, optional `icon` (data URI or extension URL), `deeplink`, and `type` (`'extension' | 'mobile' | 'web' | 'desktop'`), or `undefined` when disconnected. It does not initialize a transport or prompt for permissions.
 
-This API requires a Beacon release containing `DAppClient.getActiveWalletInfo()`;
-the pinned Beacon dependency must be updated to that release before shipping.
+## Transport & Connection Observability
+
+Query the current transport status and health without blocking on transport initialization, or subscribe to live transitions:
+
+```ts
+import {
+  BeaconEvent,
+  type ConnectionInfo,
+  type TransportStatusChangedInfo,
+} from '@taquito/beacon-wallet';
+
+const connection: ConnectionInfo = await wallet.getConnectionInfo();
+// { transport?: 'postmessage' | 'p2p' | 'walletconnect', status: TransportStatus, health: 'ok' | 'degraded', relayServer?, senderId? }
+
+const unsubscribeStatus = await wallet.subscribeToEvent(
+  BeaconEvent.TRANSPORT_STATUS_CHANGED,
+  (change: TransportStatusChangedInfo) => {
+    if (change.health === 'degraded') {
+      console.warn(`Relay degraded (${change.reason}):`, change.relayServer);
+    }
+  },
+);
+```
+
+## Request Lifecycle, Acknowledgements & Custom UI
+
+When building a custom request progress UI, you can suppress Beacon's built-in Shadow DOM progress toasts via `uiOptions: { enableToasts: false }` (while keeping the built-in pairing modal and error alerts), track in-flight requests with `wallet.getPendingRequests()`, and correlate lifecycle events by `requestId`:
+
+```ts
+import {
+  BeaconEvent,
+  BeaconWallet,
+  isBeaconError,
+  TransactionInvalidBeaconError,
+  toBeaconError,
+} from '@taquito/beacon-wallet';
+
+const wallet = new BeaconWallet({
+  name: 'MyAwesomeDapp',
+  ackTimeoutMs: 5_000,
+  uiOptions: { enableToasts: false },
+});
+
+await wallet.subscribeToEvent(BeaconEvent.OPERATION_REQUEST_SENT, (sent) => {
+  // sent.dispatchStage is 'transport' (with sent.sentAt) or 'forwarded' (with sent.forwardedAt)
+  console.log('Sent request', sent.requestId, 'to', sent.walletInfo.name);
+});
+
+await wallet.subscribeToEvent(BeaconEvent.ACKNOWLEDGE_RECEIVED, (ack) => {
+  if (ack.correlated) {
+    console.log('Wallet acknowledged request', ack.requestId);
+  }
+});
+
+await wallet.subscribeToEvent(BeaconEvent.WAITING_FOR_WALLET_ACK, (waiting) => {
+  console.warn(`Still waiting for wallet ACK (${waiting.elapsedMs}ms) on ${waiting.requestId}`);
+});
+
+await wallet.subscribeToEvent(BeaconEvent.LATE_RESPONSE_RECEIVED, (late) => {
+  if (late.kind === 'success') {
+    console.warn('Wallet responded after local timeout:', late.transactionHash);
+  }
+});
+
+// Inspect currently open requests synchronously at any point:
+const pending = wallet.getPendingRequests();
+```
+
+## Typed `BeaconError` Handling & Protocol Message Stream
+
+Request methods (`requestPermissions`, `sendOperations`, `sign`) reject with typed `BeaconError` subclasses (`AbortedBeaconError`, `TransactionInvalidBeaconError`, `PeerUnreachableBeaconError`, etc.):
+
+```ts
+try {
+  await wallet.sendOperations(operations);
+} catch (err) {
+  if (isBeaconError(err)) {
+    // err.errorOrigin is 'wallet' | 'local'
+    console.error(err.errorType, err.errorOrigin, err.title, err.description);
+    if (err instanceof TransactionInvalidBeaconError) {
+      console.error('RPC errors:', err.rpcErrors);
+    }
+  }
+}
+
+// Note: *_REQUEST_ERROR events emit a plain RequestErrorResponse in data.errorResponse;
+// pass it to toBeaconError(data.errorResponse) if you want a BeaconError instance.
+```
+
+For debugging or telemetry, observe immutable plaintext protocol messages across all transports:
+
+```ts
+const stopMessages = wallet.subscribeToMessages((record) => {
+  console.debug(record.direction, record.transport, record.message.type, record);
+});
+```
+
+## Side-Effect-Free Types (`@taquito/beacon-wallet/types`)
+
+To import Beacon enums, error classes, error guards, or TypeScript types without pulling in `@ecadlabs/beacon-dapp` runtime side effects:
+
+```ts
+import {
+  BeaconErrorType,
+  isBeaconError,
+  NetworkType,
+  PermissionScope,
+  SigningType,
+  TransportStatus,
+  TransportType,
+  type ConnectionInfo,
+  type PendingRequestInfo,
+  type WalletInfo,
+} from '@taquito/beacon-wallet/types';
+```
 
 ## WalletConnect Project ID
 

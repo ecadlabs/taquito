@@ -5,15 +5,27 @@
  */
 
 import {
+  type AlertButton,
+  BeaconEvent,
+  type BeaconEventType,
+  type BeaconMessageRecord,
+  type ConnectionInfo,
   DAppClient,
   type DAppClientDisconnectOptions,
   DAppClientOptions,
+  type ExtendedPeerInfo,
+  type PendingRequestInfo,
+  type PermissionResponseOutput,
   RequestPermissionInput,
   PermissionScope,
   getDAppClientInstance,
   SigningType,
   NodeDistributions,
   Regions,
+  type RequestResponseInfo,
+  type RequestSentInfo,
+  type StoredAccountInfo,
+  type WalletInfo,
 } from '@ecadlabs/beacon-dapp';
 import { BeaconWalletNotInitialized, MissingRequiredScopes } from './errors';
 import {
@@ -51,10 +63,39 @@ export { BeaconWalletNotInitialized, MissingRequiredScopes } from './errors';
 // a direct beacon-dapp dependency. These types live only in beacon-dapp (not in
 // beacon-types), so they come with beacon-dapp's side effects. For side-effect-free
 // beacon types (NetworkType, SigningType, etc.), use '@taquito/beacon-wallet/types'.
-export { BeaconEvent } from '@ecadlabs/beacon-dapp';
+export {
+  AbortedBeaconError,
+  BeaconError,
+  BeaconEvent,
+  BroadcastBeaconError,
+  defaultEventCallbacks,
+  getError,
+  isBeaconError,
+  isErrorOrigin,
+  isErrorResponse,
+  isRequestErrorResponse,
+  isTezosRpcError,
+  LocalStorage,
+  NetworkNotSupportedBeaconError,
+  NoAddressBeaconError,
+  NoPrivateKeyBeaconError,
+  NotGrantedBeaconError,
+  ParametersInvalidBeaconError,
+  PeerUnreachableBeaconError,
+  SignatureTypeNotSupportedBeaconError,
+  toBeaconError,
+  TooManyOperationsBeaconError,
+  TransactionInvalidBeaconError,
+  UnknownBeaconError,
+} from '@ecadlabs/beacon-dapp';
 export type {
+  AcknowledgeInfo,
+  ActiveTransportInfo,
+  BeaconErrorOptions,
   BeaconEventHandler,
   BeaconEventType,
+  BeaconMessageRecord,
+  ConnectionInfo,
   DAppClient,
   DAppClientDisconnectOptions,
   DAppClientOptions,
@@ -65,13 +106,49 @@ export type {
   LateErrorResponseInfo,
   LateResponseInfo,
   LateSuccessResponseInfo,
+  PendingRequestInfo,
   RequestErrorResponse,
+  RequestResponseInfo,
+  RequestSentInfo,
   ResponseMessage,
   ResponseOutput,
+  TezosRpcError,
+  TransportHealth,
+  TransportStatusChangedInfo,
+  TransportStatusChangeReason,
   V3ResponsePayload,
+  WaitingForWalletAckInfo,
+  WalletInfo,
   WireErrorMessage,
   WireErrorPayload,
 } from '@ecadlabs/beacon-dapp';
+
+/**
+ * UI customization options for `DAppClientOptions.uiOptions`.
+ */
+export type DAppUiOptions = NonNullable<DAppClientOptions['uiOptions']>;
+
+/**
+ * Extra callback context passed to Beacon event handlers (such as `resetCallback`).
+ */
+export type ExtraInfo = RequestSentInfo['extraInfo'];
+
+/**
+ * Event handler callback signature accepted by {@link BeaconWallet.subscribeToEvent}
+ * and `DAppClient.subscribeToEvent`.
+ */
+export type BeaconEventHandlerFunction<T = unknown> = (
+  data: T,
+  eventCallback?: AlertButton[]
+) => void | Promise<void>;
+
+/**
+ * Payload metadata emitted with {@link BeaconEvent.PERMISSION_REQUEST_SUCCESS}.
+ */
+export type PermissionResponseInfo = Omit<
+  BeaconEventType[BeaconEvent.PERMISSION_REQUEST_SUCCESS],
+  keyof RequestResponseInfo
+>;
 
 /**
  * Default matrix relay nodes curated by Taquito.
@@ -161,10 +238,10 @@ export class BeaconWallet implements WalletProvider {
   }
 
   private validateRequiredScopesOrFail(
-    permissionScopes: PermissionScope[],
+    permissionScopes: ReadonlyArray<PermissionScope | string>,
     requiredScopes: PermissionScope[]
   ) {
-    const mandatoryScope = new Set(requiredScopes);
+    const mandatoryScope = new Set<PermissionScope | string>(requiredScopes);
 
     for (const scope of permissionScopes) {
       if (mandatoryScope.has(scope)) {
@@ -173,12 +250,45 @@ export class BeaconWallet implements WalletProvider {
     }
 
     if (mandatoryScope.size > 0) {
-      throw new MissingRequiredScopes(Array.from(mandatoryScope));
+      throw new MissingRequiredScopes(
+        Array.from(mandatoryScope).filter((scope): scope is PermissionScope =>
+          requiredScopes.includes(scope as PermissionScope)
+        )
+      );
     }
   }
 
-  async requestPermissions(request?: RequestPermissionInput) {
-    await this.client.requestPermissions(request);
+  async requestPermissions(request?: RequestPermissionInput): Promise<PermissionResponseOutput> {
+    return this.client.requestPermissions(request);
+  }
+
+  /**
+   * Returns the currently active account from the underlying `DAppClient`,
+   * or `undefined` when disconnected. Does not throw when uninitialized.
+   */
+  async getActiveAccount(): Promise<StoredAccountInfo | undefined> {
+    return this.client.getActiveAccount();
+  }
+
+  /**
+   * Sets (or clears, when omitted) the active account on the underlying `DAppClient`.
+   */
+  async setActiveAccount(account?: StoredAccountInfo): Promise<void> {
+    await this.client.setActiveAccount(account);
+  }
+
+  /**
+   * Returns all persisted accounts known to the underlying `DAppClient`.
+   */
+  async getAccounts(): Promise<StoredAccountInfo[]> {
+    return this.client.getAccounts();
+  }
+
+  /**
+   * Returns all known peers across transports without blocking when no transport is active.
+   */
+  async getPeers(): Promise<ExtendedPeerInfo[]> {
+    return this.client.getPeers();
   }
 
   async getPKH() {
@@ -202,7 +312,7 @@ export class BeaconWallet implements WalletProvider {
     try {
       return await params();
     } catch (error) {
-      await this.client.hideUI(['alert']);
+      await this.client.hideUI(['alert', 'toast']);
       throw error;
     }
   }
@@ -368,6 +478,51 @@ export class BeaconWallet implements WalletProvider {
    */
   async clearActiveAccount() {
     await this.client.setActiveAccount();
+  }
+
+  /**
+   * Returns resolved metadata (`name`, optional `icon`, `deeplink`, and `type`)
+   * for the active wallet account without initializing a transport or prompting
+   * the user, or `undefined` when disconnected.
+   */
+  async getWalletInfo(): Promise<WalletInfo | undefined> {
+    return this.client.getActiveWalletInfo();
+  }
+
+  /**
+   * Returns a non-blocking snapshot of the current transport connection status,
+   * health (`'ok' | 'degraded'`), active relay server, and peer sender ID.
+   */
+  async getConnectionInfo(): Promise<ConnectionInfo> {
+    return this.client.getConnectionInfo();
+  }
+
+  /**
+   * Synchronously returns a read-only snapshot of currently open requests
+   * awaiting a wallet response.
+   */
+  getPendingRequests(): readonly PendingRequestInfo[] {
+    return this.client.getPendingRequests();
+  }
+
+  /**
+   * Subscribes to a {@link BeaconEvent} on the underlying `DAppClient` and
+   * returns an idempotent unsubscribe function.
+   */
+  async subscribeToEvent<K extends BeaconEvent>(
+    internalEvent: K,
+    eventCallback: BeaconEventHandlerFunction<BeaconEventType[K]>
+  ): Promise<() => void> {
+    return this.client.subscribeToEvent(internalEvent, eventCallback);
+  }
+
+  /**
+   * Subscribes to immutable plaintext Beacon protocol message snapshots
+   * (`direction: 'in' | 'out'`, `transport`, `senderId`, `ts`, `message`) and
+   * returns an idempotent unsubscribe function.
+   */
+  subscribeToMessages(listener: (record: BeaconMessageRecord) => void): () => void {
+    return this.client.subscribeToMessages(listener);
   }
 
   async sign(bytes: string, watermark?: Uint8Array) {
