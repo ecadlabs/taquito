@@ -63,7 +63,8 @@
     "test:browser:packages:ci": "npm run test:browser:packages",
     "typecheck:tests": "tsc -p tsconfig.typecheck-tests.json",
     "test:consumers": "node scripts/test-installed-consumers.mjs",
-    "test:fa21:local": "vitest run --config integration-tests/fa21/vitest.config.ts"
+    "test:fa21:local": "vitest run --config integration-tests/fa21/vitest.config.ts",
+    "test:synthetic-hash:packages": "npm run build && node scripts/test-synthetic-hash-consumers.mjs"
   },
   "devDependencies": {
     "@nx/vite": "22.7.12",
