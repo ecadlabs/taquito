@@ -286,8 +286,12 @@ export class Wallet {
     return this.context.walletProvider;
   }
 
-  private _pkh?: string;
-  private _pk?: string;
+  private identityCache: { pkh?: string; pk?: string } = {};
+
+  /** @internal Discard identity values after an explicit wallet-provider installation. */
+  resetIdentityCache() {
+    this.identityCache = {};
+  }
 
   /**
    * Retrieve the PKH of the account that is currently in use by the wallet
@@ -295,22 +299,37 @@ export class Wallet {
    * If forceRefetch is specified the wallet provider implementation will refetch the PKH from the wallet
    */
   async pkh({ forceRefetch }: PKHOption = {}) {
-    if (!this._pkh || forceRefetch) {
-      this._pkh = await this.walletProvider.getPKH();
-    }
-    return this._pkh;
+    return this.readIdentity('pkh', forceRefetch);
   }
 
   /**
-   * Retrieve the PK of the account that is currently in use by the wallet
-   * @param option Option to use while fetching the PK.
-   * If forceRefetch is specified the wallet provider implementation will refetch the PK from the wallet
+   * Retrieve the public key of the account currently in use by the wallet.
+   * Pass forceRefetch to read it again from the wallet provider.
    */
   async pk({ forceRefetch }: PKHOption = {}) {
-    if (!this._pk || forceRefetch) {
-      this._pk = await this.walletProvider.getPK();
-    }
-    return this._pk;
+    return this.readIdentity('pk', forceRefetch);
+  }
+
+  /** @internal Capture one provider and cache for sequential identity reads. */
+  async getIdentity() {
+    const snapshot = { cache: this.identityCache, provider: this.walletProvider };
+    return {
+      pkh: await this.readIdentity('pkh', false, snapshot),
+      publicKey: await this.readIdentity('pk', false, snapshot),
+    };
+  }
+
+  private async readIdentity(
+    field: 'pkh' | 'pk',
+    forceRefetch = false,
+    snapshot = { cache: this.identityCache, provider: this.walletProvider }
+  ) {
+    const cached = snapshot.cache[field];
+    if (cached && !forceRefetch) return cached;
+    const value = await (field === 'pkh' ? snapshot.provider.getPKH() : snapshot.provider.getPK());
+    // A provider installation replaces the cache. Late reads only fill their captured cache.
+    snapshot.cache[field] = value;
+    return value;
   }
 
   private walletCommand = <T>(send: () => Promise<T>) => {

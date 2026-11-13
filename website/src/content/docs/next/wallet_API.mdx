@@ -730,7 +730,28 @@ Methods:
 
 ## The Wallet instance
 
-The Tezos singleton object exposes a _wallet_ property in the same fashion it exposes the _contract_ property to which you may be used. This property is an instance of the [Wallet class](https://taquito.io/typedoc/classes/_taquito_taquito.wallet.html) with a few useful methods you want to check out. It becomes available as soon as you set up a wallet by calling `Tezos.setProvider({wallet})` or `Tezos.setWalletProvider(wallet)`. Here is a list of the methods and a basic description of their function before seeing some examples:
+The Tezos singleton object exposes a _wallet_ property in the same fashion it exposes the _contract_ property to which you may be used. This property is an instance of the [Wallet class](https://taquito.io/typedoc/classes/_taquito_taquito.wallet.html) with a few useful methods you want to check out. It becomes available as soon as you set up a wallet by calling `Tezos.setProvider({wallet})` or `Tezos.setWalletProvider(wallet)`. Installing a wallet provider clears the cached public key and public key hash used by the wallet, preparation and estimation APIs. This also applies when you reinstall the same provider after an account change. Requests already waiting for an identity use their original provider and cannot refill the replacement cache.
+
+Taquito does not detect account changes inside a provider automatically. Handle the wallet's account event and reinstall the provider to clear the identity caches used by the wallet, preparation and estimation APIs. `pkh({ forceRefetch: true })` and `pk({ forceRefetch: true })` refresh only the requested value on that Wallet instance. They do not clear the separate cache used by preparation and estimation. Reinstalling a provider does not change the RPC endpoint. A provider reference captured for an identity read does not freeze the provider's internal account state.
+
+For example, after the wallet reports an account change, reinstall the provider before reading the new identity:
+
+```typescript
+import { TezosToolkit } from '@taquito/taquito';
+
+const Tezos = new TezosToolkit(rpcUrl);
+Tezos.setWalletProvider(wallet);
+await Tezos.wallet.pkh();
+
+// After the wallet reports that its active account changed:
+Tezos.setWalletProvider(wallet);
+const account = await Tezos.wallet.pkh();
+const publicKey = await Tezos.wallet.pk();
+```
+
+Use the wallet provider and RPC endpoint configured by your application. Reinstalling the provider clears both identity caches even when `wallet` is the same object.
+
+Here is a list of the methods and a basic description of their function before seeing some examples:
 
 1. `at`: creates a smart contract abstraction for the address specified
 

@@ -116,14 +116,13 @@ export class RPCEstimateProvider extends Provider implements EstimationProvider 
   }> {
     if (this.identity)
       return { publicKeyHash: this.identity.pkh, publicKey: this.identity.publicKey };
-    const isSignerConfigured = this.context.isAnySignerConfigured();
+    if (!this.context.isAnySignerConfigured()) {
+      const { pkh, publicKey } = await this.context.wallet.getIdentity();
+      return { publicKeyHash: pkh, publicKey };
+    }
     return {
-      publicKeyHash: isSignerConfigured
-        ? await this.signer.publicKeyHash()
-        : await this.context.wallet.pkh(),
-      publicKey: isSignerConfigured
-        ? await this.signer.publicKey()
-        : await this.context.wallet.pk(),
+      publicKeyHash: await this.signer.publicKeyHash(),
+      publicKey: await this.signer.publicKey(),
     };
   }
 
