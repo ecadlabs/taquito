@@ -11,22 +11,52 @@ export default async function ({ assert, load }) {
       assert.equal(loaded[key], commonjs[key], `${name} changed named export ${key}`);
     }
   }
-  const { BeaconWallet, BeaconEvent } = await load('@taquito/beacon-wallet');
   const {
+    AbortedBeaconError: MainAbortedBeaconError,
+    BeaconError: MainBeaconError,
+    BeaconEvent,
+    BeaconWallet,
+    defaultEventCallbacks,
+    getError: mainGetError,
+    isBeaconError: mainIsBeaconError,
+    LocalStorage,
+    toBeaconError,
+    TransactionInvalidBeaconError: MainTransactionInvalidBeaconError,
+  } = await load('@taquito/beacon-wallet');
+  const {
+    AbortedBeaconError,
+    BeaconError,
     BeaconErrorType,
     BeaconMessageType,
     ColorMode,
+    getError,
+    isBeaconError,
     NetworkType,
     Origin,
     PermissionScope,
     Regions,
     SigningType,
+    Storage,
+    StorageKey,
+    TransactionInvalidBeaconError,
     TransportStatus,
     TransportType,
   } = await load('@taquito/beacon-wallet/types');
   assert.equal(typeof BeaconWallet, 'function');
   assert.equal(BeaconEvent.LATE_RESPONSE_RECEIVED, 'LATE_RESPONSE_RECEIVED');
+  assert.equal(BeaconEvent.TRANSPORT_STATUS_CHANGED, 'TRANSPORT_STATUS_CHANGED');
+  assert.equal(BeaconEvent.WAITING_FOR_WALLET_ACK, 'WAITING_FOR_WALLET_ACK');
   assert.equal('OPEN_BUG_REPORT' in BeaconEvent, false);
+  assert.equal(MainBeaconError, BeaconError);
+  assert.equal(MainAbortedBeaconError, AbortedBeaconError);
+  assert.equal(MainTransactionInvalidBeaconError, TransactionInvalidBeaconError);
+  assert.equal(mainGetError, getError);
+  assert.equal(mainIsBeaconError, isBeaconError);
+  assert.equal(typeof toBeaconError, 'function');
+  assert.equal(typeof LocalStorage, 'function');
+  assert.equal(typeof defaultEventCallbacks, 'object');
+  assert.equal(typeof Storage, 'function');
+  assert.equal(StorageKey.ACTIVE_ACCOUNT, 'beacon:active-account');
   assert.equal(NetworkType.MAINNET, 'mainnet');
   assert.equal(SigningType.RAW, 'raw');
   assert.equal(PermissionScope.OPERATION_REQUEST, 'operation_request');

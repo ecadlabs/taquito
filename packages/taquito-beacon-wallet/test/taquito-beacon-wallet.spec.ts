@@ -1,11 +1,22 @@
-import { BeaconMessageType, NetworkType, Origin } from '@ecadlabs/beacon-types';
+import {
+  BeaconMessageType,
+  NetworkType,
+  Origin,
+  TransportStatus,
+  TransportType,
+} from '@ecadlabs/beacon-types';
 import { UnsupportedActionError } from '@taquito/core';
 import { type MichelsonV1Expression, OpKind, PvmKind } from '@taquito/rpc';
 import { expectTypeOf, vi } from 'vitest';
 import {
+  BeaconEvent,
   BeaconWallet,
   BeaconWalletNotInitialized,
   MissingRequiredScopes,
+  type BeaconMessageRecord,
+  type ConnectionInfo,
+  type PendingRequestInfo,
+  type WalletInfo,
 } from '../src/taquito-beacon-wallet';
 import LocalStorageMock from './mock-local-storage';
 import {
@@ -44,6 +55,13 @@ vi.mock('@ecadlabs/beacon-dapp', async () => {
       requestSignPayload: vi.fn(),
       setActiveAccount: vi.fn(),
       getActiveAccount: vi.fn(),
+      getAccounts: vi.fn().mockResolvedValue([]),
+      getPeers: vi.fn().mockResolvedValue([]),
+      getActiveWalletInfo: vi.fn(),
+      getConnectionInfo: vi.fn(),
+      getPendingRequests: vi.fn().mockReturnValue([]),
+      subscribeToEvent: vi.fn().mockResolvedValue(vi.fn()),
+      subscribeToMessages: vi.fn().mockReturnValue(vi.fn()),
       showPrepare: vi.fn(),
       hideUI: vi.fn(),
       disconnect: vi.fn().mockResolvedValue(undefined),
@@ -447,7 +465,7 @@ describe('Beacon Wallet tests', () => {
           throw error;
         })
       ).rejects.toBe(error);
-      expect(wallet.client.hideUI).toHaveBeenCalledWith(['alert']);
+      expect(wallet.client.hideUI).toHaveBeenCalledWith(['alert', 'toast']);
     });
     it('preserves public return types for rollup mapper methods', () => {
       type Result<Method extends (...params: never[]) => unknown> = {
@@ -509,10 +527,50 @@ describe('Beacon Wallet tests', () => {
       wallet = new BeaconWallet({ name: 'Session test' });
     });
 
-    it('forwards requestPermissions input to DAppClient.requestPermissions', async () => {
+    it('forwards requestPermissions input to DAppClient.requestPermissions and returns the response', async () => {
       const request = { scopes: [PermissionScope.OPERATION_REQUEST] };
-      await wallet.requestPermissions(request);
+      const response = {
+        type: BeaconMessageType.PermissionResponse as const,
+        id: 'perm-1',
+        version: '2',
+        senderId: 'sender',
+        appMetadata: { senderId: 'sender', name: 'Kukai Wallet' },
+        publicKey: baseAccount.publicKey,
+        network: baseAccount.network,
+        scopes: baseAccount.scopes,
+        address: baseAccount.address,
+        walletType: 'implicit' as const,
+        accountInfo: baseAccount,
+      };
+      vi.mocked(wallet.client.requestPermissions).mockResolvedValueOnce(response);
+      await expect(wallet.requestPermissions(request)).resolves.toEqual(response);
       expect(wallet.client.requestPermissions).toHaveBeenCalledExactlyOnceWith(request);
+    });
+
+    it('delegates getActiveAccount(), setActiveAccount(), getAccounts(), and getPeers() to DAppClient', async () => {
+      vi.mocked(wallet.client.getActiveAccount).mockResolvedValueOnce(baseAccount);
+      await expect(wallet.getActiveAccount()).resolves.toEqual(baseAccount);
+      expect(wallet.client.getActiveAccount).toHaveBeenCalledExactlyOnceWith();
+
+      await wallet.setActiveAccount(baseAccount);
+      expect(wallet.client.setActiveAccount).toHaveBeenCalledExactlyOnceWith(baseAccount);
+
+      vi.mocked(wallet.client.getAccounts).mockResolvedValueOnce([baseAccount]);
+      await expect(wallet.getAccounts()).resolves.toEqual([baseAccount]);
+      expect(wallet.client.getAccounts).toHaveBeenCalledExactlyOnceWith();
+
+      const peer = {
+        type: 'p2p-pairing-response' as const,
+        id: 'peer-1',
+        name: 'Kukai Wallet',
+        version: '2',
+        publicKey: 'peer-pub-key',
+        relayServer: 'beacon-node-1.octez.io',
+        senderId: 'sender',
+      };
+      vi.mocked(wallet.client.getPeers).mockResolvedValueOnce([peer]);
+      await expect(wallet.getPeers()).resolves.toEqual([peer]);
+      expect(wallet.client.getPeers).toHaveBeenCalledExactlyOnceWith();
     });
 
     it('returns the active account address from getPKH when initialized', async () => {
@@ -755,8 +813,102 @@ describe('Beacon Wallet tests', () => {
           })
         ).rejects.toBe(failure);
         expect(wallet.client.showPrepare).toHaveBeenCalledOnce();
-        expect(wallet.client.hideUI).toHaveBeenCalledExactlyOnceWith(['alert']);
+        expect(wallet.client.hideUI).toHaveBeenCalledExactlyOnceWith(['alert', 'toast']);
       }
+    });
+  });
+
+  describe('wallet metadata, transport observability, and protocol event helpers', () => {
+    let wallet: BeaconWallet;
+
+    beforeEach(() => {
+      wallet = new BeaconWallet({ name: 'Observability test' });
+    });
+
+    it('delegates getWalletInfo() to client.getActiveWalletInfo()', async () => {
+      const expectedInfo: WalletInfo = {
+        name: 'Kukai Wallet',
+        icon: 'data:image/svg+xml;base64,PHN2Zz48L3N2Zz4=',
+        deeplink: 'https://wallet.kukai.app',
+        type: 'web',
+      };
+      vi.mocked(wallet.client.getActiveWalletInfo).mockResolvedValueOnce(expectedInfo);
+
+      const info = await wallet.getWalletInfo();
+      expect(info).toEqual(expectedInfo);
+      expect(wallet.client.getActiveWalletInfo).toHaveBeenCalledExactlyOnceWith();
+
+      vi.mocked(wallet.client.getActiveWalletInfo).mockResolvedValueOnce(undefined);
+      await expect(wallet.getWalletInfo()).resolves.toBeUndefined();
+      expectTypeOf(wallet.getWalletInfo).returns.toEqualTypeOf<Promise<WalletInfo | undefined>>();
+    });
+
+    it('delegates getConnectionInfo() to client.getConnectionInfo()', async () => {
+      const expectedConnection: ConnectionInfo = {
+        transport: TransportType.P2P,
+        status: TransportStatus.CONNECTED,
+        health: 'ok',
+        relayServer: 'beacon-node-1.octez.io',
+        senderId: 'wallet-sender-id',
+      };
+      vi.mocked(wallet.client.getConnectionInfo).mockResolvedValueOnce(expectedConnection);
+
+      const connection = await wallet.getConnectionInfo();
+      expect(connection).toEqual(expectedConnection);
+      expect(wallet.client.getConnectionInfo).toHaveBeenCalledExactlyOnceWith();
+      expectTypeOf(wallet.getConnectionInfo).returns.toEqualTypeOf<Promise<ConnectionInfo>>();
+    });
+
+    it('delegates getPendingRequests() to client.getPendingRequests()', () => {
+      const pending: readonly PendingRequestInfo[] = Object.freeze([
+        Object.freeze({
+          id: 'req-1',
+          type: BeaconMessageType.OperationRequest,
+          transport: TransportType.P2P,
+          senderId: 'wallet-sender-id',
+          sentAt: 1700000000000,
+          deadline: undefined,
+          acknowledged: true,
+        }),
+      ]);
+      vi.mocked(wallet.client.getPendingRequests).mockReturnValueOnce(pending);
+
+      const result = wallet.getPendingRequests();
+      expect(result).toBe(pending);
+      expect(wallet.client.getPendingRequests).toHaveBeenCalledExactlyOnceWith();
+      expectTypeOf(wallet.getPendingRequests).returns.toEqualTypeOf<readonly PendingRequestInfo[]>();
+    });
+
+    it('delegates subscribeToEvent() to client.subscribeToEvent() and returns the unsubscribe function', async () => {
+      const unsubscribe = vi.fn();
+      vi.mocked(wallet.client.subscribeToEvent).mockResolvedValueOnce(unsubscribe);
+      const handler = vi.fn();
+
+      const returnedUnsubscribe = await wallet.subscribeToEvent(
+        BeaconEvent.TRANSPORT_STATUS_CHANGED,
+        handler
+      );
+
+      expect(wallet.client.subscribeToEvent).toHaveBeenCalledExactlyOnceWith(
+        BeaconEvent.TRANSPORT_STATUS_CHANGED,
+        handler
+      );
+      expect(returnedUnsubscribe).toBe(unsubscribe);
+      returnedUnsubscribe();
+      expect(unsubscribe).toHaveBeenCalledOnce();
+    });
+
+    it('delegates subscribeToMessages() to client.subscribeToMessages() and returns the unsubscribe function', () => {
+      const unsubscribe = vi.fn();
+      vi.mocked(wallet.client.subscribeToMessages).mockReturnValueOnce(unsubscribe);
+      const listener = vi.fn<(record: BeaconMessageRecord) => void>();
+
+      const returnedUnsubscribe = wallet.subscribeToMessages(listener);
+
+      expect(wallet.client.subscribeToMessages).toHaveBeenCalledExactlyOnceWith(listener);
+      expect(returnedUnsubscribe).toBe(unsubscribe);
+      returnedUnsubscribe();
+      expect(unsubscribe).toHaveBeenCalledOnce();
     });
   });
 });

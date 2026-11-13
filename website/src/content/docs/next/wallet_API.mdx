@@ -73,9 +73,29 @@ console.log(wallet);
 
 The necessary bare minimum to instantiate the wallet is an object with a `name` property that contains the name of your dApp and the network you want it to point to. In this case, we choose to point it to `shadownet`.
 
-Beacon wallet allows you to customize your dApp responses to different events. In the example above, instead of getting the default Beacon pop-up after the user connects the wallet, it will display the available data in the console. You can use whatever solution you prefer for feedback. You can find a list of all the default handlers [in the beacon-sdk Github repo](https://github.com/airgap-it/beacon-sdk/blob/master/packages/beacon-dapp/src/events.ts).
+Beacon wallet allows you to customize your dApp responses to different events. In the example above, instead of getting the default Beacon pop-up after the user connects the wallet, it will display the available data in the console. You can use whatever solution you prefer for feedback. You can find a list of all the default handlers [in the Beacon SDK GitHub repo](https://github.com/ecadlabs/beacon-sdk-taquito-patches/blob/taquito-patches/packages/beacon-dapp/src/events.ts).
 
 The `enableMetrics` property is an optional parameter that allows you to enable or disable the collection of metrics. It also allows the user to report bugs via a link in the wallet pop-up.
+
+#### WalletConnect Project ID
+
+Under the covers, Beacon selects a transport per wallet: browser extensions (such as Temple) communicate locally via `postMessage`, TZIP-10 P2P wallets (such as Kukai web) use Matrix relay nodes (curated by Taquito by default), and WalletConnect-enabled wallets (such as Kukai iOS) use WalletConnect v2. `walletConnectOptions` does not replace Matrix or extension transports.
+
+If your dApp supports WalletConnect connections, register your own `projectId` at [Reown Cloud](https://dashboard.reown.com/), configure your allowed origins list, and pass it via `walletConnectOptions` when instantiating `BeaconWallet` (in web dApps, typically injected via a frontend build-time environment variable such as `VITE_*` or `NEXT_PUBLIC_*`):
+
+```js
+const options = {
+  name: 'MyAwesomeDapp',
+  iconUrl: 'https://taquito.io/favicon.svg',
+  network: { type: 'shadownet' },
+  walletConnectOptions: {
+    projectId: import.meta.env.VITE_REOWN_PROJECT_ID,
+  },
+};
+const wallet = new BeaconWallet(options);
+```
+
+A Reown `projectId` is a public client identifier (not a secret); access control is enforced by your Reown Cloud domain allowlist. Any built-in fallback `projectId` in the underlying Beacon SDK is for demo/testing purposes only. Using the default in production may put your project in breach of the WalletConnect/Reown Terms of Service, and it will be removed in the next minor release (after which omitting `projectId` will only disable WalletConnect pairings, while extension and Matrix wallets continue to work).
 
 The Beacon wallet requires an extra step to set up the network to connect to and the permissions:
 
@@ -126,49 +146,124 @@ try {
 }
 ```
 
-### Subscribing to events
+### Subscribing to events and observing lifecycle state
 
-While your dApp is connected to the wallet, different events can happen on the wallet side. A reactive dApp can subscribe to these events and update the UI to create a good user experience.
-The different types of events are defined in the type `BeaconEvent` that can be imported from `"@taquito/beacon-wallet"`. Some of the events are: `ACTIVE_ACCOUNT_SET`, `PAIR_SUCCESS`, `SIGN_REQUEST_SUCCESS`.
-To see all possible events, please check out the [BeaconEvent in Beacon SDK documentation](https://typedocs.walletbeacon.io/enums/beaconevent.html).
-
-You can subscribe to any of these events as follows:
+While your dApp is connected to a wallet, Beacon emits lifecycle events covering account state, transport health, and in-flight requests. You can subscribe to any `BeaconEvent` directly via `wallet.subscribeToEvent()`, which returns an idempotent unsubscribe function:
 
 ```ts
-await wallet.client.subscribeToEvent(BeaconEvent.ACTIVE_ACCOUNT_SET, (data) => {
-  // logic to update the active account in your dApp's UI
-  console.log(data.address);
-});
+import {
+  BeaconEvent,
+  BeaconWallet,
+  isBeaconError,
+  TransactionInvalidBeaconError,
+  type WalletInfo,
+} from '@taquito/beacon-wallet';
+
+const unsubscribeAccount = await wallet.subscribeToEvent(
+  BeaconEvent.ACTIVE_ACCOUNT_SET,
+  async (account) => {
+    if (account) {
+      const walletInfo: WalletInfo | undefined = await wallet.getWalletInfo();
+      console.log('Connected:', account.address, walletInfo?.name, walletInfo?.icon);
+    } else {
+      console.log('Disconnected');
+    }
+  }
+);
+
 await wallet.requestPermissions();
+```
+
+#### Active wallet metadata (`wallet.getWalletInfo()`)
+
+`await wallet.getWalletInfo()` resolves `{ name, icon, deeplink, type }` (`type` is `'extension' | 'mobile' | 'web' | 'desktop'`) for the active account without initializing a transport or opening the pairing modal, or returns `undefined` when disconnected.
+
+#### Transport connection health and pending requests
+
+dApps can inspect connection state on demand or react to transport transitions, slow wallet acknowledgements, and late responses after a local timeout:
+
+```ts
+// Snapshot current transport status and health ('ok' | 'degraded')
+const connection = await wallet.getConnectionInfo();
+
+// Synchronously inspect open requests awaiting a wallet response
+const pendingRequests = wallet.getPendingRequests();
+
+// Monitor transport status and relay health transitions
+await wallet.subscribeToEvent(BeaconEvent.TRANSPORT_STATUS_CHANGED, (statusInfo) => {
+  if (statusInfo.health === 'degraded') {
+    console.warn(`Transport degraded (${statusInfo.reason}):`, statusInfo.relayServer);
+  }
+});
+
+// Prompt the user if the wallet has not acknowledged a request within ackTimeoutMs (default 5000ms)
+await wallet.subscribeToEvent(BeaconEvent.WAITING_FOR_WALLET_ACK, ({ requestId, elapsedMs }) => {
+  console.warn(`Still waiting for wallet acknowledgement (${elapsedMs}ms) on ${requestId}`);
+});
+
+// Handle responses that arrive after a local deadline timed out
+await wallet.subscribeToEvent(BeaconEvent.LATE_RESPONSE_RECEIVED, (late) => {
+  if (late.kind === 'success' && late.transactionHash) {
+    console.warn('Wallet broadcast operation after timeout:', late.transactionHash);
+  }
+});
+
+// Detect invalid persisted session state deactivated during startup
+await wallet.subscribeToEvent(BeaconEvent.INVALID_ACCOUNT_DEACTIVATED, (event) => {
+  console.warn('Deactivated invalid stored session:', event?.reason);
+});
+```
+
+#### Custom request UI, typed `BeaconError` rejections, and protocol message stream
+
+Pass `uiOptions: { enableToasts: false }` in `new BeaconWallet(options)` to suppress Beacon's built-in Shadow DOM progress toasts while keeping the pairing modal and error alerts.
+
+Request methods reject with typed `BeaconError` subclasses (`AbortedBeaconError`, `TransactionInvalidBeaconError`, `PeerUnreachableBeaconError`, etc.) that include `errorType`, `errorOrigin` (`'wallet' | 'local'`), `title`, and `description`:
+
+```ts
+try {
+  await wallet.sendOperations(operations);
+} catch (err) {
+  if (isBeaconError(err)) {
+    console.error(err.errorType, err.errorOrigin, err.description);
+    if (err instanceof TransactionInvalidBeaconError) {
+      console.error('RPC errors:', err.rpcErrors);
+    }
+  }
+}
+
+// Observe plaintext protocol messages across transports for debugging:
+const stopMessages = wallet.subscribeToMessages((record) => {
+  console.debug(record.direction, record.transport, record.message.type);
+});
 ```
 
 ### Disconnecting
 
 Taquito provides two methods for ending a wallet session. Choosing the wrong one can leave stale Beacon state in localStorage that causes connection failures later.
 
-#### `wallet.disconnect()` — Full logout (recommended)
+#### `wallet.disconnect()`: Full logout (recommended)
 
-Removes **all** Beacon data from localStorage, including the active account, cached relay node, and peer information. The BeaconWallet instance is no longer usable after calling this method; you must create a new one to reconnect.
+Notifies peers, clears the active account, and tears down active Beacon transports. After `await wallet.disconnect()`, the same `BeaconWallet` instance can be reused to reconnect via `await wallet.requestPermissions()`.
 
 Use this whenever a user logs out of your dApp.
 
 ```ts
-// Full logout — clears all beacon:* localStorage keys
+// Full logout: clears active session and tears down transports
 await wallet.disconnect();
 
-// The wallet instance is now unusable. To reconnect:
-const wallet = new BeaconWallet({ name: 'MyDapp' });
-await wallet.requestPermissions({ network: { type: NetworkType.MAINNET } });
+// Reconnect using the same BeaconWallet instance:
+await wallet.requestPermissions();
 ```
 
-#### `wallet.clearActiveAccount()` — Account switching only
+#### `wallet.clearActiveAccount()`: Account switching only
 
 Removes only the active account reference. Other Beacon state (relay node, peer data) is preserved. Use this when switching between accounts within the same session.
 
 ```ts
-// Switch accounts — keeps the Beacon session alive
+// Switch accounts: keeps the Beacon session alive
 await wallet.clearActiveAccount();
-await wallet.requestPermissions({ network: { type: NetworkType.MAINNET } });
+await wallet.requestPermissions();
 ```
 
 >[!CAUTION]
