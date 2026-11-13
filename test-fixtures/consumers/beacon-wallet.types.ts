@@ -3,14 +3,21 @@ import {
   BeaconError,
   BeaconEvent,
   defaultEventCallbacks,
+  getDebugEnabled,
   getError,
+  getLogger,
+  InternalLogger,
   isBeaconError,
   isErrorOrigin,
   isErrorResponse,
   isRequestErrorResponse,
   isTezosRpcError,
   LocalStorage,
+  Logger,
   PeerUnreachableBeaconError,
+  reportDiagnostic,
+  setDebugEnabled,
+  setLogger,
   toBeaconError,
   TransactionInvalidBeaconError,
 } from '@taquito/beacon-wallet';
@@ -21,6 +28,7 @@ import type {
   BeaconEventHandler,
   BeaconEventHandlerFunction,
   BeaconEventType,
+  BeaconMessageDisposition,
   BeaconMessageRecord,
   BeaconWallet,
   ConnectionInfo,
@@ -36,6 +44,8 @@ import type {
   LateErrorResponseInfo,
   LateResponseInfo,
   LateSuccessResponseInfo,
+  LoggerDiagnostic,
+  LoggerInterface,
   PendingRequestInfo,
   PermissionResponseInfo,
   RequestErrorResponse,
@@ -87,6 +97,9 @@ const transportReason: TransportStatusChangeReason = 'sync_failing';
 const transportStatusChanged: TransportStatusChangedInfo | undefined = undefined;
 const waitingAck: WaitingForWalletAckInfo | undefined = undefined;
 const msgRecord: BeaconMessageRecord | undefined = undefined;
+const msgDisposition: BeaconMessageDisposition = 'handled';
+const loggerIface: LoggerInterface | undefined = undefined;
+const loggerDiag: LoggerDiagnostic | undefined = undefined;
 const reqSent: RequestSentInfo | undefined = undefined;
 const reqResp: RequestResponseInfo | undefined = undefined;
 const ackInfo: AcknowledgeInfo | undefined = undefined;
@@ -102,14 +115,21 @@ void [
   AbortedBeaconError,
   BeaconError,
   defaultEventCallbacks,
+  getDebugEnabled,
   getError,
+  getLogger,
+  InternalLogger,
   isBeaconError,
   isErrorOrigin,
   isErrorResponse,
   isRequestErrorResponse,
   isTezosRpcError,
   LocalStorage,
+  Logger,
   PeerUnreachableBeaconError,
+  reportDiagnostic,
+  setDebugEnabled,
+  setLogger,
   toBeaconError,
   TransactionInvalidBeaconError,
   wallet,
@@ -144,6 +164,9 @@ void [
   transportStatusChanged,
   waitingAck,
   msgRecord,
+  msgDisposition,
+  loggerIface,
+  loggerDiag,
   reqSent,
   reqResp,
   ackInfo,

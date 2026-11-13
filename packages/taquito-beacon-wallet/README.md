@@ -145,11 +145,19 @@ try {
 // pass it to toBeaconError(data.errorResponse) if you want a BeaconError instance.
 ```
 
-For debugging or telemetry, observe immutable plaintext protocol messages across all transports:
+For debugging or telemetry, observe immutable plaintext protocol messages across all transports (including incoming routing `disposition`: `'handled' | 'stale' | 'unknown-request' | 'invalid'`) or configure Beacon's logger without installing `@ecadlabs/beacon-core` directly:
 
 ```ts
+import {
+  setDebugEnabled,
+  setLogger,
+  type LoggerInterface,
+} from '@taquito/beacon-wallet';
+
+setDebugEnabled(true);
+
 const stopMessages = wallet.subscribeToMessages((record) => {
-  console.debug(record.direction, record.transport, record.message.type, record);
+  console.debug(record.direction, record.transport, record.disposition, record.message);
 });
 ```
 

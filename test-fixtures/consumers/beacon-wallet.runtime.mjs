@@ -17,9 +17,16 @@ export default async function ({ assert, load }) {
     BeaconEvent,
     BeaconWallet,
     defaultEventCallbacks,
+    getDebugEnabled,
     getError: mainGetError,
+    getLogger,
+    InternalLogger,
     isBeaconError: mainIsBeaconError,
     LocalStorage,
+    Logger,
+    reportDiagnostic,
+    setDebugEnabled,
+    setLogger,
     toBeaconError,
     TransactionInvalidBeaconError: MainTransactionInvalidBeaconError,
   } = await load('@taquito/beacon-wallet');
@@ -54,6 +61,13 @@ export default async function ({ assert, load }) {
   assert.equal(mainIsBeaconError, isBeaconError);
   assert.equal(typeof toBeaconError, 'function');
   assert.equal(typeof LocalStorage, 'function');
+  assert.equal(typeof Logger, 'function');
+  assert.equal(typeof InternalLogger, 'function');
+  assert.equal(typeof setLogger, 'function');
+  assert.equal(typeof getLogger, 'function');
+  assert.equal(typeof reportDiagnostic, 'function');
+  assert.equal(typeof setDebugEnabled, 'function');
+  assert.equal(typeof getDebugEnabled, 'function');
   assert.equal(typeof defaultEventCallbacks, 'object');
   assert.equal(typeof Storage, 'function');
   assert.equal(StorageKey.ACTIVE_ACCOUNT, 'beacon:active-account');
