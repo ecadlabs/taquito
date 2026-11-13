@@ -35,9 +35,16 @@ import { DEFAULT_BOUND_DATA, DEFAULT_MEMO } from './constants';
 import { InMemoryProvingKey } from './sapling-keys/in-memory-proving-key';
 import { InvalidAddressError, InvalidKeyHashError } from '@taquito/core';
 export { initSapling, preloadSaplingParams, SaplingParamsError } from './sapling-params-loader';
-export type { SaplingInitOptions, SaplingParamsSource } from './types';
+export type {
+  SaplingInitOptions,
+  SaplingParamsSource,
+  SaplingTransactionInputSelection,
+} from './types';
 export { InvalidSaplingOutputOrderError } from './errors';
 
+// Low-level construction for contracts with application-defined bound data.
+export { SaplingTransactionBuilder } from './sapling-tx-builder/sapling-transactions-builder';
+export { SaplingForger } from './sapling-forger/sapling-forger';
 export { SaplingTransactionViewer } from './sapling-tx-viewer/sapling-transaction-viewer';
 export { InMemoryViewingKey } from './sapling-keys/in-memory-viewing-key';
 export { InMemorySpendingKey } from './sapling-keys/in-memory-spending-key';

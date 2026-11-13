@@ -361,6 +361,7 @@ enum PublicKeyHashID {
   ED25519 = 0,
   SECP256K1 = 1,
   P256 = 2,
+  BLS12_381 = 3,
   MLDSA44 = 4,
 }
 
@@ -368,6 +369,7 @@ type AddressType =
   | 'ED25519PublicKeyHash'
   | 'SECP256K1PublicKeyHash'
   | 'P256PublicKeyHash'
+  | 'BLS12_381PublicKeyHash'
   | 'MLDSA44PublicKeyHash'
   | 'ContractHash';
 
@@ -389,6 +391,9 @@ function readPublicKeyHash(rd: Reader): Address {
       break;
     case PublicKeyHashID.P256:
       type = 'P256PublicKeyHash';
+      break;
+    case PublicKeyHashID.BLS12_381:
+      type = 'BLS12_381PublicKeyHash';
       break;
     case PublicKeyHashID.MLDSA44:
       type = 'MLDSA44PublicKeyHash';
@@ -438,6 +443,9 @@ function writePublicKeyHash(a: Address, w: Writer): void {
       break;
     case 'P256PublicKeyHash':
       tag = PublicKeyHashID.P256;
+      break;
+    case 'BLS12_381PublicKeyHash':
+      tag = PublicKeyHashID.BLS12_381;
       break;
     case 'MLDSA44PublicKeyHash':
       tag = PublicKeyHashID.MLDSA44;
@@ -931,6 +939,7 @@ const getWriteTransformFunc = (t: MichelsonType): WriteTransformFunc => {
             'ED25519PublicKeyHash',
             'SECP256K1PublicKeyHash',
             'P256PublicKeyHash',
+            'BLS12_381PublicKeyHash',
             'MLDSA44PublicKeyHash'
           );
           if (pkh === null) {
@@ -978,12 +987,15 @@ const getWriteTransformFunc = (t: MichelsonType): WriteTransformFunc => {
         }
         let bytes: BytesLiteral;
         if ('string' in d) {
-          const s = d.string.split('%');
+          const separator = d.string.indexOf('%');
+          const base = separator === -1 ? d.string : d.string.slice(0, separator);
+          const entryPoint = separator === -1 ? undefined : d.string.slice(separator + 1);
           const address = checkDecodeTezosID(
-            s[0],
+            base,
             'ED25519PublicKeyHash',
             'SECP256K1PublicKeyHash',
             'P256PublicKeyHash',
+            'BLS12_381PublicKeyHash',
             'MLDSA44PublicKeyHash',
             'ContractHash'
           );
@@ -991,10 +1003,7 @@ const getWriteTransformFunc = (t: MichelsonType): WriteTransformFunc => {
             throw new MichelsonTypeError(t, `address base58 expected: ${d.string}`, d);
           }
           const w = new Writer();
-          writeAddress(
-            { type: address[0], hash: address[1], entryPoint: s.length > 1 ? s[1] : undefined },
-            w
-          );
+          writeAddress({ type: address[0], hash: address[1], entryPoint }, w);
           bytes = { bytes: hexBytes(w.buffer) };
         } else {
           bytes = d;

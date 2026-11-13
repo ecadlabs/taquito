@@ -170,3 +170,31 @@ The fixture covers the existing constructor, both output-order policies and an
 unknown policy that TypeScript must reject. The runtime fixture also checks
 constructor creation and error identity through CommonJS and native ESM.
 Neither fixture generates proofs or submits transactions.
+
+## Custom bound data
+
+`SaplingTransactionBuilder` and `SaplingForger` are exported from `@taquito/sapling`
+for contracts whose bound data differs from the shielded-tez contract:
+
+```ts
+import { SaplingTransactionBuilder, SaplingForger } from '@taquito/sapling';
+import { packDataBytes } from '@taquito/michel-codec';
+
+const forger = new SaplingForger();
+const builder = new SaplingTransactionBuilder(keys, forger, contractDetails, readProvider);
+const boundData = Buffer.from(
+  packDataBytes({ string: recipient }, { prim: 'address' }).bytes,
+  'hex'
+);
+const description = await builder.createSaplingTx([], amount, boundData, chosenInputs);
+const transaction = forger.forgeSaplingTransaction({ ...description, root, boundData });
+```
+
+The application supplies keys, contract details, a read provider, an amount in base
+units as a `BigNumber` or another `BigNumber.Value`, the current root and
+selected spendable inputs. It must
+encode bound data according to its contract and pass the same bytes to the builder
+and forger. `createShieldedTx` also accepts bound data as its third argument.
+`SaplingToolkit.prepareUnshieldedTransaction` retains its existing recipient-key-hash
+encoding. The low-level builder leaves recipient validation and input selection to
+the application.

@@ -10,13 +10,10 @@ import BigNumber from 'bignumber.js';
 
 export class SaplingForger {
   /**
-   * Forge sapling transactions
-   * @param spendDescriptions the list of spend descriptions
-   * @param outputDescriptions the list of output descriptions
-   * @param signature signature hash
-   * @param balance balance of the Sapling contract (input/output difference)
-   * @param root root of the merkle tree
-   * @returns Forged sapling transaction of type Buffer
+   * Serialize a Sapling transaction without submitting it to a contract.
+   * @param tx Inputs, outputs, signature, balance, Sapling root and bound data.
+   * Use the same bound data that was passed to the transaction builder.
+   * @returns Serialized transaction bytes as a Buffer.
    */
   forgeSaplingTransaction(tx: SaplingTransaction): Buffer {
     const spendBuf = this.forgeSpendDescriptions(tx.inputs);

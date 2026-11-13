@@ -143,8 +143,13 @@ export type SaplingContractId =
       saplingId?: never;
     };
 
-export interface ChosenSpendableInputs {
+/** Selected inputs and their total value in base units. */
+export interface SaplingTransactionInputSelection {
   inputsToSpend: Input[];
+  sumSelectedInputs: BigNumberJs.Value;
+}
+
+export interface ChosenSpendableInputs extends SaplingTransactionInputSelection {
   sumSelectedInputs: BigNumber;
 }
 
