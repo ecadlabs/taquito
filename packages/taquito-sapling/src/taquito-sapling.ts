@@ -39,6 +39,10 @@ export type {
   SaplingInitOptions,
   SaplingParamsSource,
   SaplingTransactionInputSelection,
+  Input,
+  SaplingTransactionParams,
+  SaplingContractDetails,
+  SaplingTransaction,
 } from './types';
 export { InvalidSaplingOutputOrderError } from './errors';
 

@@ -139,12 +139,14 @@ export class SaplingTransactionBuilder {
   }
 
   /**
-   * Spend selected notes for a private transfer or withdrawal, creating change when needed.
+   * Spend selected notes for a private transfer or withdrawal.
+   * A withdrawal with positive selected inputs creates a payback note, even when its value is zero.
    * @param saplingTransactionParams Recipient notes. Use an empty list for a withdrawal.
    * @param txTotalAmount Amount to transfer or withdraw in base units.
    * @param boundData Contract-specific bytes included in the binding signature.
    * Pass the same bytes to the forger when serializing the transaction.
-   * @param chosenInputs Unspent inputs and their total value, sufficient to cover the amount.
+   * @param chosenInputs Unspent inputs and their total value. The caller must ensure this
+   * total covers the amount; this low-level method does not perform the toolkit balance check.
    * @returns Transaction descriptions, signature and balance for the forger.
    * The caller supplies a consistent Sapling root when forging the transaction.
    */
