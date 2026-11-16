@@ -1,0 +1,45 @@
+{
+  "kernelRevision": "e494418ef861bc8517f937459270f97470fd3faa",
+  "kernelMergeCommit": "cb4a12400ab5f138897572079619eba6781e9dde",
+  "kernelPath": "etherlink/kernel_latest/tezosx-journal/src/tezosx_journal.rs",
+  "source": "https://gitlab.com/tezos/tezos/-/merge_requests/22718",
+  "independentTools": {
+    "blake2b": "Python hashlib",
+    "keccak": "PyCryptodome 4.2.0",
+    "base58": "base58 2.1.1"
+  },
+  "vectors": [
+    {
+      "label": "kernel",
+      "parentHex": "0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20",
+      "parentOperationHash": "onef1shcAkeuHdHJGckAYjbuzZSg4ZGPMyGxrc1L5RadvNJNNmM",
+      "michelsonHashHex": "957934084c415ff8ccabf86a2af07db6cc557cf759e7aa50d1673bf48c39ccc5",
+      "michelsonOperationHash": "oon3NRVSUVJUDwBSfeMcXYFVU1GgFghM4ciDQsP8kuvpGrmj4kG",
+      "ethereumTransactionHash": "0x5e0287136dd2a96e55aad495edcc329afc57df76e896e29c42e1f80d9da7deb4"
+    },
+    {
+      "label": "zero",
+      "parentHex": "0000000000000000000000000000000000000000000000000000000000000000",
+      "parentOperationHash": "oneDGhZacw99EEFaYDTtWfz5QEhUW3PPVFsHa7GShnLPuDn7gSd",
+      "michelsonHashHex": "72de32429e17d9d7705d0c596dcbd2102d63321a012a4de0933f170ebcbfa9a1",
+      "michelsonOperationHash": "ooWoRGWknazPmA95zezMQYYEop6JaquJfLUPjcDByK3F6qhm3Ya",
+      "ethereumTransactionHash": "0x9e3d2459fac9713cf0ad82b503e7d050167c942ee8ff4bf689a8986216066a50"
+    },
+    {
+      "label": "leading-zero",
+      "parentHex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+      "parentOperationHash": "oneDNXrq8HVRVCJXkqofS9e41G8ZkttpBZFMaQ9MvKyP3nYiP97",
+      "michelsonHashHex": "a09a3cc68ed1544b9e97acd085a13cf55213bba27ebee85ac01c4d110ffbdbd5",
+      "michelsonOperationHash": "oorweTEmGie9TMhoKuMhov2Kzmjeyqjmz5Da7HYu76sSkYjL6rW",
+      "ethereumTransactionHash": "0xcb1314c2aeef05ac3c4b867a8c348e5b34d207ba9ac9e00f7388b36e2f308d8d"
+    },
+    {
+      "label": "ff",
+      "parentHex": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "parentOperationHash": "opaxSw1cUMpNN3qHSo5tTzarKMKC9kEGGtwPpFxLhSLnPjsGbUQ",
+      "michelsonHashHex": "b3eb13872a14a4cfda0533f261b0f01285d8e865041756afa4a0b696c83c4d1a",
+      "michelsonOperationHash": "op1T3Q2B4UGDyuHw44JRkGzAdRphywgiASejPy44PZF1qfg8x3D",
+      "ethereumTransactionHash": "0xde66a762e1632fa7e7d0256eb3e245cd85841900f6e9b9f3afe51ec70543fc26"
+    }
+  ]
+}

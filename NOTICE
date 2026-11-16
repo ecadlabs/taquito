@@ -31,3 +31,11 @@ All rights in the website and documentation content are reserved by
 ECAD Labs Inc. No permission is granted to reproduce, distribute, or
 create derivative works of the website and documentation content without
 the prior written consent of ECAD Labs Inc.
+
+============================================================================
+THIRD-PARTY SOURCE ATTRIBUTION
+============================================================================
+Synthetic cross-runtime hash helpers include code adapted from Octez.js.
+Copyright 2026 Nomadic Labs. Apache License, Version 2.0.
+https://github.com/trilitech/octez.js/pull/113
+Source commit 257d8e3be215265727c6e0175c8673cec77c477d by AurelienFT.
