@@ -66,7 +66,7 @@ export class MapToken extends Token {
 
   private objLitToMichelsonMap(val: any): any {
     if (val instanceof MichelsonMap) return val;
-    if (typeof val === 'object') {
+    if (typeof val === 'object' && val !== null && !Array.isArray(val)) {
       if (Object.keys(val).length === 0) {
         return new MichelsonMap();
       } else {

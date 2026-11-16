@@ -43,20 +43,21 @@ export class SaplingTransactionToken extends Token {
    * @throws {@link SaplingTransactionValidationError}
    */
   private validateBytes(val: any) {
-    const bytes = /^(0x|0X)?([0-9a-fA-F]*$)/.exec(val);
-    if (bytes && bytes[2].length % 2 === 0) {
-      return bytes[2];
-    } else {
-      throw new SaplingTransactionValidationError(
-        val,
-        this,
-        `Invalid bytes: ${JSON.stringify(val)}`
-      );
+    if (typeof val === 'string') {
+      const bytes = /^(0x|0X)?([0-9a-fA-F]*$)/.exec(val);
+      if (bytes && bytes[2].length % 2 === 0) {
+        return bytes[2];
+      }
     }
+    throw new SaplingTransactionValidationError(
+      val,
+      this,
+      `Invalid bytes: ${JSON.stringify(val)}`
+    );
   }
 
   private convertUint8ArrayToHexString(val: Uint8Array | string) {
-    return val.constructor === Uint8Array ? buf2hex(val) : val;
+    return val instanceof Uint8Array ? buf2hex(val) : val;
   }
 
   Encode(args: any[]): any {

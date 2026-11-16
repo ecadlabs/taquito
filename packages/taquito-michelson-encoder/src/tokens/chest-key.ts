@@ -31,14 +31,14 @@ export class ChestKeyToken extends Token {
    * @throws {@link ChestKeyValidationError}
    */
   private validate(val: any) {
-    if (/^[0-9a-fA-F]*$/.test(val) && val.length % 2 === 0) {
+    if (typeof val === 'string' && /^[0-9a-fA-F]*$/.test(val) && val.length % 2 === 0) {
       return;
     }
     throw new ChestKeyValidationError(val, this, `Invalid bytes: ${JSON.stringify(val)}`);
   }
 
   private convertUint8ArrayToHexString(val: any) {
-    return val.constructor === Uint8Array ? buf2hex(val) : val;
+    return val instanceof Uint8Array ? buf2hex(val) : val;
   }
 
   /**

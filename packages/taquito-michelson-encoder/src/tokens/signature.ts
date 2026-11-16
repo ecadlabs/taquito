@@ -5,7 +5,7 @@ import {
   TokenFactory,
   TokenValidationError,
 } from './token';
-import { validateSignature, ValidationResult } from '@taquito/utils';
+import { b58Encode, PrefixV2, validateSignature, ValidationResult } from '@taquito/utils';
 import { BaseTokenSchema } from '../schema/types';
 
 /**
@@ -34,7 +34,17 @@ export class SignatureToken extends ComparableToken {
     if (val.string) {
       return val.string;
     }
-    // TODO decode the signature
+    if (typeof val.bytes === 'string') {
+      if (val.bytes.length === 128) {
+        return b58Encode(val.bytes, PrefixV2.GenericSignature);
+      }
+      if (val.bytes.length === 192) {
+        return b58Encode(val.bytes, PrefixV2.BLS12_381Signature);
+      }
+      if (val.bytes.length === 4840) {
+        return b58Encode(val.bytes, PrefixV2.MLDSA44Signature);
+      }
+    }
     return val.bytes;
   }
 

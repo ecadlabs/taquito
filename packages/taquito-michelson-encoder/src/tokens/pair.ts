@@ -118,7 +118,7 @@ export class PairToken extends ComparableToken {
     const args = this.args();
     const leftToken = this.createToken(args[0], this.getIdxForChildren(), 'Pair');
     let keyCount = 1;
-    if (leftToken instanceof OrToken) {
+    if (leftToken instanceof OrToken || (leftToken instanceof PairToken && !leftToken.hasAnnotations())) {
       keyCount = Object.keys(leftToken.generateSchema().schema).length;
     }
 

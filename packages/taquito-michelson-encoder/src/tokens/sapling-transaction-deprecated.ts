@@ -45,20 +45,21 @@ export class SaplingTransactionDeprecatedToken extends Token {
    * @throws {@link SaplingTransactionDeprecatedValidationError}
    */
   private validateBytes(val: any) {
-    const bytes = /^(0x|0X)?([0-9a-fA-F]*$)/.exec(val);
-    if (bytes && bytes[2].length % 2 === 0) {
-      return bytes[2];
-    } else {
-      throw new SaplingTransactionDeprecatedValidationError(
-        val,
-        this,
-        `Invalid bytes: ${JSON.stringify(val)}`
-      );
+    if (typeof val === 'string') {
+      const bytes = /^(0x|0X)?([0-9a-fA-F]*$)/.exec(val);
+      if (bytes && bytes[2].length % 2 === 0) {
+        return bytes[2];
+      }
     }
+    throw new SaplingTransactionDeprecatedValidationError(
+      val,
+      this,
+      `Invalid bytes: ${JSON.stringify(val)}`
+    );
   }
 
   private convertUint8ArrayToHexString(val: Uint8Array | string) {
-    return val.constructor === Uint8Array ? buf2hex(val) : val;
+    return val instanceof Uint8Array ? buf2hex(val) : val;
   }
 
   Encode(args: any[]): any {

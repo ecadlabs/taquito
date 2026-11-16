@@ -33,14 +33,14 @@ export class Bls12381frToken extends Token {
    * @throws {@link Bls12381frValidationError}
    */
   private validate(val: any) {
-    if (/^[0-9a-fA-F]*$/.test(val) && val.length % 2 === 0) {
+    if (typeof val === 'string' && /^[0-9a-fA-F]*$/.test(val) && val.length % 2 === 0) {
       return;
     }
     throw new Bls12381frValidationError(val, this, `Invalid bytes: ${JSON.stringify(val)}`);
   }
 
   private convertUint8ArrayToHexString(val: any) {
-    return val.constructor === Uint8Array ? buf2hex(val) : val;
+    return val instanceof Uint8Array ? buf2hex(val) : val;
   }
 
   /**
@@ -48,7 +48,7 @@ export class Bls12381frToken extends Token {
    */
   Encode(args: any[]) {
     let val = args.pop();
-    if (typeof val === 'number') {
+    if (typeof val === 'number' && Number.isInteger(val)) {
       return { int: val.toString() };
     } else {
       val = this.convertUint8ArrayToHexString(val);
@@ -64,7 +64,7 @@ export class Bls12381frToken extends Token {
     if (semantic && semantic[Bls12381frToken.prim]) {
       return semantic[Bls12381frToken.prim](val);
     }
-    if (typeof val === 'number') {
+    if (typeof val === 'number' && Number.isInteger(val)) {
       return { int: val.toString() };
     } else {
       val = this.convertUint8ArrayToHexString(val);
@@ -73,8 +73,8 @@ export class Bls12381frToken extends Token {
     }
   }
 
-  Execute(val: any): string {
-    return val.bytes;
+  Execute(val: any): string | number {
+    return 'int' in val ? Number(val.int) : val.bytes;
   }
 
   generateSchema(): BaseTokenSchema {

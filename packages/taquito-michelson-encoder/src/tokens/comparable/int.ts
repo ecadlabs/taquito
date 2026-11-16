@@ -49,13 +49,16 @@ export class IntToken extends ComparableToken {
    * @throws {@link IntValidationError}
    */
   private validate(val: any) {
+    if (typeof val === 'boolean' || val === null) {
+      throw new IntValidationError(val, this, `Value is not a number: ${JSON.stringify(val)}`);
+    }
     let bigNumber: BigNumber;
     try {
       bigNumber = new BigNumber(val);
     } catch {
       throw new IntValidationError(val, this, `Value is not a number: ${JSON.stringify(val)}`);
     }
-    if (bigNumber.isNaN()) {
+    if (bigNumber.isNaN() || !bigNumber.isInteger()) {
       throw new IntValidationError(val, this, `Value is not a number: ${JSON.stringify(val)}`);
     }
   }
@@ -96,13 +99,7 @@ export class IntToken extends ComparableToken {
   }
 
   compare(int1: string | number, int2: string | number) {
-    const o1 = Number(int1);
-    const o2 = Number(int2);
-    if (o1 === o2) {
-      return 0;
-    }
-
-    return o1 < o2 ? -1 : 1;
+    return new BigNumber(int1).comparedTo(new BigNumber(int2)) ?? 0;
   }
 
   findAndReturnTokens(tokenToFind: string, tokens: Token[]) {

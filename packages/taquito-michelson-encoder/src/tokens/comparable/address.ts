@@ -7,6 +7,7 @@ import {
 } from '../token';
 import {
   b58DecodeAddress,
+  bytesToString,
   compareArrays,
   encodeAddress,
   splitAddress,
@@ -56,7 +57,11 @@ export class AddressToken extends ComparableToken {
     if (typeof value !== 'string') {
       throw new AddressValidationError(value, this, 'Type error');
     }
-    if (validateAddress(value) !== ValidationResult.VALID) {
+    const [, entrypoint] = splitAddress(value);
+    if (
+      validateAddress(value) !== ValidationResult.VALID ||
+      (entrypoint !== null && new TextEncoder().encode(entrypoint.slice(1)).length > 31)
+    ) {
       throw new AddressValidationError(
         value,
         this,
@@ -104,7 +109,8 @@ export class AddressToken extends ComparableToken {
       );
     }
 
-    return encodeAddress(val.bytes);
+    const addr = encodeAddress(val.bytes);
+    return val.bytes.length > 44 ? `${addr}%${bytesToString(val.bytes.slice(44))}` : addr;
   }
 
   generateSchema(): BaseTokenSchema {
@@ -129,7 +135,8 @@ export class AddressToken extends ComparableToken {
       );
     }
 
-    return encodeAddress(bytes);
+    const addr = encodeAddress(bytes);
+    return bytes.length > 44 ? `${addr}%${bytesToString(bytes.slice(44))}` : addr;
   }
 
   compare(address1: string, address2: string) {

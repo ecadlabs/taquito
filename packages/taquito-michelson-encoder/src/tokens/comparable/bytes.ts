@@ -52,7 +52,7 @@ export class BytesToken extends ComparableToken {
   }
 
   private convertUint8ArrayToHexString(val: any) {
-    return val.constructor === Uint8Array ? buf2hex(val) : val;
+    return val instanceof Uint8Array ? buf2hex(val) : val;
   }
 
   /**
@@ -60,7 +60,10 @@ export class BytesToken extends ComparableToken {
    */
   public Encode(args: any[]): any {
     let val = args.pop();
-    val = stripHexPrefix(this.convertUint8ArrayToHexString(val));
+    val = this.convertUint8ArrayToHexString(val);
+    if (typeof val === 'string') {
+      val = stripHexPrefix(val);
+    }
 
     this.validate(val);
 
