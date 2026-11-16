@@ -223,6 +223,7 @@ export type MichelsonTypeBLS12_381_G2 = Type0<'bls12_381_g2'>;
 export type MichelsonTypeBLS12_381_FR = Type0<'bls12_381_fr'>;
 export type MichelsonTypeChestKey = Type0<'chest_key'>;
 export type MichelsonTypeChest = Type0<'chest'>;
+export type MichelsonTypeTxRollupL2Address = Type0<'tx_rollup_l2_address'>;
 
 type TypeList<T extends MichelsonType[]> = T & Node;
 export type MichelsonTypePair<T extends MichelsonType[]> = TypeX<'pair', T> | TypeList<T>;
@@ -243,6 +244,8 @@ export interface MichelsonTypeSaplingState<S extends string = string>
   extends TypeX<'sapling_state', [IntLiteral<S>]> { }
 export interface MichelsonTypeSaplingTransaction<S extends string = string>
   extends TypeX<'sapling_transaction', [IntLiteral<S>]> { }
+export interface MichelsonTypeSaplingTransactionDeprecated<S extends string = string>
+  extends TypeX<'sapling_transaction_deprecated', [IntLiteral<S>]> { }
 export interface MichelsonTypeTicket<T extends MichelsonType> extends TypeX<'ticket', [T]> { }
 
 export type MichelsonType<T extends MichelsonTypeID = MichelsonTypeID> = T extends 'int'
@@ -303,8 +306,12 @@ export type MichelsonType<T extends MichelsonTypeID = MichelsonTypeID> = T exten
   ? MichelsonTypeBLS12_381_FR
   : T extends 'sapling_transaction'
   ? MichelsonTypeSaplingTransaction
+  : T extends 'sapling_transaction_deprecated'
+  ? MichelsonTypeSaplingTransactionDeprecated
   : T extends 'sapling_state'
   ? MichelsonTypeSaplingState
+  : T extends 'tx_rollup_l2_address'
+  ? MichelsonTypeTxRollupL2Address
   : T extends 'chest_key'
   ? MichelsonTypeChestKey
   : MichelsonTypeChest;

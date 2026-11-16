@@ -141,13 +141,12 @@ export class LongInteger {
 }
 
 export function parseBytes(s: string): number[] | null {
+  if (s.length % 2 !== 0 || !/^[0-9a-fA-F]*$/.test(s)) {
+    return null;
+  }
   const ret: number[] = [];
   for (let i = 0; i < s.length; i += 2) {
-    const x = parseInt(s.slice(i, i + 2), 16);
-    if (Number.isNaN(x)) {
-      return null;
-    }
-    ret.push(x);
+    ret.push(parseInt(s.slice(i, i + 2), 16));
   }
   return ret;
 }
@@ -282,7 +281,9 @@ export type TezosIDType =
   | 'MLDSA44Signature'
   | 'GenericSignature'
   | 'ChainID'
-  | 'RollupAddress';
+  | 'RollupAddress'
+  | 'SmartRollupAddress'
+  | 'ZkRollupAddress';
 
 export type TezosIDPrefix = [number, number[]]; // payload length, prefix
 
@@ -321,7 +322,9 @@ export const tezosPrefix: Record<TezosIDType, TezosIDPrefix> = {
   MLDSA44Signature: [2420, [1, 156, 45, 210, 3]], // mdsig(3316)
   GenericSignature: [64, [4, 130, 43]], // sig(96)
   ChainID: [4, [87, 82, 0]],
-  RollupAddress: [20, [1, 128, 120, 31]],
+  RollupAddress: [20, [1, 128, 120, 31]], // txr1(37)
+  SmartRollupAddress: [20, [6, 124, 117]], // sr1(36)
+  ZkRollupAddress: [20, [1, 23, 224, 125]], // epx1(37)
 };
 
 export function checkDecodeTezosID<T extends TezosIDType[]>(

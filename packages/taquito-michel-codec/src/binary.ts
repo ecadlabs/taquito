@@ -355,6 +355,9 @@ class Reader {
 enum ContractID {
   Implicit = 0,
   Originated = 1,
+  TxRollup = 2,
+  SmartRollup = 3,
+  ZkRollup = 4,
 }
 
 enum PublicKeyHashID {
@@ -371,7 +374,10 @@ type AddressType =
   | 'P256PublicKeyHash'
   | 'BLS12_381PublicKeyHash'
   | 'MLDSA44PublicKeyHash'
-  | 'ContractHash';
+  | 'ContractHash'
+  | 'RollupAddress'
+  | 'SmartRollupAddress'
+  | 'ZkRollupAddress';
 
 export interface Address {
   type: AddressType;
@@ -413,11 +419,21 @@ function readAddress(rd: Reader): Address {
       break;
 
     case ContractID.Originated:
+    case ContractID.TxRollup:
+    case ContractID.SmartRollup:
+    case ContractID.ZkRollup:
       address = {
-        type: 'ContractHash',
+        type:
+          tag === ContractID.Originated
+            ? 'ContractHash'
+            : tag === ContractID.TxRollup
+              ? 'RollupAddress'
+              : tag === ContractID.SmartRollup
+                ? 'SmartRollupAddress'
+                : 'ZkRollupAddress',
         hash: rd.readBytes(20),
       };
-      rd.readBytes(1);
+      rd.readUint8(); // padding
       break;
 
     default:
@@ -425,9 +441,15 @@ function readAddress(rd: Reader): Address {
   }
 
   if (rd.length !== 0) {
+    if (rd.length > 31) {
+      throw new Error(`entrypoint name too long: ${rd.length}`);
+    }
     // entry point
     const dec = new TextDecoder();
     address.entryPoint = dec.decode(new Uint8Array(rd.readBytes(rd.length)));
+    if (address.entryPoint === 'default') {
+      throw new Error('explicit default entrypoint is forbidden in binary address');
+    }
   }
   return address;
 }
@@ -458,8 +480,21 @@ function writePublicKeyHash(a: Address, w: Writer): void {
 }
 
 function writeAddress(a: Address, w: Writer): void {
-  if (a.type === 'ContractHash') {
-    w.writeUint8(ContractID.Originated);
+  if (
+    a.type === 'ContractHash' ||
+    a.type === 'RollupAddress' ||
+    a.type === 'SmartRollupAddress' ||
+    a.type === 'ZkRollupAddress'
+  ) {
+    const tag =
+      a.type === 'ContractHash'
+        ? ContractID.Originated
+        : a.type === 'RollupAddress'
+          ? ContractID.TxRollup
+          : a.type === 'SmartRollupAddress'
+            ? ContractID.SmartRollup
+            : ContractID.ZkRollup;
+    w.writeUint8(tag);
     w.writeBytes(Array.from(a.hash));
     w.writeUint8(0);
   } else {
@@ -470,6 +505,9 @@ function writeAddress(a: Address, w: Writer): void {
   if (a.entryPoint !== undefined && a.entryPoint !== '' && a.entryPoint !== 'default') {
     const enc = new TextEncoder();
     const bytes = enc.encode(a.entryPoint);
+    if (bytes.length > 31) {
+      throw new Error(`entrypoint name too long: ${a.entryPoint}`);
+    }
     w.writeBytes(Array.from(bytes));
   }
 }
@@ -991,6 +1029,7 @@ const getWriteTransformFunc = (t: MichelsonType): WriteTransformFunc => {
       };
 
     case 'address':
+    case 'contract':
       return (d: Expr) => {
         if (!('bytes' in d) && !('string' in d)) {
           throw new MichelsonTypeError(t, `address expected: ${JSON.stringify(d)}`, d);
@@ -1007,7 +1046,10 @@ const getWriteTransformFunc = (t: MichelsonType): WriteTransformFunc => {
             'P256PublicKeyHash',
             'BLS12_381PublicKeyHash',
             'MLDSA44PublicKeyHash',
-            'ContractHash'
+            'ContractHash',
+            'RollupAddress',
+            'SmartRollupAddress',
+            'ZkRollupAddress'
           );
           if (address === null) {
             throw new MichelsonTypeError(t, `address base58 expected: ${d.string}`, d);
@@ -1015,6 +1057,32 @@ const getWriteTransformFunc = (t: MichelsonType): WriteTransformFunc => {
           const w = new Writer();
           writeAddress({ type: address[0], hash: address[1], entryPoint }, w);
           bytes = { bytes: hexBytes(w.buffer) };
+        } else {
+          bytes = d;
+        }
+        return [bytes, [][Symbol.iterator]()];
+      };
+
+    case 'tx_rollup_l2_address':
+      return (d: Expr) => {
+        if (!('bytes' in d) && !('string' in d)) {
+          throw new MichelsonTypeError(
+            t,
+            `tx_rollup_l2_address expected: ${JSON.stringify(d)}`,
+            d
+          );
+        }
+        let bytes: BytesLiteral;
+        if ('string' in d) {
+          const l2 = checkDecodeTezosID(d.string, 'BLS12_381PublicKeyHash');
+          if (l2 === null) {
+            throw new MichelsonTypeError(
+              t,
+              `tx_rollup_l2_address base58 expected: ${d.string}`,
+              d
+            );
+          }
+          bytes = { bytes: hexBytes(l2[1]) };
         } else {
           bytes = d;
         }
@@ -1327,6 +1395,7 @@ const getReadTransformFuncs = (t: MichelsonType): ReadTransformFuncs => {
       ];
 
     case 'address':
+    case 'contract':
       return [
         () => [][Symbol.iterator](),
         (d: Expr) => {
@@ -1346,6 +1415,28 @@ const getReadTransformFuncs = (t: MichelsonType): ReadTransformFuncs => {
             string:
               encodeTezosID(addr.type, addr.hash) + (addr.entryPoint ? '%' + addr.entryPoint : ''),
           };
+        },
+      ];
+
+    case 'tx_rollup_l2_address':
+      return [
+        () => [][Symbol.iterator](),
+        (d: Expr) => {
+          if (!('bytes' in d) && !('string' in d)) {
+            throw new MichelsonTypeError(
+              t,
+              `tx_rollup_l2_address expected: ${JSON.stringify(d)}`,
+              d
+            );
+          }
+          if ('string' in d) {
+            return d;
+          }
+          const bytes = parseBytes(d.bytes);
+          if (bytes === null) {
+            throw new MichelsonTypeError(t, `can't parse bytes: ${d.bytes}`, d);
+          }
+          return { string: encodeTezosID('BLS12_381PublicKeyHash', bytes) };
         },
       ];
 
