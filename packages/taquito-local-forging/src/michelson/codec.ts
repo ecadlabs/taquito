@@ -1,10 +1,9 @@
 import BigNumber from 'bignumber.js';
-import { Decoder } from '../decoder';
 import { Uint8ArrayConsumer } from '../uint8array-consumer';
 import { Encoder } from '../encoder';
 import { opMappingReverse, opMapping } from '../constants';
 import { decodeUtf8, encodeUtf8ToHex, pad, toHexString } from '../utils';
-import { UnexpectedMichelsonValueError } from '../errors';
+import { OperationDecodingError, UnexpectedMichelsonValueError } from '../errors';
 import { InvalidHexStringError } from '@taquito/core';
 
 export type PrimValue = { prim: string; args?: MichelsonValue[]; annots?: string[] };
@@ -16,7 +15,7 @@ export type MichelsonValue =
   | BytesValue
   | StringValue
   | IntValue
-  | (PrimValue | BytesValue | StringValue | IntValue)[];
+  | MichelsonValue[];
 
 export const isPrim = (value: MichelsonValue): value is PrimValue => {
   return 'prim' in value;
@@ -42,7 +41,9 @@ export const scriptEncoder: Encoder<{ code: MichelsonValue; storage: MichelsonVa
   return `${pad(code.length / 2, 8)}${code}${pad(storage.length / 2, 8)}${storage}`;
 };
 
-export const scriptDecoder: Decoder = (value: Uint8ArrayConsumer) => {
+export const scriptDecoder = (
+  value: Uint8ArrayConsumer
+): { code: MichelsonValue; storage: MichelsonValue } => {
   const code = extractRequiredLen(value);
   const storage = extractRequiredLen(value);
 
@@ -70,7 +71,7 @@ export const valueEncoder: Encoder<MichelsonValue> = (value: MichelsonValue) => 
   throw new UnexpectedMichelsonValueError(JSON.stringify(value));
 };
 
-export const valueDecoder: Decoder = (value: Uint8ArrayConsumer) => {
+export const valueDecoder = (value: Uint8ArrayConsumer): MichelsonValue => {
   const preamble = value.consume(1);
   switch (preamble[0]) {
     case 0x0a:
@@ -81,7 +82,7 @@ export const valueDecoder: Decoder = (value: Uint8ArrayConsumer) => {
       return intDecoder(value);
     case 0x02: {
       const val = new Uint8ArrayConsumer(extractRequiredLen(value));
-      const results = [];
+      const results: MichelsonValue[] = [];
       while (val.length() > 0) {
         results.push(valueDecoder(val));
       }
@@ -124,7 +125,7 @@ export const bytesEncoder: Encoder<BytesValue> = (value) => {
   return `0a${pad(len)}${value.bytes}`;
 };
 
-export const bytesDecoder: Decoder = (value: Uint8ArrayConsumer) => {
+export const bytesDecoder = (value: Uint8ArrayConsumer): BytesValue => {
   const bytes = extractRequiredLen(value);
   return {
     bytes: toHexString(bytes),
@@ -137,7 +138,7 @@ export const stringEncoder: Encoder<StringValue> = (value) => {
   return `01${pad(hexLength)}${str}`;
 };
 
-export const stringDecoder: Decoder = (value: Uint8ArrayConsumer) => {
+export const stringDecoder = (value: Uint8ArrayConsumer): StringValue => {
   const str = extractRequiredLen(value);
   return {
     string: decodeUtf8(str),
@@ -235,20 +236,24 @@ export const primEncoder: Encoder<PrimValue> = (value) => {
   return `${preamble}${op}${encodedArgs}${encodedAnnots}`;
 };
 
-export const primDecoder = (value: Uint8ArrayConsumer, preamble: Uint8Array) => {
+export const primDecoder = (value: Uint8ArrayConsumer, preamble: Uint8Array): PrimValue => {
   const hasAnnot = (preamble[0] - 0x03) % 2 === 1;
   let argsCount = Math.floor((preamble[0] - 0x03) / 2);
   const op = value.consume(1)[0].toString(16).padStart(2, '0');
+  const prim = opMapping[op];
+  if (prim === undefined) {
+    throw new OperationDecodingError(`Unknown primitive opcode: ${op}`);
+  }
 
-  const result: Partial<PrimValue> = {
-    prim: opMapping[op],
+  const result: PrimValue = {
+    prim,
   };
 
-  if ((opMapping[op] === 'LAMBDA' || opMapping[op] === 'LAMBDA_REC') && argsCount) {
+  if ((prim === 'LAMBDA' || prim === 'LAMBDA_REC') && argsCount) {
     value.consume(4);
   }
 
-  if (opMapping[op] === 'view') {
+  if (prim === 'view') {
     if (argsCount != 0) {
       return primViewDecoder(value, result);
     } else {
@@ -256,9 +261,9 @@ export const primDecoder = (value: Uint8ArrayConsumer, preamble: Uint8Array) => 
     }
   }
 
-  let combPairArgs;
-  let combPairAnnots;
-  if ((opMapping[op] === 'pair' || opMapping[op] === 'Pair') && argsCount > 2) {
+  let combPairArgs: MichelsonValue[] | undefined;
+  let combPairAnnots: string[] | undefined;
+  if ((prim === 'pair' || prim === 'Pair') && argsCount > 2) {
     combPairArgs = decodeCombPair(value);
     argsCount = 0;
     combPairAnnots = decodeAnnots(value);
@@ -266,35 +271,38 @@ export const primDecoder = (value: Uint8ArrayConsumer, preamble: Uint8Array) => 
 
   const args = new Array(argsCount).fill(0).map(() => valueDecoder(value));
 
-  if ((opMapping[op] === 'LAMBDA' || opMapping[op] === 'LAMBDA_REC') && argsCount) {
+  if ((prim === 'LAMBDA' || prim === 'LAMBDA_REC') && argsCount) {
     value.consume(4);
   }
 
   if (combPairArgs) {
-    result['args'] = combPairArgs as any;
+    result['args'] = combPairArgs;
   } else if (args.length) {
-    result['args'] = args as any;
+    result['args'] = args;
   }
 
-  if (combPairAnnots && (combPairAnnots as any)[0] !== '') {
-    result['annots'] = combPairAnnots as any;
+  if (combPairAnnots && combPairAnnots[0] !== '') {
+    result['annots'] = combPairAnnots;
   } else if (hasAnnot) {
-    result['annots'] = decodeAnnots(value) as any;
+    result['annots'] = decodeAnnots(value);
   }
 
   return result;
 };
 
-export const primViewDecoder = (value: Uint8ArrayConsumer, result: Partial<PrimValue>) => {
+export const primViewDecoder = (
+  value: Uint8ArrayConsumer,
+  result: Partial<PrimValue> & Pick<PrimValue, 'prim'>
+): PrimValue => {
   value.consume(4);
-  result['args'] = new Array(4).fill(0).map(() => valueDecoder(value)) as any;
+  result['args'] = new Array(4).fill(0).map(() => valueDecoder(value));
   value.consume(4);
   return result;
 };
 
-export const decodeCombPair: Decoder = (val: Uint8ArrayConsumer) => {
+export const decodeCombPair = (val: Uint8ArrayConsumer): MichelsonValue[] => {
   const array = new Uint8ArrayConsumer(extractRequiredLen(val));
-  const args = [];
+  const args: MichelsonValue[] = [];
   while (array.length() > 0) {
     args.push(valueDecoder(array));
   }
@@ -312,7 +320,7 @@ export const encodeAnnots: Encoder<string[]> = (value: string[]) => {
   return `${pad(len)}${mergedAnnot}`;
 };
 
-export const decodeAnnots: Decoder = (val: Uint8ArrayConsumer): string[] => {
+export const decodeAnnots = (val: Uint8ArrayConsumer): string[] => {
   const len = val.consume(4);
   const annotLen = parseInt(toHexString(len), 16);
   const restOfAnnot = val.consume(annotLen);
