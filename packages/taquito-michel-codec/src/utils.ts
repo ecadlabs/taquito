@@ -257,6 +257,7 @@ export type TezosIDType =
   | 'ED25519PublicKeyHash'
   | 'SECP256K1PublicKeyHash'
   | 'P256PublicKeyHash'
+  | 'BLS12_381PublicKeyHash'
   | 'MLDSA44PublicKeyHash'
   | 'ContractHash'
   | 'CryptoboxPublicKeyHash'
@@ -294,6 +295,7 @@ export const tezosPrefix: Record<TezosIDType, TezosIDPrefix> = {
   ED25519PublicKeyHash: [20, [6, 161, 159]], // tz1(36)
   SECP256K1PublicKeyHash: [20, [6, 161, 161]], // tz2(36)
   P256PublicKeyHash: [20, [6, 161, 164]], // tz3(36)
+  BLS12_381PublicKeyHash: [20, [6, 161, 166]], // tz4(36)
   MLDSA44PublicKeyHash: [20, [6, 161, 169]], // tz5(36)
   ContractHash: [20, [2, 90, 121]], // KT1(36)
   CryptoboxPublicKeyHash: [16, [153, 103]], // id(30)

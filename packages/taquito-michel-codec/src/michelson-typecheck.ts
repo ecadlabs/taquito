@@ -375,6 +375,7 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
           'ED25519PublicKeyHash',
           'SECP256K1PublicKeyHash',
           'P256PublicKeyHash',
+          'BLS12_381PublicKeyHash',
           'MLDSA44PublicKeyHash'
         ) !== null
       ) {
@@ -409,6 +410,7 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
             'ED25519PublicKeyHash',
             'SECP256K1PublicKeyHash',
             'P256PublicKeyHash',
+            'BLS12_381PublicKeyHash',
             'MLDSA44PublicKeyHash',
             'ContractHash',
             'RollupAddress'

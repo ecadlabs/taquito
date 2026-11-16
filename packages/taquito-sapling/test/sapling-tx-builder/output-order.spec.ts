@@ -88,6 +88,24 @@ function fingerprint(tx: Awaited<ReturnType<ReturnType<typeof setup>['build']>>)
 }
 
 describe('Sapling output order', () => {
+  it.each([
+    { selected: '10', change: '0' },
+    { selected: '13', change: '3' },
+  ])(
+    'creates a $change-valued payback note when withdrawing 10 from $selected',
+    async ({ selected, change }) => {
+      const { builder, constructed } = setup();
+      const tx = await builder.createSaplingTx([], '10', boundData, {
+        inputsToSpend: [],
+        sumSelectedInputs: selected,
+      });
+      expect(tx.outputs).toHaveLength(1);
+      expect(constructed).toHaveLength(1);
+      expect(tx.outputs[0].ciphertext.payloadEnc.toString()).toBe(change + ':');
+      expect(tx.balance.toFixed()).toBe('10');
+    }
+  );
+
   for (const policy of [undefined, 'preserve'] as const) {
     it.each([
       ['shield', ['2', '3'], 0],

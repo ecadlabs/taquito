@@ -1,0 +1,47 @@
+[
+  {
+    "type": {
+      "prim": "key_hash"
+    },
+    "data": {
+      "string": "tz4QyWfEiv56CVDATV3DT3CDVhPaMKif2Ce8"
+    },
+    "packed": "050a0000001503af2dc3c40667abc0e89c0ef40171d22aed08d5eb"
+  },
+  {
+    "type": {
+      "prim": "address"
+    },
+    "data": {
+      "string": "tz4QyWfEiv56CVDATV3DT3CDVhPaMKif2Ce8"
+    },
+    "packed": "050a000000160003af2dc3c40667abc0e89c0ef40171d22aed08d5eb"
+  },
+  {
+    "type": {
+      "prim": "address"
+    },
+    "data": {
+      "string": "KT1J4E79F1qL6kGBSQ3yXBdXmuq5j4FNThK2%receive%part"
+    },
+    "packed": "050a000000220167ea84b1082efb9619d6ce04e033633906636e1d00726563656976652570617274"
+  },
+  {
+    "type": {
+      "prim": "address"
+    },
+    "data": {
+      "string": "KT1J4E79F1qL6kGBSQ3yXBdXmuq5j4FNThK2%main"
+    },
+    "packed": "050a0000001a0167ea84b1082efb9619d6ce04e033633906636e1d006d61696e"
+  },
+  {
+    "type": {
+      "prim": "address"
+    },
+    "data": {
+      "string": "KT1J4E79F1qL6kGBSQ3yXBdXmuq5j4FNThK2"
+    },
+    "packed": "050a000000160167ea84b1082efb9619d6ce04e033633906636e1d00"
+  }
+]

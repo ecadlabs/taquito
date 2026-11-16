@@ -3,6 +3,7 @@
     "website",
     "browser-tests",
     "integration-tests",
+    "test-fixtures",
     "apps",
     "**/test/**",
     "**/*.spec.ts",

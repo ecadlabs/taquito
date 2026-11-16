@@ -14,7 +14,13 @@ interface TypedTestData {
 }
 
 describe('Binary', () => {
-  const files = ['binary-data1.json', 'binary-data2.json', 'binary-data3.json'];
+  // Address regression vectors were checked with Octez's `hash data ... of type ...`.
+  const files = [
+    'binary-data1.json',
+    'binary-data2.json',
+    'binary-data3.json',
+    'binary-address-regressions.json',
+  ];
   const paths = files.map((f) => path.resolve(__dirname, f));
   const src: TypedTestData[] = [].concat(
     ...paths.map((p) => JSON.parse(fs.readFileSync(p).toString()))
