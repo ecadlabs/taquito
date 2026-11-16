@@ -270,6 +270,7 @@ export type TezosIDType =
   | 'P256EncryptedSecretKey'
   | 'SECP256K1PublicKey'
   | 'P256PublicKey'
+  | 'BLS12_381PublicKey'
   | 'MLDSA44PublicKey'
   | 'SECP256K1Scalar'
   | 'SECP256K1Element'
@@ -308,6 +309,7 @@ export const tezosPrefix: Record<TezosIDType, TezosIDPrefix> = {
   P256EncryptedSecretKey: [56, [9, 48, 57, 115, 171]], // p2esk(88)
   SECP256K1PublicKey: [33, [3, 254, 226, 86]], // sppk(55)
   P256PublicKey: [33, [3, 178, 139, 127]], // p2pk(55)
+  BLS12_381PublicKey: [48, [6, 149, 135, 204]], // BLpk(76)
   MLDSA44PublicKey: [1312, [13, 7, 237, 67]], // mdpk(1802)
   SECP256K1Scalar: [33, [38, 248, 136]], // SSp(53)
   SECP256K1Element: [33, [5, 92, 0]], // GSp(54)

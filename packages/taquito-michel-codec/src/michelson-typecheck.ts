@@ -436,6 +436,7 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
           'ED25519PublicKey',
           'SECP256K1PublicKey',
           'P256PublicKey',
+          'BLS12_381PublicKey',
           'MLDSA44PublicKey'
         ) !== null
       ) {

@@ -478,6 +478,7 @@ enum PublicKeyID {
   ED25519 = 0,
   SECP256K1 = 1,
   P256 = 2,
+  BLS12_381 = 3,
   MLDSA44 = 4,
 }
 
@@ -485,6 +486,7 @@ export type PublicKeyType =
   | 'ED25519PublicKey'
   | 'SECP256K1PublicKey'
   | 'P256PublicKey'
+  | 'BLS12_381PublicKey'
   | 'MLDSA44PublicKey';
 export interface PublicKey {
   type: PublicKeyType;
@@ -508,6 +510,10 @@ function readPublicKey(rd: Reader): PublicKey {
       type = 'P256PublicKey';
       ln = 33;
       break;
+    case PublicKeyID.BLS12_381:
+      type = 'BLS12_381PublicKey';
+      ln = 48;
+      break;
     case PublicKeyID.MLDSA44:
       type = 'MLDSA44PublicKey';
       ln = 1312;
@@ -529,6 +535,9 @@ function writePublicKey(pk: PublicKey, w: Writer): void {
       break;
     case 'P256PublicKey':
       tag = PublicKeyID.P256;
+      break;
+    case 'BLS12_381PublicKey':
+      tag = PublicKeyID.BLS12_381;
       break;
     case 'MLDSA44PublicKey':
       tag = PublicKeyID.MLDSA44;
@@ -966,6 +975,7 @@ const getWriteTransformFunc = (t: MichelsonType): WriteTransformFunc => {
             'ED25519PublicKey',
             'SECP256K1PublicKey',
             'P256PublicKey',
+            'BLS12_381PublicKey',
             'MLDSA44PublicKey'
           );
           if (key === null) {
@@ -1283,6 +1293,9 @@ const getReadTransformFuncs = (t: MichelsonType): ReadTransformFuncs => {
           }
           const rd = new Reader(new Uint8Array(bytes));
           const addr = readPublicKeyHash(rd);
+          if (rd.length !== 0) {
+            throw boundsErr;
+          }
           return {
             string:
               encodeTezosID(addr.type, addr.hash) + (addr.entryPoint ? '%' + addr.entryPoint : ''),
@@ -1306,6 +1319,9 @@ const getReadTransformFuncs = (t: MichelsonType): ReadTransformFuncs => {
           }
           const rd = new Reader(new Uint8Array(bytes));
           const pk = readPublicKey(rd);
+          if (rd.length !== 0) {
+            throw boundsErr;
+          }
           return { string: encodeTezosID(pk.type, pk.publicKey) };
         },
       ];
@@ -1459,7 +1475,11 @@ export function decodePublicKeyHashBytes(b: BytesLiteral): Address {
     throw new Error(`can't parse bytes: "${b.bytes}"`);
   }
   const rd = new Reader(new Uint8Array(bytes));
-  return readPublicKeyHash(rd);
+  const res = readPublicKeyHash(rd);
+  if (rd.length !== 0) {
+    throw boundsErr;
+  }
+  return res;
 }
 
 export function decodePublicKeyBytes(b: BytesLiteral): PublicKey {
@@ -1468,5 +1488,9 @@ export function decodePublicKeyBytes(b: BytesLiteral): PublicKey {
     throw new Error(`can't parse bytes: "${b.bytes}"`);
   }
   const rd = new Reader(new Uint8Array(bytes));
-  return readPublicKey(rd);
+  const res = readPublicKey(rd);
+  if (rd.length !== 0) {
+    throw boundsErr;
+  }
+  return res;
 }
