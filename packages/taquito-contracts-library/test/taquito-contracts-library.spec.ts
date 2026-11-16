@@ -1,8 +1,7 @@
 import { InvalidScriptFormatError } from '../src/errors';
-import { ContractsLibrary } from '../src/taquito-contracts-library';
+import { ContractsLibrary, VERSION } from '../src/taquito-contracts-library';
 import { entrypoints, entrypoints2 } from './data/contract-entrypoints';
 import { script, script2 } from './data/contract-script';
-import { VERSION } from '../src/version';
 import { InvalidAddressError } from '@taquito/core';
 
 describe('ContractsLibrary tests', () => {
@@ -11,8 +10,10 @@ describe('ContractsLibrary tests', () => {
   });
 
   it('get VERSION for ContractsLibrary', () => {
-    const version = VERSION;
-    expect(version).toBeDefined();
+    expect(VERSION).toEqual({
+      commitHash: expect.any(String),
+      version: expect.any(String),
+    });
   });
 
   it('adds one contract to the library', () => {

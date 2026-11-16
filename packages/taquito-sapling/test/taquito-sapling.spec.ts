@@ -8,6 +8,7 @@ import {
   InMemorySpendingKey,
   SaplingToolkit,
   SaplingTransactionViewer,
+  VERSION,
 } from '../src/taquito-sapling';
 import { InvalidMemo } from '../src/errors';
 import { saplingState } from './sapling-tx-builder/single-sapling-state-diff';
@@ -200,6 +201,13 @@ describe('SaplingToolkit', () => {
         mockSaplingTxBuilder as any
       )
     ).toBeDefined();
+  });
+
+  it('exports VERSION from the root entrypoint', () => {
+    expect(VERSION).toEqual({
+      commitHash: expect.any(String),
+      version: expect.any(String),
+    });
   });
 
   it('should return an instance of SaplingTransactionViewer based on sapling state id', async () => {

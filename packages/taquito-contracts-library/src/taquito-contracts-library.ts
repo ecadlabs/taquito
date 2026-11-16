@@ -9,6 +9,7 @@ import { validateAddress, ValidationResult } from '@taquito/utils';
 import { InvalidScriptFormatError } from './errors';
 import { ReadWrapperContractsLibrary } from './read-provider-wrapper';
 import { InvalidAddressError } from '@taquito/core';
+export { VERSION } from './version';
 
 interface ContractsData {
   [contractAddress: string]: { script: ScriptedContracts; entrypoints: EntrypointsResponse };
