@@ -292,12 +292,10 @@ export class PrepareProvider extends Provider implements PreparationProvider {
     publicKey?: string;
   }> {
     if (this.identity) return this.identity;
-    const isSignerConfigured = this.context.isAnySignerConfigured();
+    if (!this.context.isAnySignerConfigured()) return this.context.wallet.getIdentity();
     return {
-      pkh: isSignerConfigured ? await this.signer.publicKeyHash() : await this.context.wallet.pkh(),
-      publicKey: isSignerConfigured
-        ? await this.signer.publicKey()
-        : await this.context.wallet.pk(),
+      pkh: await this.signer.publicKeyHash(),
+      publicKey: await this.signer.publicKey(),
     };
   }
 

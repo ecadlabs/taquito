@@ -274,6 +274,8 @@ export class TezosToolkit {
     } else if (typeof wallet !== 'undefined') {
       this._options.wallet = wallet;
       this._context.walletProvider = wallet;
+      this._wallet.resetIdentityCache();
+      this._context.wallet.resetIdentityCache();
     }
   }
 
