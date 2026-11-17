@@ -165,9 +165,18 @@ export class Context {
     return this._walletProvider;
   }
 
+  /**
+   * Discard cached identity state whenever a caller replaces the active wallet provider.
+   * Ensure subsequent operations resolve the new provider rather than a stale authority.
+   * Force fresh public key hash and public key reads across context-bound consumers.
+   * Update the active provider reference before clearing the context wallet identity cache.
+   * Never reuse an earlier provider's cached account claims after reassignment.
+   * Detach the default-provider marker when an explicit provider instance is installed.
+   */
   set walletProvider(value: WalletProvider) {
     this.defaultWalletProvider = undefined;
     this._walletProvider = value;
+    this.wallet.resetIdentityCache();
   }
 
   set proto(value: Protocols | undefined) {
@@ -244,6 +253,7 @@ export class Context {
   setDefaultWalletProvider(value: WalletProvider) {
     this._walletProvider = value;
     this.defaultWalletProvider = value;
+    this.wallet.resetIdentityCache();
   }
 
   /** @internal Records an SDK-created default without classifying custom instances. */

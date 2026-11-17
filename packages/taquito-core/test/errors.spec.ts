@@ -23,7 +23,17 @@ import {
   DeprecationError,
   ProhibitedActionError,
   InvalidBigMapParameterError,
+  VERSION,
 } from '../src/taquito-core';
+
+describe('package version metadata', () => {
+  it('exports VERSION from the root entrypoint', () => {
+    expect(VERSION).toEqual({
+      commitHash: expect.any(String),
+      version: expect.any(String),
+    });
+  });
+});
 
 describe('parent errors classes', () => {
   it('should throw an ParameterValidationError', () => {

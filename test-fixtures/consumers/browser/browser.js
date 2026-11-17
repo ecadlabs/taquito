@@ -4,6 +4,7 @@ import { BeaconWallet } from '@taquito/beacon-wallet';
 import { NetworkType } from '@taquito/beacon-wallet/types';
 import { LocalForger } from '@taquito/local-forging';
 import { RemoteSigner } from '@taquito/remote-signer';
+import { getTezosOperationHash, getEthereumTransactionHash } from '@taquito/utils';
 
 if ('Buffer' in globalThis) {
   throw new Error('Expected no global Buffer in Vite browser consumer');
@@ -147,6 +148,19 @@ try {
 
 if ('Buffer' in globalThis) {
   throw new Error('Unexpected global Buffer after browser forging and signing');
+}
+
+if (
+  getTezosOperationHash('0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20') !==
+    'oon3NRVSUVJUDwBSfeMcXYFVU1GgFghM4ciDQsP8kuvpGrmj4kG' ||
+  getEthereumTransactionHash('onef1shcAkeuHdHJGckAYjbuzZSg4ZGPMyGxrc1L5RadvNJNNmM') !==
+    '0x5e0287136dd2a96e55aad495edcc329afc57df76e896e29c42e1f80d9da7deb4'
+) {
+  throw new Error('Synthetic hash browser behavior changed');
+}
+
+if ('Buffer' in globalThis) {
+  throw new Error('Unexpected global Buffer after synthetic hash derivation');
 }
 
 globalThis.consumerPassed = true;

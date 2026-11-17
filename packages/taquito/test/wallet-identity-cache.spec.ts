@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import { Context } from '../src/context';
 import { TezosToolkit } from '../src/taquito';
 import {
   first,
@@ -103,6 +104,38 @@ describe('wallet provider identity changes', () => {
     expect(original.getPK).toHaveBeenCalledTimes(1);
     expect((await prepareIdentity(toolkit)).opOb.contents).toMatchObject([
       { source: second.pkh, public_key: second.pk },
+    ]);
+  });
+
+  it('invalidates cached context.wallet identities when context.walletProvider is reassigned directly', async () => {
+    const context = new Context('http://127.0.0.1:1');
+    context.readProvider = new ReadFixture();
+    context.walletProvider = wallet();
+    expect(await Promise.all([context.wallet.pkh(), context.wallet.pk()])).toEqual([
+      first.pkh,
+      first.pk,
+    ]);
+    context.walletProvider = wallet(second);
+    expect(await Promise.all([context.wallet.pkh(), context.wallet.pk()])).toEqual([
+      second.pkh,
+      second.pk,
+    ]);
+    expect(
+      (await context.prepare.reveal({ fee: 100, gasLimit: 1000, storageLimit: 0 })).opOb.contents
+    ).toMatchObject([{ source: second.pkh, public_key: second.pk }]);
+  });
+
+  it('invalidates cached context.wallet identities when setDefaultWalletProvider is called', async () => {
+    const context = new Context('http://127.0.0.1:1');
+    context.setDefaultWalletProvider(wallet());
+    expect(await Promise.all([context.wallet.pkh(), context.wallet.pk()])).toEqual([
+      first.pkh,
+      first.pk,
+    ]);
+    context.setDefaultWalletProvider(wallet(second));
+    expect(await Promise.all([context.wallet.pkh(), context.wallet.pk()])).toEqual([
+      second.pkh,
+      second.pk,
     ]);
   });
 });

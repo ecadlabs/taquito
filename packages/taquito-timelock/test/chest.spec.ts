@@ -1,4 +1,4 @@
-import { Chest } from '../src/taquito-timelock';
+import { Chest, VERSION } from '../src/taquito-timelock';
 
 describe('Timelock chest unit test', () => {
   const time = 10000;
@@ -6,6 +6,13 @@ describe('Timelock chest unit test', () => {
   const { chest, key: chestKey1 } = Chest.newChestAndKey(payload, time);
   let op1: Uint8Array | null;
   let op2: Uint8Array | null;
+
+  it('exports VERSION from the root entrypoint', () => {
+    expect(VERSION).toEqual({
+      commitHash: expect.any(String),
+      version: expect.any(String),
+    });
+  });
 
   it('should be able to create and open chests', () => {
     const chestKey2 = chest.newKey(time);
