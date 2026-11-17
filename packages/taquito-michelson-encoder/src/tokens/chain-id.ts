@@ -5,7 +5,7 @@ import {
   TokenValidationError,
   SemanticEncoding,
 } from './token';
-import { validateChain, ValidationResult } from '@taquito/utils';
+import { b58Encode, PrefixV2, validateChain, ValidationResult } from '@taquito/utils';
 import { BaseTokenSchema } from '../schema/types';
 
 /**
@@ -44,6 +44,9 @@ export class ChainIDToken extends ComparableToken {
   }
 
   public Execute(val: any): string {
+    if (val && typeof val === 'object' && typeof val.bytes === 'string') {
+      return b58Encode(val.bytes, PrefixV2.ChainID);
+    }
     return val[Object.keys(val)[0]];
   }
 
@@ -78,7 +81,10 @@ export class ChainIDToken extends ComparableToken {
     return { string: val };
   }
 
-  public ToKey({ string }: any) {
+  public ToKey({ bytes, string }: any) {
+    if (bytes) {
+      return b58Encode(bytes, PrefixV2.ChainID);
+    }
     return string;
   }
 

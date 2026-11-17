@@ -53,16 +53,19 @@ export class NatToken extends ComparableToken {
    * @throws {@link NatValidationError}
    */
   private validate(val: any) {
+    if (typeof val === 'boolean' || val === null) {
+      throw new NatValidationError(val, this, `Value is not a number: ${JSON.stringify(val)}`);
+    }
     let bigNumber: BigNumber;
     try {
       bigNumber = new BigNumber(val);
     } catch {
       throw new NatValidationError(val, this, `Value is not a number: ${JSON.stringify(val)}`);
     }
-    if (bigNumber.isNaN()) {
+    if (bigNumber.isNaN() || !bigNumber.isInteger()) {
       throw new NatValidationError(val, this, `Value is not a number: ${JSON.stringify(val)}`);
     }
-    if (bigNumber.isNegative()) {
+    if (bigNumber.isLessThan(0)) {
       throw new NatValidationError(val, this, `Value cannot be negative: ${JSON.stringify(val)}`);
     }
   }
@@ -99,13 +102,7 @@ export class NatToken extends ComparableToken {
   }
 
   compare(nat1: string | number, nat2: string | number) {
-    const o1 = Number(nat1);
-    const o2 = Number(nat2);
-    if (o1 === o2) {
-      return 0;
-    }
-
-    return o1 < o2 ? -1 : 1;
+    return new BigNumber(nat1).comparedTo(new BigNumber(nat2)) ?? 0;
   }
 
   findAndReturnTokens(tokenToFind: string, tokens: Token[]) {

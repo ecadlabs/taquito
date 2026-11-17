@@ -63,7 +63,7 @@ export class BigMapToken extends Token {
 
   private objLitToMichelsonMap(val: any): any {
     if (val instanceof MichelsonMap) return val;
-    if (typeof val === 'object') {
+    if (typeof val === 'object' && val !== null && !Array.isArray(val)) {
       if (Object.keys(val).length === 0) {
         return new MichelsonMap();
       } else {
@@ -130,7 +130,7 @@ export class BigMapToken extends Token {
         map.set(this.KeySchema.ToKey(current.args[0]), this.ValueSchema.Execute(current.args[1]));
       });
       return map;
-    } else if ('int' in val) {
+    } else if (val && typeof val === 'object' && 'int' in val) {
       // Babylon is returning an int with the big map id in contract storage
       return val.int;
     } else {

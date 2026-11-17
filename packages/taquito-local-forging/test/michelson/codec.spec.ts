@@ -1,9 +1,13 @@
+import { describe, expect, expectTypeOf, it } from 'vitest';
+import { emitMicheline, Expr, Parser } from '@taquito/michel-codec';
 import {
   BytesValue,
   bytesDecoder,
   decodeAnnots,
+  decodeCombPair,
   encodeAnnots,
   extractRequiredLen,
+  intDecoder,
   IntValue,
   isBytes,
   isInt,
@@ -11,7 +15,9 @@ import {
   isString,
   MichelsonValue,
   OperationDecodingError,
+  primDecoder,
   PrimValue,
+  primViewDecoder,
   scriptDecoder,
   scriptEncoder,
   stringDecoder,
@@ -185,5 +191,54 @@ describe('unint8arrayconsumer', () => {
         Object.defineProperty(globalThis, 'Buffer', descriptor);
       }
     }
+  });
+
+  it('typechecks MichelsonValue, valueEncoder, and valueDecoder against @taquito/michel-codec Expr (#3536)', () => {
+    const parser = new Parser();
+    const expr = parser.parseMichelineExpression('(Pair "hello" { { 1; 2 } })');
+    expect(expr).not.toBeNull();
+    if (!expr) {
+      throw new Error('Expected parsed expression');
+    }
+
+    // Expr is assignable to MichelsonValue (including nested sequences)
+    const hex = valueEncoder(expr);
+    const nestedSeq: MichelsonValue = [[{ prim: 'DUP' }, { prim: 'DROP' }]];
+    expect(valueDecoder(Uint8ArrayConsumer.fromHexString(valueEncoder(nestedSeq)))).toEqual(
+      nestedSeq
+    );
+
+    // valueDecoder returns MichelsonValue, which is assignable to emitMicheline(expr: Expr) and type guards
+    const decoded = valueDecoder(Uint8ArrayConsumer.fromHexString(hex));
+    expect(decoded).toEqual({
+      prim: 'Pair',
+      args: [{ string: 'hello' }, [[{ int: '1' }, { int: '2' }]]],
+    });
+    const formatted = emitMicheline(decoded);
+    expect(formatted).toBe('(Pair "hello" {{1; 2}})');
+    expect(isPrim(decoded)).toBe(true);
+    if (isPrim(decoded)) {
+      expectTypeOf(decoded).toEqualTypeOf<PrimValue>();
+      expect(decoded.prim).toBe('Pair');
+    }
+
+    // Unknown primitive opcode throws OperationDecodingError rather than returning { prim: undefined }
+    expect(() => valueDecoder(Uint8ArrayConsumer.fromHexString('03ff'))).toThrow(
+      OperationDecodingError
+    );
+
+    expectTypeOf<Expr>().toMatchTypeOf<MichelsonValue>();
+    expectTypeOf(valueDecoder).returns.toEqualTypeOf<MichelsonValue>();
+    expectTypeOf(valueDecoder).returns.toMatchTypeOf<Expr>();
+    expectTypeOf(bytesDecoder).returns.toEqualTypeOf<BytesValue>();
+    expectTypeOf(stringDecoder).returns.toEqualTypeOf<StringValue>();
+    expectTypeOf(intDecoder).returns.toEqualTypeOf<IntValue>();
+    expectTypeOf(primDecoder).returns.toEqualTypeOf<PrimValue>();
+    expectTypeOf(primViewDecoder).returns.toEqualTypeOf<PrimValue>();
+    expectTypeOf(decodeCombPair).returns.toEqualTypeOf<MichelsonValue[]>();
+    expectTypeOf(scriptDecoder).returns.toEqualTypeOf<{
+      code: MichelsonValue;
+      storage: MichelsonValue;
+    }>();
   });
 });

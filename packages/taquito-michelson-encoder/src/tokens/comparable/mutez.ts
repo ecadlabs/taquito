@@ -49,14 +49,23 @@ export class MutezToken extends ComparableToken {
    * @throws {@link MutezValidationError}
    */
   private validate(val: any) {
+    if (typeof val === 'boolean' || val === null) {
+      throw new MutezValidationError(val, this, `Value is not a number: ${val}`);
+    }
     let bigNumber: BigNumber;
     try {
       bigNumber = new BigNumber(val);
     } catch {
       throw new MutezValidationError(val, this, `Value is not a number: ${val}`);
     }
-    if (bigNumber.isNaN()) {
+    if (bigNumber.isNaN() || !bigNumber.isInteger()) {
       throw new MutezValidationError(val, this, `Value is not a number: ${val}`);
+    }
+    if (bigNumber.isLessThan(0)) {
+      throw new MutezValidationError(val, this, `Value cannot be negative: ${val}`);
+    }
+    if (bigNumber.isGreaterThan('9223372036854775807')) {
+      throw new MutezValidationError(val, this, `Value is too large: ${val}`);
     }
   }
 
@@ -68,7 +77,7 @@ export class MutezToken extends ComparableToken {
 
     this.validate(val);
 
-    return { int: String(val).toString() };
+    return { int: new BigNumber(val).toFixed() };
   }
 
   /**
@@ -81,12 +90,12 @@ export class MutezToken extends ComparableToken {
       return semantic[MutezToken.prim](val);
     }
 
-    return { int: String(val).toString() };
+    return { int: new BigNumber(val).toFixed() };
   }
 
   public ToBigMapKey(val: string | number) {
     return {
-      key: { int: String(val) },
+      key: { int: new BigNumber(val).toFixed() },
       type: { prim: MutezToken.prim },
     };
   }
@@ -96,13 +105,7 @@ export class MutezToken extends ComparableToken {
   }
 
   compare(mutez1: string | number, mutez2: string | number) {
-    const o1 = Number(mutez1);
-    const o2 = Number(mutez2);
-    if (o1 === o2) {
-      return 0;
-    }
-
-    return o1 < o2 ? -1 : 1;
+    return new BigNumber(mutez1).comparedTo(new BigNumber(mutez2)) ?? 0;
   }
 
   findAndReturnTokens(tokenToFind: string, tokens: Token[]) {

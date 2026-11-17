@@ -24,7 +24,7 @@ export class SaplingStateToken extends Token {
   }
 
   private isValid(val: any) {
-    return typeof val === 'object' && Object.keys(val).length === 0;
+    return typeof val === 'object' && val !== null && Object.keys(val).length === 0;
   }
 
   /**
@@ -34,7 +34,7 @@ export class SaplingStateToken extends Token {
     if (semantic && semantic[SaplingStateToken.prim]) {
       return semantic[SaplingStateToken.prim](val, this.val);
     }
-    if ('int' in val) {
+    if (val && typeof val === 'object' && 'int' in val) {
       return val.int;
     } else {
       throw new SaplingStateValidationError(

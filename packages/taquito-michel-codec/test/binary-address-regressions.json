@@ -19,6 +19,15 @@
   },
   {
     "type": {
+      "prim": "key"
+    },
+    "data": {
+      "string": "BLpk1yKS9X6vrUiAZiZYfnjiDPkEf215W6rMX6c9gZ7FSFkkH63ZjAuU7VKvZfiBWaoCWtwWY8dQ"
+    },
+    "packed": "050a0000003103b4cd752babac8e5252b93afbc881ebc43d60339e1627e26d49e83018cedef6ddf5079b4db27c62d4d55d6eb0f3b12874"
+  },
+  {
+    "type": {
       "prim": "address"
     },
     "data": {

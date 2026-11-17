@@ -312,11 +312,18 @@ export class Parser {
     }
   }
 
+  private assertEOF(scanner: Iterator<Token>): void {
+    const tok = scanner.next();
+    if (!tok.done) {
+      throw new MichelineParseError(tok.value, `unexpected token: ${tok.value.v}`);
+    }
+  }
+
   /**
    * Parses a Micheline sequence expression, such as smart contract source. Enclosing curly brackets may be omitted.
    * @param src A Micheline sequence `{parameter ...; storage int; code { DUP ; ...};}` or `parameter ...; storage int; code { DUP ; ...};`
    */
-  parseSequence(src: string): Expr[] | null {
+  parseSequence(src: string): List<Expr> | null {
     if (typeof src !== 'string') {
       throw new TypeError(`string type was expected, got ${typeof src} instead`);
     }
@@ -326,7 +333,9 @@ export class Parser {
     if (tok.done) {
       return null;
     }
-    return this.parseSequenceExpr(scanner, tok.value);
+    const ret = this.parseSequenceExpr(scanner, tok.value);
+    this.assertEOF(scanner);
+    return ret;
   }
 
   /**
@@ -344,7 +353,9 @@ export class Parser {
     if (tok.done) {
       return null;
     }
-    return this.parseListExpr(scanner, tok.value);
+    const ret = this.parseListExpr(scanner, tok.value);
+    this.assertEOF(scanner);
+    return ret;
   }
 
   /**
@@ -362,7 +373,12 @@ export class Parser {
     if (tok.done) {
       return null;
     }
-    return this.parseExpr(scanner, tok.value);
+    const ret =
+      tok.value.t === Literal.Ident
+        ? this.parseListExpr(scanner, tok.value)
+        : this.parseExpr(scanner, tok.value);
+    this.assertEOF(scanner);
+    return ret;
   }
 
   /**
@@ -370,7 +386,7 @@ export class Parser {
    * An alias for `parseSequence`
    * @param src A Micheline sequence `{parameter ...; storage int; code { DUP ; ...};}` or `parameter ...; storage int; code { DUP ; ...};`
    */
-  parseScript(src: string): Expr[] | null {
+  parseScript(src: string): List<Expr> | null {
     return this.parseSequence(src);
   }
 

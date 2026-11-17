@@ -1,5 +1,11 @@
 import { TokenSchema } from './../schema/types';
-import { encodeAddress, validateAddress, ValidationResult } from '@taquito/utils';
+import {
+  bytesToString,
+  encodeAddress,
+  splitAddress,
+  validateAddress,
+  ValidationResult,
+} from '@taquito/utils';
 import { ContractTokenSchema } from '../schema/types';
 import { SemanticEncoding, Token, TokenFactory, TokenValidationError } from './token';
 
@@ -36,8 +42,12 @@ export class ContractToken extends Token {
     if (typeof value !== 'string') {
       throw new ContractValidationError(value, this, 'Type error');
     }
+    const [, entrypoint] = splitAddress(value);
     // tz1,tz2 and tz3 seems to be valid contract values (for Unit contract)
-    if (validateAddress(value) !== ValidationResult.VALID) {
+    if (
+      validateAddress(value) !== ValidationResult.VALID ||
+      (entrypoint !== null && new TextEncoder().encode(entrypoint.slice(1)).length > 31)
+    ) {
       throw new ContractValidationError(
         value,
         this,
@@ -65,7 +75,8 @@ export class ContractToken extends Token {
       );
     }
 
-    return encodeAddress(val.bytes);
+    const addr = encodeAddress(val.bytes);
+    return val.bytes.length > 44 ? `${addr}%${bytesToString(val.bytes.slice(44))}` : addr;
   }
 
   /**

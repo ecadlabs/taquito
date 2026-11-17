@@ -35,6 +35,9 @@
     "packages/taquito/test/wallet/smart-rollup.spec.ts",
     "packages/taquito-sapling/test/sapling-tx-builder/output-order.spec.ts",
     "packages/taquito-sapling/test/sapling-tx-builder/shuffle-outputs.spec.ts",
+    "packages/taquito-local-forging/test/michelson/codec.spec.ts",
+    "packages/taquito-michel-codec/test/micheline-parser.spec.ts",
+    "packages/taquito-michel-codec/test/tz4-validation.spec.ts",
     "test-fixtures/consumers/sapling-output-order.types.ts"
   ]
 }

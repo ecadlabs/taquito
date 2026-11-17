@@ -36,6 +36,7 @@ import {
   isPairType,
   isPairData,
   parseDate,
+  TezosIDType,
 } from './utils';
 import { decodeBase58Check } from './base58';
 import { decodeAddressBytes, decodePublicKeyBytes, decodePublicKeyHashBytes } from './binary';
@@ -76,9 +77,9 @@ function typeID(t: MichelsonType): MichelsonTypeID {
   return Array.isArray(t) ? 'pair' : t.prim;
 }
 
-type TypeArgs<T extends MichelsonType> = T extends Prim ? T['args'] : T;
+type TypeArgs<T extends MichelsonType> = T extends { prim: string; args: infer A } ? A : T;
 function typeArgs<T extends MichelsonType>(t: T): TypeArgs<T> {
-  return ('prim' in t ? (t as Extract<MichelsonType, Prim>).args : t) as TypeArgs<T>;
+  return ('prim' in t ? t.args : t) as TypeArgs<T>;
 }
 
 function assertScalarTypesEqual(a: MichelsonType, b: MichelsonType, field = false): void {
@@ -133,6 +134,7 @@ function assertScalarTypesEqual(a: MichelsonType, b: MichelsonType, field = fals
 
     case 'sapling_state':
     case 'sapling_transaction':
+    case 'sapling_transaction_deprecated':
       if (parseInt(a.args[0].int, 10) !== parseInt((b as typeof a).args[0].int, 10)) {
         throw new MichelsonTypeError(
           a,
@@ -272,6 +274,7 @@ function _compareMichelsonData(t: MichelsonType, a: MichelsonData, b: MichelsonD
       case 'address':
       case 'signature':
       case 'chain_id':
+      case 'tx_rollup_l2_address':
         if (('string' in a || 'bytes' in a) && ('string' in b || 'bytes' in b)) {
           return compareBytes(
             'string' in a ? decodeBase58Check(a.string) : parseBytes(a.bytes) || [],
@@ -341,8 +344,13 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
       throw new MichelsonTypeError(t, `integer value expected: ${JSON.stringify(d)}`, d);
 
     case 'nat':
-    case 'mutez':
       if ('int' in d && isNatural(d.int)) {
+        return;
+      }
+      throw new MichelsonTypeError(t, `natural value expected: ${JSON.stringify(d)}`, d);
+
+    case 'mutez':
+      if ('int' in d && isNatural(d.int) && BigInt(d.int) <= BigInt('9223372036854775807')) {
         return;
       }
       throw new MichelsonTypeError(t, `natural value expected: ${JSON.stringify(d)}`, d);
@@ -356,6 +364,10 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
     case 'bytes':
     case 'bls12_381_g1':
     case 'bls12_381_g2':
+    case 'sapling_transaction':
+    case 'sapling_transaction_deprecated':
+    case 'chest':
+    case 'chest_key':
       if ('bytes' in d && parseBytes(d.bytes) !== null) {
         return;
       }
@@ -397,15 +409,19 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
       throw new MichelsonTypeError(t, `timestamp expected: ${JSON.stringify(d)}`, d);
 
     case 'address':
+    case 'contract': {
+      let addrType: TezosIDType | null = null;
+      let entryPoint = '';
       if ('string' in d) {
         let address = d.string;
         const ep = d.string.indexOf('%');
         if (ep >= 0) {
           // trim entry point
           address = d.string.slice(0, ep);
+          entryPoint = d.string.slice(ep + 1);
         }
-        if (
-          checkDecodeTezosID(
+        if (new TextEncoder().encode(entryPoint).length <= 31) {
+          const decoded = checkDecodeTezosID(
             address,
             'ED25519PublicKeyHash',
             'SECP256K1PublicKeyHash',
@@ -413,20 +429,57 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
             'BLS12_381PublicKeyHash',
             'MLDSA44PublicKeyHash',
             'ContractHash',
-            'RollupAddress'
-          ) !== null
-        ) {
-          return;
+            'RollupAddress',
+            'SmartRollupAddress',
+            'ZkRollupAddress'
+          );
+          if (decoded !== null) {
+            addrType = decoded[0];
+          }
         }
       } else if ('bytes' in d) {
         try {
-          decodeAddressBytes(d);
-          return;
+          const decoded = decodeAddressBytes(d);
+          addrType = decoded.type;
+          entryPoint = decoded.entryPoint ?? '';
         } catch (err) {
           // ignore message
         }
       }
+      if (addrType !== null) {
+        if (
+          t.prim === 'contract' &&
+          (addrType === 'ED25519PublicKeyHash' ||
+            addrType === 'SECP256K1PublicKeyHash' ||
+            addrType === 'P256PublicKeyHash' ||
+            addrType === 'BLS12_381PublicKeyHash' ||
+            addrType === 'MLDSA44PublicKeyHash')
+        ) {
+          const paramArg = t.args[0];
+          const paramPrim = 'prim' in paramArg ? paramArg.prim : 'pair';
+          if (
+            (entryPoint === '' || entryPoint === 'default') &&
+            (paramPrim === 'unit' || paramPrim === 'ticket')
+          ) {
+            return;
+          }
+        } else {
+          return;
+        }
+      }
       throw new MichelsonTypeError(t, `address expected: ${JSON.stringify(d)}`, d);
+    }
+
+    case 'tx_rollup_l2_address': {
+      const bytes = 'bytes' in d ? parseBytes(d.bytes) : null;
+      if (
+        (bytes !== null && bytes.length === 20) ||
+        ('string' in d && checkDecodeTezosID(d.string, 'BLS12_381PublicKeyHash') !== null)
+      ) {
+        return;
+      }
+      throw new MichelsonTypeError(t, `tx_rollup_l2_address expected: ${JSON.stringify(d)}`, d);
+    }
 
     case 'key':
       if (
@@ -436,6 +489,7 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
           'ED25519PublicKey',
           'SECP256K1PublicKey',
           'P256PublicKey',
+          'BLS12_381PublicKey',
           'MLDSA44PublicKey'
         ) !== null
       ) {
@@ -476,14 +530,16 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
       throw new MichelsonTypeError(t, `signature expected: ${JSON.stringify(d)}`, d);
     }
 
-    case 'chain_id':
-      if ('bytes' in d || 'string' in d) {
-        const x = 'string' in d ? decodeBase58Check(d.string) : parseBytes(d.bytes);
-        if (x !== null) {
-          return;
-        }
+    case 'chain_id': {
+      const bytes = 'bytes' in d ? parseBytes(d.bytes) : null;
+      if (
+        (bytes !== null && bytes.length === 4) ||
+        ('string' in d && checkDecodeTezosID(d.string, 'ChainID') !== null)
+      ) {
+        return;
       }
       throw new MichelsonTypeError(t, `chain id expected: ${JSON.stringify(d)}`, d);
+    }
 
     // Complex types
     case 'option':

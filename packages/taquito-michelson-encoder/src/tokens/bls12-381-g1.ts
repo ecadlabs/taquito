@@ -33,14 +33,14 @@ export class Bls12381g1Token extends Token {
    * @throws {@link Bls12381g1ValidationError}
    */
   private validate(val: any) {
-    if (/^[0-9a-fA-F]*$/.test(val) && val.length % 2 === 0) {
+    if (typeof val === 'string' && /^[0-9a-fA-F]*$/.test(val) && val.length % 2 === 0) {
       return;
     }
     throw new Bls12381g1ValidationError(val, this, `Invalid bytes: ${JSON.stringify(val)}`);
   }
 
   private convertUint8ArrayToHexString(val: any) {
-    return val.constructor === Uint8Array ? buf2hex(val) : val;
+    return val instanceof Uint8Array ? buf2hex(val) : val;
   }
 
   /**

@@ -671,6 +671,7 @@ function traverseType(ex: Prim | Expr[], cb: (ex: Prim | Expr[]) => void): ex is
 
     case 'sapling_state':
     case 'sapling_transaction':
+    case 'sapling_transaction_deprecated':
       if (assertArgs(ex, 1)) {
         assertIntLiteral(ex.args[0]);
       }
