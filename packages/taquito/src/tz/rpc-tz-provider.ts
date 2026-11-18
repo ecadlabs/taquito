@@ -1,6 +1,5 @@
-import BigNumberJs from 'bignumber.js';
+import type BigNumberJs from 'bignumber.js';
 type BigNumber = InstanceType<typeof BigNumberJs>;
-const BigNumber = BigNumberJs;
 import { Context } from '../context';
 import { Operation } from '../operations/operations';
 import { TzProvider } from './interface';

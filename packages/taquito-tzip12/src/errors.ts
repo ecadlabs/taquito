@@ -1,7 +1,6 @@
 import { TaquitoError } from '@taquito/core';
-import BigNumberJs from 'bignumber.js';
+import type BigNumberJs from 'bignumber.js';
 type BigNumber = InstanceType<typeof BigNumberJs>;
-const BigNumber = BigNumberJs;
 
 /**
  *  @category Error

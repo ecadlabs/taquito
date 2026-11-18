@@ -1,8 +1,7 @@
 import { UnsupportedActionError } from '@taquito/core';
 import { RPCMethodName } from './../rpc-client-interface';
-import BigNumberJs from 'bignumber.js';
+import type BigNumberJs from 'bignumber.js';
 type BigNumber = InstanceType<typeof BigNumberJs>;
-const BigNumber = BigNumberJs;
 import { defaultRPCOptions, RpcClientInterface, RPCOptions } from '../rpc-client-interface';
 import { normalizeBigMapPagination } from '../utils/utils';
 import {

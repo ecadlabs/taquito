@@ -9,9 +9,8 @@ import {
   ScriptedContracts,
   AILaunchCycleResponse,
 } from '@taquito/rpc';
-import BigNumberJs from 'bignumber.js';
+import type BigNumberJs from 'bignumber.js';
 type BigNumber = InstanceType<typeof BigNumberJs>;
-const BigNumber = BigNumberJs;
 import { BigMapQuery, BlockIdentifier, SaplingStateQuery, TzReadProvider } from './interface';
 
 /**

@@ -45,7 +45,7 @@ export interface Prim<PT extends string = string, AT extends Expr[] = Expr[]> ex
 
 export type List<T extends Expr> = T[] & Node;
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface ExprList extends List<Expr> {}
 
 /**

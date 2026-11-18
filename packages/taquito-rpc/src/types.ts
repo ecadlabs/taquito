@@ -1,6 +1,5 @@
-import BigNumberJs from 'bignumber.js';
+import type BigNumberJs from 'bignumber.js';
 type BigNumber = InstanceType<typeof BigNumberJs>;
-const BigNumber = BigNumberJs;
 import { OpKind } from './opkind';
 
 export type BalanceResponse = BigNumber;
@@ -2520,10 +2519,10 @@ export interface ConstantsResponseProto010 extends ConstantsResponseProto009 {
   liquidity_baking_escape_ema_threshold?: number;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface ConstantsResponseProto009 extends ConstantsResponseProto008 {}
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface ConstantsResponseProto008 extends ConstantsResponseProto007 {}
 
 export interface ConstantsResponseProto007 extends Omit<

@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable @typescript-eslint/no-require-imports */
 const TerserPlugin = require('terser-webpack-plugin');
 const pkg = require('./package.json');
 const path = require('path');

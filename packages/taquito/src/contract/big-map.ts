@@ -1,8 +1,7 @@
 import { UnsupportedActionError } from '@taquito/core';
 import { Schema, BigMapKeyType } from '@taquito/michelson-encoder';
-import BigNumberJs from 'bignumber.js';
+import type BigNumberJs from 'bignumber.js';
 type BigNumber = InstanceType<typeof BigNumberJs>;
-const BigNumber = BigNumberJs;
 import { StorageProvider, BigMapValuesOptions, BigMapValuesPage } from './interface';
 import { HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
 import { BlockIdentifier } from '../read-provider/interface';

@@ -188,7 +188,7 @@ export class Schema {
     try {
       this.root.EncodeObject(val);
       return true;
-    } catch (error) {
+    } catch {
       return false;
     }
   }

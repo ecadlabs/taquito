@@ -208,7 +208,7 @@ async function loadLocalParam(
     );
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { readFile } = require(getNodeFsPromisesModuleId()) as typeof import('node:fs/promises');
   const bytes = Buffer.from(await readFile(path));
 

@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable @typescript-eslint/no-require-imports */
 const { resolve } = require('path');
 const { writeFileSync } = require('fs-extra');
 const { version } = require('./package.json');
