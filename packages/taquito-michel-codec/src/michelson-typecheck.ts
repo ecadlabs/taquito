@@ -18,6 +18,7 @@ import {
   MichelsonTypeAddress,
   MichelsonContractView,
   ProtoInferiorTo,
+  MichelsonMapElt,
 } from './michelson-types';
 import {
   unpackAnnotations,
@@ -38,8 +39,12 @@ import {
   parseDate,
   TezosIDType,
 } from './utils';
-import { decodeBase58Check } from './base58';
-import { decodeAddressBytes, decodePublicKeyBytes, decodePublicKeyHashBytes } from './binary';
+import {
+  decodeAddressBytes,
+  decodePublicKeyBytes,
+  decodePublicKeyHashBytes,
+  packData,
+} from './binary';
 import {
   assertMichelsonComparableType,
   assertMichelsonPackableType,
@@ -217,6 +222,57 @@ export function assertTypeAnnotationsValid(t: MichelsonType, field = false): voi
 
 // Data integrity check
 
+const P256_P = 0xffffffff00000001000000000000000000000000ffffffffffffffffffffffffn;
+const P256_B = 0x5ac635d8aa3a93e7b3ebbd55769886bc651d06b0cc53b0f63bce3c3e27d2604bn;
+const P256_SQRT_EXP = (P256_P + 1n) >> 2n;
+const DEFAULT_ENTRYPOINT_BYTES = [100, 101, 102, 97, 117, 108, 116];
+
+function modPow(base: bigint, exp: bigint, mod: bigint): bigint {
+  let result = 1n;
+  let b = ((base % mod) + mod) % mod;
+  let e = exp;
+  while (e > 0n) {
+    if ((e & 1n) === 1n) {
+      result = (result * b) % mod;
+    }
+    b = (b * b) % mod;
+    e >>= 1n;
+  }
+  return result;
+}
+
+function compareP256Keys(ba: number[], bb: number[]): number {
+  const xCmp = compareBytes(ba.slice(2), bb.slice(2));
+  if (xCmp !== 0) {
+    return xCmp;
+  }
+  if (ba[1] === bb[1]) {
+    return 0;
+  }
+  if ((ba[1] !== 2 && ba[1] !== 3) || (bb[1] !== 2 && bb[1] !== 3)) {
+    return compareBytes(ba, bb);
+  }
+  let x = 0n;
+  for (const byte of ba.slice(2)) {
+    x = (x << 8n) | BigInt(byte);
+  }
+  const rhs = (((x * x - 3n) % P256_P) * x + P256_B + P256_P) % P256_P;
+  const y0 = modPow(rhs, P256_SQRT_EXP, P256_P);
+  const ya = (y0 & 1n) === BigInt(ba[1] & 1) ? y0 : P256_P - y0;
+  const yb = P256_P - ya;
+  return ya < yb ? -1 : ya > yb ? 1 : 0;
+}
+
+/**
+ * Follow protocol comparable rules across scalar and composite Michelson types.
+ * Reject duplicate or descending keys when validating set and map literals.
+ * Evaluate pair combs recursively from left to right before right-hand branches.
+ * Enforce strict byte-order comparisons on packed cryptographic primitives.
+ * Recover uncompressed curve coordinates when compressed P-256 x-values collide.
+ * Interpret omitted address entrypoints as the canonical default entrypoint name.
+ * Decode timestamp literals into arbitrary-precision seconds prior to ordering.
+ * Ensure container key ordering remains deterministic across text and binary forms.
+ */
 function _compareMichelsonData(t: MichelsonType, a: MichelsonData, b: MichelsonData): number {
   if (isPairType(t)) {
     if (isPairData(a) && isPairData(b)) {
@@ -229,7 +285,7 @@ function _compareMichelsonData(t: MichelsonType, a: MichelsonData, b: MichelsonD
       if (x !== 0) {
         return x;
       }
-      return _compareMichelsonData(tComb.args[0], aComb.args[1], bComb.args[1]);
+      return _compareMichelsonData(tComb.args[1], aComb.args[1], bComb.args[1]);
     }
   } else {
     switch (t.prim) {
@@ -243,8 +299,7 @@ function _compareMichelsonData(t: MichelsonType, a: MichelsonData, b: MichelsonD
 
       case 'string':
         if ('string' in a && 'string' in b) {
-          const x = a.string.localeCompare(b.string);
-          return x < 0 ? -1 : x > 0 ? 1 : 0;
+          return a.string < b.string ? -1 : a.string > b.string ? 1 : 0;
         }
         break;
 
@@ -270,26 +325,55 @@ function _compareMichelsonData(t: MichelsonType, a: MichelsonData, b: MichelsonD
         break;
 
       case 'key':
-      case 'key_hash':
+        if (('string' in a || 'bytes' in a) && ('string' in b || 'bytes' in b)) {
+          const ba = packData(a, t).slice(6);
+          const bb = packData(b, t).slice(6);
+          if (ba[0] === 2 && bb[0] === 2) {
+            return compareP256Keys(ba, bb);
+          }
+          return compareBytes(ba, bb);
+        }
+        break;
+
       case 'address':
+        if (('string' in a || 'bytes' in a) && ('string' in b || 'bytes' in b)) {
+          const ba = packData(a, t).slice(6);
+          const bb = packData(b, t).slice(6);
+          const destCmp = compareBytes(ba.slice(0, 22), bb.slice(0, 22));
+          if (destCmp !== 0) {
+            return destCmp;
+          }
+          const epA = ba.length > 22 ? ba.slice(22) : DEFAULT_ENTRYPOINT_BYTES;
+          const epB = bb.length > 22 ? bb.slice(22) : DEFAULT_ENTRYPOINT_BYTES;
+          return compareBytes(epA, epB);
+        }
+        break;
+
+      case 'key_hash':
       case 'signature':
       case 'chain_id':
       case 'tx_rollup_l2_address':
         if (('string' in a || 'bytes' in a) && ('string' in b || 'bytes' in b)) {
-          return compareBytes(
-            'string' in a ? decodeBase58Check(a.string) : parseBytes(a.bytes) || [],
-            'string' in b ? decodeBase58Check(b.string) : parseBytes(b.bytes) || []
-          );
+          return compareBytes(packData(a, t).slice(6), packData(b, t).slice(6));
         }
         break;
 
       case 'timestamp':
         if (('string' in a || 'int' in a) && ('string' in b || 'int' in b)) {
-          const aa = parseDate(a);
-          const bb = parseDate(b);
+          const toSec = (v: typeof a): LongInteger | null => {
+            if ('int' in v && isDecimal(v.int)) {
+              return new LongInteger(v.int);
+            }
+            if ('string' in v && isDecimal(v.string)) {
+              return new LongInteger(v.string);
+            }
+            const d = parseDate(v);
+            return d !== null ? new LongInteger(Math.floor(d.valueOf() / 1000)) : null;
+          };
+          const aa = toSec(a);
+          const bb = toSec(b);
           if (aa !== null && bb !== null) {
-            const x = aa.valueOf() - bb.valueOf();
-            return x < 0 ? -1 : x > 0 ? 1 : 0;
+            return aa.cmp(bb);
           }
         }
         break;
@@ -298,6 +382,41 @@ function _compareMichelsonData(t: MichelsonType, a: MichelsonData, b: MichelsonD
         if ('prim' in a && 'prim' in b && a.prim === 'Unit' && b.prim === 'Unit') {
           return 0;
         }
+        break;
+
+      case 'option':
+        if ('prim' in a && 'prim' in b) {
+          if (a.prim === 'None' && b.prim === 'None') {
+            return 0;
+          }
+          if (a.prim === 'None' && b.prim === 'Some') {
+            return -1;
+          }
+          if (a.prim === 'Some' && b.prim === 'None') {
+            return 1;
+          }
+          if (a.prim === 'Some' && b.prim === 'Some') {
+            return _compareMichelsonData(t.args[0], a.args[0], b.args[0]);
+          }
+        }
+        break;
+
+      case 'or':
+        if ('prim' in a && 'prim' in b) {
+          if (a.prim === 'Left' && b.prim === 'Left') {
+            return _compareMichelsonData(t.args[0], a.args[0], b.args[0]);
+          }
+          if (a.prim === 'Left' && b.prim === 'Right') {
+            return -1;
+          }
+          if (a.prim === 'Right' && b.prim === 'Left') {
+            return 1;
+          }
+          if (a.prim === 'Right' && b.prim === 'Right') {
+            return _compareMichelsonData(t.args[1], a.args[0], b.args[0]);
+          }
+        }
+        break;
     }
   }
 
@@ -403,7 +522,10 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
       throw new MichelsonTypeError(t, `key hash expected: ${JSON.stringify(d)}`, d);
 
     case 'timestamp':
-      if (('string' in d || 'int' in d) && parseDate(d) !== null) {
+      if (
+        ('int' in d && isDecimal(d.int)) ||
+        ('string' in d && (isDecimal(d.string) || parseDate(d) !== null))
+      ) {
         return;
       }
       throw new MichelsonTypeError(t, `timestamp expected: ${JSON.stringify(d)}`, d);
@@ -556,9 +678,15 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
     case 'list':
     case 'set':
       if (assertDataListIfAny(d)) {
-        //let prev: MichelsonData | undefined;
+        let prev: MichelsonData | undefined;
         for (const v of d) {
           assertDataValidInternal(v, t.args[0], ctx);
+          if (t.prim === 'set') {
+            if (prev !== undefined && _compareMichelsonData(t.args[0], prev, v) >= 0) {
+              throw new MichelsonTypeError(t, `set elements must be ordered: ${JSON.stringify(d)}`, d);
+            }
+            prev = v;
+          }
         }
         return;
       }
@@ -592,13 +720,17 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
     case 'map':
     case 'big_map':
       if (Array.isArray(d)) {
-        //let prev: MichelsonMapElt | undefined;
+        let prev: MichelsonMapElt | undefined;
         for (const v of d) {
           if (!('prim' in v) || v.prim !== 'Elt') {
             throw new MichelsonTypeError(t, `map elements expected: ${JSON.stringify(d)}`, d);
           }
           assertDataValidInternal(v.args[0], t.args[0], ctx);
           assertDataValidInternal(v.args[1], t.args[1], ctx);
+          if (prev !== undefined && _compareMichelsonData(t.args[0], prev.args[0], v.args[0]) >= 0) {
+            throw new MichelsonTypeError(t, `map elements must be ordered: ${JSON.stringify(d)}`, d);
+          }
+          prev = v;
         }
         return;
       }

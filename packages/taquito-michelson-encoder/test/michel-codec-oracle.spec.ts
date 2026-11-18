@@ -12,7 +12,9 @@ import { Schema } from '../src/schema/storage';
 import { ParameterSchema } from '../src/schema/parameter';
 import { createToken } from '../src/tokens/createToken';
 import { MichelsonMap } from '../src/michelson-map';
-import { Token } from '../src/tokens/token';
+import { UnitValue } from '../src/constants';
+import { Token, TokenValidationError } from '../src/tokens/token';
+import { normalizeMichelsonValue } from './utils';
 import { IntValidationError } from '../src/tokens/comparable/int';
 import { NatValidationError } from '../src/tokens/comparable/nat';
 import { MutezValidationError } from '../src/tokens/comparable/mutez';
@@ -513,6 +515,538 @@ describe('@taquito/michelson-encoder conformance against @taquito/michel-codec o
       expect(() =>
         assertDataValid(nested.Encode(1, 'hello', 'cafe', '4', 100) as MichelsonData, nestedType)
       ).not.toThrow();
+    });
+  });
+
+  describe('8. Comparable token soundness and seeded property-based differential fuzz harness', () => {
+    it('OptionToken.compare, BoolToken.ToKey, TimestampToken.compare/ToKey, and BytesToken.compare handle composite/scalar keys soundly', () => {
+      const optIntSetType = parseType('set (option int)');
+      const optIntSetSchema = new Schema(optIntSetType);
+      const optSetEncoded = optIntSetSchema.Encode([
+        { Some: 5 },
+        null,
+        { Some: 0 },
+        { Some: -3 },
+      ]) as MichelsonData;
+      expect(() => assertDataValid(optSetEncoded, optIntSetType)).not.toThrow();
+      const optSetExecuted = optIntSetSchema.Execute(optSetEncoded);
+      expect(optIntSetSchema.Encode(optSetExecuted)).toEqual(optSetEncoded);
+
+      const boolMapType = parseType('map bool int');
+      const boolMapSchema = new Schema(boolMapType);
+      const boolMap = MichelsonMap.fromLiteral({ true: 10, false: 20 });
+      // Also test boolean keys directly
+      const directBoolMap = new MichelsonMap<boolean, number>();
+      directBoolMap.set(true, 10);
+      directBoolMap.set(false, 20);
+      const boolMapEncoded = boolMapSchema.Encode(directBoolMap) as MichelsonData;
+      expect(() => assertDataValid(boolMapEncoded, boolMapType)).not.toThrow();
+      const boolMapExecuted = boolMapSchema.Execute(boolMapEncoded) as MichelsonMap<
+        boolean,
+        BigNumber
+      >;
+      expect(boolMapExecuted.get(false)?.toNumber()).toBe(20);
+      expect(boolMapExecuted.get(true)?.toNumber()).toBe(10);
+      expect(boolMapSchema.Encode(boolMapExecuted)).toEqual(boolMapEncoded);
+      void boolMap;
+
+      const tsMapType = parseType('map timestamp int');
+      const tsMapSchema = new Schema(tsMapType);
+      const tsMap = new MichelsonMap<string | number, number>();
+      tsMap.set(100, 2);
+      tsMap.set(99, 1);
+      const tsMapEncoded = tsMapSchema.Encode(tsMap) as MichelsonData;
+      expect(() => assertDataValid(tsMapEncoded, tsMapType)).not.toThrow();
+      const tsMapExecuted = tsMapSchema.Execute(tsMapEncoded);
+      expect(tsMapSchema.Encode(tsMapExecuted)).toEqual([
+        { prim: 'Elt', args: [{ string: '1970-01-01T00:01:39.000Z' }, { int: '1' }] },
+        { prim: 'Elt', args: [{ string: '1970-01-01T00:01:40.000Z' }, { int: '2' }] },
+      ]);
+
+      // Mixed numeric and RFC3339 timestamps in a set (99s < 100s) and >53-bit timestamps
+      const tsSetType = parseType('set timestamp');
+      const tsSetSchema = new Schema(tsSetType);
+      const tsSetEncoded = tsSetSchema.Encode([
+        '9007199254740993',
+        100,
+        '9007199254740992',
+        '1970-01-01T00:01:39.000Z',
+      ]) as MichelsonData;
+      expect(() => assertDataValid(tsSetEncoded, tsSetType)).not.toThrow();
+      expect(tsSetEncoded).toEqual([
+        { string: '1970-01-01T00:01:39.000Z' },
+        { int: '100' },
+        { string: '9007199254740992' },
+        { string: '9007199254740993' },
+      ]);
+
+      // Timestamp map keys outside JavaScript's Date range (±8.64e12 seconds)
+      const outOfDateRangeMap: MichelsonData = [
+        { prim: 'Elt', args: [{ string: '8640000000001' }, { int: '1' }] },
+        { prim: 'Elt', args: [{ string: '9007199254740993' }, { int: '2' }] },
+      ];
+      expect(() => assertDataValid(outOfDateRangeMap, tsMapType)).not.toThrow();
+      const outOfDateRangeExecuted = tsMapSchema.Execute(outOfDateRangeMap) as MichelsonMap<
+        string,
+        BigNumber
+      >;
+      expect(outOfDateRangeExecuted.get('8640000000001')?.toNumber()).toBe(1);
+      expect(outOfDateRangeExecuted.get('9007199254740993')?.toNumber()).toBe(2);
+      expect(tsMapSchema.Encode(outOfDateRangeExecuted)).toEqual(outOfDateRangeMap);
+
+      // SignatureToken.compare across curve prefixes (0x11... p2sig < 0x22... BLsig)
+      const sigSetType = parseType('set signature');
+      const sigSetSchema = new Schema(sigSetType);
+      const sigSetEncoded = sigSetSchema.Encode([VALID_BLSIG, VALID_P2SIG]) as MichelsonData;
+      expect(() => assertDataValid(sigSetEncoded, sigSetType)).not.toThrow();
+
+      // KeyToken.compare vs assertDataValid on p2pk keys with opposite y-parity and same x (G vs -G)
+      const keySetType = parseType('set key');
+      const keySetSchema = new Schema(keySetType);
+      const p2pkOddSmallerX = 'p2pk66tTYL5EvahKAXncbtbRPBkAnxo3CszzUho5wPCgWauBMyvybuB';
+      const p2pkEvenLargerX = 'p2pk65CTpuTNXKxWgcPCGwi5FX1SQLiHE1gd6y5gxKmCxw7eVoqbZLL';
+      const p2pkGenSmallerY = b58Encode(
+        '036b17d1f2e12c4247f8bce6e563a440f277037d812deb33a0f4a13945d898c296',
+        PrefixV2.P256PublicKey
+      );
+      const p2pkNegGenLargerY = b58Encode(
+        '026b17d1f2e12c4247f8bce6e563a440f277037d812deb33a0f4a13945d898c296',
+        PrefixV2.P256PublicKey
+      );
+      const keySetEncoded = keySetSchema.Encode([
+        p2pkNegGenLargerY,
+        p2pkGenSmallerY,
+        p2pkEvenLargerX,
+        p2pkOddSmallerX,
+      ]) as MichelsonData;
+      expect(() => assertDataValid(keySetEncoded, keySetType)).not.toThrow();
+
+      // AddressToken.compare with %a < omitted/default < %z
+      const addrSetType = parseType('set address');
+      const addrSetSchema = new Schema(addrSetType);
+      const addrSetEncoded = addrSetSchema.Encode([
+        'KT1ThEdxfUcWUwqsdergy3QnbCWGHSUHeHJq%z',
+        'KT1ThEdxfUcWUwqsdergy3QnbCWGHSUHeHJq',
+        'KT1ThEdxfUcWUwqsdergy3QnbCWGHSUHeHJq%a',
+      ]) as MichelsonData;
+      expect(addrSetEncoded).toEqual([
+        { string: 'KT1ThEdxfUcWUwqsdergy3QnbCWGHSUHeHJq%a' },
+        { string: 'KT1ThEdxfUcWUwqsdergy3QnbCWGHSUHeHJq' },
+        { string: 'KT1ThEdxfUcWUwqsdergy3QnbCWGHSUHeHJq%z' },
+      ]);
+      expect(() => assertDataValid(addrSetEncoded, addrSetType)).not.toThrow();
+    });
+
+    it('seeded property-based fuzzing: random MichelsonType schemas and JS values satisfy Encode -> assertDataValid -> packDataBytes -> unpackDataBytes -> Execute -> Encode', () => {
+      // Deterministic Mulberry32 PRNG
+      function createPrng(seed: number) {
+        let state = seed >>> 0;
+        return () => {
+          state = (state + 0x6d2b79f5) >>> 0;
+          let t = Math.imul(state ^ (state >>> 15), 1 | state);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+      }
+
+      const fuzzSeed = process.env.TAQUITO_FUZZ_SEED
+        ? Number(process.env.TAQUITO_FUZZ_SEED)
+        : 0x250200;
+      const fuzzIterations = process.env.TAQUITO_FUZZ_ITERATIONS
+        ? Number(process.env.TAQUITO_FUZZ_ITERATIONS)
+        : 120;
+      const fuzzDepth = process.env.TAQUITO_FUZZ_DEPTH
+        ? Number(process.env.TAQUITO_FUZZ_DEPTH)
+        : 2;
+
+      const rand = createPrng(fuzzSeed);
+      const randInt = (min: number, max: number) => min + Math.floor(rand() * (max - min + 1));
+      const pick = <T>(arr: readonly T[]): T => arr[randInt(0, arr.length - 1)];
+      const randHex = (byteLen: number) => {
+        let out = '';
+        for (let i = 0; i < byteLen; i++) {
+          out += randInt(0, 255).toString(16).padStart(2, '0');
+        }
+        return out;
+      };
+      const randBigIntString = (signed: boolean) => {
+        const digits = randInt(1, 30);
+        let s = String(randInt(1, 9));
+        for (let i = 1; i < digits; i++) {
+          s += String(randInt(0, 9));
+        }
+        return signed && rand() < 0.5 ? `-${s}` : s;
+      };
+
+      const validTz4 = b58Encode('44'.repeat(20), PrefixV2.BLS12_381PublicKeyHash);
+      const validTz5 = b58Encode('55'.repeat(20), PrefixV2.MLDSA44PublicKeyHash);
+      const validSr1 = b58Encode('66'.repeat(20), PrefixV2.SmartRollupHash);
+      const ADDRESS_POOL = [
+        'tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx',
+        'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
+        'tz2TSvNTh2epDMhZHrw73nV9piBX7kLZ9K9m',
+        'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5',
+        validTz4,
+        validTz5,
+        validSr1,
+        'KT18hLaKKTfizp7BEiQLH32uroU68mCcX6Ru',
+        'KT1ThEdxfUcWUwqsdergy3QnbCWGHSUHeHJq%a',
+        'KT1ThEdxfUcWUwqsdergy3QnbCWGHSUHeHJq%d',
+        'KT1ThEdxfUcWUwqsdergy3QnbCWGHSUHeHJq%def',
+        'KT1ThEdxfUcWUwqsdergy3QnbCWGHSUHeHJq',
+        'KT1ThEdxfUcWUwqsdergy3QnbCWGHSUHeHJq%defaulta',
+        'KT1ThEdxfUcWUwqsdergy3QnbCWGHSUHeHJq%mint',
+        'KT1ThEdxfUcWUwqsdergy3QnbCWGHSUHeHJq%transfer',
+      ] as const;
+
+      const KEY_HASH_POOL = [
+        'tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx',
+        'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
+        'tz2TSvNTh2epDMhZHrw73nV9piBX7kLZ9K9m',
+        'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5',
+        validTz4,
+        validTz5,
+      ] as const;
+
+      const KEY_POOL = [
+        'edpkuBknW28nW72KG6RoHtYW7p12T6GKc7nAbwYX5m8Wd9sDVC9yav',
+        'p2pk66tTYL5EvahKAXncbtbRPBkAnxo3CszzUho5wPCgWauBMyvybuB',
+        'p2pk65CTpuTNXKxWgcPCGwi5FX1SQLiHE1gd6y5gxKmCxw7eVoqbZLL',
+        b58Encode(
+          '036b17d1f2e12c4247f8bce6e563a440f277037d812deb33a0f4a13945d898c296',
+          PrefixV2.P256PublicKey
+        ),
+        b58Encode(
+          '026b17d1f2e12c4247f8bce6e563a440f277037d812deb33a0f4a13945d898c296',
+          PrefixV2.P256PublicKey
+        ),
+        b58Encode('11'.repeat(32), PrefixV2.Ed25519PublicKey),
+        b58Encode('22'.repeat(32), PrefixV2.Ed25519PublicKey),
+      ] as const;
+
+      const SIG_POOL = [
+        'sigb1FKPeiRgPApxqBMpyBSMpwgnbzhaMcqQcTVwMz82MSzNLBrmRUuVZVgWTBFGcoWQcjTyhfJaxjFtfvB6GGHkfwpxBkFd',
+        b58Encode('11'.repeat(64), PrefixV2.GenericSignature),
+        b58Encode('33'.repeat(64), PrefixV2.GenericSignature),
+        VALID_BLSIG,
+      ] as const;
+
+      const CHAIN_ID_POOL = [
+        'NetXdQprcVkpaWU',
+        'NetXpqTM3MbtXCx',
+        b58Encode('00000001', PrefixV2.ChainID),
+      ] as const;
+
+      const STRING_POOL = ['', 'A', 'B', 'a', 'aa', 'b', 'hello', 'tezos_123'] as const;
+      const BYTES_POOL = ['', '00', '01', '0100', '02', 'cafe', 'deadbeef'] as const;
+      const TIMESTAMP_POOL = [
+        '1969-12-31T23:59:59.000Z',
+        '1970-01-01T00:00:00.000Z',
+        '2020-01-01T00:00:00.000Z',
+        '2021-12-03T18:23:10.000Z',
+        '2025-06-15T12:30:00.000Z',
+      ] as const;
+
+      const COMPARABLE_SCALARS = [
+        'unit',
+        'bool',
+        'nat',
+        'int',
+        'mutez',
+        'string',
+        'bytes',
+        'timestamp',
+        'address',
+        'key_hash',
+        'key',
+        'signature',
+        'chain_id',
+      ] as const;
+
+      let annotCounter = 0;
+      const nextAnnot = (prefix: string) => `%${prefix}_${++annotCounter}`;
+
+      function genComparableType(depth: number): MichelsonType {
+        if (depth <= 0 || rand() < 0.55) {
+          return { prim: pick(COMPARABLE_SCALARS) } as MichelsonType;
+        }
+        const kind = pick(['pair', 'option', 'or'] as const);
+        if (kind === 'option') {
+          return { prim: 'option', args: [genComparableType(depth - 1)] };
+        }
+        if (kind === 'or') {
+          return {
+            prim: 'or',
+            args: [
+              { ...(genComparableType(depth - 1) as object), annots: [nextAnnot('kl')] },
+              { ...(genComparableType(depth - 1) as object), annots: [nextAnnot('kr')] },
+            ] as [MichelsonType, MichelsonType],
+          };
+        }
+        const arity = randInt(2, 3);
+        const args: MichelsonType[] = [];
+        for (let i = 0; i < arity; i++) {
+          const child = genComparableType(depth - 1);
+          (child as { annots?: string[] }).annots = [nextAnnot('kp')];
+          args.push(child);
+        }
+        return { prim: 'pair', args } as MichelsonType;
+      }
+
+      function genPackableType(depth: number): MichelsonType {
+        if (depth <= 0 || rand() < 0.4) {
+          return genComparableType(0);
+        }
+        const kind = pick(['pair', 'option', 'or', 'list', 'set', 'map'] as const);
+        if (kind === 'option') {
+          return { prim: 'option', args: [genPackableType(depth - 1)] };
+        }
+        if (kind === 'list') {
+          return { prim: 'list', args: [genPackableType(depth - 1)] };
+        }
+        if (kind === 'set') {
+          return { prim: 'set', args: [genComparableType(depth)] };
+        }
+        if (kind === 'map') {
+          return {
+            prim: 'map',
+            args: [genComparableType(depth), genPackableType(depth - 1)],
+          };
+        }
+        if (kind === 'or') {
+          return {
+            prim: 'or',
+            args: [
+              { ...(genPackableType(depth - 1) as object), annots: [nextAnnot('left')] },
+              { ...(genPackableType(depth - 1) as object), annots: [nextAnnot('right')] },
+            ] as [MichelsonType, MichelsonType],
+          };
+        }
+        const arity = randInt(2, 3);
+        const args: MichelsonType[] = [];
+        for (let i = 0; i < arity; i++) {
+          const child = genPackableType(depth - 1);
+          (child as { annots?: string[] }).annots = [nextAnnot('f')];
+          args.push(child);
+        }
+        return { prim: 'pair', args } as MichelsonType;
+      }
+
+      function genValueForType(t: MichelsonType): unknown {
+        if (!('prim' in t)) {
+          throw new Error('Unexpected sequence type');
+        }
+        switch (t.prim) {
+          case 'unit':
+            return UnitValue;
+          case 'bool':
+            return rand() < 0.5;
+          case 'nat':
+            return rand() < 0.7
+              ? new BigNumber(randInt(0, 10000))
+              : new BigNumber(randBigIntString(false));
+          case 'int':
+            return rand() < 0.7
+              ? new BigNumber(randInt(-5000, 5000))
+              : new BigNumber(randBigIntString(true));
+          case 'mutez':
+            return rand() < 0.8
+              ? new BigNumber(randInt(0, 1000000))
+              : new BigNumber('9223372036854775807');
+          case 'string':
+            return rand() < 0.75 ? pick(STRING_POOL) : `str_${randHex(randInt(1, 6))}`;
+          case 'bytes':
+            return rand() < 0.75 ? pick(BYTES_POOL) : randHex(randInt(0, 12));
+          case 'timestamp':
+            return pick(TIMESTAMP_POOL);
+          case 'address':
+            if (rand() < 0.75) {
+              return pick(ADDRESS_POOL);
+            }
+            return b58Encode(
+              randHex(20),
+              pick([
+                PrefixV2.Ed25519PublicKeyHash,
+                PrefixV2.Secp256k1PublicKeyHash,
+                PrefixV2.P256PublicKeyHash,
+                PrefixV2.BLS12_381PublicKeyHash,
+                PrefixV2.MLDSA44PublicKeyHash,
+                PrefixV2.ContractHash,
+                PrefixV2.SmartRollupHash,
+              ] as const)
+            );
+          case 'key_hash':
+            if (rand() < 0.75) {
+              return pick(KEY_HASH_POOL);
+            }
+            return b58Encode(
+              randHex(20),
+              pick([
+                PrefixV2.Ed25519PublicKeyHash,
+                PrefixV2.Secp256k1PublicKeyHash,
+                PrefixV2.P256PublicKeyHash,
+                PrefixV2.BLS12_381PublicKeyHash,
+                PrefixV2.MLDSA44PublicKeyHash,
+              ] as const)
+            );
+          case 'key':
+            return rand() < 0.8
+              ? pick(KEY_POOL)
+              : b58Encode(randHex(32), PrefixV2.Ed25519PublicKey);
+          case 'signature':
+            return rand() < 0.8
+              ? pick(SIG_POOL)
+              : b58Encode(randHex(64), PrefixV2.GenericSignature);
+          case 'chain_id':
+            return rand() < 0.8
+              ? pick(CHAIN_ID_POOL)
+              : b58Encode(randHex(4), PrefixV2.ChainID);
+          case 'option':
+            return rand() < 0.35 ? null : { Some: genValueForType(t.args[0]) };
+          case 'list': {
+            const len = randInt(0, 3);
+            return Array.from({ length: len }, () => genValueForType(t.args[0]));
+          }
+          case 'set': {
+            const len = randInt(0, 4);
+            const elemSchema = new Schema(t.args[0]);
+            const seen = new Set<string>();
+            const items: unknown[] = [];
+            for (let i = 0; i < len; i++) {
+              const candidate = genValueForType(t.args[0]);
+              const keyStr = JSON.stringify(elemSchema.Encode(candidate));
+              if (!seen.has(keyStr)) {
+                seen.add(keyStr);
+                items.push(candidate);
+              }
+            }
+            return items;
+          }
+          case 'map': {
+            const len = randInt(0, 4);
+            const keySchema = new Schema(t.args[0]);
+            const seen = new Set<string>();
+            const map = new MichelsonMap();
+            for (let i = 0; i < len; i++) {
+              const k = genValueForType(t.args[0]);
+              const keyStr = JSON.stringify(keySchema.Encode(k));
+              if (!seen.has(keyStr)) {
+                seen.add(keyStr);
+                map.set(k, genValueForType(t.args[1]));
+              }
+            }
+            return map;
+          }
+          case 'or': {
+            const branchIdx = rand() < 0.5 ? 0 : 1;
+            const child = t.args[branchIdx];
+            if ('prim' in child && child.prim === 'or') {
+              return genValueForType(child);
+            }
+            const annot =
+              'annots' in child && child.annots?.[0]
+                ? child.annots[0].slice(1)
+                : String(branchIdx);
+            return { [annot]: genValueForType(child) };
+          }
+          case 'pair': {
+            const obj: Record<string, unknown> = {};
+            t.args.forEach((child, idx) => {
+              const annot =
+                'annots' in child && child.annots?.[0] ? child.annots[0].slice(1) : String(idx);
+              obj[annot] = genValueForType(child);
+            });
+            return obj;
+          }
+          default:
+            throw new Error(`Unsupported prim in generator: ${t.prim}`);
+        }
+      }
+
+      for (let i = 0; i < fuzzIterations; i++) {
+        const type = genPackableType(fuzzDepth);
+        const schema = new Schema(type);
+        const val = genValueForType(type);
+
+        const encoded = schema.Encode(val) as MichelsonData;
+        expect(() => assertDataValid(encoded, type)).not.toThrow();
+
+        const packed = packDataBytes(encoded, type);
+        const unpacked = unpackDataBytes(packed, type);
+        expect(() => assertDataValid(unpacked, type)).not.toThrow();
+
+        const executedFromEncoded = schema.Execute(encoded);
+        const executedFromUnpacked = schema.Execute(unpacked);
+
+        expect(normalizeMichelsonValue(executedFromUnpacked)).toEqual(
+          normalizeMichelsonValue(executedFromEncoded)
+        );
+        expect(schema.Encode(executedFromEncoded)).toEqual(encoded);
+        expect(schema.Encode(executedFromUnpacked)).toEqual(encoded);
+      }
+    });
+
+    it('hostile input fuzzing: validated tokens reject malformed inputs with TokenValidationError and never emit invalid Micheline', () => {
+      const validatedTypes = [
+        'int',
+        'nat',
+        'mutez',
+        'bytes',
+        'address',
+        'key_hash',
+        'key',
+        'signature',
+        'chain_id',
+        'contract',
+        'bls12_381_fr',
+        'bls12_381_g1',
+        'bls12_381_g2',
+        'chest',
+        'chest_key',
+        'sapling_transaction 8',
+        'map int int',
+        'big_map int int',
+        'set int',
+        'list int',
+      ];
+
+      const hostileInputs: unknown[] = [
+        null,
+        undefined,
+        true,
+        false,
+        NaN,
+        Infinity,
+        -Infinity,
+        1.5,
+        -1,
+        '',
+        '   ',
+        '0xZZZ',
+        'abc',
+        'tz1InvalidChecksum',
+        'KT1Invalid%entrypoint_name_that_is_way_too_long_over_31_chars',
+        {},
+        { random: 'object' },
+        [null],
+        ['not_an_int'],
+      ];
+
+      for (const typeExpr of validatedTypes) {
+        const type = parseType(typeExpr);
+        const schema = new Schema(type);
+        for (const hostile of hostileInputs) {
+          let encoded: MichelsonData | undefined;
+          try {
+            encoded = schema.Encode(hostile) as MichelsonData;
+          } catch (err) {
+            expect(err).toBeInstanceOf(TokenValidationError);
+          }
+          if (encoded !== undefined) {
+            expect(() => assertDataValid(encoded!, type)).not.toThrow();
+          }
+        }
+      }
     });
   });
 });

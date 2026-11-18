@@ -598,7 +598,7 @@ export function buf2hex(bytes: ArrayLike<number>): string {
  * @param str String to convert
  */
 export function stringToBytes(str: string) {
-  return Buffer.from(str, 'utf8').toString('hex');
+  return buf2hex(new TextEncoder().encode(str));
 }
 
 /**
@@ -606,7 +606,7 @@ export function stringToBytes(str: string) {
  * @param hex byte string to convert
  */
 export function bytesToString(hex: string): string {
-  return Buffer.from(hex2buf(hex)).toString('utf8');
+  return new TextDecoder('utf-8', { ignoreBOM: true }).decode(hex2buf(hex));
 }
 
 /**

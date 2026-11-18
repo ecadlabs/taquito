@@ -77,7 +77,6 @@
     "@types/node": "^22.20.5",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
-    "buffer": "^6.0.3",
     "eslint": "^8.57.0",
     "fs-extra": "^11.4.1",
     "lint-staged": "^15.2.7",

@@ -1,5 +1,7 @@
+import { assertDataValid, MichelsonData, MichelsonType } from '@taquito/michel-codec';
 import { BigNumber } from 'bignumber.js';
 import { script24, storage24 } from '../data/sample24';
+import { MichelsonMap } from '../src/michelson-map';
 import { Schema } from '../src/schema/storage';
 import { normalizeMichelsonValue } from './utils';
 
@@ -142,6 +144,44 @@ describe('Schema test', () => {
         },
         tier_map: '104762',
       })
+    );
+  });
+
+  it('Should encode complex contract storage and pass Michelson typecheck (#2232)', () => {
+    const schema = new Schema(storage24);
+    const decodedForEncode = schema.Execute(script24.script.storage, {
+      big_map: () => new MichelsonMap(),
+    });
+
+    const encodedEmptyBigMaps = schema.Encode(decodedForEncode);
+    expect(() =>
+      assertDataValid(encodedEmptyBigMaps as MichelsonData, storage24 as MichelsonType)
+    ).not.toThrow();
+    expect(schema.Encode(schema.Execute(encodedEmptyBigMaps))).toEqual(encodedEmptyBigMaps);
+    expect(normalizeMichelsonValue(schema.Execute(encodedEmptyBigMaps))).toEqual(
+      normalizeMichelsonValue(decodedForEncode)
+    );
+
+    const arriaTier3BigMap = new MichelsonMap<string, BigNumber>();
+    arriaTier3BigMap.set('tz1NcYGUWUrcriX5nWmHN6daCDKHQdMUSUDp', new BigNumber(2));
+    arriaTier3BigMap.set('KT18hLaKKTfizp7BEiQLH32uroU68mCcX6Ru', new BigNumber(1));
+    decodedForEncode.max_per_address.get('Arria').set('tier3', arriaTier3BigMap);
+
+    const lojayTier2BigMap = new MichelsonMap<string, BigNumber>();
+    lojayTier2BigMap.set('tz1cVm8jzr5MN6oH21p54HuWCi69qYzjo7MN', new BigNumber(3));
+    decodedForEncode.max_per_address.get('Lojay').set('tier2', lojayTier2BigMap);
+
+    decodedForEncode.metadata.set('', '74657a6f732d73746f726167653a636f6e74656e74');
+    decodedForEncode.tier_map.set(new BigNumber(1), new BigNumber(10));
+    decodedForEncode.tier_map.set(new BigNumber(2), new BigNumber(20));
+
+    const encodedPopulated = schema.Encode(decodedForEncode);
+    expect(() =>
+      assertDataValid(encodedPopulated as MichelsonData, storage24 as MichelsonType)
+    ).not.toThrow();
+    expect(schema.Encode(schema.Execute(encodedPopulated))).toEqual(encodedPopulated);
+    expect(normalizeMichelsonValue(schema.Execute(encodedPopulated))).toEqual(
+      normalizeMichelsonValue(decodedForEncode)
     );
   });
 });
