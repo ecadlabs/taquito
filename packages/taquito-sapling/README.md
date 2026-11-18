@@ -162,9 +162,7 @@ The CI jobs on Node 22, 24 and 26 check the same constructor fixture in
 The root type-check resolves the public package through source aliases.
 The installed-consumer runner packs Sapling and its workspace dependencies, then
 checks the emitted declarations outside the workspace under strict NodeNext CJS,
-NodeNext ESM and bundler resolution. It uses no source aliases. The fixture explicitly loads Node's declarations for
-Sapling's public `Buffer` types. It does not check a browser-only type environment
-without those declarations.
+NodeNext ESM and bundler resolution. The fixtures consume native byte arrays without opting into Node globals.
 
 The fixture covers the existing constructor, both output-order policies and an
 unknown policy that TypeScript must reject. The runtime fixture also checks
@@ -178,14 +176,12 @@ for contracts whose bound data differs from the shielded-tez contract:
 
 ```ts
 import { SaplingTransactionBuilder, SaplingForger } from '@taquito/sapling';
+import { hex2buf } from '@taquito/utils';
 import { packDataBytes } from '@taquito/michel-codec';
 
 const forger = new SaplingForger();
 const builder = new SaplingTransactionBuilder(keys, forger, contractDetails, readProvider);
-const boundData = Buffer.from(
-  packDataBytes({ string: recipient }, { prim: 'address' }).bytes,
-  'hex'
-);
+const boundData = hex2buf(packDataBytes({ string: recipient }, { prim: 'address' }).bytes);
 const description = await builder.createSaplingTx([], amount, boundData, chosenInputs);
 const transaction = forger.forgeSaplingTransaction({ ...description, root, boundData });
 ```

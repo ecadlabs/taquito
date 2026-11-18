@@ -9,7 +9,6 @@
  * Copyright (c) 2017 Stephen Andrews
  */
 
-import { Buffer } from 'buffer';
 import { PrefixV2, prefixV2, payloadLength } from './constants';
 import { blake2b } from '@noble/hashes/blake2.js';
 import bs58check from 'bs58check';
@@ -610,29 +609,22 @@ export function bytesToString(hex: string): string {
 }
 
 /**
- * Convert hex string/UintArray/Buffer to bytes
+ * Convert a hex string to bytes
  * @param hex String value to convert to bytes
  */
-export function hex2Bytes(hex: string): Buffer {
-  const hexDigits = stripHexPrefix(hex);
-  if (!hexDigits.match(/^(0x)?([\da-f]{2})*$/gi)) {
-    throw new InvalidHexStringError(
-      hex,
-      `Expecting even number of characters: 0-9, a-z, A-Z, optionally prefixed with 0x`
-    );
-  }
-  return Buffer.from(hexDigits, 'hex');
+export function hex2Bytes(hex: string): Uint8Array {
+  return hex2buf(hex);
 }
 
 /**
  * Converts a number or Bignumber to hexadecimal  string
  * @param val The value  that will be converted to a hexadecimal string value
  */
-export function toHexBuf(val: number | BigNumber, bitLength = 8): Buffer {
-  return Buffer.from(num2PaddedHex(val, bitLength), 'hex');
+export function toHexBuf(val: number | BigNumber, bitLength = 8): Uint8Array {
+  return hex2buf(num2PaddedHex(val, bitLength));
 }
-export function numToHexBuffer(val: number | BigNumber, bitLength = 8): Buffer {
-  return Buffer.from(num2PaddedHex(val, bitLength), 'hex');
+export function numToHexBuffer(val: number | BigNumber, bitLength = 8): Uint8Array {
+  return toHexBuf(val, bitLength);
 }
 
 /**

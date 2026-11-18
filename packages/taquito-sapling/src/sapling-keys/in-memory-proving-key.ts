@@ -1,4 +1,4 @@
-import { Buffer } from 'buffer';
+import { buf2hex, hex2buf } from '@taquito/utils';
 import * as sapling from '../sapling-wasm';
 import { ParametersSpendProof, SaplingSpendDescription } from '../types';
 import { decryptKey } from './helpers';
@@ -8,10 +8,10 @@ import { decryptKey } from './helpers';
  * The class can be instantiated from a proving key or a spending key
  */
 export class InMemoryProvingKey {
-  #provingKey: Buffer;
+  #provingKey: Uint8Array;
 
   constructor(provingKey: string) {
-    this.#provingKey = Buffer.from(provingKey, 'hex');
+    this.#provingKey = hex2buf(provingKey);
   }
 
   /**
@@ -28,7 +28,7 @@ export class InMemoryProvingKey {
   static async fromSpendingKey(spendingKey: string, password?: string) {
     const decodedSpendingKey = decryptKey(spendingKey, password);
     const provingKey = await sapling.getProofAuthorizingKey(decodedSpendingKey);
-    return new InMemoryProvingKey(provingKey.toString('hex'));
+    return new InMemoryProvingKey(buf2hex(provingKey));
   }
 
   /**

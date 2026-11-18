@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import {
   SaplingTransactionBuilder,
   SaplingForger,
@@ -27,7 +26,7 @@ const builder = new SaplingTransactionBuilder(
   new RpcReadAdapter(new RpcClient('https://example.invalid'))
 );
 const amount = new BigNumber(1);
-const boundData = Buffer.from('050a00000000', 'hex');
+const boundData = Uint8Array.of(5, 10, 0, 0, 0, 0);
 const outputs: SaplingTransactionParams[] = [];
 const chosenInputs: SaplingTransactionInputSelection = {
   inputsToSpend: [input],

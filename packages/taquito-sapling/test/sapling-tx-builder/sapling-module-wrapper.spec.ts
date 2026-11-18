@@ -1,3 +1,4 @@
+import { buf2hex, hex2buf } from '@taquito/utils';
 import { SaplingWrapper } from '../../src/sapling-module-wrapper';
 
 describe('SaplingWrapper', () => {
@@ -32,23 +33,21 @@ describe('SaplingWrapper', () => {
   });
 
   it('getOutgoingViewingKey', async () => {
-    const vk = Buffer.from(
-      '000000000000000000977d725fc96387e8ec1e603e7ae60c6e63529fb84e36e126770e9db9899d7f2344259fd700dc80120d3c9ca65d698f6064043b048b079caa4f198aed96271740b1d6fd523d71b15cd0b3d75644afbe9abfedb6883e299165665ab692c14ca5c835c61a0e53de553a751c78fbc42d5e7eca807fd441206651c84bf88de803efba837583145a5f338b1a7af8a5f9bec4783054f9d063d365f2352f72cbced95e0a',
-      'hex'
+    const vk = hex2buf(
+      '000000000000000000977d725fc96387e8ec1e603e7ae60c6e63529fb84e36e126770e9db9899d7f2344259fd700dc80120d3c9ca65d698f6064043b048b079caa4f198aed96271740b1d6fd523d71b15cd0b3d75644afbe9abfedb6883e299165665ab692c14ca5c835c61a0e53de553a751c78fbc42d5e7eca807fd441206651c84bf88de803efba837583145a5f338b1a7af8a5f9bec4783054f9d063d365f2352f72cbced95e0a'
     );
     const ovk = await saplingWrapper.getOutgoingViewingKey(vk);
-    expect(ovk.toString('hex')).toEqual(
+    expect(buf2hex(ovk)).toEqual(
       '35c61a0e53de553a751c78fbc42d5e7eca807fd441206651c84bf88de803efba'
     );
   });
 
   it('getOutgoingViewingKey', async () => {
-    const vk = Buffer.from(
-      '000000000000000000977d725fc96387e8ec1e603e7ae60c6e63529fb84e36e126770e9db9899d7f2344259fd700dc80120d3c9ca65d698f6064043b048b079caa4f198aed96271740b1d6fd523d71b15cd0b3d75644afbe9abfedb6883e299165665ab692c14ca5c835c61a0e53de553a751c78fbc42d5e7eca807fd441206651c84bf88de803efba837583145a5f338b1a7af8a5f9bec4783054f9d063d365f2352f72cbced95e0a',
-      'hex'
+    const vk = hex2buf(
+      '000000000000000000977d725fc96387e8ec1e603e7ae60c6e63529fb84e36e126770e9db9899d7f2344259fd700dc80120d3c9ca65d698f6064043b048b079caa4f198aed96271740b1d6fd523d71b15cd0b3d75644afbe9abfedb6883e299165665ab692c14ca5c835c61a0e53de553a751c78fbc42d5e7eca807fd441206651c84bf88de803efba837583145a5f338b1a7af8a5f9bec4783054f9d063d365f2352f72cbced95e0a'
     );
     const ovk = await saplingWrapper.getOutgoingViewingKey(vk);
-    expect(ovk.toString('hex')).toEqual(
+    expect(buf2hex(ovk)).toEqual(
       '35c61a0e53de553a751c78fbc42d5e7eca807fd441206651c84bf88de803efba'
     );
   });
@@ -60,7 +59,7 @@ describe('SaplingWrapper', () => {
       0x29, 0xc6, 0xfa, 0x91, 0x81, 0xe2, 0xa0, 0xd7, 0xb7, 0x24, 0x06, 0xc1, 0x48,
     ]);
     const diversifier = await saplingWrapper.getDiversifiedFromRawPaymentAddress(address);
-    expect(diversifier.toString('hex')).toEqual('2c8e683029bd1c1ff25882');
+    expect(buf2hex(diversifier)).toEqual('2c8e683029bd1c1ff25882');
   });
 
   it('getPkdFromRawPaymentAddress', async () => {
@@ -70,19 +69,16 @@ describe('SaplingWrapper', () => {
       0x29, 0xc6, 0xfa, 0x91, 0x81, 0xe2, 0xa0, 0xd7, 0xb7, 0x24, 0x06, 0xc1, 0x48,
     ]);
     const pkd = await saplingWrapper.getPkdFromRawPaymentAddress(address);
-    expect(pkd.toString('hex')).toEqual(
+    expect(buf2hex(pkd)).toEqual(
       'bb0353379487fcf142bbaef37d2b21dc3836f929c6fa9181e2a0d7b72406c148'
     );
   });
 
   it('deriveEphemeralPublicKey', async () => {
-    const esk = Buffer.from(
-      '50335f36d7f64b16c24433e38a98fbde45258112348334638bb5e6bd705b3102',
-      'hex'
-    );
-    const diversifier = Buffer.from('2c8e683029bd1c1ff25882', 'hex');
+    const esk = hex2buf('50335f36d7f64b16c24433e38a98fbde45258112348334638bb5e6bd705b3102');
+    const diversifier = hex2buf('2c8e683029bd1c1ff25882');
     const epk = await saplingWrapper.deriveEphemeralPublicKey(diversifier, esk);
-    expect(epk.toString('hex')).toEqual(
+    expect(buf2hex(epk)).toEqual(
       '623f1e9caa60c50d4342edaaf55a71782256f125f7d3e178c8540843be892d56'
     );
   });

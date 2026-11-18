@@ -15,6 +15,8 @@ import {
   PrefixV2,
   num2PaddedHex,
   hex2Bytes,
+  toHexBuf,
+  numToHexBuffer,
   encodeBlsAddress,
   hex2buf,
   b58DecodeAndCheckPrefix,
@@ -785,18 +787,20 @@ describe('Hex conversions', () => {
     expect(result).toEqual('ec');
   });
 
-  it('Should be able to convert hex to bytes', () => {
-    const result: Buffer = hex2Bytes('abcd');
+  it.each([toHexBuf, numToHexBuffer])('encodes a padded number as native bytes', (encode) => {
+    expect(encode(0xabcd, 32)).toStrictEqual(Uint8Array.of(0, 0, 0xab, 0xcd));
+  });
 
-    expect(result).toBeDefined();
-    expect(result).toEqual(Buffer.from('abcd', 'hex'));
+  it('Should be able to convert hex to bytes', () => {
+    const result = hex2Bytes('abcd');
+
+    expect(result).toStrictEqual(Uint8Array.of(0xab, 0xcd));
   });
 
   it('Should be able to convert hex with 0x prefix to bytes', () => {
-    const result: Buffer = hex2Bytes('0xabcd');
+    const result = hex2Bytes('0xabcd');
 
-    expect(result).toBeDefined();
-    expect(result).toEqual(Buffer.from('abcd', 'hex'));
+    expect(result).toStrictEqual(Uint8Array.of(0xab, 0xcd));
   });
 
   it('Should throw an exception because of an odd number of characters', () => {

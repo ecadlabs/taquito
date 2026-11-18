@@ -1,3 +1,4 @@
+import { buf2hex, hex2buf } from '@taquito/utils';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { vi } from 'vitest';
 import { createHash } from 'node:crypto';
@@ -16,22 +17,20 @@ import compatibility from './output-order-compatibility.json';
 
 const address = 'zet12mVvzJ4QJhnNQetGHzdwTMcLgNrdC4SFact6BB5jpeqGAefWip3iGgEjvDA9z7b9Y';
 const contract = { contractAddress: 'KT1G2kvdfPoavgR6Fjdd68M2vaPk14qJ8bhC', memoSize: 8 };
-const boundData = Buffer.from('050a0000001500eca2e9db3e096741601333274d33caefc8a16c5a', 'hex');
+const boundData = hex2buf('050a0000001500eca2e9db3e096741601333274d33caefc8a16c5a');
 const forger = new SaplingForger();
 
 function setup(outputOrder?: SaplingContractDetails['outputOrder']) {
   const random = vi.fn((_length: number) => new Uint8Array(4));
-  const signature = vi.fn(async (_context: number, _balance: string, hash: Uint8Array) =>
-    Buffer.from(hash)
-  );
+  const signature = vi.fn(async (_context: number, _balance: string, hash: Uint8Array) => hash);
   const wrapper = {
-    randR: vi.fn(async () => Buffer.alloc(32)),
+    randR: vi.fn(async () => new Uint8Array(32)),
     withProvingContext: async (action: (context: number) => unknown) => action(17),
     getRandomBytes: random,
     createBindingSignature: signature,
   };
   const viewer = {
-    getOutgoingViewingKey: async () => Buffer.alloc(32, 4),
+    getOutgoingViewingKey: async () => new Uint8Array(32).fill(4),
     getAddress: async () => ({ address }),
   };
   const keys = { saplingSigner: { getSaplingViewingKeyProvider: async () => viewer } as any };
@@ -48,15 +47,15 @@ function setup(outputOrder?: SaplingContractDetails['outputOrder']) {
   vi.spyOn(builder, 'prepareSaplingOutputDescription').mockImplementation(async (params) => {
     const marker = constructed.length + 1;
     const output = {
-      commitment: Buffer.alloc(32, marker),
-      proof: Buffer.alloc(192, marker),
+      commitment: new Uint8Array(32).fill(marker),
+      proof: new Uint8Array(192).fill(marker),
       ciphertext: {
-        commitmentValue: Buffer.alloc(32, marker),
-        ephemeralPublicKey: Buffer.alloc(32, marker),
-        payloadEnc: Buffer.from(params.amount + ':' + params.memo),
-        nonceEnc: Buffer.alloc(24, marker),
-        payloadOut: Buffer.alloc(80, marker),
-        nonceOut: Buffer.alloc(24, marker),
+        commitmentValue: new Uint8Array(32).fill(marker),
+        ephemeralPublicKey: new Uint8Array(32).fill(marker),
+        payloadEnc: new TextEncoder().encode(params.amount + ':' + params.memo),
+        nonceEnc: new Uint8Array(24).fill(marker),
+        payloadOut: new Uint8Array(80).fill(marker),
+        nonceOut: new Uint8Array(24).fill(marker),
       },
     };
     constructed.push(output);
@@ -101,7 +100,7 @@ describe('Sapling output order', () => {
       });
       expect(tx.outputs).toHaveLength(1);
       expect(constructed).toHaveLength(1);
-      expect(tx.outputs[0].ciphertext.payloadEnc.toString()).toBe(change + ':');
+      expect(new TextDecoder().decode(tx.outputs[0].ciphertext.payloadEnc)).toBe(change + ':');
       expect(tx.balance.toFixed()).toBe('10');
     }
   );
@@ -253,7 +252,7 @@ describe('Sapling output order', () => {
         expect(forge).toHaveBeenCalledOnce();
         expect(forge.mock.calls[0][0].outputs).toBe(transaction.outputs);
         expect(forge.mock.calls[0][0].signature).toBe(transaction.signature);
-        expect(encoded).toBe(forge.mock.results[0].value.toString('hex'));
+        expect(encoded).toBe(buf2hex(forge.mock.results[0].value));
         expect(random).not.toHaveBeenCalled();
       } finally {
         vi.unstubAllGlobals();

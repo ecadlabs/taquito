@@ -274,7 +274,7 @@ setup. It takes the recipient, withdrawal amount in base units, selected unspent
 inputs and Sapling root from the application:
 
 ```ts
-import { Buffer } from 'buffer';
+import { buf2hex, hex2buf } from '@taquito/utils';
 import {
     SaplingTransactionBuilder,
     SaplingForger,
@@ -296,12 +296,9 @@ async function buildWithdrawal(
     chosenInputs: SaplingTransactionInputSelection,
     root: string
 ) {
-    const boundData = Buffer.from(
-        packDataBytes({ string: recipient }, { prim: 'address' }).bytes,
-        'hex'
-    );
+    const boundData = hex2buf(packDataBytes({ string: recipient }, { prim: 'address' }).bytes);
     const description = await builder.createSaplingTx([], amount, boundData, chosenInputs);
-    return forger.forgeSaplingTransaction({ ...description, root, boundData }).toString('hex');
+    return buf2hex(forger.forgeSaplingTransaction({ ...description, root, boundData }));
 }
 ```
 

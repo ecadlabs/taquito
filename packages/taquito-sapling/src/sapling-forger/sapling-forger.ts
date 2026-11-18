@@ -1,11 +1,11 @@
-import { Buffer } from 'buffer';
+import { concatBytes } from '@noble/hashes/utils.js';
 import {
   SaplingTransactionInput,
   SaplingTransaction,
   SaplingTransactionOutput,
   SaplingTransactionPlaintext,
 } from '../types';
-import { stringToBytes, toHexBuf } from '@taquito/utils';
+import { hex2buf, stringToBytes, toHexBuf } from '@taquito/utils';
 import BigNumber from 'bignumber.js';
 
 export class SaplingForger {
@@ -13,34 +13,34 @@ export class SaplingForger {
    * Serialize a Sapling transaction without submitting it to a contract.
    * @param tx Inputs, outputs, signature, balance, Sapling root and bound data.
    * Use the same bound data that was passed to the transaction builder.
-   * @returns Serialized transaction bytes as a Buffer.
+   * @returns Serialized transaction bytes as a Uint8Array.
    */
-  forgeSaplingTransaction(tx: SaplingTransaction): Buffer {
+  forgeSaplingTransaction(tx: SaplingTransaction): Uint8Array {
     const spendBuf = this.forgeSpendDescriptions(tx.inputs);
-    const spend = Buffer.concat([toHexBuf(spendBuf.length, 32), spendBuf]);
+    const spend = concatBytes(toHexBuf(spendBuf.length, 32), spendBuf);
 
     const outputBuf = this.forgeOutputDescriptions(tx.outputs);
-    const output = Buffer.concat([toHexBuf(outputBuf.length, 32), outputBuf]);
+    const output = concatBytes(toHexBuf(outputBuf.length, 32), outputBuf);
 
-    const root = Buffer.from(tx.root, 'hex');
+    const root = hex2buf(tx.root);
 
-    return Buffer.concat([
+    return concatBytes(
       spend,
       output,
       tx.signature,
       toHexBuf(tx.balance, 64),
       root,
       toHexBuf(tx.boundData.length, 32),
-      tx.boundData,
-    ]);
+      tx.boundData
+    );
   }
 
   /**
    * Forge list of spend descriptions
    * @param spendDescriptions list of spend descriptions
-   * @returns concatenated forged bytes of type Buffer
+   * @returns concatenated forged bytes of type Uint8Array
    */
-  forgeSpendDescriptions(spendDescriptions: SaplingTransactionInput[]): Buffer {
+  forgeSpendDescriptions(spendDescriptions: SaplingTransactionInput[]): Uint8Array {
     const descriptions = [];
 
     for (const i of spendDescriptions) {
@@ -48,25 +48,25 @@ export class SaplingForger {
       descriptions.push(buff);
     }
 
-    return Buffer.concat(descriptions);
+    return concatBytes(...descriptions);
   }
 
-  forgeSpendDescription(desc: SaplingTransactionInput): Buffer {
-    return Buffer.concat([
+  forgeSpendDescription(desc: SaplingTransactionInput): Uint8Array {
+    return concatBytes(
       desc.commitmentValue,
       desc.nullifier,
       desc.publicKeyReRandomization,
       desc.proof,
-      desc.signature,
-    ]);
+      desc.signature
+    );
   }
 
   /**
    * Forge list of output descriptions
    * @param outputDescriptions list of output descriptions
-   * @returns concatenated forged bytes of type Buffer
+   * @returns concatenated forged bytes of type Uint8Array
    */
-  forgeOutputDescriptions(outputDescriptions: SaplingTransactionOutput[]): Buffer {
+  forgeOutputDescriptions(outputDescriptions: SaplingTransactionOutput[]): Uint8Array {
     const descriptions = [];
 
     for (const i of outputDescriptions) {
@@ -74,13 +74,13 @@ export class SaplingForger {
       descriptions.push(buff);
     }
 
-    return Buffer.concat(descriptions);
+    return concatBytes(...descriptions);
   }
 
-  forgeOutputDescription(desc: SaplingTransactionOutput): Buffer {
+  forgeOutputDescription(desc: SaplingTransactionOutput): Uint8Array {
     const ct = desc.ciphertext;
 
-    return Buffer.concat([
+    return concatBytes(
       desc.commitment,
       desc.proof,
       ct.commitmentValue,
@@ -89,30 +89,27 @@ export class SaplingForger {
       ct.payloadEnc,
       ct.nonceEnc,
       ct.payloadOut,
-      ct.nonceOut,
-    ]);
+      ct.nonceOut
+    );
   }
 
   forgeUnsignedTxInput(unsignedSpendDescription: Omit<SaplingTransactionInput, 'signature'>) {
-    return Buffer.concat([
+    return concatBytes(
       unsignedSpendDescription.commitmentValue,
       unsignedSpendDescription.nullifier,
       unsignedSpendDescription.publicKeyReRandomization,
-      unsignedSpendDescription.proof,
-    ]);
+      unsignedSpendDescription.proof
+    );
   }
 
   forgeTransactionPlaintext(txPlainText: SaplingTransactionPlaintext) {
-    const encodedMemo = Buffer.from(
-      stringToBytes(txPlainText.memo).padEnd(txPlainText.memoSize, '0'),
-      'hex'
-    );
-    return Buffer.concat([
+    const encodedMemo = hex2buf(stringToBytes(txPlainText.memo).padEnd(txPlainText.memoSize, '0'));
+    return concatBytes(
       txPlainText.diversifier,
       toHexBuf(new BigNumber(txPlainText.amount), 64),
       txPlainText.randomCommitmentTrapdoor,
       toHexBuf(txPlainText.memoSize, 32),
-      encodedMemo,
-    ]);
+      encodedMemo
+    );
   }
 }

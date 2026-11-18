@@ -1,4 +1,4 @@
-import { Buffer } from 'buffer';
+import { buf2hex } from '@taquito/utils';
 import * as sapling from './sapling-wasm';
 import { SaplingInitOptions, SaplingParamsSource } from './types';
 import saplingParamsManifest from './sapling-params-manifest.json';
@@ -48,8 +48,8 @@ type LocalSaplingParamsSource = {
 type ResolvedSaplingParamsSource = RemoteSaplingParamsSource | LocalSaplingParamsSource;
 
 type LoadedSaplingParams = {
-  spend: Buffer;
-  output: Buffer;
+  spend: Uint8Array;
+  output: Uint8Array;
 };
 
 const DEFAULT_SAPLING_PARAMS_MANIFEST: SaplingParamsManifest =
@@ -154,7 +154,7 @@ async function loadRemoteParam(
   expectedSha256: string,
   label: 'spend' | 'output',
   source: string
-): Promise<Buffer> {
+): Promise<Uint8Array> {
   let response: Response;
 
   try {
@@ -188,7 +188,7 @@ async function loadRemoteParam(
     );
   }
 
-  const bytes = Buffer.from(body);
+  const bytes = new Uint8Array(body);
   await assertSha256(bytes, expectedSha256, label, source, url);
 
   return bytes;
@@ -199,7 +199,7 @@ async function loadLocalParam(
   expectedSha256: string | undefined,
   label: 'spend' | 'output',
   source: string
-): Promise<Buffer> {
+): Promise<Uint8Array> {
   if (!isNodeLikeRuntime()) {
     throw new SaplingParamsError(
       'SAPLING_PARAMS_UNSUPPORTED_RUNTIME',
@@ -210,7 +210,7 @@ async function loadLocalParam(
 
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { readFile } = require(getNodeFsPromisesModuleId()) as typeof import('node:fs/promises');
-  const bytes = Buffer.from(await readFile(path));
+  const bytes = new Uint8Array(await readFile(path));
 
   if (expectedSha256) {
     await assertSha256(bytes, expectedSha256, label, source, path);
@@ -237,7 +237,7 @@ async function assertSha256(
   }
 
   const digest = await subtle.digest('SHA-256', Uint8Array.from(bytes));
-  const actualSha256 = Buffer.from(digest).toString('hex');
+  const actualSha256 = buf2hex(new Uint8Array(digest));
 
   if (actualSha256 !== expectedSha256) {
     throw new SaplingParamsError(

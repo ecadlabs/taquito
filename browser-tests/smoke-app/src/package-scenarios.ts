@@ -494,41 +494,31 @@ const scenarios: Record<PackageScenarioId, SmokeScenario> = {
   'sapling-import': async () => {
     assertNoGlobalBuffer();
     const sapling = await importPackage<typeof import('@taquito/sapling')>('@taquito/sapling');
-    // @taquito/sapling's sapling-wasm wrapper installs a Buffer shim on globalThis for @taquito/sapling-wasm;
-    // remove it temporarily to verify InMemorySpendingKey / decryptKey works without globalThis.Buffer.
-    const installedShim = (globalThis as { Buffer?: unknown }).Buffer;
-    delete (globalThis as { Buffer?: unknown }).Buffer;
-    try {
-      assertNoGlobalBuffer();
-      const spendingKey = new sapling.InMemorySpendingKey(
-        'sask27SLmU9herddHz4qFJBLMjWYMbJF8RtS579w9ej9mfCYK7VUdyCJPHK8AzW9zMsopGZEkYeNjAY7Zz1bkM7CGu8eKLzrjBLTMC5wWJDhxiK91ahA29rhDRsHdJDV2u2jFwb2MNUix8JW7sAkAqYVaJpCehTBPgRQ1KqKwqqUaNmuD8kazd4Q8MCWmgbWs21Yuomdqyi9FLigjRp7oY4m5adaVU19Nj1AHvsMY2tePeU2L'
-      );
-      const encryptedSpendingKey = new sapling.InMemorySpendingKey(
-        'MMXjN99mhomTm1Y5nQt8NfwEKTHWugsLtucX7oWrpsJd99qxGYJWP5aMb3t8zZaoKHQ898bLu9dwpog71bnjiDZfS9J9hWnTLCGm4fAjKKYeRuwTgCRjSdsP9znCPBUpCvyxeEFvUfamA5URrp8c7AaooAkobLW1PjNh2vjHobtiyNVTEtyTUWTLcjdxaiPbQWs3NaWvcb5Qr6z9MHhKrYNBHmsd9HBeRB2rVnvvL7pMc8f8zqyuXtmAuzMhiqPz3B4BRzuc8a2jkkoL14',
-        'test'
-      );
-      assertNoGlobalBuffer();
+    assertNoGlobalBuffer();
+    const spendingKey = new sapling.InMemorySpendingKey(
+      'sask27SLmU9herddHz4qFJBLMjWYMbJF8RtS579w9ej9mfCYK7VUdyCJPHK8AzW9zMsopGZEkYeNjAY7Zz1bkM7CGu8eKLzrjBLTMC5wWJDhxiK91ahA29rhDRsHdJDV2u2jFwb2MNUix8JW7sAkAqYVaJpCehTBPgRQ1KqKwqqUaNmuD8kazd4Q8MCWmgbWs21Yuomdqyi9FLigjRp7oY4m5adaVU19Nj1AHvsMY2tePeU2L'
+    );
+    const encryptedSpendingKey = new sapling.InMemorySpendingKey(
+      'MMXjN99mhomTm1Y5nQt8NfwEKTHWugsLtucX7oWrpsJd99qxGYJWP5aMb3t8zZaoKHQ898bLu9dwpog71bnjiDZfS9J9hWnTLCGm4fAjKKYeRuwTgCRjSdsP9znCPBUpCvyxeEFvUfamA5URrp8c7AaooAkobLW1PjNh2vjHobtiyNVTEtyTUWTLcjdxaiPbQWs3NaWvcb5Qr6z9MHhKrYNBHmsd9HBeRB2rVnvvL7pMc8f8zqyuXtmAuzMhiqPz3B4BRzuc8a2jkkoL14',
+      'test'
+    );
+    assertNoGlobalBuffer();
 
-      return {
-        exports: [
-          'SaplingToolkit',
-          'SaplingTransactionViewer',
-          'initSapling',
-          'preloadSaplingParams',
-        ],
-        summary: {
-          hasSaplingToolkit: typeof sapling.SaplingToolkit === 'function',
-          hasTransactionViewer: typeof sapling.SaplingTransactionViewer === 'function',
-          hasInitSapling: typeof sapling.initSapling === 'function',
-          hasPreloadSaplingParams: typeof sapling.preloadSaplingParams === 'function',
-          hasSpendingKeyInstance: Boolean(spendingKey && encryptedSpendingKey),
-        },
-      };
-    } finally {
-      if (installedShim !== undefined) {
-        (globalThis as { Buffer?: unknown }).Buffer = installedShim;
-      }
-    }
+    return {
+      exports: [
+        'SaplingToolkit',
+        'SaplingTransactionViewer',
+        'initSapling',
+        'preloadSaplingParams',
+      ],
+      summary: {
+        hasSaplingToolkit: typeof sapling.SaplingToolkit === 'function',
+        hasTransactionViewer: typeof sapling.SaplingTransactionViewer === 'function',
+        hasInitSapling: typeof sapling.initSapling === 'function',
+        hasPreloadSaplingParams: typeof sapling.preloadSaplingParams === 'function',
+        hasSpendingKeyInstance: Boolean(spendingKey && encryptedSpendingKey),
+      },
+    };
   },
 
   'sapling-preload': async () => {

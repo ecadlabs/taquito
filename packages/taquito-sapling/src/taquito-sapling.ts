@@ -3,12 +3,13 @@
  * @module @taquito/sapling
  */
 
-import { Buffer } from 'buffer';
 import BigNumberJs from 'bignumber.js';
 type BigNumber = InstanceType<typeof BigNumberJs>;
 const BigNumber = BigNumberJs;
 import { MichelCodecPacker, Packer, TzReadProvider } from '@taquito/taquito';
 import {
+  buf2hex,
+  hex2buf,
   b58DecodeAndCheckPrefix,
   b58DecodePublicKeyHash,
   format,
@@ -161,7 +162,7 @@ export class SaplingToolkit {
       signature,
     });
 
-    return forgedSaplingTx.toString('hex');
+    return buf2hex(forgedSaplingTx);
   }
 
   /**
@@ -198,7 +199,7 @@ export class SaplingToolkit {
       signature,
     });
 
-    return forgedSaplingTx.toString('hex');
+    return buf2hex(forgedSaplingTx);
   }
 
   /**
@@ -233,7 +234,7 @@ export class SaplingToolkit {
       signature,
     });
 
-    return forgedSaplingTx.toString('hex');
+    return buf2hex(forgedSaplingTx);
   }
 
   private formatTransactionParams(
@@ -284,7 +285,7 @@ export class SaplingToolkit {
       data: { bytes },
       type: { prim: 'bytes' },
     });
-    return Buffer.from(packedDestination.packed, 'hex');
+    return hex2buf(packedDestination.packed);
   }
 
   private validateDestinationImplicitAddress(to: string) {
