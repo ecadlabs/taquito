@@ -1,7 +1,7 @@
 import { InvalidSpendingKey } from '../../src/errors';
 import { InMemorySpendingKey } from '../../src/sapling-keys/in-memory-spending-key';
 import { decryptKey } from '../../src/sapling-keys/helpers';
-import { PrefixV2, b58DecodeAndCheckPrefix } from '@taquito/utils';
+import { buf2hex, PrefixV2, b58DecodeAndCheckPrefix } from '@taquito/utils';
 import { runInNewContext } from 'node:vm';
 
 const serialize = (value: unknown): string => {
@@ -42,16 +42,16 @@ describe('InMemorySpendingKey', () => {
       'test'
     );
     const viewerKeyProvider = await SaplingKeyProvider.getSaplingViewingKeyProvider();
-    expect(viewerKeyProvider.getFullViewingKey().toString('hex')).toEqual(
+    expect(buf2hex(viewerKeyProvider.getFullViewingKey())).toEqual(
       '000000000000000000977d725fc96387e8ec1e603e7ae60c6e63529fb84e36e126770e9db9899d7f2344259fd700dc80120d3c9ca65d698f6064043b048b079caa4f198aed96271740b1d6fd523d71b15cd0b3d75644afbe9abfedb6883e299165665ab692c14ca5c835c61a0e53de553a751c78fbc42d5e7eca807fd441206651c84bf88de803efba837583145a5f338b1a7af8a5f9bec4783054f9d063d365f2352f72cbced95e0a'
     );
   });
 
   it('Should decrypt encrypted spending key when Uint8Array comes from another realm', () => {
     const originalUint8Array = globalThis.Uint8Array;
-    let decrypted!: Buffer;
+    let decrypted!: Uint8Array;
 
-    // This mimics jsdom/SSR realm boundaries where Buffer no longer passes
+    // This mimics jsdom/SSR realm boundaries where Uint8Array no longer passes
     // instanceof checks against the active Uint8Array constructor.
     const foreignUint8Array: Uint8ArrayConstructor = runInNewContext('Uint8Array');
     globalThis.Uint8Array = foreignUint8Array;
@@ -68,7 +68,7 @@ describe('InMemorySpendingKey', () => {
       'sask27SLmU9herddHz4qFJBLMjWYMbJF8RtS579w9ej9mfCYK7VUdyCJPHK8AzW9zMsopGZEkYeNjAY7Zz1bkM7CGu8eKLzrjBLTMC5wWJDhxiK91ahA29rhDRsHdJDV2u2jFwb2MNUix8JW7sAkAqYVaJpCehTBPgRQ1KqKwqqUaNmuD8kazd4Q8MCWmgbWs21Yuomdqyi9FLigjRp7oY4m5adaVU19Nj1AHvsMY2tePeU2L',
       [PrefixV2.SaplingSpendingKey]
     );
-    expect(decrypted.toString('hex')).toEqual(Buffer.from(expected).toString('hex'));
+    expect(buf2hex(decrypted)).toEqual(buf2hex(expected));
   });
 
   it('Should throw error with wrong password', async () => {
@@ -112,7 +112,7 @@ describe('InMemorySpendingKey', () => {
       'm/'
     );
     const viewer = await SaplingKeyProvider.getSaplingViewingKeyProvider();
-    expect(viewer.getFullViewingKey().toString('hex')).toEqual(
+    expect(buf2hex(viewer.getFullViewingKey())).toEqual(
       '000000000000000000977d725fc96387e8ec1e603e7ae60c6e63529fb84e36e126770e9db9899d7f2344259fd700dc80120d3c9ca65d698f6064043b048b079caa4f198aed96271740b1d6fd523d71b15cd0b3d75644afbe9abfedb6883e299165665ab692c14ca5c835c61a0e53de553a751c78fbc42d5e7eca807fd441206651c84bf88de803efba837583145a5f338b1a7af8a5f9bec4783054f9d063d365f2352f72cbced95e0a'
     );
   });
@@ -171,15 +171,14 @@ describe('InMemorySpendingKey', () => {
     const unencryptedKey =
       'sask27SLmU9herddHz4qFJBLMjWYMbJF8RtS579w9ej9mfCYK7VUdyCJPHK8AzW9zMsopGZEkYeNjAY7Zz1bkM7CGu8eKLzrjBLTMC5wWJDhxiK91ahA29rhDRsHdJDV2u2jFwb2MNUix8JW7sAkAqYVaJpCehTBPgRQ1KqKwqqUaNmuD8kazd4Q8MCWmgbWs21Yuomdqyi9FLigjRp7oY4m5adaVU19Nj1AHvsMY2tePeU2L';
     const [expected] = b58DecodeAndCheckPrefix(unencryptedKey, [PrefixV2.SaplingSpendingKey]);
-    const expectedHex = Buffer.from(expected).toString('hex');
+    const expectedHex = buf2hex(expected);
 
     const descriptor = Object.getOwnPropertyDescriptor(globalThis, 'Buffer');
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    delete (globalThis as any).Buffer;
+    Reflect.deleteProperty(globalThis, 'Buffer');
     try {
       expect('Buffer' in globalThis).toBe(false);
-      expect(decryptKey(unencryptedKey).toString('hex')).toBe(expectedHex);
-      expect(decryptKey(encryptedKey, 'test').toString('hex')).toBe(expectedHex);
+      expect(buf2hex(decryptKey(unencryptedKey))).toBe(expectedHex);
+      expect(buf2hex(decryptKey(encryptedKey, 'test'))).toBe(expectedHex);
     } finally {
       if (descriptor) {
         Object.defineProperty(globalThis, 'Buffer', descriptor);

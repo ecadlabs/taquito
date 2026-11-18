@@ -55,7 +55,7 @@ try {
   );
   run(process.execPath, ['check.cjs']);
   run(process.execPath, ['check.mjs']);
-  const types = `import {getTezosOperationHash,getEthereumTransactionHash,InvalidHexStringError,toHexBuf,numToHexBuffer} from '@taquito/utils'; const a:string=getTezosOperationHash('00');const b:string=getEthereumTransactionHash('o'); const error:Error=new InvalidHexStringError('bad');const x:import('buffer').Buffer=toHexBuf(1);const y:import('buffer').Buffer=numToHexBuffer(1);void [a,b,error,x,y];`;
+  const types = `import {getTezosOperationHash,getEthereumTransactionHash,InvalidHexStringError,toHexBuf,numToHexBuffer} from '@taquito/utils'; const a:string=getTezosOperationHash('00');const b:string=getEthereumTransactionHash('o'); const error:Error=new InvalidHexStringError('bad');const x:Uint8Array=toHexBuf(1);const y:Uint8Array=numToHexBuffer(1);void [a,b,error,x,y];`;
   for (const ext of ['cts', 'mts']) {
     writeFileSync(join(consumer, 'types.' + ext), types);
     run(process.execPath, [

@@ -47,7 +47,7 @@ const server = createServer((request, response) => {
     return;
   }
   try {
-    response.setHeader('content-type', file.endsWith('.js') ? 'text/javascript' : 'text/html');
+    response.setHeader('content-type', file.endsWith('.wasm') ? 'application/wasm' : file.endsWith('.js') ? 'text/javascript' : 'text/html');
     response.end(readFileSync(file));
   } catch {
     response.writeHead(404).end();

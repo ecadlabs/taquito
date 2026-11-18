@@ -6,7 +6,7 @@
 import { Buffer } from 'buffer';
 import { Signer } from '@taquito/core';
 import Transport from '@ledgerhq/hw-transport';
-import { b58Encode, PrefixV2 } from '@taquito/utils';
+import { b58Encode, buf2hex, hex2buf, mergebuf, PrefixV2 } from '@taquito/utils';
 import {
   appendWatermark,
   transformPathToBuffer,
@@ -117,7 +117,7 @@ export class LedgerSigner implements Signer {
     }
     const responseLedger = await this.getLedgerPublicKey();
     const publicKeyLength = responseLedger[0];
-    const rawPublicKey = responseLedger.slice(1, 1 + publicKeyLength);
+    const rawPublicKey = responseLedger.subarray(1, 1 + publicKeyLength);
     const compressedPublicKey = compressPublicKey(rawPublicKey, this.derivationType);
 
     const prefixes = this.getPrefixes();
@@ -129,7 +129,7 @@ export class LedgerSigner implements Signer {
     return publicKey;
   }
 
-  private async getLedgerPublicKey(): Promise<Buffer> {
+  private async getLedgerPublicKey(): Promise<Uint8Array> {
     try {
       let ins = this.INS_PROMPT_PUBLIC_KEY;
       if (this.prompt === false) {
@@ -140,7 +140,7 @@ export class LedgerSigner implements Signer {
         ins,
         this.FIRST_MESSAGE_SEQUENCE,
         this.derivationType,
-        transformPathToBuffer(this.path)
+        Buffer.from(transformPathToBuffer(this.path))
       );
       return responseLedger;
     } catch (error) {
@@ -154,17 +154,17 @@ export class LedgerSigner implements Signer {
 
   async sign(bytes: string, watermark?: Uint8Array) {
     const watermarkedBytes = appendWatermark(bytes, watermark);
-    const watermarkedBytes2buff = Buffer.from(watermarkedBytes, 'hex');
-    let messageToSend = [];
-    messageToSend.push(transformPathToBuffer(this.path));
-    messageToSend = chunkOperation(messageToSend, watermarkedBytes2buff);
+    const messageToSend = chunkOperation(
+      [transformPathToBuffer(this.path)],
+      hex2buf(watermarkedBytes)
+    );
     const ledgerResponse = await this.signWithLedger(messageToSend);
     let signature;
     if (
       this.derivationType === DerivationType.ED25519 ||
       this.derivationType === DerivationType.BIP32_ED25519
     ) {
-      signature = ledgerResponse.slice(0, ledgerResponse.length - 2).toString('hex');
+      signature = buf2hex(ledgerResponse.subarray(0, -2));
     } else {
       if (!validateResponse(ledgerResponse)) {
         throw new InvalidLedgerResponseError(
@@ -175,8 +175,7 @@ export class LedgerSigner implements Signer {
       const rValue = extractValue(idxLengthRVal, ledgerResponse);
       const idxLengthSVal = rValue.idxValueStart + rValue.length + 1;
       const sValue = extractValue(idxLengthSVal, ledgerResponse);
-      const signatureBuffer = Buffer.concat([rValue.buffer, sValue.buffer]);
-      signature = signatureBuffer.toString('hex');
+      signature = buf2hex(mergebuf(rValue.buffer, sValue.buffer));
     }
 
     return {
@@ -187,14 +186,14 @@ export class LedgerSigner implements Signer {
     };
   }
 
-  private async signWithLedger(message: Buffer[]): Promise<Buffer> {
+  private async signWithLedger(message: Uint8Array[]): Promise<Uint8Array> {
     // first element of the message represents the path
     let ledgerResponse = await this.transport.send(
       this.CLA,
       this.INS_SIGN,
       this.FIRST_MESSAGE_SEQUENCE,
       this.derivationType,
-      message[0]
+      Buffer.from(message[0])
     );
     for (let i = 1; i < message.length; i++) {
       const p1 =
@@ -204,7 +203,7 @@ export class LedgerSigner implements Signer {
         this.INS_SIGN,
         p1,
         this.derivationType,
-        message[i]
+        Buffer.from(message[i])
       );
     }
     return ledgerResponse;

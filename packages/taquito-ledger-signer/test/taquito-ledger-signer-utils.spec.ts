@@ -1,3 +1,4 @@
+import { hex2buf } from '@taquito/utils';
 import {
   transformPathToBuffer,
   compressPublicKey,
@@ -78,12 +79,10 @@ describe('Utils functions', () => {
     );
   });
 
-  it('Should split tansaction into 2 buffers', () => {
-    let messageToSend = [] as any;
-    const transaction = '03463a2292aed955c12d81802c8db5274031d7f226d153d545e935ccf77afe854e6d02686932f282fea132ce940aa79bf6e88b43395b19d00faf8168bb78c2030000000000b702000000b205000764045b0000000a2564656372656d656e74045b0000000a25696e6372656d656e740501035b0502020000008303210317057000010321057100020316072e020000002b032105700002032105710003034203210317057000010321057100020316034b051f020000000405200002020000002b0321057000020321057100030342032103170570000103210571000203160312051f020000000405200002053d036d0342051f020000000405200002000000020000';
-    const transactionBuff = Buffer.from(transaction, 'hex');
-    messageToSend = chunkOperation(messageToSend, transactionBuff)
-    expect(messageToSend.length).toEqual(2);
+  it('chunks the selected operation bytes at the APDU limit', () => {
+    const backing = Uint8Array.from({ length: 233 }, (_, index) => index);
+    const chunks = chunkOperation([], backing.subarray(1, 232));
+    expect(chunks).toStrictEqual([backing.slice(1, 231), Uint8Array.of(231)]);
   });
 
   it('Should return only 1 buffer because size of transaction is under the max chunk size', () => {
@@ -139,9 +138,9 @@ describe('Utils functions', () => {
 
   it('Should extract the rigth part from the signature returned by the Ledger', () => {
     const response = '314402207e1bbf244cc6aedfca39c7acf1a838d13602a70248289bdecfa342c8907df5a1022030dddbd18046b7aba123a52736e232586f8acfccd039eaaef78dc63a3e2192039000';
-    const responseBuff = Buffer.from(response, 'hex');
+    const responseBuff = hex2buf('ff' + response).subarray(1);
     const value = extractValue(3, responseBuff)
-    expect(value.buffer).toEqual(Buffer.from('7e1bbf244cc6aedfca39c7acf1a838d13602a70248289bdecfa342c8907df5a1', 'hex'));
+    expect(value.buffer).toStrictEqual(hex2buf('7e1bbf244cc6aedfca39c7acf1a838d13602a70248289bdecfa342c8907df5a1'));
   });
 
   it('Should export all Ledger error classes from the public entrypoint', () => {

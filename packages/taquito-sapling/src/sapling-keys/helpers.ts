@@ -1,5 +1,4 @@
 import { InvalidSpendingKey } from '../errors';
-import { Buffer } from 'buffer';
 import { openSecretBox } from '@stablelib/nacl';
 import { pbkdf2 } from '@noble/hashes/pbkdf2.js';
 import { sha512 } from '@noble/hashes/sha2.js';
@@ -27,7 +26,7 @@ export function decryptKey(spendingKey: string, password?: string) {
       throw new InvalidSpendingKey('no password provided to decrypt');
     }
 
-    // Noble rejects Buffer salts under jsdom/SSR realm boundaries. Normalize into this realm.
+    // Normalize the salt into this realm for Noble under jsdom and SSR.
     const salt = Uint8Array.from(keyArr.subarray(0, 8));
     const encryptedSk = keyArr.subarray(8);
 
@@ -42,8 +41,8 @@ export function decryptKey(spendingKey: string, password?: string) {
     if (!decrypted) {
       throw new InvalidSpendingKey('incorrect password or unable to decrypt');
     }
-    return Buffer.from(decrypted);
+    return decrypted;
   } else {
-    return Buffer.from(keyArr);
+    return new Uint8Array(keyArr);
   }
 }

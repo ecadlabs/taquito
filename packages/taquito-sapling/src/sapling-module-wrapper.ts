@@ -1,4 +1,3 @@
-import { Buffer } from 'buffer';
 import * as sapling from './sapling-wasm';
 import { ParametersOutputProof } from './types';
 import { preloadSaplingParams } from './sapling-params-loader';
@@ -33,7 +32,7 @@ export class SaplingWrapper {
     return sapling.randR();
   }
 
-  async getOutgoingViewingKey(vk: Buffer) {
+  async getOutgoingViewingKey(vk: Uint8Array) {
     return sapling.getOutgoingViewingKey(vk);
   }
 
@@ -56,7 +55,7 @@ export class SaplingWrapper {
     return sapling.getDiversifiedFromRawPaymentAddress(decodedDestination);
   }
 
-  async deriveEphemeralPublicKey(diversifier: Buffer, esk: Buffer) {
+  async deriveEphemeralPublicKey(diversifier: Uint8Array, esk: Uint8Array) {
     return sapling.deriveEphemeralPublicKey(diversifier, esk);
   }
 
@@ -64,7 +63,7 @@ export class SaplingWrapper {
     return sapling.getPkdFromRawPaymentAddress(destination);
   }
 
-  async keyAgreement(p: Buffer, sk: Buffer) {
+  async keyAgreement(p: Uint8Array, sk: Uint8Array) {
     return sapling.keyAgreement(p, sk);
   }
 

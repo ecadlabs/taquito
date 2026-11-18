@@ -1,6 +1,6 @@
+import { concatBytes } from '@noble/hashes/utils.js';
 import { shuffleOutputs } from './shuffle-outputs';
 import { InvalidSaplingOutputOrderError } from '../errors';
-import { Buffer } from 'buffer';
 import { blake2b } from 'blakejs';
 import { secretBox } from '@stablelib/nacl';
 import { DEFAULT_MEMO, KDF_KEY, OCK_KEY } from '../constants';
@@ -89,7 +89,7 @@ export class SaplingTransactionBuilder {
   async createShieldedTx(
     saplingTransactionParams: SaplingTransactionParams[],
     txTotalAmount: BigNumberJs.Value,
-    boundData: Buffer
+    boundData: Uint8Array
   ): Promise<Pick<SaplingTransaction, 'inputs' | 'outputs' | 'signature' | 'balance'>> {
     const rcm = await this.#saplingWrapper.randR();
 
@@ -153,7 +153,7 @@ export class SaplingTransactionBuilder {
   async createSaplingTx(
     saplingTransactionParams: SaplingTransactionParams[],
     txTotalAmount: BigNumberJs.Value,
-    boundData: Buffer,
+    boundData: Uint8Array,
     chosenInputs: SaplingTransactionInputSelection
   ) {
     const sumSelectedInputs = new BigNumber(chosenInputs.sumSelectedInputs);
@@ -264,13 +264,13 @@ export class SaplingTransactionBuilder {
     );
     const outgoingCipherKey = parametersOutputDescription.outgoingViewingKey
       ? blake2b(
-          Buffer.concat([
+          concatBytes(
             commitmentValue,
             commitment,
             ephemeralPublicKey,
-            parametersOutputDescription.outgoingViewingKey,
-          ]),
-          Buffer.from(OCK_KEY),
+            parametersOutputDescription.outgoingViewingKey
+          ),
+          OCK_KEY,
           32
         )
       : this.#saplingWrapper.getRandomBytes(32);
@@ -363,8 +363,8 @@ export class SaplingTransactionBuilder {
       recipientDiversifiedTransmissionKey,
       parametersCiphertext.ephemeralPrivateKey
     );
-    const keyAgreementHash = blake2b(keyAgreement, Buffer.from(KDF_KEY), 32);
-    const nonceEnc = Buffer.from(this.#saplingWrapper.getRandomBytes(24));
+    const keyAgreementHash = blake2b(keyAgreement, KDF_KEY, 32);
+    const nonceEnc = this.#saplingWrapper.getRandomBytes(24);
 
     const transactionPlaintext = this.#saplingForger.forgeTransactionPlaintext({
       diversifier: parametersCiphertext.diversifier,
@@ -374,17 +374,12 @@ export class SaplingTransactionBuilder {
       memo: parametersCiphertext.memo,
     });
 
-    const nonceOut = Buffer.from(this.#saplingWrapper.getRandomBytes(24));
-    const payloadEnc = Buffer.from(secretBox(keyAgreementHash, nonceEnc, transactionPlaintext));
-    const payloadOut = Buffer.from(
-      secretBox(
-        parametersCiphertext.outgoingCipherKey,
-        nonceOut,
-        Buffer.concat([
-          recipientDiversifiedTransmissionKey,
-          parametersCiphertext.ephemeralPrivateKey,
-        ])
-      )
+    const nonceOut = this.#saplingWrapper.getRandomBytes(24);
+    const payloadEnc = secretBox(keyAgreementHash, nonceEnc, transactionPlaintext);
+    const payloadOut = secretBox(
+      parametersCiphertext.outgoingCipherKey,
+      nonceOut,
+      concatBytes(recipientDiversifiedTransmissionKey, parametersCiphertext.ephemeralPrivateKey)
     );
 
     return { payloadEnc, nonceEnc, payloadOut, nonceOut };
@@ -408,7 +403,7 @@ export class SaplingTransactionBuilder {
     const outputs = this.#saplingForger.forgeOutputDescriptions(parametersBindingSig.outputs);
     const inputs = this.#saplingForger.forgeSpendDescriptions(parametersBindingSig.inputs);
     const transactionSigHash = blake2b(
-      Buffer.concat([inputs, outputs, parametersBindingSig.boundData]),
+      concatBytes(inputs, outputs, parametersBindingSig.boundData),
       await this.getAntiReplay(),
       32
     );
@@ -426,6 +421,6 @@ export class SaplingTransactionBuilder {
       chainId = await this.#readProvider.getChainId();
       this.#chainId = chainId;
     }
-    return Buffer.from(`${this.#contractAddress}${chainId}`);
+    return new TextEncoder().encode(`${this.#contractAddress}${chainId}`);
   }
 }

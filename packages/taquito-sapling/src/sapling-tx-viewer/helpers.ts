@@ -1,5 +1,4 @@
-import { Buffer } from 'buffer';
-import { b58Encode, bytesToString, PrefixV2 } from '@taquito/utils';
+import { buf2hex, b58Encode, bytesToString, PrefixV2 } from '@taquito/utils';
 import BigNumber from 'bignumber.js';
 import { Input } from '../types';
 
@@ -16,19 +15,11 @@ function removeZeroPaddedBytesRight(memo: string) {
 export function readableFormat(saplingTransactionProperties: Omit<Input, 'position'>) {
   return {
     value: convertValueToBigNumber(saplingTransactionProperties.value),
-    memo: memoHexToUtf8(Buffer.from(saplingTransactionProperties.memo).toString('hex')),
+    memo: memoHexToUtf8(buf2hex(saplingTransactionProperties.memo)),
     paymentAddress: b58Encode(saplingTransactionProperties.paymentAddress, PrefixV2.SaplingAddress),
   };
 }
 
 export function convertValueToBigNumber(value: Uint8Array) {
-  return new BigNumber(Buffer.from(value).toString('hex'), 16);
-}
-
-export function bufToUint8Array(buffer: Buffer) {
-  return new Uint8Array(
-    buffer.buffer,
-    buffer.byteOffset,
-    buffer.byteLength / Uint8Array.BYTES_PER_ELEMENT
-  );
+  return new BigNumber(buf2hex(value), 16);
 }

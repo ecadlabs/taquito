@@ -24,34 +24,34 @@ export interface SaplingTransaction {
   outputs: SaplingTransactionOutput[];
   balance: BigNumber;
   root: string;
-  boundData: Buffer;
-  signature: Buffer;
+  boundData: Uint8Array;
+  signature: Uint8Array;
 }
 
 export interface Ciphertext {
-  commitmentValue: Buffer;
-  ephemeralPublicKey: Buffer;
-  payloadEnc: Buffer;
-  nonceEnc: Buffer;
-  payloadOut: Buffer;
-  nonceOut: Buffer;
+  commitmentValue: Uint8Array;
+  ephemeralPublicKey: Uint8Array;
+  payloadEnc: Uint8Array;
+  nonceEnc: Uint8Array;
+  payloadOut: Uint8Array;
+  nonceOut: Uint8Array;
 }
 
 export interface SaplingTransactionInput {
-  commitmentValue: Buffer;
-  nullifier: Buffer;
-  publicKeyReRandomization: Buffer;
-  proof: Buffer;
-  signature: Buffer;
+  commitmentValue: Uint8Array;
+  nullifier: Uint8Array;
+  publicKeyReRandomization: Uint8Array;
+  proof: Uint8Array;
+  signature: Uint8Array;
 }
 
 export interface SaplingSpendDescription extends SaplingTransactionInput {
-  rtAnchor: Buffer;
+  rtAnchor: Uint8Array;
 }
 
 export interface SaplingTransactionOutput {
-  commitment: Buffer;
-  proof: Buffer;
+  commitment: Uint8Array;
+  proof: Uint8Array;
   ciphertext: Ciphertext;
 }
 
@@ -69,14 +69,14 @@ export interface ParametersSpendProof {
   saplingContext: number;
   address: Uint8Array;
   randomCommitmentTrapdoor: Uint8Array;
-  publicKeyReRandomization: Buffer;
+  publicKeyReRandomization: Uint8Array;
   amount: string;
   root: string;
   witness: string;
 }
 
 export interface ParametersSpendSig {
-  publicKeyReRandomization: Buffer;
+  publicKeyReRandomization: Uint8Array;
   unsignedSpendDescription: Omit<SaplingSpendDescription, 'signature'>;
   hash: Uint8Array;
 }
@@ -86,13 +86,13 @@ export interface ParametersOutputDescription {
   address: Uint8Array;
   amount: string;
   memo: string;
-  randomCommitmentTrapdoor: Buffer;
-  outgoingViewingKey?: Buffer;
+  randomCommitmentTrapdoor: Uint8Array;
+  outgoingViewingKey?: Uint8Array;
 }
 
 export interface ParametersOutputProof {
   saplingContext: number;
-  ephemeralPrivateKey: Buffer;
+  ephemeralPrivateKey: Uint8Array;
   address: Uint8Array;
   randomCommitmentTrapdoor: Uint8Array;
   amount: string;
@@ -103,23 +103,23 @@ export interface ParametersBindingSig {
   inputs: SaplingTransactionInput[];
   outputs: SaplingTransactionOutput[];
   balance: BigNumber;
-  boundData: Buffer;
+  boundData: Uint8Array;
 }
 
 export interface ParametersCiphertext {
   address: Uint8Array;
-  ephemeralPrivateKey: Buffer;
-  diversifier: Buffer;
+  ephemeralPrivateKey: Uint8Array;
+  diversifier: Uint8Array;
   outgoingCipherKey: Uint8Array;
   amount: string;
-  randomCommitmentTrapdoor: Buffer;
+  randomCommitmentTrapdoor: Uint8Array;
   memo: string;
 }
 
 export interface SaplingTransactionPlaintext {
-  diversifier: Buffer;
+  diversifier: Uint8Array;
   amount: string;
-  randomCommitmentTrapdoor: Buffer;
+  randomCommitmentTrapdoor: Uint8Array;
   memoSize: number;
   memo: string;
 }
@@ -155,7 +155,7 @@ export interface ChosenSpendableInputs extends SaplingTransactionInputSelection 
 export interface SaplingTransactionParamsTxBuilder {
   root: string;
   saplingTransactionParams: SaplingTransactionParams[];
-  boundData: Buffer;
+  boundData: Uint8Array;
 }
 
 export interface SaplingTransactionParams {

@@ -1,5 +1,4 @@
-import { Buffer } from 'buffer';
-import { b58Encode, PrefixV2 } from '@taquito/utils';
+import { buf2hex, hex2buf, b58Encode, PrefixV2 } from '@taquito/utils';
 import * as sapling from '../sapling-wasm';
 import { decryptKey } from './helpers';
 
@@ -7,9 +6,9 @@ import { decryptKey } from './helpers';
  * Holds the viewing key
  */
 export class InMemoryViewingKey {
-  #fullViewingKey: Buffer;
+  #fullViewingKey: Uint8Array;
   constructor(fullViewingKey: string) {
-    this.#fullViewingKey = Buffer.from(fullViewingKey, 'hex');
+    this.#fullViewingKey = hex2buf(fullViewingKey);
   }
 
   /**
@@ -26,12 +25,12 @@ export class InMemoryViewingKey {
   static async fromSpendingKey(spendingKey: string, password?: string) {
     const spendingKeyBuf = decryptKey(spendingKey, password);
     const viewingKey = await sapling.getExtendedFullViewingKeyFromSpendingKey(spendingKeyBuf);
-    return new InMemoryViewingKey(viewingKey.toString('hex'));
+    return new InMemoryViewingKey(buf2hex(viewingKey));
   }
 
   /**
    * Retrieve the full viewing key
-   * @returns Buffer representing the full viewing key
+   * @returns Uint8Array representing the full viewing key
    *
    */
   getFullViewingKey() {
@@ -40,7 +39,7 @@ export class InMemoryViewingKey {
 
   /**
    * Retrieve the outgoing viewing key
-   * @returns Buffer representing the outgoing viewing key
+   * @returns Uint8Array representing the outgoing viewing key
    *
    */
   async getOutgoingViewingKey() {
@@ -49,7 +48,7 @@ export class InMemoryViewingKey {
 
   /**
    * Retrieve the incoming viewing key
-   * @returns Buffer representing the incoming viewing key
+   * @returns Uint8Array representing the incoming viewing key
    *
    */
   async getIncomingViewingKey() {
@@ -69,7 +68,10 @@ export class InMemoryViewingKey {
     );
     return {
       address: b58Encode(raw, PrefixV2.SaplingAddress),
-      addressIndex: index.readInt32LE(),
+      addressIndex: new DataView(index.buffer, index.byteOffset, index.byteLength).getInt32(
+        0,
+        true
+      ),
     };
   }
 }

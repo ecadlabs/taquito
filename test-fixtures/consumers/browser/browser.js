@@ -10,6 +10,11 @@ if ('Buffer' in globalThis) {
   throw new Error('Expected no global Buffer in Vite browser consumer');
 }
 
+await import('@taquito/sapling');
+if ('Buffer' in globalThis) {
+  throw new Error('Importing Sapling installed a global Buffer');
+}
+
 const invalid = new InvalidAddressError('invalid');
 const error = new HttpResponseError('missing', 404, 'Not Found', '{}', '/missing');
 if (invalid.message !== 'Invalid address "invalid"' || ValidationResult.INVALID_CHECKSUM !== 1) {
@@ -120,6 +125,8 @@ if (
 const signerPosts = [];
 const nativeFetch = globalThis.fetch;
 globalThis.fetch = async (input, init) => {
+  const url = new URL(input instanceof Request ? input.url : input, location.href);
+  if (url.origin !== 'https://signer.invalid') return nativeFetch(input, init);
   if (init?.method === 'POST') {
     signerPosts.push({ url: String(input), body: JSON.parse(init.body) });
     return Response.json({ signature: signingSignature });

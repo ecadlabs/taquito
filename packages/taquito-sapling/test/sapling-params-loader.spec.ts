@@ -1,8 +1,8 @@
+import { buf2hex, hex2buf } from '@taquito/utils';
 import { createHash, webcrypto } from 'node:crypto';
 import { mkdtemp, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { Buffer } from 'buffer';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const initParameters = vi.fn();
@@ -18,7 +18,7 @@ vi.mock('../src/sapling-wasm', () => ({
 const spendDigest = '8e48ffd23abb3a5fd9c5589204f32d9c31285a04b78096ba40a79b75677efc13';
 const outputDigest = '2f0ebbcbb9bb0bcffe95a397e7eba89c29eb4dde6191c339db88570e3f3fb0e4';
 
-const hexToArrayBuffer = (hex: string) => Uint8Array.from(Buffer.from(hex, 'hex')).buffer;
+const hexToArrayBuffer = (hex: string) => Uint8Array.from(hex2buf(hex)).buffer;
 
 describe('Sapling params loader', () => {
   const originalCrypto = globalThis.crypto;
@@ -33,7 +33,7 @@ describe('Sapling params loader', () => {
     withProvingContext.mockImplementation(async (action: (context: number) => Promise<unknown>) =>
       action(17)
     );
-    getOutgoingViewingKey.mockResolvedValue(Buffer.from('outgoing-viewing-key'));
+    getOutgoingViewingKey.mockResolvedValue(new TextEncoder().encode('outgoing-viewing-key'));
   });
 
   afterEach(() => {
@@ -84,7 +84,7 @@ describe('Sapling params loader', () => {
     };
     const { SaplingWrapper } = (await import('../src/sapling-module-wrapper')) as {
       SaplingWrapper: new () => {
-        getOutgoingViewingKey(vk: Buffer): Promise<Buffer>;
+        getOutgoingViewingKey(vk: Uint8Array): Promise<Uint8Array>;
         withProvingContext<T>(action: (context: number) => Promise<T>): Promise<T>;
       };
     };
@@ -92,7 +92,7 @@ describe('Sapling params loader', () => {
     await initSapling();
 
     const wrapper = new SaplingWrapper();
-    await wrapper.getOutgoingViewingKey(Buffer.alloc(32));
+    await wrapper.getOutgoingViewingKey(new Uint8Array(32));
 
     expect(fetchMock).not.toHaveBeenCalled();
     expect(initParameters).not.toHaveBeenCalled();
@@ -114,8 +114,8 @@ describe('Sapling params loader', () => {
 
   it('dedupes concurrent preload calls and supports trusted local file paths without digests', async () => {
     const tempDir = await mkdtemp(join(tmpdir(), 'sapling-params-'));
-    const spendParams = Buffer.from('local-spend-params');
-    const outputParams = Buffer.from('local-output-params');
+    const spendParams = new TextEncoder().encode('local-spend-params');
+    const outputParams = new TextEncoder().encode('local-output-params');
     const spendPath = join(tempDir, 'sapling-spend.params');
     const outputPath = join(tempDir, 'sapling-output.params');
 
@@ -189,9 +189,9 @@ describe('Sapling params loader', () => {
 
   it('shares a body failure and retries with a new source while the old sibling finishes', async () => {
     const cause = new Error('interrupted spend download');
-    const oldOutput = Buffer.from('old-output');
-    const newSpend = Buffer.from('new-spend');
-    const newOutput = Buffer.from('new-output');
+    const oldOutput = new TextEncoder().encode('old-output');
+    const newSpend = new TextEncoder().encode('new-spend');
+    const newOutput = new TextEncoder().encode('new-output');
     let releaseOldBody!: (body: ArrayBuffer) => void;
     const oldBody = new Promise<ArrayBuffer>((resolve) => {
       releaseOldBody = resolve;
@@ -214,7 +214,7 @@ describe('Sapling params loader', () => {
         subtle: {
           digest: async (algorithm: string, bytes: Uint8Array) => {
             const result = await webcrypto.subtle.digest(algorithm, Uint8Array.from(bytes));
-            if (Buffer.from(bytes).equals(oldOutput)) oldDigestFinished = true;
+            if (buf2hex(bytes) === buf2hex(oldOutput)) oldDigestFinished = true;
             return result;
           },
         },
@@ -222,7 +222,7 @@ describe('Sapling params loader', () => {
       configurable: true,
     });
     const { initSapling, preloadSaplingParams } = await import('../src/taquito-sapling');
-    const source = (host: string, spend: Buffer, output: Buffer) => ({
+    const source = (host: string, spend: Uint8Array, output: Uint8Array) => ({
       params: {
         spendParamsUrl: `https://${host}/spend.params`,
         outputParamsUrl: `https://${host}/output.params`,
@@ -232,7 +232,7 @@ describe('Sapling params loader', () => {
     });
 
     try {
-      await initSapling(source('old.test', Buffer.from('old-spend'), oldOutput));
+      await initSapling(source('old.test', new TextEncoder().encode('old-spend'), oldOutput));
       const failures = await Promise.all([
         preloadSaplingParams().catch((error: unknown) => error),
         preloadSaplingParams().catch((error: unknown) => error),

@@ -42,7 +42,7 @@ describe('LedgerSigner test', () => {
     const pk = await signer.publicKey();
     const pkh = await signer.publicKeyHash();
     const path = "44'/1729'/0'/0'";
-    const buff = transformPathToBuffer(path);
+    const buff = Buffer.from(transformPathToBuffer(path));
     expect(mockTransport.send).toHaveBeenCalledWith(0x80, 0x03, 0x00, 0x00, buff);
     expect(mockTransport.send).toHaveBeenCalledTimes(1);
     expect(pk).toEqual('edpkuRkcStobJ569XFxmE6edyRQQzMmtf4ZnmPkTPfSQnt6P3Nym2V');
@@ -64,7 +64,7 @@ describe('LedgerSigner test', () => {
     const pk = await signer.publicKey();
     const pkh = await signer.publicKeyHash();
     const path = "44'/1729'/0'/0'";
-    const buff = transformPathToBuffer(path);
+    const buff = Buffer.from(transformPathToBuffer(path));
     expect(mockTransport.send).toHaveBeenCalledWith(0x80, 0x02, 0x00, 0x01, buff);
     expect(mockTransport.send).toHaveBeenCalledTimes(1);
     expect(pk).toEqual('sppk7ZMM9NZLPPueTKcoJobdUG7MjLtaGsdrZqddcn9U6C9Yt99m8sU');
@@ -81,7 +81,7 @@ describe('LedgerSigner test', () => {
     const pk = await signer.publicKey();
     const pkh = await signer.publicKeyHash();
     const path = "44'/1729'/1'/0'";
-    const buff = transformPathToBuffer(path);
+    const buff = Buffer.from(transformPathToBuffer(path));
     expect(mockTransport.send).toHaveBeenCalledWith(0x80, 0x02, 0x00, 0x02, buff);
     expect(mockTransport.send).toHaveBeenCalledTimes(1);
     expect(pk).toEqual('p2pk66MZ9MuDHfn5cQsUvtCvU376cijjvDLtTQzBFNeDHMijG4snUZZ');
@@ -98,7 +98,7 @@ describe('LedgerSigner test', () => {
     mockTransport.send.mockResolvedValue(mockpk);
     const pk = await signer.publicKey();
     const pkh = await signer.publicKeyHash();
-    const buff = transformPathToBuffer(path);
+    const buff = Buffer.from(transformPathToBuffer(path));
     expect(mockTransport.send).toHaveBeenCalledWith(0x80, 0x02, 0x00, 0x00, buff);
     expect(mockTransport.send).toHaveBeenCalledTimes(1);
     expect(pk).toEqual('edpkv4FWm7YkppQNmKjxrSHCYzoh2pYRdeFeUeXWVjPTLPzyJduaox');
@@ -116,7 +116,7 @@ describe('LedgerSigner test', () => {
       '367325bbba406bc3f8c1bf12b27b6e8081064722d3342e34142c172b322ba0426b00c9fc72e8491bd2973e196f04ec6918ad5bcee22d8c0bbcb98d01e85200006760ff228c2c16cbca18bb782a106e51c43a131776f5dfad30ecb5d5e43eccbd6c00c9fc72e8491bd2973e196f04ec6918ad5bcee22dea0abdb98d01c35000a0c21e0000eadc0855adb415fa69a76fc10397dc2fb37039a000'
     );
     const path = "44'/1729'/0'/0'";
-    const buff = transformPathToBuffer(path);
+    const buff = Buffer.from(transformPathToBuffer(path));
     expect(mockTransport.send).toHaveBeenCalledTimes(2);
     expect(mockTransport.send).toHaveBeenCalledWith(0x80, 0x04, 0x00, 0x00, buff);
     expect(signature).toEqual({
@@ -146,7 +146,7 @@ describe('LedgerSigner test', () => {
       '0372a589146bff99c31469fde4a7ac539e0ea5d926cbea4b72f2ae048fefacdaa16c01cc70a574e52e16028ce0fead32e8b2d8cc1440aca40e9bba8d01ed760000016ca589ff04efc7f657ded2a796631183b3d3709a00ffff09696e6372656d656e74000000020007'
     );
     const path = "44'/1729'/0'/0'";
-    const buff = transformPathToBuffer(path);
+    const buff = Buffer.from(transformPathToBuffer(path));
     expect(mockTransport.send).toHaveBeenCalledTimes(2);
     expect(mockTransport.send).toHaveBeenCalledWith(0x80, 0x04, 0x00, 0x01, buff);
     expect(signature).toEqual({
@@ -171,7 +171,7 @@ describe('LedgerSigner test', () => {
       '038e1824a75961255a36e47d354733d6923c5849579d6abb4bd8c2a929ab5d393a6b02bd2cbb50fb2bfd7237b474a25b1b4ae447c577208c0babbc8d01e8520002022937a7444d7a00cb29f353058444d26d19382f0079e34b5aaf0eda4cec6665f16d02bd2cbb50fb2bfd7237b474a25b1b4ae447c577209310acbc8d01bb78c2030000000000b702000000b205000764045b0000000a2564656372656d656e74045b0000000a25696e6372656d656e740501035b0502020000008303210317057000010321057100020316072e020000002b032105700002032105710003034203210317057000010321057100020316034b051f020000000405200002020000002b0321057000020321057100030342032103170570000103210571000203160312051f020000000405200002053d036d0342051f020000000405200002000000020000'
     );
     const path = "44'/1729'/0'/0'";
-    const buff = transformPathToBuffer(path);
+    const buff = Buffer.from(transformPathToBuffer(path));
     expect(mockTransport.send).toHaveBeenCalledTimes(3);
     expect(mockTransport.send).toHaveBeenCalledWith(0x80, 0x04, 0x00, 0x02, buff);
     expect(signature).toEqual({
@@ -201,7 +201,7 @@ describe('LedgerSigner test', () => {
       '367325bbba406bc3f8c1bf12b27b6e8081064722d3342e34142c172b322ba0426b00c9fc72e8491bd2973e196f04ec6918ad5bcee22d8c0bbcb98d01e85200006760ff228c2c16cbca18bb782a106e51c43a131776f5dfad30ecb5d5e43eccbd6c00c9fc72e8491bd2973e196f04ec6918ad5bcee22dea0abdb98d01c35000a0c21e0000eadc0855adb415fa69a76fc10397dc2fb37039a000'
     );
     const path = "44'/1729'/1'/0'";
-    const buff = transformPathToBuffer(path);
+    const buff = Buffer.from(transformPathToBuffer(path));
     expect(mockTransport.send).toHaveBeenCalledTimes(2);
     expect(mockTransport.send).toHaveBeenCalledWith(0x80, 0x04, 0x00, 0x03, buff);
     expect(signature).toEqual({

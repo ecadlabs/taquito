@@ -1,7 +1,6 @@
-import { Buffer } from 'buffer';
 import { InMemoryViewingKey } from './in-memory-viewing-key';
 import * as sapling from '../sapling-wasm';
-import { b58Encode, PrefixV2 } from '@taquito/utils';
+import { buf2hex, b58Encode, PrefixV2 } from '@taquito/utils';
 import * as bip39 from '@scure/bip39';
 import {
   ParametersSpendProof,
@@ -17,7 +16,7 @@ import { decryptKey } from './helpers';
  * with access to instantiate a InMemoryViewingKey
  */
 export class InMemorySpendingKey {
-  #spendingKeyBuf: Buffer;
+  #spendingKeyBuf: Uint8Array;
   #saplingViewingKey: InMemoryViewingKey | undefined;
   /**
    *
@@ -41,7 +40,7 @@ export class InMemorySpendingKey {
     const first32 = fullSeed.slice(0, 32);
     const second32 = fullSeed.slice(32);
     // reduce seed bytes must be 32 bytes reflecting both halves
-    const seed = Buffer.from(first32.map((byte, index) => byte ^ second32[index]));
+    const seed = first32.map((byte, index) => byte ^ second32[index]);
 
     const spendingKeyArr = new Uint8Array(
       await sapling.getExtendedSpendingKey(seed, derivationPath)
@@ -57,10 +56,10 @@ export class InMemorySpendingKey {
    * @returns InMemoryViewingKey instantiated class
    */
   async getSaplingViewingKeyProvider() {
-    let viewingKey: Buffer;
+    let viewingKey: Uint8Array;
     if (!this.#saplingViewingKey) {
       viewingKey = await sapling.getExtendedFullViewingKeyFromSpendingKey(this.#spendingKeyBuf);
-      this.#saplingViewingKey = new InMemoryViewingKey(viewingKey.toString('hex'));
+      this.#saplingViewingKey = new InMemoryViewingKey(buf2hex(viewingKey));
     }
 
     return this.#saplingViewingKey;
@@ -135,6 +134,6 @@ export class InMemorySpendingKey {
    */
   async getProvingKey() {
     const provingKey = await sapling.getProofAuthorizingKey(this.#spendingKeyBuf);
-    return provingKey.toString('hex');
+    return buf2hex(provingKey);
   }
 }
