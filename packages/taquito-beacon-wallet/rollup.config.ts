@@ -17,6 +17,7 @@ const mainConfig = {
       sourcemap: true,
       globals: {
         '@ecadlabs/beacon-sdk': 'beacon',
+        '@ecadlabs/beacon-types': 'beaconTypes',
         '@taquito/core': 'taquitoCore',
         '@ecadlabs/beacon-dapp': 'beaconDapp',
         '@taquito/taquito': 'taquito',
@@ -30,6 +31,7 @@ const mainConfig = {
   },
   external: [
     '@ecadlabs/beacon-sdk',
+    '@ecadlabs/beacon-types',
     '@ecadlabs/beacon-dapp',
     '@taquito/core',
     '@taquito/taquito',

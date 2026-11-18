@@ -161,6 +161,42 @@ const stopMessages = wallet.subscribeToMessages((record) => {
 });
 ```
 
+## Internationalization (i18n) & RTL Layout Support
+
+Beacon includes built-in translations for English (`en`), French (`fr`), Spanish (`es`), German (`de`), Japanese (`ja`), and Arabic (`ar`, with automatic Right-to-Left `rtl` layout across `<beacon-alert>` and `<beacon-toast>` shadow roots), as well as full WCAG/WAI-ARIA keyboard navigation and screen-reader announcements.
+
+By default, `BeaconWallet` automatically detects the user's preferred language from the browser (`navigator.languages` / `navigator.language`, or a non-English `<html lang="...">` attribute, falling back to `'en'`).
+
+You can override the locale, text direction (`'ltr' | 'rtl' | 'auto'`), and partial translation strings programmatically in constructor options or at runtime:
+
+```ts
+import {
+  BeaconWallet,
+  configureBeaconI18n,
+  setBeaconLocale,
+} from '@taquito/beacon-wallet';
+
+// 1. Override in constructor options:
+const wallet = new BeaconWallet({
+  name: 'MyAwesomeDapp',
+  locale: 'fr',
+  direction: 'auto',
+  translations: {
+    ui: {
+      connectWallet: 'Connecter votre portefeuille Tezos',
+    },
+  },
+});
+
+// 2. Or switch language/direction dynamically at runtime (updates open modals/toasts immediately):
+wallet.setLocale('ar'); // switches to Arabic and sets dir="rtl"
+wallet.setLocale(undefined); // reverts to the detected browser language
+
+// Or via top-level helpers:
+setBeaconLocale('es');
+configureBeaconI18n({ locale: 'de', direction: 'ltr' });
+```
+
 ## Side-Effect-Free Types (`@taquito/beacon-wallet/types`)
 
 To import Beacon enums, error classes, error guards, or TypeScript types without pulling in `@ecadlabs/beacon-dapp` runtime side effects:

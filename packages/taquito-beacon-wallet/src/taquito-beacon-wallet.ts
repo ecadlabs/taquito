@@ -8,25 +8,42 @@ import {
   type AlertButton,
   BeaconEvent,
   type BeaconEventType,
+  type BeaconI18nConfig,
+  type BeaconLocaleMessages,
   type BeaconMessageRecord,
+  type BeaconResolvedDirection,
+  type BeaconTextDirection,
+  type BeaconTranslationOverrides,
+  configureBeaconI18n,
   type ConnectionInfo,
   DAppClient,
   type DAppClientDisconnectOptions,
   DAppClientOptions,
   type ExtendedPeerInfo,
+  getBeaconDirection,
+  getBeaconLocale,
+  getBeaconMessages,
+  getBeaconTranslations,
   type PendingRequestInfo,
   type PermissionResponseOutput,
+  registerBeaconClientI18n,
   RequestPermissionInput,
   PermissionScope,
   getDAppClientInstance,
+  resolveBeaconLang,
+  setBeaconDirection,
+  setBeaconLocale,
+  setBeaconTranslations,
   SigningType,
   NodeDistributions,
   Regions,
   type RequestResponseInfo,
   type RequestSentInfo,
   type StoredAccountInfo,
+  unregisterBeaconClientI18n,
   type WalletInfo,
 } from '@ecadlabs/beacon-dapp';
+import { detectBrowserLocale } from './beacon-types';
 import { BeaconWalletNotInitialized, MissingRequiredScopes } from './errors';
 import {
   createIncreasePaidStorageOperation,
@@ -58,6 +75,7 @@ import { UnsupportedActionError } from '@taquito/core';
 
 export { VERSION } from './version';
 export { BeaconWalletNotInitialized, MissingRequiredScopes } from './errors';
+export { detectBrowserLocale } from './beacon-types';
 
 // Re-exported from @ecadlabs/beacon-dapp for consumers who need these without
 // a direct beacon-dapp dependency. These types live only in beacon-dapp (not in
@@ -65,49 +83,89 @@ export { BeaconWalletNotInitialized, MissingRequiredScopes } from './errors';
 // beacon types (NetworkType, SigningType, etc.), use '@taquito/beacon-wallet/types'.
 export {
   AbortedBeaconError,
+  arMessages,
   BeaconError,
+  BeaconErrorType,
   BeaconEvent,
   BroadcastBeaconError,
+  builtInLocales,
+  configureBeaconI18n,
   defaultEventCallbacks,
+  deMessages,
+  enMessages,
+  esMessages,
+  ExtendedWalletConnectPairingRequest,
+  frMessages,
+  getBeaconDirection,
+  getBeaconErrorCopy,
+  getBeaconLocale,
+  getBeaconMessages,
+  getBeaconTranslations,
   getDebugEnabled,
   getError,
   getLogger,
+  hasBuiltInLocale,
   InternalLogger,
+  interpolateBeaconMessage,
   isBeaconError,
   isErrorOrigin,
   isErrorResponse,
   isRequestErrorResponse,
   isTezosRpcError,
+  jaMessages,
   LocalStorage,
   Logger,
   NetworkNotSupportedBeaconError,
   NoAddressBeaconError,
   NoPrivateKeyBeaconError,
+  normalizeLocaleTag,
   NotGrantedBeaconError,
   ParametersInvalidBeaconError,
   PeerUnreachableBeaconError,
   reportDiagnostic,
+  resetBeaconI18n,
+  resolveBeaconLang,
+  resolveBuiltInLocaleCatalog,
+  setBeaconDirection,
+  setBeaconLocale,
+  setBeaconTranslations,
   setDebugEnabled,
   setLogger,
   SignatureTypeNotSupportedBeaconError,
+  subscribeBeaconI18n,
   toBeaconError,
   TooManyOperationsBeaconError,
   TransactionInvalidBeaconError,
   UnknownBeaconError,
+  WalletConnectPairingRequest,
 } from '@ecadlabs/beacon-dapp';
 export type {
   AcknowledgeInfo,
   ActiveTransportInfo,
+  BeaconAriaMessages,
+  BeaconDAppMessages,
+  BeaconErrorCopy,
   BeaconErrorOptions,
   BeaconEventHandler,
   BeaconEventType,
+  BeaconI18nConfig,
+  BeaconLocaleMessages,
+  BeaconLocaleMetadata,
+  BeaconLocaleStatus,
   BeaconMessageDisposition,
   BeaconMessageRecord,
+  BeaconResolvedDirection,
+  BeaconTextDirection,
+  BeaconTranslationOverrides,
+  BeaconUIMessages,
+  BeaconWalletTypeMessages,
   ConnectionInfo,
   DAppClient,
   DAppClientDisconnectOptions,
   DAppClientOptions,
   DAppClientRemoveAllPeersOptions,
+  DeepPartial,
+  DisplayableWalletConnectFailureReason,
   ErrorOrigin,
   InvalidAccountDeactivatedEvent,
   InvalidAccountDeactivatedReason,
@@ -128,6 +186,9 @@ export type {
   TransportStatusChangeReason,
   V3ResponsePayload,
   WaitingForWalletAckInfo,
+  WalletConnectErrorCopy,
+  WalletConnectPairingFailureReason,
+  WalletConnectPairingResult,
   WalletInfo,
   WireErrorMessage,
   WireErrorPayload,
@@ -173,6 +234,8 @@ export type PermissionResponseInfo = Omit<
  * Users can still override specific regions (or the entire list) by passing
  * their own `matrixNodes` in the BeaconWallet constructor options.
  */
+const TAQUITO_BEACON_WALLET_I18N_OWNER = Symbol.for('@taquito/beacon-wallet/i18n-owner');
+
 const TAQUITO_CURATED_MATRIX_NODES: NodeDistributions = {
   [Regions.EUROPE_WEST]: [
     'beacon-node-1.octez.io',
@@ -249,7 +312,127 @@ export class BeaconWallet implements WalletProvider {
       ...TAQUITO_CURATED_MATRIX_NODES,
       ...(options.matrixNodes ?? {}),
     };
-    this.client = getDAppClientInstance({ ...options, matrixNodes });
+    let resolvedLocale = options.locale;
+    if (resolvedLocale === undefined) {
+      unregisterBeaconClientI18n(TAQUITO_BEACON_WALLET_I18N_OWNER);
+      if (getBeaconLocale() === undefined) {
+        resolvedLocale = detectBrowserLocale(options.translations);
+      }
+    }
+    const clientOptions: DAppClientOptions = {
+      ...options,
+      ...(resolvedLocale !== undefined ? { locale: resolvedLocale } : {}),
+      matrixNodes,
+    };
+    this.client = getDAppClientInstance(clientOptions);
+    if (
+      resolvedLocale !== undefined ||
+      options.direction !== undefined ||
+      options.translations !== undefined
+    ) {
+      registerBeaconClientI18n(TAQUITO_BEACON_WALLET_I18N_OWNER, {
+        locale: resolvedLocale,
+        direction: options.direction,
+        translations: options.translations,
+      });
+    }
+  }
+
+  /**
+   * Programmatically updates the active Beacon i18n configuration (`locale`,
+   * `direction`, and/or custom `translations`). Immediately updates any mounted
+   * `<beacon-alert>` and `<beacon-toast>` UI components.
+   */
+  configureI18n(config: BeaconI18nConfig): void {
+    if ('locale' in config && config.locale === undefined) {
+      const fallbackLocale = detectBrowserLocale(
+        'translations' in config ? config.translations : getBeaconTranslations()
+      );
+      registerBeaconClientI18n(TAQUITO_BEACON_WALLET_I18N_OWNER, {
+        locale: fallbackLocale,
+        direction: 'direction' in config ? config.direction : undefined,
+        translations: 'translations' in config ? config.translations : getBeaconTranslations(),
+      });
+      const restConfig: BeaconI18nConfig = {
+        ...('direction' in config ? { direction: config.direction } : {}),
+        ...('translations' in config ? { translations: config.translations } : {}),
+      };
+      configureBeaconI18n(restConfig);
+      return;
+    }
+    configureBeaconI18n(config);
+  }
+
+  /**
+   * Programmatically overrides the active BCP-47 locale tag (for example:
+   * `'en'`, `'fr'`, `'es'`, `'de'`, `'ja'`, `'ar'`). Pass `undefined` to clear
+   * the programmatic override and revert to the detected browser/document language.
+   */
+  setLocale(locale?: string): void {
+    if (locale === undefined) {
+      setBeaconLocale(undefined);
+      const browserLocale = detectBrowserLocale(getBeaconTranslations());
+      registerBeaconClientI18n(TAQUITO_BEACON_WALLET_I18N_OWNER, {
+        locale: browserLocale,
+        translations: getBeaconTranslations(),
+      });
+      return;
+    }
+    setBeaconLocale(locale);
+  }
+
+  /**
+   * Returns the currently configured or detected BCP-47 locale tag, or
+   * `undefined` when no explicit or browser locale is set.
+   */
+  getLocale(): string | undefined {
+    return getBeaconLocale();
+  }
+
+  /**
+   * Returns the effective resolved BCP-47 language tag used for rendering UI
+   * and error messages (falling back to `'en'` when an unsupported locale has
+   * no custom translation overrides).
+   */
+  resolveLang(): string {
+    return resolveBeaconLang();
+  }
+
+  /**
+   * Programmatically sets the UI text direction (`'ltr' | 'rtl' | 'auto'`).
+   */
+  setDirection(direction?: BeaconTextDirection): void {
+    setBeaconDirection(direction);
+  }
+
+  /**
+   * Returns the effective resolved text direction (`'ltr' | 'rtl'`).
+   */
+  getDirection(): BeaconResolvedDirection {
+    return getBeaconDirection();
+  }
+
+  /**
+   * Programmatically sets partial custom translation overrides merged on top
+   * of the active locale catalog.
+   */
+  setTranslations(translations?: BeaconTranslationOverrides): void {
+    setBeaconTranslations(translations);
+  }
+
+  /**
+   * Returns the currently configured custom translation overrides, if any.
+   */
+  getTranslations(): BeaconTranslationOverrides | undefined {
+    return getBeaconTranslations();
+  }
+
+  /**
+   * Returns the active localized message catalog (including any merged custom
+   * translation overrides).
+   */
+  getMessages(): BeaconLocaleMessages {
+    return getBeaconMessages();
   }
 
   private validateRequiredScopesOrFail(
