@@ -65,7 +65,6 @@ const options = {
   name: 'MyAwesomeDapp',
   iconUrl: 'https://taquito.io/favicon.svg',
   network: { type: 'shadownet' },
-  enableMetrics: true,
 };
 const wallet = new BeaconWallet(options);
 console.log(wallet);
@@ -74,8 +73,6 @@ console.log(wallet);
 The necessary bare minimum to instantiate the wallet is an object with a `name` property that contains the name of your dApp and the network you want it to point to. In this case, we choose to point it to `shadownet`.
 
 Beacon wallet allows you to customize your dApp responses to different events. In the example above, instead of getting the default Beacon pop-up after the user connects the wallet, it will display the available data in the console. You can use whatever solution you prefer for feedback. You can find a list of all the default handlers [in the Beacon SDK GitHub repo](https://github.com/ecadlabs/beacon-sdk-taquito-patches/blob/taquito-patches/packages/beacon-dapp/src/events.ts).
-
-The `enableMetrics` property is an optional parameter that allows you to enable or disable the collection of metrics. It also allows the user to report bugs via a link in the wallet pop-up.
 
 #### WalletConnect Project ID
 
@@ -91,11 +88,11 @@ Under the covers, Beacon selects a transport based on the wallet and how the use
 > **Why every dApp must use its own `projectId`:**
 > Historically, Beacon included a built-in fallback `projectId` for demo convenience. Relying on a single shared `projectId` across the ecosystem is both a **centralization risk** (a single rate-limit cap, account revocation, or allowlist change can break WalletConnect pairing for every unconfigured dApp at once, and a shared ID cannot enforce domain allowlists) and a **violation of the [Reown Terms of Service](https://reown.com/terms-of-service)** (*Part A, Section 1: Registration and Account*), which require each application to register its own project rather than sharing third-party credentials.
 >
-> The built-in fallback now logs a deprecation warning and **will be removed in the next minor release**. Once removed, omitting `walletConnectOptions.projectId` will disable WalletConnect pairings (such as Kukai Mobile and the Kukai QR code), while browser extensions and Matrix connections (including the Kukai Web link, Temple Mobile, and Umami) continue to work.
+> The built-in fallback now logs a deprecation warning and **will be removed in the next minor release**. Once removed, omitting `walletConnectOptions.projectId` will disable WalletConnect pairings (such as Kukai Mobile and the Kukai QR code), while browser extensions and Matrix connections (including the Kukai Web link, Temple Mobile, and Umami) continue to work. See the [Beacon SDK WalletConnect project ID guide](https://github.com/ecadlabs/beacon-sdk-taquito-patches/blob/taquito-patches/docs/walletconnect-project-id.md) for full details and migration notes.
 
 To configure WalletConnect for your dApp:
 
-1. **Create a project** at [Reown Cloud](https://dashboard.reown.com/) (the free plan is sufficient; it allows one project per team, so create a separate team per dApp if needed). You can turn off `Social & Email`, `Onramp`, and `Swaps`, which Beacon does not use.
+1. **Create a project** at [Reown Cloud](https://dashboard.reown.com/) (the free plan is sufficient; it allows one project and one member per team, so create a separate team per dApp if needed). You can turn off `Social & Email`, `Onramp`, and `Swaps`, which Beacon does not use.
 2. **Pass your `projectId`** via `walletConnectOptions` when instantiating `BeaconWallet` (typically from a build-time environment variable such as `VITE_REOWN_PROJECT_ID` or `NEXT_PUBLIC_REOWN_PROJECT_ID`):
 
 ```js
@@ -114,8 +111,8 @@ const wallet = new BeaconWallet(options);
    - `localhost` is always allowed for local development, and an empty allowlist permits all origins (lock this down before production).
    - Wildcards like `https://*.example.com` do **not** match the apex domain `https://example.com` (add both if needed).
    - Add explicit entries for preview deployments, and never wildcard shared tunnel domains such as `*.trycloudflare.com`.
-   - Allowlist updates can take several minutes to propagate; an unallowed origin currently surfaces in the wallet as `"A network error occurred."`
-4. **Verify it works:** Pair via WalletConnect (for example, using Kukai Mobile or scanning the Kukai QR code) from your allowed origin, and consider failing your production build if the environment variable is unset (see [ecadlabs/taquito-test-dapp-vue#169](https://github.com/ecadlabs/taquito-test-dapp-vue/pull/169) for a reference setup).
+   - Allowlist updates can take several minutes to propagate. When the relay rejects an unallowed origin (WebSocket close code `3000`), the dApp's Beacon pairing modal displays `"Origin not allowed."` (or `"A network error occurred."` on `@ecadlabs/beacon-* <= 4.9.0-ecad-beta.3`).
+4. **Verify it works:** Because `localhost` and an empty allowlist always pass, test WalletConnect pairing (for example, using Kukai Mobile or scanning the Kukai QR code) from your allowed origin **and** from an unallowed origin (such as a temporary tunnel URL not on the allowlist) to confirm that unauthorized origins are rejected. Consider failing your production build if the environment variable is unset (see [ecadlabs/taquito-test-dapp-vue#169](https://github.com/ecadlabs/taquito-test-dapp-vue/pull/169) for a reference setup).
 
 The Beacon wallet requires an extra step to set up the network to connect to and the permissions:
 
@@ -153,7 +150,7 @@ Make sure you have a TZIP-10 compatible wallet installed (e.g., Temple browser e
 
 ```js live wallet
 // import { BeaconWallet } from '@taquito/beacon-wallet';
-// const options = { name: 'exampleWallet', enableMetrics: true };
+// const options = { name: 'exampleWallet' };
 // const wallet = new BeaconWallet(options);
 
 try {
