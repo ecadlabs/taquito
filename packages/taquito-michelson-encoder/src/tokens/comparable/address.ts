@@ -142,8 +142,10 @@ export class AddressToken extends ComparableToken {
   compare(address1: string, address2: string) {
     const [addr1, endpoint1] = splitAddress(address1);
     const [addr2, endpoint2] = splitAddress(address2);
-    const ep1 = endpoint1 || '';
-    const ep2 = endpoint2 || '';
+    const normalizeEp = (ep: string | null) =>
+      ep === null || ep === '%' || ep === '%default' ? 'default' : ep.slice(1);
+    const ep1 = normalizeEp(endpoint1);
+    const ep2 = normalizeEp(endpoint2);
 
     // binary type tag actually reflects the expected prefix order
     const bytes1 = b58DecodeAddress(addr1, 'array');

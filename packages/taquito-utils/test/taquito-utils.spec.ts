@@ -828,4 +828,19 @@ describe('Hex conversions', () => {
   it('Should throw an exception because of invalid character (hex2buf)', () => {
     expect(() => hex2buf('abcq')).toThrow();
   });
+
+  it('stringToBytes and bytesToString work without global Buffer (#3542)', () => {
+    const originalBuffer = globalThis.Buffer;
+    try {
+      (globalThis as { Buffer?: unknown }).Buffer = undefined;
+      const samples = ['', 'hello world', 'Tezos ꜩ UTF-8 🚀', '\uFEFFabc'];
+      for (const sample of samples) {
+        const hex = stringToBytes(sample);
+        expect(bytesToString(hex)).toBe(sample);
+        expect(bytesToString(`0x${hex}`)).toBe(sample);
+      }
+    } finally {
+      globalThis.Buffer = originalBuffer;
+    }
+  });
 });

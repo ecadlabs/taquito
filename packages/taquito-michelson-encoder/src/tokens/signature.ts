@@ -5,7 +5,14 @@ import {
   TokenFactory,
   TokenValidationError,
 } from './token';
-import { b58Encode, PrefixV2, validateSignature, ValidationResult } from '@taquito/utils';
+import {
+  b58DecodeAndCheckPrefix,
+  b58Encode,
+  compareArrays,
+  PrefixV2,
+  validateSignature,
+  ValidationResult,
+} from '@taquito/utils';
 import { BaseTokenSchema } from '../schema/types';
 
 /**
@@ -97,6 +104,16 @@ export class SignatureToken extends ComparableToken {
       key: { string: val },
       type: { prim: SignatureToken.prim },
     };
+  }
+
+  compare(sig1: string, sig2: string): number {
+    const [bytes1] = b58DecodeAndCheckPrefix(sig1);
+    const [bytes2] = b58DecodeAndCheckPrefix(sig2);
+    const res = compareArrays(bytes1, bytes2);
+    if (res !== 0) {
+      return res;
+    }
+    return bytes1.length < bytes2.length ? -1 : bytes1.length > bytes2.length ? 1 : 0;
   }
 
   findAndReturnTokens(tokenToFind: string, tokens: Token[]) {

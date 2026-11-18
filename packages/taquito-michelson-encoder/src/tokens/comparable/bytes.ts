@@ -108,6 +108,12 @@ export class BytesToken extends ComparableToken {
     return bytes;
   }
 
+  compare(bytes1: string | Uint8Array, bytes2: string | Uint8Array): number {
+    const hex1 = stripHexPrefix(String(this.convertUint8ArrayToHexString(bytes1))).toLowerCase();
+    const hex2 = stripHexPrefix(String(this.convertUint8ArrayToHexString(bytes2))).toLowerCase();
+    return hex1 < hex2 ? -1 : hex1 > hex2 ? 1 : 0;
+  }
+
   findAndReturnTokens(tokenToFind: string, tokens: Token[]) {
     if (BytesToken.prim === tokenToFind) {
       tokens.push(this);

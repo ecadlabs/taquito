@@ -42,8 +42,8 @@ export class BoolToken extends ComparableToken {
     };
   }
 
-  ToKey(val: string) {
-    return this.EncodeObject(val);
+  ToKey(val: any) {
+    return this.Execute(val);
   }
 
   compare(val1: any, val2: any) {

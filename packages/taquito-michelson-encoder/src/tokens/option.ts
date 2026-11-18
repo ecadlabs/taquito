@@ -102,13 +102,36 @@ export class OptionToken extends ComparableToken {
     return this.schema() as any;
   }
 
+  private unwrapOptionValue(val: any): { isNone: boolean; value?: any } {
+    if (val === undefined || val === null) {
+      return { isNone: true };
+    }
+    let unwrapped = typeof val === 'object' && 'Some' in val ? val['Some'] : val;
+    const innerPrim = this.val.args?.[0]?.prim;
+    if (
+      Array.isArray(unwrapped) &&
+      unwrapped.length === 1 &&
+      innerPrim !== ListToken.prim &&
+      innerPrim !== SetToken.prim
+    ) {
+      unwrapped = unwrapped[0];
+    }
+    return { isNone: false, value: unwrapped };
+  }
+
   compare(val1: any, val2: any) {
-    if (!val1) {
+    const opt1 = this.unwrapOptionValue(val1);
+    const opt2 = this.unwrapOptionValue(val2);
+    if (opt1.isNone && opt2.isNone) {
+      return 0;
+    }
+    if (opt1.isNone) {
       return -1;
-    } else if (!val2) {
+    }
+    if (opt2.isNone) {
       return 1;
     }
-    return this.KeySchema.compare(val1, val2);
+    return this.KeySchema.compare(opt1.value, opt2.value);
   }
 
   public ToKey(val: any) {

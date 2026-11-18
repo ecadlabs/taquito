@@ -5,7 +5,14 @@ import {
   TokenValidationError,
   SemanticEncoding,
 } from './token';
-import { b58Encode, PrefixV2, validateChain, ValidationResult } from '@taquito/utils';
+import {
+  b58DecodeAndCheckPrefix,
+  b58Encode,
+  compareArrays,
+  PrefixV2,
+  validateChain,
+  ValidationResult,
+} from '@taquito/utils';
 import { BaseTokenSchema } from '../schema/types';
 
 /**
@@ -93,6 +100,12 @@ export class ChainIDToken extends ComparableToken {
       key: { string: val },
       type: { prim: ChainIDToken.prim },
     };
+  }
+
+  compare(chainId1: string, chainId2: string): number {
+    const [bytes1] = b58DecodeAndCheckPrefix(chainId1);
+    const [bytes2] = b58DecodeAndCheckPrefix(chainId2);
+    return compareArrays(bytes1, bytes2);
   }
 
   findAndReturnTokens(tokenToFind: string, tokens: Token[]) {

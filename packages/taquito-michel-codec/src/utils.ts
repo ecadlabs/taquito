@@ -98,6 +98,9 @@ export class LongInteger {
       return;
     }
     if (typeof arg === 'string') {
+      if (arg.length === 0 || arg === '-') {
+        throw new LongIntegerError(`unexpected empty integer constant "${arg}"`);
+      }
       for (let i = 0; i < arg.length; i++) {
         const c = arg.charCodeAt(i);
         if (i === 0 && c === 0x2d) {
@@ -108,6 +111,9 @@ export class LongInteger {
           }
           this.append(c - 0x30);
         }
+      }
+      if (this.buf.length === 0) {
+        this.neg = false;
       }
     } else if (arg < 0) {
       this.neg = true;
@@ -152,17 +158,13 @@ export function parseBytes(s: string): number[] | null {
 }
 
 export function compareBytes(a: number[] | Uint8Array, b: number[] | Uint8Array): number {
-  if (a.length !== b.length) {
-    return a.length < b.length ? -1 : 1;
-  } else if (a.length !== 0) {
-    let i = 0;
-    while (i < a.length && a[i] === b[i]) {
-      i++;
+  const len = Math.min(a.length, b.length);
+  for (let i = 0; i < len; i++) {
+    if (a[i] !== b[i]) {
+      return a[i] < b[i] ? -1 : 1;
     }
-    return i === a.length ? 0 : a[i] < b[i] ? -1 : 1;
-  } else {
-    return 0;
   }
+  return a.length < b.length ? -1 : a.length > b.length ? 1 : 0;
 }
 
 export function isDecimal(x: string): boolean {
@@ -405,16 +407,16 @@ const rfc3339Re =
 
 export function parseDate(a: StringLiteral | IntLiteral): Date | null {
   if ('string' in a) {
-    if (isNatural(a.string)) {
-      return new Date(parseInt(a.string, 10));
+    if (isDecimal(a.string)) {
+      return new Date(parseInt(a.string, 10) * 1000);
     } else if (rfc3339Re.test(a.string)) {
       const x = new Date(a.string);
-      if (!Number.isNaN(x.valueOf)) {
+      if (!Number.isNaN(x.valueOf())) {
         return x;
       }
     }
   } else if (isDecimal(a.int)) {
-    return new Date(parseInt(a.int, 10));
+    return new Date(parseInt(a.int, 10) * 1000);
   }
   return null;
 }
