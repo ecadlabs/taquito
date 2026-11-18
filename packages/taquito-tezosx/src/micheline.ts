@@ -1,9 +1,21 @@
+import { ParameterValidationError } from '@taquito/core';
 import {
   Parser,
   assertMichelsonData,
-  assertMichelsonType,
+  type Expr,
   type MichelsonData,
 } from '@taquito/michel-codec';
+
+// The pinned kernel's binary Micheline decoder accepts printable ASCII and LF in strings.
+export function assertKernelStrings(expression: Expr): void {
+  if (Array.isArray(expression)) {
+    expression.forEach(assertKernelStrings);
+  } else if ('prim' in expression) {
+    expression.args?.forEach(assertKernelStrings);
+  } else if ('string' in expression && /[^ -~\n]/u.test(expression.string)) {
+    throw new ParameterValidationError('Michelson strings must contain printable ASCII or line feeds');
+  }
+}
 
 // The data validator assumes literal values already have the correct JavaScript types.
 // Parse JSON first so malformed strings, integers, bytes and option arities cannot bypass it.
@@ -11,25 +23,4 @@ export function parseData(value: object): MichelsonData {
   const expression = new Parser({ expandMacros: false }).parseJSON(value);
   if (assertMichelsonData(expression)) return expression;
   throw new Error('Expected Michelson data');
-}
-
-/** Validate contract values as addresses offline. The target contract type still needs simulation. */
-export function offlineValidationType(
-  type: import('@taquito/michel-codec').MichelsonType
-): import('@taquito/michel-codec').MichelsonType {
-  const map = (
-    value: import('@taquito/michel-codec').Expr
-  ): import('@taquito/michel-codec').Expr => {
-    if (Array.isArray(value)) return value.map(map);
-    if ('prim' in value) {
-      // Lambda signatures describe code stack types, not contract-valued data literals.
-      if (value.prim === 'lambda') return value;
-      if (value.prim === 'contract') return { prim: 'address', annots: value.annots };
-      return { ...value, args: value.args?.map(map) };
-    }
-    return value;
-  };
-  const result = map(type);
-  if (assertMichelsonType(result)) return result;
-  throw new Error('Expected a Michelson type');
 }

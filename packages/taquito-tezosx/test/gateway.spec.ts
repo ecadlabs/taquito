@@ -27,6 +27,21 @@ it('builds the complete native gateway parameter against independent Octez bytes
   });
 });
 
+it('carries non-zero EVM value into the call_evm transfer amount in mutez', () => {
+  const call = buildMichelsonToEvmCall({
+    to: vectors.evm,
+    data: '0xd0e30db0', // deposit()
+    value: 10n ** 15n,
+  });
+
+  expect(call.mutezAmount).toBe(1000n);
+  expect(toTransferParams(call)).toMatchObject({
+    amount: 1000,
+    mutez: true,
+    parameter: { entrypoint: 'call_evm' },
+  });
+});
+
 it.each(['none', 'some'])('strips exactly the selector and preserves the %s callback', (label) => {
   const expected = vectors.contracts.find((v) => v.label === label);
   if (!expected) throw new Error('Fixture missing');
@@ -128,4 +143,26 @@ it('rejects malformed JavaScript literals and option arities at both exported bo
       ])
     ).toThrow();
   }
+});
+
+it('checks the normalized gateway URL before returning transfer parameters', () => {
+  const call = buildMichelsonToEvmCall({ to: vectors.evm });
+  const ambiguousUrl = { prim: 'Unit', string: vectors.nativeParameter.args[0].string };
+  const parameter = {
+    ...vectors.nativeParameter,
+    args: [ambiguousUrl, vectors.nativeParameter.args[1]],
+  };
+
+  expect(() => Reflect.apply(toTransferParams, undefined, [{ ...call, parameter }])).toThrow();
+});
+
+it('rejects a call_evm callback on a native transfer', () => {
+  const callback: MichelsonData = { prim: 'Some', args: [{ string: vectors.destination }] };
+  expect(() => buildMichelsonToEvmCall({ to: vectors.evm }, { callback })).toThrow();
+});
+
+it('rejects an implicit account as a bytes callback for a gateway call', () => {
+  const callback: MichelsonData = { prim: 'Some', args: [{ string: vectors.account }] };
+  const tx = { to: vectors.evm, data: vectors.erc20Calldata };
+  expect(() => buildMichelsonToEvmCall(tx, { callback })).toThrow();
 });

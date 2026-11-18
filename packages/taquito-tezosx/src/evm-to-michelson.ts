@@ -1,4 +1,4 @@
-import { parseData, offlineValidationType } from './micheline';
+import { assertKernelStrings, parseData } from './micheline';
 // Adapted from trilitech/octez.js #126, commit 73a8a6a4081b55e548f743700d99205104eaa783.
 // Copyright 2026 Nomadic Labs. Apache-2.0.
 import {
@@ -9,6 +9,7 @@ import {
   ValidationResult,
 } from '@taquito/core';
 import {
+  type MichelsonData,
   packDataBytes,
   unpackDataBytes,
   assertMichelsonPackableType,
@@ -29,18 +30,15 @@ import type { EvmToMichelsonIntent, PrecompileCall } from './types';
 
 // Entrypoint names are made of Michelson annotation characters, are at most 31
 // characters long and are given without their leading `%`
-const ENTRYPOINT_RE = /^[a-zA-Z0-9_.@][a-zA-Z0-9_.%@]{0,30}$/;
+const ENTRYPOINT_RE = /^[a-zA-Z0-9_][a-zA-Z0-9_.%@]{0,30}$/;
 
-/**
- * A transfer can credit an implicit account (tz…) or a contract (KT1).
- */
 function validateTransferDestination(destination: string) {
-  if (
-    typeof destination !== 'string' ||
-    (validateKeyHash(destination) !== ValidationResult.VALID &&
-      validateContractAddress(destination) !== ValidationResult.VALID)
-  ) {
-    throw new InvalidAddressError(destination, validateKeyHash(destination));
+  if (validateContractAddress(destination) === ValidationResult.VALID) return;
+  const result = validateKeyHash(destination);
+  if (result !== ValidationResult.VALID) throw new InvalidAddressError(destination, result);
+  // The pinned kernel's PublicKeyHash decoder supports tz1 through tz4.
+  if (!/^tz[1-4]/.test(destination)) {
+    throw new InvalidAddressError(destination, ValidationResult.PREFIX_NOT_ALLOWED);
   }
 }
 
@@ -62,8 +60,9 @@ function toBinaryMicheline(
 ): string {
   if (typeof parameter === 'string') {
     const raw = parseHexBytes(parameter, 1);
+    let decoded: MichelsonData;
     try {
-      const decoded = unpackDataBytes({ bytes: '05' + raw });
+      decoded = unpackDataBytes({ bytes: '05' + raw });
       if (packDataBytes(decoded).bytes.slice(2) !== raw)
         throw new Error('Noncanonical or trailing bytes');
     } catch {
@@ -72,14 +71,16 @@ function toBinaryMicheline(
         'Expecting canonical binary Micheline without an outer PACK marker'
       );
     }
+    assertKernelStrings(decoded);
     return raw;
   }
   if (!parameter || typeof parameter !== 'object')
     throw new ParameterValidationError('Expecting a Micheline parameter');
   const data = parseData(parameter.value);
+  assertKernelStrings(data);
   if (parameter.type !== undefined) {
     assertMichelsonPackableType(parameter.type);
-    assertDataValid(data, offlineValidationType(parameter.type));
+    assertDataValid(data, parameter.type);
   }
   const { bytes } = packDataBytes(data, parameter.type);
   return bytes.slice(2);

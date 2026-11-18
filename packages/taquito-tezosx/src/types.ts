@@ -62,7 +62,7 @@ export interface BuildMichelsonToEvmCallOptions {
   gatewayAddress?: string;
   /**
    * Callback of the `call_evm` entrypoint, of type `option (contract bytes)`: `None` (the
-   * default), or `Some` with the address of a contract taking `bytes`. The builder checks the option shape and address. The callback contract type still needs simulation.
+   * default), or `Some` with the address of a contract taking `bytes`. The builder checks the option shape and address. Native transfers reject Some. The callback contract type still needs simulation.
    */
   callback?: MichelineExpression;
   /**
@@ -112,7 +112,7 @@ export type CrossRuntimeDirection = CrossRuntimeCall['direction'];
 export type EvmToMichelsonIntent =
   | {
       kind: 'transfer';
-      /** Destination account on the Michelson runtime (implicit tz… account or KT1) */
+      /** Destination account on the Michelson runtime (tz1 through tz4, or KT1) */
       destination: string;
       /** Amount in mutez */
       amount: AmountLike;

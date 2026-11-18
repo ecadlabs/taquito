@@ -71,6 +71,9 @@ export function buildMichelsonToEvmCall(
     if (tx.methodSignature !== undefined) {
       throw new MissingCalldataError(tx.methodSignature);
     }
+    if (!('prim' in callback && callback.prim === 'None')) {
+      throw new ParameterValidationError('A callback requires a call_evm contract call');
+    }
     return {
       direction: 'michelson-to-evm',
       contractAddress,
@@ -116,7 +119,7 @@ export function toTransferParams(call: GatewayCall): GatewayTransferParams {
     throw new InvalidContractAddressError(call.contractAddress, addressResult);
   const amount = parseAmount(call.mutezAmount);
   const parameter = parseData(call.parameter);
-  assertDataValid(call.parameter, call.entrypoint === 'call' ? HTTP_CALL_TYPE : EVM_CALL_TYPE);
+  assertDataValid(parameter, call.entrypoint === 'call' ? HTTP_CALL_TYPE : EVM_CALL_TYPE);
   if (amount > BigInt(Number.MAX_SAFE_INTEGER)) {
     throw new UnsafeMutezAmountError(call.mutezAmount);
   }
@@ -131,10 +134,9 @@ export function toTransferParams(call: GatewayCall): GatewayTransferParams {
   };
 }
 
-// Offline checks validate an address representation, not the receiving contract bytes type.
 const CALLBACK_VALUE_TYPE: MichelsonType = {
   prim: 'option',
-  args: [{ prim: 'address' }],
+  args: [{ prim: 'contract', args: [{ prim: 'bytes' }] }],
 };
 const EVM_CALL_TYPE: MichelsonType = {
   prim: 'pair',

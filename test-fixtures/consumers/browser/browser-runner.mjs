@@ -1,3 +1,4 @@
+import { expectedTezosX } from './tezosx.runtime.mjs';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { createServer } from 'node:http';
@@ -15,6 +16,7 @@ const expected = [
   'beacon-wallet',
   'local-forging',
   'remote-signer',
+  'tezosx',
 ].map((name) => {
   const directory = join(root, 'node_modules', '@taquito', name);
   const pkg = JSON.parse(readFileSync(join(directory, 'package.json'), 'utf8'));
@@ -67,6 +69,7 @@ try {
   await page.waitForFunction(() => globalThis.consumerPassed === true, undefined, {
     timeout: 15000,
   });
+  assert.deepEqual(await page.evaluate(() => globalThis.tezosxResult), expectedTezosX);
   assert.deepEqual(errors, []);
   console.log('Installed Vite browser consumer passed.');
 } finally {

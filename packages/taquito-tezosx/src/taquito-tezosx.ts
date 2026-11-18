@@ -1,4 +1,5 @@
-/** Experimental unsigned builders for the pinned Tezos X NAC protocol. */
+/** Beta. The public API is subject to change. */
+export { VERSION } from './version';
 export * from './amount';
 export * from './constants';
 export * from './errors';

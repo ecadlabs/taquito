@@ -27,6 +27,21 @@ test('checkBuiltEsmImports flags named imports from bignumber.js in built esm fi
   }
 });
 
+test('checkBuiltEsmImports checks .mjs distribution bundles', () => {
+  const root = mkdtempSync(join(os.tmpdir(), 'check-esm-imports-'));
+
+  try {
+    const dist = join(root, 'taquito-tezosx', 'dist');
+    mkdirSync(dist, { recursive: true });
+    const bundle = join(dist, 'taquito-tezosx.mjs');
+    writeFileSync(bundle, "import 'fast-text-encoding';\n");
+
+    assert.deepEqual(checkBuiltEsmImports(root).map((finding) => finding.filePath), [bundle]);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
 test('checkBuiltEsmImports ignores default-only imports from bignumber.js in built esm files', () => {
   const root = mkdtempSync(join(os.tmpdir(), 'check-esm-imports-'));
 

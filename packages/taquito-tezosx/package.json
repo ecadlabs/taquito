@@ -1,7 +1,15 @@
 {
   "name": "@taquito/tezosx",
   "version": "25.1.1",
-  "description": "Experimental unsigned Tezos X cross-runtime call builders.",
+  "description": "Unsigned Tezos X cross-runtime call builders (Beta).",
+  "author": "ECAD Labs Inc <info@ecadlabs.com>",
+  "contributors": [
+    "David Kaminski (https://github.com/dvkam)"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ecadlabs/taquito.git"
+  },
   "license": "Apache-2.0",
   "engines": {
     "node": ">=22"
