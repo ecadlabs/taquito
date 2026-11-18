@@ -133,7 +133,7 @@ describe('ContractsLibrary tests', () => {
     const contractLib = new ContractsLibrary();
     const script: any = 'invalid';
 
-    !expect(script.code);
+    expect(script.code).toBeUndefined();
 
     expect(() =>
       contractLib.addContract({

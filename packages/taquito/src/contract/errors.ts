@@ -90,7 +90,7 @@ export const validateAndExtractFailwith = (
 const isJsonString = (str: string) => {
   try {
     JSON.parse(str);
-  } catch (e) {
+  } catch {
     return false;
   }
   return true;
@@ -126,7 +126,6 @@ export class RevealOperationError extends RpcError {
 export class OriginationParameterError extends ParameterValidationError {
   constructor(public readonly message: string) {
     super();
-    this.name;
   }
 }
 

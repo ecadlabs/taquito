@@ -174,7 +174,7 @@ export class PollingSubscribeProvider implements SubscribeProvider {
           confirmationPollingInterval.toNumber() === 0
             ? minimumPollingInterval
             : Math.max(confirmationPollingInterval.toNumber(), minimumPollingInterval);
-      } catch (exception) {
+      } catch {
         return defaultIntervalTestnetsMainnet;
       }
     }

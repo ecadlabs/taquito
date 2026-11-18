@@ -515,7 +515,7 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
         try {
           decodePublicKeyHashBytes(d);
           return;
-        } catch (err) {
+        } catch {
           // ignore message
         }
       }
@@ -564,7 +564,7 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
           const decoded = decodeAddressBytes(d);
           addrType = decoded.type;
           entryPoint = decoded.entryPoint ?? '';
-        } catch (err) {
+        } catch {
           // ignore message
         }
       }
@@ -620,7 +620,7 @@ function assertDataValidInternal(d: MichelsonData, t: MichelsonType, ctx: Contex
         try {
           decodePublicKeyBytes(d);
           return;
-        } catch (err) {
+        } catch {
           // ignore message
         }
       }

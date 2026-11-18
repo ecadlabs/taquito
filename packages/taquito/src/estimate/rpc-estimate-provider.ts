@@ -8,9 +8,8 @@ import {
   OperationContentsAndResultWithFee,
   OperationContents,
 } from '@taquito/rpc';
-import BigNumberJs from 'bignumber.js';
+import type BigNumberJs from 'bignumber.js';
 type BigNumber = InstanceType<typeof BigNumberJs>;
-const BigNumber = BigNumberJs;
 import { flattenErrors, flattenOperationResult, TezosOperationError } from '../operations/errors';
 import {
   DelegateParams,

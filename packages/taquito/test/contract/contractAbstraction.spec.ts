@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-empty-object-type */
 import { Context } from '../../src/context';
 import { ContractAbstraction, MANAGER_LAMBDA } from '../../src/contract';
 import { ContractMethodObject } from '../../src/contract/contract-methods/contract-method-object-param';

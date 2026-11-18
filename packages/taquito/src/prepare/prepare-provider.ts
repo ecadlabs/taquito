@@ -1131,7 +1131,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
     try {
       currentVotingPeriod = await this.rpc.getCurrentPeriod();
-    } catch (e) {
+    } catch {
       throw new RPCResponseError('Failed to get the current voting period index');
     }
 
@@ -1179,7 +1179,7 @@ export class PrepareProvider extends Provider implements PreparationProvider {
 
     try {
       currentVotingPeriod = await this.rpc.getCurrentPeriod();
-    } catch (e) {
+    } catch {
       throw new RPCResponseError('Failed to get the current voting period index');
     }
 

@@ -27,8 +27,7 @@ describe('Utils functions', () => {
 
     it('Should return a hex string without watermark', () => {
     const bytes = 'a4586adf1c2eae408d5ccbbaab186768457702c442b0b11edd0a674761699cc16c008097b09b3bfdd573ca638ca83ee62cc80a7f4adba80aaf9c60c35000a0c21e0000eadc0855adb415fa69a76fc10397dc2fb37039a000';
-    let watermark;
-    const transaction = appendWatermark(bytes, watermark);
+    const transaction = appendWatermark(bytes);
     expect(transaction).toEqual(
       'a4586adf1c2eae408d5ccbbaab186768457702c442b0b11edd0a674761699cc16c008097b09b3bfdd573ca638ca83ee62cc80a7f4adba80aaf9c60c35000a0c21e0000eadc0855adb415fa69a76fc10397dc2fb37039a000'
     );

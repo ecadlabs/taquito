@@ -77,7 +77,7 @@ export class MetadataProvider implements MetadataProviderInterface {
     let metadataJSON;
     try {
       metadataJSON = JSON.parse(metadata.replace(/^\uFEFF/, ''));
-    } catch (ex) {
+    } catch {
       const error = new InvalidContractMetadataError(metadata);
       error.message = `Unable to parse metadata from ${uri} as JSON.`;
       if (uriInfo.protocol === 'ipfs') {

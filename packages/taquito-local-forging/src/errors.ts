@@ -13,7 +13,9 @@ import { ENTRYPOINT_MAX_LENGTH } from './constants';
     super();
     this.name = 'InvalidOperationSchemaError';
     this.message = `Invalid operation content recevied`;
-    errorDetail ? (this.message += ` ${errorDetail}.`) : '';
+    if (errorDetail) {
+      this.message += ` ${errorDetail}.`;
+    }
   }
 }
 
@@ -135,7 +137,9 @@ export class InvalidSmartRollupAddressError extends ParameterValidationError {
     super();
     this.name = 'InvalidSmartRollupAddress';
     this.message = `Invalid smart rollup address "${address}"`;
-    errorDetail ? (this.message += ` ${errorDetail}.`) : '';
+    if (errorDetail) {
+      this.message += ` ${errorDetail}.`;
+    }
   }
 }
 
@@ -151,7 +155,9 @@ export class InvalidSmartRollupCommitmentHashError extends ParameterValidationEr
     super();
     this.name = 'InvalidSmartRollupCommitmentHashError';
     this.message = `Invalid smart rollup commitment hash "${hash}"`;
-    errorDetail ? (this.message += ` ${errorDetail}.`) : '';
+    if (errorDetail) {
+      this.message += ` ${errorDetail}.`;
+    }
   }
 }
 
@@ -167,6 +173,8 @@ export class InvalidDalCommitmentError extends ParameterValidationError {
     super();
     this.name = 'InvalidDalCommitmentError';
     this.message = `Invalid dal commitment "${commitment}"`;
-    errorDetail ? (this.message += ` ${errorDetail}.`) : '';
+    if (errorDetail) {
+      this.message += ` ${errorDetail}.`;
+    }
   }
 }

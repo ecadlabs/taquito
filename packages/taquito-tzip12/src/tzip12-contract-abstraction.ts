@@ -2,9 +2,8 @@ import { MichelsonMap, Schema } from '@taquito/michelson-encoder';
 import { ContractAbstraction, ContractProvider, Wallet } from '@taquito/taquito';
 import { Tzip16ContractAbstraction, MetadataContext, View, BigMapId } from '@taquito/tzip16';
 import { bytesToString } from '@taquito/utils';
-import BigNumberJs from 'bignumber.js';
+import type BigNumberJs from 'bignumber.js';
 type BigNumber = InstanceType<typeof BigNumberJs>;
-const BigNumber = BigNumberJs;
 import { InvalidTokenMetadata, TokenIdNotFound, TokenMetadataNotFound } from './errors';
 
 const tokenMetadataBigMapType = {
@@ -51,7 +50,7 @@ export class Tzip12ContractAbstraction {
     try {
       const contractMetadata = await this._tzip16ContractAbstraction.getMetadata();
       return contractMetadata.metadata;
-    } catch (err) {
+    } catch {
       // The contract is not compliant with Tzip-016. There is no contract metadata.
     }
   }
@@ -189,7 +188,7 @@ export class Tzip12ContractAbstraction {
         tokenId.toString(),
         new Schema(tokenMetadataBigMapType)
       );
-    } catch (err) {
+    } catch {
       throw new TokenIdNotFound(tokenId);
     }
 
