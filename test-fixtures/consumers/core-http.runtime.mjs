@@ -14,6 +14,16 @@ export default async function ({ assert, load, mode }) {
     assert.equal(require(`${name}/package.json`).name, name);
     const deep = await load(`${name}/dist/lib/${entry}.js`);
     assert.equal(mode === 'import' ? deep.default : deep, commonjs);
+    assert.equal(require(`${name}/dist/lib/${entry}`), commonjs);
+    assert.equal(require(`${name}/dist/lib/errors`), require(`${name}/dist/lib/errors.js`));
+    assert.equal(
+      require.resolve(`${name}/dist/${entry}.es6`),
+      require.resolve(`${name}/dist/${entry}.es6.js`)
+    );
+    assert.equal(
+      require.resolve(`${name}/dist/lib/errors.js.map`),
+      require.resolve(`${name}/dist/lib/errors.js`) + '.map'
+    );
     for (const name of Object.keys(commonjs)) {
       assert.equal(loaded[name], commonjs[name], `Changed named export: ${name}`);
     }
