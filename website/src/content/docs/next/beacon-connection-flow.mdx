@@ -3,6 +3,9 @@ title: How Beacon connections work
 author: [David Kaminski]
 ---
 
+import pairingDiagram from './images/beacon-pairing.svg';
+import requestDiagram from './images/beacon-request.svg';
+
 This page was checked against `@ecadlabs/beacon-*` 4.9.0-ecad-beta.5, which `@taquito/beacon-wallet` 25.2.0-beta3 uses.
 
 `BeaconWallet` hides how it reaches a wallet. Most of the time that is what you want. When a connection hangs, a pairing fails on a phone, or you need to know what a relay operator can see, it helps to know what happens underneath. This page describes that for the Beacon SDK that Taquito ships, `@ecadlabs/beacon-*` from [ecadlabs/beacon-sdk-taquito-patches](https://github.com/ecadlabs/beacon-sdk-taquito-patches).
@@ -27,35 +30,15 @@ The rest of this page is about the Matrix transport, because it is the one with 
 
 Pairing creates a trusted link between one browser and one wallet. It happens once. After that, the dApp and the wallet reconnect on their own.
 
-```mermaid
-sequenceDiagram
-    participant D as dApp (BeaconWallet)
-    participant RD as dApp relay
-    participant RW as Wallet relay
-    participant W as Wallet
-
-    D->>RD: GET /_synapse/client/beacon/info (all relays, fastest wins)
-    D->>RD: login @hash(dApp key), password ed:signature:key
-    D-->>W: QR code or deep link: tezos://?type=tzip10&data=pairing request (id, publicKey, relayServer)
-    W->>RW: login @hash(wallet key)
-    W->>RW: createRoom, invite @hash(dApp key):dApp relay
-    RW-->>RD: invite (federation)
-    RD-->>D: invite
-    D->>RD: join room (only while a pairing request is open)
-    W->>RW: @channel-open:@hash(dApp key):relay:sealed box(id, publicKey, relayServer)
-    RW-->>RD: message
-    RD-->>D: message
-    D->>D: open sealed box, check id was issued and unused, check sender owns publicKey
-    D->>D: store wallet as peer, forget open ids
-```
+<a href={pairingDiagram.src}><img src={pairingDiagram.src} width={pairingDiagram.width} height={pairingDiagram.height} alt="Beacon pairing over Matrix: the wallet creates a room on its relay, the invite and the join cross to the dApp relay by federation, then the wallet sends the sealed pairing response" style={{ maxWidth: '100%', height: 'auto' }} /></a>
 
 1. **The dApp picks a relay.** It asks every known relay for `GET https://<relay>/_synapse/client/beacon/info`, in parallel. Each probe has 10 seconds and all of them together have 60. The fastest relay wins and is cached in `beacon:matrix-selected-node`.
 2. **The dApp logs in.** Its Matrix user is `@<blake2b hash of its public key>:<relay>`. There is no sign-up. The password is a signature over `login:` plus the current five-minute window of the relay's clock. A plain Synapse rejects this login. A Beacon relay runs a module that checks the signature.
 3. **The dApp shows a pairing request.** It is a QR code, or a deep link on mobile, with `tezos://?type=tzip10&data=<base58check JSON>`. The JSON has a fresh random `id`, the dApp's `name`, its `publicKey`, the protocol `version`, its `relayServer`, and an optional `icon` and `appUrl`. The dApp remembers the `id`.
-4. **The wallet scans it and logs in** to its own relay in the same way.
+4. **The wallet scans it.** The wallet logged in to its own relay, in the same way, when it started.
 5. **The wallet creates a room and invites the dApp's Matrix user.** The dApp creates no room.
-6. **The dApp joins the room**, but only because a pairing request is open. Outside of pairing, the dApp joins an invite only from a wallet it already knows.
-7. **The wallet sends a pairing response**: `@channel-open:@<hash of dApp key>:<relay>:<sealed box>`. The sealed box holds `{ id, name, publicKey, relayServer, ... }`, encrypted to the dApp's public key.
+6. **The dApp joins the room**, but only because a pairing request is open. Outside of pairing, the dApp joins an invite only from a wallet it already knows. When the two sides use different relays, the invite and the join travel between the relays by Matrix federation.
+7. **The wallet waits until the dApp has joined, then sends a pairing response**: `@channel-open:@<hash of dApp key>:<relay>:<sealed box>`. The sealed box holds `{ id, name, publicKey, relayServer, ... }`, encrypted to the dApp's public key. If the dApp never joins, the wallet gives up after about two and a half minutes with `No one joined after 200 tries`.
 8. **The dApp checks the response and stores the wallet as a peer.** It opens the sealed box, then accepts the response only if:
    - its `id` is one the dApp issued in this tab in the last 30 minutes, and has not been used yet,
    - it comes from the Matrix user that owns the `publicKey` inside it.
@@ -77,32 +60,16 @@ Pairing request ids live in memory only. If the browser reloads the page while t
 
 ## Requests and responses
 
-```mermaid
-sequenceDiagram
-    participant D as dApp (BeaconWallet)
-    participant R as Relays (Matrix room)
-    participant W as Wallet
-    actor U as User
+<a href={requestDiagram.src}><img src={requestDiagram.src} width={requestDiagram.width} height={requestDiagram.height} alt="Beacon request and response: the wallet acknowledges the request when it arrives, then sends the response after the user decides" style={{ maxWidth: '100%', height: 'auto' }} /></a>
 
-    D->>R: operation_request (encrypted with session keys)
-    R-->>W: message
-    W->>R: acknowledge
-    R-->>D: acknowledge
-    W->>U: show request
-    U->>W: approve or reject
-    W->>R: operation_response, or error
-    R-->>D: response
-    D->>D: check senderId matches the decrypting key, resolve the promise
-```
-
-After pairing, each `BeaconWallet` call sends one request to the wallet. The wallet answers with an `acknowledge` first, which tells the dApp that the request arrived and the user is looking at it. The real response comes after the user decides.
+After pairing, each `BeaconWallet` call sends one request to the wallet. The wallet sends an `acknowledge` as soon as it decrypts the request, before the wallet app shows it to the user. The real response comes after the user decides. The wallet does not wait for the `acknowledge` to be delivered, so treat it as a sign that the request arrived, not as a guarantee that it comes before the response.
 
 | `BeaconWallet` method | Beacon message |
 |---|---|
 | `requestPermissions()` | `permission_request`, answered by `permission_response` |
 | `sendOperations()` | `operation_request`, answered by `operation_response` |
 | `sign()` | `sign_payload_request`, answered by `sign_payload_response` |
-| `disconnect()` | `disconnect` |
+| `disconnect()` | `disconnect`, with no answer |
 
 The SDK also defines `broadcast_request`, `encrypt_payload_request`, `blockchain_request`, `change_account_request`, `proof_of_event_challenge_request` and `simulated_proof_of_event_challenge_request`, each with a matching `*_response` except `change_account_request`, plus `acknowledge`, `disconnect` and `error`. The [`BeaconMessageType`](https://github.com/ecadlabs/beacon-sdk-taquito-patches/blob/a6113ed4ef52454a17a89827ae70729ae8e6c2d1/packages/beacon-types/src/types/beacon/BeaconMessageType.ts) enum is the full list.
 
