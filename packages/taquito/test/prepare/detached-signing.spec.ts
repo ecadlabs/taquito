@@ -158,9 +158,12 @@ describe('detached signing', () => {
       );
 
       const prepared = await workflow.prepare.contractCall(method);
+      expect(prepared.opOb.contents).toHaveLength(1);
       expect(prepared.opOb.contents[0]).toMatchObject({
         kind: OpKind.TRANSACTION,
         source: identity.pkh,
+        destination: 'KT1AiWmfuCGSttuMBKbDUqZG6SzKQNrySFei',
+        amount: '0',
         parameters: { entrypoint: 'default', value: { int: '7' } },
       });
 
