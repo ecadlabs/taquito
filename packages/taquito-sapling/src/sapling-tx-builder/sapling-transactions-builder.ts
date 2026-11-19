@@ -1,6 +1,6 @@
 import { concatBytes } from '@noble/hashes/utils.js';
 import { shuffleOutputs } from './shuffle-outputs';
-import { InvalidSaplingOutputOrderError } from '../errors';
+import { InvalidSaplingOutputOrderError, SpendingKeyRequiredError } from '../errors';
 import { blake2b } from 'blakejs';
 import { secretBox } from '@stablelib/nacl';
 import { DEFAULT_MEMO, KDF_KEY, OCK_KEY } from '../constants';
@@ -36,9 +36,13 @@ import { InMemoryProvingKey } from '../sapling-keys/in-memory-proving-key';
  * The caller validates recipients, amounts and memos, selects spendable inputs,
  * and passes the same bound data to this builder and `SaplingForger`.
  * Configure proving parameters with `initSapling` before generating proofs.
+ *
+ * `keys.saplingSigner` is only needed to spend notes (`createSaplingTx`). Shielding with
+ * `createShieldedTx` creates outputs only and never reads a key, so an application can shield
+ * to any payment address without holding a spending key.
  */
 export class SaplingTransactionBuilder {
-  #inMemorySpendingKey: InMemorySpendingKey;
+  #inMemorySpendingKey: InMemorySpendingKey | undefined;
   #inMemoryProvingKey: InMemoryProvingKey | undefined;
   #saplingForger: SaplingForger;
   #contractAddress: string;
@@ -52,7 +56,7 @@ export class SaplingTransactionBuilder {
 
   constructor(
     keys: {
-      saplingSigner: InMemorySpendingKey;
+      saplingSigner?: InMemorySpendingKey;
       saplingProver?: InMemoryProvingKey;
     },
     saplingForger: SaplingForger,
@@ -156,9 +160,10 @@ export class SaplingTransactionBuilder {
     boundData: Uint8Array,
     chosenInputs: SaplingTransactionInputSelection
   ) {
+    const spendingKey = this.#requireSpendingKey();
     const sumSelectedInputs = new BigNumber(chosenInputs.sumSelectedInputs);
     const randomCommitmentTrapdoor = await this.#saplingWrapper.randR();
-    const saplingViewer = await this.#inMemorySpendingKey.getSaplingViewingKeyProvider();
+    const saplingViewer = await spendingKey.getSaplingViewingKeyProvider();
     const outgoingViewingKey = await saplingViewer.getOutgoingViewingKey();
 
     const { signature, balance, inputs, outputs } = await this.#saplingWrapper.withProvingContext(
@@ -296,6 +301,7 @@ export class SaplingTransactionBuilder {
   }
 
   async prepareSaplingSpendDescription(saplingContext: number, inputsToSpend: Input[]) {
+    const spendingKey = this.#requireSpendingKey();
     const publicKeyReRandomization = await this.#saplingWrapper.randR();
 
     let stateDiff: SaplingDiffResponse;
@@ -326,7 +332,7 @@ export class SaplingTransactionBuilder {
             root: stateDiff.root,
             witness,
           })
-        : await this.#inMemorySpendingKey.prepareSpendDescription({
+        : await spendingKey.prepareSpendDescription({
             saplingContext,
             address: inputsToSpend[i].paymentAddress,
             randomCommitmentTrapdoor: inputsToSpend[i].randomCommitmentTrapdoor,
@@ -339,7 +345,7 @@ export class SaplingTransactionBuilder {
       const unsignedSpendDescriptionBytes =
         this.#saplingForger.forgeUnsignedTxInput(unsignedSpendDescription);
       const hash = blake2b(unsignedSpendDescriptionBytes, await this.getAntiReplay(), 32);
-      const spendDescription = await this.#inMemorySpendingKey.signSpendDescription({
+      const spendDescription = await spendingKey.signSpendDescription({
         publicKeyReRandomization,
         unsignedSpendDescription,
         hash,
@@ -413,6 +419,13 @@ export class SaplingTransactionBuilder {
       parametersBindingSig.balance.toFixed(),
       transactionSigHash
     );
+  }
+
+  #requireSpendingKey(): InMemorySpendingKey {
+    if (!this.#inMemorySpendingKey) {
+      throw new SpendingKeyRequiredError();
+    }
+    return this.#inMemorySpendingKey;
   }
 
   async getAntiReplay() {

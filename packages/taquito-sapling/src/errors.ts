@@ -95,3 +95,17 @@ export class InvalidSaplingOutputOrderError extends ParameterValidationError {
     this.name = 'InvalidSaplingOutputOrderError';
   }
 }
+
+/**
+ * @category Error
+ * Error indicates that a transaction spends notes but the builder has no spending key.
+ * Shielding with `createShieldedTx` does not need one.
+ */
+export class SpendingKeyRequiredError extends TaquitoError {
+  constructor() {
+    super(
+      'A spending key is required to spend Sapling notes. Shielding with createShieldedTx does not need one.'
+    );
+    this.name = 'SpendingKeyRequiredError';
+  }
+}
