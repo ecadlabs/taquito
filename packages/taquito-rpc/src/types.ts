@@ -3013,6 +3013,20 @@ export interface BlsThresholdSignaturesParams {
   signature_shares: BlsThresholdSignatureShare[];
 }
 
+/**
+ * Where a Sapling diff starts. Each offset is the number of entries the caller already has:
+ * `offsetCommitment` skips that many commitments and ciphertexts, `offsetNullifier` skips that
+ * many nullifiers. Both default to 0, which returns the whole state. Each must be an integer
+ * from 0 to 4294967295, the largest value the protocol accepts.
+ *
+ * The response `root` is always the root of the whole state, so offsets alone do not show that
+ * the entries a caller already has belong to the same chain.
+ */
+export interface SaplingDiffOffsets {
+  offsetCommitment?: number;
+  offsetNullifier?: number;
+}
+
 /** Finite big-map values pagination. Defaults to offset 0 and length 100. */
 export interface BigMapPagination {
   offset?: number;

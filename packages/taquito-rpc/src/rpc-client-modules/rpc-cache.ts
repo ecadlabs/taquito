@@ -3,7 +3,11 @@ import { RPCMethodName } from './../rpc-client-interface';
 import type BigNumberJs from 'bignumber.js';
 type BigNumber = InstanceType<typeof BigNumberJs>;
 import { defaultRPCOptions, RpcClientInterface, RPCOptions } from '../rpc-client-interface';
-import { normalizeBigMapPagination } from '../utils/utils';
+import {
+  normalizeBigMapPagination,
+  normalizeSaplingDiffOffsets,
+  type SaplingDiffQueryArguments,
+} from '../utils/utils';
 import {
   BlsPublicKeyWithProof,
   BigMapPagination,
@@ -49,6 +53,7 @@ import {
   RunScriptViewResult,
   RunViewResult,
   SaplingDiffResponse,
+  SaplingDiffOffsets,
   ScriptResponse,
   StorageResponse,
   UnparsingMode,
@@ -92,7 +97,8 @@ type RpcMethodParam =
   | AllDelegatesQueryArguments
   | PendingOperationsQueryArguments
   | MempoolFilterQueryArguments
-  | AttestationRightsQueryArguments;
+  | AttestationRightsQueryArguments
+  | SaplingDiffQueryArguments;
 
 const defaultTtl = 1000;
 
@@ -1168,22 +1174,27 @@ export class RpcClientCache implements RpcClientInterface {
   /**
    * @param id Sapling state ID
    * @param options contains generic configuration for rpc calls to specified block (default to head)
-   * Returns the root and a diff of a state starting from an optional offset which is zero by default
+   * @param offsets optional number of commitments and nullifiers to skip (default 0, the whole state)
+   * Returns the root and a diff of a state starting from the given offsets
    * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-sapling-sapling-state-id-get-diff
    */
   async getSaplingDiffById(
     id: string,
-    { block }: { block: string } = defaultRPCOptions
+    { block }: { block: string } = defaultRPCOptions,
+    offsets: SaplingDiffOffsets = {}
   ): Promise<SaplingDiffResponse> {
+    const query = normalizeSaplingDiffOffsets(offsets);
     const key = this.formatCacheKey(
       this.rpcClient.getRpcUrl(),
       RPCMethodName.GET_SAPLING_DIFF_BY_ID,
-      [block, id]
+      query ? [block, id, query] : [block, id]
     );
     if (this.has(key)) {
       return this.get(key);
     } else {
-      const response = this.rpcClient.getSaplingDiffById(id, { block });
+      const response = query
+        ? this.rpcClient.getSaplingDiffById(id, { block }, offsets)
+        : this.rpcClient.getSaplingDiffById(id, { block });
       this.put(key, response);
       return response;
     }
@@ -1192,22 +1203,27 @@ export class RpcClientCache implements RpcClientInterface {
   /**
    * @param contract address of the contract we want to get the sapling diff
    * @param options contains generic configuration for rpc calls to specified block (default to head)
-   * Returns the root and a diff of a state starting from an optional offset which is zero by default
+   * @param offsets optional number of commitments and nullifiers to skip (default 0, the whole state)
+   * Returns the root and a diff of a state starting from the given offsets
    * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-contracts-contract-id-single-sapling-get-diff
    */
   async getSaplingDiffByContract(
     contract: string,
-    { block }: { block: string } = defaultRPCOptions
+    { block }: { block: string } = defaultRPCOptions,
+    offsets: SaplingDiffOffsets = {}
   ): Promise<SaplingDiffResponse> {
+    const query = normalizeSaplingDiffOffsets(offsets);
     const key = this.formatCacheKey(
       this.rpcClient.getRpcUrl(),
       RPCMethodName.GET_SAPLING_DIFF_BY_CONTRACT,
-      [block, contract]
+      query ? [block, contract, query] : [block, contract]
     );
     if (this.has(key)) {
       return this.get(key);
     } else {
-      const response = this.rpcClient.getSaplingDiffByContract(contract, { block });
+      const response = query
+        ? this.rpcClient.getSaplingDiffByContract(contract, { block }, offsets)
+        : this.rpcClient.getSaplingDiffByContract(contract, { block });
       this.put(key, response);
       return response;
     }
