@@ -173,16 +173,18 @@ function retryAfterDelay(value: string | null): number | undefined {
 const sleep = (ms: number, signal?: AbortSignal): Promise<void> => {
   if (!signal) return new Promise<void>((resolve) => setTimeout(resolve, ms));
   signal.throwIfAborted();
+  // A caller's earlier listener must not suppress cancellation of this wait.
+  const waitSignal = AbortSignal.any([signal]);
   return new Promise((resolve, reject) => {
     const onAbort = () => {
       clearTimeout(timer);
-      reject(signal.reason);
+      reject(waitSignal.reason);
     };
     const timer = setTimeout(() => {
-      signal.removeEventListener('abort', onAbort);
+      waitSignal.removeEventListener('abort', onAbort);
       resolve();
     }, ms);
-    signal.addEventListener('abort', onAbort, { once: true });
+    waitSignal.addEventListener('abort', onAbort, { once: true });
   });
 };
 

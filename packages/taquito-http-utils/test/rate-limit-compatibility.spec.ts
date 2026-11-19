@@ -89,8 +89,9 @@ it('preserves the status and excessive Retry-After when the error body cannot be
   expect(fetch).toHaveBeenCalledTimes(1);
 });
 
-it('cancels a Retry-After wait with the external abort reason', async () => {
+it('cancels a Retry-After wait despite an earlier abort listener', async () => {
   const controller = new AbortController();
+  controller.signal.addEventListener('abort', (event) => event.stopImmediatePropagation());
   const fetch = vi
     .fn<typeof globalThis.fetch>()
     .mockResolvedValueOnce(new Response('busy', { status: 429, headers: { 'Retry-After': '30' } }));
