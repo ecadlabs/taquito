@@ -6,9 +6,11 @@ layout: ../layouts/MarkdownLayout.astro
 ---
 # Unreleased
 
-### Core and HTTP-utils module outputs
+### Breaking: core and HTTP-utils module outputs
 
-- `@taquito/core` and `@taquito/http-utils` now publish dedicated CommonJS entrypoints and native ESM bridges that share their exported instances. Browser bundlers retain ESM outputs. Their UMD bundles are removed; direct users of those filenames should use package imports.
+- `@taquito/core` and `@taquito/http-utils` now publish dedicated CommonJS entrypoints and native ESM bridges that share their exported instances. Browser bundlers keep the ESM outputs.
+- Their UMD bundles (`dist/taquito-core.umd.js` and `dist/taquito-http-utils.umd.js`) are removed. Import the packages by name instead of loading those files. The exports maps expose the package root, `package.json` and `dist/*`.
+- Per-package UMD scripts that expect the core global, including Sapling, signer, utils and TZIP-12, no longer have a supported core UMD to load. Use a bundler or the standalone Webpack bundles described in the bundle guide. Wider UMD and Webpack removal remains separate work.
 
 ### `@taquito/wallet-connect` removed
 

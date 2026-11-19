@@ -7,6 +7,17 @@ imports and declarations during the module migration in
 pilot emits CommonJS modules, a native ESM bridge, declarations and a browser ESM
 bundle. These two packages no longer emit UMD.
 
+Browser bundlers resolve the `browser` condition before `require` or `import`, so
+they receive the ESM bundle even for CommonJS input. Node selects `dist/lib` for
+`require` and the native `.mjs` bridge for `import`. Both Node routes share the
+same exported instances.
+
+Removing these UMD files is breaking for script-tag consumers. The remaining
+per-package Sapling, signer, utils and TZIP-12 UMD files depend on a core global
+whose UMD build is removed by this pilot. Use package imports through a bundler
+or the standalone Webpack bundles. The bundle guide describes those standalone
+outputs, which are separate from the per-package UMD files.
+
 Run on Linux, WSL or macOS. From the repository root:
 
 ```sh
