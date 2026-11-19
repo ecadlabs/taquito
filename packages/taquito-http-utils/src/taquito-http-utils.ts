@@ -170,10 +170,8 @@ function retryAfterDelay(value: string | null): number | undefined {
   return Math.max(0, date.getTime() + (second === 60 ? 1000 : 0) - Date.now());
 }
 
-const sleep = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
-
-const sleepForRateLimit = (ms: number, signal?: AbortSignal): Promise<void> => {
-  if (!signal) return sleep(ms);
+const sleep = (ms: number, signal?: AbortSignal): Promise<void> => {
+  if (!signal) return new Promise<void>((resolve) => setTimeout(resolve, ms));
   signal.throwIfAborted();
   return new Promise((resolve, reject) => {
     const onAbort = () => {
@@ -417,7 +415,7 @@ export class HttpBackend {
                 maxAttempts: httpRetryCount + 1,
                 retryDelayMs,
               }));
-              await sleepForRateLimit(retryDelayMs, signal);
+              await sleep(retryDelayMs, signal);
               continue;
             }
           }
@@ -468,7 +466,7 @@ export class HttpBackend {
               status: e.status,
               statusText: e.statusText,
             }));
-            await sleep(retryDelayMs);
+            await sleep(retryDelayMs, signal);
             continue;
           }
           traceHttp(() => ({
@@ -507,7 +505,7 @@ export class HttpBackend {
             error: formatErrorCauseChain(e),
             transportKind: classified?.kind,
           }));
-          await sleep(retryDelayMs);
+          await sleep(retryDelayMs, signal);
           continue;
         }
 

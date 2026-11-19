@@ -8,7 +8,7 @@ layout: ../layouts/MarkdownLayout.astro
 
 ### GET rate-limit retries
 
-- HTTP GET requests can retry HTTP 429 responses within the existing shared retry budget. Valid `Retry-After` delays up to 30 seconds are honored, with the existing backoff used for missing or invalid headers. External aborts cancel the wait.
+- HTTP GET requests can retry HTTP 429 responses within the existing shared retry budget. Valid `Retry-After` delays up to 30 seconds are honored, with the existing backoff used for missing or invalid headers. External aborts cancel rate-limit, gateway-status and transport retry waits.
 
 ### `@taquito/wallet-connect` removed
 

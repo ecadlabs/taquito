@@ -109,6 +109,34 @@ it('cancels a Retry-After wait with the external abort reason', async () => {
   expect(vi.getTimerCount()).toBe(0);
 });
 
+it.each(['gateway-status', 'transport'] as const)(
+  'cancels a %s backoff with the external abort reason',
+  async (failure) => {
+    vi.stubEnv('TAQUITO_HTTP_RETRY_BASE_MS', '10000');
+    const controller = new AbortController();
+    const fetch = vi.fn<typeof globalThis.fetch>();
+    if (failure === 'gateway-status') {
+      fetch.mockResolvedValueOnce(new Response('unavailable', { status: 503 }));
+    } else {
+      fetch.mockRejectedValueOnce(new TypeError('fetch failed'));
+    }
+    vi.stubGlobal('fetch', fetch);
+    const { HttpBackend } = await import('../src/taquito-http-utils');
+    const pending = new HttpBackend().createRequest({
+      url: 'https://rpc.example/chains/main/blocks/head/hash',
+      signal: controller.signal,
+    });
+    const reason = new Error('stop waiting');
+    const checked = expect(pending).rejects.toBe(reason);
+    await vi.advanceTimersByTimeAsync(1);
+    expect(fetch).toHaveBeenCalledTimes(1);
+    controller.abort(reason);
+    await checked;
+    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(vi.getTimerCount()).toBe(0);
+  }
+);
+
 it('applies the same GET rate-limit policy to bounded binary requests', async () => {
   const fetch = vi
     .fn<typeof globalThis.fetch>()
