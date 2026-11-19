@@ -4,6 +4,7 @@ import { resolve } from 'path';
 import {
   AbortedBeaconError,
   arMessages,
+  plMessages,
   BeaconError,
   BeaconErrorType,
   BeaconMessageType,
@@ -131,6 +132,7 @@ import type {
 import {
   AbortedBeaconError as MainAbortedBeaconError,
   arMessages as mainArMessages,
+  plMessages as mainPlMessages,
   BeaconError as MainBeaconError,
   BeaconEvent,
   builtInLocales as mainBuiltInLocales,
@@ -305,6 +307,8 @@ describe('beacon-types re-exports (side-effect-free)', () => {
     expect(builtInLocales.de).toBe(deMessages);
     expect(builtInLocales.ja).toBe(jaMessages);
     expect(builtInLocales.ar).toBe(arMessages);
+    expect(plMessages?.meta.locale).toBe('pl');
+    expect(plMessages).toBe(builtInLocales.pl);
 
     expect(normalizeLocaleTag(' fr_CA ')).toBe('fr-CA');
     expect(hasBuiltInLocale('fr-CA')).toBe(true);
@@ -464,6 +468,8 @@ describe('main entry re-exports (beacon-dapp types)', () => {
     expect(mainDeMessages).toBe(deMessages);
     expect(mainJaMessages).toBe(jaMessages);
     expect(mainArMessages).toBe(arMessages);
+    expect(mainPlMessages?.meta.locale).toBe('pl');
+    expect(mainPlMessages).toBe(builtInLocales.pl);
     expect(mainConfigureBeaconI18n).toBe(configureBeaconI18n);
     expect(mainResetBeaconI18n).toBe(resetBeaconI18n);
     expect(mainSubscribeBeaconI18n).toBe(subscribeBeaconI18n);
