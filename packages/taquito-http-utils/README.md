@@ -51,6 +51,13 @@ Optionally adjust the slow-request threshold (milliseconds):
 
 See the top-level https://github.com/ecadlabs/taquito file for details on reporting issues, contributing, and versioning.
 
+## GET rate limits
+
+After receiving an HTTP 429 response, `HttpBackend` can retry GET requests. Status retries and transport retries share `TAQUITO_HTTP_RETRY_COUNT`, which defaults to one retry. Set it to zero to disable both. POST response handling is unchanged, including injection, forging and preapplication.
+
+`Retry-After` can contain integer seconds or an HTTP date. A valid delay up to 30 seconds is honored. A longer delay returns the original HTTP error instead of retrying early. Missing or invalid headers use the existing exponential backoff and jitter. Browsers can read this header only when the server exposes it through CORS. Past dates retry without a delay.
+
+The attempt timer is cleared before waiting. The timeout applies to each attempt, not the full request and retry sequence. An external abort cancels the wait. If the error body cannot be read, the response status and Retry-After header still govern the decision.
 
 ## Disclaimer
 
