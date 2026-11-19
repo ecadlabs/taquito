@@ -72,7 +72,7 @@ console.log(wallet);
 
 The necessary bare minimum to instantiate the wallet is an object with a `name` property that contains the name of your dApp and the network you want it to point to. In this case, we choose to point it to `shadownet`.
 
-Beacon wallet allows you to customize your dApp responses to different events. In the example above, instead of getting the default Beacon pop-up after the user connects the wallet, it will display the available data in the console. You can use whatever solution you prefer for feedback. You can find a list of all the default handlers [in the Beacon SDK GitHub repo](https://github.com/ecadlabs/beacon-sdk-taquito-patches/blob/taquito-patches/packages/beacon-dapp/src/events.ts).
+Beacon wallet allows you to customize your dApp responses to different events. In the example above, instead of getting the default Beacon pop-up after the user connects the wallet, it will display the available data in the console. You can use whatever solution you prefer for feedback. You can find a list of all the default handlers [in the Beacon SDK 4.8.5-ecad source](https://github.com/ecadlabs/beacon-sdk-taquito-patches/blob/v4.8.5-ecad/packages/beacon-dapp/src/events.ts#L837).
 
 #### WalletConnect Project ID
 
@@ -167,7 +167,7 @@ try {
 
 While your dApp is connected to the wallet, different events can happen on the wallet side. A reactive dApp can subscribe to these events and update the UI to create a good user experience.
 The different types of events are defined in the type `BeaconEvent` that can be imported from `"@taquito/beacon-wallet"`. Some of the events are: `ACTIVE_ACCOUNT_SET`, `PAIR_SUCCESS`, `SIGN_REQUEST_SUCCESS`.
-To see all possible events, please check out the [BeaconEvent in Beacon SDK documentation](https://typedocs.walletbeacon.io/enums/beaconevent.html).
+To see all possible events, please check out the [BeaconEvent enum in Beacon SDK 4.8.5-ecad](https://github.com/ecadlabs/beacon-sdk-taquito-patches/blob/v4.8.5-ecad/packages/beacon-dapp/src/events.ts#L61).
 
 You can subscribe to any of these events as follows:
 
