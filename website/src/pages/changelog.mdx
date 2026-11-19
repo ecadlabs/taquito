@@ -6,6 +6,10 @@ layout: ../layouts/MarkdownLayout.astro
 ---
 # Unreleased
 
+### Core and HTTP-utils module outputs
+
+- `@taquito/core` and `@taquito/http-utils` now publish dedicated CommonJS entrypoints and native ESM bridges that share their exported instances. Browser bundlers retain ESM outputs. Their UMD bundles are removed; direct users of those filenames should use package imports.
+
 ### `@taquito/wallet-connect` removed
 
 - `@taquito/wallet-connect` is no longer part of Taquito and will not receive new releases. It remained in beta since its first release. Already published versions remain installable but are unmaintained. Use `@taquito/beacon-wallet` to connect to wallets, including over WalletConnect through Beacon's WalletConnect transport.
