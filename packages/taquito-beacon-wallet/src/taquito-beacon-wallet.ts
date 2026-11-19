@@ -104,6 +104,7 @@ export {
   isRequestErrorResponse,
   isTezosRpcError,
   jaMessages,
+  plMessages,
   LocalStorage,
   Logger,
   NetworkNotSupportedBeaconError,

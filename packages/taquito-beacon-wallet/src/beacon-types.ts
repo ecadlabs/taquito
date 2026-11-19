@@ -36,6 +36,7 @@ export {
   isRequestErrorResponse,
   isTezosRpcError,
   jaMessages,
+  plMessages,
   NetworkNotSupportedBeaconError,
   NetworkType,
   NoAddressBeaconError,
