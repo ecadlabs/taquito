@@ -4,6 +4,7 @@ import { it, expect, vi } from 'vitest';
 it('recovers an actual RPC GET through the real HTTP backend', async () => {
   vi.resetModules();
   vi.stubEnv('TAQUITO_HTTP_RETRY_BASE_MS', '0');
+  vi.stubEnv('TAQUITO_HTTP_RETRY_COUNT', '1');
   const requests: Array<{ url: string | undefined; method: string | undefined }> = [];
   const server = createServer((req, res) => {
     requests.push({ url: req.url, method: req.method });
