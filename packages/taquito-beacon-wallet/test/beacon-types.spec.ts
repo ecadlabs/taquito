@@ -3,36 +3,62 @@ import { resolve } from 'path';
 
 import {
   AbortedBeaconError,
+  arMessages,
   BeaconError,
   BeaconErrorType,
   BeaconMessageType,
   BroadcastBeaconError,
+  builtInLocales,
   ColorMode,
+  configureBeaconI18n,
+  deMessages,
+  detectBrowserLocale,
+  enMessages,
+  esMessages,
+  ExtendedWalletConnectPairingRequest,
+  frMessages,
+  getBeaconDirection,
+  getBeaconErrorCopy,
+  getBeaconLocale,
+  getBeaconMessages,
+  getBeaconTranslations,
   getError,
+  hasBuiltInLocale,
+  interpolateBeaconMessage,
   isBeaconError,
   isErrorOrigin,
   isErrorResponse,
   isRequestErrorResponse,
   isTezosRpcError,
+  jaMessages,
   NetworkNotSupportedBeaconError,
   NetworkType,
   NoAddressBeaconError,
   NoPrivateKeyBeaconError,
+  normalizeLocaleTag,
   NotGrantedBeaconError,
   Origin,
   ParametersInvalidBeaconError,
   PeerUnreachableBeaconError,
   PermissionScope,
   Regions,
+  resetBeaconI18n,
+  resolveBeaconLang,
+  resolveBuiltInLocaleCatalog,
+  setBeaconDirection,
+  setBeaconLocale,
+  setBeaconTranslations,
   SignatureTypeNotSupportedBeaconError,
   SigningType,
   Storage,
   StorageKey,
+  subscribeBeaconI18n,
   TooManyOperationsBeaconError,
   TransactionInvalidBeaconError,
   TransportStatus,
   TransportType,
   UnknownBeaconError,
+  WalletConnectPairingRequest,
 } from '../src/beacon-types';
 
 import type {
@@ -40,13 +66,27 @@ import type {
   AccountInfo,
   AcknowledgeResponse,
   AppMetadata,
+  BeaconAriaMessages,
+  BeaconDAppMessages,
+  BeaconErrorCopy,
   BeaconErrorOptions,
+  BeaconI18nConfig,
+  BeaconLocaleMessages,
+  BeaconLocaleMetadata,
+  BeaconLocaleStatus,
   BeaconMessageWrapper,
+  BeaconResolvedDirection,
+  BeaconTextDirection,
+  BeaconTranslationOverrides,
+  BeaconUIMessages,
+  BeaconWalletTypeMessages,
   BlockchainAccountInfo,
   BlockExplorerInterface,
   BroadcastResponseOutput,
   ConnectionContext,
   ConnectionInfo,
+  DeepPartial,
+  DisplayableWalletConnectFailureReason,
   ErrorOrigin,
   ErrorResponse,
   ExtendedP2PPairingResponse,
@@ -80,6 +120,9 @@ import type {
   TransportStatusChangedInfo,
   TransportStatusChangeReason,
   WaitingForWalletAckInfo,
+  WalletConnectErrorCopy,
+  WalletConnectPairingFailureReason,
+  WalletConnectPairingResult,
   WalletInfo,
 } from '../src/beacon-types';
 
@@ -87,34 +130,77 @@ import type {
 // because they require @ecadlabs/beacon-dapp which has side effects.
 import {
   AbortedBeaconError as MainAbortedBeaconError,
+  arMessages as mainArMessages,
   BeaconError as MainBeaconError,
   BeaconEvent,
+  builtInLocales as mainBuiltInLocales,
+  ColorMode as MainColorMode,
+  configureBeaconI18n as mainConfigureBeaconI18n,
   defaultEventCallbacks,
+  deMessages as mainDeMessages,
+  detectBrowserLocale as mainDetectBrowserLocale,
+  enMessages as mainEnMessages,
+  esMessages as mainEsMessages,
+  ExtendedWalletConnectPairingRequest as MainExtendedWalletConnectPairingRequest,
+  frMessages as mainFrMessages,
+  getBeaconDirection as mainGetBeaconDirection,
+  getBeaconErrorCopy as mainGetBeaconErrorCopy,
+  getBeaconLocale as mainGetBeaconLocale,
+  getBeaconMessages as mainGetBeaconMessages,
+  getBeaconTranslations as mainGetBeaconTranslations,
+  getColorMode as mainGetColorMode,
   getError as mainGetError,
+  hasBuiltInLocale as mainHasBuiltInLocale,
+  interpolateBeaconMessage as mainInterpolateBeaconMessage,
   isBeaconError as mainIsBeaconError,
   isErrorOrigin as mainIsErrorOrigin,
   isErrorResponse as mainIsErrorResponse,
   isRequestErrorResponse as mainIsRequestErrorResponse,
   isTezosRpcError as mainIsTezosRpcError,
+  jaMessages as mainJaMessages,
   LocalStorage,
+  normalizeLocaleTag as mainNormalizeLocaleTag,
   PeerUnreachableBeaconError as MainPeerUnreachableBeaconError,
+  resetBeaconI18n as mainResetBeaconI18n,
+  resolveBeaconLang as mainResolveBeaconLang,
+  resolveBuiltInLocaleCatalog as mainResolveBuiltInLocaleCatalog,
+  setBeaconDirection as mainSetBeaconDirection,
+  setBeaconLocale as mainSetBeaconLocale,
+  setBeaconTranslations as mainSetBeaconTranslations,
+  setColorMode as mainSetColorMode,
+  subscribeBeaconI18n as mainSubscribeBeaconI18n,
   toBeaconError,
   TransactionInvalidBeaconError as MainTransactionInvalidBeaconError,
+  WalletConnectPairingRequest as MainWalletConnectPairingRequest,
 } from '../src/taquito-beacon-wallet';
 import type {
   AcknowledgeInfo,
   ActiveTransportInfo,
+  BeaconAriaMessages as MainBeaconAriaMessages,
+  BeaconDAppMessages as MainBeaconDAppMessages,
+  BeaconErrorCopy as MainBeaconErrorCopy,
   BeaconErrorOptions as MainBeaconErrorOptions,
   BeaconEventHandler,
   BeaconEventHandlerFunction,
   BeaconEventType,
+  BeaconI18nConfig as MainBeaconI18nConfig,
+  BeaconLocaleMessages as MainBeaconLocaleMessages,
+  BeaconLocaleMetadata as MainBeaconLocaleMetadata,
+  BeaconLocaleStatus as MainBeaconLocaleStatus,
   BeaconMessageRecord,
+  BeaconResolvedDirection as MainBeaconResolvedDirection,
+  BeaconTextDirection as MainBeaconTextDirection,
+  BeaconTranslationOverrides as MainBeaconTranslationOverrides,
+  BeaconUIMessages as MainBeaconUIMessages,
+  BeaconWalletTypeMessages as MainBeaconWalletTypeMessages,
   ConnectionInfo as MainConnectionInfo,
   DAppClient,
   DAppClientDisconnectOptions,
   DAppClientOptions,
   DAppClientRemoveAllPeersOptions,
   DAppUiOptions,
+  DeepPartial as MainDeepPartial,
+  DisplayableWalletConnectFailureReason as MainDisplayableWalletConnectFailureReason,
   ErrorOrigin as MainErrorOrigin,
   ExtraInfo,
   InvalidAccountDeactivatedEvent,
@@ -135,6 +221,9 @@ import type {
   TransportStatusChangeReason as MainTransportStatusChangeReason,
   V3ResponsePayload,
   WaitingForWalletAckInfo as MainWaitingForWalletAckInfo,
+  WalletConnectErrorCopy as MainWalletConnectErrorCopy,
+  WalletConnectPairingFailureReason as MainWalletConnectPairingFailureReason,
+  WalletConnectPairingResult as MainWalletConnectPairingResult,
   WalletInfo as MainWalletInfo,
   WireErrorMessage,
   WireErrorPayload,
@@ -206,6 +295,76 @@ describe('beacon-types re-exports (side-effect-free)', () => {
     expect(typeof Storage).toBe('function');
     expect(StorageKey.ACTIVE_ACCOUNT).toBe('beacon:active-account');
     expect(StorageKey.LAST_SELECTED_WALLET).toBe('beacon:last-selected-wallet');
+  });
+
+  it('should export i18n catalogs, helpers, and WalletConnect pairing request classes from ./types', () => {
+    resetBeaconI18n();
+    expect(builtInLocales.en).toBe(enMessages);
+    expect(builtInLocales.fr).toBe(frMessages);
+    expect(builtInLocales.es).toBe(esMessages);
+    expect(builtInLocales.de).toBe(deMessages);
+    expect(builtInLocales.ja).toBe(jaMessages);
+    expect(builtInLocales.ar).toBe(arMessages);
+
+    expect(normalizeLocaleTag(' fr_CA ')).toBe('fr-CA');
+    expect(hasBuiltInLocale('fr-CA')).toBe(true);
+    expect(hasBuiltInLocale('tlh-KL')).toBe(false);
+    expect(resolveBuiltInLocaleCatalog('es-MX')).toBe(esMessages);
+    expect(typeof detectBrowserLocale).toBe('function');
+
+    const listener = () => {};
+    const unsubscribe = subscribeBeaconI18n(listener);
+    expect(typeof unsubscribe).toBe('function');
+    unsubscribe();
+
+    configureBeaconI18n({
+      locale: 'ar',
+      direction: 'auto',
+      translations: { dapp: { requestSent: 'طلب مخصص لـ {{wallet}}' } },
+    });
+    expect(getBeaconLocale()).toBe('ar');
+    expect(resolveBeaconLang()).toBe('ar');
+    expect(getBeaconDirection()).toBe('rtl');
+    expect(getBeaconTranslations()?.dapp?.requestSent).toBe('طلب مخصص لـ {{wallet}}');
+    expect(getBeaconMessages().meta.locale).toBe('ar');
+    expect(getBeaconErrorCopy(BeaconErrorType.ABORTED_ERROR).title).toBe(
+      arMessages.errors[BeaconErrorType.ABORTED_ERROR].title
+    );
+    expect(
+      interpolateBeaconMessage(getBeaconMessages().dapp.requestSent, { wallet: 'Kukai' })
+    ).toBe('طلب مخصص لـ Kukai');
+
+    setBeaconLocale('de');
+    setBeaconDirection('ltr');
+    setBeaconTranslations(undefined);
+    expect(getBeaconLocale()).toBe('de');
+    expect(getBeaconDirection()).toBe('ltr');
+    expect(getBeaconTranslations()).toBeUndefined();
+
+    const wcReq = new WalletConnectPairingRequest(
+      'id-1',
+      'App',
+      'pub-1',
+      '2',
+      'wc:test',
+      undefined,
+      undefined,
+      'origin-not-allowed'
+    );
+    expect(wcReq.failureReason).toBe('origin-not-allowed');
+    const extWcReq = new ExtendedWalletConnectPairingRequest(
+      'id-2',
+      'App',
+      'pub-2',
+      '2',
+      'sender-2',
+      'wc:test',
+      undefined,
+      undefined,
+      'relay-unreachable'
+    );
+    expect(extWcReq.failureReason).toBe('relay-unreachable');
+    resetBeaconI18n();
   });
 });
 
@@ -296,6 +455,38 @@ describe('main entry re-exports (beacon-dapp types)', () => {
     expect(converted).toBeInstanceOf(AbortedBeaconError);
     expect(isBeaconError(converted)).toBe(true);
   });
+
+  it('should re-export i18n catalogs, helpers, and WalletConnect pairing classes from main entry', () => {
+    expect(mainBuiltInLocales).toBe(builtInLocales);
+    expect(mainEnMessages).toBe(enMessages);
+    expect(mainFrMessages).toBe(frMessages);
+    expect(mainEsMessages).toBe(esMessages);
+    expect(mainDeMessages).toBe(deMessages);
+    expect(mainJaMessages).toBe(jaMessages);
+    expect(mainArMessages).toBe(arMessages);
+    expect(mainConfigureBeaconI18n).toBe(configureBeaconI18n);
+    expect(mainResetBeaconI18n).toBe(resetBeaconI18n);
+    expect(mainSubscribeBeaconI18n).toBe(subscribeBeaconI18n);
+    expect(mainSetBeaconLocale).toBe(setBeaconLocale);
+    expect(mainGetBeaconLocale).toBe(getBeaconLocale);
+    expect(mainResolveBeaconLang).toBe(resolveBeaconLang);
+    expect(mainSetBeaconDirection).toBe(setBeaconDirection);
+    expect(mainGetBeaconDirection).toBe(getBeaconDirection);
+    expect(mainSetBeaconTranslations).toBe(setBeaconTranslations);
+    expect(mainGetBeaconTranslations).toBe(getBeaconTranslations);
+    expect(mainGetBeaconMessages).toBe(getBeaconMessages);
+    expect(mainGetBeaconErrorCopy).toBe(getBeaconErrorCopy);
+    expect(mainInterpolateBeaconMessage).toBe(interpolateBeaconMessage);
+    expect(mainNormalizeLocaleTag).toBe(normalizeLocaleTag);
+    expect(mainHasBuiltInLocale).toBe(hasBuiltInLocale);
+    expect(mainResolveBuiltInLocaleCatalog).toBe(resolveBuiltInLocaleCatalog);
+    expect(mainDetectBrowserLocale).toBe(detectBrowserLocale);
+    expect(MainColorMode).toBe(ColorMode);
+    expect(typeof mainSetColorMode).toBe('function');
+    expect(typeof mainGetColorMode).toBe('function');
+    expect(MainWalletConnectPairingRequest).toBe(WalletConnectPairingRequest);
+    expect(MainExtendedWalletConnectPairingRequest).toBe(ExtendedWalletConnectPairingRequest);
+  });
 });
 
 describe('package.json exports map', () => {
@@ -330,7 +521,8 @@ const _client: DAppClient | undefined = undefined;
 const _disconnectOpts: DAppClientDisconnectOptions = { notifyPeers: false };
 const _removeAllPeersOpts: DAppClientRemoveAllPeersOptions = { ignoreDisconnectErrors: true };
 const _eventHandler: BeaconEventHandler | undefined = undefined;
-const _lateEventPayload: BeaconEventType[BeaconEvent.LATE_RESPONSE_RECEIVED] | undefined = undefined;
+const _lateEventPayload: BeaconEventType[BeaconEvent.LATE_RESPONSE_RECEIVED] | undefined =
+  undefined;
 const _errorOrigin: ErrorOrigin = 'local';
 const _reqErr: RequestErrorResponse | undefined = undefined;
 const _lateInfo: LateResponseInfo | undefined = undefined;
@@ -407,6 +599,42 @@ const _extP2pPeer: ExtendedP2PPairingResponse | undefined = undefined;
 const _extWcPeer: ExtendedWalletConnectPairingResponse | undefined = undefined;
 const _storageChangeEvent: StorageChangeEvent | undefined = undefined;
 const _storageChangeListener: StorageChangeListener | undefined = undefined;
+const _i18nCfg: BeaconI18nConfig = { locale: 'fr', direction: 'auto' };
+const _mainI18nCfg: MainBeaconI18nConfig = _i18nCfg;
+const _localeMsgs: BeaconLocaleMessages | undefined = undefined;
+const _mainLocaleMsgs: MainBeaconLocaleMessages | undefined = _localeMsgs;
+const _localeMeta: BeaconLocaleMetadata | undefined = undefined;
+const _mainLocaleMeta: MainBeaconLocaleMetadata | undefined = _localeMeta;
+const _localeStatus: BeaconLocaleStatus = 'human-reviewed';
+const _mainLocaleStatus: MainBeaconLocaleStatus = _localeStatus;
+const _resolvedDir: BeaconResolvedDirection = 'rtl';
+const _mainResolvedDir: MainBeaconResolvedDirection = _resolvedDir;
+const _textDir: BeaconTextDirection = 'auto';
+const _mainTextDir: MainBeaconTextDirection = _textDir;
+const _translationOverrides: BeaconTranslationOverrides = { ui: { close: 'Fermer' } };
+const _mainTranslationOverrides: MainBeaconTranslationOverrides = _translationOverrides;
+const _dappMsgs: BeaconDAppMessages | undefined = undefined;
+const _mainDappMsgs: MainBeaconDAppMessages | undefined = _dappMsgs;
+const _uiMsgs: BeaconUIMessages | undefined = undefined;
+const _mainUiMsgs: MainBeaconUIMessages | undefined = _uiMsgs;
+const _ariaMsgs: BeaconAriaMessages | undefined = undefined;
+const _mainAriaMsgs: MainBeaconAriaMessages | undefined = _ariaMsgs;
+const _walletTypeMsgs: BeaconWalletTypeMessages | undefined = undefined;
+const _mainWalletTypeMsgs: MainBeaconWalletTypeMessages | undefined = _walletTypeMsgs;
+const _errCopy: BeaconErrorCopy | undefined = undefined;
+const _mainErrCopy: MainBeaconErrorCopy | undefined = _errCopy;
+const _deepPartial: DeepPartial<{ a: { b: string } }> = { a: {} };
+const _mainDeepPartial: MainDeepPartial<{ a: { b: string } }> = _deepPartial;
+const _displayableWcReason: DisplayableWalletConnectFailureReason = 'origin-not-allowed';
+const _mainDisplayableWcReason: MainDisplayableWalletConnectFailureReason = _displayableWcReason;
+const _wcErrCopy: WalletConnectErrorCopy | undefined = undefined;
+const _mainWcErrCopy: MainWalletConnectErrorCopy | undefined = _wcErrCopy;
+const _wcFailureReason: WalletConnectPairingFailureReason = 'relay-unreachable';
+const _mainWcFailureReason: MainWalletConnectPairingFailureReason = _wcFailureReason;
+const _wcPairingResult: WalletConnectPairingResult = { ok: false, reason: 'timeout' };
+const _mainWcPairingResult: MainWalletConnectPairingResult = _wcPairingResult;
+const _pairInitWcPeerInfo: BeaconEventType[BeaconEvent.PAIR_INIT]['walletConnectPeerInfo'] =
+  Promise.resolve(_wcPairingResult);
 
 void [
   _opts,
@@ -489,4 +717,39 @@ void [
   _extWcPeer,
   _storageChangeEvent,
   _storageChangeListener,
+  _i18nCfg,
+  _mainI18nCfg,
+  _localeMsgs,
+  _mainLocaleMsgs,
+  _localeMeta,
+  _mainLocaleMeta,
+  _localeStatus,
+  _mainLocaleStatus,
+  _resolvedDir,
+  _mainResolvedDir,
+  _textDir,
+  _mainTextDir,
+  _translationOverrides,
+  _mainTranslationOverrides,
+  _dappMsgs,
+  _mainDappMsgs,
+  _uiMsgs,
+  _mainUiMsgs,
+  _ariaMsgs,
+  _mainAriaMsgs,
+  _walletTypeMsgs,
+  _mainWalletTypeMsgs,
+  _errCopy,
+  _mainErrCopy,
+  _deepPartial,
+  _mainDeepPartial,
+  _displayableWcReason,
+  _mainDisplayableWcReason,
+  _wcErrCopy,
+  _mainWcErrCopy,
+  _wcFailureReason,
+  _mainWcFailureReason,
+  _wcPairingResult,
+  _mainWcPairingResult,
+  _pairInitWcPeerInfo,
 ];

@@ -8,7 +8,13 @@ import {
   type AlertButton,
   BeaconEvent,
   type BeaconEventType,
+  type BeaconI18nConfig,
+  type BeaconLocaleMessages,
   type BeaconMessageRecord,
+  type BeaconResolvedDirection,
+  type BeaconTextDirection,
+  type BeaconTranslationOverrides,
+  ColorMode,
   type ConnectionInfo,
   DAppClient,
   type DAppClientDisconnectOptions,
@@ -65,49 +71,94 @@ export { BeaconWalletNotInitialized, MissingRequiredScopes } from './errors';
 // beacon types (NetworkType, SigningType, etc.), use '@taquito/beacon-wallet/types'.
 export {
   AbortedBeaconError,
+  arMessages,
   BeaconError,
+  BeaconErrorType,
   BeaconEvent,
   BroadcastBeaconError,
+  builtInLocales,
+  ColorMode,
+  configureBeaconI18n,
   defaultEventCallbacks,
+  deMessages,
+  detectBrowserLocale,
+  enMessages,
+  esMessages,
+  ExtendedWalletConnectPairingRequest,
+  frMessages,
+  getBeaconDirection,
+  getBeaconErrorCopy,
+  getBeaconLocale,
+  getBeaconMessages,
+  getBeaconTranslations,
+  getColorMode,
   getDebugEnabled,
   getError,
   getLogger,
+  hasBuiltInLocale,
   InternalLogger,
+  interpolateBeaconMessage,
   isBeaconError,
   isErrorOrigin,
   isErrorResponse,
   isRequestErrorResponse,
   isTezosRpcError,
+  jaMessages,
   LocalStorage,
   Logger,
   NetworkNotSupportedBeaconError,
   NoAddressBeaconError,
   NoPrivateKeyBeaconError,
+  normalizeLocaleTag,
   NotGrantedBeaconError,
   ParametersInvalidBeaconError,
   PeerUnreachableBeaconError,
   reportDiagnostic,
+  resetBeaconI18n,
+  resolveBeaconLang,
+  resolveBuiltInLocaleCatalog,
+  setBeaconDirection,
+  setBeaconLocale,
+  setBeaconTranslations,
+  setColorMode,
   setDebugEnabled,
   setLogger,
   SignatureTypeNotSupportedBeaconError,
+  subscribeBeaconI18n,
+  subscribeColorMode,
   toBeaconError,
   TooManyOperationsBeaconError,
   TransactionInvalidBeaconError,
   UnknownBeaconError,
+  WalletConnectPairingRequest,
 } from '@ecadlabs/beacon-dapp';
 export type {
   AcknowledgeInfo,
   ActiveTransportInfo,
+  BeaconAriaMessages,
+  BeaconDAppMessages,
+  BeaconErrorCopy,
   BeaconErrorOptions,
   BeaconEventHandler,
   BeaconEventType,
+  BeaconI18nConfig,
+  BeaconLocaleMessages,
+  BeaconLocaleMetadata,
+  BeaconLocaleStatus,
   BeaconMessageDisposition,
   BeaconMessageRecord,
+  BeaconResolvedDirection,
+  BeaconTextDirection,
+  BeaconTranslationOverrides,
+  BeaconUIMessages,
+  BeaconWalletTypeMessages,
   ConnectionInfo,
   DAppClient,
   DAppClientDisconnectOptions,
   DAppClientOptions,
   DAppClientRemoveAllPeersOptions,
+  DeepPartial,
+  DisplayableWalletConnectFailureReason,
   ErrorOrigin,
   InvalidAccountDeactivatedEvent,
   InvalidAccountDeactivatedReason,
@@ -128,6 +179,9 @@ export type {
   TransportStatusChangeReason,
   V3ResponsePayload,
   WaitingForWalletAckInfo,
+  WalletConnectErrorCopy,
+  WalletConnectPairingFailureReason,
+  WalletConnectPairingResult,
   WalletInfo,
   WireErrorMessage,
   WireErrorPayload,
@@ -249,7 +303,99 @@ export class BeaconWallet implements WalletProvider {
       ...TAQUITO_CURATED_MATRIX_NODES,
       ...(options.matrixNodes ?? {}),
     };
-    this.client = getDAppClientInstance({ ...options, matrixNodes });
+    const clientOptions: DAppClientOptions = {
+      ...options,
+      matrixNodes,
+    };
+    this.client = getDAppClientInstance(clientOptions);
+  }
+
+  /**
+   * Programmatically updates the active Beacon i18n configuration (`locale`,
+   * `direction`, and/or custom `translations`), scoped to the underlying
+   * `DAppClient` lifecycle. Immediately updates any mounted `<beacon-alert>`
+   * and `<beacon-toast>` UI components.
+   */
+  configureI18n(config: BeaconI18nConfig): void {
+    this.client.configureI18n(config);
+  }
+
+  /**
+   * Programmatically overrides the active BCP-47 locale tag (for example:
+   * `'en'`, `'fr'`, `'es'`, `'de'`, `'ja'`, `'ar'`). Pass `undefined` to clear
+   * this client's override and revert to any global baseline configuration or
+   * the detected browser/document language.
+   */
+  setLocale(locale?: string): void {
+    this.client.setLocale(locale);
+  }
+
+  /**
+   * Returns the effective explicitly configured BCP-47 locale override, or
+   * `undefined` when using browser/document language detection.
+   */
+  getLocale(): string | undefined {
+    return this.client.getLocale();
+  }
+
+  /**
+   * Returns the effective resolved BCP-47 language tag used for rendering UI
+   * and error messages (from explicit configuration, browser/document detection,
+   * or `'en'` fallback).
+   */
+  resolveLang(documentLang?: string): string {
+    return this.client.resolveLang(documentLang);
+  }
+
+  /**
+   * Programmatically sets the UI text direction (`'ltr' | 'rtl' | 'auto'`).
+   */
+  setDirection(direction?: BeaconTextDirection): void {
+    this.client.setDirection(direction);
+  }
+
+  /**
+   * Returns the effective resolved text direction (`'ltr' | 'rtl'`).
+   */
+  getDirection(documentDir?: string): BeaconResolvedDirection {
+    return this.client.getDirection(documentDir);
+  }
+
+  /**
+   * Programmatically sets partial custom translation overrides merged on top
+   * of the active locale catalog.
+   */
+  setTranslations(translations?: BeaconTranslationOverrides): void {
+    this.client.setTranslations(translations);
+  }
+
+  /**
+   * Returns the effective custom translation overrides, if any.
+   */
+  getTranslations(): BeaconTranslationOverrides | undefined {
+    return this.client.getTranslations();
+  }
+
+  /**
+   * Returns the effective localized message catalog (including any merged custom
+   * translation overrides).
+   */
+  getMessages(): BeaconLocaleMessages {
+    return this.client.getMessages();
+  }
+
+  /**
+   * Updates the Beacon UI theme color mode (`ColorMode.LIGHT` or `ColorMode.DARK`).
+   */
+  async setColorMode(colorMode: ColorMode): Promise<void> {
+    await this.client.setColorMode(colorMode);
+  }
+
+  /**
+   * Returns the active Beacon UI theme color mode (`ColorMode.LIGHT` or `ColorMode.DARK`).
+   */
+  async getColorMode(): Promise<ColorMode> {
+    return this.client.getColorMode();
   }
 
   private validateRequiredScopesOrFail(

@@ -161,6 +161,44 @@ const stopMessages = wallet.subscribeToMessages((record) => {
 });
 ```
 
+## Internationalization (i18n) & RTL Layout Support
+
+Beacon includes built-in translations for English (`en`), French (`fr`), Spanish (`es`), German (`de`), Japanese (`ja`), and Arabic (`ar`, with automatic Right-to-Left `rtl` layout across `<beacon-alert>` and `<beacon-toast>` shadow roots), as well as full WCAG/WAI-ARIA keyboard navigation and screen-reader announcements.
+
+By default, `BeaconWallet` automatically detects the user's preferred language from the browser (`navigator.languages` / `navigator.language`, or a non-English `<html lang="...">` attribute, falling back to `'en'`). To pin Beacon's UI and error messages to English regardless of the user's browser language, pass `locale: 'en'` explicitly.
+
+You can override the locale, text direction (`'ltr' | 'rtl' | 'auto'`), and partial translation strings programmatically in constructor options or at runtime:
+
+```ts
+import {
+  BeaconWallet,
+  configureBeaconI18n,
+  setBeaconLocale,
+} from '@taquito/beacon-wallet';
+
+// 1. Override in constructor options:
+const wallet = new BeaconWallet({
+  name: 'MyAwesomeDapp',
+  locale: 'fr',
+  direction: 'auto',
+  translations: {
+    ui: {
+      connectWallet: 'Connecter votre portefeuille Tezos',
+    },
+  },
+});
+
+// 2. Or switch language/direction dynamically at runtime (updates open modals/toasts immediately):
+wallet.setLocale('ar'); // switches to Arabic and sets dir="rtl"
+wallet.setLocale(undefined); // clears this client's override and reverts to global baseline or detected browser language
+
+// Or via top-level global baseline helpers:
+setBeaconLocale('es');
+configureBeaconI18n({ locale: 'de', direction: 'ltr' });
+```
+
+If you provide custom `translations` for a language not in `builtInLocales` (such as Italian `'it'` or Persian `'fa'`), pass `locale: 'it'` (or `locale: 'fa'`) alongside `translations` so Beacon sets `lang` and `dir` appropriately on its shadow hosts.
+
 ## Side-Effect-Free Types (`@taquito/beacon-wallet/types`)
 
 To import Beacon enums, error classes, error guards, or TypeScript types without pulling in `@ecadlabs/beacon-dapp` runtime side effects:

@@ -9,17 +9,28 @@ import { UnsupportedActionError } from '@taquito/core';
 import { type MichelsonV1Expression, OpKind, PvmKind } from '@taquito/rpc';
 import { expectTypeOf, vi } from 'vitest';
 import {
+  AbortedBeaconError,
+  BeaconErrorType,
   BeaconEvent,
   BeaconWallet,
   BeaconWalletNotInitialized,
+  builtInLocales,
+  ColorMode,
+  configureBeaconI18n,
+  detectBrowserLocale,
+  getColorMode,
   getDebugEnabled,
   getLogger,
   InternalLogger,
   Logger,
   MissingRequiredScopes,
   reportDiagnostic,
+  resetBeaconI18n,
+  setBeaconLocale,
+  setColorMode,
   setDebugEnabled,
   setLogger,
+  subscribeBeaconI18n,
   type BeaconMessageDisposition,
   type BeaconMessageRecord,
   type ConnectionInfo,
@@ -59,23 +70,61 @@ vi.mock('@ecadlabs/beacon-dapp', async () => {
 
   return {
     ...originalModule,
-    getDAppClientInstance: vi.fn().mockImplementation(() => ({
-      requestPermissions: vi.fn(),
-      requestOperation: vi.fn(),
-      requestSignPayload: vi.fn(),
-      setActiveAccount: vi.fn(),
-      getActiveAccount: vi.fn(),
-      getAccounts: vi.fn().mockResolvedValue([]),
-      getPeers: vi.fn().mockResolvedValue([]),
-      getActiveWalletInfo: vi.fn(),
-      getConnectionInfo: vi.fn(),
-      getPendingRequests: vi.fn().mockReturnValue([]),
-      subscribeToEvent: vi.fn().mockResolvedValue(vi.fn()),
-      subscribeToMessages: vi.fn().mockReturnValue(vi.fn()),
-      showPrepare: vi.fn(),
-      hideUI: vi.fn(),
-      disconnect: vi.fn().mockResolvedValue(undefined),
-    })),
+    getDAppClientInstance: vi.fn().mockImplementation((config) => {
+      const ownerId = Symbol('MockDAppClientI18n');
+      if (config) {
+        originalModule.registerBeaconClientI18n(ownerId, {
+          ...(config.locale !== undefined ? { locale: config.locale } : {}),
+          ...(config.direction !== undefined ? { direction: config.direction } : {}),
+          ...(config.translations !== undefined ? { translations: config.translations } : {}),
+        });
+      }
+      return {
+        requestPermissions: vi.fn(),
+        requestOperation: vi.fn(),
+        requestSignPayload: vi.fn(),
+        setActiveAccount: vi.fn(),
+        getActiveAccount: vi.fn(),
+        getAccounts: vi.fn().mockResolvedValue([]),
+        getPeers: vi.fn().mockResolvedValue([]),
+        getActiveWalletInfo: vi.fn(),
+        getConnectionInfo: vi.fn(),
+        getPendingRequests: vi.fn().mockReturnValue([]),
+        subscribeToEvent: vi.fn().mockResolvedValue(vi.fn()),
+        subscribeToMessages: vi.fn().mockReturnValue(vi.fn()),
+        showPrepare: vi.fn(),
+        hideUI: vi.fn(),
+        disconnect: vi.fn().mockResolvedValue(undefined),
+        destroy: vi.fn().mockImplementation(async () => {
+          originalModule.unregisterBeaconClientI18n(ownerId);
+        }),
+        configureI18n: vi.fn().mockImplementation((i18nConfig) => {
+          originalModule.registerBeaconClientI18n(ownerId, i18nConfig);
+        }),
+        setLocale: vi.fn().mockImplementation((locale) => {
+          originalModule.registerBeaconClientI18n(ownerId, { locale });
+        }),
+        getLocale: vi.fn().mockImplementation(() => originalModule.getBeaconLocale()),
+        resolveLang: vi
+          .fn()
+          .mockImplementation((docLang) => originalModule.resolveBeaconLang(docLang)),
+        setDirection: vi.fn().mockImplementation((direction) => {
+          originalModule.registerBeaconClientI18n(ownerId, { direction });
+        }),
+        getDirection: vi
+          .fn()
+          .mockImplementation((docDir) => originalModule.getBeaconDirection(docDir)),
+        setTranslations: vi.fn().mockImplementation((translations) => {
+          originalModule.registerBeaconClientI18n(ownerId, { translations });
+        }),
+        getTranslations: vi.fn().mockImplementation(() => originalModule.getBeaconTranslations()),
+        getMessages: vi.fn().mockImplementation(() => originalModule.getBeaconMessages()),
+        setColorMode: vi
+          .fn()
+          .mockImplementation(async (mode) => originalModule.setColorMode(mode)),
+        getColorMode: vi.fn().mockImplementation(async () => originalModule.getColorMode()),
+      };
+    }),
   };
 });
 
@@ -301,9 +350,9 @@ describe('Beacon Wallet tests', () => {
 
   it('Verify sign throws for Micheline', async () => {
     const wallet = new BeaconWallet({ name: 'Test', storage: new LocalStorage() });
-    await expect(
-      wallet.sign('48656C6C6F20576F726C64', new Uint8Array([5]))
-    ).rejects.toThrow(UnsupportedActionError);
+    await expect(wallet.sign('48656C6C6F20576F726C64', new Uint8Array([5]))).rejects.toThrow(
+      UnsupportedActionError
+    );
   });
 
   it('Verify sign throws for Raw', async () => {
@@ -629,7 +678,8 @@ describe('Beacon Wallet tests', () => {
         version: '2',
         senderId: 'sender',
         signingType: SigningType.OPERATION,
-        signature: 'edsigtXomBKi5CTRf5cjATJWSyaRvhfYNHqSUGrn4SdbYRcGwQrUGjzEfQDTuqHhuA8b2d8NarZjz8TRf65WkpQmo423BtomS8Q',
+        signature:
+          'edsigtXomBKi5CTRf5cjATJWSyaRvhfYNHqSUGrn4SdbYRcGwQrUGjzEfQDTuqHhuA8b2d8NarZjz8TRf65WkpQmo423BtomS8Q',
       });
 
       const sig = await wallet.sign('48656c6c6f', new Uint8Array([3]));
@@ -886,7 +936,9 @@ describe('Beacon Wallet tests', () => {
       const result = wallet.getPendingRequests();
       expect(result).toBe(pending);
       expect(wallet.client.getPendingRequests).toHaveBeenCalledExactlyOnceWith();
-      expectTypeOf(wallet.getPendingRequests).returns.toEqualTypeOf<readonly PendingRequestInfo[]>();
+      expectTypeOf(wallet.getPendingRequests).returns.toEqualTypeOf<
+        readonly PendingRequestInfo[]
+      >();
     });
 
     it('delegates subscribeToEvent() to client.subscribeToEvent() and returns the unsubscribe function', async () => {
@@ -942,6 +994,227 @@ describe('Beacon Wallet tests', () => {
       >();
       expectTypeOf(setLogger).parameter(0).toEqualTypeOf<LoggerInterface>();
       expectTypeOf(reportDiagnostic).parameter(0).toEqualTypeOf<LoggerDiagnostic>();
+    });
+  });
+
+  describe('i18n browser language selection and programmatic overrides', () => {
+    const navigatorDescriptor = Object.getOwnPropertyDescriptor(globalThis, 'navigator');
+    const documentDescriptor = Object.getOwnPropertyDescriptor(globalThis, 'document');
+
+    const setMockBrowserEnv = (options: {
+      languages?: readonly string[];
+      language?: string;
+      docLang?: string;
+      docDir?: string;
+    }) => {
+      Object.defineProperty(globalThis, 'navigator', {
+        configurable: true,
+        writable: true,
+        value: {
+          languages: options.languages,
+          language: options.language,
+        },
+      });
+      Object.defineProperty(globalThis, 'document', {
+        configurable: true,
+        writable: true,
+        value: {
+          documentElement: {
+            lang: options.docLang ?? '',
+            dir: options.docDir ?? '',
+          },
+        },
+      });
+    };
+
+    beforeEach(() => {
+      resetBeaconI18n();
+      setMockBrowserEnv({ languages: ['en-US', 'en'], language: 'en-US', docLang: 'en' });
+    });
+
+    afterEach(() => {
+      resetBeaconI18n();
+      if (navigatorDescriptor) {
+        Object.defineProperty(globalThis, 'navigator', navigatorDescriptor);
+      } else {
+        delete (globalThis as Record<string, unknown>).navigator;
+      }
+      if (documentDescriptor) {
+        Object.defineProperty(globalThis, 'document', documentDescriptor);
+      } else {
+        delete (globalThis as Record<string, unknown>).document;
+      }
+    });
+
+    it('selects the browser language automatically from navigator.languages even when document lang is boilerplate en', () => {
+      setMockBrowserEnv({
+        languages: ['fr-CA', 'fr', 'en-US'],
+        language: 'fr-CA',
+        docLang: 'en',
+      });
+
+      expect(detectBrowserLocale()).toBe('fr-CA');
+
+      const wallet = new BeaconWallet({ name: 'FrenchBrowserDApp' });
+
+      expect(getDAppClientInstance).toHaveBeenCalledWith(
+        expect.objectContaining({
+          name: 'FrenchBrowserDApp',
+        })
+      );
+      expect(wallet.getLocale()).toBeUndefined();
+      expect(wallet.resolveLang()).toBe('fr-CA');
+      expect(wallet.getDirection()).toBe('ltr');
+      expect(wallet.getMessages().meta.locale).toBe('fr');
+      expect(new AbortedBeaconError().title).toBe(
+        builtInLocales.fr.errors[BeaconErrorType.ABORTED_ERROR].title
+      );
+    });
+
+    it('skips unsupported preferred languages in navigator.languages and selects the first supported browser locale', () => {
+      setMockBrowserEnv({
+        languages: ['pt-BR', 'es-MX', 'en-US'],
+        language: 'pt-BR',
+        docLang: 'en',
+      });
+
+      const wallet = new BeaconWallet({ name: 'FallbackBrowserDApp' });
+
+      expect(wallet.getLocale()).toBeUndefined();
+      expect(wallet.resolveLang()).toBe('es-MX');
+      expect(wallet.getMessages().meta.locale).toBe('es');
+    });
+
+    it('automatically sets RTL direction when the browser language is Arabic', () => {
+      setMockBrowserEnv({
+        languages: ['ar-EG', 'ar'],
+        language: 'ar-EG',
+        docLang: 'en',
+      });
+
+      const wallet = new BeaconWallet({ name: 'ArabicBrowserDApp' });
+
+      expect(wallet.getLocale()).toBeUndefined();
+      expect(wallet.resolveLang()).toBe('ar-EG');
+      expect(wallet.getDirection()).toBe('rtl');
+      expect(wallet.getMessages().meta.locale).toBe('ar');
+    });
+
+    it('falls back to English when browser languages are unsupported and no custom translations are provided, or honors non-English document lang when browser is default English', () => {
+      setMockBrowserEnv({
+        languages: ['it-IT'],
+        language: 'it-IT',
+        docLang: '',
+      });
+
+      const itWallet = new BeaconWallet({ name: 'ItalianBrowserDApp' });
+      expect(itWallet.getMessages().meta.locale).toBe('en');
+      expect(itWallet.resolveLang()).toBe('en');
+      expect(itWallet.getDirection()).toBe('ltr');
+
+      setMockBrowserEnv({
+        languages: ['en-US', 'en'],
+        language: 'en-US',
+        docLang: 'de',
+      });
+
+      const deDocWallet = new BeaconWallet({ name: 'GermanDocDApp' });
+      expect(deDocWallet.getLocale()).toBeUndefined();
+      expect(deDocWallet.resolveLang()).toBe('de');
+      expect(deDocWallet.getMessages().meta.locale).toBe('de');
+    });
+
+    it('allows overriding browser language via BeaconWallet constructor options, pre-initialization setters, and runtime instance methods without leaking after destroy', async () => {
+      setMockBrowserEnv({
+        languages: ['fr-FR', 'fr'],
+        language: 'fr-FR',
+        docLang: 'en',
+      });
+
+      // 1. Pre-initialization global override is preserved when options.locale is omitted
+      setBeaconLocale('de');
+      const preConfiguredWallet = new BeaconWallet({ name: 'PreConfiguredDApp' });
+      expect(preConfiguredWallet.getLocale()).toBe('de');
+      expect(preConfiguredWallet.getMessages().meta.locale).toBe('de');
+
+      // 2. Explicit constructor options override browser language and prior global locale
+      const explicitWallet = new BeaconWallet({
+        name: 'ExplicitLocaleDApp',
+        locale: 'ja',
+        direction: 'ltr',
+        translations: {
+          ui: {
+            connectWallet: 'カスタムウォレット接続',
+          },
+        },
+      });
+      expect(explicitWallet.getLocale()).toBe('ja');
+      expect(explicitWallet.getDirection()).toBe('ltr');
+      expect(explicitWallet.getMessages().meta.locale).toBe('ja');
+      expect(explicitWallet.getMessages().ui.connectWallet).toBe('カスタムウォレット接続');
+
+      // 3. Runtime instance methods override locale, direction, and translations dynamically
+      const listener = vi.fn();
+      const unsubscribe = subscribeBeaconI18n(listener);
+
+      explicitWallet.setLocale('es');
+      expect(explicitWallet.getLocale()).toBe('es');
+      expect(explicitWallet.getMessages().meta.locale).toBe('es');
+
+      explicitWallet.setDirection('rtl');
+      expect(explicitWallet.getDirection()).toBe('rtl');
+      explicitWallet.setDirection('auto');
+      expect(explicitWallet.getDirection()).toBe('ltr');
+
+      explicitWallet.setTranslations({
+        dapp: {
+          requestSent: 'Solicitud enviada a {{wallet}} (custom)',
+        },
+      });
+      expect(explicitWallet.getTranslations()?.dapp?.requestSent).toBe(
+        'Solicitud enviada a {{wallet}} (custom)'
+      );
+      expect(explicitWallet.getMessages().dapp.requestSent).toBe(
+        'Solicitud enviada a {{wallet}} (custom)'
+      );
+
+      // Clearing client locale override with setLocale(undefined) restores the global baseline ('de')
+      explicitWallet.setLocale(undefined);
+      expect(explicitWallet.getLocale()).toBe('de');
+      expect(explicitWallet.getMessages().meta.locale).toBe('de');
+
+      // Clearing global baseline then falls back to browser auto-detection ('fr-FR')
+      setBeaconLocale(undefined);
+      expect(explicitWallet.getLocale()).toBeUndefined();
+      expect(explicitWallet.resolveLang()).toBe('fr-FR');
+      expect(explicitWallet.getMessages().meta.locale).toBe('fr');
+
+      // configureI18n updates multiple fields at once
+      explicitWallet.configureI18n({
+        locale: 'ar',
+        direction: 'auto',
+        translations: undefined,
+      });
+      expect(explicitWallet.getLocale()).toBe('ar');
+      expect(explicitWallet.getDirection()).toBe('rtl');
+      expect(explicitWallet.getTranslations()).toBeUndefined();
+      expect(listener).toHaveBeenCalled();
+
+      // Destroying the underlying DAppClient unregisters its i18n state and reverts to browser locale ('fr-FR')
+      await explicitWallet.client.destroy();
+      expect(explicitWallet.getLocale()).toBeUndefined();
+      expect(explicitWallet.resolveLang()).toBe('fr-FR');
+      expect(explicitWallet.getDirection()).toBe('ltr');
+
+      configureBeaconI18n({ locale: 'en' });
+      expect(explicitWallet.getLocale()).toBe('en');
+
+      await explicitWallet.setColorMode(ColorMode.DARK);
+      await expect(explicitWallet.getColorMode()).resolves.toBe(ColorMode.DARK);
+      setColorMode(ColorMode.LIGHT);
+      expect(getColorMode()).toBe(ColorMode.LIGHT);
+
+      unsubscribe();
     });
   });
 });
