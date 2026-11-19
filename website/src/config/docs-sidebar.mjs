@@ -77,6 +77,7 @@ export const sidebarConfig = [
       "contracts-library",
       "timelock",
       "taquito_utils",
+      "tezosx_cross_runtime",
       {
         title: "Sapling",
         items: [

@@ -25,7 +25,7 @@ function findBuiltEsmFiles(rootDir = packagesDir) {
     .flatMap((distDir) => {
       try {
         return readdirSync(distDir)
-          .filter((fileName) => fileName.endsWith('.es6.js'))
+          .filter((fileName) => fileName.endsWith('.es6.js') || fileName.endsWith('.mjs'))
           .map((fileName) => join(distDir, fileName));
       } catch {
         return [];

@@ -107,6 +107,7 @@ try {
     assert.ok(realpathSync(require.resolve(name)).startsWith(installed));
   }
 
+  cpSync(join(root, 'packages/taquito-tezosx/test/data/nac-vectors.json'), join(consumer, 'nac-vectors.json'));
   for (const file of runtimeFixtures) {
     writeFileSync(join(consumer, file), readFileSync(join(fixtures, file), 'utf8'));
     const base = file.replace(/\.runtime\.mjs$/, '');
