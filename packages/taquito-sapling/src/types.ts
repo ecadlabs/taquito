@@ -11,12 +11,22 @@ export interface SaplingIncomingTransaction {
   memo: string;
   paymentAddress: string;
   isSpent: boolean;
+  /**
+   * Index of the note in the pool's commitment list. A note the viewing key both sent and received,
+   * such as change from a spend, appears in `incoming` and `outgoing` with the same position.
+   */
+  position: number;
 }
 
 export interface SaplingOutgoingTransaction {
   value: BigNumber;
   memo: string;
   paymentAddress: string;
+  /**
+   * Index of the note in the pool's commitment list. A note the viewing key both sent and received,
+   * such as change from a spend, appears in `incoming` and `outgoing` with the same position.
+   */
+  position: number;
 }
 
 export interface SaplingTransaction {
