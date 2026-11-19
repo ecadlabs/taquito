@@ -15,6 +15,15 @@ import { validateAndExtractFailwith, TzReadProvider } from '@taquito/taquito';
 import { View } from './interface';
 import { InvalidViewParameterError } from '@taquito/core';
 
+const forbiddenInstructions = new Set([
+  'AMOUNT',
+  'CREATE_CONTRACT',
+  'SENDER',
+  'SET_DELEGATE',
+  'SOURCE',
+  'TRANSFER_TOKENS',
+]);
+
 export class MichelsonStorageView implements View {
   constructor(
     private viewName: string,
@@ -26,32 +35,16 @@ export class MichelsonStorageView implements View {
     private viewParameterType?: MichelsonV1ExpressionExtended
   ) {}
 
-  /**
-   * According to the tzip-16 standard, the following instructions must not be used in the code of the view:
-   * 'AMOUNT', 'CREATE_CONTRACT', 'SENDER', 'SET_DELEGATE', 'SOURCE', and 'TRANSFER_TOKENS'
-   * The method throw an error if an illegal instruction is found
-   */
-  private findForbiddenInstructionInViewCodeError(code: MichelsonV1ExpressionExtended[]) {
-    const illegalInstructions = [
-      'AMOUNT',
-      'CREATE_CONTRACT',
-      'SENDER',
-      'SET_DELEGATE',
-      'SOURCE',
-      'TRANSFER_TOKENS',
-    ];
-
-    for (const forbiddenInstruction of illegalInstructions) {
-      for (const instruction of code) {
-        if (Array.isArray(instruction)) {
-          this.findForbiddenInstructionInViewCodeError(instruction);
-          continue;
+  private findForbiddenInstructionInViewCodeError(code: MichelsonV1Expression[]) {
+    for (const instruction of code) {
+      if (Array.isArray(instruction)) {
+        this.findForbiddenInstructionInViewCodeError(instruction);
+      } else if ('prim' in instruction) {
+        if (forbiddenInstructions.has(instruction.prim)) {
+          throw new ForbiddenInstructionInViewCodeError(instruction.prim);
         }
-        if (instruction.prim === forbiddenInstruction) {
-          throw new ForbiddenInstructionInViewCodeError(forbiddenInstruction);
-        }
-        if (instruction.args && instruction.args.length !== 0) {
-          this.findForbiddenInstructionInViewCodeError(instruction.args as any);
+        if (instruction.args?.length) {
+          this.findForbiddenInstructionInViewCodeError(instruction.args);
         }
       }
     }
