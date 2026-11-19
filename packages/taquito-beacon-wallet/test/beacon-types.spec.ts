@@ -134,6 +134,7 @@ import {
   BeaconError as MainBeaconError,
   BeaconEvent,
   builtInLocales as mainBuiltInLocales,
+  ColorMode as MainColorMode,
   configureBeaconI18n as mainConfigureBeaconI18n,
   defaultEventCallbacks,
   deMessages as mainDeMessages,
@@ -147,6 +148,7 @@ import {
   getBeaconLocale as mainGetBeaconLocale,
   getBeaconMessages as mainGetBeaconMessages,
   getBeaconTranslations as mainGetBeaconTranslations,
+  getColorMode as mainGetColorMode,
   getError as mainGetError,
   hasBuiltInLocale as mainHasBuiltInLocale,
   interpolateBeaconMessage as mainInterpolateBeaconMessage,
@@ -165,6 +167,7 @@ import {
   setBeaconDirection as mainSetBeaconDirection,
   setBeaconLocale as mainSetBeaconLocale,
   setBeaconTranslations as mainSetBeaconTranslations,
+  setColorMode as mainSetColorMode,
   subscribeBeaconI18n as mainSubscribeBeaconI18n,
   toBeaconError,
   TransactionInvalidBeaconError as MainTransactionInvalidBeaconError,
@@ -478,6 +481,9 @@ describe('main entry re-exports (beacon-dapp types)', () => {
     expect(mainHasBuiltInLocale).toBe(hasBuiltInLocale);
     expect(mainResolveBuiltInLocaleCatalog).toBe(resolveBuiltInLocaleCatalog);
     expect(mainDetectBrowserLocale).toBe(detectBrowserLocale);
+    expect(MainColorMode).toBe(ColorMode);
+    expect(typeof mainSetColorMode).toBe('function');
+    expect(typeof mainGetColorMode).toBe('function');
     expect(MainWalletConnectPairingRequest).toBe(WalletConnectPairingRequest);
     expect(MainExtendedWalletConnectPairingRequest).toBe(ExtendedWalletConnectPairingRequest);
   });
