@@ -91,8 +91,6 @@ export class SaplingTransactionBuilder {
     txTotalAmount: BigNumberJs.Value,
     boundData: Uint8Array
   ): Promise<Pick<SaplingTransaction, 'inputs' | 'outputs' | 'signature' | 'balance'>> {
-    const rcm = await this.#saplingWrapper.randR();
-
     const balance = this.calculateTransactionBalance('0', new BigNumber(txTotalAmount).toString());
 
     const { signature, inputs, outputs } = await this.#saplingWrapper.withProvingContext(
@@ -110,7 +108,7 @@ export class SaplingTransactionBuilder {
               address,
               amount: saplingTransactionParams[i].amount,
               memo: saplingTransactionParams[i].memo,
-              randomCommitmentTrapdoor: rcm,
+              randomCommitmentTrapdoor: await this.#saplingWrapper.randR(),
             })
           );
         }
@@ -157,7 +155,6 @@ export class SaplingTransactionBuilder {
     chosenInputs: SaplingTransactionInputSelection
   ) {
     const sumSelectedInputs = new BigNumber(chosenInputs.sumSelectedInputs);
-    const randomCommitmentTrapdoor = await this.#saplingWrapper.randR();
     const saplingViewer = await this.#inMemorySpendingKey.getSaplingViewingKeyProvider();
     const outgoingViewingKey = await saplingViewer.getOutgoingViewingKey();
 
@@ -183,7 +180,7 @@ export class SaplingTransactionBuilder {
               address,
               amount: saplingTransactionParams[i].amount,
               memo: saplingTransactionParams[i].memo,
-              randomCommitmentTrapdoor,
+              randomCommitmentTrapdoor: await this.#saplingWrapper.randR(),
               outgoingViewingKey,
             })
           );
@@ -198,7 +195,7 @@ export class SaplingTransactionBuilder {
               address,
               amount: new BigNumber(txTotalAmount).toString(),
               memo: DEFAULT_MEMO,
-              randomCommitmentTrapdoor: randomCommitmentTrapdoor,
+              randomCommitmentTrapdoor: await this.#saplingWrapper.randR(),
               outgoingViewingKey: outgoingViewingKey,
             },
             sumSelectedInputs
@@ -296,8 +293,6 @@ export class SaplingTransactionBuilder {
   }
 
   async prepareSaplingSpendDescription(saplingContext: number, inputsToSpend: Input[]) {
-    const publicKeyReRandomization = await this.#saplingWrapper.randR();
-
     let stateDiff: SaplingDiffResponse;
     if (this.#saplingId) {
       stateDiff = await this.#readProvider.getSaplingDiffById({ id: this.#saplingId }, 'head');
@@ -316,6 +311,7 @@ export class SaplingTransactionBuilder {
         new BigNumber(inputsToSpend[i].position)
       );
 
+      const publicKeyReRandomization = await this.#saplingWrapper.randR();
       const unsignedSpendDescription = this.#inMemoryProvingKey
         ? await this.#inMemoryProvingKey.prepareSpendDescription({
             saplingContext,

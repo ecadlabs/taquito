@@ -1,4 +1,4 @@
-import { hex2buf } from '@taquito/utils';
+import { buf2hex, hex2buf } from '@taquito/utils';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { vi, type Mock } from 'vitest';
 import {
@@ -9,6 +9,7 @@ import {
 } from './single-sapling-state-diff';
 import { SaplingTransactionBuilder } from '../../src/sapling-tx-builder/sapling-transactions-builder';
 import { SaplingForger } from '../../src/sapling-forger/sapling-forger';
+import type { ParametersOutputProof } from '../../src/types';
 import BigNumber from 'bignumber.js';
 
 describe('Sapling transactions builder', () => {
@@ -30,7 +31,7 @@ describe('Sapling transactions builder', () => {
     prepareSpendDescription: Mock;
   };
 
-  const saplingForger = new SaplingForger();
+  let saplingForger: SaplingForger;
   const saplingContract = {
     contractAddress: 'KT1G2kvdfPoavgR6Fjdd68M2vaPk14qJ8bhC',
     saplingId: '0',
@@ -42,7 +43,7 @@ describe('Sapling transactions builder', () => {
     getRandomBytes: Mock;
     randR: Mock;
     getOutgoingViewingKey: Mock;
-    preparePartialOutputDescription: Mock;
+    preparePartialOutputDescription: Mock<(proof: ParametersOutputProof) => Promise<unknown>>;
     getDiversifiedFromRawPaymentAddress: Mock;
     deriveEphemeralPublicKey: Mock;
     getPkdFromRawPaymentAddress: Mock;
@@ -58,6 +59,7 @@ describe('Sapling transactions builder', () => {
   };
 
   beforeEach(() => {
+    saplingForger = new SaplingForger();
     mockInMemorySpendingKey = {
       prepareSpendDescription: vi.fn(),
       getSaplingViewingKeyProvider: vi.fn(),
@@ -123,6 +125,56 @@ describe('Sapling transactions builder', () => {
       )
     ).toBeDefined();
   });
+
+  it.each(['deposit', 'transfer'] as const)(
+    'uses a fresh commitment randomizer for each %s output and its plaintext',
+    async (kind) => {
+      const address = 'zet12mVvzJ4QJhnNQetGHzdwTMcLgNrdC4SFact6BB5jpeqGAefWip3iGgEjvDA9z7b9Y';
+      const payees = ['2', '3'].map((amount) => ({ to: address, amount, memo: '' }));
+      const total = new BigNumber(5);
+      const bytes = new Uint8Array(32);
+      let sample = 0;
+      mockSaplingWrapper.randR.mockImplementation(async () => new Uint8Array(32).fill(++sample));
+      mockSaplingWrapper.getRandomBytes.mockImplementation(
+        (length: number) => new Uint8Array(length)
+      );
+      mockSaplingWrapper.withProvingContext.mockImplementation((build) => build(1));
+      mockInMemorySpendingKey.getSaplingViewingKeyProvider.mockResolvedValue({
+        getOutgoingViewingKey: async () => bytes,
+        getAddress: async () => ({ address }),
+      });
+      mockSaplingWrapper.preparePartialOutputDescription.mockResolvedValue({
+        commitment: bytes,
+        commitmentValue: bytes,
+        proof: bytes,
+      });
+      mockSaplingWrapper.deriveEphemeralPublicKey.mockResolvedValue(bytes);
+      mockSaplingWrapper.getDiversifiedFromRawPaymentAddress.mockResolvedValue(new Uint8Array(11));
+      mockSaplingWrapper.getPkdFromRawPaymentAddress.mockResolvedValue(bytes);
+      mockSaplingWrapper.keyAgreement.mockResolvedValue(bytes);
+      vi.spyOn(saplingTransactionBuilder, 'prepareSaplingSpendDescription').mockResolvedValue([]);
+      vi.spyOn(saplingTransactionBuilder, 'createBindingSignature').mockResolvedValue(bytes);
+      const plaintext = vi.spyOn(saplingForger, 'forgeTransactionPlaintext');
+
+      if (kind === 'deposit') {
+        await saplingTransactionBuilder.createShieldedTx(payees, total, new Uint8Array(0));
+      } else {
+        await saplingTransactionBuilder.createSaplingTx(payees, total, new Uint8Array(0), {
+          inputsToSpend: [],
+          sumSelectedInputs: new BigNumber(6),
+        });
+      }
+
+      const proofCalls = mockSaplingWrapper.preparePartialOutputDescription.mock.calls;
+      const randomizers = proofCalls.map(([proof]) => buf2hex(proof.randomCommitmentTrapdoor));
+      const expectedOutputs = kind === 'deposit' ? 2 : 3;
+      expect(randomizers).toHaveLength(expectedOutputs);
+      expect(plaintext.mock.calls.map(([note]) => buf2hex(note.randomCommitmentTrapdoor))).toEqual(
+        randomizers
+      );
+      expect(new Set(randomizers).size).toBe(expectedOutputs);
+    }
+  );
 
   it('should prepare a shielded transaction of 8 tez', async () => {
     mockSaplingWrapper.randR.mockResolvedValue(
@@ -279,10 +331,11 @@ describe('Sapling transactions builder', () => {
     });
   });
 
-  it('prepareSaplingSpendDescription with spending key', async () => {
-    mockSaplingWrapper.randR.mockResolvedValue(
-      hex2buf('b924bc77666de1189d3f904ab5a6332c371d9f3bd9aa188579e9da60ce270f0a')
-    );
+  it('uses a fresh spend randomizer per input with the spending key', async () => {
+    const randomizers = [new Uint8Array(32).fill(1), new Uint8Array(32).fill(2)];
+    mockSaplingWrapper.randR
+      .mockResolvedValueOnce(randomizers[0])
+      .mockResolvedValueOnce(randomizers[1]);
     mockInMemorySpendingKey.prepareSpendDescription.mockResolvedValue({
       commitmentValue: hex2buf('4df98a4e1fb32530c54e6ca66051dd29f82a8322aa93ac5ca90e4d0f976ded89'),
       nullifier: hex2buf('e09749d5039c1667352e4c2d7a518ce333a65d6fa9a3191b7c746e0a4c394fab'),
@@ -309,44 +362,60 @@ describe('Sapling transactions builder', () => {
       ),
     });
 
+    const firstInput = {
+      memo: hex2buf('5461717569746f00'),
+      paymentAddress: hex2buf(
+        '2c8e683029bd1c1ff25882bb0353379487fcf142bbaef37d2b21dc3836f929c6fa9181e2a0d7b72406c148'
+      ),
+      position: 0,
+      randomCommitmentTrapdoor: hex2buf(
+        '35289e034251f3a673535eca3a795d8fe420801bbe4b97df5d96f0f654ffb608'
+      ),
+      value: hex2buf('00000000007a1200'),
+    };
+    const inputs = [
+      firstInput,
+      { ...firstInput, position: 1, randomCommitmentTrapdoor: new Uint8Array(32).fill(3) },
+    ];
     const spendDescription = await saplingTransactionBuilder.prepareSaplingSpendDescription(
       72805504,
-      [
-        {
-          memo: hex2buf('5461717569746f00'),
-          paymentAddress: hex2buf(
-            '2c8e683029bd1c1ff25882bb0353379487fcf142bbaef37d2b21dc3836f929c6fa9181e2a0d7b72406c148'
-          ),
-          position: 0,
-          randomCommitmentTrapdoor: hex2buf(
-            '35289e034251f3a673535eca3a795d8fe420801bbe4b97df5d96f0f654ffb608'
-          ),
-          value: hex2buf('00000000007a1200'),
-        },
-      ]
+      inputs
     );
 
-    expect(spendDescription).toEqual([
-      {
-        commitmentValue: hex2buf(
-          '4df98a4e1fb32530c54e6ca66051dd29f82a8322aa93ac5ca90e4d0f976ded89'
-        ),
-        nullifier: hex2buf('e09749d5039c1667352e4c2d7a518ce333a65d6fa9a3191b7c746e0a4c394fab'),
-        proof: hex2buf(
-          '910057ace443fd765ae01e9ab9a069cf997e6cdb3642c61c0be22cb755c69eeea94dc26910328d7db5acbb74f69eba04a58353bcc11450cf5791bf76147a5f5ac3c97f4a0586093715e046632d5fd8759cca7a3e595e269feaee42230e4a088406c78779807b04e5dc09b13c31203f2602fe44101c13b9d7610242ee67e0f1b617c0a85f4dd2b288a38378b44080b9a5b43ef8f4fa9ee3c39b6d0d8fcabcf997adea371d17a27140d0f9896938ad32041b2a92087144110139ff176becd60ba7'
-        ),
-        publicKeyReRandomization: hex2buf(
-          '0c3e04784691a1d843d2cf1840727e82ff7a83a5723fec28a85450596cfd40c3'
-        ),
-        rtAnchor: hex2buf('5de3573fbee0b1c59f7f02da3a5b30d0dd51f64b65ddd6fe21bb0c5b1e185e27'),
-        signature: hex2buf(
-          'ae9a1078bfcbda6e789ad8268562ed3f600e1f3265759771f7e4c0eb586b1f400c561727e5a6daa6f85feea46725d3737a0f77ad5d703f057980048c45004c00'
-        ),
-      },
-    ]);
+    for (const [index, input] of inputs.entries()) {
+      expect(mockInMemorySpendingKey.prepareSpendDescription).toHaveBeenNthCalledWith(
+        index + 1,
+        expect.objectContaining({
+          publicKeyReRandomization: randomizers[index],
+          randomCommitmentTrapdoor: input.randomCommitmentTrapdoor,
+        })
+      );
+      expect(mockInMemorySpendingKey.signSpendDescription).toHaveBeenNthCalledWith(
+        index + 1,
+        expect.objectContaining({
+          publicKeyReRandomization: randomizers[index],
+        })
+      );
+    }
+
+    const expectedSpend = {
+      commitmentValue: hex2buf('4df98a4e1fb32530c54e6ca66051dd29f82a8322aa93ac5ca90e4d0f976ded89'),
+      nullifier: hex2buf('e09749d5039c1667352e4c2d7a518ce333a65d6fa9a3191b7c746e0a4c394fab'),
+      proof: hex2buf(
+        '910057ace443fd765ae01e9ab9a069cf997e6cdb3642c61c0be22cb755c69eeea94dc26910328d7db5acbb74f69eba04a58353bcc11450cf5791bf76147a5f5ac3c97f4a0586093715e046632d5fd8759cca7a3e595e269feaee42230e4a088406c78779807b04e5dc09b13c31203f2602fe44101c13b9d7610242ee67e0f1b617c0a85f4dd2b288a38378b44080b9a5b43ef8f4fa9ee3c39b6d0d8fcabcf997adea371d17a27140d0f9896938ad32041b2a92087144110139ff176becd60ba7'
+      ),
+      publicKeyReRandomization: hex2buf(
+        '0c3e04784691a1d843d2cf1840727e82ff7a83a5723fec28a85450596cfd40c3'
+      ),
+      rtAnchor: hex2buf('5de3573fbee0b1c59f7f02da3a5b30d0dd51f64b65ddd6fe21bb0c5b1e185e27'),
+      signature: hex2buf(
+        'ae9a1078bfcbda6e789ad8268562ed3f600e1f3265759771f7e4c0eb586b1f400c561727e5a6daa6f85feea46725d3737a0f77ad5d703f057980048c45004c00'
+      ),
+    };
+    expect(spendDescription).toEqual([expectedSpend, expectedSpend]);
   });
 
-  it('prepareSaplingSpendDescription with prooving key', async () => {
+  it('uses a fresh spend randomizer per input with the separate proving key', async () => {
     const saplingTransactionBuilder2 = new SaplingTransactionBuilder(
       {
         saplingSigner: mockInMemorySpendingKey as any,
@@ -358,9 +427,10 @@ describe('Sapling transactions builder', () => {
       mockSaplingWrapper as any
     );
 
-    mockSaplingWrapper.randR.mockResolvedValue(
-      hex2buf('b924bc77666de1189d3f904ab5a6332c371d9f3bd9aa188579e9da60ce270f0a')
-    );
+    const randomizers = [new Uint8Array(32).fill(1), new Uint8Array(32).fill(2)];
+    mockSaplingWrapper.randR
+      .mockResolvedValueOnce(randomizers[0])
+      .mockResolvedValueOnce(randomizers[1]);
     mockInMemoryProvingKey.prepareSpendDescription.mockResolvedValue({
       commitmentValue: hex2buf('4df98a4e1fb32530c54e6ca66051dd29f82a8322aa93ac5ca90e4d0f976ded89'),
       nullifier: hex2buf('e09749d5039c1667352e4c2d7a518ce333a65d6fa9a3191b7c746e0a4c394fab'),
@@ -387,41 +457,57 @@ describe('Sapling transactions builder', () => {
       ),
     });
 
+    const firstInput = {
+      memo: hex2buf('5461717569746f00'),
+      paymentAddress: hex2buf(
+        '2c8e683029bd1c1ff25882bb0353379487fcf142bbaef37d2b21dc3836f929c6fa9181e2a0d7b72406c148'
+      ),
+      position: 0,
+      randomCommitmentTrapdoor: hex2buf(
+        '35289e034251f3a673535eca3a795d8fe420801bbe4b97df5d96f0f654ffb608'
+      ),
+      value: hex2buf('00000000007a1200'),
+    };
+    const inputs = [
+      firstInput,
+      { ...firstInput, position: 1, randomCommitmentTrapdoor: new Uint8Array(32).fill(3) },
+    ];
     const spendDescription = await saplingTransactionBuilder2.prepareSaplingSpendDescription(
       72805504,
-      [
-        {
-          memo: hex2buf('5461717569746f00'),
-          paymentAddress: hex2buf(
-            '2c8e683029bd1c1ff25882bb0353379487fcf142bbaef37d2b21dc3836f929c6fa9181e2a0d7b72406c148'
-          ),
-          position: 0,
-          randomCommitmentTrapdoor: hex2buf(
-            '35289e034251f3a673535eca3a795d8fe420801bbe4b97df5d96f0f654ffb608'
-          ),
-          value: hex2buf('00000000007a1200'),
-        },
-      ]
+      inputs
     );
 
-    expect(spendDescription).toEqual([
-      {
-        commitmentValue: hex2buf(
-          '4df98a4e1fb32530c54e6ca66051dd29f82a8322aa93ac5ca90e4d0f976ded89'
-        ),
-        nullifier: hex2buf('e09749d5039c1667352e4c2d7a518ce333a65d6fa9a3191b7c746e0a4c394fab'),
-        proof: hex2buf(
-          '910057ace443fd765ae01e9ab9a069cf997e6cdb3642c61c0be22cb755c69eeea94dc26910328d7db5acbb74f69eba04a58353bcc11450cf5791bf76147a5f5ac3c97f4a0586093715e046632d5fd8759cca7a3e595e269feaee42230e4a088406c78779807b04e5dc09b13c31203f2602fe44101c13b9d7610242ee67e0f1b617c0a85f4dd2b288a38378b44080b9a5b43ef8f4fa9ee3c39b6d0d8fcabcf997adea371d17a27140d0f9896938ad32041b2a92087144110139ff176becd60ba7'
-        ),
-        publicKeyReRandomization: hex2buf(
-          '0c3e04784691a1d843d2cf1840727e82ff7a83a5723fec28a85450596cfd40c3'
-        ),
-        rtAnchor: hex2buf('5de3573fbee0b1c59f7f02da3a5b30d0dd51f64b65ddd6fe21bb0c5b1e185e27'),
-        signature: hex2buf(
-          'ae9a1078bfcbda6e789ad8268562ed3f600e1f3265759771f7e4c0eb586b1f400c561727e5a6daa6f85feea46725d3737a0f77ad5d703f057980048c45004c00'
-        ),
-      },
-    ]);
+    for (const [index, input] of inputs.entries()) {
+      expect(mockInMemoryProvingKey.prepareSpendDescription).toHaveBeenNthCalledWith(
+        index + 1,
+        expect.objectContaining({
+          publicKeyReRandomization: randomizers[index],
+          randomCommitmentTrapdoor: input.randomCommitmentTrapdoor,
+        })
+      );
+      expect(mockInMemorySpendingKey.signSpendDescription).toHaveBeenNthCalledWith(
+        index + 1,
+        expect.objectContaining({
+          publicKeyReRandomization: randomizers[index],
+        })
+      );
+    }
+
+    const expectedSpend = {
+      commitmentValue: hex2buf('4df98a4e1fb32530c54e6ca66051dd29f82a8322aa93ac5ca90e4d0f976ded89'),
+      nullifier: hex2buf('e09749d5039c1667352e4c2d7a518ce333a65d6fa9a3191b7c746e0a4c394fab'),
+      proof: hex2buf(
+        '910057ace443fd765ae01e9ab9a069cf997e6cdb3642c61c0be22cb755c69eeea94dc26910328d7db5acbb74f69eba04a58353bcc11450cf5791bf76147a5f5ac3c97f4a0586093715e046632d5fd8759cca7a3e595e269feaee42230e4a088406c78779807b04e5dc09b13c31203f2602fe44101c13b9d7610242ee67e0f1b617c0a85f4dd2b288a38378b44080b9a5b43ef8f4fa9ee3c39b6d0d8fcabcf997adea371d17a27140d0f9896938ad32041b2a92087144110139ff176becd60ba7'
+      ),
+      publicKeyReRandomization: hex2buf(
+        '0c3e04784691a1d843d2cf1840727e82ff7a83a5723fec28a85450596cfd40c3'
+      ),
+      rtAnchor: hex2buf('5de3573fbee0b1c59f7f02da3a5b30d0dd51f64b65ddd6fe21bb0c5b1e185e27'),
+      signature: hex2buf(
+        'ae9a1078bfcbda6e789ad8268562ed3f600e1f3265759771f7e4c0eb586b1f400c561727e5a6daa6f85feea46725d3737a0f77ad5d703f057980048c45004c00'
+      ),
+    };
+    expect(spendDescription).toEqual([expectedSpend, expectedSpend]);
   });
 
   it('createPaybackOutput', async () => {
