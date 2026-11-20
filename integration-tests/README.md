@@ -147,3 +147,7 @@ The Keygen service (`go-tezos-keygen`) derives HD keys from a master seed, maint
 
 1. **Fresh key mode (`/v2/<network>`)**: Returns a funded `secret_key` and `pkh` for tests that sign locally via `InMemorySigner` (for example, unrevealed account tests or higher-balance tests).
 2. **Ephemeral lease mode (`/v2/<network>/ephemeral`)**: Leases a funded key from the pool and exposes a `RemoteSigner` endpoint (`/<network>/ephemeral/<id>/`) until the lease expires, after which the key is recycled back into the pool if sufficient balance remains.
+
+### Refresh known-contract fixtures
+
+Run `npm -w integration-tests run originate-known-contracts` with the intended network configuration and a funded test account. The command waits for origination on every configured network before replacing any fixture. Origination or staging failure preserves the previous files. Each file replacement is atomic. If a later replacement fails, an earlier file can already contain a complete new fixture. The command exits nonzero and emits no workflow outputs in that case. A failed balance report after successful publication is a warning.
