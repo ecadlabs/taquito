@@ -1,6 +1,6 @@
 {
   "name": "@taquito/tezosx",
-  "version": "25.1.2",
+  "version": "25.1.3",
   "description": "Unsigned Tezos X cross-runtime call builders (Beta).",
   "author": "ECAD Labs Inc <info@ecadlabs.com>",
   "contributors": [
@@ -39,9 +39,9 @@
     "version-stamp": "node ../taquito/version-stamping.js"
   },
   "dependencies": {
-    "@taquito/core": "^25.1.2",
-    "@taquito/michel-codec": "^25.1.2",
-    "@taquito/utils": "^25.1.2",
+    "@taquito/core": "^25.1.3",
+    "@taquito/michel-codec": "^25.1.3",
+    "@taquito/utils": "^25.1.3",
     "viem": "2.47.2"
   }
 }
