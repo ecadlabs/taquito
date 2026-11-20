@@ -1,6 +1,6 @@
 {
   "name": "@taquito/remote-signer",
-  "version": "25.1.1",
+  "version": "25.1.2",
   "description": "Remote signer client for Taquito, designed to work with services such as Signatory.",
   "keywords": [
     "taquito",
@@ -54,9 +54,9 @@
     ]
   },
   "dependencies": {
-    "@taquito/core": "^25.1.1",
-    "@taquito/http-utils": "^25.1.1",
-    "@taquito/utils": "^25.1.1"
+    "@taquito/core": "^25.1.2",
+    "@taquito/http-utils": "^25.1.2",
+    "@taquito/utils": "^25.1.2"
   },
   "devDependencies": {
     "@rollup/plugin-json": "^6.1.0",
