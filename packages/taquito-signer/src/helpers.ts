@@ -29,11 +29,8 @@ export const generateSecretKey = (seed: Uint8Array, derivationPath: string, curv
     case 'p256': {
       const prefixType =
         curve === 'secp256k1' ? PrefixV2.Secp256k1SecretKey : PrefixV2.P256SecretKey;
-      let privKey = PrivateKeyEc.fromSeed(seed, curve);
-      privKey = privKey.derivePath(path);
-      const uint8arr = new Uint8Array(privKey.keyPair.secretKey.toArray());
-      const sk = b58Encode(uint8arr, prefixType);
-      return sk;
+      const privKey = PrivateKeyEc.fromSeed(seed, curve).derivePath(path);
+      return b58Encode(privKey.bytes(), prefixType);
     }
     case 'bip25519': {
       throw new ToBeImplemented();
