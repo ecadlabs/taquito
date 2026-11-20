@@ -56,28 +56,35 @@ test('stages every file before replacing an existing fixture', async (t) => {
   assert.deepEqual(await readdir(directory), ['first.ts']);
 });
 
-test('reports only after all fixture replacements succeed', async (t) => {
-  const directory = await workspace(t);
-  const first = join(directory, 'first.ts');
-  const second = join(directory, 'second.ts');
-  await writeFile(first, 'previous first');
-  let reports = 0;
-  await publishKnownContractFixtures([
-    Promise.resolve(
-      fixture(first, 'new first', async () => {
-        assert.equal(await readFile(second, 'utf8'), 'new second');
-        reports++;
-      })
-    ),
-    Promise.resolve(
-      fixture(second, 'new second', async () => {
-        reports++;
-      })
-    ),
-  ]);
-  assert.equal(await readFile(first, 'utf8'), 'new first');
-  assert.equal(reports, 2);
-});
+test(
+  'reports concurrently after all fixture replacements succeed',
+  { timeout: 5000 },
+  async (t) => {
+    const directory = await workspace(t);
+    const first = join(directory, 'first.ts');
+    const second = join(directory, 'second.ts');
+    await writeFile(first, 'previous first');
+    const secondReport = Promise.withResolvers();
+    let reports = 0;
+    await publishKnownContractFixtures([
+      Promise.resolve(
+        fixture(first, 'new first', async () => {
+          assert.equal(await readFile(second, 'utf8'), 'new second');
+          await secondReport.promise;
+          reports++;
+        })
+      ),
+      Promise.resolve(
+        fixture(second, 'new second', async () => {
+          secondReport.resolve();
+          reports++;
+        })
+      ),
+    ]);
+    assert.equal(await readFile(first, 'utf8'), 'new first');
+    assert.equal(reports, 2);
+  }
+);
 
 test('keeps completed files valid if a later rename fails and emits no reports', async (t) => {
   const directory = await workspace(t);
