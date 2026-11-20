@@ -24,6 +24,7 @@ export function cjsEsmBridge(pkg) {
         [
           `import commonjs from ${JSON.stringify(specifier)};`,
           'export default commonjs;',
+          "export { commonjs as 'module.exports' };",
           ...declarations,
           '',
         ].join('\n')
