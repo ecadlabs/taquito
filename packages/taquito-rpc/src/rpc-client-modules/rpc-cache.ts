@@ -46,6 +46,7 @@ import {
   RPCRunScriptViewParam,
   RPCRunViewParam,
   RunCodeResult,
+  TraceCodeResult,
   RunScriptViewResult,
   RunViewResult,
   SaplingDiffResponse,
@@ -1033,6 +1034,22 @@ export class RpcClientCache implements RpcClientInterface {
     { block }: RPCOptions = defaultRPCOptions
   ): Promise<RunCodeResult> {
     return this.rpcClient.runCode(code, { block });
+  }
+
+  /**
+   * @param code Code to run, with the same parameters as `runCode`
+   * @param options contains generic configuration for rpc calls to specified block (default to head)
+   * Forward trace requests without caching. Custom clients may omit this capability.
+   * @see https://octez.tezos.com/docs/active/rpc.html#post-block-id-helpers-scripts-trace-code
+   */
+  async traceCode(
+    code: RPCRunCodeParam,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<TraceCodeResult> {
+    if (typeof this.rpcClient.traceCode !== 'function') {
+      throw new UnsupportedActionError('The RPC client does not support traceCode');
+    }
+    return this.rpcClient.traceCode(code, { block });
   }
 
   /**
