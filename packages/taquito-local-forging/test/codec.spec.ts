@@ -10,6 +10,9 @@ import {
   paddedBytesEncoder,
   paddedBytesDecoder,
   prefixDecoder,
+  proposalsDecoder,
+  proposalEncoder,
+  signatureProofDecoder,
   int16Encoder,
   int16Decoder,
   int32Encoder,
@@ -50,6 +53,7 @@ import {
   InvalidPublicKeyError,
   InvalidKeyHashError,
   ParameterValidationError,
+  ProhibitedActionError,
   TaquitoError,
 } from '@taquito/core';
 import { PrefixV2 } from '@taquito/utils';
@@ -672,5 +676,62 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
         expect(rollupConsumer.length()).toBe(0);
       });
     });
+  });
+});
+
+describe('length-prefixed operation fields', () => {
+  const proposal = 'PsCARTHAGazKbHtnKfLzQg3kms52kSRpgnDY982a9oYsSXRLQEb';
+  const hashBytes = proposalEncoder(proposal);
+
+  test('reads exactly the declared proposal list', () => {
+    const input = Uint8ArrayConsumer.fromHexString('00000020' + hashBytes + 'ab');
+    expect(proposalsDecoder(input)).toEqual([proposal]);
+    expect(input.consume(1)).toEqual(Uint8Array.of(0xab));
+  });
+
+  test.each([
+    ['a partial final hash', '0000001f'],
+    ['a declared list longer than the available bytes', '00000040'],
+  ])('rejects %s in a proposal list', (_, length) => {
+    const input = Uint8ArrayConsumer.fromHexString(length + hashBytes);
+    expect(() => proposalsDecoder(input)).toThrow(OperationDecodingError);
+  });
+
+  test('rejects an unsupported declared BLS proof length even with another byte available', () => {
+    const input = Uint8ArrayConsumer.fromHexString('ff0000005f' + '00'.repeat(96));
+    expect(() => signatureProofDecoder(input)).toThrow(ProhibitedActionError);
+  });
+
+  test('rejects a truncated 96-byte BLS proof', () => {
+    const input = Uint8ArrayConsumer.fromHexString('ff00000060' + '00'.repeat(95));
+    expect(() => signatureProofDecoder(input)).toThrow(OperationDecodingError);
+  });
+
+  test('round-trips a proof-bearing reveal followed by another manager operation', async () => {
+    const source = 'tz4EuLnUzNkUv14qok6BczV8DTcjwa2BgEMf';
+    const group: ForgeParams = {
+      branch: 'BLzyjjHKEKMULtvkpSHxuZxx6ei6fpntH2BTkYZiLgs8zLVstvX',
+      contents: [
+        {
+          kind: OpKind.REVEAL,
+          source,
+          fee: '733',
+          counter: '7',
+          gas_limit: '3250',
+          storage_limit: '0',
+          public_key: 'BLpk1xqBc7HwrFwF7vSs8jaBy1cvx8AaL3DU1CLZiPhbimf6u8Si65LQvJu37b4J4mKTgrDf5qbc',
+          proof: 'BLsig9m7E7NBVMa29m3pKqcXZ1yq8usLr7PiaQeMvQnxxj4uCQ3u1ZXLoubmAvD9CPc7iXutSPPXG43nyfua8NxvqQSk8z3kRLq7QX14ZApkvk8Vp3TNtJPbYh4F1nxPVk1ra7XGNr6ZTB',
+        },
+        {
+          kind: OpKind.DELEGATION,
+          source,
+          fee: '500',
+          counter: '8',
+          gas_limit: '1000',
+          storage_limit: '0',
+        },
+      ],
+    };
+    expect(await localForger.parse(await localForger.forge(group))).toEqual(group);
   });
 });

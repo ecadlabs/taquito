@@ -1,0 +1,47 @@
+---
+title: Delegation
+author: Simon Boissonneault-Robert
+---
+
+## What is baking in Tezos?
+"Baking" in Tezos is a generalized concept of participation in forming blocks on the blockchain using the Proof-of-Stake consensus algorithm. Everyone who holds Tezos coins can produce, sign, and validate blocks to get rewards in proportion to their stake.
+
+To become a baker, all you need to do is to run your own node with baking software and keep it online and up to date. You will also need a minimum of <TezosConstant name="minimalStake" version="next" /> tez to participate in baking.
+
+## What is delegation?
+Delegation is when you give your baking rights to another person (baker). This mechanism in Tezos allows users to participate in staking and receive Tezos rewards without running their own node.
+
+In Tezos, a delegation operation will set the delegate of an address.
+
+## Delegate from an implicit address (`tz1` prefix)
+Taquito has two main methods that facilitate a delegate operation, `setDelegate()` and `registerDelegate()`
+
+The difference between the 2 methods is that `registerDelegate()` will set the delegate to the current address while `setDelegate()` will set the delegate to another address (baker).
+
+### setDelegate()
+Use `setDelegate()` to delegate your coins to a registered delegate (baker).
+
+```js
+// const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
+
+await Tezos.contract.setDelegate({ source: 'tz1_source', delegate: 'tz1_baker' });
+```
+
+### registerDelegate()
+To run a delegate you must first be registered. Use`registerDelegate()` to accomplish this.
+
+```js
+// const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
+
+await Tezos.contract.registerDelegate({});
+```
+
+## Withdrawing delegate
+
+It is possible to `undelegate` by executing a new `setDelegate` operation and not specifying the `delegate` property.
+
+```ts
+// const Tezos = new TezosToolkit('https://YOUR_PREFERRED_RPC_URL');
+
+await Tezos.contract.setDelegate({ source: 'tz1_source'});
+```

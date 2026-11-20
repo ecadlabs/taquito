@@ -170,6 +170,18 @@ describe('inmemory-signer', () => {
     );
   });
 
+  it.each([undefined, Uint8Array.of(3)])(
+    'keeps signed bytes consistent when the caller reuses a buffer (watermark %s)',
+    async (watermark) => {
+      const signer = new InMemorySigner('edsk4TjJWEszkHKono7XMnepVqwi37FrpbVt1KCsifJeAGimxheShG');
+      const expected = await signer.sign('1234', watermark);
+      const message = Buffer.from('1234', 'hex');
+      const pending = signer.sign(message, watermark);
+      message.fill(0);
+      expect(await pending).toEqual(expected);
+    }
+  );
+
   it('Tz2', async () => {
     const signer = new InMemorySigner('spsk2rBDDeUqakQ42nBHDGQTtP3GErb6AahHPwF9bhca3Q5KA5HESE');
     expect(await signer.publicKey()).toEqual(
