@@ -12,6 +12,7 @@ export default async function ({ assert, load, mode }) {
     ['@taquito/http-utils', http, commonHttp, 'taquito-http-utils'],
   ]) {
     assert.equal(require(`${name}/package.json`).name, name);
+    assert.ok(require.resolve(`${name}/README.md`).endsWith('README.md'));
     const deep = await load(`${name}/dist/lib/${entry}.js`);
     assert.equal(mode === 'import' ? deep.default : deep, commonjs);
     assert.equal(require(`${name}/dist/lib/${entry}`), commonjs);
