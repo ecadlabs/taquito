@@ -1,6 +1,52 @@
 import { createServer } from 'node:http';
 import { createRequire } from 'node:module';
 
+// Enumerable CommonJS exports from the installed pre-pilot packages.
+const baselineNames = {
+  '@taquito/core': [
+    'DeprecationError',
+    'InvalidAddressError',
+    'InvalidAmountError',
+    'InvalidBigMapParameterError',
+    'InvalidBlockHashError',
+    'InvalidChainIdError',
+    'InvalidContractAddressError',
+    'InvalidDerivationPathError',
+    'InvalidFinalizeUnstakeAmountError',
+    'InvalidHexStringError',
+    'InvalidKeyError',
+    'InvalidKeyHashError',
+    'InvalidMessageError',
+    'InvalidOperationHashError',
+    'InvalidOperationKindError',
+    'InvalidProofError',
+    'InvalidPublicKeyError',
+    'InvalidSignatureError',
+    'InvalidStakingAddressError',
+    'InvalidViewParameterError',
+    'NetworkError',
+    'ParameterValidationError',
+    'PermissionDeniedError',
+    'ProhibitedActionError',
+    'PublicKeyNotFoundError',
+    'RpcError',
+    'TaquitoError',
+    'TezosToolkitConfigError',
+    'UnsupportedActionError',
+    'VERSION',
+    'ValidationResult',
+  ],
+  '@taquito/http-utils': [
+    'HttpBackend',
+    'HttpRequestFailed',
+    'HttpResponseError',
+    'HttpTimeoutError',
+    'STATUS_CODE',
+    'VERSION',
+    'classifyTransportError',
+  ],
+};
+
 export default async function ({ assert, load, mode }) {
   const core = await load('@taquito/core');
   const http = await load('@taquito/http-utils');
@@ -25,8 +71,11 @@ export default async function ({ assert, load, mode }) {
       require.resolve(`${name}/dist/lib/errors.js.map`),
       require.resolve(`${name}/dist/lib/errors.js`) + '.map'
     );
-    for (const name of Object.keys(commonjs)) {
-      assert.equal(loaded[name], commonjs[name], `Changed named export: ${name}`);
+    for (const exported of baselineNames[name]) {
+      assert.ok(Object.hasOwn(commonjs, exported), `${name} lost the ${exported} export`);
+    }
+    for (const exported of Object.keys(commonjs)) {
+      assert.equal(loaded[exported], commonjs[exported], `${name} changed the ${exported} export`);
     }
   }
   if (mode === 'import') {
