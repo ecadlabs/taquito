@@ -261,7 +261,6 @@ export const contractCodeSample = [
   },
 ];
 
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 export const storageType = contractCodeSample.find((x) => x.prim === 'storage')!.args[0] as any;
 
 export const contractStorage = {

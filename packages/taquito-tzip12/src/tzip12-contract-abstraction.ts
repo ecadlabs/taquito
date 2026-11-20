@@ -154,12 +154,10 @@ export class Tzip12ContractAbstraction {
     for (const keyTokenMetadata of metadataTokenMap.keys()) {
       if (keyTokenMetadata === 'decimals') {
         Object.assign(tokenMetadataDecoded, {
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           [keyTokenMetadata]: Number(bytesToString(metadataTokenMap.get(keyTokenMetadata)!)),
         });
       } else if (!(keyTokenMetadata === '')) {
         Object.assign(tokenMetadataDecoded, {
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           [keyTokenMetadata]: bytesToString(metadataTokenMap.get(keyTokenMetadata)!),
         });
       }

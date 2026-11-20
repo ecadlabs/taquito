@@ -13933,7 +13933,6 @@ export const script24 = {
       }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 export const storage24 = script24.script.code.find(
     x => x.prim === 'storage'
   )!.args[0] as any;
