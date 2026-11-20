@@ -442,6 +442,7 @@ export class HttpBackend {
         readingResponseBody = true;
         return await readResponse(response);
       } catch (e: unknown) {
+        clearTimeout(t);
         if (signal?.aborted) throw e;
         // Preserve the public JSON parse error; it is not a transport failure.
         if (e instanceof SyntaxError) throw e;

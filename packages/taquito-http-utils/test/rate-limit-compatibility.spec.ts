@@ -138,6 +138,35 @@ it.each(['gateway-status', 'transport'] as const)(
   }
 );
 
+it.each(['gateway-status', 'transport'] as const)(
+  'ends the failed %s attempt deadline before waiting to retry',
+  async (failure) => {
+    vi.stubEnv('TAQUITO_HTTP_RETRY_BASE_MS', '10000');
+    const fetch = vi.fn<typeof globalThis.fetch>();
+    if (failure === 'gateway-status') {
+      fetch.mockResolvedValueOnce(new Response('unavailable', { status: 503 }));
+    } else {
+      fetch.mockRejectedValueOnce(new TypeError('fetch failed'));
+    }
+    fetch.mockResolvedValueOnce(Response.json('ok'));
+    vi.stubGlobal('fetch', fetch);
+    const { HttpBackend } = await import('../src/taquito-http-utils');
+    const pending = new HttpBackend(5).createRequest({
+      url: 'https://rpc.example/chains/main/blocks/head/hash',
+    });
+    await vi.advanceTimersByTimeAsync(10);
+    const callsDuringBackoff = fetch.mock.calls.length;
+    const timersDuringBackoff = vi.getTimerCount();
+    await vi.runAllTimersAsync();
+    await expect(pending).resolves.toBe('ok');
+    expect(callsDuringBackoff).toBe(1);
+    expect(timersDuringBackoff).toBe(1);
+    expect(fetch.mock.calls[0][1]?.signal?.aborted).toBe(false);
+    expect(fetch).toHaveBeenCalledTimes(2);
+    expect(vi.getTimerCount()).toBe(0);
+  }
+);
+
 it('applies the same GET rate-limit policy to bounded binary requests', async () => {
   const fetch = vi
     .fn<typeof globalThis.fetch>()
