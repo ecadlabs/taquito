@@ -9,8 +9,7 @@ const BigNumber = BigNumberJs;
 import { codeViewsTopLevel } from './data/contract_views_top_level';
 import { knownBigMapContract } from './data/knownBigMapContract';
 import { knownContract } from './data/knownContract';
-import * as fs from 'fs/promises';
-import { join } from 'node:path';
+import { publishKnownContractFixtures } from './known-contract-publication';
 import { ticketsSendTz } from './data/code_with_ticket_transfer';
 
 // before running the test with secret key make sure tz2RqxsYQyFuP9amsmrr25x9bUcBMWXGvjuD is funded
@@ -25,7 +24,6 @@ const deployments = CONFIGS().map(async ({ lib: tezos, setup, networkName }) => 
 
   const originate = async (params: OriginateParams): Promise<string> => {
     const operation = await tezos.contract.originate(params);
-    await operation.confirmation();
     return (await operation.contract()).address;
   };
 
@@ -38,14 +36,19 @@ const deployments = CONFIGS().map(async ({ lib: tezos, setup, networkName }) => 
       address = await originate(params);
     } catch (error) {
       if (!(error instanceof Error) || error.name !== 'ForgingMismatchError') {
-        throw Object.assign(new Error(`Failed to deploy ${contractName} on ${networkName}`), { cause: error });
+        throw Object.assign(new Error(`Failed to deploy ${contractName} on ${networkName}`), {
+          cause: error,
+        });
       }
       console.log(`Composite forger failed for ${contractName}. Retrying with the RPC forger.`);
       tezos.setForgerProvider(tezos.getFactory(RpcForger)());
       try {
         address = await originate(params);
       } catch (retryError) {
-        throw Object.assign(new Error(`Failed to deploy ${contractName} on ${networkName} with the RPC forger`), { cause: retryError });
+        throw Object.assign(
+          new Error(`Failed to deploy ${contractName} on ${networkName} with the RPC forger`),
+          { cause: retryError }
+        );
       }
     }
     addresses.push({ name: contractName, address });
@@ -71,13 +74,16 @@ const deployments = CONFIGS().map(async ({ lib: tezos, setup, networkName }) => 
           ],
         },
       ],
-    }
+    },
   });
 
   // KnownBigMapContract
   const allowancesBigMap = new MichelsonMap();
   const ledgerBigMap = new MichelsonMap();
-  ledgerBigMap.set('tz1btkXVkVFWLgXa66sbRJa8eeUSwvQFX4kP', { allowances: allowancesBigMap, balance: '100' });
+  ledgerBigMap.set('tz1btkXVkVFWLgXa66sbRJa8eeUSwvQFX4kP', {
+    allowances: allowancesBigMap,
+    balance: '100',
+  });
   await originateKnownContract('bigMapContract', {
     code: knownBigMapContract,
     storage: {
@@ -85,7 +91,7 @@ const deployments = CONFIGS().map(async ({ lib: tezos, setup, networkName }) => 
       owner: 'tz1gvF4cD2dDtqitL3ZTraggSR1Mju2BKFEM',
       paused: true,
       totalSupply: '100',
-    }
+    },
   });
 
   // KnownTzip12BigMapOffChainContract
@@ -146,25 +152,25 @@ const deployments = CONFIGS().map(async ({ lib: tezos, setup, networkName }) => 
       operators,
       paused: false,
       tokens,
-    }
+    },
   });
 
   // KnownSaplingContract
   await originateKnownContract('saplingContract', {
     code: singleSaplingStateContractJProtocol(),
-    init: '{}'
+    init: '{}',
   });
 
   // knownOnChainViewContract
   await originateKnownContract('onChainViewContractAddress', {
     code: codeViewsTopLevel,
-    storage: 2
+    storage: 2,
   });
 
   // knownTicketContract
   await originateKnownContract('ticketContract', {
     code: ticketsSendTz,
-    storage: null
+    storage: null,
   });
 
   const suffix = networkName.charAt(0) + networkName.slice(1).toLowerCase();
@@ -176,22 +182,18 @@ const deployments = CONFIGS().map(async ({ lib: tezos, setup, networkName }) => 
     '',
   ].join('\n');
 
-  const stagingDirectory = await fs.mkdtemp(`${outputPath}.tmp-`);
-  try {
-    const stagingFile = join(stagingDirectory, 'known-contracts.ts');
-    await fs.writeFile(stagingFile, output);
-    await fs.rename(stagingFile, outputPath);
-  } finally {
-    await fs.rm(stagingDirectory, { recursive: true, force: true });
-  }
+  return {
+    outputPath,
+    output,
+    async reportPublished() {
+      for (const { name, address } of addresses) {
+        const capitalized = name.charAt(0).toUpperCase() + name.slice(1);
+        console.log(`::set-output name=known${capitalized}Address::${address}\n`);
+      }
 
-  for (const { name, address } of addresses) {
-    const capitalized = name.charAt(0).toUpperCase() + name.slice(1);
-    console.log(`::set-output name=known${capitalized}Address::${address}\n`);
-  }
-
-  const keyFinalBalance = await tezos.tz.getBalance(keyPkh);
-  console.log(`
+      try {
+        const keyFinalBalance = await tezos.tz.getBalance(keyPkh);
+        console.log(`
 ################################################################################
 Public Key Hash : ${keyPkh}
 Initial Balance : ${keyInitialBalance.dividedBy(MUTEZ_UNIT)} XTZ
@@ -199,13 +201,14 @@ Final Balance   : ${keyFinalBalance.dividedBy(MUTEZ_UNIT)} XTZ
 
 Total XTZ Spent : ${keyInitialBalance.minus(keyFinalBalance).dividedBy(MUTEZ_UNIT)} XTZ
 `);
+      } catch (error) {
+        console.warn(`Could not read the final balance on ${networkName}`, error);
+      }
+    },
+  };
 });
 
-void Promise.allSettled(deployments).then((results) => {
-  for (const result of results) {
-    if (result.status === 'rejected') {
-      console.error(result.reason);
-      process.exitCode = 1;
-    }
-  }
+void publishKnownContractFixtures(deployments).catch((error: unknown) => {
+  console.error(error);
+  process.exitCode = 1;
 });
