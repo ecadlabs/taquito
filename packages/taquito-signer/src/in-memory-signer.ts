@@ -177,7 +177,7 @@ export class InMemorySigner implements Signer {
       rawSignature,
       sig: signature,
       prefixSig: prefixedSignature,
-    } = await this.#key.sign(watermarkMsg);
+    } = this.#key.sign(watermarkMsg);
     // Variable-length operation signatures carry the signature-prefix marker
     // and scheme tag before the complete signature payload (Octez signature_v3).
     const signatureTag =

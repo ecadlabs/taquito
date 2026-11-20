@@ -5,6 +5,34 @@ import { verifySignature } from '@taquito/utils';
 import vectors from './fixtures/mnemonic-vectors';
 
 describe('derived mnemonic key compatibility', () => {
+  describe.each([
+    {
+      curve: 'secp256k1',
+      path: "44'/1729'/146'",
+      leafSecret: 'spsk1Rhstnie1bQbuABeYyEDtUszTsysxz5daYBoxfuZdGApwiLU9S',
+      legacyChildAddress: 'tz29aU9dN2H1twhvoGvCHVsbzo3VhYaMAbzY',
+    },
+    {
+      curve: 'p256',
+      path: "44'/1729'/152'",
+      leafSecret: 'p2sk2LqVRndL9rPP2kxLtRVArQ7VNQD2hR2dwxXXhjHsyvTdBpNdAN',
+      legacyChildAddress: 'tz3iQVCtgakqm4UATCQn4v8pZPr9R2YKU34D',
+    },
+  ] as const)('$curve leading-zero scalar', ({ curve, path, leafSecret, legacyChildAddress }) => {
+    const mnemonic = vectors[0].params.mnemonic;
+
+    it('exports the complete final scalar', () => {
+      expect(deriveKeyFromMnemonic({ mnemonic, curve, derivationPath: path }).secretKey).toBe(
+        leafSecret
+      );
+    });
+
+    it('recovers the existing hardened child address', async () => {
+      const signer = InMemorySigner.fromMnemonic({ mnemonic, curve, derivationPath: path + "/0'" });
+      expect(await signer.publicKeyHash()).toBe(legacyChildAddress);
+    });
+  });
+
   it.each(vectors)(
     'matches independent and existing signer values for $label',
     async ({ params, expected }) => {
