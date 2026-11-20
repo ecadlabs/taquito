@@ -22,7 +22,7 @@ import {
   smartRollupMessageEncoder,
   smartRollupMessageDecoder,
 } from '../src/codec';
-import { OpKind } from '@taquito/rpc';
+import { OpKind, PvmKind } from '@taquito/rpc';
 import type { ForgeParams } from '../src/interface';
 import {
   localForger,
@@ -30,6 +30,7 @@ import {
   Uint8ArrayConsumer,
 } from '../src/taquito-local-forging';
 import {
+  publicKeyHashDecoder,
   publicKeyHashEncoder,
   publicKeyHashesEncoder,
   publicKeyHashesDecoder,
@@ -149,7 +150,7 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
     expect(empty).toEqual([]);
     const tz = publicKeyHashesDecoder(
       Uint8ArrayConsumer.fromHexString(
-        'ff0000005400c9fc72e8491bd2973e196f04ec6918ad5bcee22d012ffebbf1560632ca767bc960ccdb84669d284c2c026fde46af0356a0476dae4e4600172dc9309b3aa4'
+        'ff0000003f00c9fc72e8491bd2973e196f04ec6918ad5bcee22d012ffebbf1560632ca767bc960ccdb84669d284c2c026fde46af0356a0476dae4e4600172dc9309b3aa4'
       )
     );
     expect(tz).toEqual([
@@ -157,7 +158,45 @@ describe('Tests for Entrypoint functions and for encode and decoder error messag
       'tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD',
       'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5',
     ]);
-    //
+  });
+
+  test('reports a truncated whitelist even when it ends after a complete hash', () => {
+    const hash = publicKeyHashEncoder('tz1e42w8ZaGAbM3gucbBy8iRypdbnqUj7oWY');
+    const input = Uint8ArrayConsumer.fromHexString('ff0000002a' + hash);
+    expect(() => publicKeyHashesDecoder(input)).toThrow(OperationDecodingError);
+  });
+
+  test('rejects a hash that extends past the declared whitelist boundary', () => {
+    const hash = publicKeyHashEncoder('tz1e42w8ZaGAbM3gucbBy8iRypdbnqUj7oWY');
+    const input = Uint8ArrayConsumer.fromHexString('ff00000014' + hash);
+    expect(() => publicKeyHashesDecoder(input)).toThrow(OperationDecodingError);
+  });
+
+  test('rejects an unknown public key hash tag', () => {
+    const input = Uint8ArrayConsumer.fromHexString('ff' + '00'.repeat(20));
+    expect(() => publicKeyHashDecoder(input)).toThrow(OperationDecodingError);
+  });
+
+  test('round-trips both rollup originations when the first whitelist is present', async () => {
+    const source = 'tz1e42w8ZaGAbM3gucbBy8iRypdbnqUj7oWY';
+    const origination = {
+      kind: OpKind.SMART_ROLLUP_ORIGINATE,
+      source,
+      fee: '0',
+      counter: '0',
+      gas_limit: '0',
+      storage_limit: '0',
+      pvm_kind: PvmKind.WASM2,
+      kernel: '00',
+      parameters_ty: { prim: 'bytes' },
+      whitelist: [source],
+    } satisfies ForgeParams['contents'][number];
+    const group = {
+      branch: 'BLxGBu48ybnWvZoaVLyXV4XVnhdeDc9V2NcB9wsegQniza6mxvX',
+      contents: [origination, { ...origination, counter: '1', whitelist: [] }],
+    };
+    const bytes = await localForger.forge(group);
+    expect(await localForger.parse(bytes)).toEqual(group);
   });
 
   test(`Verify publicKeyEncoder`, async () => {

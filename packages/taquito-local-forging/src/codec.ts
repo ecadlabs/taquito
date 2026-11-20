@@ -20,6 +20,7 @@ import {
   InvalidSmartRollupCommitmentHashError,
   InvalidSmartRollupAddressError,
   InvalidDalCommitmentError,
+  OperationDecodingError,
 } from './errors';
 import BigNumber from 'bignumber.js';
 import { entrypointMapping, entrypointMappingReverse, ENTRYPOINT_MAX_LENGTH } from './constants';
@@ -55,7 +56,7 @@ export const prefixDecoder = (pre: PrefixV2) => (str: Uint8ArrayConsumer) => {
 
 export const tz1Decoder = prefixDecoder(PrefixV2.Ed25519PublicKeyHash);
 export const branchDecoder = prefixDecoder(PrefixV2.BlockHash);
-export const publicKeyHashDecoder = (val: Uint8ArrayConsumer) => {
+export const publicKeyHashDecoder = (val: Uint8ArrayConsumer): string => {
   const prefix = val.consume(1);
 
   if (prefix[0] === 0x00) {
@@ -69,6 +70,7 @@ export const publicKeyHashDecoder = (val: Uint8ArrayConsumer) => {
   } else if (prefix[0] === 0x04) {
     return prefixDecoder(PrefixV2.MLDSA44PublicKeyHash)(val);
   }
+  throw new OperationDecodingError(`Unknown public key hash tag: ${prefix[0]}`);
 };
 
 export const publicKeyHashesDecoder = (val: Uint8ArrayConsumer) => {
@@ -76,9 +78,9 @@ export const publicKeyHashesDecoder = (val: Uint8ArrayConsumer) => {
     return;
   }
   const publicKeyHashes = [];
-  val.consume(4);
-  while (val.length() > 0) {
-    publicKeyHashes.push(publicKeyHashDecoder(val));
+  const whitelist = new Uint8ArrayConsumer(extractRequiredLen(val));
+  while (whitelist.length() > 0) {
+    publicKeyHashes.push(publicKeyHashDecoder(whitelist));
   }
   return publicKeyHashes;
 };
