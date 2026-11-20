@@ -51,6 +51,10 @@ it.each([
   { header: '2026-10-25', delay: 100 },
   { header: 'Sun, 31 Feb 2026 00:00:02 GMT', delay: 100 },
   { header: 'Mon, 25 Oct 2026 00:00:02 GMT', delay: 100 },
+  { header: 'Sun, 25 Oct 2026 00:00:60 GMT', delay: 100 },
+  { header: 'Sunday, 25-Oct-26 00:00:60 GMT', delay: 100 },
+  { header: 'Sun Oct 25 00:00:60 2026', delay: 100 },
+  { header: 'Sun, 25 Oct 2026 23:58:60 GMT', delay: 100 },
 ])('uses the bounded delay for $header', async ({ header, delay }) => {
   vi.spyOn(Math, 'random').mockReturnValue(0);
   const fetch = vi
@@ -174,6 +178,7 @@ it.each([
   { now: '2026-11-05T00:00:00Z', header: 'Thu Nov 05 00:00:02 2026', delay: 2000 },
   { now: '2026-12-31T23:59:58Z', header: 'Thu, 31 Dec 2026 23:59:60 GMT', delay: 2000 },
   { now: '2026-10-25T00:00:00Z', header: 'Monday, 25-Oct-76 00:00:01 GMT', delay: 0 },
+  { now: '2099-12-31T23:59:58Z', header: 'Friday, 01-Jan-00 00:00:00 GMT', delay: 2000 },
 ])('accepts valid legacy or leap-second date $header', async ({ now, header, delay }) => {
   vi.setSystemTime(new Date(now));
   const fetch = vi
@@ -187,7 +192,11 @@ it.each([
   const checked = expect(
     new HttpBackend().createRequest({ url: 'https://rpc.example/read' })
   ).resolves.toBe('ok');
-  await vi.advanceTimersByTimeAsync(delay);
+  if (delay > 0) {
+    await vi.advanceTimersByTimeAsync(delay - 1);
+    expect(fetch).toHaveBeenCalledTimes(1);
+  }
+  await vi.advanceTimersByTimeAsync(delay > 0 ? 1 : 0);
   await checked;
   expect(fetch).toHaveBeenCalledTimes(2);
 });

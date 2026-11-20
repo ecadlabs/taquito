@@ -148,8 +148,8 @@ function retryAfterDelay(value: string | null): number | undefined {
   const date = new Date(0);
   if (rfc850) {
     const cutoff = new Date(Date.now());
-    year += Math.floor(cutoff.getUTCFullYear() / 100) * 100;
     cutoff.setUTCFullYear(cutoff.getUTCFullYear() + 50);
+    year += Math.floor(cutoff.getUTCFullYear() / 100) * 100;
     date.setUTCFullYear(year, month, day);
     date.setUTCHours(hour, minute, Math.min(second, 59), 0);
     if (date.getTime() > cutoff.getTime()) year -= 100;
@@ -159,6 +159,7 @@ function retryAfterDelay(value: string | null): number | undefined {
   const weekday = match[1].slice(0, 3);
   if (
     second > 60 ||
+    (second === 60 && (hour !== 23 || minute !== 59)) ||
     date.getUTCFullYear() !== year ||
     date.getUTCMonth() !== month ||
     date.getUTCDate() !== day ||
