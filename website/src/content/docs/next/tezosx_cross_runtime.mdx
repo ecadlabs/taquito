@@ -77,7 +77,9 @@ The implementation adapts AurelienFT's Apache-licensed Octez.js contributions #1
 
 Horus can create an alias on-chain before the first cross-runtime call. Use the RPC and
 sender for the runtime **where the alias will be created**. Both builders prepare unsigned
-requests and set the transfer value to zero.
+requests and set the transfer value to zero. The sender still pays fees. First-time Michelson
+alias creation can also incur a storage burn. EVM precompiles and the Michelson gateway are
+ineligible as source accounts.
 
 ### Create an EVM alias for a Michelson account
 

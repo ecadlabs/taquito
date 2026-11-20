@@ -4,12 +4,7 @@ import {
   ParameterValidationError,
   ValidationResult,
 } from '@taquito/core';
-import {
-  getPublicKeyHashFromPublicKey,
-  validateContractAddress,
-  validateKeyHash,
-  validatePublicKey,
-} from '@taquito/utils';
+import { getPkhfromPk, validateContractAddress, validateKeyHash } from '@taquito/utils';
 import { encodeFunctionData, isAddress, keccak256 } from 'viem';
 import { NAC_GATEWAY, NAC_PRECOMPILE_ADDRESS } from './constants';
 import { InvalidEvmAddressError } from './errors';
@@ -56,26 +51,43 @@ export function buildEvmAliasMaterialization(
     throw new ParameterValidationError('Expected a Michelson alias source');
   }
 
-  if (source.kind === 'implicit') {
-    const addressResult = validateKeyHash(source.address);
+  const { kind, address, publicKey } = source;
+  if (typeof address !== 'string') {
+    throw new ParameterValidationError('Expected a Tezos address string');
+  }
+
+  if (kind === 'implicit') {
+    const addressResult =
+      address.length === 36 ? validateKeyHash(address) : ValidationResult.INVALID_LENGTH;
     if (addressResult !== ValidationResult.VALID) {
-      throw new InvalidAddressError(source.address, addressResult);
+      throw new InvalidAddressError(address, addressResult);
     }
-    if (!/^tz[1-4]/.test(source.address)) {
-      throw new InvalidAddressError(source.address, ValidationResult.PREFIX_NOT_ALLOWED);
+    if (!/^tz[1-4]/.test(address)) {
+      throw new InvalidAddressError(address, ValidationResult.PREFIX_NOT_ALLOWED);
     }
-    if (validatePublicKey(source.publicKey) !== ValidationResult.VALID) {
+    // 76 characters is the largest supported public key encoding (BLpk).
+    if (typeof publicKey !== 'string' || publicKey.length > 76) {
       throw new ParameterValidationError('Expected a valid Tezos public key');
     }
-    if (getPublicKeyHashFromPublicKey(source.publicKey) !== source.address) {
+    let publicKeyHash: string;
+    try {
+      publicKeyHash = getPkhfromPk(publicKey);
+    } catch (error) {
+      if (error instanceof ParameterValidationError) {
+        throw new ParameterValidationError('Expected a valid Tezos public key', error.result);
+      }
+      throw error;
+    }
+    if (publicKeyHash !== address) {
       throw new ParameterValidationError('Public key does not match the Tezos address');
     }
-  } else if (source.kind === 'contract') {
-    const result = validateContractAddress(source.address);
+  } else if (kind === 'contract') {
+    const result =
+      address.length === 36 ? validateContractAddress(address) : ValidationResult.INVALID_LENGTH;
     if (result !== ValidationResult.VALID) {
-      throw new InvalidContractAddressError(source.address, result);
+      throw new InvalidContractAddressError(address, result);
     }
-    if (source.publicKey !== undefined) {
+    if (publicKey !== undefined) {
       throw new ParameterValidationError('A Michelson contract cannot have a public key');
     }
   } else {
@@ -88,7 +100,7 @@ export function buildEvmAliasMaterialization(
     data: encodeFunctionData({
       abi: MATERIALIZE_ALIAS_ABI,
       functionName: 'materializeAlias',
-      args: ['tezos', source.address, source.publicKey ?? ''],
+      args: ['tezos', address, publicKey ?? ''],
     }),
   };
 }
@@ -106,24 +118,25 @@ export function buildTezosAliasMaterialization(source: EvmAliasSource): GatewayT
   if (!source || typeof source !== 'object') {
     throw new ParameterValidationError('Expected an EVM alias source');
   }
-  if (typeof source.address !== 'string' || !isAddress(source.address)) {
-    throw new InvalidEvmAddressError(source.address);
+  const { address: inputAddress, publicKey } = source;
+  if (typeof inputAddress !== 'string') {
+    throw new ParameterValidationError('Expected an EVM address string');
   }
-  const address = source.address.toLowerCase();
+  if (inputAddress.length !== 42 || !isAddress(inputAddress)) {
+    throw new InvalidEvmAddressError(inputAddress);
+  }
+  const address = inputAddress.toLowerCase();
   let key: MichelineExpression = { prim: 'None' };
-  if (source.publicKey !== undefined) {
-    if (
-      typeof source.publicKey !== 'string' ||
-      !/^(?:0x)?(?:04)?[0-9a-fA-F]{128}$/.test(source.publicKey)
-    ) {
+  if (publicKey !== undefined) {
+    if (typeof publicKey !== 'string' || !/^(?:0x)?(?:04)?[0-9a-fA-F]{128}$/.test(publicKey)) {
       throw new ParameterValidationError('Expected a raw or uncompressed EVM public key');
     }
-    const digits = source.publicKey.replace(/^0x/, '');
+    const digits = publicKey.replace(/^0x/, '');
     const rawKey = digits.length === 130 ? digits.slice(2) : digits;
     if (`0x${keccak256(`0x${rawKey}`).slice(-40)}` !== address) {
       throw new ParameterValidationError('Public key does not match the EVM address');
     }
-    key = { prim: 'Some', args: [{ string: source.publicKey }] };
+    key = { prim: 'Some', args: [{ string: publicKey }] };
   }
 
   return {

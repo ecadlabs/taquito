@@ -84,13 +84,15 @@ const tezosEstimate = await Tezos.estimate.transfer(tezosTransfer);
 Send `evmTransaction` through the EVM gateway to create a Michelson account's EVM alias.
 Pass `tezosTransfer` to `Tezos.wallet.transfer` or `Tezos.contract.transfer` on the Etherlink
 Michelson RPC to create an EVM account's KT1 alias. Both builders set the value to zero.
+The sender still pays fees. First-time Michelson alias creation can also incur a storage burn.
 
 An implicit Tezos account (`tz1` through `tz4`) requires its matching public key. For a native
 Michelson contract, use `kind: 'contract'` and omit the key. Pass a lowercase or EIP-55-checksummed
 `evmAccountAddress` and its matching `evmPublicKey`. You can omit the key if the kernel can
 establish that the account is native from its state. An EOA without that evidence needs its
 matching raw or uncompressed secp256k1 public key. Existing aliases are left untouched by the
-gateway. Use a viem `publicClient` and an `evmSender` for the target EVM network. Configure
+gateway. EVM precompiles and the Michelson gateway are ineligible as source accounts.
+Use a viem `publicClient` and an `evmSender` for the target EVM network. Configure
 `Tezos` with the target Michelson RPC and the intended Michelson source before estimating.
 
 ## Amounts and verification limits
