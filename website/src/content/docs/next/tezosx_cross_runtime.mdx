@@ -4,7 +4,7 @@ title: Tezos X call preparation (Beta)
 
 **Beta. The public API is subject to change.**
 
-`@taquito/tezosx` prepares unsigned NAC calls for compatible Tezos X kernels. It is optional and is not imported by `@taquito/utils` or the toolkit. The builders follow kernel revision `fb064e9f6a13c0ebd7bb1b7ec6727274e2dc23af`.
+`@taquito/tezosx` prepares unsigned NAC calls for compatible Tezos X kernels. It is optional and is not imported by `@taquito/utils` or the toolkit. The NAC call builders follow kernel revision `fb064e9f6a13c0ebd7bb1b7ec6727274e2dc23af`.
 
 ## Try the unreleased package
 
@@ -72,3 +72,50 @@ Defaults identify the pinned kernel, not every network. Check the target deploym
 ABI fixtures use eth-abi 5.2.0 and PyCryptodome Keccak, with raw Micheline and optimized addresses checked against Octez 25.3. The UTF-8 bytes fixture uses Octez 25.2 and Foundry Cast. Gateway parameters containing contract-valued callbacks are compared as raw Micheline, not claimed to be protocol PACK fixtures.
 
 The implementation adapts AurelienFT's Apache-licensed Octez.js contributions #123 through #126. Source and commit attribution is retained in NOTICE and commit trailers.
+
+## Materialize an alias on Horus
+
+Horus can create an alias on-chain before the first cross-runtime call. Use the RPC and
+sender for the runtime **where the alias will be created**. Both builders prepare unsigned
+requests and set the transfer value to zero. The sender still pays fees. First-time Michelson
+alias creation can also incur a storage burn. EVM precompiles and the Michelson gateway are
+ineligible as source accounts.
+
+### Create an EVM alias for a Michelson account
+
+```typescript
+import { buildEvmAliasMaterialization } from '@taquito/tezosx';
+
+const request = buildEvmAliasMaterialization({
+  kind: 'implicit',
+  address: tezosAccountAddress,
+  publicKey: tezosPublicKey,
+});
+
+const gas = await publicClient.estimateGas({ account: evmSender, ...request });
+const unsignedTransaction = { ...request, gas };
+```
+
+Use a viem client on the target Etherlink EVM RPC. An implicit `tz1` through `tz4` account
+requires its matching Tezos public key. For a native Michelson contract, use `kind: 'contract'`
+with its `KT1` address and omit `publicKey`.
+
+### Create a Michelson alias for an EVM account
+
+```typescript
+import { buildTezosAliasMaterialization } from '@taquito/tezosx';
+
+const transfer = buildTezosAliasMaterialization({
+  address: evmAccountAddress,
+  publicKey: evmPublicKey,
+});
+
+const estimate = await Tezos.estimate.transfer(transfer);
+```
+
+Configure `Tezos` with the target Michelson RPC and a signer for the Michelson sender before
+estimating. The EVM account address can be lowercase or EIP-55 checksummed. For an EOA whose
+native status is unknown to the gateway, supply the matching raw or uncompressed secp256k1
+public key in hex. You can omit the key when the gateway can establish that the account is native
+from chain state. The transfer parameters work with `Tezos.contract.transfer` and
+`Tezos.wallet.transfer`.
