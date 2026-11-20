@@ -201,8 +201,10 @@ describe('Forge and parse operations default protocol', () => {
     it(`Verify getCodec for CODEC.OP_DELEGATION`, async () => {
       const codec = CODEC.OP_DELEGATION;
       const myGetCodec = getCodec(codec, ProtocolsHash.PtKathman);
-      const consumer = myGetCodec.decoder(hexToParse);
+      const delegationBytes = '00c9fc72e8491bd2973e196f04ec6918ad5bcee22d72cbea904d674600';
+      const consumer = myGetCodec.decoder(delegationBytes);
       expect(consumer).toEqual({
+        source: 'tz1e42w8ZaGAbM3gucbBy8iRypdbnqUj7oWY',
         counter: '161756491',
         fee: '114',
         gas_limit: '103',
