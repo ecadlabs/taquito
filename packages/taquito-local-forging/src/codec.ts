@@ -98,11 +98,11 @@ export const proposalDecoder = (proposal: Uint8ArrayConsumer): string => {
   return prefixDecoder(PrefixV2.ProtocolHash)(proposal);
 };
 
-export const proposalsDecoder = (proposal: Uint8ArrayConsumer): string[] => {
+export const proposalsDecoder = (value: Uint8ArrayConsumer): string[] => {
+  const payload = new Uint8ArrayConsumer(extractRequiredLen(value));
   const proposals = [];
-  proposal.consume(4);
-  while (proposal.length() > 0) {
-    proposals.push(proposalDecoder(proposal));
+  while (payload.length() > 0) {
+    proposals.push(proposalDecoder(payload));
   }
   return proposals;
 };
@@ -500,12 +500,11 @@ const signatureV1Encoder = (val: string) => {
 };
 
 const signatureV1Decoder = (val: Uint8ArrayConsumer) => {
-  val.consume(4);
-  if (val.length().toString() === '96') {
-    return prefixDecoder(PrefixV2.BLS12_381Signature)(val);
-  } else {
+  const proof = extractRequiredLen(val);
+  if (proof.length !== payloadLength[PrefixV2.BLS12_381Signature]) {
     throw new ProhibitedActionError('we only support decoding of BLSIG signatures');
   }
+  return b58Encode(proof, PrefixV2.BLS12_381Signature);
 };
 
 export const signatureProofEncoder = (val: string) => {
