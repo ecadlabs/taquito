@@ -10,6 +10,30 @@ title: Tezos X call preparation (Beta)
 
 This package is not yet part of a published Taquito release. Check out a revision that includes the package, then run `npm ci` and `npm run build` at the repository root. The examples use the built workspace package. Check that the target network runs a compatible kernel before using the builders.
 
+## Etherlink 8.0 (Horus) migration
+
+Horus changes the EVM aliases of `tz1`, `tz2`, and `tz3` accounts. If your app stores or displays
+these aliases, recompute them when the target network activates Horus. The alias identifies the
+Michelson caller on the EVM interface. Any allowance or other contract state keyed by the old
+address still belongs to that address. Already-materialized legacy aliases continue forwarding
+native tez. ERC-20 balances and NFTs held at those addresses do not move to the new aliases.
+
+On the target network's EVM JSON-RPC endpoint, call `tez_getTezosEthereumAddress` with the Tezos
+address as its only parameter. Use `tez_getEthereumTezosAddress` for the other direction. These
+methods derive addresses. For a cross-runtime gateway `resolveAddress` query, `classified: true`
+with `res: 0` means recorded and `res: 1` means derived. With `classified: false`, the input could
+not be classified. Ignore its `res` value. If you cache aliases, include the target network and
+derivation version in the cache key.
+
+Refresh cached gas estimates after the upgrade. The Michelson interface refunds the fee for
+unused gas and reports common operation errors with Tezos L1 error IDs and fields. Matches on the
+old `tezlink_error` ID or on debug strings need updating. If your app decodes EVM reverts from
+cross-runtime calls, a Michelson out-of-gas failure now carries status `429` and body `OOG`.
+
+See the [Horus upgrade proposal](https://forum.tezosagora.org/t/announcing-etherlink-8-0-horus-a-new-etherlink-kernel-upgrade-proposal/7241),
+the [Etherlink alias RPCs](https://docs.etherlink.com/michelson/developing/rpc-reference/#alias-rpcs),
+and the [Tezos X Previewnet dashboard](https://previewnet.tezosx.nomadic-labs.com/).
+
 ## Michelson to EVM
 
 ```typescript
