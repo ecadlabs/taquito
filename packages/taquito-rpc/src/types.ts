@@ -2410,7 +2410,7 @@ export interface ConstantsResponseProto015 extends Omit<
   sc_rollup_number_of_sections_in_dissection: number;
   sc_rollup_timeout_period_in_blocks: number;
   sc_rollup_max_number_of_cemented_commitments: number;
-  zk_rollup_enable: number;
+  zk_rollup_enable: boolean;
   zk_rollup_origination_size: number;
   zk_rollup_min_pending_to_process: number;
 }
