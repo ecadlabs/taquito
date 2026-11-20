@@ -688,6 +688,20 @@ export class BeaconWallet implements WalletProvider {
     return this.client.subscribeToMessages(listener);
   }
 
+  /**
+   * Ask the wallet to sign bytes through a Beacon sign-payload request.
+   *
+   * @param bytes Hex bytes to sign, without the watermark
+   * @param watermark `03` signs an operation (`SigningType.OPERATION`), `05` signs Micheline data
+   * (`SigningType.MICHELINE`). The watermark is prepended to the payload.
+   * @returns The wallet's signature
+   * @throws {@link UnsupportedActionError} without a watermark. Use `client.requestSignPayload` with
+   * `SigningType.RAW` for raw payloads if the wallet supports them.
+   * @throws `Error` for any other watermark
+   * @example
+   * const { bytes } = packDataBytes({ string: 'sign in to example.com' }, { prim: 'string' });
+   * const signature = await wallet.sign(bytes.slice(2), new Uint8Array([5]));
+   */
   async sign(bytes: string, watermark?: Uint8Array) {
     let bb = hex2buf(bytes);
     if (typeof watermark !== 'undefined') {
@@ -695,9 +709,9 @@ export class BeaconWallet implements WalletProvider {
     }
     const watermarkedBytes = buf2hex(bb);
     const signingType = this.getSigningType(watermark);
-    if (signingType !== SigningType.OPERATION) {
+    if (signingType !== SigningType.OPERATION && signingType !== SigningType.MICHELINE) {
       throw new UnsupportedActionError(
-        `Taquito Beacon Wallet currently only supports signing operations, not ${signingType}`
+        'Taquito Beacon Wallet signs operations (watermark 03) and Micheline data (watermark 05), not raw payloads'
       );
     }
     const { signature } = await this.client.requestSignPayload({
