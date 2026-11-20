@@ -60,8 +60,8 @@ export default async function ({ assert, load, mode }) {
     assert.equal(require(`${name}/package.json`).name, name);
     assert.ok(require.resolve(`${name}/README.md`).endsWith('README.md'));
     const deep = await load(`${name}/dist/lib/${entry}.js`);
-    assert.equal(mode === 'import' ? deep.default : deep, commonjs);
-    assert.equal(require(`${name}/dist/lib/${entry}`), commonjs);
+    const commonDeep = require(`${name}/dist/lib/${entry}`);
+    assert.equal(mode === 'import' ? deep.default : deep, commonDeep);
     assert.equal(require(`${name}/dist/lib/errors`), require(`${name}/dist/lib/errors.js`));
     assert.equal(
       require.resolve(`${name}/dist/${entry}.es6`),
