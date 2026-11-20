@@ -624,6 +624,29 @@ describe('MichelsonStorageView test', () => {
     expect(JSON.stringify(secondAdaptedCode)).toContain('NetSecondCall');
   });
 
+  it('checks a nested instruction once when scanning for forbidden instructions', () => {
+    let primitiveReads = 0;
+    const unit = {
+      get prim() {
+        primitiveReads++;
+        return 'UNIT';
+      },
+    };
+    const code = [{ prim: 'DIP', args: [[unit, { prim: 'DROP' }]] }];
+    const view = new MichelsonStorageView(
+      'test',
+      mockContractAbstraction,
+      mockRpcClient,
+      mockReadProvider,
+      { prim: 'unit' },
+      code
+    );
+
+    view['findForbiddenInstructionInViewCodeError'](code);
+
+    expect(primitiveReads).toBe(1);
+  });
+
   it('rejects forbidden instructions nested inside sequence array elements (e.g. DIP or IF branches)', async () => {
     const viewCode = [
       {
