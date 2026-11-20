@@ -91,5 +91,16 @@
     "ts-node": "^10.9.2",
     "typescript": "^6.0.3"
   },
-  "gitHead": "551e35aeff7d6dcde1c72284238c0ed3c3aae77e"
+  "gitHead": "551e35aeff7d6dcde1c72284238c0ed3c3aae77e",
+  "nx": {
+    "targets": {
+      "build": {
+        "inputs": [
+          "default",
+          "^default",
+          "{workspaceRoot}/scripts/cjs-esm-bridge.mjs"
+        ]
+      }
+    }
+  }
 }
