@@ -72,8 +72,8 @@
     ]
   },
   "dependencies": {
-    "@ecadlabs/beacon-dapp": "4.9.0-ecad-beta.6",
-    "@ecadlabs/beacon-types": "4.9.0-ecad-beta.6",
+    "@ecadlabs/beacon-dapp": "4.9.0-ecad-rc.0",
+    "@ecadlabs/beacon-types": "4.9.0-ecad-rc.0",
     "@types/chrome": "0.1.40",
     "@types/react": "^19.3.0",
     "@taquito/core": "^25.1.3",
@@ -81,8 +81,8 @@
     "@taquito/utils": "^25.1.3"
   },
   "devDependencies": {
-    "@ecadlabs/beacon-transport-postmessage": "4.9.0-ecad-beta.6",
-    "@ecadlabs/beacon-ui": "4.9.0-ecad-beta.6",
+    "@ecadlabs/beacon-transport-postmessage": "4.9.0-ecad-rc.0",
+    "@ecadlabs/beacon-ui": "4.9.0-ecad-rc.0",
     "@rollup/plugin-json": "^6.1.0",
     "@types/node": "^22.20.5",
     "eslint": "^10.15.0",
