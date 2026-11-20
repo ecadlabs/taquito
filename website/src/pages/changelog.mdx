@@ -6,6 +6,10 @@ layout: ../layouts/MarkdownLayout.astro
 ---
 # Unreleased
 
+### Michelson constructor validation
+
+- Typed packing and unpacking reject `Some`, `None`, `Left` and `Right` values with an incorrect number of arguments with `MichelsonTypeError`. Valid nested values retain their encoding.
+
 ### `@taquito/wallet-connect` removed
 
 - `@taquito/wallet-connect` is no longer part of Taquito and will not receive new releases. It remained in beta since its first release. Already published versions remain installable but are unmaintained. Use `@taquito/beacon-wallet` to connect to wallets, including over WalletConnect through Beacon's WalletConnect transport.

@@ -6,8 +6,6 @@ import {
   MichelsonInstructionID,
   MichelsonData,
   MichelsonType,
-  MichelsonDataOr,
-  MichelsonDataOption,
   MichelsonInstruction,
 } from './michelson-types';
 import {
@@ -824,13 +822,20 @@ function readExpr(rd: Reader, tf: ReadTransformFuncs): Expr {
   }
 }
 
-const isOrData = (e: Expr): e is MichelsonDataOr =>
-  'prim' in e && (e.prim === 'Left' || e.prim === 'Right');
-const isOptionData = (e: Expr): e is MichelsonDataOption =>
-  'prim' in e && (e.prim === 'Some' || e.prim === 'None');
+const isOrData = (e: Expr): e is Prim<'Left' | 'Right'> =>
+  'prim' in e &&
+  (e.prim === 'Left' || e.prim === 'Right') &&
+  Array.isArray(e.args) &&
+  e.args.length === 1;
+const isOptionData = (e: Expr): e is Prim<'Some' | 'None'> =>
+  'prim' in e &&
+  ((e.prim === 'Some' && Array.isArray(e.args) && e.args.length === 1) ||
+    (e.prim === 'None' &&
+      (e.args === undefined ||
+        (Array.isArray(e.args) && e.args.length === 0))));
 
 function* optionTransforms<T>(
-  data: MichelsonDataOption,
+  data: Prim<'Some' | 'None'>,
   type: MichelsonType<'option'>,
   transform: (child: MichelsonType) => T
 ): Generator<T> {
