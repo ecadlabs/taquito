@@ -4,12 +4,12 @@ These checks install built Taquito tarballs outside the workspace. They cover
 public big-map methods, core and HTTP-utils compatibility, and Beacon wallet
 imports and declarations during the module migration in
 [#3345](https://github.com/ecadlabs/taquito/issues/3345). The core and HTTP-utils
-pilot emits CommonJS modules, a native ESM bridge, declarations and a browser ESM
-bundle. These two packages no longer emit UMD.
+pilot emits a CommonJS bundle, a native ESM bridge, declarations and a browser ESM
+bundle for each package. These two packages no longer emit UMD.
 
 Browser bundlers resolve the `browser` condition before `require` or `import`, so
-they receive the ESM bundle even for CommonJS input. Node selects `dist/lib` for
-`require` and the native `.mjs` bridge for `import`. Both Node routes share the
+they receive the ESM bundle even for CommonJS input. Node selects the `.cjs` bundle
+for `require` and the native `.mjs` bridge for `import`. Both Node routes share the
 same exported instances.
 
 Removing these UMD files is breaking for script-tag consumers. The remaining
@@ -90,10 +90,10 @@ The Beacon wallet Node conditions currently use its existing UMD/CJS files. When
 those outputs are removed, update the Node targets together with the require
 targets. Browser imports retain the existing ESM routes.
 
-Core and HTTP-utils now point `main` and `require` at `dist/lib`, route native
-ESM imports through a generated `.mjs` bridge, and keep browser imports on their
-ESM bundles. The bridge preserves CommonJS default/named export identity. Their
-existing `dist` subpaths and package metadata remain accessible.
+Core and HTTP-utils point `main` and `require` at their `.cjs` bundles, route
+native ESM imports through a generated `.mjs` bridge, and keep browser imports
+on their ESM bundles. The bridge preserves CommonJS default and named export
+identity. The existing `dist/lib` modules and package metadata remain accessible.
 The installed fixtures cover extensionless CommonJS modules, the legacy `.es6`
 shorthand, explicit JavaScript/source-map paths and extensionless declaration
 imports under `dist/types`.
