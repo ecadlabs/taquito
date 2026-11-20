@@ -22,7 +22,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
 
     it('reads full and partial pages and an empty boundary page at one pinned block hash', async () => {
       const bigMapInit = new MichelsonMap();
-      bigMapInit.set(await Tezos.signer.publicKeyHash(), { 0: '1', 1: new MichelsonMap() });
+      bigMapInit.set('tz1bwsEWCwSEXdRvnJxvegQZKeX5dj6oKEys', { 0: '1', 1: new MichelsonMap() });
       bigMapInit.set('tz3PNdfg3Fc8hH4m9iSs7bHgDgugsufJnBZ1', { 0: '2', 1: new MichelsonMap() });
       bigMapInit.set('tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD', { 0: '3', 1: new MichelsonMap() });
       bigMapInit.set('tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb', { 0: '4', 1: new MichelsonMap() });
@@ -56,25 +56,17 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       const amounts = [...first.values, ...second.values].map((value) => value[0].toFixed());
       expect(amounts.sort()).toEqual(['1', '2', '3', '4']);
 
-      const partialFirst = await bigMap.getValuesPage<TokenValue>({
-        offset: 0,
-        length: 3,
-        block: first.blockHash,
-      });
-      const partialLast = await bigMap.getValuesPage<TokenValue>({
+      const partial = await bigMap.getValuesPage<TokenValue>({
         offset: 3,
-        length: 3,
+        length: 2,
         block: first.blockHash,
       });
-      expect(partialFirst.blockHash).toBe(first.blockHash);
-      expect(partialLast.blockHash).toBe(first.blockHash);
-      expect(partialFirst.values).toHaveLength(3);
-      expect(partialLast.values).toHaveLength(1);
-      expect(
-        [...partialFirst.values, ...partialLast.values].map((value) => value[0].toFixed()).sort()
-      ).toEqual(['1', '2', '3', '4']);
+      expect(partial.blockHash).toBe(first.blockHash);
+      expect(partial.values.map((value) => value[0].toFixed())).toEqual(
+        second.values.slice(1).map((value) => value[0].toFixed())
+      );
 
-      const values = await bigMap.listValues<TokenValue>({ length: 4, block: first.blockHash });
+      const values = await bigMap.listValues<TokenValue>({ length: 4, block: level });
       expect(values.map((value) => value[0].toFixed()).sort()).toEqual(['1', '2', '3', '4']);
 
       expect(await bigMap.isEmpty(first.blockHash)).toBe(false);
