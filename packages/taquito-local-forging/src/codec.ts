@@ -20,6 +20,7 @@ import {
   InvalidSmartRollupCommitmentHashError,
   InvalidSmartRollupAddressError,
   InvalidDalCommitmentError,
+  OperationDecodingError,
 } from './errors';
 import BigNumber from 'bignumber.js';
 import { entrypointMapping, entrypointMappingReverse, ENTRYPOINT_MAX_LENGTH } from './constants';
@@ -50,7 +51,9 @@ export const prefixEncoder = (prefix: PrefixV2) => (str: string) => {
 
 export const prefixDecoder = (pre: PrefixV2) => (str: Uint8ArrayConsumer) => {
   if (str.length() < payloadLength[pre]) {
-    throw new Error(`Truncated ${pre} payload: expected ${payloadLength[pre]} bytes`);
+    throw new OperationDecodingError(
+      `Truncated ${pre} payload: expected ${payloadLength[pre]} bytes`
+    );
   }
   const val = str.consume(payloadLength[pre]);
   return b58Encode(val, pre);
@@ -58,7 +61,7 @@ export const prefixDecoder = (pre: PrefixV2) => (str: Uint8ArrayConsumer) => {
 
 export const tz1Decoder = prefixDecoder(PrefixV2.Ed25519PublicKeyHash);
 export const branchDecoder = prefixDecoder(PrefixV2.BlockHash);
-export const publicKeyHashDecoder = (val: Uint8ArrayConsumer) => {
+export const publicKeyHashDecoder = (val: Uint8ArrayConsumer): string => {
   const prefix = val.consume(1);
 
   if (prefix[0] === 0x00) {
@@ -72,16 +75,27 @@ export const publicKeyHashDecoder = (val: Uint8ArrayConsumer) => {
   } else if (prefix[0] === 0x04) {
     return prefixDecoder(PrefixV2.MLDSA44PublicKeyHash)(val);
   }
+  throw new OperationDecodingError(`Unknown public key hash tag: ${prefix[0]}`);
 };
 
 export const publicKeyHashesDecoder = (val: Uint8ArrayConsumer) => {
+  if (val.length() < 1) {
+    throw new OperationDecodingError('Missing whitelist option flag');
+  }
   if (!boolDecoder(val)) {
     return;
   }
   const publicKeyHashes = [];
-  val.consume(4);
-  while (val.length() > 0) {
-    publicKeyHashes.push(publicKeyHashDecoder(val));
+  if (val.length() < 4) {
+    throw new OperationDecodingError('Truncated whitelist length');
+  }
+  const length = Buffer.from(val.consume(4)).readUInt32BE(0);
+  if (length > val.length()) {
+    throw new OperationDecodingError('Truncated whitelist payload');
+  }
+  const whitelist = new Uint8ArrayConsumer(val.consume(length));
+  while (whitelist.length() > 0) {
+    publicKeyHashes.push(publicKeyHashDecoder(whitelist));
   }
   return publicKeyHashes;
 };
