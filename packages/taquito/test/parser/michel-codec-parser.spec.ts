@@ -144,7 +144,43 @@ describe('MichelCodec parser', () => {
       }
     });
 
-    it('expands global constants before encoding storage arguments', async () => {
+    it('encodes None without resolving a constant in the unused option type', async () => {
+      const parser = new MichelCodecParser(new Context(mockRpcClient as any));
+      const constant = {
+        prim: 'constant',
+        args: [{ string: 'expruu5BTdW7ajqJ9XPTF3kgcV78pRiaBW3Gq31mgp3WSYjjUBYxre' }],
+      };
+      const code = [{ prim: 'storage', args: [{ prim: 'option', args: [constant] }] }];
+      await expect(parser.prepareCodeOrigination({ code, storage: null })).resolves.toEqual({
+        code,
+        init: { prim: 'None' },
+      });
+    });
+
+    it('rejects a global constant which expands to a malformed type', async () => {
+      const context = new Context(mockRpcClient as any);
+      context.globalConstantsProvider = mockGlobalConstantsProvider;
+      mockGlobalConstantsProvider.getGlobalConstantByHash.mockResolvedValue({
+        prim: 'pair',
+        args: [],
+      });
+      const code = [
+        {
+          prim: 'storage',
+          args: [
+            {
+              prim: 'constant',
+              args: [{ string: 'expruu5BTdW7ajqJ9XPTF3kgcV78pRiaBW3Gq31mgp3WSYjjUBYxre' }],
+            },
+          ],
+        },
+      ];
+      await expect(
+        new MichelCodecParser(context).prepareCodeOrigination({ code, storage: 0 })
+      ).rejects.toBeInstanceOf(InvalidCodeParameter);
+    });
+
+    it.each([0, 10])('expands global constants before encoding storage %i', async (storage) => {
       const context = new Context(mockRpcClient as any);
       mockGlobalConstantsProvider.getGlobalConstantByHash.mockResolvedValue({ prim: 'int' });
       context.globalConstantsProvider = mockGlobalConstantsProvider;
@@ -167,7 +203,7 @@ describe('MichelCodec parser', () => {
         },
       ];
 
-      const result = await parser.prepareCodeOrigination({ code, storage: 10 });
+      const result = await parser.prepareCodeOrigination({ code, storage });
 
       expect(result).toEqual({
         code: [
@@ -186,7 +222,7 @@ describe('MichelCodec parser', () => {
             args: [[{ prim: 'DUP' }]],
           },
         ],
-        init: { int: '10' },
+        init: { int: String(storage) },
       });
     });
   });

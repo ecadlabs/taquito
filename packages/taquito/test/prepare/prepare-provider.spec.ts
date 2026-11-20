@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Context } from '../../src/context';
+import { createOriginationOperation } from '../../src/contract/prepare';
+import { InvalidCodeParameter } from '../../src/contract/errors';
 import { PrepareProvider } from '../../src/prepare/prepare-provider';
 import BigNumber from 'bignumber.js';
 import { preparedOriginationOpWithReveal, preparedOriginationOpNoReveal } from './data';
@@ -156,6 +158,96 @@ describe('PrepareProvider test', () => {
   });
 
   describe('originate', () => {
+    it.each([
+      { name: 'missing storage section', sections: [] },
+      ...[
+        { prim: 'DROP' },
+        { prim: 'pair', args: [] },
+        { prim: 'option' },
+        { prim: 'string', args: [{ prim: 'nat' }] },
+        { prim: 'constant', args: [] },
+        { prim: 'option', args: [[{ prim: 'nat' }]] },
+        [],
+      ].map((type) => ({
+        name: JSON.stringify(type),
+        sections: [{ prim: 'storage', args: [type] }],
+      })),
+      { name: 'missing arguments', sections: [{ prim: 'storage' }] },
+      { name: 'empty arguments', sections: [{ prim: 'storage', args: [] }] },
+      {
+        name: 'a literal instead of a type',
+        sections: [{ prim: 'storage', args: [{ int: '1' }] }],
+      },
+      {
+        name: 'extra arguments',
+        sections: [{ prim: 'storage', args: [{ prim: 'string' }, { prim: 'int' }] }],
+      },
+    ])('rejects $name before building the script', async ({ sections }) => {
+      const code = [{ prim: 'parameter', args: [{ prim: 'string' }] }, ...sections];
+      await expect(prepareProvider.originate({ code, storage: 'test' })).rejects.toBeInstanceOf(
+        InvalidCodeParameter
+      );
+      await expect(createOriginationOperation({ code, storage: 'test' })).rejects.toBeInstanceOf(
+        InvalidCodeParameter
+      );
+    });
+
+    it.each([
+      { prim: 'pair', args: [{ prim: 'int', annots: [42] }, { prim: 'string' }] },
+      { prim: 'sapling_state', args: [{ int: 'oops' }] },
+      { prim: 'sapling_state', args: [{ bytes: '00', int: '8' }] },
+      { prim: 'constant', args: [{ bytes: '00', string: 'expr' }] },
+      { prim: 'constant', args: [{ int: '8', string: 'expr' }] },
+      { prim: 'string', bytes: '00' },
+      { prim: 'sapling_state', args: [{ prim: 'DROP', int: '8' }] },
+      { prim: 'sapling_state', args: [{ string: 'text', int: '8' }] },
+      { prim: 'constant', args: [{ prim: 'DROP', string: 'expr' }] },
+    ])('rejects malformed raw Micheline before encoding', async (type) => {
+      await expect(
+        createOriginationOperation({
+          code: [{ prim: 'storage', args: [type] }],
+          storage: {},
+        })
+      ).rejects.toBeInstanceOf(InvalidCodeParameter);
+    });
+
+    it('preserves a global constant in a Sapling memo size', async () => {
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
+      const constant = {
+        prim: 'constant',
+        args: [{ string: 'expruu5BTdW7ajqJ9XPTF3kgcV78pRiaBW3Gq31mgp3WSYjjUBYxre' }],
+      };
+      const code = [{ prim: 'storage', args: [{ prim: 'sapling_state', args: [constant] }] }];
+      const prepared = await prepareProvider.originate({ code, storage: {} });
+      expect(prepared.opOb.contents).toEqual([
+        expect.objectContaining({ script: { code, storage: [] } }),
+      ]);
+    });
+
+    it('encodes a sequence-form pair without changing the script', async () => {
+      const code = [{ prim: 'storage', args: [[{ prim: 'string' }, { prim: 'int' }]] }];
+      const op = await createOriginationOperation({ code, storage: { 0: 'abc', 1: 42 } });
+      expect(op.script).toEqual({
+        code,
+        storage: { prim: 'Pair', args: [{ string: 'abc' }, { int: '42' }] },
+      });
+    });
+
+    it('encodes a supplied storage value from the script type', async () => {
+      mockReadProvider.isAccountRevealed.mockResolvedValue(true);
+      const prepared = await prepareProvider.originate({
+        balance: '1',
+        code: 'parameter string; storage string; code { CAR; NIL operation; PAIR };',
+        storage: 'test',
+      });
+
+      expect(prepared.opOb.contents).toEqual([
+        expect.objectContaining({
+          script: expect.objectContaining({ storage: { string: 'test' } }),
+        }),
+      ]);
+    });
+
     it('should return a prepared origination operation with a reveal operation', async () => {
       mockReadProvider.isAccountRevealed.mockResolvedValue(false);
 
