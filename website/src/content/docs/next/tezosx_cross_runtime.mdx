@@ -6,11 +6,21 @@ title: Tezos X call preparation (Beta)
 
 `@taquito/tezosx` prepares unsigned NAC calls for compatible Tezos X kernels. It is optional and is not imported by `@taquito/utils` or the toolkit. The builders follow kernel revision `fb064e9f6a13c0ebd7bb1b7ec6727274e2dc23af`.
 
-## Try the unreleased package
+## Install the beta
 
-This package is not yet part of a published Taquito release. Check out a revision that includes the package, then run `npm ci` and `npm run build` at the repository root. The examples use the built workspace package. Check that the target network runs a compatible kernel before using the builders.
+```sh
+npm install @taquito/tezosx@next
+```
+
+The npm beta includes the NAC call builders. The Next guide can also cover APIs that have
+yet to reach npm. To try one of those APIs, check out a revision that includes it and run
+`npm ci` and `npm run build` at the repository root. Check that the target network runs a
+compatible kernel before using the builders.
 
 ## Etherlink 8.0 (Horus) migration
+
+Horus is available on [Tezos X Previewnet](https://previewnet.tezosx.nomadic-labs.com/).
+Confirm the deployed kernel on your target network before changing your integration.
 
 Horus changes the EVM aliases of `tz1`, `tz2`, and `tz3` accounts. If your app stores or displays
 these aliases, recompute them when the target network activates Horus. The alias identifies the
@@ -31,8 +41,7 @@ old `tezlink_error` ID or on debug strings need updating. If your app decodes EV
 cross-runtime calls, a Michelson out-of-gas failure now carries status `429` and body `OOG`.
 
 See the [Horus upgrade proposal](https://forum.tezosagora.org/t/announcing-etherlink-8-0-horus-a-new-etherlink-kernel-upgrade-proposal/7241),
-the [Etherlink alias RPCs](https://docs.etherlink.com/michelson/developing/rpc-reference/#alias-rpcs),
-and the [Tezos X Previewnet dashboard](https://previewnet.tezosx.nomadic-labs.com/).
+and the [Etherlink alias RPCs](https://docs.etherlink.com/michelson/developing/rpc-reference/#alias-rpcs).
 
 ## Michelson to EVM
 
