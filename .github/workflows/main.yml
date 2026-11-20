@@ -118,6 +118,7 @@ jobs:
       - run: npx -y npm@11 ci
       - run: npm run build
       - run: npm run typecheck:tests
+      - run: npm run typecheck:tooling
       - run: npx playwright install --with-deps chromium
       - run: npm run test:consumers
         env:
