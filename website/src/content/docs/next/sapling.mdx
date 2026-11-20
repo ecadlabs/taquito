@@ -260,6 +260,23 @@ not hide output counts, public deposits and withdrawals, or timing. Other
 application behavior can still identify outputs. This option does not provide
 a proof of anonymity.
 
+## Amounts in token pools
+
+Sapling notes hold integers. In the shielded-tez contract the unit is mutez, so the toolkit
+methods take tez by default and convert with `mutez: false`. A pool that holds an FA1.2 or FA2
+token instead of tez stores the token's base units. For such a pool, pass amounts in base units
+and set `mutez: true`, whatever the token's decimals are. With the default, the toolkit multiplies
+the amount by 1,000,000, which is only right for tez and for tokens with 6 decimals:
+
+```js
+// Pool of a token with 0 decimals: shield 5 tokens
+await saplingToolkit.prepareShieldedTransaction([{ to: zet, amount: 5, mutez: true }]); // 5 units
+await saplingToolkit.prepareShieldedTransaction([{ to: zet, amount: 5 }]); // 5,000,000 units
+```
+
+Balances and history from `SaplingTransactionViewer` are in the same base units. The low-level
+`SaplingTransactionBuilder` below always takes base units and never converts.
+
 ## Custom bound data
 
 `SaplingToolkit.prepareUnshieldedTransaction` builds bound data from the recipient's
@@ -316,6 +333,66 @@ with the Sapling state used to build the transaction. Amounts and the selected-i
 total accept `BigNumber.Value`, including decimal strings and `BigNumber` instances.
 The builder uses base units directly; it does not convert tez to mutez.
 
+The builder reads the pool again when it builds the Merkle witness for each spend.
+Reading notes and the root at `head` and then calling the builder can therefore mix two
+states: if a commitment lands in between, the transaction's root no longer matches the
+witness and the pool rejects it. Pin one block instead, and give the viewer, the builder
+and the forger the same state:
+
+```ts
+import BigNumber from 'bignumber.js';
+import { RpcReadAdapter } from '@taquito/taquito';
+import { RpcClient, type SaplingDiffResponse } from '@taquito/rpc';
+import { SaplingTransactionViewer, type Input } from '@taquito/sapling';
+import { buf2hex, hex2buf } from '@taquito/utils';
+
+// Answers every Sapling state read with one recorded state, whatever block is asked for.
+class PinnedSaplingState extends RpcReadAdapter {
+    constructor(
+        rpc: RpcClient,
+        private readonly state: SaplingDiffResponse
+    ) {
+        super(rpc);
+    }
+    override async getSaplingDiffByContract() {
+        return this.state;
+    }
+    override async getSaplingDiffById() {
+        return this.state;
+    }
+}
+
+const rpc = new RpcClient('https://tezos-shadownet.octez.io/');
+// head~2 is final under Tenderbake. Pinning it by hash keeps later reads on the same block.
+const { hash } = await rpc.getBlockHeader({ block: 'head~2' });
+const state = await rpc.getSaplingDiffByContract(saplingContract.address, { block: hash });
+const snapshot = new PinnedSaplingState(rpc, state);
+
+// Take unspent notes from the pinned state until they cover the total.
+async function selectNotes(total: BigNumber.Value) {
+    const viewer = new SaplingTransactionViewer(
+        await inMemorySpendingKey.getSaplingViewingKeyProvider(),
+        { contractAddress: saplingContract.address },
+        snapshot
+    );
+    const { incoming } = await viewer.getIncomingAndOutgoingTransactionsRaw();
+    const inputsToSpend: Input[] = [];
+    let sumSelectedInputs = new BigNumber(0);
+    for (const { isSpent, ...note } of incoming) {
+        if (isSpent || sumSelectedInputs.gte(total)) continue;
+        inputsToSpend.push(note);
+        sumSelectedInputs = sumSelectedInputs.plus(new BigNumber(buf2hex(note.value), 16));
+    }
+    if (sumSelectedInputs.lt(total)) throw new Error('Not enough unspent notes');
+    return { inputsToSpend, sumSelectedInputs };
+}
+```
+
+Pass `snapshot` as the builder's read provider and `state.root` as the root, as in the
+example below. The snapshot is consistent, not current: a note spent after the pinned block
+still looks unspent, and the pool rejects a transaction that spends it again. A pool also
+accepts only a limited number of recent roots, so build and submit soon after pinning.
+
 `createSaplingTx` prepares private transfers and withdrawals. For the withdrawal
 above, the empty output list requests no new recipient notes. With positive selected
 inputs, the builder creates a private payback note, including a zero-valued note
@@ -324,13 +401,51 @@ its third argument. Validate recipient policy, amounts and memos in the applicat
 when using these low-level methods. Forging returns transaction bytes; submitting
 them to the contract is a separate step.
 
+To add shielded outputs to a withdrawal, such as a fee paid to a relayer's payment
+address inside the pool, pass them in the output list and set `txTotalAmount` to the
+withdrawal plus the sum of those outputs. The builder returns change of
+`sumSelectedInputs - txTotalAmount` to the spender, and the withdrawn amount is the
+transaction balance, `txTotalAmount` minus the outputs. Passing only the withdrawal
+as `txTotalAmount` builds a transaction that withdraws less, by the sum of the outputs.
+Select notes for the whole total, not only the withdrawal, or the fee may not be covered.
+
+This example continues the pinned-state example above. Its bound data is the `PACK address`
+encoding from [Custom bound data](#custom-bound-data), so `saplingContract` here stands for a
+pool that expects that encoding. The shielded-tez contract expects the key-hash bytes that
+`prepareUnshieldedTransaction` builds instead.
+
+```ts
+import { SaplingTransactionBuilder, SaplingForger } from '@taquito/sapling';
+import { packDataBytes } from '@taquito/michel-codec';
+
+const forger = new SaplingForger();
+const builder = new SaplingTransactionBuilder(
+    { saplingSigner: inMemorySpendingKey },
+    forger,
+    { contractAddress: saplingContract.address, memoSize: 8 },
+    snapshot
+);
+
+// recipient is the withdrawal address; relayerPaymentAddress is the relayer's zet address.
+// Withdraw 5,000,000 base units to recipient and pay a 50,000 relayer fee inside the pool.
+const withdrawal = new BigNumber('5000000');
+const fee = { to: relayerPaymentAddress, amount: '50000', memo: 'fee' };
+const txTotalAmount = withdrawal.plus(fee.amount); // withdrawal + fee
+const chosenInputs = await selectNotes(txTotalAmount);
+const boundData = hex2buf(packDataBytes({ string: recipient }, { prim: 'address' }).bytes);
+const description = await builder.createSaplingTx([fee], txTotalAmount, boundData, chosenInputs);
+const withdrawalTx = buf2hex(
+    forger.forgeSaplingTransaction({ ...description, root: state.root, boundData })
+);
+```
+
 ## How to retrieve my balance in the Sapling shielded set?
 
 When calling the `getSaplingTransactionViewer` method of the `SaplingToolkit` class, an instance of the `SaplingTransactionViewer` class is returned. The `SaplingTransactionViewer` class allows retrieving and decrypting Sapling transactions for the specified viewing key and calculating the unspent balance.
 
 For each entry in the shielded set, the `SaplingTransactionViewer` class will try to decrypt them using the viewing key as if it were the receiver. If a ciphertext is successfully decrypted, the configured account was the receiver of the output. The `SaplingTransactionViewer` will find which inputs were not spent by computing their nullifier. If an input is spent, its nullifier will be in the Sapling state. If the nullifier is not present, the input has not been spent, and its value will be considered in the calculated balance.
 
-Note that the balance is represented in mutez.
+Note that the balance is in mutez for the shielded-tez contract, and in the token's base units for a token pool.
 
 The balance can be retrieved as follows:
 
