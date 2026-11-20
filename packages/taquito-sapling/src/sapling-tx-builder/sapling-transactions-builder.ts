@@ -239,6 +239,12 @@ export class SaplingTransactionBuilder {
     return new BigNumber(inputTotal).minus(new BigNumber(outputTotal));
   }
 
+  /**
+   * Build a single Sapling output description and encrypted note ciphertext.
+   * Callers invoking this low-level helper directly must supply a freshly sampled
+   * `randomCommitmentTrapdoor` (`rcm`) for each output; never reuse a trapdoor
+   * across outputs or as an ephemeral private key.
+   */
   async prepareSaplingOutputDescription(
     parametersOutputDescription: ParametersOutputDescription
   ): Promise<SaplingTransactionOutput> {
@@ -350,6 +356,12 @@ export class SaplingTransactionBuilder {
     return saplingSpendDescriptions;
   }
 
+  /**
+   * Encrypt a Sapling note plaintext and outgoing ciphertext for a single output.
+   * Callers invoking this low-level helper directly must pass the freshly sampled
+   * `randomCommitmentTrapdoor` (`rcm`) used for this output's commitment and a
+   * separately sampled `ephemeralPrivateKey`.
+   */
   async encryptCiphertext(
     parametersCiphertext: ParametersCiphertext
   ): Promise<Pick<Ciphertext, 'payloadEnc' | 'nonceEnc' | 'payloadOut' | 'nonceOut'>> {
@@ -381,6 +393,11 @@ export class SaplingTransactionBuilder {
     return { payloadEnc, nonceEnc, payloadOut, nonceOut };
   }
 
+  /**
+   * Build the change (payback) output description for the remainder of `sumSelectedInputs`.
+   * Callers invoking this low-level helper directly must supply a freshly sampled
+   * `randomCommitmentTrapdoor` (`rcm`), distinct from any recipient output trapdoors.
+   */
   async createPaybackOutput(params: ParametersOutputDescription, sumSelectedInputs: BigNumber) {
     const payBackAmount = sumSelectedInputs.minus(params.amount).toString();
     const payBackOutput = await this.prepareSaplingOutputDescription({

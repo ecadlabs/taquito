@@ -126,8 +126,8 @@ describe('Sapling transactions builder', () => {
     ).toBeDefined();
   });
 
-  it.each(['deposit', 'transfer'] as const)(
-    'uses a fresh commitment randomizer for each %s output and its plaintext',
+  it.each(['deposit', 'transfer with change', 'exact-balance transfer'] as const)(
+    'uses fresh, distinct commitment trapdoors and ephemeral keys for each %s output',
     async (kind) => {
       const address = 'zet12mVvzJ4QJhnNQetGHzdwTMcLgNrdC4SFact6BB5jpeqGAefWip3iGgEjvDA9z7b9Y';
       const payees = ['2', '3'].map((amount) => ({ to: address, amount, memo: '' }));
@@ -161,18 +161,27 @@ describe('Sapling transactions builder', () => {
       } else {
         await saplingTransactionBuilder.createSaplingTx(payees, total, new Uint8Array(0), {
           inputsToSpend: [],
-          sumSelectedInputs: new BigNumber(6),
+          sumSelectedInputs: new BigNumber(kind === 'transfer with change' ? 6 : 5),
         });
       }
 
       const proofCalls = mockSaplingWrapper.preparePartialOutputDescription.mock.calls;
       const randomizers = proofCalls.map(([proof]) => buf2hex(proof.randomCommitmentTrapdoor));
-      const expectedOutputs = kind === 'deposit' ? 2 : 3;
+      const ephemeralKeys = proofCalls.map(([proof]) => buf2hex(proof.ephemeralPrivateKey));
+      const expectedOutputs = kind === 'transfer with change' ? 3 : 2;
       expect(randomizers).toHaveLength(expectedOutputs);
+      expect(ephemeralKeys).toHaveLength(expectedOutputs);
       expect(plaintext.mock.calls.map(([note]) => buf2hex(note.randomCommitmentTrapdoor))).toEqual(
         randomizers
       );
-      expect(new Set(randomizers).size).toBe(expectedOutputs);
+      expect(
+        mockSaplingWrapper.deriveEphemeralPublicKey.mock.calls.map(([, esk]) => buf2hex(esk))
+      ).toEqual(ephemeralKeys);
+      expect(mockSaplingWrapper.keyAgreement.mock.calls.map(([, esk]) => buf2hex(esk))).toEqual(
+        ephemeralKeys
+      );
+      expect(new Set([...randomizers, ...ephemeralKeys]).size).toBe(expectedOutputs * 2);
+      expect(mockSaplingWrapper.randR).toHaveBeenCalledTimes(expectedOutputs * 2);
     }
   );
 
