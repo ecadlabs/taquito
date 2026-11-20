@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 export const rpcContractResponse = {
   balance: '0',
   script: {

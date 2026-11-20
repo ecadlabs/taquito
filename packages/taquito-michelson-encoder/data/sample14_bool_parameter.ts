@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 const code = [{
   "prim": "parameter",
   "args":

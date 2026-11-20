@@ -19,10 +19,8 @@ export class CompositeForger implements Forger {
       throw new UnspecifiedForgerError();
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     let lastResult: string = results.pop()!; // Assumed to be more than one since we
     while (results.length) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const currentResult = results.pop()!;
 
       if (currentResult !== lastResult) {
