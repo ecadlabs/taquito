@@ -49,9 +49,36 @@ it('retries without waiting for the unused 429 response body', async () => {
   const { HttpBackend } = await import('../src/taquito-http-utils');
   const result = new HttpBackend().createRequest({ url: 'https://rpc.example/read' });
   await vi.advanceTimersByTimeAsync(1);
-  expect(cancel).toHaveBeenCalledOnce();
+  expect(cancel).not.toHaveBeenCalled();
   expect(fetch).toHaveBeenCalledTimes(2);
   await expect(result).resolves.toBe('ready');
+  await vi.advanceTimersByTimeAsync(9);
+  expect(cancel).toHaveBeenCalledOnce();
+});
+
+it.each([
+  { size: 64 * 1024, canceled: false },
+  { size: 64 * 1024 + 1, canceled: true },
+])('discards $size bytes from a retry response with a bounded read', async ({ size, canceled }) => {
+  const cancel = vi.fn();
+  const stream = new ReadableStream<Uint8Array>({
+    start(controller) {
+      controller.enqueue(new Uint8Array(size));
+      if (!canceled) controller.close();
+    },
+    cancel,
+  });
+  const fetch = vi
+    .fn<typeof globalThis.fetch>()
+    .mockResolvedValueOnce(new Response(stream, { status: 429, headers: { 'Retry-After': '0' } }))
+    .mockResolvedValueOnce(Response.json('ready'));
+  vi.stubGlobal('fetch', fetch);
+  const { HttpBackend } = await import('../src/taquito-http-utils');
+  const result = new HttpBackend().createRequest({ url: 'https://rpc.example/read' });
+  await vi.advanceTimersByTimeAsync(1);
+  await expect(result).resolves.toBe('ready');
+  expect(cancel).toHaveBeenCalledTimes(canceled ? 1 : 0);
+  expect(vi.getTimerCount()).toBe(0);
 });
 
 it.each([

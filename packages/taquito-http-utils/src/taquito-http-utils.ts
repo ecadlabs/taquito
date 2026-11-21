@@ -189,6 +189,28 @@ const sleep = (ms: number, signal?: AbortSignal): Promise<void> => {
   });
 };
 
+const RETRY_BODY_DRAIN_LIMIT = 64 * 1024;
+const RETRY_BODY_DRAIN_TIMEOUT_MS = 10;
+
+const discardRetryBody = async (body: ReadableStream<Uint8Array> | null): Promise<void> => {
+  if (!body) return;
+  const reader = body.getReader();
+  const cancel = () => void reader.cancel().catch(() => undefined);
+  const timer = setTimeout(cancel, RETRY_BODY_DRAIN_TIMEOUT_MS);
+  try {
+    let remaining = RETRY_BODY_DRAIN_LIMIT;
+    while (remaining >= 0) {
+      const { done, value } = await reader.read();
+      if (done) return;
+      remaining -= Math.max(1, value.byteLength);
+    }
+  } finally {
+    clearTimeout(timer);
+    cancel();
+    reader.releaseLock();
+  }
+};
+
 const readBoundedBytes = async (
   response: Response,
   maxResponseBytes: number
@@ -415,8 +437,8 @@ export class HttpBackend {
           }));
           if (retryDelayMs !== undefined) {
             clearTimeout(t);
-            // A retried response has no diagnostic body to return to the caller.
-            void response.body?.cancel().catch(() => undefined);
+            // Draining a small, ready body preserves the connection without delaying the retry.
+            void discardRetryBody(response.body).catch(() => undefined);
             traceHttp(() => ({
               stage: 'request-retry',
               method: methodValue,
