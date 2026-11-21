@@ -8,7 +8,7 @@ import {
   importKey,
 } from '@taquito/taquito';
 import { RemoteSigner } from '@taquito/remote-signer';
-import { HttpBackend, HttpResponseError } from '@taquito/http-utils';
+import { HttpBackend, HttpRequestFailed, HttpResponseError } from '@taquito/http-utils';
 import { b58Encode, PrefixV2 } from '@taquito/utils';
 import { InMemorySigner } from '@taquito/signer';
 import { RpcClient, RpcClientCache } from '@taquito/rpc';
@@ -179,20 +179,86 @@ interface SignerStateSnapshot {
   balanceAsNumber: number | null;
 }
 
+const isTransientSignerStateError = (error: unknown) =>
+  (error instanceof HttpResponseError && [502, 503, 504].includes(error.status)) ||
+  (error instanceof HttpRequestFailed &&
+    error.transportError !== undefined &&
+    ['dns', 'connect', 'socket', 'timeout', 'network'].includes(error.transportError.kind));
+
+// This is an additional setup-level read, after the HTTP backend's own retries.
+// Bound the added wait independently of the key-allocation attempt budget.
+const signerStateRetryTimeoutMs = 5000;
+
+const retrySignerStateRead = async <T>(read: () => Promise<T>, error: unknown): Promise<T> => {
+  let timeout: ReturnType<typeof setTimeout> | undefined;
+  try {
+    return await Promise.race([
+      read(),
+      new Promise<never>((_, reject) => {
+        timeout = setTimeout(() => reject(error), signerStateRetryTimeoutMs);
+      }),
+    ]);
+  } finally {
+    clearTimeout(timeout);
+  }
+};
+
 const readSignerState = async (
   Tezos: TezosToolkit,
-  pkhHint?: string
+  pkhHint?: string,
+  constraints?: Pick<SetupOptions, 'requireUnrevealed' | 'minBalanceMutez'>
 ): Promise<SignerStateSnapshot> => {
   const pkh = pkhHint ?? (await Tezos.signer.publicKeyHash());
+  const readStateField = async <T>(request: () => Promise<T>, required: boolean): Promise<T> => {
+    try {
+      return await request();
+    } catch (error) {
+      if (!required || !isTransientSignerStateError(error)) {
+        throw error;
+      }
+      // RpcClientCache also caches rejected promises. Refresh this read for the
+      // same candidate instead of allocating another key during an RPC outage.
+      clearRpcCache(Tezos);
+      return retrySignerStateRead(request, error);
+    }
+  };
   const [managerKeyResult, balanceResult] = await Promise.allSettled([
-    Tezos.rpc.getManagerKey(pkh),
-    Tezos.rpc.getBalance(pkh),
+    readStateField(() => Tezos.rpc.getManagerKey(pkh), constraints?.requireUnrevealed === true),
+    readStateField(() => Tezos.rpc.getBalance(pkh), (constraints?.minBalanceMutez ?? 0) > 0),
   ]);
+  if (constraints?.requireUnrevealed && managerKeyResult.status === 'rejected') {
+    throw managerKeyResult.reason;
+  }
+  if ((constraints?.minBalanceMutez ?? 0) > 0 && balanceResult.status === 'rejected') {
+    throw balanceResult.reason;
+  }
 
   const managerKey = managerKeyResult.status === 'fulfilled' ? managerKeyResult.value : null;
+  if (
+    constraints?.requireUnrevealed &&
+    managerKey !== null &&
+    !(typeof managerKey === 'string' && managerKey.length > 0) &&
+    !(
+      typeof managerKey === 'object' &&
+      'key' in managerKey &&
+      typeof managerKey.key === 'string' &&
+      managerKey.key.length > 0
+    )
+  ) {
+    throw new Error(`Invalid manager key returned by ${Tezos.rpc.getRpcUrl()} for ${pkh}`);
+  }
   const balanceMutez = balanceResult.status === 'fulfilled' ? balanceResult.value.toString() : null;
   const balanceAsNumber =
     balanceMutez !== null && Number.isFinite(Number(balanceMutez)) ? Number(balanceMutez) : null;
+  if (
+    (constraints?.minBalanceMutez ?? 0) > 0 &&
+    balanceResult.status === 'fulfilled' &&
+    (balanceAsNumber === null ||
+      !balanceResult.value.isInteger() ||
+      balanceResult.value.isNegative())
+  ) {
+    throw new Error(`Invalid balance returned by ${Tezos.rpc.getRpcUrl()} for ${pkh}`);
+  }
 
   return {
     pkh,
@@ -565,7 +631,7 @@ const setupSignerWithFreshKey = async (
     const signer = new InMemorySigner(keyResponse.secret_key);
     Tezos.setSignerProvider(signer);
     const signerStateStartedAt = Date.now();
-    state = await readSignerState(Tezos, keyResponse.pkh);
+    state = await readSignerState(Tezos, keyResponse.pkh, options);
     const signerStateDurationMs = Date.now() - signerStateStartedAt;
 
     const lowBalance =
