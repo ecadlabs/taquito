@@ -19,6 +19,7 @@
     ".": {
       "types": "./dist/types/taquito-http-utils.d.ts",
       "browser": "./dist/taquito-http-utils.es6.js",
+      "module": "./dist/taquito-http-utils.bundler.mjs",
       "import": "./dist/taquito-http-utils.mjs",
       "require": "./dist/taquito-http-utils.cjs",
       "default": "./dist/taquito-http-utils.es6.js"
