@@ -172,6 +172,7 @@ import {
   BeaconEvent,
   BeaconWallet,
   isBeaconError,
+  isTezosRpcError,
   TransactionInvalidBeaconError,
   type WalletInfo,
 } from '@taquito/beacon-wallet';
@@ -194,6 +195,10 @@ await wallet.requestPermissions();
 #### Active wallet metadata (`wallet.getWalletInfo()`)
 
 `await wallet.getWalletInfo()` resolves `{ name, icon, deeplink, type }` (`type` is `'extension' | 'mobile' | 'web' | 'desktop'`) for the active account without initializing a transport or opening the pairing modal, or returns `undefined` when disconnected.
+
+The Vue test dApp uses the wallet name and optional icon to show which wallet will receive the next request. In this example, the Temple icon appears beside the balance and address. Use the name when the wallet has no icon and clear the display on disconnect. [Vue implementation](https://github.com/ecadlabs/taquito-test-dapp-vue/blob/main/src/lib/walletDisplay.ts)
+
+<img src="/images/beacon-4-9/connected-temple.png" alt="Temple icon beside the connected account’s tez balance and abbreviated address" />
 
 #### Transport connection health and pending requests
 
@@ -244,7 +249,8 @@ try {
   if (isBeaconError(err)) {
     console.error(err.errorType, err.errorOrigin, err.description);
     if (err instanceof TransactionInvalidBeaconError) {
-      console.error('RPC errors:', err.rpcErrors);
+      const rpcErrors = Array.isArray(err.data) ? err.data.filter(isTezosRpcError) : [];
+      console.error('RPC errors:', rpcErrors);
     }
   }
 }
@@ -256,9 +262,27 @@ const stopMessages = wallet.subscribeToMessages((record) => {
 });
 ```
 
+#### Following a request in Beacon Inspector
+
+Open **Beacon inspector** in the header of the Vue test dApp, then send a test operation. Follow its request ID from the outgoing message through the wallet acknowledgement to the operation response. In this Shadownet trace the wallet acknowledged the request in under a second. The successful operation response arrived about 25 seconds later. This distinction helps you see whether the wallet received the request and how long the response took. [Open the Shadownet test dApp](https://shadownet.dapp.taquito.io/)
+
+<a href="/images/beacon-4-9/inspector.png"><img src="/images/beacon-4-9/inspector.png" alt="Beacon Inspector shows a request sent at 12:38:11, an acknowledgement that same second, and an operation response at 12:38:36" /></a>
+
+Select **Events** or **Messages** to filter the trace. **Export** saves a copy for debugging.
+
 #### Internationalization (i18n), RTL layout, and accessibility
 
-Beacon includes built-in translations for English (`en`), French (`fr`), Spanish (`es`), German (`de`), Japanese (`ja`), and Arabic (`ar`, with automatic Right-to-Left `rtl` layout across `<beacon-alert>` and `<beacon-toast>` shadow roots), along with WCAG/WAI-ARIA keyboard navigation, focus management, and screen-reader announcements.
+Beacon includes English, French, Spanish, German, Japanese, Arabic, and Polish. The same Kukai confirmation appears below in Japanese and Arabic. In the right-to-left layout, the dismiss control moves to the left and the wallet name retains its reading direction.
+
+<img src="/images/beacon-4-9/confirmation-ja.png" alt="Japanese notification asking the user to confirm in Kukai Wallet, with the dismiss control on the right" />
+
+<img src="/images/beacon-4-9/confirmation-ar.png" alt="Arabic notification asking the user to confirm in Kukai Wallet, with the dismiss control on the left" />
+
+If a prompt sounds unnatural in your language, you can suggest wording directly on GitHub. The translation guide explains how to review an existing language or add a new one. [Contribute a Beacon translation](https://github.com/ecadlabs/beacon-sdk-taquito-patches/blob/taquito-patches/TRANSLATIONS.md)
+
+Use Tab or Shift+Tab to move through the wallet chooser. A blue outline shows which control has focus. Escape closes the dialog. The silent keyboard demonstration shows the focus outline moving between wallets.
+
+<video controls preload="none" playsinline width="484" height="380" style="max-width: 100%; height: auto" poster="/images/beacon-4-9/keyboard-focus.png" aria-label="Keyboard navigation in the Beacon wallet chooser" src="/images/beacon-4-9/keyboard-navigation.mp4"></video>
 
 By default, `BeaconWallet` automatically selects the user's preferred language from the browser (`navigator.languages` / `navigator.language`, or a non-English `<html lang="...">` document attribute, falling back to `'en'`). You can also override the locale, text direction (`'ltr' | 'rtl' | 'auto'`), and partial custom translation strings programmatically at initialization or at runtime:
 

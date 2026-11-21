@@ -20,6 +20,7 @@ import {
   InvalidSmartRollupCommitmentHashError,
   InvalidSmartRollupAddressError,
   InvalidDalCommitmentError,
+  OperationDecodingError,
 } from './errors';
 import BigNumber from 'bignumber.js';
 import { entrypointMapping, entrypointMappingReverse, ENTRYPOINT_MAX_LENGTH } from './constants';
@@ -55,7 +56,7 @@ export const prefixDecoder = (pre: PrefixV2) => (str: Uint8ArrayConsumer) => {
 
 export const tz1Decoder = prefixDecoder(PrefixV2.Ed25519PublicKeyHash);
 export const branchDecoder = prefixDecoder(PrefixV2.BlockHash);
-export const publicKeyHashDecoder = (val: Uint8ArrayConsumer) => {
+export const publicKeyHashDecoder = (val: Uint8ArrayConsumer): string => {
   const prefix = val.consume(1);
 
   if (prefix[0] === 0x00) {
@@ -69,6 +70,7 @@ export const publicKeyHashDecoder = (val: Uint8ArrayConsumer) => {
   } else if (prefix[0] === 0x04) {
     return prefixDecoder(PrefixV2.MLDSA44PublicKeyHash)(val);
   }
+  throw new OperationDecodingError(`Unknown public key hash tag: ${prefix[0]}`);
 };
 
 export const publicKeyHashesDecoder = (val: Uint8ArrayConsumer) => {
@@ -76,9 +78,9 @@ export const publicKeyHashesDecoder = (val: Uint8ArrayConsumer) => {
     return;
   }
   const publicKeyHashes = [];
-  val.consume(4);
-  while (val.length() > 0) {
-    publicKeyHashes.push(publicKeyHashDecoder(val));
+  const whitelist = new Uint8ArrayConsumer(extractRequiredLen(val));
+  while (whitelist.length() > 0) {
+    publicKeyHashes.push(publicKeyHashDecoder(whitelist));
   }
   return publicKeyHashes;
 };
@@ -96,11 +98,11 @@ export const proposalDecoder = (proposal: Uint8ArrayConsumer): string => {
   return prefixDecoder(PrefixV2.ProtocolHash)(proposal);
 };
 
-export const proposalsDecoder = (proposal: Uint8ArrayConsumer): string[] => {
+export const proposalsDecoder = (value: Uint8ArrayConsumer): string[] => {
+  const payload = new Uint8ArrayConsumer(extractRequiredLen(value));
   const proposals = [];
-  proposal.consume(4);
-  while (proposal.length() > 0) {
-    proposals.push(proposalDecoder(proposal));
+  while (payload.length() > 0) {
+    proposals.push(proposalDecoder(payload));
   }
   return proposals;
 };
@@ -498,12 +500,11 @@ const signatureV1Encoder = (val: string) => {
 };
 
 const signatureV1Decoder = (val: Uint8ArrayConsumer) => {
-  val.consume(4);
-  if (val.length().toString() === '96') {
-    return prefixDecoder(PrefixV2.BLS12_381Signature)(val);
-  } else {
+  const proof = extractRequiredLen(val);
+  if (proof.length !== payloadLength[PrefixV2.BLS12_381Signature]) {
     throw new ProhibitedActionError('we only support decoding of BLSIG signatures');
   }
+  return b58Encode(proof, PrefixV2.BLS12_381Signature);
 };
 
 export const signatureProofEncoder = (val: string) => {

@@ -100,7 +100,7 @@ export class PrivateKey implements ExtendedPrivateKey {
   derive(index: number): PrivateKey {
     const data = new Uint8Array(37);
     if ((index & Hard) !== 0) {
-      // hardened derivation
+      // Existing wallets depend on trailing zero padding here when the parent scalar is short.
       data.set(this.keyPair.secretKey.toArray(), 1);
     } else {
       data.set(this.keyPair.publicKey, 0);
