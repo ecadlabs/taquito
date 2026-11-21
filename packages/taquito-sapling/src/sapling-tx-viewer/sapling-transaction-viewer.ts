@@ -93,7 +93,7 @@ export class SaplingTransactionViewer {
         incoming.push({ ...decryptedAsReceiver, isSpent, position: i });
       }
       if (decryptedAsSender) {
-        outgoing.push(decryptedAsSender);
+        outgoing.push({ ...decryptedAsSender, position: i });
       }
     }
     return {
@@ -105,14 +105,17 @@ export class SaplingTransactionViewer {
   /**
    * Retrieve all the incoming and outgoing decoded transactions associated with the configured viewing key
    *
+   * Each entry has the `position` of its note in the pool. Change from a spend is a note the key both
+   * sent and received, so it appears in both lists with the same position. A deliberate payment to one
+   * of the key's own addresses looks the same, so positions alone don't say whether a note is change.
    */
   async getIncomingAndOutgoingTransactions(): Promise<SaplingIncomingAndOutgoingTransaction> {
     const tx = await this.getIncomingAndOutgoingTransactionsRaw();
-    const incoming = tx.incoming.map(({ isSpent, ...rest }) => {
-      return { ...readableFormat(rest), isSpent };
+    const incoming = tx.incoming.map(({ isSpent, position, ...rest }) => {
+      return { ...readableFormat(rest), isSpent, position };
     });
-    const outgoing = tx.outgoing.map((outgoingTx) => {
-      return readableFormat(outgoingTx);
+    const outgoing = tx.outgoing.map(({ position, ...rest }) => {
+      return { ...readableFormat(rest), position };
     });
     return { incoming, outgoing };
   }

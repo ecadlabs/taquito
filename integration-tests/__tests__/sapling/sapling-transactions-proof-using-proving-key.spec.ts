@@ -90,7 +90,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             value: new BigNumber(3000000),
             memo: 'First Tx',
             paymentAddress: alicePaymentAddress,
-            isSpent: false
+            isSpent: false,
+            position: 0
           }
         ],
         outgoing: []
@@ -143,26 +144,30 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             value: new BigNumber(3000000),
             memo: 'First Tx',
             paymentAddress: alicePaymentAddress,
-            isSpent: true
+            isSpent: true,
+            position: 0
           },
           { // This input is a payback for when Alice sent 2 tz to bob (3tz - 2tz = 1tz).
             // Alice consumed the 3tz input and received 1tz back.
             value: new BigNumber(1000000),
             memo: '',
             paymentAddress: alicePaymentAddress,
-            isSpent: false
+            isSpent: false,
+            position: 2
           }
         ],
         outgoing: [
           {
             value: new BigNumber(2000000),
             memo: 'A gift',
-            paymentAddress: bobPaymentAddress
+            paymentAddress: bobPaymentAddress,
+            position: 1
           },
           { // Here Alice sent 1tz back to her (matching the payback input above).
             value: new BigNumber(1000000),
             memo: '',
-            paymentAddress: alicePaymentAddress
+            paymentAddress: alicePaymentAddress,
+            position: 2
           }
         ]
       })
@@ -181,7 +186,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             value: new BigNumber(2000000),
             memo: 'A gift',
             paymentAddress: bobPaymentAddress,
-            isSpent: false
+            isSpent: false,
+            position: 1
           }
         ],
         outgoing: []
@@ -234,36 +240,42 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             value: new BigNumber(3000000),
             memo: 'First Tx',
             paymentAddress: alicePaymentAddress,
-            isSpent: true
+            isSpent: true,
+            position: 0
           },
           {
             value: new BigNumber(1000000),
             memo: '',
             paymentAddress: alicePaymentAddress,
-            isSpent: true
+            isSpent: true,
+            position: 2
           },
           {
             value: new BigNumber(0),
             memo: '',
             paymentAddress: alicePaymentAddress,
-            isSpent: false
+            isSpent: false,
+            position: 3
           }
         ],
         outgoing: [
           {
             value: new BigNumber(2000000),
             memo: 'A gift',
-            paymentAddress: bobPaymentAddress
+            paymentAddress: bobPaymentAddress,
+            position: 1
           },
           {
             value: new BigNumber(1000000),
             memo: '',
-            paymentAddress: alicePaymentAddress
+            paymentAddress: alicePaymentAddress,
+            position: 2
           },
           {
             value: new BigNumber(0),
             memo: '',
-            paymentAddress: alicePaymentAddress
+            paymentAddress: alicePaymentAddress,
+            position: 3
           }
         ]
       })
