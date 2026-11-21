@@ -1,18 +1,98 @@
 import { createServer } from 'node:http';
 import { createRequire } from 'node:module';
 
+// Enumerable CommonJS exports from the installed pre-pilot packages.
+const baselineNames = {
+  '@taquito/core': [
+    'DeprecationError',
+    'InvalidAddressError',
+    'InvalidAmountError',
+    'InvalidBigMapParameterError',
+    'InvalidBlockHashError',
+    'InvalidChainIdError',
+    'InvalidContractAddressError',
+    'InvalidDerivationPathError',
+    'InvalidFinalizeUnstakeAmountError',
+    'InvalidHexStringError',
+    'InvalidKeyError',
+    'InvalidKeyHashError',
+    'InvalidMessageError',
+    'InvalidOperationHashError',
+    'InvalidOperationKindError',
+    'InvalidProofError',
+    'InvalidPublicKeyError',
+    'InvalidSignatureError',
+    'InvalidStakingAddressError',
+    'InvalidViewParameterError',
+    'NetworkError',
+    'ParameterValidationError',
+    'PermissionDeniedError',
+    'ProhibitedActionError',
+    'PublicKeyNotFoundError',
+    'RpcError',
+    'TaquitoError',
+    'TezosToolkitConfigError',
+    'UnsupportedActionError',
+    'VERSION',
+    'ValidationResult',
+  ],
+  '@taquito/http-utils': [
+    'HttpBackend',
+    'HttpRequestFailed',
+    'HttpResponseError',
+    'HttpTimeoutError',
+    'STATUS_CODE',
+    'VERSION',
+    'classifyTransportError',
+  ],
+};
+
 export default async function ({ assert, load, mode }) {
   const core = await load('@taquito/core');
   const http = await load('@taquito/http-utils');
   const require = createRequire(import.meta.url);
   const commonCore = require('@taquito/core');
   const commonHttp = require('@taquito/http-utils');
-  assert.equal(core.NetworkError, commonCore.NetworkError);
-  assert.equal(http.HttpResponseError, commonHttp.HttpResponseError);
+  for (const [name, loaded, commonjs, entry] of [
+    ['@taquito/core', core, commonCore, 'taquito-core'],
+    ['@taquito/http-utils', http, commonHttp, 'taquito-http-utils'],
+  ]) {
+    const manifest = require(`${name}/package.json`);
+    assert.equal(manifest.name, name);
+    assert.equal(manifest.exports['.'].module, `./dist/${entry}.bundler.mjs`);
+    assert.ok(require.resolve(`${name}/dist/${entry}.bundler.mjs`).endsWith('.bundler.mjs'));
+    assert.ok(require.resolve(`${name}/README.md`).endsWith('README.md'));
+    const deep = await load(`${name}/dist/lib/${entry}.js`);
+    const commonDeep = require(`${name}/dist/lib/${entry}`);
+    assert.equal(mode === 'import' ? deep.default : deep, commonDeep);
+    assert.equal(require(`${name}/dist/lib/errors`), require(`${name}/dist/lib/errors.js`));
+    assert.equal(
+      require.resolve(`${name}/dist/${entry}.es6`),
+      require.resolve(`${name}/dist/${entry}.es6.js`)
+    );
+    assert.equal(
+      require.resolve(`${name}/dist/${entry}.es6.js.map`),
+      require.resolve(`${name}/dist/${entry}.es6.js`) + '.map'
+    );
+    for (const exported of baselineNames[name]) {
+      assert.ok(Object.hasOwn(commonjs, exported), `${name} lost the ${exported} export`);
+    }
+    if (mode === 'import') {
+      for (const exported of Object.keys(commonjs)) {
+        assert.equal(
+          loaded[exported],
+          commonjs[exported],
+          `${name} changed the ${exported} export`
+        );
+      }
+    }
+  }
   if (mode === 'import') {
-    // Record current CJS interop until the native ESM default-export policy is agreed.
+    // Native ESM shares the CommonJS namespace and constructor instances.
     assert.equal(core.default, commonCore);
     assert.equal(http.default, commonHttp);
+    assert.equal(core['module.exports'], commonCore);
+    assert.equal(http['module.exports'], commonHttp);
   }
   const requireHttp = createRequire(require.resolve('@taquito/http-utils'));
   assert.equal(requireHttp.resolve('@taquito/core'), require.resolve('@taquito/core'));

@@ -1,3 +1,5 @@
+import type { TaquitoError as DeepCoreError } from '@taquito/core/dist/types/errors';
+import type { HttpResponseError as DeepHttpError } from '@taquito/http-utils/dist/types/errors';
 import { InvalidAddressError, NetworkError, ValidationResult } from '@taquito/core';
 import { HttpBackend, HttpResponseError, STATUS_CODE } from '@taquito/http-utils';
 import type { ClassifiedTransportError } from '@taquito/http-utils';
@@ -22,3 +24,10 @@ new HttpBackend().createRequest({ url: 123 });
 // @ts-expect-error The public address property remains a string.
 const invalidAddress: number = invalid.address;
 void [address, error, request, classified, invalidAddress];
+
+declare const deepCoreError: DeepCoreError;
+declare const deepHttpError: DeepHttpError;
+const rootCoreError: import('@taquito/core').TaquitoError = deepCoreError;
+const rootHttpError: import('@taquito/http-utils').HttpResponseError = deepHttpError;
+void rootCoreError;
+void rootHttpError;

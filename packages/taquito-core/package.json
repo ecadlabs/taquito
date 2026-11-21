@@ -9,9 +9,31 @@
     "blockchain",
     "sdk"
   ],
-  "main": "dist/taquito-core.umd.js",
+  "main": "dist/taquito-core.cjs",
   "module": "dist/taquito-core.es6.js",
   "typings": "dist/types/taquito-core.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/taquito-core.d.ts",
+      "browser": "./dist/taquito-core.es6.js",
+      "module": "./dist/taquito-core.bundler.mjs",
+      "import": "./dist/taquito-core.mjs",
+      "require": "./dist/taquito-core.cjs",
+      "default": "./dist/taquito-core.es6.js"
+    },
+    "./package.json": "./package.json",
+    "./README.md": "./README.md",
+    "./dist/*.js": "./dist/*.js",
+    "./dist/*.mjs": "./dist/*.mjs",
+    "./dist/*.cjs": "./dist/*.cjs",
+    "./dist/*.map": "./dist/*.map",
+    "./dist/*.d.ts": "./dist/*.d.ts",
+    "./dist/*.json": "./dist/*.json",
+    "./dist/*": {
+      "types": "./dist/*.d.ts",
+      "default": "./dist/*.js"
+    }
+  },
   "files": [
     "dist"
   ],
@@ -54,8 +76,18 @@
   "devDependencies": {
     "@rollup/plugin-json": "^6.1.0",
     "@types/node": "^22.20.5",
-    "lodash.camelcase": "^4.3.0",
     "rollup": "^4.67.3",
     "rollup-plugin-typescript2": "^0.37.0"
+  },
+  "nx": {
+    "targets": {
+      "build": {
+        "inputs": [
+          "default",
+          "^default",
+          "{workspaceRoot}/scripts/cjs-esm-bridge.mjs"
+        ]
+      }
+    }
   }
 }
