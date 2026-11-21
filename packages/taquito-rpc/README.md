@@ -30,6 +30,8 @@ const client = new RpcClient('https://YOUR_PREFERRED_RPC_URL');
 const balance = await client.getBalance('tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb');
 ```
 
+`getConstants()` returns `zk_rollup_enable` as a boolean on protocols that expose the flag. Use `true` or `false` in typed fixtures and mocks.
+
 ### RpcClientCache
 
 The `RpcClientCache` class aims to improve the performance of dApps built using Taquito by reducing the number of calls made to the RPC. Its constructor takes a RpcClient instance as a parameter and an optional ttl (time to live). The RpcClient responses will be cached for the period defined by the ttl (default is of 1000 milliseconds). The `RpcClientCache` can be injected to the TezosToolkit as follow:
