@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 836 923" width="836" height="923" role="img" aria-labelledby="t d">
+<title id="t">Beacon pairing over Matrix</title><desc id="d">The dApp probes relays and logs in, shows a QR code, the wallet creates a room and invites the dApp, the invite and the join cross the two relays by federation, the wallet sends the sealed pairing response, and the dApp checks it and stores the wallet as a peer.</desc>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#1f2328"/></marker>
+<marker id="ah-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#57606a"/></marker>
+</defs>
+<rect x="0.5" y="0.5" width="835" height="922" rx="10" fill="#ffffff" stroke="#d0d7de"/>
+<line x1="96" y1="70" x2="96" y2="853" stroke="#8c959f" stroke-dasharray="3 4"/>
+<line x1="316" y1="70" x2="316" y2="853" stroke="#8c959f" stroke-dasharray="3 4"/>
+<line x1="520" y1="70" x2="520" y2="853" stroke="#8c959f" stroke-dasharray="3 4"/>
+<line x1="740" y1="70" x2="740" y2="853" stroke="#8c959f" stroke-dasharray="3 4"/>
+<rect x="24" y="24" width="144" height="46" rx="8" fill="#f6f8fa" stroke="#d0d7de"/>
+<text x="96" y="52" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="600" fill="#1f2328">dApp</text>
+<rect x="24" y="853" width="144" height="46" rx="8" fill="#f6f8fa" stroke="#d0d7de"/>
+<text x="96" y="881" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="600" fill="#1f2328">dApp</text>
+<rect x="244" y="24" width="144" height="46" rx="8" fill="#f6f8fa" stroke="#d0d7de"/>
+<text x="316" y="52" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="600" fill="#1f2328">dApp relay</text>
+<rect x="244" y="853" width="144" height="46" rx="8" fill="#f6f8fa" stroke="#d0d7de"/>
+<text x="316" y="881" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="600" fill="#1f2328">dApp relay</text>
+<rect x="448" y="24" width="144" height="46" rx="8" fill="#f6f8fa" stroke="#d0d7de"/>
+<text x="520" y="52" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="600" fill="#1f2328">Wallet relay</text>
+<rect x="448" y="853" width="144" height="46" rx="8" fill="#f6f8fa" stroke="#d0d7de"/>
+<text x="520" y="881" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="600" fill="#1f2328">Wallet relay</text>
+<rect x="668" y="24" width="144" height="46" rx="8" fill="#f6f8fa" stroke="#d0d7de"/>
+<text x="740" y="52" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="600" fill="#1f2328">Wallet</text>
+<rect x="668" y="853" width="144" height="46" rx="8" fill="#f6f8fa" stroke="#d0d7de"/>
+<text x="740" y="881" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="600" fill="#1f2328">Wallet</text>
+<line x1="740" y1="120" x2="522" y2="120" stroke="#1f2328" stroke-width="1.6" marker-end="url(#ah)"/>
+<text x="630.0" y="112" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#1f2328">when the wallet starts</text>
+<text x="630.0" y="96" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#1f2328">log in as @hash(wallet key)</text>
+<line x1="96" y1="182" x2="314" y2="182" stroke="#1f2328" stroke-width="1.6" marker-end="url(#ah)"/>
+<text x="216.0" y="174" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#1f2328">keep the fastest</text>
+<text x="216.0" y="158" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#1f2328">probe every relay,</text>
+<circle cx="110" cy="182" r="9" fill="#0969da"/><text x="110" y="186" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="700" fill="#ffffff">1</text>
+<line x1="96" y1="228" x2="314" y2="228" stroke="#1f2328" stroke-width="1.6" marker-end="url(#ah)"/>
+<text x="216.0" y="220" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#1f2328">log in as @hash(dApp key)</text>
+<circle cx="110" cy="228" r="9" fill="#0969da"/><text x="110" y="232" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="700" fill="#ffffff">2</text>
+<line x1="96" y1="274" x2="738" y2="274" stroke="#57606a" stroke-width="1.6" stroke-dasharray="6 4" marker-end="url(#ah-m)"/>
+<text x="428.0" y="266" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#57606a">QR code or deep link: tezos://?type=tzip10&amp;data=…</text>
+<circle cx="110" cy="274" r="9" fill="#0969da"/><text x="110" y="278" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="700" fill="#ffffff">3</text>
+<line x1="740" y1="336" x2="522" y2="336" stroke="#1f2328" stroke-width="1.6" marker-end="url(#ah)"/>
+<text x="620.0" y="328" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#1f2328">@hash(dApp key):dApp relay</text>
+<text x="620.0" y="312" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#1f2328">createRoom, invite</text>
+<circle cx="726" cy="336" r="9" fill="#0969da"/><text x="726" y="340" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="700" fill="#ffffff">5</text>
+<line x1="520" y1="382" x2="318" y2="382" stroke="#57606a" stroke-width="1.6" stroke-dasharray="6 4" marker-end="url(#ah-m)"/>
+<text x="418.0" y="374" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#57606a">invite (federation)</text>
+<line x1="316" y1="428" x2="98" y2="428" stroke="#57606a" stroke-width="1.6" stroke-dasharray="6 4" marker-end="url(#ah-m)"/>
+<text x="206.0" y="420" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#57606a">invite</text>
+<line x1="96" y1="490" x2="314" y2="490" stroke="#1f2328" stroke-width="1.6" marker-end="url(#ah)"/>
+<text x="216.0" y="482" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#1f2328">pairing request is open</text>
+<text x="216.0" y="466" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#1f2328">join, only while a</text>
+<circle cx="110" cy="490" r="9" fill="#0969da"/><text x="110" y="494" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="700" fill="#ffffff">6</text>
+<line x1="316" y1="536" x2="518" y2="536" stroke="#57606a" stroke-width="1.6" stroke-dasharray="6 4" marker-end="url(#ah-m)"/>
+<text x="418.0" y="528" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#57606a">join (federation)</text>
+<line x1="520" y1="582" x2="738" y2="582" stroke="#57606a" stroke-width="1.6" stroke-dasharray="6 4" marker-end="url(#ah-m)"/>
+<text x="630.0" y="574" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#57606a">dApp joined</text>
+<line x1="740" y1="628" x2="522" y2="628" stroke="#1f2328" stroke-width="1.6" marker-end="url(#ah)"/>
+<text x="620.0" y="620" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#1f2328">@channel-open:…:&lt;sealed box&gt;</text>
+<circle cx="726" cy="628" r="9" fill="#0969da"/><text x="726" y="632" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="700" fill="#ffffff">7</text>
+<line x1="520" y1="674" x2="318" y2="674" stroke="#57606a" stroke-width="1.6" stroke-dasharray="6 4" marker-end="url(#ah-m)"/>
+<text x="418.0" y="666" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#57606a">message (federation)</text>
+<line x1="316" y1="720" x2="98" y2="720" stroke="#57606a" stroke-width="1.6" stroke-dasharray="6 4" marker-end="url(#ah-m)"/>
+<text x="206.0" y="712" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#57606a">message</text>
+<rect x="26" y="766" width="360" height="71" rx="6" fill="#ddf4ff" stroke="#54aeff"/>
+<text x="60" y="791" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#1f2328">Open the sealed box. Check that the id was issued</text>
+<text x="60" y="810" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#1f2328">here and is unused, and that the sender owns the</text>
+<text x="60" y="829" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#1f2328">publicKey. Store the wallet as a peer.</text>
+<circle cx="43" cy="786" r="9" fill="#0969da"/><text x="43" y="790" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="700" fill="#ffffff">8</text>
+</svg>

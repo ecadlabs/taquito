@@ -48,6 +48,7 @@ The `next` version contains the latest unreleased documentation.
 
 ### Wallets
 - `wallets` - Wallets
+- `beacon-connection-flow` - How Beacon connections work
 - `transaction_limits` - Transaction limits
 
 ### Michelson
