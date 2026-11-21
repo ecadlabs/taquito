@@ -8,7 +8,6 @@ import { PvmKind } from "@taquito/rpc";
 CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker, knownTicketContract }) => {
   describe(`Test tz2 account operations through contract API using: ${rpc}`, () => {
     const Tezos = lib;
-    let contractAddress = ''
     let Tz2: TezosToolkit;
 
     beforeEach(async () => {
@@ -67,35 +66,47 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker, knownTicketCont
       expect(transferOp.status).toBe('applied')
     })
 
-    it('verify that originate fee and gas is sufficient', async () => {
-      const estimated = await Tz2.estimate.originate({ code: "parameter unit; storage unit; code {CDR; NIL operation; PAIR};", storage: "unit" })
-      expect(estimated?.suggestedFeeMutez).toBeGreaterThanOrEqual(334)
-      expect(estimated?.gasLimit).toBeGreaterThanOrEqual(664)
-      expect(estimated?.storageLimit).toBe(315)
+    it('uses sufficient fees and gas for originate, contractCall and increase_paid_storage', async () => {
+      const origination = {
+        code: 'parameter unit; storage unit; code {CDR; NIL operation; PAIR};',
+        storage: 'unit',
+      }
+      const originationEstimate = await Tz2.estimate.originate(origination)
+      expect(originationEstimate?.suggestedFeeMutez).toBeGreaterThanOrEqual(334)
+      expect(originationEstimate?.gasLimit).toBeGreaterThanOrEqual(664)
+      expect(originationEstimate?.storageLimit).toBe(315)
 
-      const originateOp = await Tz2.contract.originate({ code: "parameter unit; storage unit; code {CDR; NIL operation; PAIR};", storage: "unit" })
+      const originateOp = await Tz2.contract.originate(origination)
       await originateOp.confirmation()
-      contractAddress = originateOp.contractAddress!
-      await waitForRpcState(
+      expect(originateOp.status).toBe('applied')
+      const { contractAddress } = originateOp
+      assert(contractAddress, 'Origination did not return a contract address')
+      const contract = await waitForRpcState(
         Tz2,
-        () => Tz2.rpc.getContract(contractAddress),
+        () => Tz2.contract.at(contractAddress),
         () => true,
         { description: `contract ${contractAddress}` }
       )
-      expect(originateOp.status).toBe('applied')
-    })
 
-    it('verify that contractCall fee and gas is sufficient', async () => {
-      const contract = await Tz2.contract.at(contractAddress)
       const method = contract.methodsObject.default(UnitValue)
-      const estimated = await Tz2.estimate.contractCall(method)
-      expect(estimated?.suggestedFeeMutez).toBeGreaterThanOrEqual(296)
-      expect(estimated?.gasLimit).toBeGreaterThanOrEqual(458)
-      expect(estimated?.storageLimit).toBe(0)
+      const callEstimate = await Tz2.estimate.contractCall(method)
+      expect(callEstimate?.suggestedFeeMutez).toBeGreaterThanOrEqual(296)
+      expect(callEstimate?.gasLimit).toBeGreaterThanOrEqual(458)
+      expect(callEstimate?.storageLimit).toBe(0)
 
       const contractCallOp = await method.send()
       await contractCallOp.confirmation()
       expect(contractCallOp.status).toBe('applied')
+
+      const increasePaidStorage = { amount: 3, destination: contractAddress }
+      const storageEstimate = await Tz2.estimate.increasePaidStorage(increasePaidStorage)
+      expect(storageEstimate?.suggestedFeeMutez).toBeGreaterThanOrEqual(265)
+      expect(storageEstimate?.gasLimit).toBeGreaterThanOrEqual(155)
+      expect(storageEstimate?.storageLimit).toBe(0)
+
+      const increasePaidStorageOp = await Tz2.contract.increasePaidStorage(increasePaidStorage)
+      await increasePaidStorageOp.confirmation()
+      expect(increasePaidStorageOp.status).toBe('applied')
     })
 
     it('verify that setDelegate fee and gas is sufficient', async () => {
@@ -120,17 +131,6 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker, knownTicketCont
       const registerDelegateOp = await Tz2.contract.registerDelegate({})
       await registerDelegateOp.confirmation()
       expect(registerDelegateOp.status).toBe('applied')
-    })
-
-    it('verify that increase_paid_storage fee and gas is sufficient', async () => {
-      const estimated = await Tz2.estimate.increasePaidStorage({ amount: 3, destination: contractAddress })
-      expect(estimated?.suggestedFeeMutez).toBeGreaterThanOrEqual(265)
-      expect(estimated?.gasLimit).toBeGreaterThanOrEqual(155)
-      expect(estimated?.storageLimit).toBe(0)
-
-      const increasePaidStorageOp = await Tz2.contract.increasePaidStorage({ amount: 3, destination: contractAddress })
-      await increasePaidStorageOp.confirmation()
-      expect(increasePaidStorageOp.status).toBe('applied')
     })
 
     it('verify that register_global_constant fee and gas is sufficient', async () => {
