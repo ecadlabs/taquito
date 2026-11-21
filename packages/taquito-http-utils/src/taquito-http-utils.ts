@@ -385,13 +385,26 @@ export class HttpBackend {
 
         // Handle responses with status code >= 400
         if (response.status >= 400) {
+          const canRetryRateLimit =
+            response.status === 429 &&
+            methodValue.toUpperCase() === 'GET' &&
+            attempt < httpRetryCount;
+          let retryDelayMs: number | undefined;
+          if (canRetryRateLimit) {
+            const requestedDelay = retryAfterDelay(response.headers.get('Retry-After'));
+            if (requestedDelay === undefined || requestedDelay <= MAX_RETRY_AFTER_MS) {
+              retryDelayMs = requestedDelay ?? computeRetryDelayMs(attempt);
+            }
+          }
+
           let errorData = '';
-          try {
-            errorData = await readErrorResponse(response);
-          } catch {
-            // If reading the error body fails (e.g. socket reset or timeout mid-error-body),
-            // preserve the HTTP status so the status-based retry policy still governs.
-            errorData = response.statusText || '';
+          if (retryDelayMs === undefined) {
+            try {
+              errorData = await readErrorResponse(response);
+            } catch {
+              // Preserve the HTTP status when the error body cannot be read.
+              errorData = response.statusText || '';
+            }
           }
           traceHttp(() => ({
             stage: 'response-error',
@@ -400,27 +413,21 @@ export class HttpBackend {
             status: response.status,
             elapsedMs: Date.now() - requestStartedAt,
           }));
-          if (
-            response.status === 429 &&
-            methodValue.toUpperCase() === 'GET' &&
-            attempt < httpRetryCount
-          ) {
-            const requestedDelay = retryAfterDelay(response.headers.get('Retry-After'));
-            const retryDelayMs = requestedDelay ?? computeRetryDelayMs(attempt);
-            if (requestedDelay === undefined || requestedDelay <= MAX_RETRY_AFTER_MS) {
-              clearTimeout(t);
-              traceHttp(() => ({
-                stage: 'request-retry',
-                method: methodValue,
-                url: normalizeTraceUrl(urlWithQuery),
-                status: response.status,
-                attempt: attempt + 1,
-                maxAttempts: httpRetryCount + 1,
-                retryDelayMs,
-              }));
-              await sleep(retryDelayMs, signal);
-              continue;
-            }
+          if (retryDelayMs !== undefined) {
+            clearTimeout(t);
+            // A retried response has no diagnostic body to return to the caller.
+            void response.body?.cancel().catch(() => undefined);
+            traceHttp(() => ({
+              stage: 'request-retry',
+              method: methodValue,
+              url: normalizeTraceUrl(urlWithQuery),
+              status: response.status,
+              attempt: attempt + 1,
+              maxAttempts: httpRetryCount + 1,
+              retryDelayMs,
+            }));
+            await sleep(retryDelayMs, signal);
+            continue;
           }
           throw new HttpResponseError(
             `Http error response: (${response.status}) ${errorData}`,

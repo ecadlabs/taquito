@@ -38,6 +38,22 @@ it('honors GET Retry-After seconds and preserves the query and headers', async (
   expect(fetch.mock.calls[1]?.[1]?.headers).toMatchObject({ Authorization: 'token' });
 });
 
+it('retries without waiting for the unused 429 response body', async () => {
+  const cancel = vi.fn();
+  const stream = new ReadableStream<Uint8Array>({ cancel });
+  const fetch = vi
+    .fn<typeof globalThis.fetch>()
+    .mockResolvedValueOnce(new Response(stream, { status: 429, headers: { 'Retry-After': '0' } }))
+    .mockResolvedValueOnce(Response.json('ready'));
+  vi.stubGlobal('fetch', fetch);
+  const { HttpBackend } = await import('../src/taquito-http-utils');
+  const result = new HttpBackend().createRequest({ url: 'https://rpc.example/read' });
+  await vi.advanceTimersByTimeAsync(1);
+  expect(cancel).toHaveBeenCalledOnce();
+  expect(fetch).toHaveBeenCalledTimes(2);
+  await expect(result).resolves.toBe('ready');
+});
+
 it.each([
   { header: 'Sun, 25 Oct 2026 00:00:02 GMT', delay: 2000 },
   { header: 'Sunday, 25-Oct-26 00:00:02 GMT', delay: 2000 },

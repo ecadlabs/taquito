@@ -57,7 +57,7 @@ After receiving an HTTP 429 response, `HttpBackend` can retry GET requests. Stat
 
 `Retry-After` can contain integer seconds or an HTTP date. A valid delay up to 30 seconds is honored. A longer delay returns the original HTTP error instead of retrying early. Missing or invalid headers use the existing exponential backoff and jitter. Browsers can read this header only when the server exposes it through CORS. Past dates retry without a delay.
 
-The attempt timer is cleared before waiting. The timeout applies to each attempt, not the full request and retry sequence. An external abort cancels every retry wait, including gateway-status and transport backoff. If the error body cannot be read, the response status and Retry-After header still govern the decision.
+`HttpBackend` cancels the unused 429 response body before retrying a GET. If the response ends the retry sequence, `HttpResponseError` still includes the response body when it can be read. The timeout applies to each attempt. An external abort cancels any retry wait, including gateway and transport backoff.
 
 ## Disclaimer
 
