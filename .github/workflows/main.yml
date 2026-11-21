@@ -160,6 +160,7 @@ jobs:
     concurrency:
       group: ${{ matrix.network.name }}-itest-testnet-shard-${{ matrix.shard }}
       cancel-in-progress: false
+      queue: max
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
@@ -270,6 +271,7 @@ jobs:
     concurrency:
       group: shadownet-itest-sapling
       cancel-in-progress: false
+      queue: max
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
