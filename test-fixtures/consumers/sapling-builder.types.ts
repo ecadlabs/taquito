@@ -33,6 +33,14 @@ const chosenInputs: SaplingTransactionInputSelection = {
   sumSelectedInputs: amount,
 };
 void builder.createShieldedTx(outputs, amount, boundData);
+// Shielding does not need a spending key.
+const keylessBuilder = new SaplingTransactionBuilder(
+  {},
+  forger,
+  contract,
+  new RpcReadAdapter(new RpcClient('https://example.invalid'))
+);
+void keylessBuilder.createShieldedTx(outputs, amount, boundData);
 async function buildTransaction(): Promise<SaplingTransaction> {
   const description = await builder.createSaplingTx(outputs, amount, boundData, chosenInputs);
   const transaction: SaplingTransaction = { ...description, root: '00'.repeat(32), boundData };

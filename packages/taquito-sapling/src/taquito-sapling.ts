@@ -45,7 +45,7 @@ export type {
   SaplingContractDetails,
   SaplingTransaction,
 } from './types';
-export { InvalidSaplingOutputOrderError } from './errors';
+export { InvalidSaplingOutputOrderError, SpendingKeyRequiredError } from './errors';
 
 // Low-level construction for contracts with application-defined bound data.
 export { SaplingTransactionBuilder } from './sapling-tx-builder/sapling-transactions-builder';
