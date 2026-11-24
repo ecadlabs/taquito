@@ -15,7 +15,7 @@ When an RPC node responds with HTTP 429, Taquito's default HTTP backend can retr
 
 HTTP 429 retries apply only to GET requests. GET requests and selected POST endpoints, including `run_code`, `run_view` and `pack_data`, can also retry HTTP 502, 503 and 504 or transient transport failures such as a connection reset. If an operation injection retry returns an error, check the operation hash before reporting a failure. The first attempt may have reached the node.
 
-The default budget is one retry shared across rate limits, gateway errors and transport failures. In Node.js, set `TAQITO_HTTP_RETRY_COUNT` to change the budget or to `0` to disable retries. Set `TAQITO_HTTP_RETRY_BASE_MS` to change the base backoff delay, which defaults to 100 ms. Set both variables before importing Taquito. Aborting the request also cancels a retry wait.
+The default budget is one retry shared across rate limits, gateway errors and transport failures. In Node.js, set `TAQUITO_HTTP_RETRY_COUNT` to change the budget or to `0` to disable retries. Set `TAQUITO_HTTP_RETRY_BASE_MS` to change the base backoff delay, which defaults to 100 ms. Set both variables before importing Taquito. Aborting the request also cancels a retry wait.
 
 ## Examples
 
