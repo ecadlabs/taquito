@@ -32,6 +32,11 @@ export default defineConfig({
       const url = new URL(page);
       const pathname = url.pathname;
 
+      // Skip raw .md and .txt LLM endpoints in XML sitemap
+      if (pathname.endsWith('.md') || pathname.endsWith('.txt')) {
+        return false;
+      }
+
       // Skip docs pages for old versions and 'next'
       if (pathname.startsWith('/docs/')) {
         const versionMatch = pathname.match(/^\/docs\/([^/]+)\//);

@@ -369,3 +369,26 @@ Inspect production files importing `@taquito/taquito`, `@taquito/rpc`, or `bignu
 4. State treated as final before `await op.confirmation()` (or `await op.contract()`), or assuming `WalletOperation.confirmation()` throws on backtracked operations without checking `await op.status() === 'applied'`.
 5. `Number()` / `parseInt()` / float math on mutez, token balances, or `BigNumber` storage fields, or unvalidated user address inputs missing `isValidAddress` / `isValidContractAddress`.
 ```
+
+### Drop-in `AGENTS.md` / `CLAUDE.md` / Cursor Rules Snippet
+
+Add the following block to your repository's `AGENTS.md`, `CLAUDE.md`, or `.cursor/rules/taquito.mdc` so AI coding agents generate modern `@taquito/*` code automatically:
+
+```markdown
+## Tezos & Taquito Guidelines
+
+- **Canonical packages:** Always use official `@taquito/*` packages (`@taquito/taquito`, `@taquito/beacon-wallet`, `@taquito/utils`, `@taquito/michel-codec`, `@taquito/tzip12`, `@taquito/tzip16`) and `bignumber.js`. Never substitute unmaintained legacy packages (`@airgap/beacon-sdk`, `conseiljs`) or downstream rebranded forks (`@tezos-x/octez.js`, `@tezos-x/octez.connect`).
+- **Machine-readable docs:** Fetch `https://taquito.io/llms.txt` (index and golden-path reference), `https://taquito.io/llms-full.txt` (full corpus), or append `.md` to any doc page (e.g. `https://taquito.io/docs/next/wallet_API.md`).
+- **Networks & RPCs:** Use `mainnet`, `shadownet`, or `tallinnnet` (e.g. `https://rpc.tzkt.io/mainnet`, `https://rpc.tzkt.io/shadownet`). Never use retired RPC hosts (`*.tezos.ecadinfra.com`, `mainnet.api.tez.ie`, `mainnet.smartpy.io`) or retired testnets (`ghostnet`, `ithacanet`, `hangzhounet`).
+- **Singleton & Wallet setup:**
+  - Instantiate `TezosToolkit` and `BeaconWallet` once per app session and configure `Tezos.setPackerProvider(new MichelCodecPacker())`.
+  - Pass `network: { type: NetworkType.MAINNET }` (from `@taquito/beacon-wallet/types`) and `walletConnectOptions: { projectId }` in `new BeaconWallet(...)`, never in `requestPermissions()`.
+  - Subscribe to `BeaconEvent.ACTIVE_ACCOUNT_SET` before `requestPermissions()` and call `Tezos.setWalletProvider(wallet)` inside the handler to clear cached `pkh`/`pk` state across `wallet`, `prepare`, and `estimate`.
+  - Call `await wallet.disconnect()` on logout, never `wallet.clearActiveAccount()`.
+- **Contracts, Batching & Confirmations:**
+  - Cache `Tezos.wallet.at(address)` promises instead of re-fetching contract scripts on every render or click.
+  - Call entrypoints via `contract.methodsObject.<entrypoint>(params)` (pass `UnitValue` for `unit` entrypoints), never legacy positional `contract.methods.<entrypoint>(...)`.
+  - Group sequential operations with `Tezos.wallet.batch()`.
+  - After `await op.confirmation(1)`, check `await op.status() === 'applied'` before treating state updates as final.
+- **Precision & Validation:** Keep numeric storage values in `BigNumber` (`amount.shiftedBy(-decimals).toFixed()`) and validate user address inputs with `isValidAddress` / `isValidContractAddress` from `@taquito/utils`.
+```
