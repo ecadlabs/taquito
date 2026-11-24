@@ -27,6 +27,17 @@ describe('Binary', () => {
   );
 
   describe('pack', () => {
+    it.each(['toString', 'constructor', '__proto__', 'valueOf', 'notAPrimitive'])(
+      'rejects an unregistered primitive %s',
+      (prim) => {
+        expect(() => packData({ prim } as unknown as MichelsonData)).toThrow(TypeError);
+      }
+    );
+
+    it('continues to encode the registered primitive with opcode zero', () => {
+      expect(packData({ prim: 'parameter' } as unknown as MichelsonData)).toEqual([5, 3, 0]);
+    });
+
     for (const s of src) {
       it(JSON.stringify(s.data), () => {
         const p = packData(s.data, s.type);

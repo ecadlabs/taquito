@@ -1,5 +1,6 @@
 import { describe, expect, expectTypeOf, it } from 'vitest';
 import { emitMicheline, Expr, Parser } from '@taquito/michel-codec';
+import { UnexpectedMichelsonValueError } from '../../src/errors';
 import {
   BytesValue,
   bytesDecoder,
@@ -28,6 +29,19 @@ import {
   valueDecoder,
   valueEncoder,
 } from '../../src/taquito-local-forging';
+
+describe('primitive encoding', () => {
+  it.each(['toString', 'constructor', '__proto__', 'valueOf', 'notAPrimitive'])(
+    'rejects the unregistered primitive %s during encoding',
+    (prim) => {
+      expect(() => valueEncoder({ prim })).toThrow(UnexpectedMichelsonValueError);
+    }
+  );
+
+  it('retains the registered primitive with opcode zero', () => {
+    expect(valueEncoder({ prim: 'parameter' })).toBe('0300');
+  });
+});
 
 describe('unint8arrayconsumer', () => {
   it('should not stall ', () => {

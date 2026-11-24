@@ -213,7 +213,15 @@ export const primEncoder: Encoder<PrimValue> = (value) => {
   // Specify the number of args max is 3 without annotation
   const preamble = pad(Math.min(2 * argsCount + hasAnnot + 0x03, 9), 2);
 
-  const op = opMappingReverse[value.prim];
+  // Only registered primitives have opcodes.
+  const op =
+    typeof value.prim === 'string' &&
+    Object.prototype.hasOwnProperty.call(opMappingReverse, value.prim)
+      ? opMappingReverse[value.prim]
+      : undefined;
+  if (op === undefined) {
+    throw new UnexpectedMichelsonValueError(JSON.stringify(value));
+  }
 
   let encodedArgs = (value.args || []).map((arg) => valueEncoder(arg)).join('');
   const encodedAnnots = Array.isArray(value.annots) ? encodeAnnots(value.annots) : '';
