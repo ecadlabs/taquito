@@ -113,7 +113,7 @@ The `next` version contains the latest unreleased documentation.
 ### Dapp Development
 - `package_bundle` - Client-Side Environments
 - `dapp_template` - dApp Templates
-- `dapp_prelaunch` - dApp Pre-launch Checklist
+- `dapp_prelaunch` - dApp Best Practices Checklist
 
 ### Taquito Public API
 - `wallet_API` - Wallet API
