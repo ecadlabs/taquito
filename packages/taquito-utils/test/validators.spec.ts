@@ -1,3 +1,5 @@
+import { b58DecodeAndCheckPrefix, b58Encode } from '../src/encoding';
+import { payloadLength, PrefixV2 } from '../src/constants';
 import {
   validateAddress,
   ValidationResult,
@@ -13,6 +15,18 @@ import {
 } from '../src/validators';
 
 describe('validateAddress', () => {
+  it('rejects an address one character over the global Base58 bound', () => {
+    expect(validateAddress('z'.repeat(5334))).toEqual(ValidationResult.INVALID_LENGTH);
+  });
+
+  it('preserves legitimate values at the largest prefix size', () => {
+    const [prefix] = Object.values(PrefixV2).sort((a, b) => payloadLength[b] - payloadLength[a]);
+    const bytes = new Uint8Array(payloadLength[prefix]).fill(0xff);
+    const encoded = b58Encode(bytes, prefix);
+    expect(b58DecodeAndCheckPrefix(encoded, [prefix], true)).toEqual(bytes);
+    expect(validateAddress(encoded)).toEqual(ValidationResult.PREFIX_NOT_ALLOWED);
+  });
+
   it('Validate address properly', () => {
     expect(validateAddress('tz1QZ6KY7d3BuZDT1d19dUxoQrtFPN2QJ3hn')).toEqual(ValidationResult.VALID);
     expect(validateAddress('KT1Fe71jyjrxFg9ZrYqtvaX7uQjcLo7svE4D')).toEqual(ValidationResult.VALID);

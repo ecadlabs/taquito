@@ -187,7 +187,7 @@ const base58alphabetBwd: number[] = [
 
 function byteAt(src: string, i: number): number {
   const c = src.charCodeAt(i) - 49;
-  if (c >= base58alphabetFwd.length || base58alphabetFwd[c] === -1) {
+  if (c < 0 || c >= base58alphabetFwd.length || base58alphabetFwd[c] === -1) {
     throw new Base58DecodingError(`Unexpected character at position ${i}: ${src[i]}`);
   }
   return base58alphabetFwd[c];

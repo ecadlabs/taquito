@@ -329,10 +329,21 @@ export const tezosPrefix: Record<TezosIDType, TezosIDPrefix> = {
   ZkRollupAddress: [20, [1, 23, 224, 125]], // epx1(37)
 };
 
+const maxBase58Length = (bytes: number) => Math.ceil((bytes * Math.log(256)) / Math.log(58));
+
 export function checkDecodeTezosID<T extends TezosIDType[]>(
   id: string,
   ...types: T
 ): [T[number], number[]] | null {
+  // Bound decoding work by the largest requested identifier, including its checksum.
+  let maxLength = 0;
+  for (const t of types) {
+    const [plen, p] = tezosPrefix[t];
+    maxLength = Math.max(maxLength, maxBase58Length(p.length + plen + 4));
+  }
+  if (id.length > maxLength) {
+    return null;
+  }
   const buf = decodeBase58Check(id);
   for (const t of types) {
     const [plen, p] = tezosPrefix[t];
