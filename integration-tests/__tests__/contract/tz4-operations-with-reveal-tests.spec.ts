@@ -1,4 +1,4 @@
-import { CONFIGS } from "../../config";
+import { CONFIGS, waitForRpcState } from "../../config";
 import { PrefixV2 } from "@taquito/utils";
 import { UnitValue, OpKind, TezosToolkit } from "@taquito/taquito";
 import crypto from 'crypto';
@@ -268,7 +268,12 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker, knownTicketCont
       const issueOp = await ticketContract.methodsObject.default([tz4Pkh, '3']).send();
       await issueOp.confirmation();
 
-      const block = await client.getBlock({ block: String(issueOp.includedInBlock) });
+      const block = await waitForRpcState(
+        Tezos,
+        () => client.getBlock({ block: String(issueOp.includedInBlock) }),
+        (candidate) => candidate.operations[3]?.some(({ hash }) => hash === issueOp.hash) ?? false,
+        { description: `ticket issuance block ${issueOp.includedInBlock} for ${issueOp.hash}` }
+      );
       const issuance = block.operations[3]?.find(({ hash }) => hash === issueOp.hash);
       const transaction = issuance?.contents.find(
         (content) => content.kind === OpKind.TRANSACTION && 'metadata' in content
