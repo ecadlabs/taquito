@@ -1,4 +1,4 @@
-import { CONFIGS } from "../../config";
+import { CONFIGS, waitForRpcState } from "../../config";
 import { PrefixV2 } from "@taquito/utils";
 import { UnitValue, OpKind, TezosToolkit } from "@taquito/taquito";
 import crypto from 'crypto';
@@ -268,20 +268,34 @@ CONFIGS().forEach(({ lib, rpc, setup, createAddress, knownBaker, knownTicketCont
       const issueOp = await ticketContract.methodsObject.default([tz4Pkh, '3']).send();
       await issueOp.confirmation();
 
-      expect(issueOp.status).toBe('applied');
-      const ticketBalance = await client.getTicketBalance(tz4Pkh, ticket);
-      const head = await client.getBlockHeader();
-      console.log('[ticket-diag]', JSON.stringify({
-        tz4Pkh,
-        issueHash: issueOp.hash,
-        issueStatus: issueOp.status,
-        issuedInBlock: issueOp.includedInBlock,
-        ticketBalance,
-        headLevel: head.level,
-        headTimestamp: head.timestamp,
-        gap: head.level - issueOp.includedInBlock,
-      }));
-      expect(ticketBalance).toBe('3');
+      const block = await waitForRpcState(
+        Tezos,
+        () => client.getBlock({ block: String(issueOp.includedInBlock) }),
+        (candidate) => candidate.operations[3]?.some(({ hash }) => hash === issueOp.hash) ?? false,
+        { description: `ticket issuance block ${issueOp.includedInBlock} for ${issueOp.hash}` }
+      );
+      const issuance = block.operations[3]?.find(({ hash }) => hash === issueOp.hash);
+      const transaction = issuance?.contents.find(
+        (content) => content.kind === OpKind.TRANSACTION && 'metadata' in content
+      );
+      const receiptContext = `Ticket issuance ${issueOp.hash} in block ${block.hash}`;
+      expect(transaction?.metadata.operation_result.status, receiptContext).toBe('applied');
+
+      const delivery = transaction?.metadata.internal_operation_results?.find(
+        (operation) => operation.kind === OpKind.TRANSACTION && operation.destination === tz4Pkh
+      );
+      expect(delivery?.result, receiptContext).toMatchObject({
+        status: 'applied',
+        ticket_receipt: expect.arrayContaining([
+          expect.objectContaining({
+            ticket_token: ticket,
+            updates: expect.arrayContaining([{ account: tz4Pkh, amount: '3' }]),
+          }),
+        ]),
+      });
+
+      const ticketBalance = await client.getTicketBalance(tz4Pkh, ticket, { block: block.hash });
+      expect(ticketBalance, `${receiptContext}, balance for ${tz4Pkh}`).toBe('3');
 
       const estimated = await Tz4.estimate.transferTicket({
         ticketContents: ticket.content,
