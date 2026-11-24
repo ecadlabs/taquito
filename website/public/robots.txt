@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
 
+# LLM & Coding Agent Documentation Index (https://llmstxt.org)
+# Compact index + golden-path reference: https://taquito.io/llms.txt
+# Full single-file markdown corpus: https://taquito.io/llms-full.txt
 Sitemap: https://taquito.io/sitemap-index.xml

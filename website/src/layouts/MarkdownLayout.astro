@@ -82,6 +82,14 @@ const articleJsonLd = {
     <title>{pageTitle}</title>
     <meta name="description" content={pageDescription} />
     <link rel="canonical" href={canonicalHref} />
+    {isDocsPage && currentSlug && (
+      <link
+        rel="alternate"
+        type="text/markdown"
+        href={`/docs/${currentSlug}.md`}
+        title={`${pageTitle} (Markdown)`}
+      />
+    )}
 
     <!-- Prevent indexing of old/next versions -->
     {(isOldVersion || isNextVersion) && <meta name="robots" content="noindex, follow" />}
@@ -142,8 +150,20 @@ const articleJsonLd = {
           }
           {
             isDocsPage && version && (
-              <div class="bg-primary rounded-md py-0.5 px-2 w-fit mb-1">
-                <p class="text-white text-xs">Version: {version}</p>
+              <div class="flex items-center gap-2 mb-1">
+                <div class="bg-primary rounded-md py-0.5 px-2 w-fit">
+                  <p class="text-white text-xs">Version: {version}</p>
+                </div>
+                {currentSlug && (
+                  <a
+                    href={`/docs/${currentSlug}.md`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-xs text-text-secondary/75 hover:text-primary border border-gray-300 rounded-md py-0.5 px-2 no-underline transition-colors"
+                    title="View clean Markdown for LLMs and coding agents">
+                    View .md
+                  </a>
+                )}
               </div>
             )
           }
