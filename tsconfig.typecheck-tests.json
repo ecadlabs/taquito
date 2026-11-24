@@ -15,6 +15,7 @@
     "packages/taquito-http-utils/test/response-body-timeout.spec.ts",
     "integration-tests/__tests__/tzip-metadata/tzip16-originate-contracts-with-metadata-on-HTTPS-and-sha256-hash-and-fetch-metadata.spec.ts",
     "packages/taquito-http-utils/test/native-fetch.spec.ts",
+    "packages/taquito-http-utils/test/rate-limit*.spec.ts",
     "packages/taquito/test/contract/big-map-values*.spec.ts",
     "packages/taquito/test/contract/fa21.spec.ts",
     "packages/taquito-rpc/test/big-map-values*.spec.ts",

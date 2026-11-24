@@ -6,6 +6,10 @@ layout: ../layouts/MarkdownLayout.astro
 ---
 # Unreleased
 
+### GET rate-limit retries
+
+- HTTP GET requests can retry HTTP 429 responses within the existing shared retry budget. Valid `Retry-After` delays up to 30 seconds are honored, with the existing backoff used for missing or invalid headers. External aborts cancel rate-limit, gateway-status and transport retry waits.
+
 ### `@taquito/wallet-connect` removed
 
 - `@taquito/wallet-connect` is no longer part of Taquito and will not receive new releases. It remained in beta since its first release. Already published versions remain installable but are unmaintained. Use `@taquito/beacon-wallet` to connect to wallets, including over WalletConnect through Beacon's WalletConnect transport.

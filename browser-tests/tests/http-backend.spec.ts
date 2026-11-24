@@ -301,3 +301,54 @@ test('reports a CORS rejection without exposing an HTTP response', async ({ page
   expect(endpoint.preflights.length).toBeGreaterThan(0);
   expect(endpoint.requests).toEqual([]);
 });
+
+for (const exposeHeader of [false, true]) {
+  test(`retries a GET rate limit with Retry-After exposed=${exposeHeader}`, async ({
+    page,
+    endpoint,
+  }) => {
+    endpoint.respond = (_request, response) => {
+      if (exposeHeader) response.setHeader('Access-Control-Expose-Headers', 'Retry-After');
+      if (endpoint.requests.length === 1) {
+        response.setHeader('Retry-After', '0');
+        response.writeHead(429).end('busy');
+      } else {
+        response.end(JSON.stringify('ready'));
+      }
+    };
+    const observed = await page.evaluate(async (url) => {
+      const fetch = globalThis.fetch;
+      const retryAfter: (string | null)[] = [];
+      globalThis.fetch = async (...args) => {
+        const response = await fetch(...args);
+        retryAfter.push(response.headers.get('Retry-After'));
+        return response;
+      };
+      try {
+        return { result: await window.httpTest.request({ url }), retryAfter };
+      } finally {
+        globalThis.fetch = fetch;
+      }
+    }, endpoint.url);
+    expect(observed).toEqual({
+      result: { kind: 'success', value: 'ready' },
+      retryAfter: [exposeHeader ? '0' : null, null],
+    });
+    expect(await page.evaluate(() => window.httpTest.fetchAttempts())).toBe(2);
+  });
+}
+
+test('preserves a browser rate-limit response when Retry-After exceeds the cap', async ({
+  page,
+  endpoint,
+}) => {
+  endpoint.respond = (_request, response) => {
+    response.setHeader('Access-Control-Expose-Headers', 'Retry-After');
+    response.setHeader('Retry-After', '31');
+    response.writeHead(429).end('busy');
+  };
+  expect(
+    await page.evaluate((url) => window.httpTest.request({ url }), endpoint.url)
+  ).toMatchObject({ kind: 'response', status: 429, body: 'busy' });
+  expect(await page.evaluate(() => window.httpTest.fetchAttempts())).toBe(1);
+});

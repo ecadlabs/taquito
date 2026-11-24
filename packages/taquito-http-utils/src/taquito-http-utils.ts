@@ -101,7 +101,115 @@ const computeRetryDelayMs = (attempt: number) => {
   return exponential + jitter;
 };
 
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+// Related to Octez.js #50. This policy retries GET 429 only, not POST responses.
+const MAX_RETRY_AFTER_MS = 30000;
+const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+// Accept HTTP-date's three specified forms, without Date.parse's loose date syntax.
+function retryAfterDelay(value: string | null): number | undefined {
+  if (value === null) return undefined;
+  const text = value.trim();
+  if (/^\d+$/.test(text)) return Number(text) * 1000;
+  const imf =
+    /^(Sun|Mon|Tue|Wed|Thu|Fri|Sat), (\d{2}) (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) (\d{4}) (\d{2}):(\d{2}):(\d{2}) GMT$/.exec(
+      text
+    );
+  const rfc850 =
+    /^(Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday), (\d{2})-(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)-(\d{2}) (\d{2}):(\d{2}):(\d{2}) GMT$/.exec(
+      text
+    );
+  const asctime =
+    /^(Sun|Mon|Tue|Wed|Thu|Fri|Sat) (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) ( [1-9]|0[1-9]|[12]\d|3[01]) (\d{2}):(\d{2}):(\d{2}) (\d{4})$/.exec(
+      text
+    );
+  const match =
+    imf ??
+    rfc850 ??
+    (asctime
+      ? [
+          asctime[0],
+          asctime[1],
+          asctime[3],
+          asctime[2],
+          asctime[7],
+          asctime[4],
+          asctime[5],
+          asctime[6],
+        ]
+      : null);
+  if (!match) return undefined;
+  const day = Number(match[2]);
+  const month = months.indexOf(match[3]);
+  let year = Number(match[4]);
+  const hour = Number(match[5]);
+  const minute = Number(match[6]);
+  const second = Number(match[7]);
+  const date = new Date(0);
+  if (rfc850) {
+    const cutoff = new Date(Date.now());
+    cutoff.setUTCFullYear(cutoff.getUTCFullYear() + 50);
+    year += Math.floor(cutoff.getUTCFullYear() / 100) * 100;
+    date.setUTCFullYear(year, month, day);
+    date.setUTCHours(hour, minute, Math.min(second, 59), 0);
+    if (date.getTime() > cutoff.getTime()) year -= 100;
+  }
+  date.setUTCFullYear(year, month, day);
+  date.setUTCHours(hour, minute, Math.min(second, 59), 0);
+  const weekday = match[1].slice(0, 3);
+  if (
+    second > 60 ||
+    (second === 60 && (hour !== 23 || minute !== 59)) ||
+    date.getUTCFullYear() !== year ||
+    date.getUTCMonth() !== month ||
+    date.getUTCDate() !== day ||
+    date.getUTCHours() !== hour ||
+    date.getUTCMinutes() !== minute ||
+    weekdays[date.getUTCDay()] !== weekday
+  )
+    return undefined;
+  return Math.max(0, date.getTime() + (second === 60 ? 1000 : 0) - Date.now());
+}
+
+const sleep = (ms: number, signal?: AbortSignal): Promise<void> => {
+  if (!signal) return new Promise<void>((resolve) => setTimeout(resolve, ms));
+  signal.throwIfAborted();
+  // A caller's earlier listener must not suppress cancellation of this wait.
+  const waitSignal = AbortSignal.any([signal]);
+  return new Promise((resolve, reject) => {
+    const onAbort = () => {
+      clearTimeout(timer);
+      reject(waitSignal.reason);
+    };
+    const timer = setTimeout(() => {
+      waitSignal.removeEventListener('abort', onAbort);
+      resolve();
+    }, ms);
+    waitSignal.addEventListener('abort', onAbort, { once: true });
+  });
+};
+
+const RETRY_BODY_DRAIN_LIMIT = 64 * 1024;
+const RETRY_BODY_DRAIN_TIMEOUT_MS = 10;
+
+const discardRetryBody = async (body: ReadableStream<Uint8Array> | null): Promise<void> => {
+  if (!body) return;
+  const reader = body.getReader();
+  const cancel = () => void reader.cancel().catch(() => undefined);
+  const timer = setTimeout(cancel, RETRY_BODY_DRAIN_TIMEOUT_MS);
+  try {
+    let remaining = RETRY_BODY_DRAIN_LIMIT;
+    while (remaining >= 0) {
+      const { done, value } = await reader.read();
+      if (done) return;
+      remaining -= Math.max(1, value.byteLength);
+    }
+  } finally {
+    clearTimeout(timer);
+    cancel();
+    reader.releaseLock();
+  }
+};
 
 const readBoundedBytes = async (
   response: Response,
@@ -160,7 +268,8 @@ export interface HttpRequestOptions {
  * Retries eligible transport failures, such as socket resets and DNS errors, and transient
  * gateway HTTP statuses (`502`, `503`, `504`) on allowlisted requests (`GET` and
  * safe RPC `POST` endpoints) with exponential backoff and jitter. Requests that fail
- * with {@link HttpTimeoutError} are not retried. Configure via environment variables:
+ * with {@link HttpTimeoutError} are not retried. GET 429 responses also use bounded Retry-After handling.
+ * Configure via environment variables:
  *
  * - `TAQUITO_HTTP_RETRY_COUNT` - max retries (default `1`)
  * - `TAQUITO_HTTP_RETRY_BASE_MS` - base delay in ms (default `100`)
@@ -298,13 +407,26 @@ export class HttpBackend {
 
         // Handle responses with status code >= 400
         if (response.status >= 400) {
+          const canRetryRateLimit =
+            response.status === 429 &&
+            methodValue.toUpperCase() === 'GET' &&
+            attempt < httpRetryCount;
+          let retryDelayMs: number | undefined;
+          if (canRetryRateLimit) {
+            const requestedDelay = retryAfterDelay(response.headers.get('Retry-After'));
+            if (requestedDelay === undefined || requestedDelay <= MAX_RETRY_AFTER_MS) {
+              retryDelayMs = requestedDelay ?? computeRetryDelayMs(attempt);
+            }
+          }
+
           let errorData = '';
-          try {
-            errorData = await readErrorResponse(response);
-          } catch {
-            // If reading the error body fails (e.g. socket reset or timeout mid-error-body),
-            // preserve the HTTP status so the status-based retry policy still governs.
-            errorData = response.statusText || '';
+          if (retryDelayMs === undefined) {
+            try {
+              errorData = await readErrorResponse(response);
+            } catch {
+              // Preserve the HTTP status when the error body cannot be read.
+              errorData = response.statusText || '';
+            }
           }
           traceHttp(() => ({
             stage: 'response-error',
@@ -313,6 +435,22 @@ export class HttpBackend {
             status: response.status,
             elapsedMs: Date.now() - requestStartedAt,
           }));
+          if (retryDelayMs !== undefined) {
+            clearTimeout(t);
+            // Draining a small, ready body preserves the connection without delaying the retry.
+            void discardRetryBody(response.body).catch(() => undefined);
+            traceHttp(() => ({
+              stage: 'request-retry',
+              method: methodValue,
+              url: normalizeTraceUrl(urlWithQuery),
+              status: response.status,
+              attempt: attempt + 1,
+              maxAttempts: httpRetryCount + 1,
+              retryDelayMs,
+            }));
+            await sleep(retryDelayMs, signal);
+            continue;
+          }
           throw new HttpResponseError(
             `Http error response: (${response.status}) ${errorData}`,
             response.status as STATUS_CODE,
@@ -334,6 +472,7 @@ export class HttpBackend {
         readingResponseBody = true;
         return await readResponse(response);
       } catch (e: unknown) {
+        clearTimeout(t);
         if (signal?.aborted) throw e;
         // Preserve the public JSON parse error; it is not a transport failure.
         if (e instanceof SyntaxError) throw e;
@@ -360,7 +499,7 @@ export class HttpBackend {
               status: e.status,
               statusText: e.statusText,
             }));
-            await sleep(retryDelayMs);
+            await sleep(retryDelayMs, signal);
             continue;
           }
           traceHttp(() => ({
@@ -399,7 +538,7 @@ export class HttpBackend {
             error: formatErrorCauseChain(e),
             transportKind: classified?.kind,
           }));
-          await sleep(retryDelayMs);
+          await sleep(retryDelayMs, signal);
           continue;
         }
 

@@ -9,6 +9,14 @@ In general, you won't need to use this package directly, but it is available for
 
 Methods in the RPC package map one-to-one to the corresponding Tezos RPC API endpoints. All responses from the RPC are returned with TypeScript types. No other parsing or compositions are done at this level.
 
+## Rate limits and retries
+
+When an RPC node responds with HTTP 429, Taquito's default HTTP backend can retry a GET request. The backend honors `Retry-After` as an integer number of seconds or an HTTP date. A valid delay above 30 seconds returns the original HTTP error. If the header is missing or invalid, the backend uses exponential backoff with jitter. In browsers the RPC server must expose `Retry-After` through CORS for the backend to read it.
+
+HTTP 429 retries apply only to GET requests. GET requests and selected POST endpoints, including `run_code`, `run_view` and `pack_data`, can also retry HTTP 502, 503 and 504 or transient transport failures such as a connection reset. If an operation injection retry returns an error, check the operation hash before reporting a failure. The first attempt may have reached the node.
+
+The default budget is one retry shared across rate limits, gateway errors and transport failures. In Node.js, set `TAQUITO_HTTP_RETRY_COUNT` to change the budget or to `0` to disable retries. Set `TAQUITO_HTTP_RETRY_BASE_MS` to change the base backoff delay, which defaults to 100 ms. Set both variables before importing Taquito. Aborting the request also cancels a retry wait.
+
 ## Examples
 
 The `RpcClient` constructor takes the URL of the node you want to use and the chain ID.
