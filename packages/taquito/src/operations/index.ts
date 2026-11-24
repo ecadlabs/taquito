@@ -4,6 +4,7 @@ export {
   TezosOperationErrorWithMessage,
   TezosPreapplyFailureError,
   InvalidEstimateValueError,
+  OperationReorgError,
 } from './errors';
 export { BatchOperation } from './batch-operation';
 export { OriginationOperation } from './origination-operation';

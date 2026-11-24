@@ -33,6 +33,7 @@ import { createObservableFromSubscription } from '../subscribe/create-observable
 import { ConfirmationTimeoutError, InvalidConfirmationCountError } from '../errors';
 import { InvalidOperationHashError } from '@taquito/core';
 import { isBlockHashIdentifier } from '../read-provider/interface';
+import { OperationReorgError } from './errors';
 
 const env = typeof process !== 'undefined' ? process.env : undefined;
 
@@ -104,6 +105,19 @@ const traceOperation = (payload: Record<string, unknown>) => {
   console.log(`[taquito:op-trace] ${JSON.stringify(payload)}`);
 };
 
+// Limit the work performed for one mismatched head, including for old operation objects.
+const REINCLUSION_SEARCH_BLOCKS = 120;
+
+// A head and the inclusion block that its branch was checked against.
+interface BranchEvidence {
+  head: BlockResponse;
+  inclusion: BlockResponse;
+}
+
+const isSameOrChildOf = (head: BlockResponse, previous: BlockResponse | undefined) =>
+  previous !== undefined &&
+  (head.hash === previous.hash || head.header.predecessor === previous.hash);
+
 interface PollingConfig {
   timeout: number;
   interval: number;
@@ -115,6 +129,7 @@ interface PollingConfig {
 export class Operation {
   private _pollingConfig$ = new ReplaySubject<PollingConfig>(1);
   private lastHead: BlockResponse | undefined;
+  private lastObservedHeadHash: string | undefined;
   protected _includedInBlock = new ReplaySubject<BlockResponse>(1);
 
   private currentHead$ = this._pollingConfig$.pipe(
@@ -131,9 +146,12 @@ export class Operation {
       return defer(() =>
         createObservableFromSubscription(this.context.stream.subscribeBlock('head'))
       ).pipe(
+        tap((head) => (this.lastObservedHeadHash = head.hash)),
         // Finish each backfill before handling another head, even when reads take longer than a block.
-        concatMap((newHead) =>
-          defer(async () => {
+        concatMap((newHead) => {
+          const observed = { block: newHead, observed: true };
+          if (Number.isFinite(this._foundAt)) return of(observed);
+          return defer(async () => {
             if (this.lastHead) {
               return this.lastHead.header.level;
             }
@@ -144,15 +162,31 @@ export class Operation {
               ? this.context.readProvider.getBlockLevel(branch)
               : newHead.header.level - 1;
           }).pipe(
-            concatMap((prevHead) =>
-              range(prevHead + 1, Math.max(0, newHead.header.level - prevHead - 1)).pipe(
-                concatMap((level) => this.context.readProvider.getBlock(level)),
-                endWith(newHead)
-              )
+            concatMap((prevHead) => {
+              const missed = newHead.header.level - prevHead - 1;
+              if (Number.isFinite(this._foundAt) || missed <= 0) {
+                return of(observed);
+              }
+              const hash = newHead.hash;
+              if (!isBlockHashIdentifier(hash)) {
+                throw new Error('Cannot backfill confirmation with an invalid head block hash');
+              }
+              return range(prevHead + 1, missed).pipe(
+                concatMap((level) =>
+                  this.context.readProvider.getBlock(`${hash}~${newHead.header.level - level}`)
+                ),
+                map((block) => ({ block, observed: false })),
+                endWith(observed)
+              );
+            }),
+            catchError((error: unknown) =>
+              newHead.hash === this.lastObservedHeadHash ? throwError(() => error) : EMPTY
             )
-          )
-        ),
-        tap((newHead) => (this.lastHead = newHead))
+          );
+        }),
+        tap(({ block, observed }) => {
+          if (observed) this.lastHead = block;
+        })
       );
     }),
     shareReplay({ bufferSize: 1, refCount: true })
@@ -160,7 +194,7 @@ export class Operation {
 
   // Observable that emit once operation is seen in a block
   private confirmed$ = this.currentHead$.pipe(
-    map((head) => {
+    map(({ block: head }) => {
       for (let i = head.operations.length - 1; i >= 0; i--) {
         for (const op of head.operations[i]) {
           if (op.hash === this.hash) {
@@ -195,6 +229,52 @@ export class Operation {
 
     return inclusionBlock;
   }
+
+  private includesOperation(block: BlockResponse) {
+    return block.operations.some((pass) => pass.some((operation) => operation.hash === this.hash));
+  }
+
+  // Finds the inclusion on the head's branch. Without one, `searchedToBranch` says whether the
+  // walk reached the forged branch block, which proves that the whole branch omits the operation.
+  private async findConfirmationInclusion(
+    head: BlockResponse,
+    recordedInclusion: BlockResponse
+  ): Promise<{ inclusion?: BlockResponse; searchedToBranch: boolean }> {
+    const distance = head.header.level - recordedInclusion.header.level;
+    const found = (inclusion: BlockResponse) => ({ inclusion, searchedToBranch: true });
+    if (distance === 0 && head.hash === recordedInclusion.hash) return found(recordedInclusion);
+    if (distance === 1 && head.header.predecessor === recordedInclusion.hash) {
+      return found(recordedInclusion);
+    }
+    if (distance > 1) {
+      if (!isBlockHashIdentifier(head.hash)) {
+        throw new Error('Cannot verify confirmation with an invalid head block hash');
+      }
+      const ancestor = await this.context.readProvider.getBlockHash(`${head.hash}~${distance}`);
+      if (ancestor === recordedInclusion.hash) return found(recordedInclusion);
+    }
+
+    const branch = this.raw.opOb?.branch;
+    let block = head;
+    for (let remaining = REINCLUSION_SEARCH_BLOCKS; remaining > 0; remaining--) {
+      if (block.hash === branch || block.header.level <= 0) return { searchedToBranch: true };
+      if (this.includesOperation(block)) return found(block);
+      const predecessor = block.header.predecessor;
+      if (branch && predecessor === branch) return { searchedToBranch: true };
+      if (remaining === 1) break;
+      if (!isBlockHashIdentifier(predecessor)) {
+        throw new Error('Cannot verify confirmation with an invalid predecessor block hash');
+      }
+      const parent = await this.context.readProvider.getBlock(predecessor);
+      if (parent.hash !== predecessor || parent.header.level !== block.header.level - 1) {
+        throw new Error('The read provider returned an inconsistent predecessor block');
+      }
+      block = parent;
+    }
+
+    return { searchedToBranch: false };
+  }
+
   /**
    *
    * @param hash Operation hash
@@ -226,8 +306,7 @@ export class Operation {
     return (
       Array.isArray(this.results) &&
       (this.results.find((op) => op.kind === 'reveal') as
-        | OperationContentsAndResultReveal
-        | undefined)
+        OperationContentsAndResultReveal | undefined)
     );
   }
 
@@ -270,15 +349,86 @@ export class Operation {
 
     const conf = confirmations !== undefined ? confirmations : defaultConfirmationCount;
 
+    let verified: BranchEvidence | undefined;
+    // Set while the branch of `head` omits the operation. `inclusion` is the dropped inclusion.
+    let orphaned: (BranchEvidence & { searchedToBranch: boolean }) | undefined;
     return new Promise<number>((resolve, reject) => {
       this.confirmed$
         .pipe(
           switchMap(() => this.currentHead$),
-          filter((head) => head.header.level - this._foundAt >= conf - 1),
+          // Backfilled blocks can discover an inclusion, but only observed tips confirm it.
+          filter(({ observed }) => observed),
+          concatMap(async ({ block: head }) => {
+            const extendsVerifiedHead = isSameOrChildOf(head, verified?.head);
+            // The shortcut needs proof that the whole branch of the orphaned head omits the operation.
+            const extendsOrphanedHead =
+              orphaned?.searchedToBranch === true && isSameOrChildOf(head, orphaned.head);
+            if (
+              head.hash !== this.lastObservedHeadHash &&
+              !extendsVerifiedHead &&
+              !extendsOrphanedHead
+            ) {
+              return undefined;
+            }
+            try {
+              let inclusion: BlockResponse | undefined;
+              let recordedInclusion: BlockResponse;
+              let searchedToBranch = true;
+              if (verified !== undefined && extendsVerifiedHead) {
+                inclusion = verified.inclusion;
+                recordedInclusion = verified.inclusion;
+              } else if (orphaned !== undefined && extendsOrphanedHead) {
+                // The predecessor's branch omits the operation, so only this head can add it.
+                inclusion = this.includesOperation(head) ? head : undefined;
+                recordedInclusion = orphaned.inclusion;
+              } else {
+                recordedInclusion =
+                  verified?.inclusion ?? orphaned?.inclusion ?? (await this.getInclusionBlock());
+                // A head below the inclusion comes from a node that is behind, not from a reorg.
+                if (head.header.level < recordedInclusion.header.level) return undefined;
+                ({ inclusion, searchedToBranch } = await this.findConfirmationInclusion(
+                  head,
+                  recordedInclusion
+                ));
+              }
+              if (inclusion === undefined) {
+                // Wait for re-inclusion. The timeout reports OperationReorgError while this is set.
+                verified = undefined;
+                orphaned = { head, inclusion: recordedInclusion, searchedToBranch };
+                return undefined;
+              }
+              // Keep branch evidence for this caller even if a newer head arrived during the read.
+              // Only the latest observed head can publish the inclusion or resolve confirmation.
+              orphaned = undefined;
+              verified = { head, inclusion };
+              return verified;
+            } catch (error) {
+              if (head.hash === this.lastObservedHeadHash) throw error;
+              return undefined;
+            }
+          }),
+          filter((match) => match !== undefined),
+          filter(({ head }) => head.hash === this.lastObservedHeadHash),
+          tap((match) => {
+            this._foundAt = match.inclusion.header.level;
+            this._includedInBlock.next(match.inclusion);
+          }),
+          map(({ head, inclusion }) =>
+            head.header.level - inclusion.header.level >= conf - 1
+              ? inclusion.header.level + conf - 1
+              : undefined
+          ),
+          filter((level) => level !== undefined),
           first()
         )
         .subscribe({
-          error: (e) => {
+          error: (cause) => {
+            const e =
+              cause instanceof ConfirmationTimeoutError &&
+              orphaned?.searchedToBranch === true &&
+              orphaned.head.hash === this.lastObservedHeadHash
+                ? new OperationReorgError(this.hash, orphaned.inclusion.hash, orphaned.head.hash)
+                : cause;
             traceOperation({
               stage: 'confirmation-error',
               hash: this.hash,
@@ -292,7 +442,7 @@ export class Operation {
             });
             reject(e);
           },
-          complete: () => {
+          next: (level) => {
             const elapsedMs = Date.now() - startedAt;
             if (opTraceVerbose || elapsedMs >= opTraceSlowMs || this.status !== 'applied') {
               traceOperation({
@@ -306,7 +456,7 @@ export class Operation {
                 results: summarizeOperationResults(this.results),
               });
             }
-            resolve(this._foundAt + (conf - 1));
+            resolve(level);
           },
         });
     });

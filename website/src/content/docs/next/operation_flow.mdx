@@ -25,8 +25,10 @@ const op = await Tezos.contract.transfer({ to: 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8C
 await op.confirmation();
 ```
 
+`confirmation()` resolves with the confirmation level when the block that included the operation is still an ancestor of the head observed for that check. A head on the inclusion block, or the next block, is checked from the header already in hand. A greater distance reads one ancestor, `<head hash>~<distance>`. If the observed branch replaced the recorded inclusion, Taquito checks up to 120 recent blocks for re-inclusion. When it finds the operation, it counts confirmations from the replacement block. Otherwise Taquito keeps waiting and checks each later head for the operation. If the search reaches the operation's branch and the timeout passes before the operation is included again, the promise rejects with `OperationReorgError` instead of `ConfirmationTimeoutError`. Taquito ignores a head below the inclusion level, because it comes from a node that is behind. Use `confirmation(3)` on Tenderbake before triggering irreversible actions. This waits for two blocks after inclusion.
+
 ## Wallet API
-Aside from the Contract API, Taquito provides the ability for our users to interact with the Tezos blockchain via the Wallet API. The Wallet API is functionally similar to the Contract API, but it delegates several actions to the wallet (i.e. signing operations).
+Aside from the Contract API, Taquito provides the ability for our users to interact with the Tezos blockchain via the Wallet API. The Wallet API is functionally similar to the Contract API, but it delegates several actions to the wallet (i.e. signing operations). Unlike the Contract API, `WalletOperation.confirmation()` does not verify branch ancestry; call `isInCurrentBranch()` after the chain advances past the inclusion block if you need to check for reorganizations.
 
 ### Installing the Wallet API
 The Wallet API is part of the `@taquito/taquito` package, so the installation method is the exact same as the Contract API in the section above.
