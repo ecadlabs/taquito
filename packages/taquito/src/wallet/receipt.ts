@@ -4,6 +4,7 @@ type BigNumber = InstanceType<typeof BigNumberJs>;
 const BigNumber = BigNumberJs;
 import { COST_PER_BYTE } from '../constants';
 import { flattenOperationResult } from '../operations/errors';
+import { milliGasToGas } from '../operations/gas';
 
 export interface Receipt {
   totalFee: BigNumber;
@@ -23,7 +24,6 @@ export const receiptFromOperation = (
     ORIGINATION_BURN: 257,
   }
 ): Receipt => {
-  BigNumber.config({ DECIMAL_PLACES: 0, ROUNDING_MODE: BigNumber.ROUND_UP });
   const operationResults = flattenOperationResult({ contents: op });
   let totalMilliGas = new BigNumber(0);
   let totalStorage = new BigNumber(0);
@@ -55,7 +55,7 @@ export const receiptFromOperation = (
   return {
     totalFee,
     totalMilliGas,
-    totalGas: totalMilliGas.dividedBy(1000),
+    totalGas: milliGasToGas(totalMilliGas),
     totalStorage,
     totalAllocationBurn,
     totalOriginationBurn,

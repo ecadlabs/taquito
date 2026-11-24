@@ -8,6 +8,7 @@ type BigNumber = InstanceType<typeof BigNumberJs>;
 const BigNumber = BigNumberJs;
 import { Context } from '../context';
 import { flattenErrors, flattenOperationResult, MergedOperationResult } from './errors';
+import { milliGasToGas } from './gas';
 import { Operation } from './operations';
 import {
   FeeConsumingOperation,
@@ -82,8 +83,7 @@ export class TransactionOperation
   }
 
   get consumedGas() {
-    BigNumber.config({ DECIMAL_PLACES: 0, ROUNDING_MODE: BigNumber.ROUND_UP });
-    return new BigNumber(this.consumedMilliGas).dividedBy(1000).toString();
+    return milliGasToGas(new BigNumber(this.consumedMilliGas)).toString();
   }
 
   get consumedMilliGas() {

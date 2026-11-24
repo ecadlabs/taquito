@@ -69,7 +69,7 @@ describe('RegisterGlobalConstantWalletOperation', () => {
   });
 
   it('should register a global constant and return the hash', async () => {
-    testScheduler.run(async (helpers) => {
+    await testScheduler.run(async (helpers) => {
       const { cold, flush } = helpers;
       const blockObservable = cold<BlockResponse>('--a', {
         a: createFakeBlock(1, 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj'),
@@ -91,7 +91,7 @@ describe('RegisterGlobalConstantWalletOperation', () => {
   });
 
   it('should return applied status when operation is successful', async () => {
-    testScheduler.run(async (helpers) => {
+    await testScheduler.run(async (helpers) => {
       const { cold, flush } = helpers;
       const blockObservable = cold<BlockResponse>('--a', {
         a: createFakeBlock(1, 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj'),

@@ -1,6 +1,7 @@
 import { TestScheduler } from 'rxjs/testing';
 import { throwError } from 'rxjs';
 import { BlockResponse } from '@taquito/rpc';
+import BigNumber from 'bignumber.js';
 import { Context } from '../../src/context';
 import { ConfirmationTimeoutError } from '../../src/errors';
 import { WalletOperation } from '../../src/wallet';
@@ -142,7 +143,7 @@ describe('WalletOperation', () => {
         createFakeBlock(2, 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj')
       );
 
-      testScheduler.run(async (helpers) => {
+      await testScheduler.run(async (helpers) => {
         const { cold, flush } = helpers;
         const blockObservable = cold<BlockResponse>('--a--c', {
           a: createFakeBlock(1),
@@ -177,7 +178,7 @@ describe('WalletOperation', () => {
         createFakeBlock(2, 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj')
       );
 
-      testScheduler.run(async (helpers) => {
+      await testScheduler.run(async (helpers) => {
         const { cold, flush } = helpers;
         const blockObservable = cold<BlockResponse>('--a--d', {
           a: createFakeBlock(1),
@@ -213,7 +214,7 @@ describe('WalletOperation', () => {
         createFakeBlock(3, 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj')
       );
 
-      testScheduler.run(async (helpers) => {
+      await testScheduler.run(async (helpers) => {
         const { cold, flush } = helpers;
         const blockObservable = cold<BlockResponse>('--a--d', {
           a: createFakeBlock(1),
@@ -259,7 +260,7 @@ describe('WalletOperation', () => {
 
   describe('receipt', () => {
     it('should return a receipt after the operation is included in block', async () => {
-      testScheduler.run(async (helpers) => {
+      await testScheduler.run(async (helpers) => {
         const { cold, flush } = helpers;
 
         const blockObservable = cold<BlockResponse>('--a', {
@@ -289,7 +290,7 @@ describe('WalletOperation', () => {
     });
 
     it('should return a receipt from actual case values after including the operation in a block', async () => {
-      testScheduler.run(async (helpers) => {
+      await testScheduler.run(async (helpers) => {
         const { cold, flush } = helpers;
 
         const blockObservable = cold<BlockResponse>('--a', {
@@ -303,25 +304,36 @@ describe('WalletOperation', () => {
         );
 
         flush();
-        const receipt = await op.receipt();
-
-        expect(toJSON(receipt)).toEqual({
-          totalFee: '6317',
-          totalGas: '4056',
-          totalMilliGas: '4055338',
-          totalOriginationBurn: '257',
-          totalPaidStorageDiff: '5334',
-          totalStorage: '5591',
-          totalStorageBurn: '1397750',
-          totalAllocationBurn: '0',
+        const config = BigNumber.config();
+        const expected = BigNumber.config({
+          DECIMAL_PLACES: 20,
+          ROUNDING_MODE: BigNumber.ROUND_HALF_UP,
         });
+        try {
+          const receipt = await op.receipt();
+          expect(receipt.totalGas.toString()).toBe('4056');
+          expect(BigNumber.config()).toEqual(expected);
+
+          expect(toJSON(receipt)).toEqual({
+            totalFee: '6317',
+            totalGas: '4056',
+            totalMilliGas: '4055338',
+            totalOriginationBurn: '257',
+            totalPaidStorageDiff: '5334',
+            totalStorage: '5591',
+            totalStorageBurn: '1397750',
+            totalAllocationBurn: '0',
+          });
+        } finally {
+          BigNumber.config(config);
+        }
       });
     });
   });
 
   describe('operationResults', () => {
     it('should return operation result after the operation is included in a block', async () => {
-      testScheduler.run(async (helpers) => {
+      await testScheduler.run(async (helpers) => {
         const { cold, flush } = helpers;
         const blockObservable = cold<BlockResponse>('--a', {
           a: createFakeBlock(1, 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj'),
@@ -343,7 +355,7 @@ describe('WalletOperation', () => {
 
   describe('getCurrentConfirmation', () => {
     it('should return 0 when operation is not included', async () => {
-      testScheduler.run(async (helpers) => {
+      await testScheduler.run(async (helpers) => {
         const { cold, flush } = helpers;
         const blockObservable = cold<BlockResponse>('--a', {
           a: createFakeBlock(1),
@@ -361,7 +373,7 @@ describe('WalletOperation', () => {
     });
 
     it('should return 1 when there is 1 confirmation', async () => {
-      testScheduler.run(async (helpers) => {
+      await testScheduler.run(async (helpers) => {
         const { cold, flush } = helpers;
         const blockObservable = cold<BlockResponse>('--a', {
           a: createFakeBlock(1, 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj'),
@@ -383,7 +395,7 @@ describe('WalletOperation', () => {
     });
 
     it('should return 2 when there is 2 confirmation', async () => {
-      testScheduler.run(async (helpers) => {
+      await testScheduler.run(async (helpers) => {
         const { cold, flush } = helpers;
         const blockObservable = cold<BlockResponse>('--a', {
           a: createFakeBlock(1, 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj'),

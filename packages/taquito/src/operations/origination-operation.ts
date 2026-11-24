@@ -11,6 +11,7 @@ import { DefaultContractType } from '../contract/contract';
 import { RpcContractProvider } from '../contract/rpc-contract-provider';
 import { isBlockHashIdentifier } from '../read-provider/interface';
 import { OriginationOperationError } from './errors';
+import { milliGasToGas } from './gas';
 import { Operation } from './operations';
 import {
   FeeConsumingOperation,
@@ -81,9 +82,8 @@ export class OriginationOperation<TContract extends DefaultContractType = Defaul
   }
 
   get consumedGas() {
-    BigNumber.config({ DECIMAL_PLACES: 0, ROUNDING_MODE: BigNumber.ROUND_UP });
     return this.consumedMilliGas
-      ? new BigNumber(this.consumedMilliGas).dividedBy(1000).toString()
+      ? milliGasToGas(new BigNumber(this.consumedMilliGas)).toString()
       : undefined;
   }
 
