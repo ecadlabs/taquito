@@ -7,6 +7,7 @@ import BigNumberJs from 'bignumber.js';
 type BigNumber = InstanceType<typeof BigNumberJs>;
 const BigNumber = BigNumberJs;
 import { Context } from '../context';
+import { milliGasToGas } from './gas';
 import { Operation } from './operations';
 import {
   FeeConsumingOperation,
@@ -77,9 +78,8 @@ export class RegisterGlobalConstantOperation
   }
 
   get consumedGas() {
-    BigNumber.config({ DECIMAL_PLACES: 0, ROUNDING_MODE: BigNumber.ROUND_UP });
     return this.consumedMilliGas
-      ? new BigNumber(this.consumedMilliGas).dividedBy(1000).toString()
+      ? milliGasToGas(new BigNumber(this.consumedMilliGas)).toString()
       : undefined;
   }
 

@@ -1,5 +1,5 @@
 import { decodeBase58, decodeBase58Check, encodeBase58, encodeBase58Check } from '../src/base58';
-import { parseHex } from '../src/utils';
+import { checkDecodeTezosID, parseHex } from '../src/utils';
 
 const test: {
   vec: string;
@@ -30,6 +30,14 @@ const testCheck: {
 ];
 
 describe('Base58', () => {
+  it.each(['0', '/', ' '])('rejects invalid characters below the alphabet: %j', (character) => {
+    expect(() => decodeBase58(`1${character}`)).toThrow();
+  });
+
+  it('rejects a tz1 identifier one character over the Base58 bound', () => {
+    expect(checkDecodeTezosID('z'.repeat(38), 'ED25519PublicKeyHash')).toBeNull();
+  });
+
   it('encode', () => {
     for (const t of test) {
       expect(encodeBase58(parseHex(t.vec))).toEqual(t.s);

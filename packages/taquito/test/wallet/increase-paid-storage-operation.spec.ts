@@ -127,7 +127,7 @@ describe('WalletOperation', () => {
         expect(actual).toEqual(expected);
       });
 
-      testScheduler.run(async ({ cold, flush }) => {
+      await testScheduler.run(async ({ cold, flush }) => {
         const blockObs = cold<BlockResponse>('--a', {
           a: createFakeBlock(1, 'ooBghN2ok5EpgEuMqYWqvfwNLBiK9eNFoPai91iwqk2nRCyUKgE'),
         });

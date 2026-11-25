@@ -1,7 +1,9 @@
 import { BlockResponse, RpcClient } from '@taquito/rpc';
+import { b58Encode, PrefixV2 } from '@taquito/utils';
 import { Context } from '../../src/context';
 import { ConfirmationTimeoutError } from '../../src/errors';
 import { Operation } from '../../src/operations/operations';
+import { OperationReorgError } from '../../src/operations/errors';
 import { PollingSubscribeProvider } from '../../src/subscribe/polling-subcribe-provider';
 import { blockResponse } from '../read-provider/data';
 
@@ -9,14 +11,22 @@ const operationHash = 'ood2Y1FLHH9izvYghVcDGGAkvJFo1CgSEjPfWvGsaz3qypCmeUj';
 const branchHash = blockResponse.hash;
 const confirmationTimeoutSeconds = 30;
 
-function makeBlock(level: number, includesOperation = false): BlockResponse {
+function blockHash(level: number, replacement = false): string {
+  if (level === 100) return branchHash;
+  const bytes = new Uint8Array(32);
+  bytes[0] = replacement ? 1 : 0;
+  bytes[31] = level;
+  return b58Encode(bytes, PrefixV2.BlockHash);
+}
+
+function makeBlock(level: number, includesOperation = false, replacement = false): BlockResponse {
   return {
     ...blockResponse,
-    hash: level === 100 ? branchHash : `block-${level}`,
+    hash: blockHash(level, replacement),
     header: {
       ...blockResponse.header,
       level,
-      predecessor: level === 101 ? branchHash : `block-${level - 1}`,
+      predecessor: blockHash(level - 1, replacement),
     },
     metadata: {
       ...blockResponse.metadata,
@@ -54,14 +64,17 @@ describe('Operation.confirmation', () => {
 
     rpc = new RpcClient('http://localhost:0');
     const getBlock = (identifier = 'head'): BlockResponse => {
-      const block =
-        identifier === 'head'
+      const [id, offset] = identifier.split('~');
+      let block =
+        id === 'head'
           ? head
-          : blocks.find((candidate) =>
-              identifier.startsWith('head~')
-                ? candidate.header.level === head.header.level - Number(identifier.slice(5))
-                : candidate.hash === identifier || String(candidate.header.level) === identifier
+          : blocks.find(
+              (candidate) => candidate.hash === id || String(candidate.header.level) === id
             );
+      for (let n = 0; block && n < Number(offset); n++) {
+        const predecessor = block.header.predecessor;
+        block = blocks.find((candidate) => candidate.hash === predecessor);
+      }
       if (!block || block.header.level > head.header.level) {
         throw new Error(`Unexpected block requested: ${identifier}`);
       }
@@ -133,10 +146,7 @@ describe('Operation.confirmation', () => {
       expect(historicalReads.length).toBeGreaterThan(0);
       expect(new Set(historicalReads).size).toBe(historicalReads.length);
       for (const identifier of historicalReads) {
-        const block = blocks.find(
-          (candidate) =>
-            candidate.hash === identifier || String(candidate.header.level) === identifier
-        );
+        const block = await rpc.getBlock({ block: identifier });
         expect(block?.header.level).toBeGreaterThan(100);
         expect(block?.header.level).toBeLessThanOrEqual(headLevel);
       }
@@ -179,7 +189,7 @@ describe('Operation.confirmation', () => {
   it('finishes a slow historical read while new heads continue arriving', async () => {
     const getBlock = context.readProvider.getBlock.bind(context.readProvider);
     vi.spyOn(context.readProvider, 'getBlock').mockImplementation(async (block) => {
-      if (block === 101) {
+      if (block === `${blocks[2].hash}~1`) {
         await new Promise<void>((resolve) => setTimeout(resolve, 250));
       }
       return getBlock(block);
@@ -197,6 +207,31 @@ describe('Operation.confirmation', () => {
     await vi.advanceTimersByTimeAsync(100);
     head = blocks[5];
     await vi.advanceTimersByTimeAsync(100);
+
+    expect(resolved).toHaveBeenCalledWith(101);
+    expect(rejected).not.toHaveBeenCalled();
+  });
+
+  it('continues on a newer head after a superseded historical read fails', async () => {
+    const getBlock = context.readProvider.getBlock.bind(context.readProvider);
+    const historicalRead = `${blocks[2].hash}~1`;
+    const reader = vi.spyOn(context.readProvider, 'getBlock').mockImplementation(async (block) => {
+      if (block === historicalRead) {
+        await new Promise<void>((resolve) => setTimeout(resolve, 250));
+        throw new Error('Previous tip unavailable');
+      }
+      return getBlock(block);
+    });
+    const operation = createOperation();
+    head = blocks[2];
+    const resolved = vi.fn();
+    const rejected = vi.fn();
+    void operation.confirmation(1).then(resolved, rejected);
+    await vi.advanceTimersByTimeAsync(100);
+    expect(reader).toHaveBeenCalledWith(historicalRead);
+
+    head = blocks[3];
+    await vi.advanceTimersByTimeAsync(200);
 
     expect(resolved).toHaveBeenCalledWith(101);
     expect(rejected).not.toHaveBeenCalled();
@@ -281,6 +316,282 @@ describe('Operation.confirmation', () => {
 
     await expect(confirmation).resolves.toBe(101);
     expect(operation.includedInBlock).toBe(101);
+  });
+
+  it('rejects at the timeout when a replacement branch omits the operation', async () => {
+    const operation = createOperation();
+    head = blocks[1];
+    const initial = expect(operation.confirmation(1)).resolves.toBe(101);
+    await vi.advanceTimersByTimeAsync(0);
+    await initial;
+
+    const replacement = [makeBlock(101, false, true), makeBlock(102, false, true)];
+    blocks.push(...replacement);
+    head = replacement[1];
+    const resolved = vi.fn();
+    const rejected = vi.fn();
+    void operation.confirmation(1).then(resolved, rejected);
+    await vi.advanceTimersByTimeAsync(100);
+    expect(rejected).not.toHaveBeenCalled();
+
+    await vi.advanceTimersByTimeAsync(confirmationTimeoutSeconds * 1000);
+    expect(resolved).not.toHaveBeenCalled();
+    expect(rejected).toHaveBeenCalledWith(expect.any(OperationReorgError));
+  });
+
+  it('keeps waiting when a node behind the inclusion reports the head', async () => {
+    const operation = createOperation();
+    head = blocks[1];
+    const resolved = vi.fn();
+    const rejected = vi.fn();
+    void operation.confirmation(3).then(resolved, rejected);
+    await vi.advanceTimersByTimeAsync(150);
+
+    head = blocks[0];
+    await vi.advanceTimersByTimeAsync(150);
+    head = blocks[3];
+    await vi.advanceTimersByTimeAsync(300);
+
+    expect(rejected).not.toHaveBeenCalled();
+    expect(resolved).toHaveBeenCalledWith(103);
+  });
+
+  it('counts from a re-inclusion after a same-level replacement omits the operation', async () => {
+    const operation = createOperation();
+    head = blocks[1];
+    const resolved = vi.fn();
+    const rejected = vi.fn();
+    void operation.confirmation(2).then(resolved, rejected);
+    await vi.advanceTimersByTimeAsync(150);
+
+    const replacement = [
+      makeBlock(101, false, true),
+      makeBlock(102, true, true),
+      makeBlock(103, false, true),
+    ];
+    blocks.push(...replacement);
+    for (const block of replacement) {
+      head = block;
+      await vi.advanceTimersByTimeAsync(150);
+    }
+
+    expect(rejected).not.toHaveBeenCalled();
+    expect(resolved).toHaveBeenCalledWith(103);
+    expect(operation.includedInBlock).toBe(102);
+  });
+
+  it('checks only the new head while consecutive heads omit the operation', async () => {
+    const operation = createOperation();
+    head = blocks[1];
+    const initial = expect(operation.confirmation(1)).resolves.toBe(101);
+    await vi.advanceTimersByTimeAsync(0);
+    await initial;
+
+    const replacement = [
+      makeBlock(101, false, true),
+      makeBlock(102, false, true),
+      makeBlock(103, false, true),
+      makeBlock(104, true, true),
+    ];
+    blocks.push(...replacement);
+    head = replacement[1];
+    const confirmation = expect(operation.confirmation(1)).resolves.toBe(104);
+    await vi.advanceTimersByTimeAsync(150);
+
+    const getBlock = context.readProvider.getBlock.bind(context.readProvider);
+    const ancestorReads: unknown[] = [];
+    vi.spyOn(context.readProvider, 'getBlock').mockImplementation(async (block) => {
+      if (block !== head.hash) ancestorReads.push(block);
+      return getBlock(block);
+    });
+    head = replacement[2];
+    await vi.advanceTimersByTimeAsync(150);
+    head = replacement[3];
+    await vi.advanceTimersByTimeAsync(150);
+
+    await confirmation;
+    expect(ancestorReads).toEqual([]);
+  });
+
+  it('rejects with the read error when an ancestry read fails while waiting for re-inclusion', async () => {
+    const operation = createOperation();
+    head = blocks[1];
+    const initial = expect(operation.confirmation(1)).resolves.toBe(101);
+    await vi.advanceTimersByTimeAsync(0);
+    await initial;
+
+    const replacement = [101, 102, 103, 104].map((level) => makeBlock(level, false, true));
+    blocks.push(...replacement);
+    head = replacement[1];
+    const resolved = vi.fn();
+    const rejected = vi.fn();
+    void operation.confirmation(1).then(resolved, rejected);
+    await vi.advanceTimersByTimeAsync(150);
+    expect(rejected).not.toHaveBeenCalled();
+
+    const error = new Error('Ancestry lookup failed');
+    vi.spyOn(context.readProvider, 'getBlockHash').mockRejectedValue(error);
+    head = replacement[3];
+    await vi.advanceTimersByTimeAsync(150);
+
+    expect(resolved).not.toHaveBeenCalled();
+    expect(rejected).toHaveBeenCalledWith(error);
+  });
+
+  it('searches the whole branch again when the last search stopped at the block limit', async () => {
+    const operation = createOperation();
+    head = blocks[1];
+    const initial = expect(operation.confirmation(1)).resolves.toBe(101);
+    await vi.advanceTimersByTimeAsync(0);
+    await initial;
+
+    const replacement = Array.from({ length: 126 }, (_, offset) =>
+      makeBlock(101 + offset, false, true)
+    );
+    blocks.push(...replacement);
+    head = replacement[124];
+    const resolved = vi.fn();
+    const rejected = vi.fn();
+    void operation.confirmation(1).then(resolved, rejected);
+    await vi.advanceTimersByTimeAsync(150);
+
+    const getBlock = context.readProvider.getBlock.bind(context.readProvider);
+    const ancestorReads: unknown[] = [];
+    vi.spyOn(context.readProvider, 'getBlock').mockImplementation(async (block) => {
+      if (block !== head.hash) ancestorReads.push(block);
+      return getBlock(block);
+    });
+    head = replacement[125];
+    await vi.advanceTimersByTimeAsync(150);
+
+    expect(ancestorReads.length).toBeGreaterThan(0);
+
+    await vi.advanceTimersByTimeAsync(confirmationTimeoutSeconds * 1000);
+    expect(resolved).not.toHaveBeenCalled();
+    expect(rejected).toHaveBeenCalledWith(expect.any(ConfirmationTimeoutError));
+  });
+
+  it('propagates an ancestry lookup failure for the current head', async () => {
+    const operation = createOperation();
+    head = blocks[1];
+    const initial = expect(operation.confirmation(1)).resolves.toBe(101);
+    await vi.advanceTimersByTimeAsync(0);
+    await initial;
+
+    const error = new Error('Ancestry lookup failed');
+    vi.spyOn(context.readProvider, 'getBlockHash').mockRejectedValue(error);
+    head = blocks[3];
+    const confirmation = expect(operation.confirmation(1)).rejects.toBe(error);
+    await vi.advanceTimersByTimeAsync(100);
+    await confirmation;
+  });
+
+  it('counts concurrent confirmations from a verified replacement inclusion', async () => {
+    const operation = createOperation();
+    head = blocks[1];
+    const initial = expect(operation.confirmation(1)).resolves.toBe(101);
+    await vi.advanceTimersByTimeAsync(0);
+    await initial;
+
+    const replacement = [makeBlock(101, false, true), makeBlock(102, true, true)];
+    blocks.push(...replacement);
+    head = replacement[1];
+    const firstConfirmation = expect(operation.confirmation(1)).resolves.toBe(102);
+    const secondConfirmation = expect(operation.confirmation(2)).resolves.toBe(103);
+    await vi.advanceTimersByTimeAsync(100);
+    await firstConfirmation;
+    expect(operation.includedInBlock).toBe(102);
+
+    head = makeBlock(103, false, true);
+    blocks.push(head);
+    await vi.advanceTimersByTimeAsync(100);
+    await secondConfirmation;
+  });
+
+  it('counts a replacement inclusion when intermediate heads were skipped', async () => {
+    const operation = createOperation();
+    head = blocks[1];
+    const initial = expect(operation.confirmation(1)).resolves.toBe(101);
+    await vi.advanceTimersByTimeAsync(0);
+    await initial;
+
+    const replacement = [makeBlock(101, false, true), makeBlock(102, false, true)];
+    head = makeBlock(103, true, true);
+    blocks.push(...replacement, head);
+    const confirmation = expect(operation.confirmation(1)).resolves.toBe(103);
+    await vi.advanceTimersByTimeAsync(100);
+
+    await confirmation;
+    expect(operation.includedInBlock).toBe(103);
+  });
+
+  it('uses a completed ancestry read to verify newer consecutive heads', async () => {
+    const operation = createOperation();
+    head = blocks[1];
+    const initial = expect(operation.confirmation(1)).resolves.toBe(101);
+    await vi.advanceTimersByTimeAsync(0);
+    await initial;
+
+    const getBlockHash = context.readProvider.getBlockHash.bind(context.readProvider);
+    const ancestryReads = vi
+      .spyOn(context.readProvider, 'getBlockHash')
+      .mockImplementation(async (block) => {
+        if (block !== 'head') {
+          await new Promise<void>((resolve) => setTimeout(resolve, 250));
+        }
+        return getBlockHash(block);
+      });
+    head = blocks[3];
+    const resolved = vi.fn();
+    const rejected = vi.fn();
+    void operation.confirmation(5).then(resolved, rejected);
+    await vi.advanceTimersByTimeAsync(100);
+    head = blocks[4];
+    await vi.advanceTimersByTimeAsync(100);
+    head = blocks[5];
+    await vi.advanceTimersByTimeAsync(150);
+
+    expect(resolved).toHaveBeenCalledWith(105);
+    expect(rejected).not.toHaveBeenCalled();
+    expect(ancestryReads.mock.calls.filter(([block]) => block !== 'head')).toEqual([
+      [`${blocks[3].hash}~2`],
+    ]);
+  });
+
+  it('counts from the newer observed branch when a confirmation read overlaps a head change', async () => {
+    const operation = createOperation();
+    head = blocks[1];
+    const initial = expect(operation.confirmation(1)).resolves.toBe(101);
+    await vi.advanceTimersByTimeAsync(0);
+    await initial;
+
+    const getBlockHash = context.readProvider.getBlockHash.bind(context.readProvider);
+    const olderAncestor = `${blocks[3].hash}~2`;
+    const ancestryRead = vi
+      .spyOn(context.readProvider, 'getBlockHash')
+      .mockImplementation(async (block) => {
+        if (block === olderAncestor) {
+          await new Promise<void>((resolve) => setTimeout(resolve, 250));
+        }
+        return getBlockHash(block);
+      });
+
+    head = blocks[3];
+    const confirmation = expect(operation.confirmation(3)).resolves.toBe(104);
+    await vi.advanceTimersByTimeAsync(100);
+    expect(ancestryRead).toHaveBeenCalledWith(olderAncestor);
+
+    const replacement = [
+      makeBlock(101, false, true),
+      makeBlock(102, true, true),
+      makeBlock(103, false, true),
+    ];
+    head = makeBlock(104, false, true);
+    blocks.push(...replacement, head);
+
+    await vi.advanceTimersByTimeAsync(500);
+    await confirmation;
+    expect(operation.includedInBlock).toBe(102);
   });
 
   it('times out when the operation is absent from both historical blocks and the head', async () => {

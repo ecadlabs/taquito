@@ -72,6 +72,13 @@ export const signaturePrefixes = [
   PrefixV2.GenericSignature,
 ];
 
+// Use all known prefixes so a valid but disallowed identifier still reports PREFIX_NOT_ALLOWED.
+const maxPrefixedBase58Length = Math.max(
+  ...Object.values(PrefixV2).map((p) =>
+    Math.ceil(((prefixV2[p].length + payloadLength[p] + 4) * Math.log(256)) / Math.log(58))
+  )
+);
+
 /**
  * Decodes Base58 string, looks for known prefix and strips it
  * @param src Base58 string
@@ -99,6 +106,9 @@ export function b58DecodeAndCheckPrefix<T extends readonly PrefixV2[]>(
   allowed?: T,
   payloadOnly?: boolean
 ): [Uint8Array, T[number]] | Uint8Array {
+  if (typeof src === 'string' && src.length > maxPrefixedBase58Length) {
+    throw new ParameterValidationError(ValidationResult.INVALID_LENGTH);
+  }
   const buf = (() => {
     try {
       return bs58check.decode(src);

@@ -20,7 +20,8 @@ export type SaplingStateQuery = {
   id: string;
 };
 
-// block identifier can be head, a block relative to head, a block hash or a block level
+// A block identifier can be a level, head, a block hash, or an ancestor of head or a block hash.
+// For example, `head~2` and `B...~2` both select the block two levels before the named block.
 export type BlockIdentifier = 'head' | `head~${number}` | `B${string}` | number;
 
 export const isBlockHashIdentifier = (block: string): block is `B${string}` => {
@@ -86,7 +87,7 @@ export interface TzReadProvider {
   getStorage(contract: string, block: BlockIdentifier): Promise<MichelsonV1Expression>;
 
   /**
-   * Access the block hash
+   * Access the block hash. Contract confirmation uses `<block hash>~<distance>` to read an ancestor.
    */
   getBlockHash(block: BlockIdentifier): Promise<string>;
 
@@ -167,7 +168,8 @@ export interface TzReadProvider {
   isAccountRevealed(publicKeyHash: string, block: BlockIdentifier): Promise<boolean>;
 
   /**
-   * Return all the information about a block
+   * Return all the information about a block. Contract confirmation may request an ancestor
+   * using `<block hash>~<distance>`.
    * @param block from which we want to retrieve the information
    */
   getBlock(block: BlockIdentifier): Promise<BlockResponse>;

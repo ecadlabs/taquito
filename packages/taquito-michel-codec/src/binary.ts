@@ -202,8 +202,7 @@ const primitives: PrimID[] = [
   'GET_ADDRESS_INDEX',
 ];
 
-const primTags: { [key in PrimID]?: number } & { [key: string]: number | undefined } =
-  Object.assign({}, ...primitives.map((v, i) => ({ [v]: i })));
+const primTags = new Map<string, number>(primitives.map((prim, index) => [prim, index]));
 
 enum Tag {
   Int = 0,
@@ -644,7 +643,7 @@ function writeExpr(expr: Expr, wr: Writer, tf: WriteTransformFunc): void {
     return;
   }
 
-  const prim = primTags[e.prim];
+  const prim = primTags.get(e.prim);
   if (prim === undefined) {
     throw new TypeError(`Can't encode primary: ${e.prim}`);
   }

@@ -159,6 +159,23 @@ export const flattenErrors = (
 
 /**
  *  @category Error
+ *  The observed branch dropped the operation's inclusion and did not include it again before
+ *  confirmation timed out.
+ */
+export class OperationReorgError extends TaquitoError {
+  constructor(
+    public readonly operationHash: string,
+    public readonly inclusionBlockHash: string,
+    public readonly headHash: string
+  ) {
+    super();
+    this.name = 'OperationReorgError';
+    this.message = `Operation ${operationHash} included in ${inclusionBlockHash} is not an ancestor of ${headHash}`;
+  }
+}
+
+/**
+ *  @category Error
  *  Error that indicates a general failure happening during an origination operation.
  */
 export class OriginationOperationError extends TaquitoError {
