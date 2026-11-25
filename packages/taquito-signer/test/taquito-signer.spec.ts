@@ -451,7 +451,6 @@ describe('inmemory-signer', () => {
 
   it('Should throw error with wrong curve', () => {
     // account for js error / bad type cast
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect(() =>
       InMemorySigner.fromMnemonic({
         mnemonic,

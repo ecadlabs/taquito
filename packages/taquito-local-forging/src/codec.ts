@@ -347,7 +347,6 @@ export const zarithEncoder = (n: string): string => {
   if (nn.isNaN()) {
     throw new TypeError(`Invalid zarith number ${n}`);
   }
-  // eslint-disable-next-line no-constant-condition
   while (true) {
     if (nn.lt(128)) {
       if (nn.lt(16)) fn.push('0');

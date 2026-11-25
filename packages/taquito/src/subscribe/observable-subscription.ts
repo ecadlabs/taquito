@@ -1,4 +1,3 @@
-/* eslint-disable no-dupe-class-members */
 import { Observable, ReplaySubject, EMPTY, OperatorFunction } from 'rxjs';
 import { Subscription } from './interface';
 import { takeUntil, tap, catchError, retry } from 'rxjs/operators';
@@ -43,7 +42,6 @@ export class ObservableSubscription<T> implements Subscription<T> {
   private call<K>(listeners: Array<(val: K) => void>, value?: K) {
     for (const l of listeners) {
       try {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         l(value!);
       } catch (ex) {
         console.error(ex);

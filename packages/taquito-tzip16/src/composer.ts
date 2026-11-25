@@ -18,7 +18,6 @@ export function tzip16<T extends ContractAbstraction<ContractProvider | Wallet>>
         this[ABSTRACTION_KEY] = new Tzip16ContractAbstraction(this, context as MetadataContext);
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return this[ABSTRACTION_KEY]!;
     },
   });
