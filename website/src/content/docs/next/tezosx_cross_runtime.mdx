@@ -4,7 +4,7 @@ title: Tezos X call preparation (Beta)
 
 **Beta. The public API is subject to change.**
 
-`@taquito/tezosx` prepares unsigned NAC calls for compatible Tezos X kernels. It is optional and is not imported by `@taquito/utils` or the toolkit. The builders follow kernel revision `fb064e9f6a13c0ebd7bb1b7ec6727274e2dc23af`.
+`@taquito/tezosx` prepares unsigned NAC calls for compatible Tezos X kernels. It is optional and is not imported by `@taquito/utils` or the toolkit. The NAC call builders follow kernel revision `fb064e9f6a13c0ebd7bb1b7ec6727274e2dc23af`.
 
 ## Try the unreleased package
 
@@ -62,6 +62,24 @@ Entrypoint names start with an ASCII letter, digit or underscore. Subsequent cha
 Parameters can be expressions or canonical binary Micheline. Michelson strings accept printable ASCII and line feeds. For UTF-8 text, use a `bytes` literal when the receiving contract accepts bytes. Raw input must contain exactly one expression without an outer PACK marker. A raw expression can itself begin with `05`, as `Some` does; do not remove that byte. The codec uses the optional type hint for both validation and encoding. For contract handles, it checks the address and the parameter types supported by implicit accounts. Verifying a deployed contract's parameter type requires simulation. Non-packable type hints are rejected. Without a hint, the builder validates data structure but cannot check the target schema.
 
 The codec can encode a `tz5` address in a typed Michelson parameter. The pinned kernel rejects that address when it decodes the parameter.
+
+## Derive aliases offline
+
+```typescript
+import { getEthereumAlias, getTezosAlias } from '@taquito/tezosx';
+
+const evmAlias = getEthereumAlias('tz1aygVpocoeEMU89vXk92sMHqPYFNZVgvrh', 'horus');
+const michelsonAlias = getTezosAlias('0x1234567890abcdef1234567890abcdef12345678');
+```
+
+For Tezos-to-EVM derivation, pass the kernel running on your target network. Use `ganesha`
+for Etherlink 7 and `horus` for Etherlink 8. Horus changes the aliases of `tz1`, `tz2`, and
+`tz3` accounts. EVM-to-Michelson derivation uses the same formula on both kernels.
+
+These helpers derive an address from the input alone. To check whether the alias is recorded
+on-chain, use the [gateway's `resolveAddress` view](https://docs.etherlink.com/evm/nac-usage/).
+For a cross-runtime lookup, `classified: true` with `res: 0` means recorded and `res: 1`
+means derived. Ignore `res` when `classified` is `false`.
 
 ## Amounts and verification limits
 
