@@ -4,6 +4,7 @@ export * from './amount';
 export * from './constants';
 export * from './errors';
 export * from './types';
+export * from './materialization';
 export { DEFAULT_KNOWN_SIGNATURES } from './method-signature';
 export * from './michelson-to-evm';
 export * from './evm-to-michelson';
