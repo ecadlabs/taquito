@@ -1,9 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { ParameterValidationError } from '@taquito/core';
+import { ParameterValidationError, ValidationResult } from '@taquito/core';
 import calldata from './data/materialization-vectors.json';
 import {
   buildEvmAliasMaterialization,
   buildTezosAliasMaterialization,
+  type MichelsonAliasSource,
 } from '../src/taquito-tezosx';
 
 const tezosAddress = 'tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx';
@@ -118,6 +119,66 @@ describe('alias materialization', () => {
         buildTezosAliasMaterialization({ address: evmAddress, publicKey })
       ).not.toThrow();
     }
+  });
+
+  it('rejects oversized Base58 inputs and non-string addresses', () => {
+    const oversized = 'z'.repeat(8192);
+    const sources = [
+      { kind: 'implicit', address: oversized, publicKey: tezosPublicKey },
+      { kind: 'contract', address: oversized },
+    ] satisfies MichelsonAliasSource[];
+    for (const source of sources) {
+      expect(() => buildEvmAliasMaterialization(source)).toThrow(
+        expect.objectContaining({ result: ValidationResult.INVALID_LENGTH })
+      );
+    }
+    expect(() =>
+      buildEvmAliasMaterialization({
+        kind: 'implicit',
+        address: tezosAddress,
+        publicKey: oversized,
+      })
+    ).toThrow('Expected a valid Tezos public key');
+
+    const nonString = Object.create(null);
+    expect(() =>
+      Reflect.apply(buildEvmAliasMaterialization, undefined, [
+        { kind: 'contract', address: nonString },
+      ])
+    ).toThrow(ParameterValidationError);
+    expect(() =>
+      Reflect.apply(buildTezosAliasMaterialization, undefined, [{ address: nonString }])
+    ).toThrow(ParameterValidationError);
+  });
+
+  it('encodes the values that were validated when input properties are accessors', () => {
+    let tezosAddressReads = 0;
+    let tezosKeyReads = 0;
+    const evmRequest = buildEvmAliasMaterialization({
+      kind: 'implicit',
+      get address() {
+        return tezosAddressReads++ === 0 ? tezosAddress : 'different address';
+      },
+      get publicKey() {
+        return tezosKeyReads++ === 0 ? tezosPublicKey : 'different key';
+      },
+    });
+    expect(evmRequest.data).toBe(calldata.implicit);
+
+    const publicKey = '0x04' + evmRawPublicKey;
+    let evmAddressReads = 0;
+    let evmKeyReads = 0;
+    const tezosRequest = buildTezosAliasMaterialization({
+      get address() {
+        return evmAddressReads++ === 0 ? evmAddress : 'different address';
+      },
+      get publicKey() {
+        return evmKeyReads++ === 0 ? publicKey : 'different key';
+      },
+    });
+    expect(tezosRequest).toEqual(
+      buildTezosAliasMaterialization({ address: evmAddress, publicKey })
+    );
   });
 
   it('checks Tezos address kinds and rejects missing or mismatched keys before encoding', () => {
