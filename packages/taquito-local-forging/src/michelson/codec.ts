@@ -159,7 +159,6 @@ export const intEncoder: Encoder<IntValue> = ({ int }) => {
 
   const splitted = binary.padStart(pad, '0').match(/\d{6,7}/g);
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const reversed = splitted!.reverse();
 
   reversed[0] = positiveMark + reversed[0];
