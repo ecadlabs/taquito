@@ -229,6 +229,7 @@ import type {
   WalletInfo as MainWalletInfo,
   WireErrorMessage,
   WireErrorPayload,
+  WireRequestErrorResponse,
 } from '../src/taquito-beacon-wallet';
 
 describe('beacon-types re-exports (side-effect-free)', () => {
@@ -587,6 +588,10 @@ const _rpcErr: TezosRpcError | undefined = undefined;
 const _mainRpcErr: MainTezosRpcError | undefined = undefined;
 const _mainErrorOrigin: MainErrorOrigin = 'wallet';
 const _mainReqErr: MainRequestErrorResponse | undefined = undefined;
+const _wireReqErr: WireRequestErrorResponse | undefined = undefined;
+const _opEventErrResp:
+  | BeaconEventType[typeof BeaconEvent.OPERATION_REQUEST_ERROR]['errorResponse']
+  | undefined = _wireReqErr;
 const _acctId: AccountIdentifier | undefined = undefined;
 const _storedAcct: StoredAccountInfo | undefined = undefined;
 const _bcAcct: BlockchainAccountInfo | undefined = undefined;
@@ -758,4 +763,6 @@ void [
   _wcPairingResult,
   _mainWcPairingResult,
   _pairInitWcPeerInfo,
+  _wireReqErr,
+  _opEventErrResp,
 ];

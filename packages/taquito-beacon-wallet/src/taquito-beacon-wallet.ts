@@ -186,6 +186,7 @@ export type {
   WalletInfo,
   WireErrorMessage,
   WireErrorPayload,
+  WireRequestErrorResponse,
 } from '@ecadlabs/beacon-dapp';
 
 /**
