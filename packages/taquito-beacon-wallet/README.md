@@ -141,8 +141,10 @@ try {
   }
 }
 
-// Note: *_REQUEST_ERROR events emit a plain RequestErrorResponse in data.errorResponse;
-// pass it to toBeaconError(data.errorResponse) if you want a BeaconError instance.
+// Note: *_REQUEST_ERROR events emit a plain WireRequestErrorResponse in data.errorResponse
+// (where errorType is a string to preserve unfamiliar wallet codes). Narrow with
+// isRequestErrorResponse(data.errorResponse) before indexing by BeaconErrorType,
+// or pass it to toBeaconError(data.errorResponse) for a typed BeaconError instance.
 ```
 
 For debugging or telemetry, observe immutable plaintext protocol messages across all transports (including incoming routing `disposition`: `'handled' | 'stale' | 'unknown-request' | 'invalid'`) or configure Beacon's logger without installing `@ecadlabs/beacon-core` directly:
