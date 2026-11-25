@@ -61,6 +61,38 @@ Parameters can be expressions or canonical binary Micheline. Michelson strings a
 
 The codec can encode a `tz5` address in a typed Michelson parameter. The pinned kernel rejects that address when it decodes the parameter.
 
+## Materialize an alias on Horus
+
+```typescript
+import { buildEvmAliasMaterialization, buildTezosAliasMaterialization } from '@taquito/tezosx';
+
+const evmTransaction = buildEvmAliasMaterialization({
+  kind: 'implicit',
+  address: 'tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx',
+  publicKey: 'edpkuBknW28nW72KG6RoHtYW7p12T6GKc7nAbwYX5m8Wd9sDVC9yav',
+});
+
+const tezosTransfer = buildTezosAliasMaterialization({
+  address: evmAccountAddress,
+  publicKey: evmPublicKey,
+});
+
+const evmGas = await publicClient.estimateGas({ account: evmSender, ...evmTransaction });
+const tezosEstimate = await Tezos.estimate.transfer(tezosTransfer);
+```
+
+Send `evmTransaction` through the EVM gateway to create a Michelson account's EVM alias.
+Pass `tezosTransfer` to `Tezos.wallet.transfer` or `Tezos.contract.transfer` on the Etherlink
+Michelson RPC to create an EVM account's KT1 alias. Both builders set the value to zero.
+
+An implicit Tezos account (`tz1` through `tz4`) requires its matching public key. For a native
+Michelson contract, use `kind: 'contract'` and omit the key. Pass a lowercase or EIP-55-checksummed
+`evmAccountAddress` and its matching `evmPublicKey`. You can omit the key if the kernel can
+establish that the account is native from its state. An EOA without that evidence needs its
+matching raw or uncompressed secp256k1 public key. Existing aliases are left untouched by the
+gateway. Use a viem `publicClient` and an `evmSender` for the target EVM network. Configure
+`Tezos` with the target Michelson RPC and the intended Michelson source before estimating.
+
 ## Amounts and verification limits
 
 Amounts accept a bigint, a safe integer number, or an unsigned decimal or `0x` integer string. Negative, fractional and unsafe-number inputs are rejected. One mutez is exactly 10^12 wei. Sub-mutez remainders and amounts above 2^63 minus 1 mutez are rejected. `toTransferParams` also rejects amounts above JavaScript's safe-integer limit.
