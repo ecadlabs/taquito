@@ -42,4 +42,37 @@ describe('Binary', () => {
       });
     }
   });
+
+  describe('unpack of deeply nested values', () => {
+    const depth = 40;
+    const address = 'tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx';
+
+    it('reads untyped nested sequences and prims once', () => {
+      let data: MichelsonData = { int: '0' };
+      for (let i = 0; i < depth; i++) {
+        data = [{ prim: 'Pair', args: [{ int: String(i) }, data] }];
+      }
+      expect(unpackData(packData(data))).toEqual(data);
+    });
+
+    it('applies type conversions at every level of a nested type', () => {
+      let type: MichelsonType = { prim: 'address' };
+      let data: MichelsonData = { string: address };
+      for (let i = 0; i < depth; i++) {
+        type = { prim: 'option', args: [{ prim: 'pair', args: [{ prim: 'address' }, type] }] };
+        data = { prim: 'Some', args: [{ prim: 'Pair', args: [{ string: address }, data] }] };
+      }
+      expect(unpackData(packData(data, type), type)).toEqual(data);
+    });
+
+    it('converts a PUSH inline type inside nested lambdas', () => {
+      let data: MichelsonData = [
+        { prim: 'PUSH', args: [{ prim: 'address' }, { string: address }] },
+      ];
+      for (let i = 0; i < depth; i++) {
+        data = [{ prim: 'LAMBDA', args: [{ prim: 'unit' }, { prim: 'unit' }, data] }];
+      }
+      expect(unpackData(packData(data))).toEqual(data);
+    });
+  });
 });

@@ -292,10 +292,6 @@ class Reader {
     return ret;
   }
 
-  copy(): Reader {
-    return new Reader(this.buffer, this.idx, this.cap);
-  }
-
   readUint8(): number {
     if (this.cap - this.idx < 1) {
       throw boundsErr;
@@ -698,13 +694,11 @@ function writeExpr(expr: Expr, wr: Writer, tf: WriteTransformFunc): void {
 
 type ReadTransformFuncs = [(e: Expr) => IterableIterator<ReadTransformFuncs>, (e: Expr) => Expr];
 
-function readExpr(rd: Reader, tf: ReadTransformFuncs): Expr {
-  function* passThrough() {
-    while (true) {
-      yield readPassThrough;
-    }
-  }
-  const [args, tr] = tf;
+/**
+ * Decodes one packed expression without type information, reading every byte once.
+ * {@link transformExpr} applies the type-directed conversions to the result.
+ */
+function readExpr(rd: Reader): Expr {
   const tag = rd.readUint8();
   switch (tag) {
     case Tag.Int: {
@@ -728,44 +722,31 @@ function readExpr(rd: Reader, tf: ReadTransformFuncs): Expr {
       if (sign) {
         val = -val;
       }
-      return tr({ int: String(val) });
+      return { int: String(val) };
     }
 
     case Tag.String: {
       const length = rd.readUint32();
       const bytes = rd.readBytes(length);
       const dec = new TextDecoder();
-      return tr({ string: dec.decode(new Uint8Array(bytes)) });
+      return { string: dec.decode(new Uint8Array(bytes)) };
     }
 
     case Tag.Bytes: {
       const length = rd.readUint32();
       const bytes = rd.readBytes(length);
       const hex = hexBytes(Array.from(bytes));
-      return tr({ bytes: hex });
+      return { bytes: hex };
     }
 
     case Tag.Sequence: {
       const length = rd.readUint32();
-      let res: Expr[] = [];
-      let savedrd = rd.copy();
-      // make two passes
-      let it: IterableIterator<ReadTransformFuncs> = passThrough();
-      for (let n = 0; n < 2; n++) {
-        const r = savedrd.reader(length);
-        res = [];
-        while (r.length > 0) {
-          const a = it.next();
-          if (a.done) {
-            throw new Error('REPORT ME: iterator is done');
-          }
-          res.push(readExpr(r, a.value));
-        }
-        // make a second pass with injected side effects
-        it = args(res);
-        savedrd = rd;
+      const r = rd.reader(length);
+      const res: Expr[] = [];
+      while (r.length > 0) {
+        res.push(readExpr(r));
       }
-      return tr(res);
+      return res;
     }
 
     default: {
@@ -778,36 +759,22 @@ function readExpr(rd: Reader, tf: ReadTransformFuncs): Expr {
       }
       const prim = primitives[p];
       const argn = (tag - 3) >> 1;
-      let res: Prim = { prim };
-      // make two passes
-      let it: IterableIterator<ReadTransformFuncs> = passThrough();
-      let savedrd = rd.copy();
-      for (let n = 0; n < 2; n++) {
-        res = { prim };
-        if (argn < 3) {
+      const res: Prim = { prim };
+      if (argn < 3) {
+        if (argn > 0) {
+          const args: Expr[] = [];
           for (let i = 0; i < argn; i++) {
-            const a = it.next();
-            if (a.done) {
-              throw new Error('REPORT ME: iterator is done');
-            }
-            res.args = res.args || [];
-            res.args.push(readExpr(savedrd, a.value));
+            args.push(readExpr(rd));
           }
-        } else {
-          res.args = res.args || [];
-          const length = savedrd.readUint32();
-          const r = savedrd.reader(length);
-          while (r.length > 0) {
-            const a = it.next();
-            if (a.done) {
-              throw new Error('REPORT ME: iterator is done');
-            }
-            res.args.push(readExpr(r, a.value));
-          }
+          res.args = args;
         }
-        // make a second pass with injected side effects
-        it = args(res);
-        savedrd = rd;
+      } else {
+        res.args = [];
+        const length = rd.readUint32();
+        const r = rd.reader(length);
+        while (r.length > 0) {
+          res.args.push(readExpr(r));
+        }
       }
 
       if (((tag - 3) & 1) === 1 || argn === 3) {
@@ -819,9 +786,41 @@ function readExpr(rd: Reader, tf: ReadTransformFuncs): Expr {
           res.annots = dec.decode(new Uint8Array(bytes)).split(' ');
         }
       }
-      return tr(res);
+      return res;
     }
   }
+}
+
+function nextTransform(it: IterableIterator<ReadTransformFuncs>): ReadTransformFuncs {
+  const a = it.next();
+  if (a.done) {
+    throw new Error('REPORT ME: iterator is done');
+  }
+  return a.value;
+}
+
+/**
+ * Applies type-directed read transforms to a decoded expression, visiting each node once.
+ * `args` receives each node with its untyped children and without annotations.
+ */
+function transformExpr(e: Expr, [args, tr]: ReadTransformFuncs): Expr {
+  if (Array.isArray(e)) {
+    const it = args(e);
+    return tr(e.map((child) => transformExpr(child, nextTransform(it))));
+  }
+  if (!('prim' in e)) {
+    return tr(e);
+  }
+  const untyped: Prim = e.args === undefined ? { prim: e.prim } : { prim: e.prim, args: e.args };
+  const it = args(untyped);
+  const res: Prim = { prim: e.prim };
+  if (e.args !== undefined) {
+    res.args = e.args.map((child) => transformExpr(child, nextTransform(it)));
+  }
+  if (e.annots !== undefined) {
+    res.annots = e.annots;
+  }
+  return tr(res);
 }
 
 const isOrData = (e: Expr): e is MichelsonDataOr =>
@@ -1066,21 +1065,13 @@ const getWriteTransformFunc = (t: MichelsonType): WriteTransformFunc => {
     case 'tx_rollup_l2_address':
       return (d: Expr) => {
         if (!('bytes' in d) && !('string' in d)) {
-          throw new MichelsonTypeError(
-            t,
-            `tx_rollup_l2_address expected: ${JSON.stringify(d)}`,
-            d
-          );
+          throw new MichelsonTypeError(t, `tx_rollup_l2_address expected: ${JSON.stringify(d)}`, d);
         }
         let bytes: BytesLiteral;
         if ('string' in d) {
           const l2 = checkDecodeTezosID(d.string, 'BLS12_381PublicKeyHash');
           if (l2 === null) {
-            throw new MichelsonTypeError(
-              t,
-              `tx_rollup_l2_address base58 expected: ${d.string}`,
-              d
-            );
+            throw new MichelsonTypeError(t, `tx_rollup_l2_address base58 expected: ${d.string}`, d);
           }
           bytes = { bytes: hexBytes(l2[1]) };
         } else {
@@ -1515,7 +1506,10 @@ export function unpackData(src: number[] | Uint8Array, t?: MichelsonType): Miche
   if (r.readUint8() !== 5) {
     throw new Error('incorrect packed data magic number');
   }
-  const ex = readExpr(r, t !== undefined ? getReadTransformFuncs(t) : readPassThrough);
+  const ex = transformExpr(
+    readExpr(r),
+    t !== undefined ? getReadTransformFuncs(t) : readPassThrough
+  );
   if (assertMichelsonData(ex)) {
     return ex;
   }
