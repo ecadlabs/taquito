@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { InvalidAddressError, ParameterValidationError } from '@taquito/core';
+import { InvalidAddressError, ParameterValidationError, ValidationResult } from '@taquito/core';
 import { getEthereumAlias, getTezosAlias } from '../src/taquito-tezosx';
 
 describe('Tezos X alias derivation', () => {
@@ -49,6 +49,24 @@ describe('Tezos X alias derivation', () => {
   it('derives the Michelson alias from lowercase EVM address bytes', () => {
     expect(getTezosAlias('0xCCEF676171871A48BBD6E2BE75BBCC09D38830C5')).toBe(
       'KT1TLraR9PboPAvxLKYQs9eU4n75rGFJTbWk'
+    );
+  });
+
+  it('rejects oversized inputs before decoding and validates untyped arguments', () => {
+    expect(() => getEthereumAlias('z'.repeat(8192), 'horus')).toThrow(
+      expect.objectContaining({
+        name: 'InvalidAddressError',
+        result: ValidationResult.INVALID_LENGTH,
+      })
+    );
+    expect(() => getTezosAlias('0x' + 'a'.repeat(8192))).toThrow(InvalidAddressError);
+
+    const nonString = Object.create(null);
+    expect(() => Reflect.apply(getEthereumAlias, undefined, [nonString, 'horus'])).toThrow(
+      ParameterValidationError
+    );
+    expect(() => Reflect.apply(getTezosAlias, undefined, [nonString])).toThrow(
+      ParameterValidationError
     );
   });
 
