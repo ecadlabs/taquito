@@ -4,9 +4,15 @@
 
 `@taquito/tezosx` prepares unsigned NAC calls for compatible Tezos X kernels. It is optional and is not imported by `@taquito/utils` or the toolkit. The builders follow kernel revision `fb064e9f6a13c0ebd7bb1b7ec6727274e2dc23af`.
 
-## Try the unreleased package
+## Install the beta
 
-This package is not yet part of a published Taquito release. Check out a revision that includes the package, then run `npm ci` and `npm run build` at the repository root. The examples use the built workspace package. Check that the target network runs a compatible kernel before using the builders.
+```sh
+npm install @taquito/tezosx@next
+```
+
+To try an API that has yet to reach npm, check out a revision that includes it and run
+`npm ci` and `npm run build` at the repository root. Check that the target network runs
+a compatible kernel before using the builders.
 
 ## Michelson to EVM
 
