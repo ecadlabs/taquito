@@ -22,6 +22,8 @@ export function exerciseTezosX(api) {
     evmData: evm.data,
     evmValue: evm.value,
     messageData: message.data,
+    horusAlias: api.getEthereumAlias('tz1aygVpocoeEMU89vXk92sMHqPYFNZVgvrh', 'horus'),
+    tezosAlias: api.getTezosAlias('0x1234567890abcdef1234567890abcdef12345678'),
   };
 }
 
@@ -31,6 +33,8 @@ export const expectedTezosX = {
   evmData: vectors.evmTransferData,
   evmValue: 1000000000000000n,
   messageData: vectors.utf8Bytes.calldata,
+  horusAlias: '0x0ea7865238580e0d8f0d2ca196d3b672dea705ad',
+  tezosAlias: 'KT1CYcsqu3TnW3aA2hYL62ZCtcA484yCG4Zq',
 };
 
 export default async function ({ assert, load }) {

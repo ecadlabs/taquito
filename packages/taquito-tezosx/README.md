@@ -8,6 +8,26 @@
 
 This package is not yet part of a published Taquito release. Check out a revision that includes the package, then run `npm ci` and `npm run build` at the repository root. The examples use the built workspace package. Check that the target network runs a compatible kernel before using the builders.
 
+## Derive cross-runtime aliases
+
+```typescript
+import { getEthereumAlias, getTezosAlias } from '@taquito/tezosx';
+
+const evmAlias = getEthereumAlias('tz1aygVpocoeEMU89vXk92sMHqPYFNZVgvrh', 'horus');
+const michelsonAlias = getTezosAlias('0x1234567890abcdef1234567890abcdef12345678');
+```
+
+Use `ganesha` for Etherlink 7 and `horus` for Etherlink 8. The Horus formula changes the
+EVM alias of `tz1`, `tz2`, and `tz3` accounts. The other supported prefixes keep the legacy
+formula. A derived address can exist before the account or its alias is recorded on-chain.
+
+To query the connected Etherlink node, call `tez_getTezosEthereumAddress` or
+`tez_getEthereumTezosAddress` on its EVM JSON-RPC endpoint with the native address as the
+only parameter. For a cross-runtime gateway `resolveAddress` query, `classified: true` with
+`res: 0` means recorded and `res: 1` means derived. With `classified: false`, the input
+could not be classified. Ignore its `res` value.
+See the [Etherlink RPC reference](https://docs.etherlink.com/michelson/developing/rpc-reference/#alias-rpcs).
+
 ## Michelson to EVM
 
 ```typescript
