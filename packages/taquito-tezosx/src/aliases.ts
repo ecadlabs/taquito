@@ -1,5 +1,6 @@
 // Derivation adapted from trilitech/octez.js #152. Copyright 2026 Nomadic Labs. Apache-2.0.
 import { blake2b } from '@noble/hashes/blake2.js';
+import { keccak_256 } from '@noble/hashes/sha3.js';
 import { InvalidAddressError, ParameterValidationError, ValidationResult } from '@taquito/core';
 import {
   b58DecodeAndCheckPrefix,
@@ -7,7 +8,7 @@ import {
   PrefixV2,
   publicKeyHashPrefixes,
 } from '@taquito/utils';
-import { concatHex, isAddress, keccak256, toHex } from 'viem';
+import { bytesToHex, concatBytes, concatHex, hexToBytes, isAddress } from 'viem';
 import type { Hex } from 'viem';
 
 /** Etherlink kernels supported by the offline Tezos-to-EVM alias derivation. */
@@ -23,10 +24,20 @@ const GUARDED_CLONE_PREFIX =
   '0x733822d2fe3dce6ce4f4c7f274e2415fa3fae66c3e3b15601e57600080fd5b604180602a6000396000f3';
 const PROXY_HEAD = '0x363d3d373d3d3d363d73';
 const PROXY_TAIL = '0x5af43d82803e903d91602b57fd5bf3';
-const rescueImplementations: Partial<Record<PrefixV2, Hex>> = {
-  [PrefixV2.Ed25519PublicKeyHash]: '0xfee60e905d91905df9cd6bf8153976e9d77d5051',
-  [PrefixV2.Secp256k1PublicKeyHash]: '0x47c81e55f51344d80a8e85c2add86257b51ea3d2',
-  [PrefixV2.P256PublicKeyHash]: '0x894b62c61b208184b80fd72803811ba35d818112',
+const create2Prefix = hexToBytes(concatHex(['0xff', SAFE_FACTORY, RESCUE_SALT]));
+
+function buildInitCodePrefix(implementation: Hex): Uint8Array {
+  return hexToBytes(concatHex([GUARDED_CLONE_PREFIX, PROXY_HEAD, implementation, PROXY_TAIL]));
+}
+
+const rescueInitCodePrefixes: Partial<Record<PrefixV2, Uint8Array>> = {
+  [PrefixV2.Ed25519PublicKeyHash]: buildInitCodePrefix(
+    '0xfee60e905d91905df9cd6bf8153976e9d77d5051'
+  ),
+  [PrefixV2.Secp256k1PublicKeyHash]: buildInitCodePrefix(
+    '0x47c81e55f51344d80a8e85c2add86257b51ea3d2'
+  ),
+  [PrefixV2.P256PublicKeyHash]: buildInitCodePrefix('0x894b62c61b208184b80fd72803811ba35d818112'),
 };
 
 /**
@@ -62,21 +73,14 @@ export function getEthereumAlias(address: string, kernel: AliasKernel): Hex {
   }
 
   const [pkh, prefix] = decoded;
-  const implementation = rescueImplementations[prefix];
-  if (kernel === 'ganesha' || implementation === undefined) {
-    return `0x${keccak256(textEncoder.encode(address)).slice(2, 42)}`;
+  const initCodePrefix = rescueInitCodePrefixes[prefix];
+  if (kernel === 'ganesha' || initCodePrefix === undefined) {
+    return bytesToHex(keccak_256(textEncoder.encode(address)).subarray(0, 20));
   }
 
-  const bytecode = concatHex([
-    GUARDED_CLONE_PREFIX,
-    PROXY_HEAD,
-    implementation,
-    PROXY_TAIL,
-    toHex(pkh),
-  ]);
+  const initCodeHash = keccak_256(concatBytes([initCodePrefix, pkh]));
   // CREATE2 takes the low 20 bytes. The alias RPC returns them without an EIP-55 checksum.
-  const hash = keccak256(concatHex(['0xff', SAFE_FACTORY, RESCUE_SALT, keccak256(bytecode)]));
-  return `0x${hash.slice(-40)}`;
+  return bytesToHex(keccak_256(concatBytes([create2Prefix, initCodeHash])).subarray(12));
 }
 
 /**
