@@ -4,6 +4,7 @@ import path from 'path';
 import { MichelsonData, MichelsonType, ProtocolID } from '../src/michelson-types';
 import { packData, unpackData } from '../src/binary';
 import { MichelsonTypeError, parseHex } from '../src/utils';
+import { Expr } from '../src/micheline';
 
 interface TypedTestData {
   type?: MichelsonType;
@@ -86,6 +87,81 @@ describe('Binary', () => {
       expect(unpackData(packData(data))).toEqual(data);
     });
   });
+  describe('constructor arity', () => {
+    // Exercise invalid JavaScript inputs without claiming they satisfy MichelsonData.
+    const packInvalidJavaScriptData = (data: unknown, type: MichelsonType) =>
+      Reflect.apply(packData, undefined, [data, type]);
+
+    const optionType: MichelsonType = { prim: 'option', args: [{ prim: 'nat' }] };
+    const orType: MichelsonType = {
+      prim: 'or',
+      args: [{ prim: 'nat' }, { prim: 'nat' }],
+    };
+
+    it.each([
+      { name: 'Some with string args', data: { prim: 'Some', args: '1' }, type: optionType },
+      { name: 'None with null args', data: { prim: 'None', args: null }, type: optionType },
+      { name: 'None with string args', data: { prim: 'None', args: '' }, type: optionType },
+      {
+        name: 'None with array-like args',
+        data: { prim: 'None', args: { length: 0 } },
+        type: optionType,
+      },
+      {
+        name: 'Left with array-like args',
+        data: { prim: 'Left', args: { length: 1 } },
+        type: orType,
+      },
+      { name: 'Right with string args', data: { prim: 'Right', args: '1' }, type: orType },
+    ] satisfies { name: string; data: unknown; type: MichelsonType }[])(
+      'rejects $name as an argument container',
+      ({ data, type }) => {
+        expect(() => packInvalidJavaScriptData(data, type)).toThrow(MichelsonTypeError);
+      }
+    );
+
+    it.each([
+      { name: 'Some without an argument', data: { prim: 'Some' }, packed: '050309' },
+      {
+        name: 'Some with two arguments',
+        data: { prim: 'Some', args: [{ int: '1' }, { int: '2' }] },
+        packed: '05070900010002',
+      },
+      {
+        name: 'None with an argument',
+        data: { prim: 'None', args: [{ int: '1' }] },
+        packed: '0505060001',
+      },
+    ] satisfies { name: string; data: Expr; packed: string }[])(
+      'rejects $name when packing and unpacking',
+      ({ data, packed }) => {
+        expect(() => packInvalidJavaScriptData(data, optionType)).toThrow(MichelsonTypeError);
+        expect(() => unpackData(parseHex(packed), optionType)).toThrow(MichelsonTypeError);
+      }
+    );
+
+    it.each([
+      { name: 'Left without an argument', data: { prim: 'Left' }, packed: '050305' },
+      {
+        name: 'Left with two arguments',
+        data: { prim: 'Left', args: [{ int: '1' }, { int: '2' }] },
+        packed: '05070500010002',
+      },
+      { name: 'Right without an argument', data: { prim: 'Right' }, packed: '050308' },
+      {
+        name: 'Right with two arguments',
+        data: { prim: 'Right', args: [{ int: '1' }, { int: '2' }] },
+        packed: '05070800010002',
+      },
+    ] satisfies { name: string; data: Expr; packed: string }[])(
+      'rejects $name when packing and unpacking',
+      ({ data, packed }) => {
+        expect(() => packInvalidJavaScriptData(data, orType)).toThrow(MichelsonTypeError);
+        expect(() => unpackData(parseHex(packed), orType)).toThrow(MichelsonTypeError);
+      }
+    );
+  });
+
   describe('nested option', () => {
     const chainId = 'NetXynUjJNZm7wi';
     const nested: MichelsonType = {
