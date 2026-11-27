@@ -28,7 +28,9 @@ async function renderMermaid(): Promise<void> {
       } else {
         figure.setAttribute('aria-label', 'Mermaid diagram');
       }
+      const hadFocus = pre.contains(document.activeElement);
       pre.replaceWith(figure);
+      if (hadFocus) figure.focus({ preventScroll: true });
     } catch (error) {
       console.warn('Could not render a Mermaid diagram.', error);
     }
