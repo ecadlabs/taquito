@@ -20,6 +20,7 @@
     "packages/taquito/test/contract/fa21.spec.ts",
     "packages/taquito-rpc/test/big-map-values*.spec.ts",
     "packages/taquito-rpc/test/aggregate-proofs*.spec.ts",
+    "test-fixtures/rpc-zk-rollup-constant.types.ts",
     "packages/taquito-signer/test/aggregate-proof*.spec.ts",
     "packages/taquito/test/contract/smart-rollup-whitelist.spec.ts",
     "packages/taquito-timelock/test/protocol-compatibility.spec.ts",
