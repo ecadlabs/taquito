@@ -20,11 +20,12 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       await setup({ preferFreshKey: true, minBalanceMutez: 2_000_000 });
     });
 
-    it('reads two pages of a populated big map at one pinned block hash', async () => {
+    it('reads full and partial pages and an empty boundary page at one pinned block hash', async () => {
       const bigMapInit = new MichelsonMap();
       bigMapInit.set(await Tezos.signer.publicKeyHash(), { 0: '1', 1: new MichelsonMap() });
       bigMapInit.set('tz3PNdfg3Fc8hH4m9iSs7bHgDgugsufJnBZ1', { 0: '2', 1: new MichelsonMap() });
       bigMapInit.set('tz2Ch1abG7FNiibmV26Uzgdsnfni9XGrk5wD', { 0: '3', 1: new MichelsonMap() });
+      bigMapInit.set('tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb', { 0: '4', 1: new MichelsonMap() });
       const op = await Tezos.contract.originate({
         code: tokenCode,
         storage: { 0: bigMapInit, 1: await Tezos.signer.publicKeyHash(), 2: true, 3: '3' },
@@ -41,15 +42,40 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
         length: 2,
         block: first.blockHash,
       });
+      const end = await bigMap.getValuesPage<TokenValue>({
+        offset: 4,
+        length: 2,
+        block: first.blockHash,
+      });
       expect(second.blockHash).toBe(first.blockHash);
+      expect(end.blockHash).toBe(first.blockHash);
       expect(first.values).toHaveLength(2);
-      expect(second.values).toHaveLength(1);
+      expect(second.values).toHaveLength(2);
+      expect(end.values).toHaveLength(0);
       // Ordering is unspecified, so compare the union of both pages.
       const amounts = [...first.values, ...second.values].map((value) => value[0].toFixed());
-      expect(amounts.sort()).toEqual(['1', '2', '3']);
+      expect(amounts.sort()).toEqual(['1', '2', '3', '4']);
 
-      const values = await bigMap.listValues<TokenValue>({ length: 3, block: level });
-      expect(values.map((value) => value[0].toFixed()).sort()).toEqual(['1', '2', '3']);
+      const partialFirst = await bigMap.getValuesPage<TokenValue>({
+        offset: 0,
+        length: 3,
+        block: first.blockHash,
+      });
+      const partialLast = await bigMap.getValuesPage<TokenValue>({
+        offset: 3,
+        length: 3,
+        block: first.blockHash,
+      });
+      expect(partialFirst.blockHash).toBe(first.blockHash);
+      expect(partialLast.blockHash).toBe(first.blockHash);
+      expect(partialFirst.values).toHaveLength(3);
+      expect(partialLast.values).toHaveLength(1);
+      expect(
+        [...partialFirst.values, ...partialLast.values].map((value) => value[0].toFixed()).sort()
+      ).toEqual(['1', '2', '3', '4']);
+
+      const values = await bigMap.listValues<TokenValue>({ length: 4, block: first.blockHash });
+      expect(values.map((value) => value[0].toFixed()).sort()).toEqual(['1', '2', '3', '4']);
 
       expect(await bigMap.isEmpty(first.blockHash)).toBe(false);
     });
