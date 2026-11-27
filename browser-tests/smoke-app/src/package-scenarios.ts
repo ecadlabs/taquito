@@ -373,7 +373,7 @@ const scenarios: Record<PackageScenarioId, SmokeScenario> = {
     } catch (error) {
       if (
         error instanceof Error &&
-        error.message.includes('only supports signing operations, not raw')
+        error.message.includes('not raw payloads')
       ) {
         rejectedRaw = true;
       } else {
@@ -391,6 +391,15 @@ const scenarios: Record<PackageScenarioId, SmokeScenario> = {
       requests[0]?.signingType !== 'operation'
     ) {
       throw new Error('Unexpected BeaconWallet.sign() result in browser');
+    }
+    // The 05 watermark goes out as a Micheline request with the watermark prepended once.
+    await wallet.sign(signingBytesFixture.slice(2), new Uint8Array([5]));
+    if (
+      requests.length !== 2 ||
+      requests[1]?.payload !== `05${signingBytesFixture.slice(2)}` ||
+      requests[1]?.signingType !== 'micheline'
+    ) {
+      throw new Error('Unexpected BeaconWallet.sign() Micheline request in browser');
     }
     assertNoGlobalBuffer();
 

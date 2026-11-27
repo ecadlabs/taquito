@@ -348,11 +348,30 @@ describe('Beacon Wallet tests', () => {
     expect(() => wallet['getSigningType'](new Uint8Array([7]))).toThrow();
   });
 
-  it('Verify sign throws for Micheline', async () => {
+  it('signs Micheline data with the 05 watermark as a Beacon Micheline request', async () => {
     const wallet = new BeaconWallet({ name: 'Test', storage: new LocalStorage() });
-    await expect(wallet.sign('48656C6C6F20576F726C64', new Uint8Array([5]))).rejects.toThrow(
-      UnsupportedActionError
+    const requestSignPayload = vi.fn().mockResolvedValue({
+      type: 'sign_payload_response',
+      signingType: SigningType.MICHELINE,
+      signature:
+        'edsigtXomBKi5CTRf5cjATJWSyaRvhfYNHqSUGrn4SdbYRcGwQrUGjzEfQDTuqHhuA8b2d8NarZjz8TRf65WkpQmo423BtomS8Q',
+      version: '2',
+      id: 'fixture',
+      senderId: 'fixture',
+    });
+    wallet.client.requestSignPayload = requestSignPayload;
+
+    // PACK("Hello World") without its 05 prefix; the watermark supplies it.
+    const packed = '010000000b48656c6c6f20576f726c64';
+    const signature = await wallet.sign(packed, new Uint8Array([5]));
+
+    expect(signature).toBe(
+      'edsigtXomBKi5CTRf5cjATJWSyaRvhfYNHqSUGrn4SdbYRcGwQrUGjzEfQDTuqHhuA8b2d8NarZjz8TRf65WkpQmo423BtomS8Q'
     );
+    expect(requestSignPayload).toHaveBeenCalledExactlyOnceWith({
+      payload: `05${packed}`,
+      signingType: SigningType.MICHELINE,
+    });
   });
 
   it('Verify sign throws for Raw', async () => {
@@ -379,9 +398,6 @@ describe('Beacon Wallet tests', () => {
       wallet.client.requestSignPayload = requestSignPayload;
 
       await expect(wallet.sign('48656c6c6f', undefined)).rejects.toThrow(UnsupportedActionError);
-      await expect(wallet.sign('48656c6c6f', new Uint8Array([5]))).rejects.toThrow(
-        UnsupportedActionError
-      );
       await expect(wallet.sign('48656c6c6f', new Uint8Array([1, 2]))).rejects.toThrow(
         'Invalid watermark'
       );

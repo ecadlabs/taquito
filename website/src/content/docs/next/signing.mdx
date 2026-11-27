@@ -84,6 +84,14 @@ You can then use the `requestSignPayload` method of the `client` available on th
 
 The wallet will return an object with a `signature` property that holds our signature.
 
+`BeaconWallet` also implements Taquito's `WalletProvider.sign`. Pass the bytes without their `05` prefix and the `05` watermark. It sends a Micheline sign request for the same payload, without a `sourceAddress`, and returns the signature string:
+
+```typescript
+const signature = await wallet.sign(payloadBytes.slice(2), new Uint8Array([5]));
+```
+
+`wallet.sign` accepts the `03` (operation) and `05` (Micheline) watermarks. It rejects raw payloads; use `requestSignPayload` with `SigningType.RAW` for those, if the wallet supports raw signing.
+
 Here is the full code to sign data with a wallet:
 
 ```ts
