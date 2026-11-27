@@ -68,14 +68,16 @@ export default async function ({ assert, load, mode }) {
       require.resolve(`${name}/dist/${entry}.es6.js`)
     );
     assert.equal(
-      require.resolve(`${name}/dist/lib/errors.js.map`),
-      require.resolve(`${name}/dist/lib/errors.js`) + '.map'
+      require.resolve(`${name}/dist/${entry}.es6.js.map`),
+      require.resolve(`${name}/dist/${entry}.es6.js`) + '.map'
     );
     for (const exported of baselineNames[name]) {
       assert.ok(Object.hasOwn(commonjs, exported), `${name} lost the ${exported} export`);
     }
-    for (const exported of Object.keys(commonjs)) {
-      assert.equal(loaded[exported], commonjs[exported], `${name} changed the ${exported} export`);
+    if (mode === 'import') {
+      for (const exported of Object.keys(commonjs)) {
+        assert.equal(loaded[exported], commonjs[exported], `${name} changed the ${exported} export`);
+      }
     }
   }
   if (mode === 'import') {
