@@ -28,7 +28,7 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
       bigMapInit.set('tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb', { 0: '4', 1: new MichelsonMap() });
       const op = await Tezos.contract.originate({
         code: tokenCode,
-        storage: { 0: bigMapInit, 1: await Tezos.signer.publicKeyHash(), 2: true, 3: '3' },
+        storage: { 0: bigMapInit, 1: await Tezos.signer.publicKeyHash(), 2: true, 3: '10' },
       });
       await op.confirmation();
       // Pin reads to the inclusion level so load-balanced nodes agree on the snapshot.
