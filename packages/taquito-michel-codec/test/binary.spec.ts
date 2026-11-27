@@ -3,7 +3,7 @@ import path from 'path';
 
 import { MichelsonData, MichelsonType, ProtocolID } from '../src/michelson-types';
 import { packData, unpackData } from '../src/binary';
-import { parseHex } from '../src/utils';
+import { MichelsonTypeError, parseHex } from '../src/utils';
 
 interface TypedTestData {
   type?: MichelsonType;
@@ -84,6 +84,37 @@ describe('Binary', () => {
         data = [{ prim: 'LAMBDA', args: [{ prim: 'unit' }, { prim: 'unit' }, data] }];
       }
       expect(unpackData(packData(data))).toEqual(data);
+    });
+  });
+  describe('nested option', () => {
+    const chainId = 'NetXynUjJNZm7wi';
+    const nested: MichelsonType = {
+      prim: 'option',
+      args: [{ prim: 'option', args: [{ prim: 'chain_id' }] }],
+    };
+
+    it('round-trips Some of Some chain id', () => {
+      const data: MichelsonData = {
+        prim: 'Some',
+        args: [{ prim: 'Some', args: [{ string: chainId }] }],
+      };
+      const packed = '05050905090a00000004f3d48554';
+      expect(packData(data, nested)).toEqual(parseHex(packed));
+      expect(unpackData(parseHex(packed), nested)).toEqual(data);
+    });
+
+    it('round-trips Some of None', () => {
+      const data: MichelsonData = { prim: 'Some', args: [{ prim: 'None' }] };
+      const packed = '0505090306';
+      expect(packData(data, nested)).toEqual(parseHex(packed));
+      expect(unpackData(parseHex(packed), nested)).toEqual(data);
+    });
+
+    it('rejects a value that is not Some or None', () => {
+      const type: MichelsonType = { prim: 'option', args: [{ prim: 'nat' }] };
+      const data: MichelsonData = { prim: 'Unit' };
+      expect(() => packData(data, type)).toThrow(MichelsonTypeError);
+      expect(() => unpackData(parseHex('05030b'), type)).toThrow(MichelsonTypeError);
     });
   });
 });
