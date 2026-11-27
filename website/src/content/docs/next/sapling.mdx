@@ -324,6 +324,47 @@ its third argument. Validate recipient policy, amounts and memos in the applicat
 when using these low-level methods. Forging returns transaction bytes; submitting
 them to the contract is a separate step.
 
+## Shielding without a spending key
+
+Shielding only creates new notes. `createShieldedTx` encrypts each note for its recipient and
+never reads a spending key, so an application can deposit to someone else's payment address
+without holding any Sapling key. Build `SaplingTransactionBuilder` with no `saplingSigner`:
+
+```ts
+import { buf2hex } from '@taquito/utils';
+import { SaplingTransactionBuilder, SaplingForger } from '@taquito/sapling';
+
+const forger = new SaplingForger();
+const builder = new SaplingTransactionBuilder(
+    {},
+    forger,
+    { contractAddress: saplingContract.address, memoSize: 8 },
+    readProvider
+);
+
+// friendPaymentAddress is the recipient's zet address
+const boundData = new Uint8Array();
+const { root } = await readProvider.getSaplingDiffByContract(saplingContract.address, 'head');
+const description = await builder.createShieldedTx(
+    [{ to: friendPaymentAddress, amount: '1000000', memo: 'gift' }],
+    '1000000',
+    boundData
+);
+const shieldedTx = buf2hex(forger.forgeSaplingTransaction({ ...description, root, boundData }));
+
+// Send the shielded amount along with the call, as with prepareShieldedTransaction.
+const op = await saplingContract.methodsObject.default([shieldedTx]).send({ amount: 1 });
+```
+
+Amounts are in base units. Spending with `createSaplingTx` still needs a spending key and
+throws `SpendingKeyRequiredError` without one. Shielding never encrypts notes for an outgoing
+viewing key, with or without a signer, so the sender can't decrypt them later as outgoing.
+Only the recipient sees them.
+
+This only removes the key from deposits. Spending still runs in the same page as the
+spending key: it is not a remote signer, a remote prover or a way to keep the key away from
+page code.
+
 ## How to retrieve my balance in the Sapling shielded set?
 
 When calling the `getSaplingTransactionViewer` method of the `SaplingToolkit` class, an instance of the `SaplingTransactionViewer` class is returned. The `SaplingTransactionViewer` class allows retrieving and decrypting Sapling transactions for the specified viewing key and calculating the unspent balance.

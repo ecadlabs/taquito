@@ -69,5 +69,28 @@ export default async function ({ assert, load }) {
       Buffer.from(forged.subarray(-boundData.length - 4)),
       Buffer.concat([Buffer.from('00000028', 'hex'), boundData])
     );
+
+    // Shielding needs no spending key; spending without one fails with the exported error.
+    const keyless = new Builder(
+      {},
+      new SaplingForger(),
+      { contractAddress, memoSize: 8 },
+      { getChainId: async () => chainId },
+      {
+        randR: async () => Buffer.alloc(32),
+        withProvingContext: async () => assert.fail('spending started proving without a key'),
+      }
+    );
+    await assert.rejects(
+      keyless.createSaplingTx([], new BigNumber(1), boundData, {
+        inputsToSpend: [],
+        sumSelectedInputs: new BigNumber(1),
+      }),
+      (error) =>
+        error.name === 'SpendingKeyRequiredError' &&
+        // The deep CommonJS builder throws the CommonJS class in native import mode.
+        (Builder !== sapling.SaplingTransactionBuilder ||
+          error instanceof sapling.SpendingKeyRequiredError)
+    );
   }
 }
