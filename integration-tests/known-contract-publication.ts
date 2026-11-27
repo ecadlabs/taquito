@@ -50,7 +50,5 @@ export async function publishKnownContractFixtures(
     }
   }
 
-  for (const fixture of fixtures) {
-    await fixture.reportPublished();
-  }
+  await Promise.all(fixtures.map((fixture) => fixture.reportPublished()));
 }
