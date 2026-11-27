@@ -20,6 +20,7 @@
       "require": "./dist/lib/taquito-core.js"
     },
     "./package.json": "./package.json",
+    "./README.md": "./README.md",
     "./dist/*.js": "./dist/*.js",
     "./dist/*.mjs": "./dist/*.mjs",
     "./dist/*.map": "./dist/*.map",
