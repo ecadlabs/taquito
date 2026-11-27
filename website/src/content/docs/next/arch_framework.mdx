@@ -392,6 +392,10 @@ The RPC Interface includes several processing endpoints:
 
   It returns the new Storage value as well as the results associated with executing the specified Transaction including any Internal Operations triggered as a result.
 
+- **traceCode** - TraceCode takes the same parameters as runCode. It returns the new storage, the operations the script emitted, any `lazy_storage_diff`, and a `trace` list. The first trace entry is the starting stack, `Pair parameter storage`. Each later entry has the `location` of an instruction, the `gas` it consumed and the `stack` after it ran. The emitted operations have not been applied, so they carry no `result`.
+
+  When the script fails, for example at `FAILWITH`, the node answers with an error and `traceCode` rejects with an `HttpResponseError`. Parse its `body` to read the errors: the `script_rejected` entry holds the failing `location`, the value it failed `with`, and the trace up to that instruction. `RpcClientCache` forwards traceCode without caching, and custom `RpcClientInterface` implementations may leave it out.
+
 - **runView** - RunView simulates a call to a TZIP-4 Callback View (see TZIP-4 section below) as if it were a Storage View. Rather than specifying a smart contract Entry Point callback to obtain the result, only the Callback View and the Callback View argument are specified; the result is obtained directly, and without incurring a gas or fee cost. See also [Lambda View](lambda_view) and [On-Chain Views](on_chain_views).
 
 ## Extensions to Tezos

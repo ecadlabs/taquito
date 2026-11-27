@@ -58,6 +58,7 @@ import {
   RPCRunViewParam,
   RPCRunScriptViewParam,
   RunCodeResult,
+  TraceCodeResult,
   RunViewResult,
   RunScriptViewResult,
   SaplingDiffResponse,
@@ -1007,6 +1008,29 @@ export class RpcClient implements RpcClientInterface {
     );
 
     return response;
+  }
+
+  /**
+   * @param code Code to run, with the same parameters as `runCode`
+   * @param options contains generic configuration for rpc calls to specified block (default to head)
+   * Run a Michelson script in the current context and return its trace: the starting stack, then
+   * the stack after each instruction. A failing script rejects with an `HttpResponseError`.
+   * @see https://octez.tezos.com/docs/active/rpc.html#post-block-id-helpers-scripts-trace-code
+   * @example
+   * const result = await rpc.traceCode({ script, storage, input, amount: '0', chain_id });
+   * // result.trace[0].stack is [Pair input storage]; later entries follow each instruction
+   */
+  async traceCode(
+    code: RPCRunCodeParam,
+    { block }: RPCOptions = defaultRPCOptions
+  ): Promise<TraceCodeResult> {
+    return this.httpBackend.createRequest<TraceCodeResult>(
+      {
+        url: this.createURL(`/chains/${this.chain}/blocks/${block}/helpers/scripts/trace_code`),
+        method: 'POST',
+      },
+      code
+    );
   }
 
   /**

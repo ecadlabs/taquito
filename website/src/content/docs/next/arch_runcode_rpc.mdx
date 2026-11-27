@@ -75,3 +75,5 @@ We can now make sense of RunCodeResult:
 - **Operations** - the result of executing any Internal Operations left on the Michelson Stack after the transaction endpoint is executed. Taquito does not actually make use of this field since in both Taquito use cases, no Operations are left on the stack.
 
 This leaves two optional RunCodeResult parameters that remain uninterpreted, namely: Big_map_diff and Lazy_storage_diff. Taquito does not make use of these parameters.
+
+Use [`RpcClient.traceCode`](./arch_framework#processing-endpoints) to inspect the stack after each instruction during simulation.

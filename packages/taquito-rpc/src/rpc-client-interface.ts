@@ -40,6 +40,7 @@ import {
   RPCRunScriptViewParam,
   RPCRunViewParam,
   RunCodeResult,
+  TraceCodeResult,
   RunScriptViewResult,
   RunViewResult,
   SaplingDiffResponse,
@@ -132,6 +133,7 @@ export interface RpcClientInterface {
   getEntrypoints(contract: string, options?: RPCOptions): Promise<EntrypointsResponse>;
   simulateOperation(op: RPCSimulateOperationParam, options?: RPCOptions): Promise<PreapplyResponse>;
   runCode(code: RPCRunCodeParam, options?: RPCOptions): Promise<RunCodeResult>;
+  traceCode?(code: RPCRunCodeParam, options?: RPCOptions): Promise<TraceCodeResult>;
   runScriptView(
     viewScriptParams: RPCRunScriptViewParam,
     options?: RPCOptions
