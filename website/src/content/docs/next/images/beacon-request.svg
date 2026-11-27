@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 836 658" width="836" height="658" role="img" aria-labelledby="t d">
+<title id="t">Beacon request and response</title><desc id="d">The dApp sends an encrypted operation request through the relays, the wallet acknowledges it at once, shows it to the user, and sends the operation response or an error after the user decides.</desc>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#1f2328"/></marker>
+<marker id="ah-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#57606a"/></marker>
+</defs>
+<rect x="0.5" y="0.5" width="835" height="657" rx="10" fill="#ffffff" stroke="#d0d7de"/>
+<line x1="96" y1="70" x2="96" y2="588" stroke="#8c959f" stroke-dasharray="3 4"/>
+<line x1="316" y1="70" x2="316" y2="588" stroke="#8c959f" stroke-dasharray="3 4"/>
+<line x1="520" y1="70" x2="520" y2="588" stroke="#8c959f" stroke-dasharray="3 4"/>
+<line x1="740" y1="70" x2="740" y2="588" stroke="#8c959f" stroke-dasharray="3 4"/>
+<rect x="24" y="24" width="144" height="46" rx="8" fill="#f6f8fa" stroke="#d0d7de"/>
+<text x="96" y="52" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="600" fill="#1f2328">dApp</text>
+<rect x="24" y="588" width="144" height="46" rx="8" fill="#f6f8fa" stroke="#d0d7de"/>
+<text x="96" y="616" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="600" fill="#1f2328">dApp</text>
+<rect x="244" y="24" width="144" height="46" rx="8" fill="#f6f8fa" stroke="#d0d7de"/>
+<text x="316" y="52" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="600" fill="#1f2328">Relays</text>
+<rect x="244" y="588" width="144" height="46" rx="8" fill="#f6f8fa" stroke="#d0d7de"/>
+<text x="316" y="616" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="600" fill="#1f2328">Relays</text>
+<rect x="448" y="24" width="144" height="46" rx="8" fill="#f6f8fa" stroke="#d0d7de"/>
+<text x="520" y="52" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="600" fill="#1f2328">Wallet</text>
+<rect x="448" y="588" width="144" height="46" rx="8" fill="#f6f8fa" stroke="#d0d7de"/>
+<text x="520" y="616" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="600" fill="#1f2328">Wallet</text>
+<rect x="668" y="24" width="144" height="46" rx="8" fill="#f6f8fa" stroke="#d0d7de"/>
+<text x="740" y="52" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="600" fill="#1f2328">User</text>
+<rect x="668" y="588" width="144" height="46" rx="8" fill="#f6f8fa" stroke="#d0d7de"/>
+<text x="740" y="616" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="600" fill="#1f2328">User</text>
+<line x1="96" y1="120" x2="314" y2="120" stroke="#1f2328" stroke-width="1.6" marker-end="url(#ah)"/>
+<text x="206.0" y="112" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#1f2328">encrypted</text>
+<text x="206.0" y="96" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#1f2328">operation_request,</text>
+<line x1="316" y1="166" x2="518" y2="166" stroke="#57606a" stroke-width="1.6" stroke-dasharray="6 4" marker-end="url(#ah-m)"/>
+<text x="418.0" y="158" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#57606a">message</text>
+<line x1="520" y1="228" x2="318" y2="228" stroke="#1f2328" stroke-width="1.6" marker-end="url(#ah)"/>
+<text x="418.0" y="220" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#1f2328">on receipt</text>
+<text x="418.0" y="204" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#1f2328">acknowledge, sent</text>
+<line x1="316" y1="274" x2="98" y2="274" stroke="#57606a" stroke-width="1.6" stroke-dasharray="6 4" marker-end="url(#ah-m)"/>
+<text x="206.0" y="266" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#57606a">acknowledge</text>
+<line x1="520" y1="320" x2="738" y2="320" stroke="#1f2328" stroke-width="1.6" marker-end="url(#ah)"/>
+<text x="630.0" y="312" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#1f2328">show the request</text>
+<line x1="740" y1="366" x2="522" y2="366" stroke="#1f2328" stroke-width="1.6" marker-end="url(#ah)"/>
+<text x="630.0" y="358" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#1f2328">approve or reject</text>
+<line x1="520" y1="428" x2="318" y2="428" stroke="#1f2328" stroke-width="1.6" marker-end="url(#ah)"/>
+<text x="418.0" y="420" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#1f2328">or error</text>
+<text x="418.0" y="404" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#1f2328">operation_response,</text>
+<line x1="316" y1="474" x2="98" y2="474" stroke="#57606a" stroke-width="1.6" stroke-dasharray="6 4" marker-end="url(#ah-m)"/>
+<text x="206.0" y="466" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#57606a">response</text>
+<rect x="26" y="520" width="360" height="52" rx="6" fill="#ddf4ff" stroke="#54aeff"/>
+<text x="38" y="545" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#1f2328">Check that senderId matches the key</text>
+<text x="38" y="564" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#1f2328">that decrypted it, then resolve the promise.</text>
+</svg>
