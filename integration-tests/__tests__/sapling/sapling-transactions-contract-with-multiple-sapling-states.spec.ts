@@ -106,7 +106,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             value: new BigNumber(3000000),
             memo: 'Left',
             paymentAddress: alicePaymentAddress,
-            isSpent: false
+            isSpent: false,
+            position: 0
           }
         ],
         outgoing: []
