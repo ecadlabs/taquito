@@ -2676,6 +2676,35 @@ export type RunCodeResult = {
   lazy_storage_diff?: LazyStorageDiff;
 };
 
+/**
+ * An operation the traced script emitted. The node has not applied it, so unlike an
+ * `InternalOperationResult` it carries no `result`.
+ */
+export type TraceCodeOperation = Omit<InternalOperationResult, 'result'>;
+
+/**
+ * One entry of a `trace_code` trace. The first entry holds the starting stack,
+ * `Pair parameter storage`, at the location of the first instruction. Each later entry holds the
+ * stack after the instruction at `location` ran.
+ */
+export type TraceCodeStep = {
+  location: number;
+  gas: string;
+  stack: MichelsonV1Expression[];
+};
+
+/**
+ * The result of a `trace_code` run that completed. A run that fails, for example at `FAILWITH`,
+ * rejects with an `HttpResponseError` instead: its `body` holds the node's errors, and the
+ * `script_rejected` error carries the trace up to the failing instruction.
+ */
+export type TraceCodeResult = {
+  storage: MichelsonV1Expression;
+  operations: TraceCodeOperation[];
+  lazy_storage_diff?: LazyStorageDiff[];
+  trace: TraceCodeStep[];
+};
+
 export type RPCRunScriptViewParam = {
   contract: string;
   view: string;
