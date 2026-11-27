@@ -7,23 +7,6 @@ import { fixtureServer } from './detached-test-server';
 import { InMemorySigner } from '@taquito/signer';
 import { tz5 } from '../../../../test-fixtures/tz5';
 
-async function signerFor(scheme: string): Promise<InMemorySigner> {
-  switch (scheme) {
-    case 'ed25519':
-      return new InMemorySigner('edsk4TjJWEszkHKono7XMnepVqwi37FrpbVt1KCsifJeAGimxheShG');
-    case 'secp256k1':
-      return new InMemorySigner('spsk2rBDDeUqakQ42nBHDGQTtP3GErb6AahHPwF9bhca3Q5KA5HESE');
-    case 'p256':
-      return new InMemorySigner('p2sk2obfVMEuPUnadAConLWk7Tf4Dt3n4svSgJwrgpamRqJXvaYcg1');
-    case 'bls':
-      return new InMemorySigner('BLsk2zk6pBGysG9BJn4u3XNtFnJQ1wpUYz6sQMTZQdfxQaiBWkqLyh');
-    case 'mldsa44':
-      return new InMemorySigner(tz5.secretKey);
-    default:
-      throw new Error(`Unsupported test signer: ${scheme}`);
-  }
-}
-
 describe('detached signing', () => {
   let server: Awaited<ReturnType<typeof fixtureServer>>;
   beforeEach(async () => {
@@ -34,11 +17,27 @@ describe('detached signing', () => {
   });
   const vector = vectors.vectors[0];
   const signingSchemes = [
-    { scheme: 'ed25519', prefix: 'edsig' },
-    { scheme: 'secp256k1', prefix: 'spsig1' },
-    { scheme: 'p256', prefix: 'p2sig' },
-    { scheme: 'bls', prefix: 'BLsig' },
-    { scheme: 'mldsa44', prefix: 'mdsig' },
+    {
+      scheme: 'ed25519',
+      prefix: 'edsig',
+      secretKey: 'edsk4TjJWEszkHKono7XMnepVqwi37FrpbVt1KCsifJeAGimxheShG',
+    },
+    {
+      scheme: 'secp256k1',
+      prefix: 'spsig1',
+      secretKey: 'spsk2rBDDeUqakQ42nBHDGQTtP3GErb6AahHPwF9bhca3Q5KA5HESE',
+    },
+    {
+      scheme: 'p256',
+      prefix: 'p2sig',
+      secretKey: 'p2sk2obfVMEuPUnadAConLWk7Tf4Dt3n4svSgJwrgpamRqJXvaYcg1',
+    },
+    {
+      scheme: 'bls',
+      prefix: 'BLsig',
+      secretKey: 'BLsk2zk6pBGysG9BJn4u3XNtFnJQ1wpUYz6sQMTZQdfxQaiBWkqLyh',
+    },
+    { scheme: 'mldsa44', prefix: 'mdsig', secretKey: tz5.secretKey },
   ];
   const params = {
     to: 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
@@ -144,8 +143,8 @@ describe('detached signing', () => {
 
   it.each(signingSchemes)(
     'completes detached contract-call signing and injection for $scheme',
-    async ({ scheme, prefix }) => {
-      const signer = await signerFor(scheme);
+    async ({ prefix, secretKey }) => {
+      const signer = new InMemorySigner(secretKey);
       const identity = { pkh: await signer.publicKeyHash(), publicKey: await signer.publicKey() };
       const tezos = new TezosToolkit(server.url);
       const workflow = tezos.prepareFor(identity);
@@ -181,8 +180,8 @@ describe('detached signing', () => {
 
   it.each(signingSchemes)(
     'completes detached user-batch signing and injection for $scheme',
-    async ({ scheme, prefix }) => {
-      const signer = await signerFor(scheme);
+    async ({ prefix, secretKey }) => {
+      const signer = new InMemorySigner(secretKey);
       const identity = { pkh: await signer.publicKeyHash(), publicKey: await signer.publicKey() };
       const workflow = new TezosToolkit(server.url).prepareFor(identity);
       const batch = [
