@@ -6,6 +6,10 @@ layout: ../layouts/MarkdownLayout.astro
 ---
 # Unreleased
 
+### Core and HTTP-utils module outputs
+
+- `@taquito/core` and `@taquito/http-utils` now publish dedicated CommonJS entrypoints and native ESM bridges that share their exported instances. Browser bundlers retain ESM outputs. Their UMD bundles are removed; direct users of those filenames should use package imports.
+
 ### GET rate-limit retries
 
 - HTTP GET requests can retry HTTP 429 responses within the existing shared retry budget. Valid `Retry-After` delays up to 30 seconds are honored, with the existing backoff used for missing or invalid headers. External aborts cancel rate-limit, gateway-status and transport retry waits.

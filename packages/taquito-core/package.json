@@ -9,9 +9,19 @@
     "blockchain",
     "sdk"
   ],
-  "main": "dist/taquito-core.umd.js",
+  "main": "dist/lib/taquito-core.js",
   "module": "dist/taquito-core.es6.js",
   "typings": "dist/types/taquito-core.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/taquito-core.d.ts",
+      "browser": "./dist/taquito-core.es6.js",
+      "import": "./dist/taquito-core.mjs",
+      "require": "./dist/lib/taquito-core.js"
+    },
+    "./package.json": "./package.json",
+    "./dist/*": "./dist/*"
+  },
   "files": [
     "dist"
   ],
@@ -54,7 +64,6 @@
   "devDependencies": {
     "@rollup/plugin-json": "^6.1.0",
     "@types/node": "^22.20.5",
-    "lodash.camelcase": "^4.3.0",
     "rollup": "^4.67.3",
     "rollup-plugin-typescript2": "^0.37.0"
   }

@@ -7,10 +7,19 @@ export default async function ({ assert, load, mode }) {
   const require = createRequire(import.meta.url);
   const commonCore = require('@taquito/core');
   const commonHttp = require('@taquito/http-utils');
-  assert.equal(core.NetworkError, commonCore.NetworkError);
-  assert.equal(http.HttpResponseError, commonHttp.HttpResponseError);
+  for (const [name, loaded, commonjs, entry] of [
+    ['@taquito/core', core, commonCore, 'taquito-core'],
+    ['@taquito/http-utils', http, commonHttp, 'taquito-http-utils'],
+  ]) {
+    assert.equal(require(`${name}/package.json`).name, name);
+    const deep = await load(`${name}/dist/lib/${entry}.js`);
+    assert.equal(mode === 'import' ? deep.default : deep, commonjs);
+    for (const name of Object.keys(commonjs)) {
+      assert.equal(loaded[name], commonjs[name], `Changed named export: ${name}`);
+    }
+  }
   if (mode === 'import') {
-    // Record current CJS interop until the native ESM default-export policy is agreed.
+    // Native ESM shares the CommonJS namespace and constructor instances.
     assert.equal(core.default, commonCore);
     assert.equal(http.default, commonHttp);
   }

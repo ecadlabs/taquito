@@ -2,8 +2,10 @@
 
 These checks install built Taquito tarballs outside the workspace. They cover
 public big-map methods, core and HTTP-utils compatibility, and Beacon wallet
-imports and declarations before the module migration in
-[#3345](https://github.com/ecadlabs/taquito/issues/3345). They do not remove UMD builds.
+imports and declarations during the module migration in
+[#3345](https://github.com/ecadlabs/taquito/issues/3345). The core and HTTP-utils
+pilot emits CommonJS modules, a native ESM bridge, declarations and a browser ESM
+bundle. These two packages no longer emit UMD.
 
 Run on Linux, WSL or macOS. From the repository root:
 
@@ -68,19 +70,23 @@ temporary tarball paths and is an audit record, not a standalone install recipe.
 
 ## Later migration steps
 
-The native ESM default-export identity and exact browser `module` routes record
-current packaging. Agree default-export behavior and supported subpaths before
-changing exports maps. These tests do not define every namespace export or bundle
-filename as a permanent API, and they do not test direct `dist` or `package.json`
-imports.
+The native ESM default-export identity and browser `module` routes are checked
+through the pilot. Apply the same compatibility checks when defining the exports
+of other packages. The runtime fixtures exercise package roots; the pilot also
+retains package metadata and existing compatible `dist` subpaths.
 
 The Beacon wallet Node conditions currently use its existing UMD/CJS files. When
 those outputs are removed, update the Node targets together with the require
 targets. Browser imports retain the existing ESM routes.
 
-Next, pilot dedicated CJS, Node-valid ESM and explicit exports for core and
-HTTP-utils, then remove their UMD output. Extend the agreed pattern to other
-packages and remove obsolete CDN and Webpack tooling separately.
+Core and HTTP-utils now point `main` and `require` at `dist/lib`, route native
+ESM imports through a generated `.mjs` bridge, and keep browser imports on their
+ESM bundles. The bridge preserves CommonJS default/named export identity. Their
+existing `dist` subpaths and package metadata remain accessible.
+
+Their `start` commands use Rollup watch to update CommonJS, native ESM, browser
+ESM and declarations in the same build. Extend the pattern to other packages
+and remove obsolete CDN and Webpack tooling separately.
 
 Browser globals, other browser engines, older TypeScript versions and the minimum
 Node 22.0.0 runtime are outside this increment. No funded network operation is
