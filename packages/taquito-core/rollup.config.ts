@@ -10,11 +10,9 @@ export default {
   input: `src/${libraryName}.ts`,
   output: [
     {
-      dir: 'dist/lib',
+      file: pkg.main,
       format: 'cjs',
       exports: 'named',
-      preserveModules: true,
-      preserveModulesRoot: 'src',
       sourcemap: true,
     },
     { file: pkg.module, format: 'es', sourcemap: true },

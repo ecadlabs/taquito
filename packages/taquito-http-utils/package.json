@@ -12,7 +12,7 @@
     "retry",
     "transport"
   ],
-  "main": "dist/lib/taquito-http-utils.js",
+  "main": "dist/taquito-http-utils.cjs",
   "module": "dist/taquito-http-utils.es6.js",
   "typings": "dist/types/taquito-http-utils.d.ts",
   "exports": {
@@ -20,13 +20,14 @@
       "types": "./dist/types/taquito-http-utils.d.ts",
       "browser": "./dist/taquito-http-utils.es6.js",
       "import": "./dist/taquito-http-utils.mjs",
-      "require": "./dist/lib/taquito-http-utils.js",
+      "require": "./dist/taquito-http-utils.cjs",
       "default": "./dist/taquito-http-utils.es6.js"
     },
     "./package.json": "./package.json",
     "./README.md": "./README.md",
     "./dist/*.js": "./dist/*.js",
     "./dist/*.mjs": "./dist/*.mjs",
+    "./dist/*.cjs": "./dist/*.cjs",
     "./dist/*.map": "./dist/*.map",
     "./dist/*.d.ts": "./dist/*.d.ts",
     "./dist/*.json": "./dist/*.json",

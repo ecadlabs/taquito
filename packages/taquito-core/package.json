@@ -9,7 +9,7 @@
     "blockchain",
     "sdk"
   ],
-  "main": "dist/lib/taquito-core.js",
+  "main": "dist/taquito-core.cjs",
   "module": "dist/taquito-core.es6.js",
   "typings": "dist/types/taquito-core.d.ts",
   "exports": {
@@ -17,13 +17,14 @@
       "types": "./dist/types/taquito-core.d.ts",
       "browser": "./dist/taquito-core.es6.js",
       "import": "./dist/taquito-core.mjs",
-      "require": "./dist/lib/taquito-core.js",
+      "require": "./dist/taquito-core.cjs",
       "default": "./dist/taquito-core.es6.js"
     },
     "./package.json": "./package.json",
     "./README.md": "./README.md",
     "./dist/*.js": "./dist/*.js",
     "./dist/*.mjs": "./dist/*.mjs",
+    "./dist/*.cjs": "./dist/*.cjs",
     "./dist/*.map": "./dist/*.map",
     "./dist/*.d.ts": "./dist/*.d.ts",
     "./dist/*.json": "./dist/*.json",
