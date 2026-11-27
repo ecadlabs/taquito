@@ -17,7 +17,8 @@
       "types": "./dist/types/taquito-core.d.ts",
       "browser": "./dist/taquito-core.es6.js",
       "import": "./dist/taquito-core.mjs",
-      "require": "./dist/lib/taquito-core.js"
+      "require": "./dist/lib/taquito-core.js",
+      "default": "./dist/taquito-core.es6.js"
     },
     "./package.json": "./package.json",
     "./README.md": "./README.md",
@@ -41,7 +42,7 @@
   "contributors": [
     "hui-an.yang <hui-an.yang@ecadlabs.com>",
     "Davis Sawali <davis.sawali@ecadlabs.com>",
-    "Jev Bj\u00f6rsell (jevonearth)"
+    "Jev Björsell (jevonearth)"
   ],
   "homepage": "https://taquito.io/",
   "repository": {

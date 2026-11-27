@@ -82,6 +82,8 @@ export default async function ({ assert, load, mode }) {
     // Native ESM shares the CommonJS namespace and constructor instances.
     assert.equal(core.default, commonCore);
     assert.equal(http.default, commonHttp);
+    assert.equal(core['module.exports'], commonCore);
+    assert.equal(http['module.exports'], commonHttp);
   }
   const requireHttp = createRequire(require.resolve('@taquito/http-utils'));
   assert.equal(requireHttp.resolve('@taquito/core'), require.resolve('@taquito/core'));
