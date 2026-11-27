@@ -112,7 +112,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             value: new BigNumber(1000000),
             memo: 'T1',
             paymentAddress: paymentAddress1Index0,
-            isSpent: false
+            isSpent: false,
+            position: 0
           }
         ],
         outgoing: []
@@ -128,7 +129,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             value: new BigNumber(2000000),
             memo: 'T2',
             paymentAddress: paymentAddress2Index0,
-            isSpent: false
+            isSpent: false,
+            position: 1
           }
         ],
         outgoing: []
@@ -144,7 +146,8 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             value: new BigNumber(3000000),
             memo: 'T3',
             paymentAddress: paymentAddress3Index0,
-            isSpent: false
+            isSpent: false,
+            position: 2
           }
         ],
         outgoing: []
@@ -210,50 +213,59 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             "value": new BigNumber("1000000"),
             "memo": "T1",
             "paymentAddress": paymentAddress1Index0,
-            "isSpent": true
+            "isSpent": true,
+            "position": 0
           },
           {
             "value": new BigNumber("999790"),
             "memo": "",
             "paymentAddress": paymentAddress1Index0,
-            "isSpent": false
+            "isSpent": false,
+            "position": 9
           }
         ],
         "outgoing": [
           {
             "value": new BigNumber("10"),
             "memo": "tx1",
-            "paymentAddress": paymentAddress2Index0
+            "paymentAddress": paymentAddress2Index0,
+            "position": 3
           },
           {
             "value": new BigNumber("20"),
             "memo": "tx2",
-            "paymentAddress": paymentAddress2Index5
+            "paymentAddress": paymentAddress2Index5,
+            "position": 4
           },
           {
             "value": new BigNumber("30"),
             "memo": "tx3",
-            "paymentAddress": paymentAddress2Index8
+            "paymentAddress": paymentAddress2Index8,
+            "position": 5
           },
           {
             "value": new BigNumber("40"),
             "memo": "tx4",
-            "paymentAddress": paymentAddress3Index0
+            "paymentAddress": paymentAddress3Index0,
+            "position": 6
           },
           {
             "value": new BigNumber("50"),
             "memo": "tx5",
-            "paymentAddress": paymentAddress3Index5
+            "paymentAddress": paymentAddress3Index5,
+            "position": 7
           },
           {
             "value": new BigNumber("60"),
             "memo": "tx6",
-            "paymentAddress": paymentAddress3Index8
+            "paymentAddress": paymentAddress3Index8,
+            "position": 8
           },
           {
             "value": new BigNumber("999790"),
             "memo": "",
-            "paymentAddress": paymentAddress1Index0
+            "paymentAddress": paymentAddress1Index0,
+            "position": 9
           }
         ]
       })
@@ -268,25 +280,29 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             "value": new BigNumber("2000000"),
             "memo": "T2",
             "paymentAddress": paymentAddress2Index0,
-            "isSpent": false
+            "isSpent": false,
+            "position": 1
           },
           {
             "value": new BigNumber("10"),
             "memo": "tx1",
             "paymentAddress": paymentAddress2Index0,
-            "isSpent": false
+            "isSpent": false,
+            "position": 3
           },
           {
             "value": new BigNumber("20"),
             "memo": "tx2",
             "paymentAddress": paymentAddress2Index5,
-            "isSpent": false
+            "isSpent": false,
+            "position": 4
           },
           {
             "value": new BigNumber("30"),
             "memo": "tx3",
             "paymentAddress": paymentAddress2Index8,
-            "isSpent": false
+            "isSpent": false,
+            "position": 5
           }
         ],
         "outgoing": []
@@ -302,25 +318,29 @@ CONFIGS().forEach(({ lib, rpc, setup }) => {
             "value": new BigNumber("3000000"),
             "memo": "T3",
             "paymentAddress": paymentAddress3Index0,
-            "isSpent": false
+            "isSpent": false,
+            "position": 2
           },
           {
             "value": new BigNumber("40"),
             "memo": "tx4",
             "paymentAddress": paymentAddress3Index0,
-            "isSpent": false
+            "isSpent": false,
+            "position": 6
           },
           {
             "value": new BigNumber("50"),
             "memo": "tx5",
             "paymentAddress": paymentAddress3Index5,
-            "isSpent": false
+            "isSpent": false,
+            "position": 7
           },
           {
             "value": new BigNumber("60"),
             "memo": "tx6",
             "paymentAddress": paymentAddress3Index8,
-            "isSpent": false
+            "isSpent": false,
+            "position": 8
           }
         ],
         "outgoing": []

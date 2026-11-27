@@ -394,6 +394,31 @@ saplingToolkit.getSaplingTransactionViewer()
   .catch((error) => console.log(`Error: ${JSON.stringify(error, null, 2)}`));
 ```
 
+Each incoming and outgoing entry also has a `position`, the index of its note in the pool's commitment list. When Alice spends a note, her change comes back to her as a new note. She can decrypt that note both as its sender and as its receiver, so it appears in `incoming` and in `outgoing` with the same `position`:
+
+```js
+import { RpcReadAdapter } from '@taquito/taquito';
+import { SaplingToolkit, InMemorySpendingKey } from '@taquito/sapling';
+import { RpcClient } from '@taquito/rpc';
+
+const aliceSk = 'sask27SLmU9herddHz4qFJBLMjWYMbJF8RtS579w9ej9mfCYK7VUdyCJPHK8AzW9zMsopGZEkYeNjAY7Zz1bkM7CGu8eKLzrjBLTMC5wWJDhxiK91ahA29rhDRsHdJDV2u2jFwb2MNUix8JW7sAkAqYVaJpCehTBPgRQ1KqKwqqUaNmuD8kazd4Q8MCWmgbWs21Yuomdqyi9FLigjRp7oY4m5adaVU19Nj1AHvsMY2tePeU2L';
+
+const saplingToolkit = new SaplingToolkit(
+    { saplingSigner: new InMemorySpendingKey(aliceSk) },
+    { contractAddress: 'KT18iaRnYYNvEJpnk6e46NwBGKNJ8Dn19mtv', memoSize: 8 },
+    new RpcReadAdapter(new RpcClient('https://tezos-shadownet.octez.io/'))
+);
+
+const txViewer = await saplingToolkit.getSaplingTransactionViewer();
+const { incoming, outgoing } = await txViewer.getIncomingAndOutgoingTransactions();
+const receivedPositions = new Set(incoming.map((note) => note.position));
+// Outgoing notes that Alice also received: change, or a payment to one of her own addresses
+const sentToSelf = outgoing.filter((note) => receivedPositions.has(note.position));
+console.log(`Alice sent ${sentToSelf.length} notes to herself`);
+```
+
+A deliberate payment to one of Alice's own addresses looks the same as change, so the position alone doesn't tell the two apart.
+
 ## How to prepare a shielded transaction?
 
 A shielded transaction allows sending tokens from a Tezos account (tz1, tz2, tz3) to a Sapling address (zet). The `prepareShieldedTransaction` method of the `SaplingToolkit` takes an array of `ParametersSaplingTransaction`, making it possible to send tez to multiple addresses at once if needed.

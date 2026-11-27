@@ -50,30 +50,35 @@ describe('SaplingTransactionViewer', () => {
           memo: '',
           paymentAddress: 'zet12YrifNvzLj2D897URmAKpvazMDucwkFEPUGrmmDUE1E7aHXnLU2oTTxUA8igg7sxb',
           isSpent: true,
+          position: 0,
         },
         {
           value: new BigNumber('0'),
           memo: '',
           paymentAddress: 'zet12xEiGz8bTjRWxAE5kanYUQjZv27JSrUE9JymsT8FrMrZbETtHqCnkLGN7MumgFWNr',
           isSpent: true,
+          position: 2,
         },
         {
           value: new BigNumber('10000000'),
           memo: '',
           paymentAddress: 'zet12xEiGz8bTjRWxAE5kanYUQjZv27JSrUE9JymsT8FrMrZbETtHqCnkLGN7MumgFWNr',
           isSpent: true,
+          position: 3,
         },
         {
           value: new BigNumber('6000000'),
           memo: '',
           paymentAddress: 'zet13NrtDFk1CwK3LwRMS84tHoer9JXoh47HemGYqLFmYGUyvX2qRhiYtgdrv8XMbpJtE',
           isSpent: true,
+          position: 5,
         },
         {
           value: new BigNumber('5000000'),
           memo: '',
           paymentAddress: 'zet13sURbJMkAE6qkMZLDsHypuihJLcvEpfpfjxT3jNAqTpYjgKey5QGXgePPbeJFgqXG',
           isSpent: false,
+          position: 7,
         },
       ],
       outgoing: [
@@ -81,29 +86,68 @@ describe('SaplingTransactionViewer', () => {
           value: new BigNumber('10000000'),
           memo: '',
           paymentAddress: 'zet13JTYHFem23nK34x9AXg7rWRSKXXixCRZwN8Wd9q2HkWZiW5GjqHfvT53WFPHMZszM',
+          position: 1,
         },
         {
           value: new BigNumber('0'),
           memo: '',
           paymentAddress: 'zet12xEiGz8bTjRWxAE5kanYUQjZv27JSrUE9JymsT8FrMrZbETtHqCnkLGN7MumgFWNr',
+          position: 2,
         },
         {
           value: new BigNumber('6000000'),
           memo: '',
           paymentAddress: 'zet13NrtDFk1CwK3LwRMS84tHoer9JXoh47HemGYqLFmYGUyvX2qRhiYtgdrv8XMbpJtE',
+          position: 5,
         },
         {
           value: new BigNumber('4000000'),
           memo: 'taquito',
           paymentAddress: 'zet134HVqfm5DVp8PZccMeQQjeNXFJZg2VyZigpBSR31ppdfvddkRuqGyEWPLiaXULtDR',
+          position: 6,
         },
         {
           value: new BigNumber('5000000'),
           memo: '',
           paymentAddress: 'zet13sURbJMkAE6qkMZLDsHypuihJLcvEpfpfjxT3jNAqTpYjgKey5QGXgePPbeJFgqXG',
+          position: 7,
         },
       ],
     });
+  });
+
+  it('gives each note its pool position so change can be matched across both lists', async () => {
+    const txViewer = new SaplingTransactionViewer(
+      viewingKeyInMemory,
+      { saplingId: '3899' },
+      mockRpcClient
+    );
+    const { incoming, outgoing } = await txViewer.getIncomingAndOutgoingTransactions();
+    const commitmentCount = saplingStateDiff.commitments_and_ciphertexts.length;
+
+    for (const list of [incoming, outgoing]) {
+      const positions = list.map((note) => note.position);
+      expect(positions.every((p) => Number.isInteger(p) && p >= 0 && p < commitmentCount)).toBe(
+        true
+      );
+      expect([...positions].sort((a, b) => a - b)).toEqual(positions);
+      expect(new Set(positions).size).toBe(positions.length);
+    }
+
+    // A note this key sent to itself (change, or a payment to its own address) appears in both
+    // lists at one position.
+    const incomingByPosition = new Map(incoming.map((note) => [note.position, note]));
+    const sharedPositions = outgoing
+      .map((note) => note.position)
+      .filter((position) => incomingByPosition.has(position));
+    expect(sharedPositions.length).toBeGreaterThan(0);
+    for (const position of sharedPositions) {
+      const sent = outgoing.find((note) => note.position === position);
+      const received = incomingByPosition.get(position);
+      expect(sent?.paymentAddress).toBe(received?.paymentAddress);
+      expect(sent?.value).toEqual(received?.value);
+      expect(sent?.memo).toBe(received?.memo);
+    }
   });
 
   it('Retrieve incoming and outgoing transactions raw format', async () => {
@@ -156,12 +200,14 @@ describe('SaplingTransactionViewer', () => {
           memo: 'test',
           paymentAddress: 'zet14599uF9M7xXsJ9ALhHEdvcRTiE43RLbSTScbEAkozjStD2EA7iBVbYiMkuGDzhi4p',
           isSpent: false,
+          position: 9,
         },
         {
           value: new BigNumber('7000000'),
           memo: 'test',
           paymentAddress: 'zet12mvUcMftBAkvn58h5gNVCwiySx2w2Qb4pjP5F5qqZ7xBnVmy7ckRDPGmj2hzZti2s',
           isSpent: true,
+          position: 10,
         },
       ],
       outgoing: [
@@ -169,6 +215,7 @@ describe('SaplingTransactionViewer', () => {
           value: new BigNumber('1000000'),
           memo: 'hi',
           paymentAddress: 'zet144JrAT1waTbYdFWPzJGPSGgDyy3vmDDPSWaxmWGJuhwpn3F6RL48kcWMDxAwGGFWY',
+          position: 11,
         },
       ],
     });
