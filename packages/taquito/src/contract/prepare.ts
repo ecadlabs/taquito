@@ -1,6 +1,7 @@
+import { getOriginationStorageType } from './origination-storage-type';
 import { Schema } from '@taquito/michelson-encoder';
-import { OpKind, MichelsonV1Expression } from '@taquito/rpc';
-import { Prim, Expr } from '@taquito/michel-codec';
+import { OpKind } from '@taquito/rpc';
+import { Expr } from '@taquito/michel-codec';
 import {
   OriginateParams,
   RPCOriginationOperation,
@@ -76,13 +77,7 @@ export const createOriginationOperation = async ({
 
   let contractStorage: Expr | undefined;
   if (storage !== undefined) {
-    const storageType = (code as Expr[]).find(
-      (p): p is Prim => 'prim' in p && p.prim === 'storage'
-    );
-    if (storageType?.args === undefined) {
-      throw new InvalidCodeParameter('The storage section is missing from the script', code);
-    }
-    const schema = new Schema(storageType.args[0] as MichelsonV1Expression); // TODO
+    const schema = new Schema(getOriginationStorageType(code));
     contractStorage = schema.Encode(storage);
   } else if (init !== undefined && typeof init === 'object') {
     contractStorage = init as Expr;
