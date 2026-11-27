@@ -153,7 +153,8 @@ Refer to the top-level `package.json` for available scripts. Common commands:
 - `npm run build`: Builds all workspace packages via Nx
 - `npm run test`: Runs unit tests across all packages
 - `npm run lint`: Checks the package catalog and runs ESLint across workspaces
-- `npm run lint:audit:promises`: Runs an on-demand check of package source and tests for floating promises and promises passed where a synchronous callback is expected.
+- `npm run lint:promises`: Fails CI on floating or misused promises in package source.
+- `npm run lint:audit:promises`: Reports the same checks as advisory warnings for package source and tests.
 - `npm run build-docs`: Generates TypeDoc API documentation
 - `npm run clean`: Removes `node_modules` directories across the monorepo
 - `npm run typecheck:tests`: Strictly checks selected contract and wallet tests, provider compatibility and configured-network fixtures. CI runs it after the build.
