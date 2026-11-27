@@ -38,16 +38,14 @@ const deployments = CONFIGS().map(async ({ lib: tezos, setup, networkName }) => 
       address = await originate(params);
     } catch (error) {
       if (!(error instanceof Error) || error.name !== 'ForgingMismatchError') {
-        throw new Error(`Failed to deploy ${contractName} on ${networkName}`, { cause: error });
+        throw Object.assign(new Error(`Failed to deploy ${contractName} on ${networkName}`), { cause: error });
       }
       console.log(`Composite forger failed for ${contractName}. Retrying with the RPC forger.`);
       tezos.setForgerProvider(tezos.getFactory(RpcForger)());
       try {
         address = await originate(params);
       } catch (retryError) {
-        throw new Error(`Failed to deploy ${contractName} on ${networkName} with the RPC forger`, {
-          cause: retryError,
-        });
+        throw Object.assign(new Error(`Failed to deploy ${contractName} on ${networkName} with the RPC forger`), { cause: retryError });
       }
     }
     addresses.push({ name: contractName, address });
