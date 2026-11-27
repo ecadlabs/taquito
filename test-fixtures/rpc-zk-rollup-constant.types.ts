@@ -1,6 +1,6 @@
-import type { ConstantsResponseProto015 } from '@taquito/rpc';
+import type { RpcClient } from '@taquito/rpc';
 
-type ZkRollupFlag = ConstantsResponseProto015['zk_rollup_enable'];
+type ZkRollupFlag = Awaited<ReturnType<RpcClient['getConstants']>>['zk_rollup_enable'];
 const enabled: ZkRollupFlag = true;
 const disabled: ZkRollupFlag = false;
 // @ts-expect-error The RPC does not return a number for this flag.
