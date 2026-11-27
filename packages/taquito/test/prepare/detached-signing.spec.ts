@@ -4,6 +4,25 @@ import { ParameterSchema } from '@taquito/michelson-encoder';
 import { TezosToolkit, OpKind } from '../../src/taquito';
 import vectors from './detached-signing-vectors';
 import { fixtureServer } from './detached-test-server';
+import { InMemorySigner } from '@taquito/signer';
+import { tz5 } from '../../../../test-fixtures/tz5';
+
+async function signerFor(scheme: string): Promise<InMemorySigner> {
+  switch (scheme) {
+    case 'ed25519':
+      return new InMemorySigner('edsk4TjJWEszkHKono7XMnepVqwi37FrpbVt1KCsifJeAGimxheShG');
+    case 'secp256k1':
+      return new InMemorySigner('spsk2rBDDeUqakQ42nBHDGQTtP3GErb6AahHPwF9bhca3Q5KA5HESE');
+    case 'p256':
+      return new InMemorySigner('p2sk2obfVMEuPUnadAConLWk7Tf4Dt3n4svSgJwrgpamRqJXvaYcg1');
+    case 'bls':
+      return new InMemorySigner('BLsk2zk6pBGysG9BJn4u3XNtFnJQ1wpUYz6sQMTZQdfxQaiBWkqLyh');
+    case 'mldsa44':
+      return new InMemorySigner(tz5.secretKey);
+    default:
+      throw new Error(`Unsupported test signer: ${scheme}`);
+  }
+}
 
 describe('detached signing', () => {
   let server: Awaited<ReturnType<typeof fixtureServer>>;
@@ -14,6 +33,13 @@ describe('detached signing', () => {
     await server.close();
   });
   const vector = vectors.vectors[0];
+  const signingSchemes = [
+    { scheme: 'ed25519', prefix: 'edsig' },
+    { scheme: 'secp256k1', prefix: 'spsig1' },
+    { scheme: 'p256', prefix: 'p2sig' },
+    { scheme: 'bls', prefix: 'BLsig' },
+    { scheme: 'mldsa44', prefix: 'mdsig' },
+  ];
   const params = {
     to: 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
     amount: 1,
@@ -115,6 +141,85 @@ describe('detached signing', () => {
     });
     expect((await workflow.estimate.contractCall(method)).suggestedFeeMutez).toBeGreaterThan(0);
   });
+
+  it.each(signingSchemes)(
+    'completes detached contract-call signing and injection for $scheme',
+    async ({ scheme, prefix }) => {
+      const signer = await signerFor(scheme);
+      const identity = { pkh: await signer.publicKeyHash(), publicKey: await signer.publicKey() };
+      const tezos = new TezosToolkit(server.url);
+      const workflow = tezos.prepareFor(identity);
+      const method = new ContractMethodObject(
+        tezos.contract,
+        'KT1AiWmfuCGSttuMBKbDUqZG6SzKQNrySFei',
+        new ParameterSchema({ prim: 'nat' }),
+        'default',
+        7,
+        false
+      );
+
+      const prepared = await workflow.prepare.contractCall(method);
+      expect(prepared.opOb.contents[0]).toMatchObject({
+        kind: OpKind.TRANSACTION,
+        source: identity.pkh,
+        parameters: { entrypoint: 'default', value: { int: '7' } },
+      });
+
+      const signable = await workflow.toSignable(prepared);
+      const signature = await signer.sign(signable.unsignedBytes, new Uint8Array([3]));
+      expect(signature.prefixSig.startsWith(prefix)).toBe(true);
+      const signed = workflow.attachSignature(signable, signature.prefixSig);
+      expect(signed.signedBytes).toBe(signature.sbytes);
+      const operation = await workflow.inject(signed);
+
+      expect(operation.raw.opbytes).toBe(signature.sbytes);
+      expect(
+        server.requests.find((request) => request.path.startsWith('/injection/operation'))?.body
+      ).toBe(signature.sbytes);
+    }
+  );
+
+  it.each(signingSchemes)(
+    'completes detached user-batch signing and injection for $scheme',
+    async ({ scheme, prefix }) => {
+      const signer = await signerFor(scheme);
+      const identity = { pkh: await signer.publicKeyHash(), publicKey: await signer.publicKey() };
+      const workflow = new TezosToolkit(server.url).prepareFor(identity);
+      const batch = [
+        { kind: OpKind.TRANSACTION, to: params.to, amount: 1, mutez: true },
+        { kind: OpKind.TRANSACTION, to: params.to, amount: 2, mutez: true },
+      ] satisfies Parameters<typeof workflow.prepare.batch>[0];
+
+      const prepared = await workflow.prepare.batch(batch);
+      expect(prepared.opOb.contents).toHaveLength(2);
+      expect(prepared.opOb.contents).toMatchObject([
+        {
+          kind: OpKind.TRANSACTION,
+          source: identity.pkh,
+          amount: '1',
+          destination: params.to,
+        },
+        {
+          kind: OpKind.TRANSACTION,
+          source: identity.pkh,
+          amount: '2',
+          destination: params.to,
+        },
+      ]);
+
+      const signable = await workflow.toSignable(prepared);
+      const signature = await signer.sign(signable.unsignedBytes, new Uint8Array([3]));
+      expect(signature.prefixSig.startsWith(prefix)).toBe(true);
+      const signed = workflow.attachSignature(signable, signature.prefixSig);
+      expect(signed.signedBytes).toBe(signature.sbytes);
+      const operation = await workflow.inject(signed);
+
+      expect(operation.raw.opbytes).toBe(signature.sbytes);
+      expect(
+        server.requests.find((request) => request.path.startsWith('/injection/operation'))?.body
+      ).toBe(signature.sbytes);
+    }
+  );
   it('uses the validated BLS proof for automatic reveal and rejects missing proof', async () => {
     const bls = operationVectors.vectors.find((item) => item.scheme === 'bls');
     if (!bls || !('proof' in bls)) throw new Error('Missing BLS fixture');
