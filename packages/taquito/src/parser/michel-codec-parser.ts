@@ -3,8 +3,12 @@ import { ParserProvider } from './interface';
 import { Expr, GlobalConstantHashAndValue, Parser, Prim, ProtocolID } from '@taquito/michel-codec';
 import { OriginateParams } from '../operations/types';
 import { InvalidInitParameter, InvalidCodeParameter } from '../contract/errors';
+import {
+  getOriginationStorageType,
+  requireStorageType,
+} from '../contract/origination-storage-type';
 import { Schema } from '@taquito/michelson-encoder';
-import { MichelsonV1Expression, MichelsonV1ExpressionBase } from '@taquito/rpc';
+import { MichelsonV1ExpressionBase } from '@taquito/rpc';
 import { Protocols } from '../constants';
 
 export class MichelCodecParser implements ParserProvider {
@@ -35,28 +39,26 @@ export class MichelCodecParser implements ParserProvider {
 
   async prepareCodeOrigination(params: OriginateParams): Promise<OriginateParams> {
     const parsedParams = params;
-    parsedParams.code = await this.formatCodeParam(params.code);
+    const code = await this.formatCodeParam(params.code);
+    parsedParams.code = code;
     if (params.init) {
       parsedParams.init = await this.formatInitParam(params.init);
-    } else if (params.storage) {
-      const storageType = (parsedParams.code as Expr[]).find(
-        (p): p is Prim => 'prim' in p && p.prim === 'storage'
-      );
-      if (!storageType?.args) {
-        throw new InvalidCodeParameter(
-          'The storage section is missing from the script',
-          params.code
-        );
-      }
-      const schema = new Schema(storageType.args[0] as MichelsonV1Expression);
-      const globalconstantsHashAndValue = await this.findGlobalConstantsHashAndValue(schema);
+    } else if (params.init === undefined && params.storage !== undefined) {
+      const storageType = getOriginationStorageType(code);
+      const schema = new Schema(storageType);
+      // None does not use the option's inner type, which can contain an unresolved constant.
+      const isNone =
+        params.storage === null && 'prim' in storageType && storageType.prim === 'option';
+      const globalconstantsHashAndValue = isNone
+        ? {}
+        : await this.findGlobalConstantsHashAndValue(schema);
 
       if (Object.keys(globalconstantsHashAndValue).length !== 0) {
         // If there are global constants in the storage part of the contract code,
         // they need to be locally expanded in order to encode the storage arguments
         const p = new Parser({ expandGlobalConstant: globalconstantsHashAndValue });
-        const storageTypeNoGlobalConst = p.parseJSON(storageType.args[0]);
-        const schemaNoGlobalConst = new Schema(storageTypeNoGlobalConst);
+        const storageTypeNoGlobalConst = p.parseJSON(storageType);
+        const schemaNoGlobalConst = new Schema(requireStorageType(storageTypeNoGlobalConst, code));
         parsedParams.init = schemaNoGlobalConst.Encode(params.storage);
       } else {
         parsedParams.init = schema.Encode(params.storage);
