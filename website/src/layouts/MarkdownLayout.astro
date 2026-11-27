@@ -6,6 +6,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import DocsSidebar from '../components/DocsSidebar.astro';
 import FeedbackWidget from '../components/docs/FeedbackWidget.astro';
+import MermaidRenderer from '../components/docs/MermaidRenderer.astro';
 import RpcStatusBanner from '@components/RpcStatusBanner.astro';
 import { DEFAULT_VERSION } from '../pages/api/search/[version].json.ts'
 
@@ -15,9 +16,11 @@ interface Props {
   version?: string;
   currentSlug?: string;
   author?: string | string[];
+  hasMermaid?: boolean;
+  frontmatter?: { hasMermaid?: boolean };
 }
 
-const { title, description, version, currentSlug, author } = Astro.props;
+const { title, description, version, currentSlug, author, hasMermaid, frontmatter } = Astro.props;
 
 const formatAuthors = (author: string | string[] | undefined): string | null => {
   if (!author) return null;
@@ -118,6 +121,8 @@ const articleJsonLd = {
       href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
+
+    {(hasMermaid || frontmatter?.hasMermaid) && <MermaidRenderer />}
 
     <!-- Load Taquito -->
     <script src="../scripts/taquito-init.ts"></script>
@@ -258,6 +263,11 @@ const articleJsonLd = {
 </html>
 
 <style is:global>
+  .markdown-body .mermaid-diagram {
+    margin: 1rem 0;
+    overflow-x: auto;
+  }
+
   .markdown-body pre {
     position: relative;
   }
@@ -281,7 +291,8 @@ const articleJsonLd = {
     z-index: 10;
   }
 
-  .markdown-body pre:hover .copy-button {
+  .markdown-body pre:hover .copy-button,
+  .markdown-body pre:focus-within .copy-button {
     opacity: 1;
   }
 

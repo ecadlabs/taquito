@@ -4,6 +4,7 @@ import { unified } from '@astrojs/markdown-remark';
 import mdx from '@astrojs/mdx';
 import AutoImport from 'astro-auto-import';
 import { remarkLiveCode } from './src/utils/remark-live-code.mjs';
+import { rehypeMermaid } from './src/utils/rehype-mermaid.mjs';
 import { remarkCallouts } from './src/utils/remark-callouts.mjs';
 import { remarkRelativeLinks } from './src/utils/remark-relative-links.mjs';
 import { fileURLToPath } from 'node:url';
@@ -52,6 +53,7 @@ export default defineConfig({
   markdown: {
     processor: unified({
       remarkPlugins: [remarkRelativeLinks, remarkCallouts, remarkLiveCode],
+      rehypePlugins: [rehypeMermaid],
     }),
     syntaxHighlight: false,
   },

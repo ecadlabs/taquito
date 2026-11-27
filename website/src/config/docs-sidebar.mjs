@@ -49,6 +49,7 @@ export const sidebarConfig = [
     name: "Wallets",
     items: [
       "wallets",
+      "beacon-connection-flow",
       "transaction_limits",
     ],
   },

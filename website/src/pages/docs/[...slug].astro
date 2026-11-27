@@ -23,7 +23,7 @@ export async function getStaticPaths() {
 }
 
 const { doc } = Astro.props;
-const { Content } = await render(doc);
+const { Content, remarkPluginFrontmatter } = await render(doc);
 const title = doc.data.title || 'Taquito Documentation';
 
 // Extract the slug from the file path to preserve dots
@@ -36,7 +36,14 @@ const slug = filePath
 const version = slug.split('/')[0];
 ---
 
-<MarkdownLayout title={title} description={doc.data.description} version={version} currentSlug={slug} author={doc.data.author}>
+<MarkdownLayout
+  title={title}
+  description={doc.data.description}
+  version={version}
+  currentSlug={slug}
+  author={doc.data.author}
+  hasMermaid={remarkPluginFrontmatter.hasMermaid === true}
+>
   <Content />
 </MarkdownLayout>
 

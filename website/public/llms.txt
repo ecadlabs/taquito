@@ -128,6 +128,7 @@ export function getWalletContract(address: string): Promise<WalletContract> {
 
 ### Wallets
 - [Wallets](https://taquito.io/docs/next/wallets.md): This a list of the Tezos wallets we know of.
+- [How Beacon connections work](https://taquito.io/docs/next/beacon-connection-flow.md): Taquito 25.1.3 uses Beacon `4.9.0-ecad-rc.0`.
 - [Transaction limits](https://taquito.io/docs/next/transaction_limits.md): Developers may wish to set different limits for a transaction before broadcasting it, for example to give it a better chance to be included first or to preve...
 
 ### Michelson

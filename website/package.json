@@ -12,7 +12,8 @@
     "generate:llms": "node src/scripts/generate-llms-txt.mjs",
     "generate:rpc": "node src/scripts/generate-rpc-table.js",
     "originate:live-code-fixtures": "ts-node --compiler-options '{\"module\":\"commonjs\"}' scripts/originate-live-code-fixtures.ts",
-    "test:live-code:prod": "node scripts/prod-live-code-smoke.mjs"
+    "test:live-code:prod": "node scripts/prod-live-code-smoke.mjs",
+    "test:mermaid": "node --test test/mermaid.test.mjs test/rehype-mermaid.test.mjs"
   },
   "dependencies": {
     "@ledgerhq/hw-transport-webhid": "^6.36.0",
@@ -27,6 +28,7 @@
     "bignumber.js": "^10.0.2",
     "buffer": "^6.0.3",
     "fuse.js": "^7.5.0",
+    "mermaid": "^12.3.0",
     "prismjs": "^1.30.0"
   },
   "devDependencies": {

@@ -2,8 +2,15 @@ import Prism from 'prismjs';
 import 'prismjs/components/prism-javascript';
 import 'prismjs/components/prism-typescript';
 
+Prism.hooks.add('before-all-elements-highlight', (environment) => {
+  const elements: Element[] = environment.elements;
+  environment.elements = elements.filter(
+    (element) => !element.matches('.markdown-body pre > code.language-mermaid')
+  );
+});
+
 function highlightCodeBlocks() {
-  document.querySelectorAll(".markdown-body pre code").forEach((code) => {
+  document.querySelectorAll(".markdown-body pre code:not(.language-mermaid)").forEach((code) => {
     if (code.classList.contains('prism-highlighted')) {
       return;
     }
