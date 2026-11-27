@@ -78,6 +78,7 @@ const isRetriableRequest = (method: string, url: string) => {
     normalizedUrl.endsWith('/helpers/scripts/simulate_operation') ||
     normalizedUrl.endsWith('/helpers/scripts/run_operation') ||
     normalizedUrl.endsWith('/helpers/scripts/run_code') ||
+    normalizedUrl.endsWith('/helpers/scripts/trace_code') ||
     normalizedUrl.endsWith('/helpers/scripts/run_view') ||
     normalizedUrl.endsWith('/helpers/scripts/run_script_view') ||
     normalizedUrl.endsWith('/helpers/scripts/pack_data') ||

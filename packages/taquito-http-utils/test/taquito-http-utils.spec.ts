@@ -583,6 +583,7 @@ describe('HttpBackend', () => {
         '/chains/main/blocks/head/helpers/scripts/simulate_operation',
         '/chains/main/blocks/head/helpers/scripts/run_operation',
         '/chains/main/blocks/head/helpers/scripts/run_code',
+        '/chains/main/blocks/head/helpers/scripts/trace_code',
         '/chains/main/blocks/head/helpers/scripts/run_view',
         '/chains/main/blocks/head/helpers/scripts/run_script_view',
         '/chains/main/blocks/head/helpers/scripts/pack_data',
@@ -741,7 +742,7 @@ describe('HttpBackend', () => {
         expect(mockFetch).toHaveBeenCalledTimes(1);
       });
 
-      it.each([400, 404, 500])(
+      it.each([400, 404, 429, 500])(
         'does not retry %i status on allowlisted requests',
         async (status) => {
           mockFetch.mockResolvedValueOnce(
