@@ -94,6 +94,9 @@ Core and HTTP-utils now point `main` and `require` at `dist/lib`, route native
 ESM imports through a generated `.mjs` bridge, and keep browser imports on their
 ESM bundles. The bridge preserves CommonJS default/named export identity. Their
 existing `dist` subpaths and package metadata remain accessible.
+The installed fixtures cover extensionless CommonJS modules, the legacy `.es6`
+shorthand, explicit JavaScript/source-map paths and extensionless declaration
+imports under `dist/types`.
 
 Their `start` commands use Rollup watch to update CommonJS, native ESM, browser
 ESM and declarations in the same build. Extend the pattern to other packages

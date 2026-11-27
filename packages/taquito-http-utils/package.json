@@ -23,14 +23,22 @@
       "require": "./dist/lib/taquito-http-utils.js"
     },
     "./package.json": "./package.json",
-    "./dist/*": "./dist/*"
+    "./dist/*.js": "./dist/*.js",
+    "./dist/*.mjs": "./dist/*.mjs",
+    "./dist/*.map": "./dist/*.map",
+    "./dist/*.d.ts": "./dist/*.d.ts",
+    "./dist/*.json": "./dist/*.json",
+    "./dist/*": {
+      "types": "./dist/*.d.ts",
+      "default": "./dist/*.js"
+    }
   },
   "files": [
     "dist"
   ],
   "author": "ECAD Labs Inc <info@ecadlabs.com>",
   "contributors": [
-    "Jev Björsell (jevonearth)",
+    "Jev Bj\u00f6rsell (jevonearth)",
     "Davis Sawali <davis.sawali@ecadlabs.com>",
     "Roxane Letourneau <roxane@ecadlabs.com>",
     "Simon Boissonneault-Robert <simon@ecadlabs.com>"

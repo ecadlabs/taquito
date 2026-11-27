@@ -20,7 +20,15 @@
       "require": "./dist/lib/taquito-core.js"
     },
     "./package.json": "./package.json",
-    "./dist/*": "./dist/*"
+    "./dist/*.js": "./dist/*.js",
+    "./dist/*.mjs": "./dist/*.mjs",
+    "./dist/*.map": "./dist/*.map",
+    "./dist/*.d.ts": "./dist/*.d.ts",
+    "./dist/*.json": "./dist/*.json",
+    "./dist/*": {
+      "types": "./dist/*.d.ts",
+      "default": "./dist/*.js"
+    }
   },
   "files": [
     "dist"
@@ -32,7 +40,7 @@
   "contributors": [
     "hui-an.yang <hui-an.yang@ecadlabs.com>",
     "Davis Sawali <davis.sawali@ecadlabs.com>",
-    "Jev Björsell (jevonearth)"
+    "Jev Bj\u00f6rsell (jevonearth)"
   ],
   "homepage": "https://taquito.io/",
   "repository": {
