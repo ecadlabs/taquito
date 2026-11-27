@@ -28,6 +28,10 @@ layout: ../layouts/MarkdownLayout.astro
 
 - HTTP request timeouts now remain active while reading successful response bodies. JSON parse errors and other non-abort body errors still propagate unchanged. This fixes an existing issue across supported Node.js versions and browsers.
 
+### Michelson constructor validation
+
+- Typed packing and unpacking reject `Some`, `None`, `Left` and `Right` values with an incorrect number of arguments with `MichelsonTypeError`. Valid nested values retain their encoding.
+
 ### tz5 and ML-DSA-44
 
 - Added tz5 address, key, signature, Michelson, and operation codecs. `InMemorySigner` imports Octez `mdsk` and encrypted `mdesk` keys and produces `mdsig` signatures with the complete `ff04` operation envelope. Sending operations requires a protocol with `tz5_account_enable` enabled.

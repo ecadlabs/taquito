@@ -6,8 +6,6 @@ import {
   MichelsonInstructionID,
   MichelsonData,
   MichelsonType,
-  MichelsonDataOr,
-  MichelsonDataOption,
   MichelsonInstruction,
 } from './michelson-types';
 import {
@@ -822,10 +820,27 @@ function transformExpr(e: Expr, [args, tr]: ReadTransformFuncs): Expr {
   return tr(res);
 }
 
-const isOrData = (e: Expr): e is MichelsonDataOr =>
-  'prim' in e && (e.prim === 'Left' || e.prim === 'Right');
-const isOptionData = (e: Expr): e is MichelsonDataOption =>
-  'prim' in e && (e.prim === 'Some' || e.prim === 'None');
+const isOrData = (e: Expr): e is Prim<'Left' | 'Right'> =>
+  'prim' in e &&
+  (e.prim === 'Left' || e.prim === 'Right') &&
+  Array.isArray(e.args) &&
+  e.args.length === 1;
+const isOptionData = (e: Expr): e is Prim<'Some' | 'None'> =>
+  'prim' in e &&
+  ((e.prim === 'Some' && Array.isArray(e.args) && e.args.length === 1) ||
+    (e.prim === 'None' &&
+      (e.args === undefined ||
+        (Array.isArray(e.args) && e.args.length === 0))));
+
+function* optionTransforms<T>(
+  data: Prim<'Some' | 'None'>,
+  type: MichelsonType<'option'>,
+  transform: (child: MichelsonType) => T
+): Generator<T> {
+  if (data.prim === 'Some') {
+    yield transform(type.args[0]);
+  }
+}
 
 const getWriteTransformFunc = (t: MichelsonType): WriteTransformFunc => {
   if (isPairType(t)) {
@@ -867,18 +882,7 @@ const getWriteTransformFunc = (t: MichelsonType): WriteTransformFunc => {
         if (!isOptionData(d)) {
           throw new MichelsonTypeError(t, `option expected: ${JSON.stringify(d)}`, d);
         }
-        return [
-          d,
-          (function* () {
-            const dd = d;
-            // TODO: refactor and remove ts-ignore
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            if (dd.prim === 'Some') {
-              yield getWriteTransformFunc(t.args[0]);
-            }
-          })(),
-        ];
+        return [d, optionTransforms(d, t, getWriteTransformFunc)];
       };
 
     case 'list':
@@ -1234,14 +1238,7 @@ const getReadTransformFuncs = (t: MichelsonType): ReadTransformFuncs => {
           if (!isOptionData(d)) {
             throw new MichelsonTypeError(t, `option expected: ${JSON.stringify(d)}`, d);
           }
-          return (function* () {
-            // TODO: refactor and remove ts-ignore
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            if (d.prim === 'Some') {
-              yield getReadTransformFuncs(t.args[0]);
-            }
-          })();
+          return optionTransforms(d, t, getReadTransformFuncs);
         },
         (d: Expr) => d,
       ];
