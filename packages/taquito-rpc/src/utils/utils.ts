@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
-import { InvalidBigMapParameterError } from '@taquito/core';
-import type { BigMapPagination } from '../types';
+import { InvalidBigMapParameterError, ParameterValidationError } from '@taquito/core';
+import type { BigMapPagination, SaplingDiffOffsets } from '../types';
 
 /**
  * Casts object/array items to BigNumber
@@ -87,4 +87,43 @@ export function normalizeBigMapPagination(page: BigMapPagination = {}): Required
     );
   }
   return { offset, length };
+}
+
+/** Node query parameters for Sapling diff offsets. */
+export type SaplingDiffQueryArguments = { offset_commitment?: number; offset_nullifier?: number };
+
+// The query parser accepts larger numbers, but the protocol checks both offsets as Sapling
+// commitment positions, which are 32-bit. The node answers 500 above this value.
+const MAX_SAPLING_DIFF_OFFSET = 4294967295;
+
+/**
+ * Validates Sapling diff offsets and returns the RPC query, or undefined when no offset is set.
+ * @throws {@link ParameterValidationError} when an offset is not an integer from 0 to 4294967295
+ */
+export function normalizeSaplingDiffOffsets(
+  offsets: SaplingDiffOffsets = {}
+): SaplingDiffQueryArguments | undefined {
+  if (!offsets || typeof offsets !== 'object') {
+    throw new ParameterValidationError(
+      'Invalid Sapling diff offsets: expected an object',
+      'expected an object'
+    );
+  }
+  const { offsetCommitment, offsetNullifier } = offsets;
+  for (const [name, value] of [
+    ['offsetCommitment', offsetCommitment],
+    ['offsetNullifier', offsetNullifier],
+  ] as const) {
+    if (
+      value !== undefined &&
+      (!Number.isInteger(value) || value < 0 || value > MAX_SAPLING_DIFF_OFFSET)
+    ) {
+      const detail = `${name} must be an integer from 0 to ${MAX_SAPLING_DIFF_OFFSET}, got ${String(value)}`;
+      throw new ParameterValidationError(`Invalid Sapling diff offsets: ${detail}`, detail);
+    }
+  }
+  if (offsetCommitment === undefined && offsetNullifier === undefined) {
+    return undefined;
+  }
+  return { offset_commitment: offsetCommitment, offset_nullifier: offsetNullifier };
 }

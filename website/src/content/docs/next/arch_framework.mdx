@@ -359,6 +359,8 @@ Several queries only apply to Originated Accounts:
 - **getEntryPoints** - fetches the entry point names and associated parameters of a specified Originated Account
 - **getSaplingDiffByContract** - fetches the Sapling State of a specified Smart Contract
 - **getSaplingDiffById** - fetches the Sapling State for a specified Sapling State Identity
+
+  Both take optional `{ offsetCommitment, offsetNullifier }` offsets. A client that already holds N commitments and M nullifiers passes them to fetch only the newer entries. Each offset must be an integer from 0 to 4294967295; Taquito rejects other values before sending a request. The returned `root` covers the whole state, so it does not prove that the entries you already hold come from the same chain. A custom `RpcClientInterface` implementation must forward the offsets to the node.
 - **getBigMapExpr** - Fetches the BigMap value for the specified Big Map identity and key. The key is represented in Binary Micheline, a binary encoding of Micheline (see packData RPC). The returned value is represented in JSON Micheline.
 - **getBigMapValuesPage** - Fetches one finite page of values for the specified Big Map identity, using an offset and a length. The keys are not returned and the order is unspecified. The returned values are represented in JSON Micheline.
 
