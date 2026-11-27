@@ -1,6 +1,6 @@
-import camelCase from 'lodash.camelcase';
 import typescript from 'rollup-plugin-typescript2';
 import json from '@rollup/plugin-json';
+import { cjsEsmBridge } from '../../scripts/cjs-esm-bridge.mjs';
 
 const pkg = require('./package.json');
 
@@ -9,28 +9,27 @@ const libraryName = 'taquito-http-utils';
 export default {
   input: `src/${libraryName}.ts`,
   output: [
-    { 
-      file: pkg.main, 
-      name: camelCase(libraryName), 
-      format: 'umd', 
-      sourcemap: true, 
-      globals: {
-        "@taquito/core": "core",
-      } 
+    {
+      file: pkg.main,
+      format: 'cjs',
+      exports: 'named',
+      sourcemap: true,
     },
     { file: pkg.module, format: 'es', sourcemap: true },
   ],
-  // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
-  external: [
-    '@taquito/core',
-  ],
+  external: ['@taquito/core'],
   watch: {
     include: 'src/**',
   },
   plugins: [
+    cjsEsmBridge(pkg),
     // Allow json resolution
     json(),
     // Compile TypeScript files
-    typescript({ tsconfig: './tsconfig.prod.json', useTsconfigDeclarationDir: true, include: ['**/*.ts', '**/*.tsx'] }),
+    typescript({
+      tsconfig: './tsconfig.prod.json',
+      useTsconfigDeclarationDir: true,
+      include: ['**/*.ts', '**/*.tsx'],
+    }),
   ],
 };
