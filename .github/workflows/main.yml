@@ -118,6 +118,7 @@ jobs:
       - run: npx -y npm@11 ci
       - run: npm run build
       - run: npm run typecheck:tests
+      - run: npm run typecheck:tooling
       - run: npx playwright install --with-deps chromium
       - run: npm run test:consumers
         env:
@@ -131,6 +132,7 @@ jobs:
       - run: npm run test:scripts
       - run: npm run test:dist:esm-imports
       - run: npm run lint
+      - run: npm run lint:tooling
       - run: npm run build-docs
       - run: npm run test
       - name: Codecov
