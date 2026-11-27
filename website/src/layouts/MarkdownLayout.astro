@@ -123,6 +123,7 @@ const articleJsonLd = {
     <script src="../scripts/taquito-init.ts"></script>
     <!-- Load Prism for syntax highlighting -->
     <script src="../scripts/prism-highlight.ts"></script>
+    <script src="../scripts/render-mermaid.ts"></script>
   </head>
   <body class="flex flex-col min-h-screen">
     <RpcStatusBanner />
@@ -258,6 +259,11 @@ const articleJsonLd = {
 </html>
 
 <style is:global>
+  .markdown-body .mermaid-diagram {
+    margin: 1rem 0;
+    overflow-x: auto;
+  }
+
   .markdown-body pre {
     position: relative;
   }

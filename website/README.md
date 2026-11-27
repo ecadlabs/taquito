@@ -20,6 +20,12 @@ npm ci
 npm run dev
 ```
 
+## Mermaid diagrams
+
+Use a fenced `mermaid` code block in an MDX page. Give the diagram a title and a short description with `accTitle` and `accDescr`.
+
+To check rendering in Chromium, run `npm run build` and `npm run preview` from the website directory. With the preview running, use `npm run test:mermaid`. Install the browser with `npx playwright install chromium` from the repository root if needed.
+
 ## Contact
 
 For permissions or licensing inquiries, contact [info@ecadlabs.com](mailto:info@ecadlabs.com).

@@ -3,9 +3,6 @@ title: How Beacon connections work
 author: [David Kaminski]
 ---
 
-import pairingDiagram from './images/beacon-pairing.svg';
-import requestDiagram from './images/beacon-request.svg';
-
 Taquito 25.1.3 uses Beacon `4.9.0-ecad-rc.0`. The relay selection described below follows that release.
 
 `BeaconWallet` hides how it reaches a wallet. Most of the time that is what you want. When a connection hangs, a pairing fails on a phone, or you need to know what a relay operator can see, it helps to know what happens underneath. This page describes that for the Beacon SDK that Taquito ships, `@ecadlabs/beacon-*` from [ecadlabs/beacon-sdk-taquito-patches](https://github.com/ecadlabs/beacon-sdk-taquito-patches).
@@ -30,7 +27,30 @@ The rest of this page is about the Matrix transport, because it is the one with 
 
 Pairing creates a trusted link between one browser and one wallet. It happens once. After that, the dApp and the wallet reconnect on their own.
 
-<a href={pairingDiagram.src}><img src={pairingDiagram.src} width={pairingDiagram.width} height={pairingDiagram.height} alt="Beacon pairing over Matrix: the wallet creates a room on its relay, the invite and the join cross to the dApp relay by federation, then the wallet sends the sealed pairing response" style={{ maxWidth: '100%', height: 'auto' }} /></a>
+```mermaid
+sequenceDiagram
+    accTitle: Beacon pairing over Matrix
+    accDescr: The wallet logs in before scanning. The invite and the join cross the relays before the wallet sends the sealed pairing response.
+    participant D as dApp
+    participant DR as dApp relay
+    participant WR as Wallet relay
+    participant W as Wallet
+
+    W->>WR: Log in at startup
+    Note over D,DR: Use a cached relay or probe candidates
+    D->>DR: Log in
+    D-->>W: Pairing request as a QR code or deep link
+    W->>WR: Create a room and invite the dApp
+    WR-->>DR: Invite through federation
+    DR-->>D: Invite
+    D->>DR: Join while the pairing request is open
+    DR-->>WR: Join through federation
+    WR-->>W: The dApp joined the room
+    W->>WR: Send sealed pairing response
+    WR-->>DR: Response through federation
+    DR-->>D: Response
+    Note over D,DR: Check the request id and sender, then store the wallet as a peer
+```
 
 1. **The dApp picks a relay.** It tries a stored relay first. If it needs to discover one, it sends `GET /_synapse/client/beacon/info` to the configured relays in parallel. Each probe has a 10-second timeout. Discovery stops at the first successful response, when all probes fail, or after 60 seconds. The dApp caches the selected relay in `beacon:matrix-selected-node`.
 2. **The dApp logs in.** Its Matrix user is `@<blake2b hash of its public key>:<relay>`. There is no sign-up. The password is a signature over `login:` plus the current five-minute window of the relay's clock. A plain Synapse rejects this login. A Beacon relay runs a module that checks the signature.
@@ -60,7 +80,28 @@ Pairing request ids live in memory only. If the browser reloads the page while t
 
 ## Requests and responses
 
-<a href={requestDiagram.src}><img src={requestDiagram.src} width={requestDiagram.width} height={requestDiagram.height} alt="Beacon request and response: the wallet acknowledges the request when it arrives, then sends the response after the user decides" style={{ maxWidth: '100%', height: 'auto' }} /></a>
+```mermaid
+sequenceDiagram
+    accTitle: Beacon request and response
+    accDescr: The wallet sends an acknowledgement on receipt and continues to the user prompt without waiting for delivery.
+    participant D as dApp
+    participant R as Matrix relays
+    participant W as Wallet
+    actor U as User
+
+    D->>R: Encrypted operation request
+    R-->>W: Request
+    W--)R: Send acknowledge on receipt
+    par Acknowledgement delivery
+        R-->>D: Acknowledge
+    and User decision and response
+        W->>U: Show the request
+        U->>W: Approve or reject
+        W->>R: Operation response or error
+        R-->>D: Response
+    end
+    Note over D,R: Check senderId against the decrypting key before handling the response
+```
 
 After pairing, each `BeaconWallet` call sends one request to the wallet. The wallet sends an `acknowledge` as soon as it decrypts the request, before the wallet app shows it to the user. The real response comes after the user decides. The wallet does not wait for the `acknowledge` to be delivered, so treat it as a sign that the request arrived, not as a guarantee that it comes before the response.
 
