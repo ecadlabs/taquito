@@ -61,6 +61,7 @@ import {
   RunViewResult,
   RunScriptViewResult,
   SaplingDiffResponse,
+  SaplingDiffOffsets,
   ScriptResponse,
   StorageResponse,
   UnparsingMode,
@@ -80,7 +81,11 @@ import {
   MempoolFilterQueryArguments,
   MempoolFilterResponse,
 } from './types';
-import { castToBigNumber, normalizeBigMapPagination } from './utils/utils';
+import {
+  castToBigNumber,
+  normalizeBigMapPagination,
+  normalizeSaplingDiffOffsets,
+} from './utils/utils';
 import {
   validateAddress,
   validateContractAddress,
@@ -1139,34 +1144,42 @@ export class RpcClient implements RpcClientInterface {
   /**
    * @param id Sapling state ID
    * @param options contains generic configuration for rpc calls to specified block (default to head)
-   * Returns the root and a diff of a state starting from an optional offset which is zero by default
+   * @param offsets optional number of commitments and nullifiers to skip (default 0, the whole state)
+   * Returns the root and a diff of a state starting from the given offsets
    * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-sapling-sapling-state-id-get-diff
+   * @example getSaplingDiffById('5', { block: 'head' }, { offsetCommitment: 24, offsetNullifier: 11 })
    */
   async getSaplingDiffById(
     id: string,
-    { block }: { block: string } = defaultRPCOptions
+    { block }: { block: string } = defaultRPCOptions,
+    offsets: SaplingDiffOffsets = {}
   ): Promise<SaplingDiffResponse> {
     return this.httpBackend.createRequest<SaplingDiffResponse>({
       url: this.createURL(`/chains/${this.chain}/blocks/${block}/context/sapling/${id}/get_diff`),
       method: 'GET',
+      query: normalizeSaplingDiffOffsets(offsets),
     });
   }
 
   /**
    * @param contract address of the contract we want to get the sapling diff
    * @param options contains generic configuration for rpc calls to specified block (default to head)
-   * Returns the root and a diff of a state starting from an optional offset which is zero by default
+   * @param offsets optional number of commitments and nullifiers to skip (default 0, the whole state)
+   * Returns the root and a diff of a state starting from the given offsets
    * @see https://tezos.gitlab.io/active/rpc.html#get-block-id-context-contracts-contract-id-single-sapling-get-diff
+   * @example getSaplingDiffByContract('KT1...', { block: 'head' }, { offsetCommitment: 24, offsetNullifier: 11 })
    */
   async getSaplingDiffByContract(
     contract: string,
-    { block }: { block: string } = defaultRPCOptions
+    { block }: { block: string } = defaultRPCOptions,
+    offsets: SaplingDiffOffsets = {}
   ): Promise<SaplingDiffResponse> {
     return this.httpBackend.createRequest<SaplingDiffResponse>({
       url: this.createURL(
         `/chains/${this.chain}/blocks/${block}/context/contracts/${contract}/single_sapling_get_diff`
       ),
       method: 'GET',
+      query: normalizeSaplingDiffOffsets(offsets),
     });
   }
 

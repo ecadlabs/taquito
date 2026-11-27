@@ -43,6 +43,7 @@ import {
   RunScriptViewResult,
   RunViewResult,
   SaplingDiffResponse,
+  SaplingDiffOffsets,
   ScriptResponse,
   StorageResponse,
   UnparsingMode,
@@ -145,8 +146,21 @@ export interface RpcClientInterface {
   getRpcUrl(): string;
   getCurrentPeriod(options?: RPCOptions): Promise<VotingPeriodBlockResult>;
   getSuccessorPeriod(options?: RPCOptions): Promise<VotingPeriodBlockResult>;
-  getSaplingDiffById(id: string, options?: RPCOptions): Promise<SaplingDiffResponse>;
-  getSaplingDiffByContract(contract: string, options?: RPCOptions): Promise<SaplingDiffResponse>;
+  /**
+   * An implementation that receives `offsets` must send them to the node. One that ignores them
+   * returns the whole state, and RpcClientCache would store that under the offset key.
+   */
+  getSaplingDiffById(
+    id: string,
+    options?: RPCOptions,
+    offsets?: SaplingDiffOffsets
+  ): Promise<SaplingDiffResponse>;
+  /** Same `offsets` requirement as getSaplingDiffById. */
+  getSaplingDiffByContract(
+    contract: string,
+    options?: RPCOptions,
+    offsets?: SaplingDiffOffsets
+  ): Promise<SaplingDiffResponse>;
   getProtocols(options?: RPCOptions): Promise<ProtocolsResponse>;
   getProtocolActivations(protocol?: string): Promise<ProtocolActivationsResponse>;
   getStorageUsedSpace(contract: string, options?: RPCOptions): Promise<string>;
