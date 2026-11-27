@@ -54,6 +54,8 @@
     "gh-pages": "gh-pages",
     "integration-tests": "npm -w integration-tests run originate-known-contracts && npm -w integration-tests run test:secret-key",
     "version-stamp": "npm run --workspaces --if-present version-stamp",
+    "lint:audit:promises": "eslint --config eslint.promises.config.mjs \"packages/*/src/**/*.ts\" \"packages/*/test/**/*.ts\"",
+    "lint:promises": "eslint --config eslint.promises.config.mjs --max-warnings 0 \"packages/*/src/**/*.ts\"",
     "test:scripts": "node --test scripts/*.test.js",
     "test:browser:packages": "npm run build && npm run test:dist:esm-imports && playwright test --config browser-tests/playwright.config.ts --project=chromium",
     "test:browser:packages:firefox": "npm run build && npm run test:dist:esm-imports && playwright test --config browser-tests/playwright.config.ts --project=firefox",
