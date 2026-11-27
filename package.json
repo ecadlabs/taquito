@@ -63,6 +63,7 @@
     "test:browser:packages:ci": "npm run test:browser:packages",
     "typecheck:tests": "tsc -p tsconfig.typecheck-tests.json",
     "typecheck:tests:native": "npm exec --yes --package=typescript@7.0.2 -- tsc --noEmit -p tsconfig.typecheck-tests.json",
+    "typecheck:tooling": "tsc -p tsconfig.typecheck-tooling.json",
     "test:consumers": "node scripts/test-installed-consumers.mjs",
     "test:fa21:local": "vitest run --config integration-tests/fa21/vitest.config.ts",
     "test:synthetic-hash:packages": "npm run build && node scripts/test-synthetic-hash-consumers.mjs",
