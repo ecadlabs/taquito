@@ -57,7 +57,10 @@ export default async function ({ assert, load, mode }) {
     ['@taquito/core', core, commonCore, 'taquito-core'],
     ['@taquito/http-utils', http, commonHttp, 'taquito-http-utils'],
   ]) {
-    assert.equal(require(`${name}/package.json`).name, name);
+    const manifest = require(`${name}/package.json`);
+    assert.equal(manifest.name, name);
+    assert.equal(manifest.exports['.'].module, `./dist/${entry}.bundler.mjs`);
+    assert.ok(require.resolve(`${name}/dist/${entry}.bundler.mjs`).endsWith('.bundler.mjs'));
     assert.ok(require.resolve(`${name}/README.md`).endsWith('README.md'));
     const deep = await load(`${name}/dist/lib/${entry}.js`);
     const commonDeep = require(`${name}/dist/lib/${entry}`);
@@ -76,7 +79,11 @@ export default async function ({ assert, load, mode }) {
     }
     if (mode === 'import') {
       for (const exported of Object.keys(commonjs)) {
-        assert.equal(loaded[exported], commonjs[exported], `${name} changed the ${exported} export`);
+        assert.equal(
+          loaded[exported],
+          commonjs[exported],
+          `${name} changed the ${exported} export`
+        );
       }
     }
   }

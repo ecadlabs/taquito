@@ -16,6 +16,7 @@
     ".": {
       "types": "./dist/types/taquito-core.d.ts",
       "browser": "./dist/taquito-core.es6.js",
+      "module": "./dist/taquito-core.bundler.mjs",
       "import": "./dist/taquito-core.mjs",
       "require": "./dist/taquito-core.cjs",
       "default": "./dist/taquito-core.es6.js"
